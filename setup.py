@@ -5,11 +5,13 @@ import telemeta
 
 CLASSIFIERS = ['Environment :: Web Environment', 'Framework :: Django', 'Intended Audience :: Science/Research', 'Intended Audience :: Education', 'Programming Language :: Python', 'Programming Language :: JavaScript', 'Topic :: Internet :: WWW/HTTP :: Dynamic Content', 'Topic :: Internet :: WWW/HTTP :: WSGI :: Application', 'Topic :: Multimedia :: Sound/Audio', 'Topic :: Multimedia :: Sound/Audio :: Analysis', 'Topic :: Multimedia :: Sound/Audio :: Players', 'Topic :: Scientific/Engineering :: Information Analysis', 'Topic :: System :: Archiving',  ]
 
+README = os.path.join(os.path.dirname(__file__), 'README.rst')
+
 setup(
-  name = "Telemeta",
-  url = "http://telemeta.org",
-  description = "open web audio CMS",
-  long_description = open('README.rst').read(),
+  name = "TeleForma",
+  url = "http://parisson.com/products/teleforma",
+  description = "open multimedia e-leaning system",
+  long_description = open(README).read(),
   author = "Guillaume Pellerin",
   author_email = "yomguy@parisson.com",
   version = telemeta.__version__,
@@ -22,6 +24,7 @@ setup(
         'django-pagination',
         'django-postman',
         'django-socialregistration',
+        'telemeta',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
