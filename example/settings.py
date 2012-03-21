@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'jsonrpc',
     'south',
     'teleforma',
+    'django_extensions',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
