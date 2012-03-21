@@ -79,7 +79,7 @@ class Department(Model):
 
     class Meta:
         db_table = app_label + '_' + 'department'
-
+        verbose_name = _('department')
 
 
 class Category(Model):
@@ -87,8 +87,12 @@ class Category(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = app_label + '_' + 'category'
+        verbose_name = _('category')
         verbose_name_plural = _('categories')
 
 
@@ -101,10 +105,11 @@ class Course(Model):
     category        = ForeignKey('Category', related_name='course', verbose_name='category')
 
     def __str__(self):
-        return self.department.name + ' - '  + self.title + ' - ' + self.category.name
+        return self.department.name + ' - '  + self.category.name + ' - ' + self.title
 
     class Meta:
         db_table = app_label + '_' + 'course'
+        verbose_name = _('course')
 
 
 class Professor(Model):
