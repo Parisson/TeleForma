@@ -389,6 +389,17 @@ digraph name {
     </TABLE>
     >]
 
+    telemeta_models_media_MediaResource [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+     <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4"
+     ><FONT FACE="Helvetica Bold" COLOR="white"
+     >MediaResource<BR/>&lt;<FONT FACE="Helvetica Italic">ModelCore</FONT>&gt;</FONT></TD></TR>
+    
+        
+    
+    </TABLE>
+    >]
+
     telemeta_models_media_MediaRelated [label=<
     <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
      <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4"
@@ -444,17 +455,6 @@ digraph name {
         <TD ALIGN="LEFT"
         ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">FileField</FONT
         ></TD></TR>
-        
-    
-    </TABLE>
-    >]
-
-    telemeta_models_media_MediaResource [label=<
-    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
-     <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4"
-     ><FONT FACE="Helvetica Bold" COLOR="white"
-     >MediaResource<BR/>&lt;<FONT FACE="Helvetica Italic">ModelCore</FONT>&gt;</FONT></TD></TR>
-    
         
     
     </TABLE>
@@ -2822,13 +2822,6 @@ digraph name {
         ></TD></TR>
         
         <TR><TD ALIGN="LEFT" BORDER="0"
-        ><FONT FACE="Helvetica Bold">public_id</FONT
-        ></TD>
-        <TD ALIGN="LEFT"
-        ><FONT FACE="Helvetica Bold">CharField</FONT
-        ></TD></TR>
-        
-        <TR><TD ALIGN="LEFT" BORDER="0"
         ><FONT FACE="Helvetica Bold">title</FONT
         ></TD>
         <TD ALIGN="LEFT"
@@ -2837,6 +2830,13 @@ digraph name {
         
         <TR><TD ALIGN="LEFT" BORDER="0"
         ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">description</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">CharField</FONT
+        ></TD></TR>
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">public_id</FONT
         ></TD>
         <TD ALIGN="LEFT"
         ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">CharField</FONT
@@ -2858,6 +2858,38 @@ digraph name {
         ></TD>
         <TD ALIGN="LEFT"
         ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">AutoField</FONT
+        ></TD></TR>
+        
+    
+    </TABLE>
+    >]
+
+    teleforma_models_Room [label=<
+    <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+     <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4"
+     ><FONT FACE="Helvetica Bold" COLOR="white"
+     >Room</FONT></TD></TR>
+    
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">id</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">AutoField</FONT
+        ></TD></TR>
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT FACE="Helvetica Bold">name</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT FACE="Helvetica Bold">CharField</FONT
+        ></TD></TR>
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">description</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">CharField</FONT
         ></TD></TR>
         
     
@@ -2897,6 +2929,20 @@ digraph name {
         ></TD>
         <TD ALIGN="LEFT"
         ><FONT FACE="Helvetica Bold">CharField</FONT
+        ></TD></TR>
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">date_begin</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">DateTimeField</FONT
+        ></TD></TR>
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">date_end</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">DateTimeField</FONT
         ></TD></TR>
         
     
@@ -3021,6 +3067,13 @@ digraph name {
         ></TD>
         <TD ALIGN="LEFT"
         ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">CharField</FONT
+        ></TD></TR>
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">is_annal</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">BooleanField</FONT
         ></TD></TR>
         
         <TR><TD ALIGN="LEFT" BORDER="0"
@@ -3589,12 +3642,22 @@ digraph name {
 
   
   
+  teleforma_models_Room -> teleforma_models_Organization
+  [label="organization (room)"] [arrowhead=none, arrowtail=dot];
+  
+
+  
+  
   teleforma_models_Conference -> teleforma_models_Professor
   [label="professor (conference)"] [arrowhead=none, arrowtail=dot];
   
   
   teleforma_models_Conference -> teleforma_models_Course
   [label="course (conference)"] [arrowhead=none, arrowtail=dot];
+  
+  
+  teleforma_models_Conference -> teleforma_models_Room
+  [label="room (conference)"] [arrowhead=none, arrowtail=dot];
   
 
   
