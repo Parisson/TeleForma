@@ -67,12 +67,13 @@ class Organization(Model):
 
     class Meta:
         db_table = app_label + '_' + 'organization'
+        verbose_name = _('organization')
 
 class Department(Model):
 
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    organization    = ForeignKey('Organization', related_name='department', verbose_name='organization')
+    organization    = ForeignKey('Organization', related_name='department', verbose_name=_('organization'))
 
     def __str__(self):
         return self.name
@@ -98,11 +99,11 @@ class Category(Model):
 
 class Course(Model):
 
-    public_id       = CharField(_('public_id'), max_length=255)
-    department      = ForeignKey('Department', related_name='course', verbose_name='department')
+    department      = ForeignKey('Department', related_name='course', verbose_name=_('department'))
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    category        = ForeignKey('Category', related_name='course', verbose_name='category')
+    category        = ForeignKey('Category', related_name='course', verbose_name=_('category'))
+    public_id       = CharField(_('public_id'), max_length=255, blank=True)
 
     def __str__(self):
         return self.department.name + ' - '  + self.category.name + ' - ' + self.title
@@ -114,7 +115,7 @@ class Course(Model):
 
 class Professor(Model):
 
-    user            = ForeignKey(User, related_name='professor', verbose_name='user')
+    user            = ForeignKey(User, related_name='professor', verbose_name=_('user'))
     courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
 
@@ -123,22 +124,44 @@ class Professor(Model):
 
     class Meta:
         db_table = app_label + '_' + 'professor'
+        verbose_name = _('professor')
+
+
+class Room(Model):
+
+    organization    = ForeignKey('Organization', related_name='room', verbose_name=_('organization'))
+    name            = CharField(_('name'), max_length=255)
+    description     = CharField(_('description'), max_length=255, blank=True)
+
+    def __str__(self):
+        return self.organization.name + ' - ' + self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'room'
+        verbose_name = _('room')
 
 
 class Conference(Model):
 
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    professor       = ForeignKey('Professor', related_name='conference', verbose_name='professor')
-    course          = ForeignKey('Course', related_name='conference', verbose_name='course')
+    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'))
+    course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
     session         = CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
+    room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
+                                 null=True, blank=True)
+    date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
+    date_end        = DateTimeField(_('end date'), null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.course.department.name + ' - ' + self.course.title + ' - ' + \
+                self.title + ' - ' + self.professor.user.first_name +  ' - ' + \
+                self.professor.user.last_name +  ' - ' + str(self.date_begin)
 
     class Meta:
         db_table = app_label + '_' + 'conference'
+        verbose_name = _('conference')
 
 
 class IEJ(Model):
@@ -157,9 +180,9 @@ class IEJ(Model):
 
 class Student(Model):
 
-    user            = ForeignKey(User, related_name='student', verbose_name='user')
-    category        = ForeignKey('Category', related_name='student', verbose_name='category')
-    iej             = ForeignKey('IEJ', related_name='student', verbose_name='iej')
+    user            = ForeignKey(User, related_name='student', verbose_name=_('user'))
+    category        = ForeignKey('Category', related_name='student', verbose_name=_('category'))
+    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     courses         = ManyToManyField('Course', related_name="student", verbose_name=_('courses'),
                                         blank=True, null=True)
 
@@ -168,6 +191,7 @@ class Student(Model):
 
     class Meta:
         db_table = app_label + '_' + 'student'
+        verbose_name = _('student')
 
 
 class MediaBase(Model):
@@ -175,7 +199,7 @@ class MediaBase(Model):
 
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    mime_type       = CharField(_('mime_type'), max_length=255, blank=True)
+    mime_type       = CharField(_('mime type'), max_length=255, blank=True)
     credits         = CharField(_('credits'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
@@ -202,6 +226,7 @@ class Document(MediaBase):
 
     code            = CharField(_('code'), max_length=255, blank=True)
     course          = ForeignKey('Course', related_name='document', verbose_name='course')
+    is_annal        = BooleanField(_('annal'))
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
 
     def is_image(self):

@@ -18,8 +18,7 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Document)
 admin.site.register(Video)
 admin.site.register(Audio)
-
-
+admin.site.register(Room)
 
 
 
