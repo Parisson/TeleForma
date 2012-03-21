@@ -1,0 +1,18 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+
+{% block extra_stylesheets %}
+
+{% endblock %}
+
+{% block logo %}
+<a href="{% url teleforma-home %}"><img src="{% url telemeta-images "logo_telemeta_2.png" %}" alt="TeleForma" /></a>
+{% endblock %}
+
+{% block archives %}
+<li><a href="{% url telemeta-collections %}" class="green">{% trans "Courses" %}</a></li>
+{% endblock %}
+
+{% block geonav %}
+<li><a href="{% url teleforma-home %}" class="yellow">{% trans "Messages" %}</a></li>
+{% endblock %}
