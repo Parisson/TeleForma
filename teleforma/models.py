@@ -47,8 +47,7 @@ from django.forms import ModelForm, TextInput, Textarea
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from tools import *
-from telemeta.models.media import *
+import telemeta.models as telemeta_models
 
 from south.modelsinspector import add_introspection_rules
 
@@ -102,7 +101,7 @@ class Course(Model):
     department      = ForeignKey('Department', related_name='course', verbose_name='department')
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    category        = ForeignKey('Category', related_name='student', verbose_name='category')
+    category        = ForeignKey('Category', related_name='course', verbose_name='category')
 
     class Meta:
         db_table = app_label + '_' + 'course'
@@ -110,8 +109,8 @@ class Course(Model):
 
 class Professor(Model):
 
-    user            = ForeignKey('User', related_name='professor', verbose_name='user')
-    courses         = ManyToManyField('Course', related_name="student", verbose_name=_('course'),
+    user            = ForeignKey(User, related_name='professor', verbose_name='user')
+    courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
 
     def __str__(self):
@@ -125,8 +124,8 @@ class Conference(Model):
 
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    professor       = ForeignKey('Professor', related_name='course', verbose_name='professor')
-    course          = ForeignKey('Course', related_name='document', verbose_name='course')
+    professor       = ForeignKey('Professor', related_name='conference', verbose_name='professor')
+    course          = ForeignKey('Course', related_name='conference', verbose_name='course')
     session         = CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
 
@@ -151,10 +150,10 @@ class IEJ(Model):
 
 class Student(Model):
 
-    user            = ForeignKey('User', related_name='student', verbose_name='user')
+    user            = ForeignKey(User, related_name='student', verbose_name='user')
     category        = ForeignKey('Category', related_name='student', verbose_name='category')
     iej             = ForeignKey('IEJ', related_name='student', verbose_name='iej')
-    courses         = ManyToManyField('Course', related_name="student", verbose_name=_('course'),
+    courses         = ManyToManyField('Course', related_name="student", verbose_name=_('courses'),
                                         blank=True, null=True)
 
     def __str__(self):
@@ -164,13 +163,13 @@ class Student(Model):
         db_table = app_label + '_' + 'student'
 
 
-class MediaBaseResource(Model):
+class MediaBase(Model):
     "Describe a media base resource"
 
-    title           = CharField(_('title'), required=True)
-    description     = CharField(_('description'))
-    mime_type       = CharField(_('mime_type'), null=True)
-    credits         = CharField(_('credits'))
+    title           = CharField(_('title'), max_length=255)
+    description     = CharField(_('description'), max_length=255)
+    mime_type       = CharField(_('mime_type'), max_length=255, null=True)
+    credits         = CharField(_('credits'), max_length=255)
     is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
@@ -185,16 +184,16 @@ class MediaBaseResource(Model):
     def get_fields(self):
         return self._meta.fields
 
-    class Meta(MetaCore):
+    class Meta:
         abstract = True
         ordering = ['code']
 
 
-class Document(MediaBaseResource):
+class Document(MediaBase):
 
     element_type = 'document'
 
-    code            = CharField(_('code'))
+    code            = CharField(_('code'), max_length=255)
     course          = ForeignKey('Course', related_name='document', verbose_name='course')
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename")
 
@@ -221,12 +220,12 @@ class Document(MediaBaseResource):
         db_table = app_label + '_' + 'document'
 
 
-class Media(MediaBaseResource):
+class Media(MediaBase):
 
     element_type = 'media'
 
     course          = ForeignKey('Course', related_name='media', verbose_name='course')
-    item            = ForeignKey('MediaItem', related_name='media', verbose_name='item')
+    item            = ForeignKey(telemeta_models.media.MediaItem, related_name='media', verbose_name='item')
 
     class Meta:
         db_table = app_label + '_' + 'media'
