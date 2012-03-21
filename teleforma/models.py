@@ -87,12 +87,9 @@ class Category(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         db_table = app_label + '_' + 'category'
-
+        verbose_name_plural = _('categories')
 
 
 class Course(Model):
@@ -102,6 +99,9 @@ class Course(Model):
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     category        = ForeignKey('Category', related_name='course', verbose_name='category')
+
+    def __str__(self):
+        return self.department.name + ' - '  + self.title + ' - ' + self.category.name
 
     class Meta:
         db_table = app_label + '_' + 'course'
@@ -146,6 +146,8 @@ class IEJ(Model):
 
     class Meta:
         db_table = app_label + '_' + 'iej'
+        verbose_name = _('IEJ')
+        verbose_name_plural = _('IEJ')
 
 
 class Student(Model):
@@ -167,9 +169,9 @@ class MediaBase(Model):
     "Describe a media base resource"
 
     title           = CharField(_('title'), max_length=255)
-    description     = CharField(_('description'), max_length=255)
-    mime_type       = CharField(_('mime_type'), max_length=255, null=True)
-    credits         = CharField(_('credits'), max_length=255)
+    description     = CharField(_('description'), max_length=255, blank=True)
+    mime_type       = CharField(_('mime_type'), max_length=255, blank=True)
+    credits         = CharField(_('credits'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
@@ -193,9 +195,9 @@ class Document(MediaBase):
 
     element_type = 'document'
 
-    code            = CharField(_('code'), max_length=255)
+    code            = CharField(_('code'), max_length=255, blank=True)
     course          = ForeignKey('Course', related_name='document', verbose_name='course')
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename")
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
 
     def is_image(self):
         is_url_image = False
@@ -220,15 +222,26 @@ class Document(MediaBase):
         db_table = app_label + '_' + 'document'
 
 
-class Media(MediaBase):
+class Video(MediaBase):
 
-    element_type = 'media'
+    element_type = 'media_video'
 
-    course          = ForeignKey('Course', related_name='media', verbose_name='course')
-    item            = ForeignKey(telemeta_models.media.MediaItem, related_name='media', verbose_name='item')
+    course          = ForeignKey('Course', related_name='video', verbose_name='course')
+    item            = ForeignKey(telemeta_models.media.MediaItem, related_name='video', verbose_name='item')
 
     class Meta:
-        db_table = app_label + '_' + 'media'
+        db_table = app_label + '_' + 'video'
+
+
+class Audio(MediaBase):
+
+    element_type = 'media_audio'
+
+    course          = ForeignKey('Course', related_name='audio', verbose_name='course')
+    item            = ForeignKey(telemeta_models.media.MediaItem, related_name='audio', verbose_name='item')
+
+    class Meta:
+        db_table = app_label + '_' + 'audio'
 
 
 
