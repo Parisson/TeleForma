@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'south',
     'teleforma',
     'sorl.thumbnail',
+    'django_extensions',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

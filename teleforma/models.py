@@ -48,8 +48,7 @@ from django.forms import ModelForm, TextInput, Textarea
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-
-from south.modelsinspector import add_introspection_rules
+from teleforma.fields import *
 
 app_label = 'teleforma'
 
@@ -164,36 +163,6 @@ class Conference(Model):
         verbose_name = _('conference')
 
 
-class IEJ(Model):
-
-    name            = CharField(_('name'), max_length=255)
-    description     = CharField(_('description'), max_length=255, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = app_label + '_' + 'iej'
-        verbose_name = _('IEJ')
-        verbose_name_plural = _('IEJ')
-
-
-class Student(Model):
-
-    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
-    category        = ForeignKey('Category', related_name='student', verbose_name=_('category'))
-    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
-    courses         = ManyToManyField('Course', related_name="student", verbose_name=_('courses'),
-                                        blank=True, null=True)
-
-    def __str__(self):
-        return self.user.username
-
-    class Meta:
-        db_table = app_label + '_' + 'student'
-        verbose_name = _('student')
-
-
 class MediaBase(Model):
     "Base media resource"
 
@@ -268,13 +237,99 @@ class Media(MediaBase):
         db_table = app_label + '_' + 'media'
 
 
+# STUDENT
 
-class ShortTextField(models.TextField):
+class IEJ(Model):
 
-    def formfield(self, **kwargs):
-         kwargs.update(
-            {"widget": Textarea(attrs={'rows':3, 'cols':30})}
-         )
-         return super(ShortTextField, self).formfield(**kwargs)
+    name            = CharField(_('name'), max_length=255)
+    description     = CharField(_('description'), max_length=255, blank=True)
 
-add_introspection_rules([], ["^teleforma\.models\.ShortTextField"])
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'iej'
+        verbose_name = _('IEJ')
+        verbose_name_plural = _('IEJ')
+
+
+class Training(Model):
+
+    name            = CharField(_('name'), max_length=255, blank=True)
+    courses         = ManyToManyField('Course', related_name="training", verbose_name=_('courses'),
+                                        blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'training'
+        verbose_name = _('training')
+
+
+class Procedure(Model):
+
+    name           = CharField(_('name'), max_length=255, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'procedure'
+        verbose_name = _('procedure')
+
+
+class Speciality(Model):
+
+    name           = CharField(_('name'), max_length=255, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'speciality'
+        verbose_name = _('speciality')
+
+
+class Student(Model):
+
+    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
+    category        = ForeignKey('Category', related_name='student', verbose_name=_('category'))
+    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
+    training        = ForeignKey('Training', related_name='student',
+                                 verbose_name='training', blank=True, null=True)
+    procedure       = ForeignKey('Procedure', related_name='student',
+                                 verbose_name='procedure', blank=True, null=True)
+    oral_speciality = ForeignKey('Speciality', related_name='student_oral_spe',
+                                 verbose_name='oral speciality', blank=True, null=True)
+    written_speciality = ForeignKey('Speciality', related_name='student_written_spe',
+                                verbose_name='written speciality', blank=True, null=True)
+    oral_1          = CharField(_('oral 1'), max_length=255, blank=True)
+    oral_2          = CharField(_('oral 2'), max_length=255, blank=True)
+
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        db_table = app_label + '_' + 'student'
+        verbose_name = _('student')
+
+
+class Profile(models.Model):
+    "User profile extension"
+
+    user            = ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
+    address         = TextField(_('Address'))
+    postal_code     = CharField(_('Postal code'), max_length=255)
+    city            = CharField(_('City'), max_length=255)
+    country         = CharField(_('Country'), max_length=255, blank=True)
+    language        = CharField(_('Language'), max_length=255, blank=True)
+    telephone       = CharField(_('Telephone'), max_length=255, blank=True)
+    expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
+    init_password   = BooleanField(_('Password initialization'))
+
+    class Meta:
+        db_table = app_label + '_' + 'profiles'
+        verbose_name = _('profile')
+
