@@ -41,13 +41,13 @@ import time
 import urllib
 import datetime
 import mimetypes
+import telemeta
 import django.db.models as models
 from django.db.models import *
 from django.forms import ModelForm, TextInput, Textarea
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-import telemeta.models as telemeta_models
 
 from south.modelsinspector import add_introspection_rules
 
@@ -115,7 +115,7 @@ class Course(Model):
 
 class Professor(Model):
 
-    user            = ForeignKey(User, related_name='professor', verbose_name=_('user'))
+    user            = ForeignKey(User, related_name='professor', verbose_name=_('user'), unique=True)
     courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
 
@@ -180,7 +180,7 @@ class IEJ(Model):
 
 class Student(Model):
 
-    user            = ForeignKey(User, related_name='student', verbose_name=_('user'))
+    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
     category        = ForeignKey('Category', related_name='student', verbose_name=_('category'))
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     courses         = ManyToManyField('Course', related_name="student", verbose_name=_('courses'),
@@ -195,18 +195,20 @@ class Student(Model):
 
 
 class MediaBase(Model):
-    "Describe a media base resource"
+    "Base media resource"
 
-    title           = CharField(_('title'), max_length=255)
+    title           = CharField(_('title'), max_length=255, blank=True)
     description     = CharField(_('description'), max_length=255, blank=True)
-    mime_type       = CharField(_('mime type'), max_length=255, blank=True)
     credits         = CharField(_('credits'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
 
     def __unicode__(self):
-        return self.code
+        if self.title:
+            return self.title
+        else:
+            return self.item.title
 
     @property
     def public_id(self):
@@ -217,7 +219,7 @@ class MediaBase(Model):
 
     class Meta:
         abstract = True
-        ordering = ['code']
+        ordering = ['date_added']
 
 
 class Document(MediaBase):
@@ -252,26 +254,18 @@ class Document(MediaBase):
         db_table = app_label + '_' + 'document'
 
 
-class Video(MediaBase):
+class Media(MediaBase):
+    "Describe a media resource linked to a conference and a telemeta item"
 
-    element_type = 'media_video'
+    element_type = 'media'
 
-    course          = ForeignKey('Course', related_name='video', verbose_name='course')
-    item            = ForeignKey(telemeta_models.media.MediaItem, related_name='video', verbose_name='item')
-
-    class Meta:
-        db_table = app_label + '_' + 'video'
-
-
-class Audio(MediaBase):
-
-    element_type = 'media_audio'
-
-    course          = ForeignKey('Course', related_name='audio', verbose_name='course')
-    item            = ForeignKey(telemeta_models.media.MediaItem, related_name='audio', verbose_name='item')
+    conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'))
+    item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
+                                 verbose_name='item', blank=True, null=True)
+    is_live         = BooleanField(_('is live'))
 
     class Meta:
-        db_table = app_label + '_' + 'audio'
+        db_table = app_label + '_' + 'media'
 
 
 

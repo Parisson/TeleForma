@@ -1,25 +1,39 @@
 # -*- coding: utf-8 -*-
 from teleforma.models import *
 from django.contrib import admin
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from telemeta.models.system import UserProfile
 
-class StudentAdmin(admin.ModelAdmin):
-    search_fields = ['user', 'iej']
-    ordering = ['user']
+admin.site.unregister(User)
+
+#class UserProfileInline(admin.StackedInline):
+#	model = UserProfile
+
+class StudentProfileInline(admin.StackedInline):
+    model = Student
     filter_horizontal = ['courses']
+
+class ProfessorProfileInline(admin.StackedInline):
+    model = Professor
+    filter_horizontal = ['courses']
+
+class UserProfileInline(admin.StackedInline):
+	model = UserProfile
+
+class UserProfileAdmin(UserAdmin):
+    inlines = [StudentProfileInline, ProfessorProfileInline, UserProfileInline]
 
 admin.site.register(Organization)
 admin.site.register(Department)
 admin.site.register(Category)
 admin.site.register(Course)
-admin.site.register(Professor)
 admin.site.register(Conference)
 admin.site.register(IEJ)
-admin.site.register(Student, StudentAdmin)
 admin.site.register(Document)
-admin.site.register(Video)
-admin.site.register(Audio)
+admin.site.register(Media)
 admin.site.register(Room)
-
+admin.site.register(User, UserProfileAdmin)
 
 
 

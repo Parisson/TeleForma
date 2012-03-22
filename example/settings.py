@@ -106,7 +106,7 @@ INSTALLED_APPS = (
     'jsonrpc',
     'south',
     'teleforma',
-    'django_extensions',
+    'sorl.thumbnail',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
