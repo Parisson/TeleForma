@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-22 15:00+0100\n"
+"POT-Creation-Date: 2012-03-27 21:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: models.py:61 models.py:73 models.py:87 models.py:132 models.py:244
-#: models.py:258 models.py:272 models.py:284 models.py:295 models.py:310
+#: models.py:61 models.py:73 models.py:87 models.py:132 models.py:248
+#: models.py:262 models.py:276 models.py:288
 msgid "name"
 msgstr "nom"
 
 #: models.py:62 models.py:74 models.py:88 models.py:103 models.py:133
-#: models.py:146 models.py:170 models.py:245
+#: models.py:190 models.py:249
 msgid "description"
 msgstr "description"
 
@@ -36,7 +36,7 @@ msgstr "organisation"
 msgid "department"
 msgstr "département"
 
-#: models.py:95 models.py:104 models.py:326
+#: models.py:95 models.py:104 models.py:301
 msgid "category"
 msgstr "catégorie"
 
@@ -44,7 +44,7 @@ msgstr "catégorie"
 msgid "categories"
 msgstr "catégories"
 
-#: models.py:102 models.py:145 models.py:169
+#: models.py:102 models.py:189
 msgid "title"
 msgstr "titre"
 
@@ -52,145 +52,153 @@ msgstr "titre"
 msgid "public_id"
 msgstr ""
 
-#: models.py:112 models.py:148
+#: models.py:112 models.py:145
 msgid "course"
 msgstr "matière"
 
-#: models.py:117 models.py:325 models.py:342
+#: models.py:117 models.py:300 models.py:326
 msgid "user"
 msgstr "utilisateur"
 
-#: models.py:118 models.py:259 models.py:328
+#: models.py:118 models.py:263
 msgid "courses"
 msgstr "matières"
 
-#: models.py:126 models.py:147
+#: models.py:126 models.py:146
 msgid "professor"
 msgstr "professeur"
 
-#: models.py:140 models.py:151
+#: models.py:140 models.py:149
 msgid "room"
 msgstr "salle"
 
-#: models.py:149
+#: models.py:147
 msgid "session"
 msgstr "session"
 
-#: models.py:153
+#: models.py:151
+msgid "comment"
+msgstr ""
+
+#: models.py:152
 msgid "begin date"
 msgstr "date de début"
 
-#: models.py:154
+#: models.py:153
 msgid "end date"
 msgstr "date de fin"
 
-#: models.py:163 models.py:231
+#: models.py:166 models.py:193 models.py:227
 msgid "conference"
 msgstr "conférence"
 
-#: models.py:171
+#: models.py:172
 msgid "credits"
 msgstr "crédits"
 
-#: models.py:172
+#: models.py:173
 msgid "published"
 msgstr "publié"
 
-#: models.py:173
+#: models.py:174
 msgid "date added"
 msgstr "date d'ajout"
 
-#: models.py:174
+#: models.py:175
 msgid "date modified"
 msgstr "date de modification"
 
-#: models.py:198
+#: models.py:191
 msgid "code"
 msgstr "cote"
 
-#: models.py:200
+#: models.py:195
 msgid "annal"
 msgstr "annale"
 
-#: models.py:201
+#: models.py:196
 msgid "file"
 msgstr "fichier"
 
-#: models.py:234
+#: models.py:231
 msgid "is live"
 msgstr "en direct"
 
-#: models.py:252 models.py:253
+#: models.py:256 models.py:257
 msgid "IEJ"
 msgstr "IEJ"
 
-#: models.py:267
+#: models.py:271 models.py:304
 msgid "training"
 msgstr "formation"
 
-#: models.py:279
+#: models.py:283 models.py:306
 msgid "procedure"
 msgstr "procédure"
 
-#: models.py:291
+#: models.py:295
 msgid "speciality"
 msgstr "spécialité"
 
-#: models.py:304
-msgid "oral speciality"
-msgstr "spécialité orale"
-
-#: models.py:305
-msgid "oral specialities"
-msgstr "spécialités orales"
-
-#: models.py:319
-msgid "written speciality"
-msgstr "spécialité écrit"
-
-#: models.py:320
-msgid "written specialities"
-msgstr "spécialités écrites"
-
-#: models.py:327
+#: models.py:302
 msgid "iej"
 msgstr "iej"
 
-#: models.py:336
+#: models.py:308
+msgid "oral speciality"
+msgstr "spécialité orale"
+
+#: models.py:310
+msgid "written speciality"
+msgstr "spécialité écrit"
+
+#: models.py:311
+msgid "oral 1"
+msgstr ""
+
+#: models.py:312
+msgid "oral 2"
+msgstr ""
+
+#: models.py:320
 msgid "student"
 msgstr "étudiant"
 
-#: models.py:343
+#: models.py:327
 msgid "Address"
 msgstr ""
 
-#: models.py:344
+#: models.py:328
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models.py:345
+#: models.py:329
 msgid "City"
 msgstr "Ville"
 
-#: models.py:346
+#: models.py:330
 msgid "Country"
-msgstr ""
+msgstr "Pays"
 
-#: models.py:347
+#: models.py:331
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
-#: models.py:348
+#: models.py:332
 msgid "Telephone"
-msgstr ""
+msgstr "Téléphone"
 
-#: models.py:349
+#: models.py:333
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models.py:350
+#: models.py:334
 msgid "Password initialization"
 msgstr ""
+
+#: models.py:338
+msgid "profile"
+msgstr "profil"
 
 #: templates/teleforma/base.html:13
 msgid "Courses"
@@ -199,6 +207,49 @@ msgstr "Matières"
 #: templates/teleforma/base.html:17
 msgid "Messages"
 msgstr "Messages"
+
+#: templates/teleforma/courses.html:32
+msgid "My courses"
+msgstr "Mes matières"
+
+#: templates/teleforma/courses.html:55
+msgid "Documents"
+msgstr "Documents"
+
+#: templates/teleforma/courses.html:58 templates/teleforma/courses.html:74
+msgid "Title"
+msgstr "Titre"
+
+#: templates/teleforma/courses.html:59 templates/teleforma/courses.html:75
+msgid "Description"
+msgstr "Description"
+
+#: templates/teleforma/courses.html:60 templates/teleforma/courses.html:76
+#: templates/teleforma/courses.html:93
+msgid "Date added"
+msgstr "Date d'ajout"
+
+#: templates/teleforma/courses.html:71
+msgid "Medias"
+msgstr "Médias"
+
+#: templates/teleforma/courses.html:88
+msgid "Conferences"
+msgstr "Conférences"
+
+#: templates/teleforma/courses.html:91
+msgid "Session"
+msgstr "Session"
+
+#: templates/teleforma/courses.html:92
+msgid "Professor"
+msgstr "Professeur"
+
+#~ msgid "oral specialities"
+#~ msgstr "spécialités orales"
+
+#~ msgid "written specialities"
+#~ msgstr "spécialités écrites"
 
 #~ msgid "mime type"
 #~ msgstr "type mime"

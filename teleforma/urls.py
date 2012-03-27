@@ -34,7 +34,8 @@
 
 import os.path
 from django.conf.urls.defaults import *
-from django.views.generic.simple import redirect_to, direct_to_template
+from django.views.generic import *
+from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
 from jsonrpc import jsonrpc_site
@@ -42,7 +43,12 @@ from jsonrpc import jsonrpc_site
 htdocs = os.path.dirname(__file__) + '/htdocs'
 
 urlpatterns = patterns('',
-    url(r'^$', direct_to_template, {'template': 'teleforma/base.html'}, name="teleforma-home"),
+
+    url(r'^desk/courses/$', ListView.as_view(model=Course, template_name='teleforma/courses.html'), name="teleforma-courses"),
+
+    url(r'^desk/courses/(?P<pk>.*)$', CourseView.as_view(), name="teleforma-course-detail"),
+
+    url(r'^messages/$', ListView.as_view(model=Course, template_name='teleforma/courses.html'), name="teleforma-messages"),
 
 # CSS+Images (FIXME: for developement only)
     url(r'^css/(?P<path>.*)$', 'django.views.static.serve',

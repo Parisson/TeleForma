@@ -1,0 +1,66 @@
+{% extends "teleforma/courses.html" %}
+{% load i18n %}
+
+
+{% block courses %}
+
+<table class="listing" style="width:100%;margin-top: 1em">
+<tr>
+<td style="border-bottom:1px solid #6A0307;color:#6A0307;font-size: 120%">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}</td>
+<td colspan="2" style="border-bottom:1px solid #6A0307;color:#6A0307;font-size: 80%; text-align:right"></td>
+</tr>
+
+</table>
+
+<h2>{% trans "Documents"%}</h2>
+<table class="listing" width="100%">
+<tr>
+<th class="highlight">{% trans "Title" %}</th>
+<th>{% trans "Description" %}</th>
+<th>{% trans "Date added" %}</th>
+</tr>
+{% for document in course.document.all %}
+<tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
+<td>{{ document.title }}</td>
+<td>{{ document.description }}</td>
+<td>{{ document.date_added }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>{% trans "Medias"%}</h2>
+<table class="listing" width="100%">
+<tr>
+<th class="highlight">{% trans "Title" %}</th>
+<th>{% trans "Description" %}</th>
+<th>{% trans "Date added" %}</th>
+</tr>
+{% for media in course.media.all %}
+<tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
+<td><a href="{% url telemeta-item-detail media.item.public_id %}">{{ media.item.title }}</a></td>
+<td>{{ media.item.description }}</td>
+<td>{{ media.date_added }}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+<h2>{% trans "Conferences"%}</h2>
+<table class="listing" width="100%">
+<tr>
+<th class="highlight">{% trans "Session" %}</th>
+<th>{% trans "Professor" %}</th>
+<th>{% trans "Date added" %}</th>
+</tr>
+{% for conference in course.conference.all %}
+<tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
+<td>{{ conference.session }}</td>
+<td>{{ conference.professor.user.first_name }} {{ conference.professor.user.last_name }}</td>
+<td>{{ conference.date_begin }}</td>
+</tr>
+
+</table>
+
+{% endfor %}
+
+{% endblock courses %}

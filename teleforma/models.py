@@ -142,21 +142,24 @@ class Room(Model):
 
 class Conference(Model):
 
-    title           = CharField(_('title'), max_length=255)
-    description     = CharField(_('description'), max_length=255, blank=True)
-    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'))
     course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
+    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'))
     session         = CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
     room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
+    comment         = CharField(_('comment'), max_length=255, blank=True)
     date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
 
-    def __str__(self):
+    @property
+    def description(self):
         return self.course.department.name + ' - ' + self.course.title + ' - ' + \
-                self.title + ' - ' + self.professor.user.first_name +  ' - ' + \
+                self.professor.user.first_name +  ' - ' + \
                 self.professor.user.last_name +  ' - ' + str(self.date_begin)
+
+    def __str__(self):
+        return self.description
 
     class Meta:
         db_table = app_label + '_' + 'conference'
@@ -166,22 +169,10 @@ class Conference(Model):
 class MediaBase(Model):
     "Base media resource"
 
-    title           = CharField(_('title'), max_length=255, blank=True)
-    description     = CharField(_('description'), max_length=255, blank=True)
     credits         = CharField(_('credits'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
-
-    def __unicode__(self):
-        if self.title:
-            return self.title
-        else:
-            return self.item.title
-
-    @property
-    def public_id(self):
-        return self.code
 
     def get_fields(self):
         return self._meta.fields
@@ -195,8 +186,12 @@ class Document(MediaBase):
 
     element_type = 'document'
 
+    title           = CharField(_('title'), max_length=255, blank=True)
+    description     = CharField(_('description'), max_length=255, blank=True)
     code            = CharField(_('code'), max_length=255, blank=True)
     course          = ForeignKey('Course', related_name='document', verbose_name='course')
+    conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
+                                 blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
 
@@ -213,7 +208,7 @@ class Document(MediaBase):
         if self.file:
             self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
-    def __unicode__(self):
+    def __str__(self):
         if self.title and not re.match('^ *N *$', self.title):
             return  self.title
         else:
@@ -228,10 +223,19 @@ class Media(MediaBase):
 
     element_type = 'media'
 
-    conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'))
+    course          = ForeignKey('Course', related_name='media', verbose_name='course')
+    conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
+                                 blank=True, null=True)
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
     is_live         = BooleanField(_('is live'))
+
+    def __unicode__(self):
+        description = self.conference.description
+        if self.item:
+            return description + ' _ ' + self.item.title
+        else:
+            return description
 
     class Meta:
         db_table = app_label + '_' + 'media'
@@ -297,13 +301,13 @@ class Student(Model):
     category        = ForeignKey('Category', related_name='student', verbose_name=_('category'))
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     training        = ForeignKey('Training', related_name='student',
-                                 verbose_name='training', blank=True, null=True)
+                                 verbose_name=_('training'), blank=True, null=True)
     procedure       = ForeignKey('Procedure', related_name='student',
-                                 verbose_name='procedure', blank=True, null=True)
+                                 verbose_name=_('procedure'), blank=True, null=True)
     oral_speciality = ForeignKey('Speciality', related_name='student_oral_spe',
-                                 verbose_name='oral speciality', blank=True, null=True)
+                                 verbose_name=_('oral speciality'), blank=True, null=True)
     written_speciality = ForeignKey('Speciality', related_name='student_written_spe',
-                                verbose_name='written speciality', blank=True, null=True)
+                                verbose_name=_('written speciality'), blank=True, null=True)
     oral_1          = CharField(_('oral 1'), max_length=255, blank=True)
     oral_2          = CharField(_('oral 2'), max_length=255, blank=True)
 

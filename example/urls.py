@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     (r'^admin/django/', include(admin.site.urls)),
 
     # Telemeta
-    (r'^telemeta/', include('telemeta.urls')),
+    (r'^', include('telemeta.urls')),
 
     # TeleForma
     (r'^', include('teleforma.urls')),
