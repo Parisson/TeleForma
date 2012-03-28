@@ -154,6 +154,9 @@ TELEMETA_PUBLIC_ACCESS_PERIOD = 51
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/desk/courses'
+
 EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 

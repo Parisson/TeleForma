@@ -63,6 +63,7 @@ alt="Telemeta Powered"/>
  </li>
  {% else %}
   <li><a href="{% url telemeta-home %}" class="blue">{% trans "Home" %}</a></li>
+  <li><a href="{% url telemeta-login %}?next={{ request.path|urlencode }}" class="violet">{% trans "Sign in" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
@@ -81,16 +82,9 @@ alt="Telemeta Powered"/>
  <li><a href="{% url telemeta-collections %}">{% trans "Collections" %}</a></li>
  <li><a href="{% url telemeta-items %}">{% trans "Items" %}</a></li>
  </ul>
- 
  </li>
  
- <li><a href="#admin#" class="violet">{% trans "Admin" %}</a>
- <ul>
- <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
- <li><a href="{% url telemeta-admin-enumerations %}">{% trans "Enumerations" %}</a></li>
- <li><a href="{% url telemeta-instrument-edit %}">{% trans "Instruments" %}</a></li>
- </ul>
- </li>
+ <li><a href="{% url telemeta-admin-general %}" class="violet">{% trans "Admin" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
@@ -105,9 +99,7 @@ alt="Telemeta Powered"/>
     <li><a href="{% url telemeta-logout %}">{% trans "Sign out" %}</a></li>
     </ul>
  </li>
-
- {% else %}
- <li><a href="{% url telemeta-login %}?next={{ request.path|urlencode }}">{% trans "Sign in" %}</a></li>
+ 
  {% endif %}
 
 {% endif %}

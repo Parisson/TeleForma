@@ -518,10 +518,11 @@ color:#FFF;
     border-bottom:2px solid #000000;
     background-color: #000000;
     color: #FFF;
+    width:100%;
 }
     
 #nav ul li {
-    width:100px;
+    width: 100%;
     float:left;
     border-bottom:0px solid #fff;
 }
