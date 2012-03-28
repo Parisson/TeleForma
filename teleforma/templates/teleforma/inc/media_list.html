@@ -1,0 +1,22 @@
+{% load i18n %}
+
+
+    <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Medias"%}</h2>
+    <table class="listing" width="100%">
+    <thead>
+        <tr>
+        <th class="highlight">{% trans "Title" %}</th>
+        <th>{% trans "Description" %}</th>
+        <th>{% trans "Date added" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for media in course.media.all %}
+            <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
+            <td><a href="{% url telemeta-item-detail media.item.public_id %}">{{ media.item.title }}</a></td>
+            <td>{{ media.item.description }}</td>
+            <td>{{ media.date_added }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>

@@ -1,0 +1,21 @@
+{% load i18n %}
+
+    <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Conferences"%}</h2>
+    <table class="listing" width="100%">
+    <thead>
+        <tr>
+        <th class="highlight">{% trans "Session" %}</th>
+        <th>{% trans "Professor" %}</th>
+        <th>{% trans "Date added" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for conference in course.conference.all %}
+            <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
+            <td>{{ conference.session }}</td>
+            <td>{{ conference.professor.user.first_name }} {{ conference.professor.user.last_name }}</td>
+            <td>{{ conference.date_begin }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>

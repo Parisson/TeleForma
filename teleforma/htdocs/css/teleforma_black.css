@@ -168,7 +168,7 @@ a img { border: none; }
 
 #collection_player {
     background: transparent; 
-    /*     background-image: url(../images/grid_bg.png); */
+    /*     background-image: url(../images/grid_bg_2.png); */
 }
 
 #collection_player .title {
@@ -436,7 +436,7 @@ form.login .submit {
     background-color: #000000 ;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
     border-top: .25em solid #000000;
-    padding-left:26px;
+    padding-left:200px;
 }
 
 #menu a, #menu a:visited{
@@ -908,7 +908,7 @@ img.align-left {
 
 #module-set .module {
     border: 1px solid #000;
-    background-image: url(../images/grid_bg.png);
+    background-image: url(../images/grid_bg_2.png);
     padding: 0.3em 0.8em 0.8em 0.8em;
     margin: 3.5em 0em 1.5em 1.5em;
     -moz-border-radius: 8px 8px 8px 8px;
@@ -1269,7 +1269,10 @@ input,textarea{
 .course_title {
     border-bottom:1px solid #6A0307;
     color:#FFFFFF;
-    background-image: url(../images/grid_bg.png);
+    background-image: url(../images/grid_bg_2.png);
+    -moz-border-radius: 8px 8px 8px 8px;
+    -webkit-border-radius: 8px 8px 8px 8px;
+    border-radius: 8px 8px 8px 8px;
     }
 
 #module-set-left {
@@ -1280,7 +1283,7 @@ input,textarea{
     
 #module-set-left .module {
         border: 1px solid #000;
-        background-image: url(../images/grid_bg.png);
+        background-image: url(../images/grid_bg_2.png);
         padding: 0em 0.8em 0em 0.8em;
         margin: 0em 0em 1.5em 0em;
         -moz-border-radius: 8px 8px 8px 8px;

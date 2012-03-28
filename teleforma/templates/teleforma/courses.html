@@ -28,7 +28,7 @@
    <div id="module-set-left" style="width: 30%">
     <div class="module">
     <h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</h3>
-    
+
         <div style="background: white;">
         <ul>
         {% block courses %}
@@ -40,65 +40,36 @@
         </div>
     </div>
    </div>
-    
+
     <div class="desk_center">
     {% block course %}
+
     {% for course in object_list %}
-    
+
         <table class="listing" style="width:100%;margin-top: 1em">
             <tr>
             <td class="course_title" style="font-size: 120%;">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}</td>
             </tr>
         </table>
 
-        <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Documents"%}</h2>
-        <table class="listing" width="100%">
-            <tr>
-            <th class="highlight">{% trans "Title" %}</th>
-            <th>{% trans "Description" %}</th>
-            <th>{% trans "Date added" %}</th>
-            </tr>
-        {% for document in course.document.all %}
-            <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td>{{ document.title }}</td>
-            <td>{{ document.description }}</td>
-            <td>{{ document.date_added }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+        {% block document %}
+        {% with course as course and %}
+        {% include "teleforma/inc/document_list.html" %}
+        {% endwith %}
+        {% endblock %}
 
-    <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Medias"%}</h2>
-    <table class="listing" width="100%">
-        <tr>
-        <th class="highlight">{% trans "Title" %}</th>
-        <th>{% trans "Description" %}</th>
-        <th>{% trans "Date added" %}</th>
-        </tr>
-        {% for media in course.media.all %}
-            <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td><a href="{% url telemeta-item-detail media.item.public_id %}">{{ media.item.title }}</a></td>
-            <td>{{ media.item.description }}</td>
-            <td>{{ media.date_added }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+        {% block media %}
+        {% with course as course and %}
+        {% include "teleforma/inc/media_list.html" %}
+        {% endwith %}
+        {% endblock %}
 
+        {% block conference %}
+        {% with course as course and %}
+        {% include "teleforma/inc/conference_list.html" %}
+        {% endwith %}
+        {% endblock %}
 
-    <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Conferences"%}</h2>
-    <table class="listing" width="100%">
-        <tr>
-        <th class="highlight">{% trans "Session" %}</th>
-        <th>{% trans "Professor" %}</th>
-        <th>{% trans "Date added" %}</th>
-        </tr>
-        {% for conference in course.conference.all %}
-            <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td>{{ conference.session }}</td>
-            <td>{{ conference.professor.user.first_name }} {{ conference.professor.user.last_name }}</td>
-            <td>{{ conference.date_begin }}</td>
-            </tr>
-        {% endfor %}
-    </table>
 
     {% endfor %}
     {% endblock course %}
