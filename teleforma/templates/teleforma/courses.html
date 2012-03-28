@@ -21,31 +21,37 @@
 </div>
 
 <div class="home-description">
-<h1><img src="{% url telemeta-images "playlist_title.png" %}" alt="playlists" style="vertical-align:middle" /> {% trans "My courses" %}</h1>
+<h1><img src="{% url telemeta-images "playlist_title.png" %}" alt="playlists" style="vertical-align:middle" /> {% trans "Bureau" %}</h1>
+<br />
 
-    <div>
-    {% block courses %}
-        <div style="float: left; width: 25%;">
+
+   <div id="module-set-left" style="width: 30%">
+    <div class="module">
+    <h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</h3>
+    
+        <div style="background: white;">
         <ul>
+        {% block courses %}
         {% for course in object_list %}
             <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
         {% endfor %}
+        {% endblock courses %}
         </ul>
-    {% endblock courses %}
+        </div>
     </div>
-
-    <div style="float: left;">
+   </div>
+    
+    <div class="desk_center">
     {% block course %}
     {% for course in object_list %}
     
         <table class="listing" style="width:100%;margin-top: 1em">
             <tr>
-            <td style="border-bottom:1px solid #6A0307;color:#6A0307;font-size: 120%">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}</td>
-            <td colspan="2" style="border-bottom:1px solid #6A0307;color:#6A0307;font-size: 80%; text-align:right"></td>
+            <td class="course_title" style="font-size: 120%;">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}</td>
             </tr>
         </table>
 
-        <h2>{% trans "Documents"%}</h2>
+        <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Documents"%}</h2>
         <table class="listing" width="100%">
             <tr>
             <th class="highlight">{% trans "Title" %}</th>
@@ -61,7 +67,7 @@
         {% endfor %}
         </table>
 
-    <h2>{% trans "Medias"%}</h2>
+    <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Medias"%}</h2>
     <table class="listing" width="100%">
         <tr>
         <th class="highlight">{% trans "Title" %}</th>
@@ -78,7 +84,7 @@
     </table>
 
 
-    <h2>{% trans "Conferences"%}</h2>
+    <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Conferences"%}</h2>
     <table class="listing" width="100%">
         <tr>
         <th class="highlight">{% trans "Session" %}</th>

@@ -84,19 +84,19 @@ a img { border: none; }
     padding: .1em 0;
 }
 #content h1 {
-    color: #6a0307;
+    color: #030250;
     font-weight: bold;
     display:  inline;
     font-size: 120%; 
 }
 #content h3 {
-    color: #6a0307;
+    color: #030250;
     font-weight: bold;
     display:  inline;
 }
 
 #content h2 {
-    color: #6a0307;
+    color: #030250;
 }
 
 #logo a, #logo a:hover { border: none; background: transparent; }
@@ -294,7 +294,7 @@ label.disabled { color: #d7d7d7 }
     position: absolute;
     top: 1.7em;
     left: 35%;
-    background-color: #6a0307;
+    background-color: #030250;
     padding: 0.3em 0em 0.3em 0.3em;
     -moz-border-radius: 8px 8px 8px 8px;
     -webkit-border-radius: 8px 8px 8px 8px;
@@ -341,7 +341,7 @@ label.disabled { color: #d7d7d7 }
     right: 1.1em;
     margin-right: 1em;
     font-size: 0.9em;
-    background-color: #6a0307;
+    background-color: #030250;
     padding: 1em;
     -moz-border-radius: 8px 8px 8px 8px;
     -webkit-border-radius: 8px 8px 8px 8px;
@@ -390,7 +390,7 @@ form.login .submit {
     padding: .5em;
     width: 650px;
     border: none;
-    border: 1px solid #6a0307;
+    border: 1px solid #030250;
     margin-bottom: 1em;
     -moz-border-radius: 8px 8px 8px 8px;
     -webkit-border-radius: 8px 8px 8px 8px;
@@ -433,9 +433,9 @@ form.login .submit {
 
 /* Main navigation bar  (borrowed from Trac) */
 #menu {
-    background-color: #6a0307 ;
+    background-color: #030250 ;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
-    border-top: .25em solid #6a0307;
+    border-top: .25em solid #030250;
     padding-left:26px;
 }
 
@@ -445,7 +445,7 @@ form.login .submit {
     text-decoration:none;
     border-bottom-width:.5em;
     border-bottom-style: solid;
-    background-color: #6a0307;
+    background-color: #030250;
     -webkit-border-top-left-radius:5px 5px;
     moz-border-radius-topleft: 5px 5px;
     border-top-left-radius: 5px 5px;
@@ -458,7 +458,7 @@ form.login .submit {
 }
 #menu a:hover, #menu a.active{
     background-color: #FFF;
-    color: #6a0307;
+    color: #030250;
 }
 
 #menu .darkblue { border-bottom-color: #0f3179; }
@@ -470,7 +470,7 @@ form.login .submit {
 #menu .black { border-bottom-color:  #000000; }
 #menu .red { border-bottom-color:  #DD0000; }
 #menu .violet { border-bottom-color:  #A00020; }
-#menu .origin { border-bottom-color: #6a0307; }
+#menu .origin { border-bottom-color: #030250; }
 
 * html #menu :link, * html #menu :visited { background-position: 1px 0 }
 
@@ -513,10 +513,10 @@ color:#FFF;
     margin:0 0 0 -2px;
     padding:0;
     list-style: none outside none;
-    border-left:2px solid #6a0307;
-    border-right:2px solid #6a0307;
-    border-bottom:2px solid #6a0307;
-    background-color: #6a0307;
+    border-left:2px solid #030250;
+    border-right:2px solid #030250;
+    border-bottom:2px solid #030250;
+    background-color: #030250;
     color: #FFF;
 }
     
@@ -544,19 +544,19 @@ color:#FFF;
     
 #nav ul a:hover {
     background-color: #FFF ;
-    color: #6a0307 ;
+    color: #030250 ;
 }
 
 #nav ul a:active {
     background-color: #FFF;
-    color: #6a0307 ;
+    color: #030250 ;
 }
 
 
 
 /* Footer (borrowed from Trac) */
 #footer {
-    background: #6a0307;
+    background: #030250;
     clear: both;
     color: #FFF;
     font-size: 10px;
@@ -714,7 +714,7 @@ dl.dublincore dd.caption {
     font-size: 1em;
     line-height: 1.4em;
     border-bottom: 1px dotted #aaa;
-    color: #6a0307;
+    color: #030250;
 }
 .with-rightcol .extraInfos h4 {
     margin-right: 395px;
@@ -723,7 +723,7 @@ dl.dublincore dd.caption {
 .extraInfos h4 a {
     position: relative;
     display: block;
-    color: #6a0307 !important;
+    color: #030250 !important;
     text-decoration: none;
     margin: 0;
     background: #fff url(more.png) no-repeat left top;
@@ -736,7 +736,7 @@ dl.dublincore dd.caption {
 .extraInfos h4 a:hover {
     background-color: transparent;
     border-bottom: none;
-    color: #6a0307 !important;
+    color: #030250 !important;
     text-decoration:none;
 }
 .extraInfos .folded h4 {
@@ -871,7 +871,7 @@ table td.error {
 }
 
 .rst-content h1 {
-    color: #6a0307;
+    color: #030250;
 }
 
 .rst-content img.align-left {
@@ -1262,5 +1262,5 @@ input,textarea{
 }
 
 .related_media {
-    border-top: 1px dotted #6a0307;
+    border-top: 1px dotted #030250;
 }

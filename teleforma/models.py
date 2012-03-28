@@ -231,7 +231,7 @@ class Media(MediaBase):
     is_live         = BooleanField(_('is live'))
 
     def __unicode__(self):
-        description = self.conference.description
+        description = self.course.title
         if self.item:
             return description + ' _ ' + self.item.title
         else:

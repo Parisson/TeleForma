@@ -40,7 +40,7 @@ from teleforma.models import *
 from teleforma.views import *
 from jsonrpc import jsonrpc_site
 
-htdocs = os.path.dirname(__file__) + '/htdocs'
+htdocs_forma = os.path.dirname(__file__) + '/htdocs'
 
 urlpatterns = patterns('',
 
@@ -51,14 +51,14 @@ urlpatterns = patterns('',
     url(r'^messages/$', ListView.as_view(model=Course, template_name='teleforma/courses.html'), name="teleforma-messages"),
 
 # CSS+Images (FIXME: for developement only)
-    url(r'^css/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs+'/css'},
+    url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': htdocs_forma+'/css'},
         name="teleforma-css"),
     url(r'images/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs+'/images'},
+        {'document_root': htdocs_forma+'/images'},
         name="teleforma-images"),
     url(r'^js/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs+'/js'},
+        {'document_root': htdocs_forma+'/js'},
         name="teleforma-js"),
 
 # JSON RPC
