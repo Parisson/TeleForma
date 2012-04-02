@@ -42,6 +42,7 @@ admin.site.register(User, UserProfileAdmin)
 admin.site.register(Training, TrainingAdmin)
 admin.site.register(Procedure)
 admin.site.register(Speciality)
+admin.site.register(CourseType)
 
 
 

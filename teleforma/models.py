@@ -61,7 +61,7 @@ class Organization(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -74,7 +74,7 @@ class Department(Model):
     description     = CharField(_('description'), max_length=255, blank=True)
     organization    = ForeignKey('Organization', related_name='department', verbose_name=_('organization'))
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -87,7 +87,7 @@ class Category(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -95,6 +95,18 @@ class Category(Model):
         verbose_name = _('category')
         verbose_name_plural = _('categories')
 
+class CourseType(Model):
+
+    name            = CharField(_('name'), max_length=255)
+    description     = CharField(_('description'), max_length=255, blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'course_type'
+        verbose_name = _('course type')
+        verbose_name_plural = _('course types')
 
 class Course(Model):
 
@@ -102,9 +114,10 @@ class Course(Model):
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     category        = ForeignKey('Category', related_name='course', verbose_name=_('category'))
+    type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.department.name + ' - '  + self.category.name + ' - ' + self.title
 
     class Meta:
@@ -118,7 +131,7 @@ class Professor(Model):
     courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.user.username
 
     class Meta:
@@ -132,7 +145,7 @@ class Room(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.organization.name + ' - ' + self.name
 
     class Meta:
@@ -158,7 +171,7 @@ class Conference(Model):
                 self.professor.user.first_name +  ' - ' + \
                 self.professor.user.last_name +  ' - ' + str(self.date_begin)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.description
 
     class Meta:
@@ -208,7 +221,7 @@ class Document(MediaBase):
         if self.file:
             self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
-    def __str__(self):
+    def __unicode__(self):
         if self.title and not re.match('^ *N *$', self.title):
             return  self.title
         else:
@@ -248,7 +261,7 @@ class IEJ(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -267,7 +280,7 @@ class Training(Model):
     obligation      = BooleanField(_('obligation'))
 
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -280,7 +293,7 @@ class Procedure(Model):
     name           = CharField(_('name'), max_length=255, blank=True)
     code           = CharField(_('code'), max_length=255)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -293,7 +306,7 @@ class Speciality(Model):
     name           = CharField(_('name'), max_length=255, blank=True)
     code           = CharField(_('code'), max_length=255)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -306,7 +319,7 @@ class Oral(Model):
     name           = CharField(_('name'), max_length=255, blank=True)
     code           = CharField(_('code'), max_length=255)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -332,7 +345,7 @@ class Student(Model):
     oral_2          = ForeignKey('Oral', related_name='oral_2',
                                  verbose_name=_('oral 1'), blank=True, null=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.user.username
 
     class Meta:

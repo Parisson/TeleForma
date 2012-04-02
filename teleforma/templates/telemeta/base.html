@@ -84,7 +84,11 @@ alt="Telemeta Powered"/>-->
  </ul>
  </li>
 
- <li><a href="{% url telemeta-admin-general %}" class="violet">{% trans "Admin" %}</a></li>
+ <li><a href="#admin#" class="violet">{% trans "Admin" %}</a>
+  <ul>
+    <li><a href="{% url telemeta-admin-general %}">{% trans "Generale" %}</a></li>
+  </ul>
+ </li>
  {% endif %}
 
  {% if user.is_authenticated %}
