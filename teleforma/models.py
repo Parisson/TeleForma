@@ -327,9 +327,9 @@ class Student(Model):
                                  verbose_name=_('oral speciality'), blank=True, null=True)
     written_speciality = ForeignKey('Speciality', related_name='student_written_spe',
                                 verbose_name=_('written speciality'), blank=True, null=True)
-    oral_1          = ForeignKey('Oral', related_name='student_oral_1',
+    oral_1          = ForeignKey('Oral', related_name='oral_1',
                                  verbose_name=_('oral 1'), blank=True, null=True)
-    oral_2          = ForeignKey('Oral', related_name='student_oral_2',
+    oral_2          = ForeignKey('Oral', related_name='oral_2',
                                  verbose_name=_('oral 1'), blank=True, null=True)
 
     def __str__(self):

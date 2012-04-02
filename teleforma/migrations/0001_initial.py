@@ -36,18 +36,18 @@ class Migration(SchemaMigration):
         # Adding model 'Course'
         db.create_table('teleforma_course', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('public_id', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('department', self.gf('django.db.models.fields.related.ForeignKey')(related_name='course', to=orm['teleforma.Department'])),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
             ('category', self.gf('django.db.models.fields.related.ForeignKey')(related_name='course', to=orm['teleforma.Category'])),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=255)),
         ))
         db.send_create_signal('teleforma', ['Course'])
 
         # Adding model 'Professor'
         db.create_table('teleforma_professor', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='professor', to=orm['auth.User'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='professor', unique=True, to=orm['auth.User'])),
         ))
         db.send_create_signal('teleforma', ['Professor'])
 
@@ -59,16 +59,58 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('teleforma_professor_courses', ['professor_id', 'course_id'])
 
+        # Adding model 'Room'
+        db.create_table('teleforma_room', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('organization', self.gf('django.db.models.fields.related.ForeignKey')(related_name='room', to=orm['teleforma.Organization'])),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('description', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+        ))
+        db.send_create_signal('teleforma', ['Room'])
+
         # Adding model 'Conference'
         db.create_table('teleforma_conference', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
-            ('professor', self.gf('django.db.models.fields.related.ForeignKey')(related_name='conference', to=orm['teleforma.Professor'])),
             ('course', self.gf('django.db.models.fields.related.ForeignKey')(related_name='conference', to=orm['teleforma.Course'])),
+            ('professor', self.gf('django.db.models.fields.related.ForeignKey')(related_name='conference', to=orm['teleforma.Professor'])),
             ('session', self.gf('django.db.models.fields.CharField')(default='1', max_length=16)),
+            ('room', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='conference', null=True, to=orm['teleforma.Room'])),
+            ('comment', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('date_begin', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('date_end', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
         ))
         db.send_create_signal('teleforma', ['Conference'])
+
+        # Adding model 'Document'
+        db.create_table('teleforma_document', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('credits', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('is_published', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('description', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('course', self.gf('django.db.models.fields.related.ForeignKey')(related_name='document', to=orm['teleforma.Course'])),
+            ('conference', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='document', null=True, to=orm['teleforma.Conference'])),
+            ('is_annal', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=100, db_column='filename', blank=True)),
+        ))
+        db.send_create_signal('teleforma', ['Document'])
+
+        # Adding model 'Media'
+        db.create_table('teleforma_media', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('credits', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('is_published', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('course', self.gf('django.db.models.fields.related.ForeignKey')(related_name='media', to=orm['teleforma.Course'])),
+            ('conference', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='media', null=True, to=orm['teleforma.Conference'])),
+            ('item', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='media', null=True, to=orm['telemeta.MediaItem'])),
+            ('is_live', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('teleforma', ['Media'])
 
         # Adding model 'IEJ'
         db.create_table('teleforma_iej', (
@@ -78,53 +120,77 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('teleforma', ['IEJ'])
 
+        # Adding model 'Training'
+        db.create_table('teleforma_training', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('synthesis_note', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('obligation', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('teleforma', ['Training'])
+
+        # Adding M2M table for field courses on 'Training'
+        db.create_table('teleforma_training_courses', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('training', models.ForeignKey(orm['teleforma.training'], null=False)),
+            ('course', models.ForeignKey(orm['teleforma.course'], null=False))
+        ))
+        db.create_unique('teleforma_training_courses', ['training_id', 'course_id'])
+
+        # Adding model 'Procedure'
+        db.create_table('teleforma_procedure', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=255)),
+        ))
+        db.send_create_signal('teleforma', ['Procedure'])
+
+        # Adding model 'Speciality'
+        db.create_table('teleforma_speciality', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=255)),
+        ))
+        db.send_create_signal('teleforma', ['Speciality'])
+
+        # Adding model 'Oral'
+        db.create_table('teleforma_oral', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(max_length=255)),
+        ))
+        db.send_create_signal('teleforma', ['Oral'])
+
         # Adding model 'Student'
         db.create_table('teleforma_student', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='student', to=orm['auth.User'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='student', unique=True, to=orm['auth.User'])),
             ('category', self.gf('django.db.models.fields.related.ForeignKey')(related_name='student', to=orm['teleforma.Category'])),
             ('iej', self.gf('django.db.models.fields.related.ForeignKey')(related_name='student', to=orm['teleforma.IEJ'])),
+            ('training', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='student', null=True, to=orm['teleforma.Training'])),
+            ('procedure', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='student', null=True, to=orm['teleforma.Procedure'])),
+            ('oral_speciality', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='student_oral_spe', null=True, to=orm['teleforma.Speciality'])),
+            ('written_speciality', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='student_written_spe', null=True, to=orm['teleforma.Speciality'])),
+            ('oral_1', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='oral_1', null=True, to=orm['teleforma.Oral'])),
+            ('oral_2', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='oral_2', null=True, to=orm['teleforma.Oral'])),
         ))
         db.send_create_signal('teleforma', ['Student'])
 
-        # Adding M2M table for field courses on 'Student'
-        db.create_table('teleforma_student_courses', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('student', models.ForeignKey(orm['teleforma.student'], null=False)),
-            ('course', models.ForeignKey(orm['teleforma.course'], null=False))
-        ))
-        db.create_unique('teleforma_student_courses', ['student_id', 'course_id'])
-
-        # Adding model 'Document'
-        db.create_table('teleforma_document', (
+        # Adding model 'Profile'
+        db.create_table('teleforma_profiles', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('mime_type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
-            ('credits', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('is_published', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('course', self.gf('django.db.models.fields.related.ForeignKey')(related_name='document', to=orm['teleforma.Course'])),
-            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=100, db_column='filename')),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='profile', unique=True, to=orm['auth.User'])),
+            ('address', self.gf('django.db.models.fields.TextField')()),
+            ('postal_code', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('city', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('country', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('language', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('telephone', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('expiration_date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('init_password', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal('teleforma', ['Document'])
-
-        # Adding model 'Media'
-        db.create_table('teleforma_media', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('mime_type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
-            ('credits', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('is_published', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('course', self.gf('django.db.models.fields.related.ForeignKey')(related_name='media', to=orm['teleforma.Course'])),
-            ('item', self.gf('django.db.models.fields.related.ForeignKey')(related_name='media', to=orm['telemeta.MediaItem'])),
-        ))
-        db.send_create_signal('teleforma', ['Media'])
+        db.send_create_signal('teleforma', ['Profile'])
 
     def backwards(self, orm):
         # Deleting model 'Organization'
@@ -145,23 +211,41 @@ class Migration(SchemaMigration):
         # Removing M2M table for field courses on 'Professor'
         db.delete_table('teleforma_professor_courses')
 
+        # Deleting model 'Room'
+        db.delete_table('teleforma_room')
+
         # Deleting model 'Conference'
         db.delete_table('teleforma_conference')
-
-        # Deleting model 'IEJ'
-        db.delete_table('teleforma_iej')
-
-        # Deleting model 'Student'
-        db.delete_table('teleforma_student')
-
-        # Removing M2M table for field courses on 'Student'
-        db.delete_table('teleforma_student_courses')
 
         # Deleting model 'Document'
         db.delete_table('teleforma_document')
 
         # Deleting model 'Media'
         db.delete_table('teleforma_media')
+
+        # Deleting model 'IEJ'
+        db.delete_table('teleforma_iej')
+
+        # Deleting model 'Training'
+        db.delete_table('teleforma_training')
+
+        # Removing M2M table for field courses on 'Training'
+        db.delete_table('teleforma_training_courses')
+
+        # Deleting model 'Procedure'
+        db.delete_table('teleforma_procedure')
+
+        # Deleting model 'Speciality'
+        db.delete_table('teleforma_speciality')
+
+        # Deleting model 'Oral'
+        db.delete_table('teleforma_oral')
+
+        # Deleting model 'Student'
+        db.delete_table('teleforma_student')
+
+        # Deleting model 'Profile'
+        db.delete_table('teleforma_profiles')
 
     models = {
         'auth.group': {
@@ -208,20 +292,22 @@ class Migration(SchemaMigration):
         },
         'teleforma.conference': {
             'Meta': {'object_name': 'Conference'},
+            'comment': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'conference'", 'to': "orm['teleforma.Course']"}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'date_begin': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'date_end': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'professor': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'conference'", 'to': "orm['teleforma.Professor']"}),
-            'session': ('django.db.models.fields.CharField', [], {'default': "'1'", 'max_length': '16'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'room': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'conference'", 'null': 'True', 'to': "orm['teleforma.Room']"}),
+            'session': ('django.db.models.fields.CharField', [], {'default': "'1'", 'max_length': '16'})
         },
         'teleforma.course': {
             'Meta': {'object_name': 'Course'},
             'category': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'course'", 'to': "orm['teleforma.Category']"}),
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'department': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'course'", 'to': "orm['teleforma.Department']"}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'public_id': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'teleforma.department': {
@@ -233,17 +319,18 @@ class Migration(SchemaMigration):
         },
         'teleforma.document': {
             'Meta': {'object_name': 'Document'},
-            'code': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'conference': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'document'", 'null': 'True', 'to': "orm['teleforma.Conference']"}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'document'", 'to': "orm['teleforma.Course']"}),
-            'credits': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'credits': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'filename'"}),
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'db_column': "'filename'", 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_annal': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'mime_type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         'teleforma.iej': {
             'Meta': {'object_name': 'IEJ'},
@@ -253,16 +340,21 @@ class Migration(SchemaMigration):
         },
         'teleforma.media': {
             'Meta': {'object_name': 'Media'},
+            'conference': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'media'", 'null': 'True', 'to': "orm['teleforma.Conference']"}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'media'", 'to': "orm['teleforma.Course']"}),
-            'credits': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'credits': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_live': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_published': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'item': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'media'", 'to': "orm['telemeta.MediaItem']"}),
-            'mime_type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'item': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'media'", 'null': 'True', 'to': "orm['telemeta.MediaItem']"})
+        },
+        'teleforma.oral': {
+            'Meta': {'object_name': 'Oral'},
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         'teleforma.organization': {
             'Meta': {'object_name': 'Organization'},
@@ -270,19 +362,65 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
+        'teleforma.procedure': {
+            'Meta': {'object_name': 'Procedure'},
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+        },
         'teleforma.professor': {
             'Meta': {'object_name': 'Professor'},
             'courses': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'professor'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.Course']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'professor'", 'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'professor'", 'unique': 'True', 'to': "orm['auth.User']"})
+        },
+        'teleforma.profile': {
+            'Meta': {'object_name': 'Profile', 'db_table': "'teleforma_profiles'"},
+            'address': ('django.db.models.fields.TextField', [], {}),
+            'city': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'country': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'expiration_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'init_password': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'language': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'postal_code': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'telephone': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'profile'", 'unique': 'True', 'to': "orm['auth.User']"})
+        },
+        'teleforma.room': {
+            'Meta': {'object_name': 'Room'},
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'organization': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'room'", 'to': "orm['teleforma.Organization']"})
+        },
+        'teleforma.speciality': {
+            'Meta': {'object_name': 'Speciality'},
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         'teleforma.student': {
             'Meta': {'object_name': 'Student'},
             'category': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'student'", 'to': "orm['teleforma.Category']"}),
-            'courses': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'student'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.Course']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'iej': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'student'", 'to': "orm['teleforma.IEJ']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'student'", 'to': "orm['auth.User']"})
+            'oral_1': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'oral_1'", 'null': 'True', 'to': "orm['teleforma.Oral']"}),
+            'oral_2': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'oral_2'", 'null': 'True', 'to': "orm['teleforma.Oral']"}),
+            'oral_speciality': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'student_oral_spe'", 'null': 'True', 'to': "orm['teleforma.Speciality']"}),
+            'procedure': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'student'", 'null': 'True', 'to': "orm['teleforma.Procedure']"}),
+            'training': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'student'", 'null': 'True', 'to': "orm['teleforma.Training']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'student'", 'unique': 'True', 'to': "orm['auth.User']"}),
+            'written_speciality': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'student_written_spe'", 'null': 'True', 'to': "orm['teleforma.Speciality']"})
+        },
+        'teleforma.training': {
+            'Meta': {'object_name': 'Training'},
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'courses': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'training'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.Course']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'obligation': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'synthesis_note': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         'telemeta.acquisitionmode': {
             'Meta': {'ordering': "['value']", 'object_name': 'AcquisitionMode', 'db_table': "'acquisition_modes'"},
@@ -401,7 +539,7 @@ class Migration(SchemaMigration):
             'generic_style': ('telemeta.models.core.WeakForeignKey', [], {'default': 'None', 'related_name': "'items'", 'null': 'True', 'blank': 'True', 'to': "orm['telemeta.GenericStyle']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'language': ('telemeta.models.core.CharField', [], {'default': "''", 'max_length': '250', 'blank': 'True'}),
-            'language_iso': ('telemeta.models.core.ForeignKey', [], {'default': 'None', 'related_name': "'items'", 'null': 'True', 'blank': 'True', 'to': "orm['telemeta.Language']"}),
+            'language_iso': ('telemeta.models.core.ForeignKey', [], {'related_name': "'items'", 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': "orm['telemeta.Language']", 'blank': 'True', 'null': 'True'}),
             'location': ('telemeta.models.core.WeakForeignKey', [], {'default': 'None', 'to': "orm['telemeta.Location']", 'null': 'True', 'blank': 'True'}),
             'location_comment': ('telemeta.models.core.CharField', [], {'default': "''", 'max_length': '250', 'blank': 'True'}),
             'moda_execut': ('telemeta.models.core.CharField', [], {'default': "''", 'max_length': '250', 'blank': 'True'}),

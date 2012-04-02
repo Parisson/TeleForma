@@ -28,7 +28,6 @@ class TrainingAdmin(admin.ModelAdmin):
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course
-    exclude = ['public_id']
 
 admin.site.register(Organization)
 admin.site.register(Department)

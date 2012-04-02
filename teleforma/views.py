@@ -40,7 +40,6 @@ class CourseView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         context['courses'] = Course.objects.all()
-        context['searches'] = Search.objects.filter(username=self.request.user)
         return context
 
 class CoursesView(ListView):
@@ -51,7 +50,6 @@ class CoursesView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['courses'] = Course.objects.all()
-        context['searches'] = Search.objects.filter(username=self.request.user)
         return context
 
 class MediaView(DetailView):
@@ -67,5 +65,4 @@ class MediaView(DetailView):
         context['mime_type'] = view.item_analyze(media.item)
         context['course'] = media.course
         context['item'] = media.item
-        context['searches'] = Search.objects.filter(username=self.request.user)
         return context
