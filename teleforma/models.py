@@ -102,7 +102,7 @@ class Course(Model):
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     category        = ForeignKey('Category', related_name='course', verbose_name=_('category'))
-    public_id       = CharField(_('public_id'), max_length=255, blank=True)
+    code            = CharField(_('code'), max_length=255)
 
     def __str__(self):
         return self.department.name + ' - '  + self.category.name + ' - ' + self.title
@@ -259,9 +259,13 @@ class IEJ(Model):
 
 class Training(Model):
 
+    code            = CharField(_('code'), max_length=255)
     name            = CharField(_('name'), max_length=255, blank=True)
     courses         = ManyToManyField('Course', related_name="training", verbose_name=_('courses'),
                                         blank=True, null=True)
+    synthesis_note  = BooleanField(_('synthesis note'))
+    obligation      = BooleanField(_('obligation'))
+
 
     def __str__(self):
         return self.name
@@ -274,6 +278,7 @@ class Training(Model):
 class Procedure(Model):
 
     name           = CharField(_('name'), max_length=255, blank=True)
+    code           = CharField(_('code'), max_length=255)
 
     def __str__(self):
         return self.name
@@ -286,6 +291,7 @@ class Procedure(Model):
 class Speciality(Model):
 
     name           = CharField(_('name'), max_length=255, blank=True)
+    code           = CharField(_('code'), max_length=255)
 
     def __str__(self):
         return self.name
@@ -293,6 +299,19 @@ class Speciality(Model):
     class Meta:
         db_table = app_label + '_' + 'speciality'
         verbose_name = _('speciality')
+
+
+class Oral(Model):
+
+    name           = CharField(_('name'), max_length=255, blank=True)
+    code           = CharField(_('code'), max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'oral'
+        verbose_name = _('oral')
 
 
 class Student(Model):
@@ -308,9 +327,10 @@ class Student(Model):
                                  verbose_name=_('oral speciality'), blank=True, null=True)
     written_speciality = ForeignKey('Speciality', related_name='student_written_spe',
                                 verbose_name=_('written speciality'), blank=True, null=True)
-    oral_1          = CharField(_('oral 1'), max_length=255, blank=True)
-    oral_2          = CharField(_('oral 2'), max_length=255, blank=True)
-
+    oral_1          = ForeignKey('Oral', related_name='student_oral_1',
+                                 verbose_name=_('oral 1'), blank=True, null=True)
+    oral_2          = ForeignKey('Oral', related_name='student_oral_2',
+                                 verbose_name=_('oral 1'), blank=True, null=True)
 
     def __str__(self):
         return self.user.username

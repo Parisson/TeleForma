@@ -107,6 +107,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'example.urls'
@@ -132,6 +133,8 @@ INSTALLED_APPS = (
     'teleforma',
     'sorl.thumbnail',
     'django_extensions',
+    'pagination',
+    'postman',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -160,3 +163,4 @@ LOGIN_REDIRECT_URL = '/desk/courses'
 EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 
+POSTMAN_AUTO_MODERATE_AS=True

@@ -44,11 +44,9 @@ htdocs_forma = os.path.dirname(__file__) + '/htdocs'
 
 urlpatterns = patterns('',
 
-    url(r'^desk/courses/$', ListView.as_view(model=Course, template_name='teleforma/courses.html'), name="teleforma-courses"),
-
+    url(r'^desk/courses/$', CoursesView.as_view(), name="teleforma-courses"),
     url(r'^desk/courses/(?P<pk>.*)$', CourseView.as_view(), name="teleforma-course-detail"),
-
-    url(r'^messages/$', ListView.as_view(model=Course, template_name='teleforma/courses.html'), name="teleforma-messages"),
+    url(r'^desk/medias/(?P<pk>.*)$', MediaView.as_view(), name="teleforma-media-detail"),
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',

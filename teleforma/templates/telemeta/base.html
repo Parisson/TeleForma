@@ -67,14 +67,14 @@ alt="Telemeta Powered"/>-->
  {% endif %}
 
  {% if user.is_authenticated %}
- <li><a href="{% url teleforma-messages %}" class="green">{% trans "Messages" %}</a></li>
+ <li><a href="/messages" class="green">{% trans "Messages" %}</a></li>
 
  <li><a href="{% url telemeta-users %}" class="yellow">{% trans "Users" %}</a></li>
-  
+
  <li><a href="{% url telemeta-search-criteria %}" class="orange">{% trans "Advanced search" %}</a></li>
 
  {% if user.is_staff %}
- 
+
  <li><a href="#archives#" class="red">{% trans "Archives" %}</a>
  <ul>
  <li><a href="{% url telemeta-fonds %}">{% trans "Fonds" %}</a></li>
@@ -83,7 +83,7 @@ alt="Telemeta Powered"/>-->
  <li><a href="{% url telemeta-items %}">{% trans "Items" %}</a></li>
  </ul>
  </li>
- 
+
  <li><a href="{% url telemeta-admin-general %}" class="violet">{% trans "Admin" %}</a></li>
  {% endif %}
 
@@ -99,7 +99,7 @@ alt="Telemeta Powered"/>-->
     <li><a href="{% url telemeta-logout %}">{% trans "Sign out" %}</a></li>
     </ul>
  </li>
- 
+
  {% endif %}
 
 {% endif %}
@@ -133,7 +133,7 @@ alt="Telemeta Powered"/>-->
  <table width="100%">
   <tr>
    <td>
-    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{% url telemeta-images "logo_mini_2.png" %}" 
+    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{% url telemeta-images "logo_mini_2.png" %}"
    alt="Telemeta Powered"/></a>
     <p class="left">
     {% trans "Powered by" %} <a href="{% telemeta_url %}" target="_blank"><strong>Telemeta {% telemeta_version %}</strong></a><br />

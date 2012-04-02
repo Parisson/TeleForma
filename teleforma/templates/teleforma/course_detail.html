@@ -9,12 +9,10 @@
 
 {% block course %}
 
-<table class="listing" style="width:100%;margin-top: 1em">
-<tr>
-<td class="course_title" style="font-size: 120%;">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}</td>
-</tr>
-</table>
+<div class="course">
 
+<div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
+</div>
 
 {% block document %}
 {% with course as course and %}
@@ -34,5 +32,5 @@
 {% endwith %}
 {% endblock %}
 
-
+</div>
 {% endblock course %}
