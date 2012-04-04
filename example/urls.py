@@ -16,18 +16,10 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    (r'^admin/django/', include(admin.site.urls)),
-
-    # Telemeta
-    (r'^', include('telemeta.urls')),
+    url(r'^admin/django/', include(admin.site.urls)),
 
     # TeleForma
     (r'^', include('teleforma.urls')),
-
-    # Postman
-    (r'^messages/', include('postman.urls')),
 
     # Languages
     (r'^i18n/', include('django.conf.urls.i18n')),

@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'pagination',
     'postman',
+    'private_files',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -167,3 +168,4 @@ DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 
 POSTMAN_AUTO_MODERATE_AS=True
 
+FILE_PROTECTION_METHOD = 'basic'

@@ -44,11 +44,18 @@ htdocs_forma = os.path.dirname(__file__) + '/htdocs'
 
 urlpatterns = patterns('',
 
+    # Telemeta
+    url(r'^', include('telemeta.urls')),
+
     url(r'^desk/courses/$', CoursesView.as_view(), name="teleforma-courses"),
     url(r'^desk/courses/(?P<pk>.*)$', CourseView.as_view(), name="teleforma-course-detail"),
     url(r'^desk/medias/(?P<pk>.*)$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/documents/(?P<pk>.*)/download/', document_download, name="teleforma-document-download"),
     url(r'^desk/documents/(?P<pk>.*)/view/', document_view, name="teleforma-document-view"),
+
+    # Postman
+    url(r'^messages/', include('postman.urls')),
+
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
@@ -63,5 +70,8 @@ urlpatterns = patterns('',
 
 # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
+
+    url(r'^private_files/', include('private_files.urls')),
+
 
 )
