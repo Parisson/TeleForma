@@ -6,19 +6,8 @@
 
 
 {% block content %}
-<div id="module-set" style="width: 33%">
-    {% block module_all_revisions %}
-    {% with revisions as revisions and "All last changes" as title %}
-    {% include "telemeta/inc/module_revisions.html" %}
-    {% endwith %}
-    {% endblock %}
-</div>
 
 <div class="home-description">
-<h1><img src="{% url telemeta-images "playlist_title.png" %}" alt="playlists" style="vertical-align:middle" /> {% trans "Bureau" %}</h1>
-<br />
-
-
    <div id="module-set-left" style="width: 30%">
     <div class="module">
     <h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</h3>
@@ -60,6 +49,7 @@
         {% include "teleforma/inc/conference_list.html" %}
         {% endwith %}
         {% endblock %}
+
       </div>
 
     {% endfor %}

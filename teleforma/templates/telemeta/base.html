@@ -1,6 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 {% load i18n %}
 {% load telemeta_utils %}
+
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
@@ -63,11 +64,11 @@ alt="Telemeta Powered"/>-->
  </li>
  {% else %}
   <li><a href="{% url telemeta-home %}" class="blue">{% trans "Home" %}</a></li>
-  <li><a href="{% url telemeta-login %}?next={{ request.path|urlencode }}" class="violet">{% trans "Sign in" %}</a></li>
+  <li><a href="{% url telemeta-login %}" class="violet">{% trans "Sign in" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
- <li><a href="/messages" class="green">{% trans "Messages" %}</a></li>
+ <li><a href="/messages" class="green">{% trans "Messages" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
 
  <li><a href="{% url telemeta-users %}" class="yellow">{% trans "Users" %}</a></li>
 
@@ -86,7 +87,7 @@ alt="Telemeta Powered"/>-->
 
  <li><a href="#admin#" class="violet">{% trans "Admin" %}</a>
   <ul>
-    <li><a href="{% url telemeta-admin-general %}">{% trans "Generale" %}</a></li>
+    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
   </ul>
  </li>
  {% endif %}
@@ -115,14 +116,15 @@ alt="Telemeta Powered"/>-->
 </div>
 {% endblock header %}
 
-{% block postman_menu %}
-{% endblock postman_menu %}
-
 <div id="content">
     <table id="content_header"><tr>
             <td class="leftcol"><h1>{% block title %}{% endblock %}</h1></td>
             <td class="rightcol">{% block title_buttons %}{% endblock %}</td>
     </tr></table>
+
+{% block postman_menu %}
+{% endblock postman_menu %}
+
 {% block content %}{% endblock %}
 <div class="nett"></div>
 {% block delete %}{% endblock %}

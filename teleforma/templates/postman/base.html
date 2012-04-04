@@ -1,20 +1,29 @@
-{% extends "telemeta/base.html" %}
-{% load i18n %}{% load postman_tags %}
+{% extends "teleforma/base.html" %}
+{% load i18n %}
+{% load postman_tags %}
 
-{% block title %}
-<img src="{% url telemeta-images "item.png" %}" alt="item" style="vertical-align:middle" />
-{% trans "Messages"%}
-{% endblock %}
+{% block postman_menu %}
 
+<div id="module-set-left" style="width: 20%;">
 
+<div class="module">
+<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "Folders" %}</h3>
 
-{% block title_buttons %}
-<div id="postman_menu" style="padding-left: 20px;">
+<div style="background: white;">
 {% postman_unread as unread_count %}
-<a href="{% url postman_inbox %}" class="component_icon button icon_edit">{% trans "Inbox" %}{% if unread_count %} <strong>({{ unread_count }})</strong>{% endif %}</a></li>
-<a href="{% url postman_sent %}" class="component_icon button icon_edit">{% trans "Sent Messages" %}</a>
-<a href="{% url postman_write %}" class="component_icon button icon_edit">{% trans "Write" %}</a>
-<a href="{% url postman_archives %}" class="component_icon button icon_edit">{% trans "Archives" %}</a>
-<a href="{% url postman_trash %}" class="component_icon button icon_edit">{% trans "Trash" %}</a>
+<ul>
+<li><a href="{% url postman_inbox %}">{% trans "Inbox" %}{% if unread_count %} <strong>({{ unread_count }})</strong>{% endif %}</a></li>
+<li><a href="{% url postman_sent %}">{% trans "Sent Messages" %}</a></li>
+<li><a href="{% url postman_archives %}">{% trans "Archives" %}</a></li>
+<li><a href="{% url postman_trash %}">{% trans "Trash" %}</a></li>
+</ul>
 </div>
-{% endblock %}
+</div>
+<div id="pm_write">
+<a href="{% url postman_write %}" class="component_icon button icon_edit">{% trans "Write" %}</a>
+</div>
+</div>
+
+
+
+{% endblock postman_menu %}

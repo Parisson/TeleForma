@@ -29,6 +29,10 @@ class TrainingAdmin(admin.ModelAdmin):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
 
+class ProfessorAdmin(admin.ModelAdmin):
+    model = Professor
+    filter_horizontal = ['courses']
+
 admin.site.register(Organization)
 admin.site.register(Department)
 admin.site.register(Category)
@@ -43,6 +47,8 @@ admin.site.register(Training, TrainingAdmin)
 admin.site.register(Procedure)
 admin.site.register(Speciality)
 admin.site.register(CourseType)
+admin.site.register(Oral)
+admin.site.register(Professor, ProfessorAdmin)
 
 
 

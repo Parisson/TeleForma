@@ -1,5 +1,6 @@
 {% load i18n %}
 
+<div class="course_content">
 <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Documents"%}</h2>
 <table class="listing" width="100%">
     <thead>
@@ -12,10 +13,11 @@
     <tbody>
         {% for document in course.document.all %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-        <td>{{ document.title }}</td>
+        <td><a href="{% url teleforma-document-view document.id %}">{{ document.title }}</a></td>
         <td>{{ document.description }}</td>
         <td>{{ document.date_added }}</td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+</div>

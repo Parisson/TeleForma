@@ -105,8 +105,7 @@ class CourseType(Model):
 
     class Meta:
         db_table = app_label + '_' + 'course_type'
-        verbose_name = _('course type')
-        verbose_name_plural = _('course types')
+        verbose_name = _('type')
 
 class Course(Model):
 
@@ -118,7 +117,7 @@ class Course(Model):
     code            = CharField(_('code'), max_length=255)
 
     def __unicode__(self):
-        return self.department.name + ' - '  + self.category.name + ' - ' + self.title
+        return ' - '.join([self.department.name, self.category.name, self.title, self.type.name])
 
     class Meta:
         db_table = app_label + '_' + 'course'
@@ -167,9 +166,9 @@ class Conference(Model):
 
     @property
     def description(self):
-        return self.course.department.name + ' - ' + self.course.title + ' - ' + \
-                self.professor.user.first_name +  ' - ' + \
-                self.professor.user.last_name +  ' - ' + str(self.date_begin)
+        return ' - '.join([self.course.department.name, self.course.title, self.course.type.name,
+                           self.session, self.professor.user.first_name, self.professor.user.last_name,
+                           str(self.date_begin)])
 
     def __unicode__(self):
         return self.description
@@ -222,10 +221,7 @@ class Document(MediaBase):
             self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
     def __unicode__(self):
-        if self.title and not re.match('^ *N *$', self.title):
-            return  self.title
-        else:
-            return  unicode(self.title)
+        return  ' - '.join([self.title, unicode(self.course)])
 
     class Meta:
         db_table = app_label + '_' + 'document'

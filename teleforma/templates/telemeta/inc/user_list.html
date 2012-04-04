@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+  <table class="listing" width="100%">
+   <thead>
+    <tr><th>{% trans "User"%}</th>
+    <th>{% trans "First Name"%}</th>
+    <th>{% trans "Last Name"%}</th>
+    <th>{% trans "Messages"%}</th>
+    <th>{% trans "Training"%}</th>
+    </tr>
+   </thead><tbody>
+    {% for user in users %}
+    <tr>
+     <td><a href="{% url telemeta-profile-detail user.username %}">{{user.username}}</a></td>
+     <td>{{ user.first_name }}</td>
+     <td>{{ user.last_name }}</td>
+     <td><a href="{% url postman_write user.username %}" class="component_icon button icon_edit">Write</a></td>
+     <td>{% for training in user__student.training %}{{ training }} {% endfor %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>

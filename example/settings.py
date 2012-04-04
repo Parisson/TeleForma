@@ -3,6 +3,7 @@
 
 import os
 import sys
+from django.core.urlresolvers import reverse_lazy
 
 sys.dont_write_bytecode = True
 
@@ -17,10 +18,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'sandbox.sql',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'teleforma',                      # Or path to database file if using sqlite3.
+        'USER': 'teleforma',                      # Not used with sqlite3.
+        'PASSWORD': 'HMYsrZLEtYeBrvER',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -140,6 +141,7 @@ INSTALLED_APPS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
+    'postman.context_processors.inbox',
 )
 
 TELEMETA_ORGANIZATION = 'Parisson'
@@ -154,13 +156,14 @@ TELEMETA_DOWNLOAD_ENABLED = True
 TELEMETA_STREAMING_FORMATS = ('mp3', 'webm')
 TELEMETA_DOWNLOAD_FORMATS = ('wav', 'mp3', 'webm')
 TELEMETA_PUBLIC_ACCESS_PERIOD = 51
-AUTH_PROFILE_MODULE = 'telemeta.userprofile'
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/desk/courses'
+AUTH_PROFILE_MODULE = 'telemeta.userprofile'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = reverse_lazy('teleforma-courses')
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 
 POSTMAN_AUTO_MODERATE_AS=True
+

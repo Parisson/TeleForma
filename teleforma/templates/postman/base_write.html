@@ -10,7 +10,7 @@
 {% endif %}
 {% endblock %}
 {% block content %}
-<div id="postman">
+<div id="postman" class="desk_center">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
 <form action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" method="post">{% csrf_token %}
 <table>

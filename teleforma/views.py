@@ -1,5 +1,7 @@
 # Create your views here.
 
+import mimetypes
+
 from jsonrpc import jsonrpc_method
 
 from django.utils.decorators import method_decorator
@@ -32,6 +34,47 @@ def render(request, template, data = None, mimetype = None):
     return render_to_response(template, data, context_instance=RequestContext(request),
                               mimetype=mimetype)
 
+def get_courses(user):
+    professor = user.professor.all()
+    student = user.student.all()
+    if professor:
+        courses = user.professor.get().courses.all()
+    elif student:
+        courses = user.student.get().training.courses.all()
+    elif user.is_staff:
+        courses = Course.objects.all()
+    else:
+        courses = None
+    return courses
+
+def stream_from_file(__file):
+    chunk_size = 0x10000
+    f = open(__file, 'r')
+    while True:
+        __chunk = f.read(chunk_size)
+        if not len(__chunk):
+            f.close()
+            break
+        yield __chunk
+
+def document_download(request, pk):
+    document = Document.objects.get(id=pk)
+    fsock = open(document.file.path, 'r')
+    mimetype = mimetypes.guess_type(document.file.path)[0]
+    extension = mimetypes.guess_extension(mimetype)
+    response = HttpResponse(fsock, mimetype=mimetype)
+    response['Content-Disposition'] = "attachment; filename=%s%s" % \
+                                     (unicode(document), extension)
+    return response
+
+def document_view(request, pk):
+    document = Document.objects.get(id=pk)
+    fsock = open(document.file.path, 'r')
+    mimetype = mimetypes.guess_type(document.file.path)[0]
+    extension = mimetypes.guess_extension(mimetype)
+    response = HttpResponse(fsock, mimetype=mimetype)
+    return response
+
 
 class CourseView(DetailView):
 
@@ -39,7 +82,7 @@ class CourseView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
-        context['courses'] = Course.objects.all()
+        context['courses'] = get_courses(self.request.user)
         return context
 
 class CoursesView(ListView):
@@ -49,7 +92,7 @@ class CoursesView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
-        context['courses'] = Course.objects.all()
+        context['object_list'] = get_courses(self.request.user)
         return context
 
 class MediaView(DetailView):
@@ -59,10 +102,13 @@ class MediaView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
-        context['courses'] = Course.objects.all()
+        context['courses'] = get_courses(self.request.user)
         media = self.get_object()
         view = ItemView()
+        print media.item.file
+        print view.item_analyze(media.item)
         context['mime_type'] = view.item_analyze(media.item)
         context['course'] = media.course
         context['item'] = media.item
         return context
+
