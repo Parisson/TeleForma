@@ -7,22 +7,23 @@
 
 {% block content %}
 
-<div class="home-description">
-   <div id="module-set-left" style="width: 30%">
-    <div class="module">
-    <h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</h3>
+<div id="module-set-left" style="width: 20%">
+<div class="module">
+<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</h3>
 
-        <div style="background: white;">
-        <ul>
-        {% block courses %}
-        {% for course in object_list %}
-            <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
-        {% endfor %}
-        {% endblock courses %}
-        </ul>
-        </div>
-    </div>
-   </div>
+<div style="background: white;">
+<ul>
+{% block courses %}
+{% for course in object_list %}
+<li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+{% endfor %}
+{% endblock courses %}
+</ul>
+</div>
+</div>
+</div>
+
+
 
     <div class="desk_center">
     {% block course %}
@@ -57,7 +58,6 @@
 
     </div>
 
-</div>
 
 
 </div>

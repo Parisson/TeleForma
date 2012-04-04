@@ -93,13 +93,16 @@ alt="Telemeta Powered"/>-->
  {% endif %}
 
  {% if user.is_authenticated %}
- <li><a href="#profil#"  class="origin"><img src="{% url telemeta-images "user.png" %}" alt="user" style="vertical-align:middle" width="12px" />{% if user.first_name and user.last_name %}
+ <li><a href="#profil#"  class="origin"><img src="{% url telemeta-images "user_tr.png" %}" alt="user" style="vertical-align:middle" width="13px" />{% if user.first_name and user.last_name %}
  {{ user.first_name }} {{ user.last_name }}
  {% else %}
  {{ user.username }}
  {% endif %}</a>
     <ul>
     <li><a href="{% url telemeta-profile-detail user.username %}">{% trans "Profile" %}</a></li>
+    {% if user.is_staff %}
+    <li><a href="{% url telemeta-desk-lists %}">{% trans "Lists" %}</a></li>
+    {% endif %}
     <li><a href="{% url telemeta-flatpage "help" %}">{% trans "Help" %}</a></li>
     <li><a href="{% url telemeta-logout %}">{% trans "Sign out" %}</a></li>
     </ul>

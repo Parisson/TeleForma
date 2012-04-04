@@ -11,14 +11,14 @@
 {% else %}
 
 {% if pm_messages %}
-<br /><br />
-{% block pm_by_modes %}<div id="pm_by_modes">
+
+{% block pm_by_modes %}<div id="pm_by_modes" style="float: right;">
 <a href="{{ by_conversation_url }}" class="component_icon button icon_filter">{% trans "by conversation" %}</a>
 <a href="{{ by_message_url }}" class="component_icon button icon_filter">{% trans "by message" %}</a>
 </div>{% endblock pm_by_modes %}
 <br />
 
-<form action="{% block pm_form_action %}{% endblock %}" method="post">{% csrf_token %}
+<form id="_messageForm" action="{% block pm_form_action %}{% endblock %}" method="post">{% csrf_token %}
 
 <table id="pm_messages" class="listing" >
  <thead>
@@ -33,7 +33,7 @@
  <tbody>{% for message in pm_messages %}
   <tr>
    <td><input type="checkbox" {% if by_conversation and message.thread_id %}name="tpks" value="{{ message.thread_id }}"{% else %}name="pks" value="{{ message.pk }}"{% endif %} /></td>
-{% block pm_sender_cell %}   <td>{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>{% endblock %}
+   {% block pm_sender_cell %}   <td>{% if message.is_new %}<strong>{% endif %}{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}{% if message.is_new %}</strong>{% endif %}</td>{% endblock %}
 {% block pm_recipient_cell %}   <td>{{ message.obfuscated_recipient|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>{% endblock %}
    <td>{% if message.is_new %}<strong>{% endif %}{% if message.is_replied %}<em>{% endif %}
 {% block pm_subject %}
@@ -49,9 +49,15 @@
 
 <br />
 {% block pm_form_buttons %}<span id="pm_buttons">
-{% block pm_delete_button %}<button type="submit" onclick="this.form.action='{% url postman_delete %}'">{% trans "Delete" %}</button>{% endblock %}
-{% block pm_archive_button %}<button type="submit" onclick="this.form.action='{% url postman_archive %}'">{% trans "Archive" %}</button>{% endblock %}
-{% block pm_undelete_button %}<button type="submit" onclick="this.form.action='{% url postman_undelete %}'">{% trans "Undelete" %}</button>{% endblock %}
+{% block pm_delete_button %}
+<a href="#" class="component_icon button icon_delete" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_delete %}'; f.submit(); return false;">{% trans "Delete" %}</a>
+{% endblock %}
+{% block pm_archive_button %}
+<a href="#" class="component_icon button icon_save" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_archive %}'; f.submit(); return false;">{% trans "Archive" %}</a>
+{% endblock %}
+{% block pm_undelete_button %}
+<a href="#" class="component_icon button icon_previous" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_undelete %}'; f.submit(); return false;">{% trans "Undelete" %}</a>
+{% endblock %}
 </span>{% endblock %}
 
 </form>

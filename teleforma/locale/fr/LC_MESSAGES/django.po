@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-04 13:32+0200\n"
+"POT-Creation-Date: 2012-04-04 22:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,9 +226,9 @@ msgid ""
 "long term storage."
 msgstr ""
 
-#: templates/postman/base.html:7 templates/telemeta/base.html:71
-msgid "Messages"
-msgstr "Messages"
+#: templates/postman/base.html:10
+msgid "Folders"
+msgstr "Dossiers"
 
 #: templates/postman/base.html:15
 msgid "Inbox"
@@ -239,17 +239,17 @@ msgstr ""
 msgid "Sent Messages"
 msgstr "Messages"
 
-#: templates/postman/base.html:17 templates/postman/write.html:3
-msgid "Write"
-msgstr ""
-
-#: templates/postman/base.html:18 templates/telemeta/base.html:79
+#: templates/postman/base.html:17 templates/telemeta/base.html:79
 msgid "Archives"
 msgstr ""
 
-#: templates/postman/base.html:19
+#: templates/postman/base.html:18
 msgid "Trash"
 msgstr ""
+
+#: templates/postman/base.html:23
+msgid "New message"
+msgstr "Nouveau message"
 
 #: templates/postman/base_folder.html:10
 msgid "Sorry, this page number is invalid."
@@ -288,19 +288,19 @@ msgstr ""
 msgid "g:i A,M j,n/j/y"
 msgstr ""
 
-#: templates/postman/base_folder.html:52 templates/postman/view.html:28
+#: templates/postman/base_folder.html:53 templates/postman/view.html:32
 msgid "Delete"
 msgstr ""
 
-#: templates/postman/base_folder.html:53 templates/postman/view.html:29
+#: templates/postman/base_folder.html:56 templates/postman/view.html:36
 msgid "Archive"
 msgstr ""
 
-#: templates/postman/base_folder.html:54
+#: templates/postman/base_folder.html:59
 msgid "Undelete"
 msgstr ""
 
-#: templates/postman/base_folder.html:60
+#: templates/postman/base_folder.html:66
 #, fuzzy
 msgid "No messages."
 msgstr "Messages"
@@ -394,8 +394,8 @@ msgstr "Messages"
 msgid "Received"
 msgstr ""
 
-#: templates/postman/reply.html:3 templates/postman/view.html:31
-#: templates/postman/view.html.py:34 templates/postman/view.html:37
+#: templates/postman/reply.html:3 templates/postman/view.html:40
+#: templates/postman/view.html.py:43 templates/postman/view.html:46
 msgid "Reply"
 msgstr ""
 
@@ -431,31 +431,35 @@ msgstr ""
 msgid ":"
 msgstr ""
 
-#: templates/postman/view.html:26
+#: templates/postman/view.html:27
 msgid "Back"
 msgstr ""
 
+#: templates/postman/write.html:3
+msgid "Write"
+msgstr ""
+
 #: templates/teleforma/course.html:15
-#: templates/teleforma/inc/document_list.html:3
+#: templates/teleforma/inc/document_list.html:4
 msgid "Documents"
 msgstr "Documents"
 
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
-#: templates/teleforma/inc/document_list.html:7
+#: templates/teleforma/inc/document_list.html:8
 #: templates/teleforma/inc/media_list.html:8
 msgid "Title"
 msgstr "Titre"
 
 #: templates/teleforma/course.html:19 templates/teleforma/course.html.py:35
-#: templates/teleforma/inc/document_list.html:8
+#: templates/teleforma/inc/document_list.html:9
 #: templates/teleforma/inc/media_list.html:9
 msgid "Description"
 msgstr "Description"
 
 #: templates/teleforma/course.html:20 templates/teleforma/course.html.py:36
 #: templates/teleforma/course.html:53
-#: templates/teleforma/inc/conference_list.html:9
-#: templates/teleforma/inc/document_list.html:9
+#: templates/teleforma/inc/conference_list.html:10
+#: templates/teleforma/inc/document_list.html:10
 #: templates/teleforma/inc/media_list.html:10
 msgid "Date added"
 msgstr "Date d'ajout"
@@ -466,35 +470,26 @@ msgid "Medias"
 msgstr "Médias"
 
 #: templates/teleforma/course.html:48
-#: templates/teleforma/inc/conference_list.html:3
+#: templates/teleforma/inc/conference_list.html:4
 msgid "Conferences"
 msgstr "Conférences"
 
 #: templates/teleforma/course.html:51
-#: templates/teleforma/inc/conference_list.html:7
+#: templates/teleforma/inc/conference_list.html:8
 msgid "Session"
 msgstr "Session"
 
 #: templates/teleforma/course.html:52
-#: templates/teleforma/inc/conference_list.html:8
+#: templates/teleforma/inc/conference_list.html:9
 msgid "Professor"
 msgstr "Professeur"
 
-#: templates/teleforma/course_media.html:27
+#: templates/teleforma/course_media.html:48
 #, fuzzy
 msgid "Recording date"
 msgstr "date de début"
 
-#: templates/teleforma/course_media.html:32
-#, fuzzy
-msgid "Last modification"
-msgstr "date de modification"
-
-#: templates/teleforma/courses.html:18
-msgid "Bureau"
-msgstr ""
-
-#: templates/teleforma/courses.html:24
+#: templates/teleforma/courses.html:12
 msgid "My courses"
 msgstr "Mes matières"
 
@@ -509,6 +504,10 @@ msgstr ""
 #: templates/telemeta/base.html:67
 msgid "Sign in"
 msgstr ""
+
+#: templates/telemeta/base.html:71 templates/telemeta/inc/user_list.html:10
+msgid "Messages"
+msgstr "Messages"
 
 #: templates/telemeta/base.html:73
 msgid "Users"
@@ -555,27 +554,48 @@ msgstr ""
 msgid "Sign out"
 msgstr ""
 
-#: templates/telemeta/base.html:144
+#: templates/telemeta/base.html:145
 msgid "Powered by"
 msgstr ""
 
-#: templates/telemeta/base.html:145
+#: templates/telemeta/base.html:146
 msgid "By"
 msgstr ""
 
-#: templates/telemeta/base.html:150
+#: templates/telemeta/base.html:151
 msgid ""
 "Usage of the archives in the respect of cultural heritage of the original "
 "communities."
 msgstr ""
 
-#: templates/telemeta/base.html:156
+#: templates/telemeta/base.html:157
 msgid "Legal notices"
 msgstr ""
 
 #: templates/telemeta/home.html:14 templates/telemeta/home.html.py:42
 msgid "Musical selection"
 msgstr ""
+
+#: templates/telemeta/inc/user_list.html:7
+msgid "User"
+msgstr ""
+
+#: templates/telemeta/inc/user_list.html:8
+msgid "First Name"
+msgstr ""
+
+#: templates/telemeta/inc/user_list.html:9
+msgid "Last Name"
+msgstr ""
+
+#: templates/telemeta/inc/user_list.html:11
+#, fuzzy
+msgid "Training"
+msgstr "formation"
+
+#, fuzzy
+#~ msgid "Last modification"
+#~ msgstr "date de modification"
 
 #~ msgid "course types"
 #~ msgstr "types de matières"

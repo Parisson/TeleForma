@@ -433,12 +433,12 @@ form.login .submit {
 /* Main navigation bar  (borrowed from Trac) */
 #menu {
     background-color: #000000 ;
-    background:no-repeat url(http://si0.twimg.com/a/1333470865/t1/img/twitter_web_sprite_bgs.png) 0 0;
+    background:no-repeat url(../images/tw_hd_bg.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
     border-top: 1px solid #333;
-    padding-left:15%;
+    padding-left:10%;
 }
 
 #menu a, #menu a:visited{
@@ -527,7 +527,7 @@ color:#FFF;
     width: 100%;
     float:left;
     border-bottom:0px solid #fff;
-    background:no-repeat url(http://si0.twimg.com/a/1333470865/t1/img/twitter_web_sprite_bgs.png) 0 0;
+    background:no-repeat url(../images/tw_hd_bg.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
 }
@@ -563,7 +563,7 @@ color:#FFF;
 /* Footer (borrowed from Trac) */
 #footer {
     background: #000000;
-    background:no-repeat url(http://si0.twimg.com/a/1333470865/t1/img/twitter_web_sprite_bgs.png) 0 0;
+    background:no-repeat url(../images/tw_hd_bg.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
     clear: both;
@@ -1141,6 +1141,22 @@ a.image-link {
     color: #000; /*#6A0307;*/
 }
 
+#button_action_blue {
+    background-color:  #4b8df8;
+    color: #FFF;
+    padding:0.8em 0.8em 0.8em 0.8em;
+    }
+
+#button_action_red {
+    background-color:  #d34836;
+    color: #FFF;
+    padding:0.8em 0.8em 0.8em 0.8em;
+    }
+#button_action_green {
+    background-color:  #92b220;
+    color: #FFF;
+    padding:0.8em 0.8em 0.8em 0.8em;
+        }
 
 .list_item, .list_item:visited, .list_item:hover{
     display:block;
@@ -1338,7 +1354,7 @@ input,textarea{
     -moz-border-radius: 8px 0px 0px 0px;
     -webkit-border-radius: 8px 0px 0px 0px;
     border-radius: 8px 0px 0px 0px;
-    padding: 0em 0.8em 0em 0em;
+    padding: 0em 0.8em 0.8em 0em;
     font-weight: bold;
     font-size: 1.2em;
     }
@@ -1350,8 +1366,13 @@ input,textarea{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
-
+    padding: 0em 0em 0em 0.3em;
 }
+
+
+.course_content h2 {
+    padding: 0.5em 0em 0em 0.3em;
+    }
 
 .course_media {
     background-color: transparent;
@@ -1365,11 +1386,12 @@ input,textarea{
 .media_infos {
     background-color: #FFF;
     padding: 0.3em 0.8em 0.3em 0.8em;
+    width: 100%;
     }
 
 .video {
     background-color: transparent;
-    padding: 0.8em 1em 1em 0em;
+    padding: 0.8em 0em 1em 0em;
     }
 
 .audio {
@@ -1388,12 +1410,34 @@ input,textarea{
     padding: 0em 0em 0em 1em;
     }
 
+.pm_message {
+    background-color: #FFF;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    padding: 0.8em 0.8em 0.8em 1em;
+    }
+
+#pm_messages {
+    font-weight: normal;
+    font-size: 1em;
+    background-color: #FFF;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    padding: 0.8em 0.8em 0.8em 1em;
+    width: 100%;
+    margin-top : 1em;
+    }
+
 #pm_messages td {
     font-weight: normal;
     font-size: 1em;
+
     }
 
 #pm_write {
     text-align: center;
     margin: 0em 0em 3em 0em;
+    padding: 1em;
 }
