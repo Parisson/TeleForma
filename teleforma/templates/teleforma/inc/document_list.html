@@ -13,7 +13,7 @@
     <tbody>
         {% for document in course.document.all %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-        <td><a href="{% url teleforma-document-view document.id %}">{{ document.title }}</a></td>
+        <td><a href="{% url teleforma-document-view document.id %}" target="_blank">{{ document.title }}</a></td>
         <td>{{ document.description }}</td>
         <td>{{ document.date_added }}</td>
         </tr>

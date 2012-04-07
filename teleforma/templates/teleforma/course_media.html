@@ -4,10 +4,19 @@
 
 
 {% block extra_javascript %}
+
 {% if "video" in mime_type %}
-<link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
-<script src="http://vjs.zencdn.net/c/video.js"></script>
+<script src="{% url telemeta-video-js "video.js" %}"></script>
+<link href="{% url telemeta-video-js "video-js.css" %}" rel="stylesheet">
 {% endif %}
+
+<script type="text/javascript" src="/static/jqchat/jqchat.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    });
+</script>
+
 {% endblock extra_javascript %}
 
 {% block course %}
@@ -21,39 +30,55 @@
 
 {% if "video" in mime_type %}
 <div class="video">
-<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup="{}">
+<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
 <!-- Hello Chrome and Firefox (and Opera?) -->
 <source src="{% url telemeta-item-export media.item.public_id mime_type|mime_to_ext %}" type="{{ mime_type }}" />
 </video>
 </div>
 
-
 {% elif "audio" in mime_type %}
-
 <div class="audio">
 <iframe width='640' height='200' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src="{% url telemeta-item-player-simple  media.item.public_id 640 130 %}"></iframe>
 </div>
-
 {% endif %}
 
 </div>
 
-<div class="media_infos">
-
 {% block general_info %}
+<div class="course_content" id="media_infos">
 <dl class="listing">
 {% dl_field item "title" placeholder %}
-<dt>{% field_label item "collection" %}</dt>
-<dd><a href="{% url telemeta-collection-detail item.collection.public_id %}">{{ item.collection }}</a></dd>
+<dt>{% field_label item "approx_duration" %}</dt>
+<dd>{{ item.approx_duration }}</a></dd>
 <dt>{% trans "Recording date" %}</dt>
-
 <dd>{% if item.recorded_from_date %}{{ item.recorded_from_date }}{% endif %}{% if item.recorded_from_date and item.recorded_to_date%} - {% endif %}{% if item.recorded_to_date %}{{ item.recorded_to_date}}{% endif %}</dd>
-
 </dl>
+</div>
 {% endblock general_info %}
 
 </div>
-
-
-</div>
 {% endblock course %}
+
+{% block chat %}
+{% if room %}
+
+<div id="module-set" style="width: 240px">
+
+<div class="module">
+<h3><img src="{% url telemeta-images "search_wh2.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Questions" %}</h3>
+<div style="background: white;">
+<div id="chatwindow"><span id="loading">Loading...</span></div>
+<form id="chatform">{% csrf_token %}
+<label for="msg"></label>
+<input type="text" id="msg" /><br />
+<input type="submit" value="Ask" /><br />
+</form>
+<!--<script type="text/javascript">document.getElementById("msg").focus();</script>-->
+</div>
+</div>
+</div>
+</div>
+
+
+{% endif %}
+{% endblock chat %}

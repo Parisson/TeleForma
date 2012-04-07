@@ -17,7 +17,7 @@
 {% if message.is_rejected %}  <div class="pm_status">{% trans "Rejected" %}{% if message.moderation_reason %}{% trans ":" %} {{ message.moderation_reason }}{% endif %}</div>{% endif %}
  </div>
  <hr />
- <div class="pm_body">{{ message.body|linebreaksbr }}</div>
+ <div class="pm_body">{{ message.body|urlize|linebreaksbr }}</div>
 </div>
 <br />
 {% if forloop.last %}

@@ -111,7 +111,7 @@ MIDDLEWARE_CLASSES = (
     'pagination.middleware.PaginationMiddleware',
 )
 
-ROOT_URLCONF = 'example.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -136,7 +136,12 @@ INSTALLED_APPS = (
     'django_extensions',
     'pagination',
     'postman',
-    'private_files',
+#    'private_files',
+    'markup_mixin',
+    'notes',
+#    'jquery',
+    'jqchat',
+#    'follow',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -168,4 +173,4 @@ DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 
 POSTMAN_AUTO_MODERATE_AS=True
 
-FILE_PROTECTION_METHOD = 'basic'
+FILE_PROTECTION_METHOD = 'xsendfile'

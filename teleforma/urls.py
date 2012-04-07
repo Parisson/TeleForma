@@ -39,6 +39,7 @@ from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
 from jsonrpc import jsonrpc_site
+import jqchat.views
 
 htdocs_forma = os.path.dirname(__file__) + '/htdocs'
 
@@ -71,7 +72,7 @@ urlpatterns = patterns('',
 # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
 
-    url(r'^private_files/', include('private_files.urls')),
-
+#    url(r'^private_files/', include('private_files.urls')),
+    url(r'^room/(?P<id>\d+)/ajax/$', jqchat.views.BasicAjaxHandler, name="jqchat_ajax"),
 
 )

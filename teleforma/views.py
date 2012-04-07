@@ -26,8 +26,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 
 from teleforma.models import *
-
 from telemeta.views.base import *
+from jqchat.models import *
+
 
 
 def render(request, template, data = None, mimetype = None):
@@ -83,6 +84,8 @@ class CourseView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         context['courses'] = get_courses(self.request.user)
+        course = self.get_object()
+        context['notes'] = course.notes.all().filter(author=self.request.user)
         return context
 
 class CoursesView(ListView):
@@ -93,6 +96,7 @@ class CoursesView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['object_list'] = get_courses(self.request.user)
+        context['notes'] = Note.objects.filter(author=self.request.user)
         return context
 
 class MediaView(DetailView):
@@ -105,10 +109,10 @@ class MediaView(DetailView):
         context['courses'] = get_courses(self.request.user)
         media = self.get_object()
         view = ItemView()
-        print media.item.file
-        print view.item_analyze(media.item)
         context['mime_type'] = view.item_analyze(media.item)
         context['course'] = media.course
         context['item'] = media.item
+        context['notes'] = media.notes.all().filter(author=self.request.user)
+        context['room'] = media.course.chat_room
         return context
 

@@ -49,6 +49,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from teleforma.fields import *
+from django.contrib.contenttypes import generic
+from notes.models import Note
+import jqchat.models
 
 app_label = 'teleforma'
 
@@ -115,6 +118,10 @@ class Course(Model):
     category        = ForeignKey('Category', related_name='course', verbose_name=_('category'))
     type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
+    chat_room       = OneToOneField(jqchat.models.Room, help_text='Chat room to be used for this lobby.',
+                                    blank=True, null=True)
+
+    notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
         return ' - '.join([self.department.name, self.category.name, self.title, self.type.name])
@@ -186,6 +193,8 @@ class MediaBase(Model):
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
 
+    notes = generic.GenericRelation(Note)
+
     def get_fields(self):
         return self._meta.fields
 
@@ -238,6 +247,7 @@ class Media(MediaBase):
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
     is_live         = BooleanField(_('is live'))
+
 
     def __unicode__(self):
         description = self.course.title

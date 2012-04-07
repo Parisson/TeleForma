@@ -2,23 +2,54 @@
 {% load telemeta_utils %}
 {% load teleforma_tags %}
 
+<div id="users">
   <table class="listing" width="100%">
    <thead>
     <tr><th>{% trans "User"%}</th>
     <th>{% trans "First Name"%}</th>
     <th>{% trans "Last Name"%}</th>
-    <th>{% trans "Messages"%}</th>
     <th>{% trans "Training"%}</th>
+    <th>{% trans "IEJ"%}</th>
+    <th>{% trans "Procedure"%}</th>
+    <th>{% trans "Oral spe"%}</th>
+    <th>{% trans "Written spe"%}</th>
+    <th>{% trans "Oral 1"%}</th>
+    <th>{% trans "Oral 2"%}</th>
+    <th>{% trans "Synthesis note"%}</th>
+    <th>{% trans "Messages"%}</th>
     </tr>
-   </thead><tbody>
+    </thead>
+    <tbody id="spacing">
     {% for user in users %}
     <tr>
      <td><a href="{% url telemeta-profile-detail user.username %}">{{user.username}}</a></td>
      <td>{{ user.first_name }}</td>
      <td>{{ user.last_name }}</td>
-     <td><a href="{% url postman_write user.username %}" class="component_icon button icon_edit">Write</a></td>
-     <td>{% for training in user__student.training %}{{ training }} {% endfor %}</td>
+     {% if user.student.get %}
+      {% with user.student.get as student %}
+        <td>{{ student.training }}</td>
+        <td>{{ student.iej }}</td>
+        <td>{{ student.procedure }}</td>
+        <td>{{ student.oral_speciality }}</td>
+        <td>{{ student.written_speciality }}</td>
+        <td>{{ student.oral_1 }}</td>
+        <td>{{ student.oral_2 }}</td>
+        <td></td>
+     {% endwith %}
+    {% elif user.professor.get %}
+        <td>{% trans "Professor" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+
+    {% endif %}
+    <td><a href="{% url postman_write user.username %}" class="component_icon button" id="action_green">{% trans "Write" %}</a></td>
     </tr>
     {% endfor %}
     </tbody>
   </table>
+</div>

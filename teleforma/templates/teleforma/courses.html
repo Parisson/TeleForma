@@ -8,9 +8,9 @@
 {% block content %}
 
 <div id="module-set-left" style="width: 20%">
+
 <div class="module">
 <h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</h3>
-
 <div style="background: white;">
 <ul>
 {% block courses %}
@@ -21,13 +21,29 @@
 </ul>
 </div>
 </div>
+
+{% block notes %}
+<div class="module">
+<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
+<div style="background: white;">
+<ul>
+{% for note in notes %}
+<li>{{ note.content }}</li>
+{% endfor %}
+</ul>
+</div>
+</div>
+<div class="module_action">
+<a href="#" class="component_icon button" id="action_blue">{% trans "New note" %}</a>
+</div>
+{% endblock notes %}
+
 </div>
 
 
 
-    <div class="desk_center">
+<div class="desk_center">
     {% block course %}
-
     {% for course in object_list %}
       <div class="course">
         <div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
@@ -52,15 +68,14 @@
         {% endblock %}
 
       </div>
-
     {% endfor %}
     {% endblock course %}
-
     </div>
-
-
-
 </div>
-{% endblock %}
+
+{% block chat %}
+{% endblock chat %}
+
+{% endblock content %}
 
 

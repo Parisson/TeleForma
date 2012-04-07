@@ -22,6 +22,7 @@ setup(
         'django-pagination',
         'django-postman',
         'django-extensions',
+        'django-notes',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
