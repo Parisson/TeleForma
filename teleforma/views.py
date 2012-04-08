@@ -24,6 +24,7 @@ from django.utils.translation import ugettext
 from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
+from django.core.paginator import Paginator
 
 from teleforma.models import *
 from telemeta.views.base import *
@@ -116,3 +117,12 @@ class MediaView(DetailView):
         context['room'] = media.course.chat_room
         return context
 
+class UsersView(ListView):
+
+    model = User
+    template_name='telemeta/users.html'
+    context_object_name = 'users'
+    paginate_by = 12
+
+    def get_queryset(self):
+        return User.objects.all().order_by('last_name')

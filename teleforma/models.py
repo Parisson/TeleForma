@@ -274,6 +274,7 @@ class IEJ(Model):
         db_table = app_label + '_' + 'iej'
         verbose_name = _('IEJ')
         verbose_name_plural = _('IEJ')
+        ordering = ['name']
 
 
 class Training(Model):
@@ -287,7 +288,7 @@ class Training(Model):
 
 
     def __unicode__(self):
-        return self.name
+        return self.code
 
     class Meta:
         db_table = app_label + '_' + 'training'
@@ -300,7 +301,7 @@ class Procedure(Model):
     code           = CharField(_('code'), max_length=255)
 
     def __unicode__(self):
-        return self.name
+        return self.code
 
     class Meta:
         db_table = app_label + '_' + 'procedure'
@@ -313,7 +314,7 @@ class Speciality(Model):
     code           = CharField(_('code'), max_length=255)
 
     def __unicode__(self):
-        return self.name
+        return self.code
 
     class Meta:
         db_table = app_label + '_' + 'speciality'
@@ -326,7 +327,7 @@ class Oral(Model):
     code           = CharField(_('code'), max_length=255)
 
     def __unicode__(self):
-        return self.name
+        return self.code
 
     class Meta:
         db_table = app_label + '_' + 'oral'

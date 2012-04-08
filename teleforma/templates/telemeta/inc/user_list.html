@@ -2,12 +2,28 @@
 {% load telemeta_utils %}
 {% load teleforma_tags %}
 
+{% if is_paginated %}
+<div class="pagination">
+<span class="page-links">
+{% if page_obj.has_previous %}
+<a href="{% url teleforma-users %}?page={{ page_obj.previous_page_number }}" class="component_icon button icon_previous">{% trans "Previous" %}</a>
+{% endif %}
+<span class="page-current">
+{% trans "Page" %} {{ page_obj.number }} {%trans "of" %} {{ page_obj.paginator.num_pages }}.
+</span>
+{% if page_obj.has_next %}
+<a href="{% url teleforma-users %}?page={{ page_obj.next_page_number }}" class="component_icon button icon_next">{% trans "Next" %}</a>
+{% endif %}
+</span>
+</div>
+{% endif %}
+
 <div id="users">
   <table class="listing" width="100%">
    <thead>
-    <tr><th>{% trans "User"%}</th>
+   <tr><th>{% trans "Last Name"%}</th>
     <th>{% trans "First Name"%}</th>
-    <th>{% trans "Last Name"%}</th>
+    <th>{% trans "User"%}</th>
     <th>{% trans "Training"%}</th>
     <th>{% trans "IEJ"%}</th>
     <th>{% trans "Procedure"%}</th>
@@ -15,25 +31,26 @@
     <th>{% trans "Written spe"%}</th>
     <th>{% trans "Oral 1"%}</th>
     <th>{% trans "Oral 2"%}</th>
-    <th>{% trans "Synthesis note"%}</th>
+    <th>{% trans "Synthesis"%}</th>
     <th>{% trans "Messages"%}</th>
     </tr>
     </thead>
     <tbody id="spacing">
     {% for user in users %}
     <tr>
-     <td><a href="{% url telemeta-profile-detail user.username %}">{{user.username}}</a></td>
-     <td>{{ user.first_name }}</td>
      <td>{{ user.last_name }}</td>
+     <td>{{ user.first_name }}</td>
+     <td><a href="{% url telemeta-profile-detail user.username %}">{{user.username}}</a></td>
+
      {% if user.student.get %}
       {% with user.student.get as student %}
-        <td>{{ student.training }}</td>
-        <td>{{ student.iej }}</td>
-        <td>{{ student.procedure }}</td>
-        <td>{{ student.oral_speciality }}</td>
-        <td>{{ student.written_speciality }}</td>
-        <td>{{ student.oral_1 }}</td>
-        <td>{{ student.oral_2 }}</td>
+        <td>{{ student.training.code }}</td>
+        <td>{{ student.iej.name }}</td>
+        <td>{{ student.procedure.code }}</td>
+        <td>{{ student.oral_speciality.code }}</td>
+        <td>{{ student.written_speciality.code }}</td>
+        <td>{{ student.oral_1.code }}</td>
+        <td>{{ student.oral_2.code }}</td>
         <td></td>
      {% endwith %}
     {% elif user.professor.get %}
