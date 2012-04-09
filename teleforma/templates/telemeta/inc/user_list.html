@@ -4,15 +4,12 @@
 
 {% if is_paginated %}
 <div class="pagination">
-<span class="page-links">
 {% if page_obj.has_previous %}
-<a href="{% url teleforma-users %}?page={{ page_obj.previous_page_number }}" class="component_icon button icon_previous">{% trans "Previous" %}</a>
+<a href="{% url teleforma-users %}?page={{ page_obj.previous_page_number }}">< {% trans "Previous" %}</a>
 {% endif %}
-<span class="page-current">
 {% trans "Page" %} {{ page_obj.number }} {%trans "of" %} {{ page_obj.paginator.num_pages }}.
-</span>
 {% if page_obj.has_next %}
-<a href="{% url teleforma-users %}?page={{ page_obj.next_page_number }}" class="component_icon button icon_next">{% trans "Next" %}</a>
+<a href="{% url teleforma-users %}?page={{ page_obj.next_page_number }}">{% trans "Next" %} ></a>
 {% endif %}
 </span>
 </div>
