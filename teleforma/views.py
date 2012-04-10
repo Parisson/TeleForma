@@ -140,6 +140,7 @@ class UsersTrainingView(UsersView):
         trainings = Training.objects.filter(id=self.args[0])
         return User.objects.filter(student__training__in=trainings)
 
+
 class UsersXLSExport(object):
 
     first_row = 1
@@ -173,6 +174,7 @@ class UsersXLSExport(object):
 
             print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
 
+    @method_decorator(permission_required('is_superuser'))
     def export(self, request):
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')

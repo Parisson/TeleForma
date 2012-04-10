@@ -25,9 +25,13 @@
 </div>
 
 <div class="desk_course">
+
+{% if user.is_staff %}
 <div style="float:right;">
 <a href="{% url teleforma-users-xls-export %}" class="component_icon button icon_csv">XLS Export</a>
 </div>
+{% endif %}
+
 <div class="course_title">{% trans "Users" %}</div>
  {% if users %}
   {% include "telemeta/inc/user_list.html" %}
