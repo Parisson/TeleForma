@@ -3,7 +3,7 @@
 {% load teleforma_tags %}
 
 {% if is_paginated %}
-<div class="pagination">
+<div class="pagination" id="user_pagination">
 {% if page_obj.has_previous %}
 <a href="{% url teleforma-users %}?page={{ page_obj.previous_page_number }}">< {% trans "Previous" %}</a>
 {% endif %}

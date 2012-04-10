@@ -760,7 +760,7 @@ dl.dublincore dd.caption {
 
 /* Pagination */
 .pagination {
-    margin-top: .7em;
+    margin-top: 0em;
     margin-bottom: .3em;
     padding: .3em 0;
     font-size: 1em;
@@ -1389,7 +1389,7 @@ input,textarea{
     -moz-border-radius: 8px 0px 0px 0px;
     -webkit-border-radius: 8px 0px 0px 0px;
     border-radius: 8px 0px 0px 0px;
-    padding: 0em 0.8em 0.3em 0em;
+    padding: 0em 0.8em 0.8em 0em;
     font-weight: bold;
     font-size: 1.2em;
     }
@@ -1499,4 +1499,3 @@ input,textarea{
     font-size: 0.8em;
     font-weight: normal;
     }
-
