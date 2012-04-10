@@ -68,14 +68,14 @@ alt="Telemeta Powered"/>-->
  {% endif %}
 
  {% if user.is_authenticated %}
+
  <li><a href="/messages" class="green">{% trans "Messages" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
 
  <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
 
- <li><a href="{% url telemeta-search-criteria %}" class="orange">{% trans "Advanced search" %}</a></li>
+ <li><a href="{% url telemeta-search-criteria %}" class="orange">{% trans "Search" %}</a></li>
 
  {% if user.is_staff %}
-
  <li><a href="#archives#" class="red">{% trans "Archives" %}</a>
  <ul>
  <li><a href="{% url telemeta-fonds %}">{% trans "Fonds" %}</a></li>
@@ -85,15 +85,12 @@ alt="Telemeta Powered"/>-->
  </ul>
  </li>
 
- <li><a href="#admin#" class="violet">{% trans "Admin" %}</a>
-  <ul>
-    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
-  </ul>
- </li>
+ {% else %}
+  <li><a href="{% url telemeta-flatpage "help" %}" class="red">{% trans "Help" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
- <li><a href="#profil#"  class="origin"><img src="{% url telemeta-images "user_tr.png" %}" alt="user" style="vertical-align:middle" width="13px" />{% if user.first_name and user.last_name %}
+ <li><a href="#profil#" class="violet"><img src="{% url telemeta-images "user_tr.png" %}" alt="user" style="vertical-align:middle" width="13px" />{% if user.first_name and user.last_name %}
  {{ user.first_name }} {{ user.last_name }}
  {% else %}
  {{ user.username }}
@@ -108,8 +105,14 @@ alt="Telemeta Powered"/>-->
     </ul>
  </li>
 
+ {% if user.is_staff %}
+ <li><a href="#admin#" class="violet">{% trans "Admin" %}</a>
+  <ul>
+    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
+  </ul>
+ </li>
  {% endif %}
-
+ {% endif %}
 {% endif %}
 
 </ul>

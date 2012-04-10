@@ -125,4 +125,17 @@ class UsersView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        return User.objects.all().order_by('last_name')
+        return User.objects.all().select_related(depth=1).order_by('last_name')
+
+    def get_context_data(self, **kwargs):
+        context = super(UsersView, self).get_context_data(**kwargs)
+        context['trainings'] = Training.objects.all()
+        return context
+
+class UsersTrainingView(UsersView):
+
+    def get_queryset(self):
+        users = User.objects.all().select_related(depth=2)
+        trainings = Training.objects.filter(id=self.args[0])
+        return User.objects.filter(student__training__in=trainings)
+

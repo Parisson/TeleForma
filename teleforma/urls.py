@@ -57,7 +57,9 @@ urlpatterns = patterns('',
     # Postman
     url(r'^messages/', include('postman.urls')),
 
+    # Users
     url(r'^all_users/$', UsersView.as_view(), name="teleforma-users"),
+    url(r'^all_users/by_trainings/(\w+)$', UsersTrainingView.as_view(), name="teleforma-training-users"),
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',

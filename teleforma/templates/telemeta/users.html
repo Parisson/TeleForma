@@ -4,14 +4,33 @@
 
 {% block head_title %}{% trans "Users" %} - {{ block.super }}{% endblock %}
 
+
 {% block title %}
- <img src="{% url telemeta-images "user_red.png" %}" alt="user" style="vertical-align:middle" /> {% trans "Users" %}
+
 {% endblock %}
 
 {% block content %}
+<div id="module-set-left" style="width: 20%">
+<div class="module">
+<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "Trainings" %}</h3>
+<div style="background: white;">
+<ul>
+{% block courses %}
+{% for training in trainings %}
+<li><a href="{% url teleforma-training-users training.id %}">{{ training.code }}</a></li>
+{% endfor %}
+{% endblock courses %}
+</ul>
+</div>
+</div>
+</div>
+
+<div class="desk_large">
+<div class="course_title">{% trans "Users" %}</div>
  {% if users %}
   {% include "telemeta/inc/user_list.html" %}
  {% else %}
     <p class="help">{% trans "No users" %}</p>
  {% endif %}
+</div>
 {% endblock %}
