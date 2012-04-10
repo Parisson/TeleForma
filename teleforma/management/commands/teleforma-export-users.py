@@ -38,7 +38,7 @@ class Command(BaseCommand):
             if profile:
                 profile = Profile.objects.get(user=user)
                 row.write(10, profile.address)
-                row.write(11, int(profile.postal_code))
+                row.write(11, profile.postal_code)
                 row.write(12, profile.city)
                 row.write(13, profile.telephone)
                 row.write(14, profile.date_added.strftime("%d/%m/%Y"))
