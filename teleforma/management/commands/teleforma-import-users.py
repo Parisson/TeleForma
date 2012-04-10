@@ -44,16 +44,14 @@ class Command(BaseCommand):
             student.oral_1, c = Oral.objects.get_or_create(code=row[7].value)
             student.oral_2, c = Oral.objects.get_or_create(code=row[8].value)
             student.category, c = Category.objects.get_or_create(name=row[15].value)
-            address     = row[10].value
-            p_code      = row[11].value
-            city        = row[12].value
-            tel         = row[13].value
-            date        = row[14].value
-
+            profile, created = Profile.objects.get_or_create(user=user)
+            profile.address = row[10].value
+            profile.postal_code = int(row[11].value)
+            profile.city = row[12].value
+            profile.telephone = row[13].value
+            profile.save()
             student.save()
             print 'imported: ' + first_name + ' ' + last_name + ' ' + username
-
-
 
     def handle(self, *args, **options):
         file = args[0]
