@@ -115,7 +115,6 @@ class Course(Model):
     department      = ForeignKey('Department', related_name='course', verbose_name=_('department'))
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    category        = ForeignKey('Category', related_name='course', verbose_name=_('category'))
     type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
     chat_room       = OneToOneField(jqchat.models.Room, help_text='Chat room to be used for this lobby.',
@@ -124,7 +123,7 @@ class Course(Model):
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return ' - '.join([self.department.name, self.category.name, self.title, self.type.name])
+        return ' - '.join([self.department.name, self.title, self.type.name])
 
     class Meta:
         db_table = app_label + '_' + 'course'
@@ -281,14 +280,14 @@ class Training(Model):
 
     code            = CharField(_('code'), max_length=255)
     name            = CharField(_('name'), max_length=255, blank=True)
+    category        = ForeignKey('Category', related_name='course', verbose_name=_('category'))
     courses         = ManyToManyField('Course', related_name="training", verbose_name=_('courses'),
                                         blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligation'))
 
-
     def __unicode__(self):
-        return self.code
+        return self.code + ' - ' + self.category.name
 
     class Meta:
         db_table = app_label + '_' + 'training'
