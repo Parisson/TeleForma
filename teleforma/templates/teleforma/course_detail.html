@@ -8,7 +8,7 @@
 {% endblock courses %}
 
 {% block course %}
-
+<div class="desk_course">
 <div class="course">
 
 <div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
@@ -32,5 +32,6 @@
 {% endwith %}
 {% endblock %}
 
+</div>
 </div>
 {% endblock course %}

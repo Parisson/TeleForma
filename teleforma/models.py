@@ -128,6 +128,7 @@ class Course(Model):
     class Meta:
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
+        ordering = ['title']
 
 
 class Professor(Model):
@@ -182,6 +183,7 @@ class Conference(Model):
     class Meta:
         db_table = app_label + '_' + 'conference'
         verbose_name = _('conference')
+        ordering = ['-date_begin']
 
 
 class MediaBase(Model):
@@ -199,7 +201,7 @@ class MediaBase(Model):
 
     class Meta:
         abstract = True
-        ordering = ['date_added']
+        ordering = ['-date_added']
 
 
 class Document(MediaBase):

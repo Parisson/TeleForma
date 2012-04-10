@@ -10,7 +10,7 @@
 <div id="module-set-left" style="width: 20%">
 
 <div class="module">
-<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</h3>
+<h3><a href="{% url teleforma-courses %}"><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
@@ -41,36 +41,41 @@
 </div>
 
 
-
-<div class="desk_center">
-    {% block course %}
+{% block course %}
+<div class="desk_large">
     {% for course in object_list %}
       <div class="course">
         <div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
+        {% if course.conference.all or course.document.all or course.media.all %}
         {% block document %}
-        {% with course as course and %}
+        {% with course as course %}
         {% include "teleforma/inc/document_list.html" %}
         {% endwith %}
         {% endblock %}
 
         {% block media %}
-        {% with course as course and %}
+        {% with course as course %}
         {% include "teleforma/inc/media_list.html" %}
         {% endwith %}
         {% endblock %}
 
         {% block conference %}
-        {% with course as course and %}
+        {% with course as course %}
         {% include "teleforma/inc/conference_list.html" %}
         {% endwith %}
         {% endblock %}
-
+        {% else %}
+        <div class="course_content">
+         <h2>{% trans "No document" %}</h2>
+        </div>
+        {% endif %}
       </div>
     {% endfor %}
-    {% endblock course %}
-    </div>
+
+</div>
+{% endblock course %}
 </div>
 
 {% block chat %}

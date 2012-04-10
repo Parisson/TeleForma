@@ -1,5 +1,6 @@
 {% load i18n %}
 
+{% if course.document.all %}
 <div class="course_content">
 <h2><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Documents"%}</h2>
 <table class="listing" width="100%">
@@ -21,3 +22,4 @@
     </tbody>
 </table>
 </div>
+{% endif %}

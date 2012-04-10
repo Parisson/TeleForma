@@ -1323,12 +1323,20 @@ input,textarea{
             font-weight: bold;
             }
 
+
+#module-set-left .module h3 a {
+            color: #FFF;
+            }
+
 #module-set-left .module ul {
         margin: 0em 0em 0em 0.5em;
         font-size: 0.8125em;
         background-color: #FFF;
         color: #0000 ;
         font-weight: bold;
+        max-height: 250px;
+        overflow-y: scroll;
+
         }
 
 #module-set-left .module a {
@@ -1340,14 +1348,29 @@ input,textarea{
     float: left;
     width:55%;
     padding: 0em 0em 0em 1em;
+    max-height: 600px;
+    overflow-y: scroll;
     }
 
 .desk_large {
     float: left;
     width:75%;
+    padding: 0em 0.8em 0em 1em;
+    max-height: 600px;
+    overflow-y: scroll;
+    }
+
+.desk_course {
+    float: left;
+    width:75%;
     padding: 0em 0em 0em 1em;
     }
 
+.desk_media {
+    float: left;
+    width: 640px;
+    padding: 0em 0em 0em 1em;
+    }
 
 .course {
     margin: 0em 0em 2em 0em;
@@ -1372,26 +1395,26 @@ input,textarea{
     }
 
 .course_content {
-    /*max-height: 200px;
-    overflow-y: scroll;*/
     background-color: #FFF;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
-    padding: 0em 0em 0em 0.3em;
+    padding: 0em 0em 0em 0em;
 }
 
 
 .course_content h2 {
-    padding: 0.5em 0em 0em 0.3em;
+    padding: 0.5em 0.8em 0em 0.8em;
     }
 
 .course_media {
+    float: left;
     background-color: transparent;
-    margin: 0em 0em 2em 0em;
+    margin: 0em 0em 2em 1em;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
+    width: 640px;
 /*     border: 2px solid #CCC; */
     }
 
@@ -1427,7 +1450,7 @@ input,textarea{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
-
+    padding: 0.5em 0.8em 0.8em 0.8em;
     }
 
 #pm_messages {
@@ -1457,7 +1480,6 @@ input,textarea{
 
 #chatwindow {
     height: 340px;
-    width: 187px;
     border-bottom: 1px solid;
     padding: 0.8em 2em 0em 0em;
     overflow: auto;

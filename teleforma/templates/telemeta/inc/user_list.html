@@ -21,14 +21,12 @@
    <tr><th>{% trans "Last Name"%}</th>
     <th>{% trans "First Name"%}</th>
     <th>{% trans "User"%}</th>
-    <th>{% trans "Training"%}</th>
     <th>{% trans "IEJ"%}</th>
     <th>{% trans "Procedure"%}</th>
     <th>{% trans "Oral spe"%}</th>
     <th>{% trans "Written spe"%}</th>
     <th>{% trans "Oral 1"%}</th>
     <th>{% trans "Oral 2"%}</th>
-    <th>{% trans "Synthesis"%}</th>
     <th>{% trans "Messages"%}</th>
     </tr>
     </thead>
@@ -41,19 +39,15 @@
 
      {% if user.student.get %}
       {% with user.student.get as student %}
-        <td>{{ student.training.code }}</td>
         <td>{{ student.iej.name }}</td>
         <td>{{ student.procedure.code }}</td>
         <td>{{ student.oral_speciality.code }}</td>
         <td>{{ student.written_speciality.code }}</td>
         <td>{{ student.oral_1.code }}</td>
         <td>{{ student.oral_2.code }}</td>
-        <td></td>
      {% endwith %}
     {% elif user.professor.get %}
         <td>{% trans "Professor" %}</td>
-        <td></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
