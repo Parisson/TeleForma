@@ -4,10 +4,9 @@
 
 {% block head_title %}{% trans "Users" %} - {{ block.super }}{% endblock %}
 
-
 {% block title %}
-
 {% endblock %}
+
 
 {% block content %}
 <div id="module-set-left" style="width: 20%">
@@ -26,6 +25,9 @@
 </div>
 
 <div class="desk_course">
+<div style="float:right;">
+<a href="{% url teleforma-users-xls-export %}" class="component_icon button icon_csv">XLS Export</a>
+</div>
 <div class="course_title">{% trans "Users" %}</div>
  {% if users %}
   {% include "telemeta/inc/user_list.html" %}

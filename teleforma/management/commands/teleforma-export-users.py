@@ -45,8 +45,7 @@ class Command(BaseCommand):
 
             print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
 
-    def handle(self, *args, **options):
-        file = args[0]
+    def export(self):
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')
         users = User.objects.all()
@@ -66,12 +65,19 @@ class Command(BaseCommand):
         row.write(12, 'VILLE')
         row.write(13, 'TEL')
         row.write(14, "Date d'inscription")
-        row.write(15, unicode("Categorie"))
+        row.write(15, "Categorie")
 
         count = self.first_row
         for user in users:
             self.export_user(count, user)
             count += 1
-        self.book.save(file)
+
+        self.book.save(self.file)
+
+    def handle(self, *args, **options):
+        self.file = args[0]
+        self.export()
+
+
 
 

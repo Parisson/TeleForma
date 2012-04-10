@@ -42,6 +42,7 @@ from jsonrpc import jsonrpc_site
 import jqchat.views
 
 htdocs_forma = os.path.dirname(__file__) + '/htdocs'
+user_export = UsersXLSExport()
 
 urlpatterns = patterns('',
 
@@ -60,6 +61,7 @@ urlpatterns = patterns('',
     # Users
     url(r'^all_users/$', UsersView.as_view(), name="teleforma-users"),
     url(r'^all_users/by_trainings/(\w+)$', UsersTrainingView.as_view(), name="teleforma-training-users"),
+    url(r'^all_users/export/$', user_export.export, name="teleforma-users-xls-export"),
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
