@@ -140,10 +140,44 @@ class UsersTrainingView(UsersView):
         trainings = Training.objects.filter(id=self.args[0])
         return User.objects.filter(student__training__in=trainings)
 
+    def get_context_data(self, **kwargs):
+        context = super(UsersTrainingView, self).get_context_data(**kwargs)
+        context['training'] = Training.objects.get(id=self.args[0])
+        return context
+
 class UsersXLSExport(object):
 
-    def __init__(self):
-        self.first_row = 1
+    first_row = 2
+
+    def export_user(self, count, user):
+        student = Student.objects.filter(user=user)
+        if student:
+            student = Student.objects.get(user=user)
+            row = self.sheet.row(count)
+            row.write(0, user.last_name)
+            row.write(1, user.first_name)
+            row.write(9, user.email)
+            row.write(2, unicode(student.iej))
+            row.write(3, unicode(student.training.code))
+            row.write(4, unicode(student.procedure))
+            row.write(5, unicode(student.written_speciality))
+            row.write(6, unicode(student.oral_speciality))
+            row.write(7, unicode(student.oral_1))
+            row.write(8, unicode(student.oral_2))
+
+            profile = Profile.objects.filter(user=user)
+            if profile:
+                profile = Profile.objects.get(user=user)
+                row.write(10, profile.address)
+                row.write(11, profile.postal_code)
+                row.write(12, profile.city)
+                row.write(13, profile.telephone)
+                row.write(14, profile.date_added.strftime("%d/%m/%Y"))
+
+            print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
+
+    @method_decorator(permission_required('is_superuser'))
+    def export(self, request):
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')
         row = self.sheet.row(0)
@@ -162,61 +196,22 @@ class UsersXLSExport(object):
         row.write(12, 'VILLE')
         row.write(13, 'TEL')
         row.write(14, "Date d'inscription")
-        row.write(15, "Categorie")
-
-    def export_user(self, count, user):
-        student = Student.objects.filter(user=user)
-        if student:
-            student = Student.objects.get(user=user)
-            row = self.sheet.row(count)
-            row.write(0, user.last_name)
-            row.write(1, user.first_name)
-            row.write(9, user.email)
-            row.write(2, unicode(student.iej))
-            row.write(3, unicode(student.training.code))
-            row.write(4, unicode(student.procedure))
-            row.write(5, unicode(student.written_speciality))
-            row.write(6, unicode(student.oral_speciality))
-            row.write(7, unicode(student.oral_1))
-            row.write(8, unicode(student.oral_2))
-            row.write(15, unicode(student.category))
-
-            profile = Profile.objects.filter(user=user)
-            if profile:
-                profile = Profile.objects.get(user=user)
-                row.write(10, profile.address)
-                row.write(11, profile.postal_code)
-                row.write(12, profile.city)
-                row.write(13, profile.telephone)
-                row.write(14, profile.date_added.strftime("%d/%m/%Y"))
-
-            print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
-
-    @method_decorator(permission_required('is_superuser'))
-    def export(self, request):
-        users = User.objects.all()
         count = self.first_row
-        for user in users:
+        for user in self.users:
             self.export_user(count, user)
             count += 1
-
         response = HttpResponse(mimetype="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         self.book.save(response)
         return response
 
     @method_decorator(permission_required('is_superuser'))
-    def export_training(self, request, id):
-        users = User.objects.all().select_related(depth=2)
+    def all(self, request):
+        self.users = User.objects.all()
+        return self.export(request)
+
+    @method_decorator(permission_required('is_superuser'))
+    def by_training(self, request, id):
         trainings = Training.objects.filter(id=id)
-        users = User.objects.filter(student__training__in=trainings)
-
-        count = self.first_row
-        for user in users:
-            self.export_user(count, user)
-            count += 1
-
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
-        response['Content-Disposition'] = 'attachment; filename=users.xls'
-        self.book.save(response)
-        return response
+        self.users = User.objects.all().select_related(depth=2).filter(student__training__in=trainings)
+        return self.export(request)

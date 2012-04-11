@@ -28,7 +28,7 @@
 
 {% if user.is_staff %}
 <div style="float:right;">
-<a href="{% url teleforma-users-xls-export %}" class="component_icon button icon_csv">XLS Export</a>
+<a href="{% if training %}{% url teleforma-training-users-export training.id %}{% else %}{% url teleforma-users-xls-export %}{% endif %}" class="component_icon button icon_csv">XLS Export</a>
 </div>
 {% endif %}
 
