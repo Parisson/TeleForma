@@ -1348,7 +1348,7 @@ input,textarea{
     float: left;
     width:55%;
     padding: 0em 0em 0em 1em;
-    max-height: 600px;
+    max-height: 550px;
     overflow-y: scroll;
     }
 
@@ -1356,7 +1356,7 @@ input,textarea{
     float: left;
     width:75%;
     padding: 0em 0.8em 0em 1em;
-    max-height: 600px;
+    max-height: 550px;
     overflow-y: scroll;
     }
 

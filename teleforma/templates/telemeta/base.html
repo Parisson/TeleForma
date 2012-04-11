@@ -64,7 +64,7 @@ alt="Telemeta Powered"/>-->
  </li>
  {% else %}
   <li><a href="{% url telemeta-home %}" class="blue">{% trans "Home" %}</a></li>
-  <li><a href="{% url telemeta-login %}" class="violet">{% trans "Sign in" %}</a></li>
+  <li><a href="{% url telemeta-login %}" class="red">{% trans "Sign in" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
