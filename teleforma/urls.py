@@ -60,7 +60,7 @@ urlpatterns = patterns('',
 
     # Users
     url(r'^user/all/$', UsersView.as_view(), name="teleforma-users"),
-    url(r'^user/by_training/(\w+)$', UsersTrainingView.as_view(), name="teleforma-training-users"),
+    url(r'^user/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
     url(r'^user/all/export/$', user_export.all, name="teleforma-users-xls-export"),
     url(r'^user/by_training/(?P<id>.*)/export/$', user_export.by_training, name="teleforma-training-users-export"),
 

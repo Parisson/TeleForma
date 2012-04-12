@@ -17,7 +17,7 @@
 <a href="{{ by_message_url }}" class="component_icon button icon_filter">{% trans "by message" %}</a>
 </div>{% endblock pm_by_modes %}
 <br />
-
+{% paginate %}
 <form id="_messageForm" action="{% block pm_form_action %}{% endblock %}" method="post">{% csrf_token %}
 
 <table id="pm_messages" class="listing" >
@@ -61,7 +61,6 @@
 </span>{% endblock %}
 
 </form>
-{% paginate %}
 {% else %}
 <p>{% trans "No messages." %}</p>
 {% endif %}

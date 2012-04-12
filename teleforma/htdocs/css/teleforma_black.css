@@ -471,7 +471,7 @@ form.login .submit {
 #menu .orange { border-bottom-color:  #e65911; }
 #menu .darkgreen { border-bottom-color:  #006a12; }
 #menu .black { border-bottom-color:  #000000; }
-#menu .red { border-bottom-color:  #DD0000; }
+#menu .red { border-bottom-color:  #cc0000; }
 #menu .violet { border-bottom-color:  #A00020; }
 #menu .origin { border-bottom-color: transparent; }
 
@@ -1161,7 +1161,14 @@ a.image-link {
     background-color:  #3c9200;
     color: #FFF;
     padding:0.8em 0.8em 0.8em 0.8em;
-        }
+   }
+
+#action_orange {
+    background-color: #e65911;
+    color: #FFF;
+    padding:0.8em 0.8em 0.8em 0.8em;
+   }
+
 
 .list_item, .list_item:visited, .list_item:hover{
     display:block;

@@ -49,6 +49,7 @@
         </div>
 
         {% if course.conference.all or course.document.all or course.media.all %}
+
         {% block document %}
         {% with course as course %}
         {% include "teleforma/inc/document_list.html" %}

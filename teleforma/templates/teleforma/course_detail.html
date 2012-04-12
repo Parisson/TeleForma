@@ -14,6 +14,8 @@
 <div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
 </div>
 
+{% if course.conference.all or course.document.all or course.media.all %}
+
 {% block document %}
 {% with course as course and %}
 {% include "teleforma/inc/document_list.html" %}
@@ -31,6 +33,12 @@
 {% include "teleforma/inc/conference_list.html" %}
 {% endwith %}
 {% endblock %}
+
+{% else %}
+<div class="course_content">
+<h2>{% trans "No document" %}</h2>
+</div>
+{% endif %}
 
 </div>
 </div>

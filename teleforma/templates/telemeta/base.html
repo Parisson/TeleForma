@@ -78,8 +78,6 @@ alt="Telemeta Powered"/>-->
  {% if user.is_staff %}
  <li><a href="#archives#" class="green">{% trans "Archives" %}</a>
  <ul>
- <li><a href="{% url telemeta-fonds %}">{% trans "Fonds" %}</a></li>
- <li><a href="{% url telemeta-corpus %}">{% trans "Corpus" %}</a></li>
  <li><a href="{% url telemeta-collections %}">{% trans "Collections" %}</a></li>
  <li><a href="{% url telemeta-items %}">{% trans "Items" %}</a></li>
  </ul>
@@ -90,6 +88,14 @@ alt="Telemeta Powered"/>-->
  {% endif %}
 
  {% if user.is_authenticated %}
+  {% if user.is_staff %}
+ <li><a href="#admin#" class="blue">{% trans "Admin" %}</a>
+  <ul>
+    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
+  </ul>
+ </li>
+ {% endif %}
+
  <li><a href="#profil#" class="blue"><img src="{% url telemeta-images "user_tr.png" %}" alt="user" style="vertical-align:middle" width="13px" />{% if user.first_name and user.last_name %}
  {{ user.first_name }} {{ user.last_name }}
  {% else %}
@@ -105,13 +111,6 @@ alt="Telemeta Powered"/>-->
     </ul>
  </li>
 
- {% if user.is_staff %}
- <li><a href="#admin#" class="blue">{% trans "Admin" %}</a>
-  <ul>
-    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
-  </ul>
- </li>
- {% endif %}
  {% endif %}
 {% endif %}
 
