@@ -25,6 +25,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 from teleforma.models import *
 from telemeta.views.base import *
@@ -90,6 +91,11 @@ class CourseView(DetailView):
         context['notes'] = course.notes.all().filter(author=self.request.user)
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CourseView, self).dispatch(*args, **kwargs)
+
+
 class CoursesView(ListView):
 
     model = Course
@@ -100,6 +106,11 @@ class CoursesView(ListView):
         context['object_list'] = get_courses(self.request.user)
         context['notes'] = Note.objects.filter(author=self.request.user)
         return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CoursesView, self).dispatch(*args, **kwargs)
+
 
 class MediaView(DetailView):
 
@@ -118,6 +129,11 @@ class MediaView(DetailView):
         context['room'] = media.course.chat_room
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MediaView, self).dispatch(*args, **kwargs)
+
+
 class UsersView(ListView):
 
     model = User
@@ -134,6 +150,11 @@ class UsersView(ListView):
         context['all_users'] = User.objects.all()
         return context
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UsersView, self).dispatch(*args, **kwargs)
+
+
 class UsersTrainingView(UsersView):
 
     def get_queryset(self):
@@ -141,11 +162,17 @@ class UsersTrainingView(UsersView):
         self.trainings = Training.objects.filter(id=self.args[0])
         return User.objects.filter(student__training__in=self.trainings)
 
+    @login_required
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)
         context['training'] = Training.objects.get(id=self.args[0])
         context['all_users'] = User.objects.filter(student__training__in=self.trainings).all()
         return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UsersTrainingView, self).dispatch(*args, **kwargs)
+
 
 class UsersXLSExport(object):
 
