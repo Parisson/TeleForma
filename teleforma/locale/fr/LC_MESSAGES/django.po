@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 10:01+0200\n"
+"POT-Creation-Date: 2012-04-12 11:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,7 +246,7 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: templates/postman/base.html:23
+#: templates/postman/base.html:23 templates/telemeta/users.html:29
 msgid "New message"
 msgstr "Nouveau message"
 
@@ -344,20 +344,28 @@ msgstr ""
 msgid "You have received a message from the user '%(sender)s'."
 msgstr ""
 
-#: templates/postman/email_user.txt:17 templates/postman/email_visitor.txt:14
+#: templates/postman/email_user.txt:15
+msgid ""
+"You can read and respond to this message from your e-learning desk following "
+"this link:"
+msgstr ""
+"Vous pouvez lire et répondre à ce message depuis votre bureau e-learning en "
+"suivant ce lien :"
+
+#: templates/postman/email_user.txt:18 templates/postman/email_visitor.txt:14
 msgid "Thank you again for your interest in our services."
 msgstr ""
 
-#: templates/postman/email_user.txt:18 templates/postman/email_visitor.txt:16
+#: templates/postman/email_user.txt:19 templates/postman/email_visitor.txt:16
 msgid "The site administrator"
 msgstr ""
 
-#: templates/postman/email_user.txt:18
+#: templates/postman/email_user.txt:19
 #: templates/telemeta/inc/user_list.html:10
 msgid "of"
 msgstr "de"
 
-#: templates/postman/email_user.txt:20 templates/postman/email_visitor.txt:18
+#: templates/postman/email_user.txt:21 templates/postman/email_visitor.txt:18
 msgid ""
 "Note: This message is issued by an automated system.\n"
 "Do not reply, this would not be taken into account."
@@ -525,8 +533,8 @@ msgstr ""
 msgid "Messages"
 msgstr "Messages"
 
-#: templates/telemeta/base.html:74 templates/telemeta/users.html:5
-#: templates/telemeta/users.html.py:35
+#: templates/telemeta/base.html:74 templates/telemeta/users.html:6
+#: templates/telemeta/users.html.py:43
 msgid "Users"
 msgstr ""
 
@@ -593,15 +601,15 @@ msgstr ""
 msgid "Legal notices"
 msgstr ""
 
-#: templates/telemeta/home.html:14 templates/telemeta/home.html.py:42
-msgid "Musical selection"
+#: templates/telemeta/home.html:26
+msgid "Connexion"
 msgstr ""
 
-#: templates/telemeta/users.html:14
+#: templates/telemeta/users.html:15
 msgid "Trainings"
 msgstr "Formations"
 
-#: templates/telemeta/users.html:39
+#: templates/telemeta/users.html:48
 #, fuzzy
 msgid "No users"
 msgstr "Pas d'utilisateurs"
