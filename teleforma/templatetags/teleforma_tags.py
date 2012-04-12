@@ -49,3 +49,10 @@ class ValueFromSettings(template.Node):
 def trainings(user):
     student = user.student.get()
     return training.student.all()
+
+@register.filter
+def to_recipients(users):
+    list = []
+    for user in users:
+        list.append(user.username)
+    return ':'.join(list)

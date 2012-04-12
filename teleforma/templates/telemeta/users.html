@@ -1,6 +1,7 @@
 {% extends "telemeta/base.html" %}
 {% load i18n %}
 {% load telemeta_utils %}
+{% load teleforma_tags %}
 
 {% block head_title %}{% trans "Users" %} - {{ block.super }}{% endblock %}
 
@@ -22,6 +23,13 @@
 </ul>
 </div>
 </div>
+
+{% if users %}
+<div class="module_action">
+<a href="{% url postman_write all_users|to_recipients %}" class="component_icon button" id="action_green">{% trans "New message" %}</a>
+</div>
+{% endif %}
+
 </div>
 
 <div class="desk_course">
