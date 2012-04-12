@@ -64,10 +64,6 @@ $(document).ready(function () {
     {% endwith %}
     {% endblock %}
 
-    <div class="module_action">
-    <a href="#" class="component_icon button" id="action_yellow"
-      onclick="document.getElementById('searchform').submit(); return false;">{% trans 'Search' %}</a>
-    </div>
 </div>
 
 <div class="desk_course">
@@ -151,6 +147,14 @@ $(document).ready(function () {
 </fieldset>
 
 </form>
+
 </div>
 </div>
+
+<div class="module_action">
+    <a href="#" class="component_icon button" id="action_yellow"
+      onclick="document.getElementById('searchform').submit(); return false;">{% trans 'Search' %}</a>
+</div>
+
+
 {% endblock %}

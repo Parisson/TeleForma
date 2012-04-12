@@ -927,7 +927,7 @@ img.align-left {
     border: 1px solid #000;
     background-image: url(../images/grid_bg_2.png);
     padding: 0.3em 0.4em 0.4em 0.4em;
-    margin: 2.5em 1em 1em 0em;
+    margin: 2em 1em 0em 0em;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1152,9 +1152,14 @@ a.image-link {
     padding:0.8em 0.8em 0.8em 0.8em;
     }
 
+#action_violet {
+    background-color: #a00020;
+    color: #FFF;
+    padding:0.8em 0.8em 0.8em 0.8em;
+    }
 
 #action_red {
-    background-color:  #d24836;
+    background-color:  #db1020;
     color: #FFF;
     padding:0.8em 0.8em 0.8em 0.8em;
     }
