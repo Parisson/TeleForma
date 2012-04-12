@@ -701,6 +701,13 @@ digraph name {
         ></TD></TR>
         
         <TR><TD ALIGN="LEFT" BORDER="0"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">date_added</FONT
+        ></TD>
+        <TD ALIGN="LEFT"
+        ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">DateTimeField</FONT
+        ></TD></TR>
+        
+        <TR><TD ALIGN="LEFT" BORDER="0"
         ><FONT COLOR="#7B7B7B" FACE="Helvetica Bold">expiration_date</FONT
         ></TD>
         <TD ALIGN="LEFT"
@@ -740,12 +747,12 @@ digraph name {
   [label="department (course)"] [arrowhead=none, arrowtail=dot];
   
   
-  teleforma_models_Course -> teleforma_models_Category
-  [label="category (course)"] [arrowhead=none, arrowtail=dot];
-  
-  
   teleforma_models_Course -> teleforma_models_CourseType
   [label="type (course)"] [arrowhead=none, arrowtail=dot];
+  
+  
+  teleforma_models_Course -> jqchat_models_Room
+  [label="chat_room (course)"] [arrowhead=none, arrowtail=none];
   
 
   
@@ -785,6 +792,18 @@ digraph name {
   teleforma_models_Conference -> teleforma_models_Room
   [label="room (conference)"] [arrowhead=none, arrowtail=dot];
   
+  
+  django_contrib_auth_models_User [label=<
+      <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4"
+      ><FONT FACE="Helvetica Bold" COLOR="white"
+      >User</FONT></TD></TR>
+      </TABLE>
+      >]
+  
+  teleforma_models_Conference -> django_contrib_auth_models_User
+  [label="readers (conference)"] [arrowhead=dot arrowtail=dot, dir=both];
+  
 
   
   
@@ -794,6 +813,18 @@ digraph name {
   
   teleforma_models_Document -> teleforma_models_Conference
   [label="conference (document)"] [arrowhead=none, arrowtail=dot];
+  
+  
+  django_contrib_auth_models_User [label=<
+      <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4"
+      ><FONT FACE="Helvetica Bold" COLOR="white"
+      >User</FONT></TD></TR>
+      </TABLE>
+      >]
+  
+  teleforma_models_Document -> django_contrib_auth_models_User
+  [label="readers (document)"] [arrowhead=dot arrowtail=dot, dir=both];
   
 
   
@@ -817,9 +848,25 @@ digraph name {
   teleforma_models_Media -> telemeta_models_media_MediaItem
   [label="item (media)"] [arrowhead=none, arrowtail=dot];
   
+  
+  django_contrib_auth_models_User [label=<
+      <TABLE BGCOLOR="palegoldenrod" BORDER="0" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER" BGCOLOR="olivedrab4"
+      ><FONT FACE="Helvetica Bold" COLOR="white"
+      >User</FONT></TD></TR>
+      </TABLE>
+      >]
+  
+  teleforma_models_Media -> django_contrib_auth_models_User
+  [label="readers (media)"] [arrowhead=dot arrowtail=dot, dir=both];
+  
 
   
 
+  
+  
+  teleforma_models_Training -> teleforma_models_Category
+  [label="category (course)"] [arrowhead=none, arrowtail=dot];
   
   
   teleforma_models_Training -> teleforma_models_Course

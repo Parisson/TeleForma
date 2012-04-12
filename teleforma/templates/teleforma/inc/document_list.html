@@ -9,6 +9,8 @@
         <th class="highlight">{% trans "Title" %}</th>
         <th>{% trans "Description" %}</th>
         <th>{% trans "Date added" %}</th>
+        <th>{% trans "Annal" %}</th>
+<!--         <th>{% trans "Download" %}</th> -->
         </tr>
     </thead>
     <tbody>
@@ -17,6 +19,8 @@
         <td><a href="{% url teleforma-document-view document.id %}" target="_blank">{{ document.title }}</a></td>
         <td>{{ document.description }}</td>
         <td>{{ document.date_added }}</td>
+        <td>{{ document.is_annal }}</td>
+        <!--<td><a href="{% url teleforma-document-view document.id %}"><img src="{% url telemeta-images "download.png" %}" width="20px" /></a></td>-->
         </tr>
     {% endfor %}
     </tbody>

@@ -3,7 +3,7 @@
 
 {% block courses %}
 {% for course in courses %}
-<li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+<li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
 {% endfor %}
 {% endblock courses %}
 
@@ -36,7 +36,7 @@
 
 {% else %}
 <div class="course_content">
-<h2>{% trans "No document" %}</h2>
+<p>{% trans "No document" %}</p>
 </div>
 {% endif %}
 

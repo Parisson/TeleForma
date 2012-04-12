@@ -15,7 +15,7 @@
 <ul>
 {% block courses %}
 {% for course in object_list %}
-<li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+<li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
 {% endfor %}
 {% endblock courses %}
 </ul>
@@ -45,7 +45,7 @@
 <div class="desk_large">
     {% for course in object_list %}
       <div class="course">
-        <div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
+        <div class="course_title">{{ course.title }} - {{ course.type }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
         {% if course.conference.all or course.document.all or course.media.all %}
@@ -69,7 +69,7 @@
         {% endblock %}
         {% else %}
         <div class="course_content">
-         <h2>{% trans "No document" %}</h2>
+         <p>{% trans "No document" %}</p>
         </div>
         {% endif %}
       </div>

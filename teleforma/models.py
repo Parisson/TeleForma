@@ -170,6 +170,8 @@ class Conference(Model):
     comment         = CharField(_('comment'), max_length=255, blank=True)
     date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
+    readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
+                                        blank=True, null=True)
 
     @property
     def description(self):
@@ -216,6 +218,8 @@ class Document(MediaBase):
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
+    readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
+                                        blank=True, null=True)
 
     def is_image(self):
         is_url_image = False
@@ -233,6 +237,12 @@ class Document(MediaBase):
     def __unicode__(self):
         return  ' - '.join([self.title, unicode(self.course)])
 
+    def set_read(self, user):
+        pass
+
+    def get_read(self, user):
+        return user in self.readers
+
     class Meta:
         db_table = app_label + '_' + 'document'
 
@@ -248,7 +258,8 @@ class Media(MediaBase):
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
     is_live         = BooleanField(_('is live'))
-
+    readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
+                                        blank=True, null=True)
 
     def __unicode__(self):
         description = self.course.title
