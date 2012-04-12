@@ -34,6 +34,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
+USE_TZ = True
 TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
@@ -141,6 +142,7 @@ INSTALLED_APPS = (
     'markup_mixin',
     'notes',
 #    'jquery',
+    'timezones',
     'jqchat',
 #    'follow',
 )
@@ -166,7 +168,7 @@ TELEMETA_PUBLIC_ACCESS_PERIOD = 51
 
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = reverse_lazy('teleforma-courses')
+LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 EMAIL_HOST = 'localhost'

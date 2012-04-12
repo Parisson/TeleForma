@@ -39,7 +39,6 @@ from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
 from jsonrpc import jsonrpc_site
-import jqchat.views
 
 htdocs_forma = os.path.dirname(__file__) + '/htdocs'
 user_export = UsersXLSExport()
@@ -49,7 +48,7 @@ urlpatterns = patterns('',
     # Telemeta
     url(r'^', include('telemeta.urls')),
 
-    url(r'^desk/courses/$', CoursesView.as_view(), name="teleforma-courses"),
+    url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
     url(r'^desk/courses/(?P<pk>.*)$', CourseView.as_view(), name="teleforma-course-detail"),
     url(r'^desk/medias/(?P<pk>.*)$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/documents/(?P<pk>.*)/download/', document_download, name="teleforma-document-download"),
@@ -75,10 +74,12 @@ urlpatterns = patterns('',
         {'document_root': htdocs_forma+'/js'},
         name="teleforma-js"),
 
-# JSON RPC
+    # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
 
 #    url(r'^private_files/', include('private_files.urls')),
-    url(r'^room/(?P<id>\d+)/ajax/$', jqchat.views.BasicAjaxHandler, name="jqchat_ajax"),
+
+    # JQCHAT
+    url(r'^', include('jqchat.urls')),
 
 )

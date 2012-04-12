@@ -58,3 +58,11 @@ def to_recipients(users):
     return ':'.join(list)
 
 
+
+import django.utils.timezone as timezone
+
+from timezones.utils import localtime_for_timezone
+
+@register.filter
+def localtime(value, timezone):
+    return localtime_for_timezone(value, timezone)
