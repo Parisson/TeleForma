@@ -162,7 +162,6 @@ class UsersTrainingView(UsersView):
         self.trainings = Training.objects.filter(id=self.args[0])
         return User.objects.filter(student__training__in=self.trainings)
 
-    @login_required
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)
         context['training'] = Training.objects.get(id=self.args[0])
