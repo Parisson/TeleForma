@@ -20,9 +20,13 @@
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
         <td><a href="{% url teleforma-document-view document.id %}" target="_blank">{{ document.title }}</a></td>
         <td>{{ document.description }}</td>
-        <td>{{ document.is_annal }}</td>
+        <td align="center">
+        {% if document.is_annal %}
+          <img src="images/ok.png" alt="yes" style="vertical-align:middle" />&nbsp;
+        {% endif %}
+        </td>
         <td>{{ document.date_added }}</td>
-        <td><a href="{% url teleforma-document-view document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px" /></a></td>
+        <td align="center"><a href="{% url teleforma-document-view document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" />&nbsp;</a></td>
         </tr>
     {% endfor %}
     </tbody>

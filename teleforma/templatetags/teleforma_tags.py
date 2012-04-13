@@ -60,7 +60,6 @@ def to_recipients(users):
 
 
 import django.utils.timezone as timezone
-
 from timezones.utils import localtime_for_timezone
 
 @register.filter
