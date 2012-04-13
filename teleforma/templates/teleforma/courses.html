@@ -1,8 +1,17 @@
 {% extends "telemeta/base.html" %}
 {% load i18n %}
 
-{% block extra_stylesheets %}
-{% endblock %}
+
+{% block extra_javascript %}
+
+<script type="text/javascript" src="/static/jqchat/jqchat.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    });
+</script>
+
+{% endblock extra_javascript %}
 
 
 {% block content %}
@@ -80,6 +89,23 @@
 </div>
 
 {% block chat %}
+{% if room %}
+<div id="module-set" style="width: 290px">
+<div class="module">
+<h3><img src="{% url telemeta-images "search_wh2.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Tweeter" %}</h3>
+
+<div style="background: white;">
+<div id="chatwindow"><span id="loading">Loading...</span></div>
+<form id="chatform">{% csrf_token %}
+<label for="msg"></label>
+<input type="text" id="msg" />
+<input type="submit" value="{% trans "Send" %}" />
+</form>
+<!--<script type="text/javascript">document.getElementById("msg").focus();</script>-->
+</div>
+</div>
+</div>
+{% endif %}
 {% endblock chat %}
 
 {% endblock content %}

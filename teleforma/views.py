@@ -80,12 +80,13 @@ def document_view(request, pk):
     response = HttpResponse(fsock, mimetype=mimetype)
     return response
 
-def get_room(content_type, id, name):
-    rooms = jqchat.models.Room.objects.filter(content_type=content_type, object_id=id)
+def get_room(content_type=None, id=None, name=None):
+    rooms = jqchat.models.Room.objects.filter(content_type=content_type,
+                                                object_id=id, name=name)
     if not rooms:
         room = jqchat.models.Room.objects.create(content_type=content_type,
-                                      object_id=id,
-                                      name=name[:20])
+                                          object_id=id,
+                                          name=name[:20])
     else:
         room = rooms[0]
     return room
@@ -101,7 +102,8 @@ class CourseView(DetailView):
         course = self.get_object()
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(content_type, course.id, course.title)
+        context['room'] = get_room(name=course.title, content_type=content_type,
+                                   id=course.id)
         return context
 
     @method_decorator(login_required)
@@ -118,6 +120,7 @@ class CoursesView(ListView):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['object_list'] = get_courses(self.request.user)
         context['notes'] = Note.objects.filter(author=self.request.user)
+        context['room'] = get_room(name='site')
         return context
 
     @method_decorator(login_required)
@@ -140,7 +143,8 @@ class MediaView(DetailView):
         context['item'] = media.item
         context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="media")
-        context['room'] = get_room(content_type, media.id, media.item.title)
+        context['room'] = get_room(name=media.item.title, content_type=content_type,
+                                   id=media.id)
         return context
 
     @method_decorator(login_required)

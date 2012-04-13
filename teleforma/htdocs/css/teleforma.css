@@ -1369,8 +1369,8 @@ input,textarea{
 
 .desk_center {
     float: left;
-    width:55%;
-    padding: 0em 0em 0em 1em;
+    width:52%;
+    padding: 0em 2em 0em 1em;
     max-height: 550px;
     overflow-y: scroll;
     }
