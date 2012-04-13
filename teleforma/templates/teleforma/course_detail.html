@@ -1,6 +1,17 @@
 {% extends "teleforma/courses.html" %}
 {% load i18n %}
 
+{% block extra_javascript %}
+
+<script type="text/javascript" src="/static/jqchat/jqchat.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    });
+</script>
+
+{% endblock extra_javascript %}
+
 {% block courses %}
 {% for course in courses %}
 <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
@@ -8,7 +19,7 @@
 {% endblock courses %}
 
 {% block course %}
-<div class="desk_course">
+<div class="desk_media">
 <div class="course">
 
 <div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
@@ -43,3 +54,23 @@
 </div>
 </div>
 {% endblock course %}
+
+{% block chat %}
+{% if room %}
+<div id="module-set" style="width: 290px">
+<div class="module">
+<h3><img src="{% url telemeta-images "search_wh2.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Tweeter" %}</h3>
+
+<div style="background: white;">
+<div id="chatwindow"><span id="loading">Loading...</span></div>
+<form id="chatform">{% csrf_token %}
+<label for="msg"></label>
+<input type="text" id="msg" />
+<input type="submit" value="{% trans "Send" %}" />
+</form>
+<!--<script type="text/javascript">document.getElementById("msg").focus();</script>-->
+</div>
+</div>
+</div>
+{% endif %}
+{% endblock chat %}

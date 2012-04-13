@@ -134,6 +134,8 @@ class Professor(Model):
     user            = ForeignKey(User, related_name='professor', verbose_name=_('user'), unique=True)
     courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
+    training        = ForeignKey('Training', related_name='professor',
+                                 verbose_name=_('training'), blank=True, null=True)
 
     def __unicode__(self):
         return self.user.username

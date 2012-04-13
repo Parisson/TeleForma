@@ -80,6 +80,16 @@ def document_view(request, pk):
     response = HttpResponse(fsock, mimetype=mimetype)
     return response
 
+def get_room(content_type, id, name):
+    rooms = jqchat.models.Room.objects.filter(content_type=content_type, object_id=id)
+    if not rooms:
+        room = jqchat.models.Room.objects.create(content_type=content_type,
+                                      object_id=id,
+                                      name=name[:20])
+    else:
+        room = rooms[0]
+    return room
+
 
 class CourseView(DetailView):
 
@@ -90,6 +100,8 @@ class CourseView(DetailView):
         context['courses'] = get_courses(self.request.user)
         course = self.get_object()
         context['notes'] = course.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(content_type, course.id, course.title)
         return context
 
     @method_decorator(login_required)
@@ -127,15 +139,8 @@ class MediaView(DetailView):
         context['course'] = media.course
         context['item'] = media.item
         context['notes'] = media.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        rooms = jqchat.models.Room.objects.filter(content_type=content_type, object_id=media.course.id)
-        if not rooms:
-            room = jqchat.models.Room.objects.create(content_type=content_type,
-                                      object_id=media.course.id,
-                                      name=media.course.title[:20])
-        else:
-            room = rooms[0]
-        context['room'] = room
+        content_type = ContentType.objects.get(app_label="teleforma", model="media")
+        context['room'] = get_room(content_type, media.id, media.item.title)
         return context
 
     @method_decorator(login_required)

@@ -42,7 +42,7 @@
 
 
 {% block course %}
-<div class="desk_large">
+<div class="desk_center">
     {% for course in object_list %}
       <div class="course">
         <div class="course_title">{{ course.title }} - {{ course.type }}{% if course.description %} - {{ course.description }}{% endif %}

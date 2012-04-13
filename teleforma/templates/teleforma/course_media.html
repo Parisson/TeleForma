@@ -60,11 +60,10 @@ $(document).ready(function(){
 
 {% block chat %}
 {% if room %}
-
 <div id="module-set" style="width: 290px">
-
 <div class="module">
-<h3><img src="{% url telemeta-images "search_wh2.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Chatter" %}</h3>
+<h3><img src="{% url telemeta-images "search_wh2.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Tweeter" %}</h3>
+
 <div style="background: white;">
 <div id="chatwindow"><span id="loading">Loading...</span></div>
 <form id="chatform">{% csrf_token %}
@@ -76,8 +75,5 @@ $(document).ready(function(){
 </div>
 </div>
 </div>
-</div>
-
-
 {% endif %}
 {% endblock chat %}
