@@ -4,7 +4,7 @@
 {% load postman_tags %}
 
 {% block content %}
-<div id="postman" class="desk_media">
+<div id="postman" class="desk_large">
 <h1>{% if pm_messages|length > 1 %}{% trans "Conversation" %}{% else %}{% trans "Message" %}{% endif %}</h1>
 <br /><br />
 {% for message in pm_messages %}

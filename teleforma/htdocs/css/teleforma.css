@@ -767,7 +767,7 @@ dl.dublincore dd.caption {
     padding: .3em 0;
     font-size: 1em;
     background-color: transparent;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 0px solid #aaa;
     color: #333;
     font-weight: bold;
 }
@@ -1360,8 +1360,7 @@ input,textarea{
         color: #0000 ;
         font-weight: normal;
         max-height: 250px;
-        overflow-y: scroll;
-
+        overflow-y: auto;
         }
 
 #module-set-left .module a {
@@ -1381,8 +1380,6 @@ input,textarea{
     float: left;
     width:75%;
     padding: 0em 1.8em 0em 1em;
-    max-height: 550px;
-    overflow-y: scroll;
     }
 
 .desk_course {
@@ -1530,4 +1527,9 @@ input,textarea{
     padding: 1em 1em 1em 0.3em;
     font-size: 0.9125em;
     font-weight: normal;
+    }
+
+#paginate_fix {
+    padding: 1em 0em 0em 0em;
+    margin: 0em 0em -0.8em 0em;
     }

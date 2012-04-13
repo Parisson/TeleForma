@@ -4,16 +4,7 @@
 {% load pagination_tags %}
 
 {% if is_paginated %}
-<div class="pagination" id="user_pagination">
-{% if page_obj.has_previous %}
-<a href="{% url teleforma-users %}?page={{ page_obj.previous_page_number }}">< {% trans "Previous" %}</a>
-{% endif %}
-{% trans "Page" %} {{ page_obj.number }} {%trans "of" %} {{ page_obj.paginator.num_pages }}.
-{% if page_obj.has_next %}
-<a href="{% url teleforma-users %}?page={{ page_obj.next_page_number }}">{% trans "Next" %} ></a>
-{% endif %}
-</span>
-</div>
+{% paginate %}
 {% endif %}
 
 <div id="users">
