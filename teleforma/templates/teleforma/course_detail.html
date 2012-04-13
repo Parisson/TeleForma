@@ -57,7 +57,7 @@ $(document).ready(function(){
 
 {% block chat %}
 {% if room %}
-<div id="module-set" style="width: 290px">
+<div id="module-set" style="width: 24%">
 <div class="module">
 <h3><img src="{% url telemeta-images "search_wh2.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Tweeter" %}</h3>
 
@@ -68,7 +68,7 @@ $(document).ready(function(){
 <input type="text" id="msg" />
 <input type="submit" value="{% trans "Send" %}" />
 </form>
-<script type="text/javascript">document.getElementById("msg").focus();</script>
+<!-- <script type="text/javascript">document.getElementById("msg").focus();</script> -->
 </div>
 </div>
 </div>
