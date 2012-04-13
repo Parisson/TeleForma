@@ -10,7 +10,6 @@
    <thead>
    <tr><th>{% trans "Last Name"%}</th>
     <th>{% trans "First Name"%}</th>
-    <th>{% trans "User"%}</th>
     <th>{% trans "IEJ"%}</th>
     <th>{% trans "Procedure"%}</th>
     <th>{% trans "Oral spe"%}</th>
@@ -23,9 +22,8 @@
     <tbody id="spacing">
     {% for user in users %}
     <tr>
-     <td>{{ user.last_name }}</td>
-     <td>{{ user.first_name }}</td>
-     <td><a href="{% url telemeta-profile-detail user.username %}">{{user.username}}</a></td>
+     <td><a href="{% url telemeta-profile-detail user.username %}">{{ user.last_name }}</a></td>
+     <td><a href="{% url telemeta-profile-detail user.username %}">{{ user.first_name }}</a></td>
 
      {% if user.student.get %}
       {% with user.student.get as student %}

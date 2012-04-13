@@ -571,8 +571,8 @@ color:#FFF;
     font-size: 0.8125em;
     border-top: 1px solid #FFF;
     border-bottom: 1px solid #000;
-    height: 29px;
-    padding: 0em 0.5em 1em 0.5em;
+    height: 30px;
+    padding: 0em 0.5em 10px 0.5em;
     margin-top: 2.5em;
 }
 #footer :link, #footer :visited { color: #FFF; }
@@ -1543,7 +1543,7 @@ input,textarea{
 
 #spacing td {
     padding: 1em 1em 1em 0.3em;
-    font-size: 0.9125em;
+    font-size: 0.8125em;
     font-weight: normal;
     }
 
