@@ -86,7 +86,7 @@ a img { border: none; }
     color: #000000;
     font-weight: bold;
     display:  inline;
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 #content h3 {
     color: #000000;
@@ -1334,7 +1334,7 @@ input,textarea{
 
 #module-set .module h3 {
     color: #FFF;
-    font-size: 1em;
+    font-size: 1.1em;
     font-weight: bold;
     margin-top: 0.2em;
     margin-bottom: 0.2em;
@@ -1362,7 +1362,7 @@ input,textarea{
 
 #module-set-left .module h3 {
             color: #FFF;
-            font-size: 1em;
+            font-size: 1.1em;
             font-weight: bold;
             }
 
@@ -1444,7 +1444,7 @@ input,textarea{
     border-radius: 8px 0px 0px 0px;
     padding: 0em 0.8em 0em 0em;
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1.2em;
     }
 
 .course_content {
