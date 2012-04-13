@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 {% load i18n %}
 {% load telemeta_utils %}
-
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
 <title>{%block head_title %}{% description %} - Telemeta{% endblock %}</title>
 
 {% block stylesheets %}
@@ -35,6 +38,9 @@
 {% else %}
 <script type='text/javascript'>var CURRENT_USER_NAME=undefined;</script>
 {% endif %}
+
+<script type='text/javascript'>window.scrollTo(0, 1);</script>
+
 {% endblock %}
 
 {% block extra_javascript %}{% endblock %}

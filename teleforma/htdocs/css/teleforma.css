@@ -939,8 +939,8 @@ img.align-left {
     color: #FFF;
     font-size: 1.1em;
     font-weight: bold;
-    -webkit-margin-before: 0.2em;
-    -webkit-margin-after: 0.2em;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
 }
 
 #module-set .module a:hover {
@@ -1380,6 +1380,13 @@ input,textarea{
     float: left;
     width:75%;
     padding: 0em 1.8em 0em 1em;
+    }
+
+
+.desk_messages {
+    float: left;
+    width:75%;
+    padding: 0em 0em 0em 1em;
     }
 
 .desk_course {
