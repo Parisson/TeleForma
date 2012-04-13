@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-13 09:57+0200\n"
+"POT-Creation-Date: 2012-04-13 11:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -138,7 +138,7 @@ msgstr "fichier"
 msgid "is live"
 msgstr "en direct"
 
-#: models.py:293 models.py:294 templates/telemeta/inc/user_list.html:16
+#: models.py:293 models.py:294 templates/telemeta/inc/user_list.html:14
 msgid "IEJ"
 msgstr "IEJ"
 
@@ -250,7 +250,7 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: templates/postman/base.html:23 templates/telemeta/users.html:29
+#: templates/postman/base.html:23
 msgid "New message"
 msgstr "Nouveau message"
 
@@ -292,11 +292,11 @@ msgstr ""
 msgid "g:i A,M j,n/j/y"
 msgstr ""
 
-#: templates/postman/base_folder.html:56 templates/postman/view.html:32
+#: templates/postman/base_folder.html:56 templates/postman/view.html:35
 msgid "Delete"
 msgstr ""
 
-#: templates/postman/base_folder.html:59 templates/postman/view.html:36
+#: templates/postman/base_folder.html:59 templates/postman/view.html:39
 msgid "Archive"
 msgstr ""
 
@@ -409,8 +409,8 @@ msgstr "Messages"
 msgid "Received"
 msgstr ""
 
-#: templates/postman/reply.html:3 templates/postman/view.html:40
-#: templates/postman/view.html.py:43 templates/postman/view.html:46
+#: templates/postman/reply.html:3 templates/postman/view.html:43
+#: templates/postman/view.html.py:46 templates/postman/view.html:49
 msgid "Reply"
 msgstr ""
 
@@ -429,24 +429,24 @@ msgid ""
 "storage, use instead the archive folder."
 msgstr ""
 
-#: templates/postman/view.html:8
+#: templates/postman/view.html:9
 msgid "Conversation"
 msgstr ""
 
-#: templates/postman/view.html:8 templates/telemeta/inc/user_list.html:50
+#: templates/postman/view.html:9 templates/telemeta/inc/user_list.html:48
 #, fuzzy
 msgid "Message"
 msgstr "Messages"
 
-#: templates/postman/view.html:17
+#: templates/postman/view.html:21
 msgid "Rejected"
 msgstr ""
 
-#: templates/postman/view.html:17
+#: templates/postman/view.html:21
 msgid ":"
 msgstr ""
 
-#: templates/postman/view.html:27
+#: templates/postman/view.html:32
 msgid "Back"
 msgstr ""
 
@@ -495,7 +495,7 @@ msgstr "Session"
 
 #: templates/teleforma/course.html:52
 #: templates/teleforma/inc/conference_list.html:12
-#: templates/telemeta/inc/user_list.html:42
+#: templates/telemeta/inc/user_list.html:40
 msgid "Professor"
 msgstr "Professeur"
 
@@ -558,7 +558,7 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
-#: templates/telemeta/base.html:72 templates/telemeta/inc/user_list.html:22
+#: templates/telemeta/base.html:72 templates/telemeta/inc/user_list.html:20
 msgid "Messages"
 msgstr "Messages"
 
@@ -645,12 +645,12 @@ msgid "Change password"
 msgstr ""
 
 #: templates/telemeta/profile_detail.html:46
-#: templates/telemeta/inc/user_list.html:14
+#: templates/telemeta/inc/user_list.html:12
 msgid "First Name"
 msgstr ""
 
 #: templates/telemeta/profile_detail.html:47
-#: templates/telemeta/inc/user_list.html:13
+#: templates/telemeta/inc/user_list.html:11
 msgid "Last Name"
 msgstr ""
 
@@ -729,6 +729,14 @@ msgstr ""
 msgid "Trainings"
 msgstr "Formations"
 
+#: templates/telemeta/users.html:29
+msgid "Grouped message"
+msgstr "Message groupé"
+
+#: templates/telemeta/users.html:43
+msgid "All trainings"
+msgstr "Toutes les formations"
+
 #: templates/telemeta/users.html:48
 #, fuzzy
 msgid "No users"
@@ -739,7 +747,7 @@ msgid "Type"
 msgstr ""
 
 #: templates/telemeta/inc/module_revisions.html:19
-#: templates/telemeta/inc/user_list.html:15
+#: templates/telemeta/inc/user_list.html:13
 msgid "User"
 msgstr ""
 
@@ -751,25 +759,28 @@ msgstr ""
 msgid "Criteria"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:17
+#: templates/telemeta/inc/user_list.html:15
 msgid "Procedure"
 msgstr "Procédure"
 
-#: templates/telemeta/inc/user_list.html:18
+#: templates/telemeta/inc/user_list.html:16
 msgid "Oral spe"
 msgstr "Oral Spé"
 
-#: templates/telemeta/inc/user_list.html:19
+#: templates/telemeta/inc/user_list.html:17
 msgid "Written spe"
 msgstr "Ecrit Spé"
 
-#: templates/telemeta/inc/user_list.html:20
+#: templates/telemeta/inc/user_list.html:18
 msgid "Oral 1"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:21
+#: templates/telemeta/inc/user_list.html:19
 msgid "Oral 2"
 msgstr ""
+
+#~ msgid "All"
+#~ msgstr "Tous"
 
 #~ msgid "Questions"
 #~ msgstr "Questions"
