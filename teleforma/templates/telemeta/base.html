@@ -7,7 +7,7 @@
 
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" />
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.5; user-scalable=1;" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -52,18 +52,18 @@
 {% block header %}
 <div id="header">
 
+<div id="logo_wrapper">
+<div id="logo">
+<img src="{% url telemeta-images "logo_only_22_nb.png" %}" style="vertical-align:middle"
+alt="logo" />
+</div>
+</div>
 
 <div id="menu">
 {% block menu %}
-
 {# spaces between li and a elements breaks layout #}
 
 <ul id="nav">
-
-<div id="logo" style="padding-right:8em; float: left;">
-<!--<img src="{% url telemeta-images "logo_mini_wh.png" %}" style="vertical-align:middle"
-alt="Telemeta Powered"/>-->
-</div>
 
  {% if user.is_authenticated %}
  <li><a href="{% url teleforma-desk %}" class="violet">{% trans "Desk" %}</a>
@@ -95,11 +95,7 @@ alt="Telemeta Powered"/>-->
 
  {% if user.is_authenticated %}
   {% if user.is_staff %}
- <li><a href="#admin#" class="blue">{% trans "Admin" %}</a>
-  <ul>
-    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
-  </ul>
- </li>
+ <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
  {% endif %}
 
  <li><a href="#accounts#" class="blue"><img src="{% url telemeta-images "user_tr.png" %}" alt="user" style="vertical-align:middle" width="13px" />{% if user.first_name and user.last_name %}
@@ -121,10 +117,10 @@ alt="Telemeta Powered"/>-->
 {% endif %}
 
 </ul>
-
 {% endblock menu %}
 </div>
 </div>
+
 {% endblock header %}
 
 <div id="content">
