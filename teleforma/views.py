@@ -50,6 +50,7 @@ def get_courses(user):
         courses = Course.objects.all()
     else:
         courses = None
+    courses = courses.order_by('-date_modified')
     return courses
 
 def stream_from_file(__file):

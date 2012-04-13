@@ -117,6 +117,7 @@ class Course(Model):
     description     = CharField(_('description'), max_length=255, blank=True)
     type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
+    date_modified   = DateTimeField(_('date modified'), auto_now=True)
 
     notes = generic.GenericRelation(Note)
 
@@ -191,10 +192,13 @@ class Conference(Model):
 class MediaBase(Model):
     "Base media resource"
 
+    title           = CharField(_('title'), max_length=255, blank=True)
+    description     = CharField(_('description'), max_length=255, blank=True)
     credits         = CharField(_('credits'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
+    code            = CharField(_('code'), max_length=255, blank=True)
 
     notes = generic.GenericRelation(Note)
 
@@ -203,16 +207,12 @@ class MediaBase(Model):
 
     class Meta:
         abstract = True
-        ordering = ['-date_added']
 
 
 class Document(MediaBase):
 
     element_type = 'document'
 
-    title           = CharField(_('title'), max_length=255, blank=True)
-    description     = CharField(_('description'), max_length=255, blank=True)
-    code            = CharField(_('code'), max_length=255, blank=True)
     course          = ForeignKey('Course', related_name='document', verbose_name='course')
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
                                  blank=True, null=True)
@@ -243,8 +243,13 @@ class Document(MediaBase):
     def get_read(self, user):
         return user in self.readers
 
+    def save(self, **kwargs):
+        super(Document, self).save(**kwargs)
+        self.course.save()
+
     class Meta:
         db_table = app_label + '_' + 'document'
+        ordering = ['-date_modified']
 
 
 class Media(MediaBase):
@@ -270,6 +275,7 @@ class Media(MediaBase):
 
     class Meta:
         db_table = app_label + '_' + 'media'
+        ordering = ['-date_modified']
 
 
 # STUDENT

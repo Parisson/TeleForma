@@ -2,13 +2,15 @@
 
 {% if course.media.all %}
 <div class="course_content">
+<div class="course_subtitle">
     <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Medias"%}</h3>
+</div>
     <table class="listing" width="100%">
     <thead>
         <tr>
         <th class="highlight">{% trans "Title" %}</th>
         <th>{% trans "Description" %}</th>
-        <th>{% trans "Date added" %}</th>
+        <th>{% trans "Date modified" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +18,7 @@
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td><a href="{% url teleforma-media-detail media.id %}">{{ media.item.title }}</a></td>
             <td>{{ media.item.description }}</td>
-            <td>{{ media.date_added }}</td>
+            <td>{{ media.date_modified }}</td>
             </tr>
         {% endfor %}
     </tbody>

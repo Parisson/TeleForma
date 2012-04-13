@@ -1356,7 +1356,7 @@ input,textarea{
         font-size: 0.9125em;
         background-color: #FFF;
         color: #0000 ;
-        font-weight: normal;
+        font-weight: bold;
         max-height: 250px;
         overflow-y: scroll;
 
@@ -1426,10 +1426,10 @@ input,textarea{
     margin-top: 0.8em;
 }
 
+.course_subtitle {
+    padding: 0.3em;
 
-.course_content h2 {
-    padding: 0.5em 0.8em 0.8em 0.8em;
-    }
+}
 
 .course_content p {
     padding: 0.5em 0.8em 0.8em 0.8em;

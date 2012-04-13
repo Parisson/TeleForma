@@ -2,13 +2,15 @@
 
 {% if course.conference.all %}
 <div class="course_content">
+<div class="course_subtitle">
     <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Conferences"%}</h3>
+</div>
     <table class="listing" width="100%">
     <thead>
         <tr>
         <th class="highlight">{% trans "Session" %}</th>
         <th>{% trans "Professor" %}</th>
-        <th>{% trans "Date added" %}</th>
+        <th>{% trans "Date begin" %}</th>
         </tr>
     </thead>
     <tbody>
