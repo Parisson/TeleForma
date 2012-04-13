@@ -65,7 +65,7 @@ $(document).ready(function(){
 <div id="chatwindow"><span id="loading">Loading...</span></div>
 <form id="chatform">{% csrf_token %}
 <label for="msg"></label>
-<input type="text" id="msg" />
+<input type="text" id="msg" size="16" />
 <input type="submit" value="{% trans "Send" %}" />
 </form>
 <!-- <script type="text/javascript">document.getElementById("msg").focus();</script> -->

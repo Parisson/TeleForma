@@ -86,7 +86,7 @@ a img { border: none; }
     color: #000000;
     font-weight: bold;
     display:  inline;
-    font-size: 120%;
+    font-size: 1.1em;
 }
 #content h3 {
     color: #000000;
@@ -446,7 +446,7 @@ form.login .submit {
 /* Main navigation bar  (borrowed from Trac) */
 #menu {
     background-color: #000000 ;
-    background:no-repeat url(../images/tw_hd_bg.png) 0 0;
+    background:no-repeat url(../images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
@@ -541,7 +541,7 @@ color:#FFF;
     width: 100%;
     float:left;
     border-bottom:0px solid #fff;
-    background:no-repeat url(../images/tw_hd_bg.png) 0 0;
+    background:no-repeat url(../images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
 }
@@ -551,7 +551,7 @@ color:#FFF;
     display:block;
     height:22px;
     padding: 0.8em 0.5em 0.5em 0.5em;
-    font-size: 0.9em;
+/*     font-size: 0.9em; */
     text-align:left;
     -webkit-border-top-left-radius:0px 0px;
     moz-border-radius-topleft: 0px 0px;
@@ -577,7 +577,7 @@ color:#FFF;
 /* Footer (borrowed from Trac) */
 #footer {
     background: #000000;
-    background:no-repeat url(../images/tw_hd_bg.png) 0 0;
+    background:no-repeat url(../images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
     clear: both;
@@ -932,33 +932,6 @@ img.align-left {
     clear: none;
     font-size: 1em;
     margin-left: 0.4em;
-}
-
-#module-set {
-    float: right;
-    clear: right;
-}
-
-#module-set .module {
-    border: 1px solid #000;
-    background-image: url(../images/grid_bg_2.png);
-    padding: 0.4em 0.4em 0.4em 0.4em;
-    margin: 2em 2.5em 0em 0em;
-    -moz-border-radius: 8px 0px 8px 8px;
-    -webkit-border-radius: 8px 0px 8px 8px;
-    border-radius: 8px 0px 8px 8px;
-}
-
-#module-set .module h3 {
-    color: #FFF;
-    font-size: 1.1em;
-    font-weight: bold;
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
-}
-
-#module-set .module a:hover {
-    text-decoration: none;
 }
 
 a.image-link {
@@ -1327,6 +1300,7 @@ a.image-link {
     width: 250px;
 }
 
+
 /*focus on elements*/
 a:focus,div:focus{
     -moz-outline: 1px dotted #999  !important;
@@ -1340,6 +1314,36 @@ input,textarea{
     border-top: 1px dotted #000000;
 }
 
+#module-set {
+    float: right;
+    clear: right;
+}
+
+#module-set .module {
+    border: 1px solid #000;
+    background-color: #000000 ;
+    background:no-repeat url(../images/tw_hd.png) 0 0;
+    background-color:#ebebeb;
+    background-repeat:repeat;
+    padding: 0.2em;
+    margin: 2em 2.5em 0em 0em;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+#module-set .module h3 {
+    color: #FFF;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}
+
+#module-set .module a:hover {
+    text-decoration: none;
+}
+
 #module-set-left {
     float: left;
     clear: left;
@@ -1348,8 +1352,8 @@ input,textarea{
 
 #module-set-left .module {
         border: 1px solid #000;
-        background-image: url(../images/grid_bg_2.png);
-        padding: 0.3em 0.4em 0.4em 0.4em;
+        background-image: url(../images/tw_hd.png);
+        padding: 0.2em;
         margin: 0em 0em 1.5em 0em;
         -moz-border-radius: 8px 0px 8px 8px;
         -webkit-border-radius: 8px 0px 8px 8px;
@@ -1358,7 +1362,7 @@ input,textarea{
 
 #module-set-left .module h3 {
             color: #FFF;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             }
 
@@ -1368,7 +1372,7 @@ input,textarea{
             }
 
 #module-set-left .module ul {
-        margin: 0em 0em 0em 0.5em;
+        margin: 0em 0em 0em 0.3em;
         font-size: 0.9125em;
         background-color: #FFF;
         color: #0000 ;
@@ -1440,7 +1444,7 @@ input,textarea{
     border-radius: 8px 0px 0px 0px;
     padding: 0em 0.8em 0em 0em;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.1em;
     }
 
 .course_content {
@@ -1539,7 +1543,8 @@ input,textarea{
 
 
 #chatwindow {
-    height: 36em;
+    min-height: 10em;
+    max-height: 35em;
     border-bottom: 1px solid;
     padding: 0.8em;
     overflow: auto;
