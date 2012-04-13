@@ -177,9 +177,8 @@ class UsersView(ListView):
 class UsersTrainingView(UsersView):
 
     def get_queryset(self):
-        users = User.objects.all().select_related(depth=2)
         self.trainings = Training.objects.filter(id=self.args[0])
-        return User.objects.filter(student__training__in=self.trainings)
+        return User.objects.filter(student__training__in=self.trainings).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)

@@ -34,7 +34,6 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-USE_TZ = True
 TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
@@ -151,6 +150,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
     'postman.context_processors.inbox',
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
 )
 
 TELEMETA_ORGANIZATION = 'Parisson'

@@ -5,8 +5,12 @@
 
 {% block content %}
 <div id="postman" class="desk_large">
+
 <h1>{% if pm_messages|length > 1 %}{% trans "Conversation" %}{% else %}{% trans "Message" %}{% endif %}</h1>
 <br /><br />
+
+<div id="large_scroll">
+
 {% for message in pm_messages %}
 <div class="pm_message{% if message.is_pending %} pm_pending{% endif %}{% if message.is_rejected %} pm_rejected{% endif %}{% if message.sender == user and message.sender_archived or message.recipient == user and message.recipient_archived %} pm_archived{% endif %}{% if message.sender == user and message.sender_deleted_at or message.recipient == user and message.recipient_deleted_at %} pm_deleted{% endif %}{% if message.recipient == user and not message.read_at %} pm_unread{% endif %}">
  <div class="pm_header">
@@ -19,15 +23,14 @@
  <hr />
  <div class="pm_body">{{ message.body|urlize|linebreaksbr }}</div>
 </div>
-<br />
+
 {% if forloop.last %}
 <form id="_messageForm" action="" method="post">{% csrf_token %}
 <input type="hidden" {% if message.thread_id %}name="tpks" value="{{ message.thread_id }}"{% else %}name="pks" value="{{ message.pk }}"{% endif %} />
 
+<div class="pm_buttons">
 <a href="{{ next_url }}" class="component_icon button icon_previous">{% trans "Back" %}</a>
-
 <span id="pm_buttons">
-
 {% block pm_delete_button %}
 <a href="#" class="component_icon button icon_delete" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_delete %}'; f.submit(); return false;">{% trans "Delete" %}</a>
 {% endblock %}
@@ -44,8 +47,14 @@
 <form id="_messageReply" action="{% url postman_reply reply_to_pk %}?next={{ next_url|urlencode }}" method="post">{% csrf_token %}
 <div id="pm_reply">{{ form.body }}</div><br />
 <a href="#" class="component_icon button icon_next" onclick="f=document.getElementById('_messageReply'); f.submit(); return false;">{% trans "Reply" %}</a>
-</form>{% endif %}
+</div>
+</form>
+
 {% endif %}
+{% endif %}
+
 {% endfor %}
 </div>
+</div>
+<script type="text/javascript">document.getElementById("id_body").focus();</script>
 {% endblock %}
