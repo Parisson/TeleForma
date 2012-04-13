@@ -117,8 +117,6 @@ class Course(Model):
     description     = CharField(_('description'), max_length=255, blank=True)
     type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
-    chat_room       = OneToOneField(jqchat.models.Room, help_text='Chat room to be used for this lobby.',
-                                    blank=True, null=True)
 
     notes = generic.GenericRelation(Note)
 

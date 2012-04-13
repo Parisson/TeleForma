@@ -26,10 +26,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 
 from teleforma.models import *
 from telemeta.views.base import *
-from jqchat.models import *
+import jqchat.models
 from xlwt import Workbook
 
 
@@ -126,7 +127,15 @@ class MediaView(DetailView):
         context['course'] = media.course
         context['item'] = media.item
         context['notes'] = media.notes.all().filter(author=self.request.user)
-        context['room'] = media.course.chat_room
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        rooms = jqchat.models.Room.objects.filter(content_type=content_type, object_id=media.course.id)
+        if not rooms:
+            room = jqchat.models.Room.objects.create(content_type=content_type,
+                                      object_id=media.course.id,
+                                      name=media.course.title[:20])
+        else:
+            room = rooms[0]
+        context['room'] = room
         return context
 
     @method_decorator(login_required)
