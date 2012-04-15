@@ -193,7 +193,7 @@ class UsersTrainingView(UsersView):
 
 class UsersXLSExport(object):
 
-    first_row = 1
+    first_row = 2
 
     def export_user(self, counter, user):
         student = Student.objects.filter(user=user)
@@ -219,7 +219,6 @@ class UsersXLSExport(object):
                 row.write(12, profile.city)
                 row.write(13, profile.telephone)
                 row.write(14, profile.date_added.strftime("%d/%m/%Y"))
-            print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
             return counter + 1
         else:
             return counter
@@ -244,7 +243,7 @@ class UsersXLSExport(object):
         row.write(12, 'VILLE')
         row.write(13, 'TEL')
         row.write(14, "Date d'inscription")
-        counter = 1
+        counter = 0
         for user in self.users:
             counter = self.export_user(counter, user)
         response = HttpResponse(mimetype="application/vnd.ms-excel")
