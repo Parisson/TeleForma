@@ -25,8 +25,8 @@ class Command(BaseCommand):
         username = slugify(first_name)[0] + '.' + slugify(last_name)
 
         #FIXME: not for prod
-        user = User.objects.get(username=username)
-        user.delete()
+        #user = User.objects.get(username=username)
+        #user.delete()
 
         user, created = User.objects.get_or_create(username=username, first_name=first_name,
                                      last_name=last_name, email=email)
