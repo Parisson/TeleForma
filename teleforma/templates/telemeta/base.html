@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load i18n %}
 {% load telemeta_utils %}
+{% load teleforma_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
@@ -149,7 +150,7 @@ alt="logo" />
     <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{% url telemeta-images "logo_mini_2.png" %}"
    alt="Telemeta Powered"/></a>
     <p class="left">
-    {% trans "Powered by" %} <a href="{% telemeta_url %}" target="_blank"><br /><strong>Telemeta {% telemeta_version %}</strong></a><br />
+    {% trans "Powered by" %} <a href="{% telemeta_url %}" target="_blank"><br /><strong>TeleForma {% teleforma_version %}</strong></a><br />
     </p>
    </td>
    <td>

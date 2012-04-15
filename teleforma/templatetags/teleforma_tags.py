@@ -19,6 +19,16 @@ from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
+class TeleFormaVersionNode(template.Node):
+    def render(self, context):
+        from teleforma import __version__
+        return __version__
+
+@register.tag
+def teleforma_version(parser, token):
+    "Get TeleForma version number"
+    return TeleFormaVersionNode()
+
 @register.filter
 def parse_urls(text):
     output = ''
