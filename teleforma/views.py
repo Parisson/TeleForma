@@ -193,13 +193,13 @@ class UsersTrainingView(UsersView):
 
 class UsersXLSExport(object):
 
-    first_row = 2
+    first_row = 1
 
-    def export_user(self, count, user):
+    def export_user(self, counter, user):
         student = Student.objects.filter(user=user)
         if student:
             student = Student.objects.get(user=user)
-            row = self.sheet.row(count)
+            row = self.sheet.row(counter + self.first_row)
             row.write(0, user.last_name)
             row.write(1, user.first_name)
             row.write(9, user.email)
@@ -219,8 +219,10 @@ class UsersXLSExport(object):
                 row.write(12, profile.city)
                 row.write(13, profile.telephone)
                 row.write(14, profile.date_added.strftime("%d/%m/%Y"))
-
             print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
+            return counter + 1
+        else:
+            return counter
 
     @method_decorator(permission_required('is_superuser'))
     def export(self, request):
@@ -233,7 +235,7 @@ class UsersXLSExport(object):
         row.write(3, 'FORMATION')
         row.write(4, 'PROC')
         row.write(5, 'Ecrit Spe')
-        row.write(6, unicode('Oral Spe'))
+        row.write(6, 'Oral Spe')
         row.write(7, 'ORAL 1')
         row.write(8, 'ORAL 2')
         row.write(9, 'MAIL')
@@ -242,10 +244,9 @@ class UsersXLSExport(object):
         row.write(12, 'VILLE')
         row.write(13, 'TEL')
         row.write(14, "Date d'inscription")
-        count = self.first_row
+        counter = 1
         for user in self.users:
-            self.export_user(count, user)
-            count += 1
+            counter = self.export_user(counter, user)
         response = HttpResponse(mimetype="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         self.book.save(response)
