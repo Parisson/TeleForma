@@ -307,7 +307,10 @@ class Training(Model):
     obligation      = BooleanField(_('obligation'))
 
     def __unicode__(self):
-        return self.code + ' - ' + self.category.name
+        code = self.code
+        if self.category:
+            code += ' - ' + self.category.name
+        return code
 
     class Meta:
         db_table = app_label + '_' + 'training'
