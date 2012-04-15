@@ -11,6 +11,16 @@ See http://djangoproject.com.
 
 Other needed librairies are listed below.
 
+telemeta
+django-markup-mixin
+django-pagination
+django-notes
+django-extensions
+postman
+django-timezones
+xlwt
+xlrd
+
 
 Install the system dependencies
 --------------------------------

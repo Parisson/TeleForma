@@ -11,7 +11,7 @@ import codecs
 
 class Command(BaseCommand):
     help = "Import courses from a txt file (see an example in example/data/"
-    args = "path"
+    args = "organization path"
     admin_email = 'webmaster@parisson.com'
 
     def handle(self, *args, **options):

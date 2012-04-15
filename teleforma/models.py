@@ -299,7 +299,8 @@ class Training(Model):
 
     code            = CharField(_('code'), max_length=255)
     name            = CharField(_('name'), max_length=255, blank=True)
-    category        = ForeignKey('Category', related_name='course', verbose_name=_('category'))
+    category        = ForeignKey('Category', related_name='course', verbose_name=_('category'),
+                                 blank=True, null=True)
     courses         = ManyToManyField('Course', related_name="training", verbose_name=_('courses'),
                                         blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
