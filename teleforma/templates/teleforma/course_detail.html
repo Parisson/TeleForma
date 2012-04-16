@@ -3,7 +3,7 @@
 
 {% block extra_javascript %}
 
-<script type="text/javascript" src="{{ STATIC_URL }}/jqchat/jqchat.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jqchat/jqchat.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     InitChatWindow("{% url jqchat_ajax room.id %}", null);
