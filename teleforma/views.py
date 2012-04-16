@@ -83,7 +83,7 @@ def document_view(request, pk):
 
 def get_room(content_type=None, id=None, name=None):
     rooms = jqchat.models.Room.objects.filter(content_type=content_type,
-                                                object_id=id, name=name)
+                                                object_id=id)
     if not rooms:
         room = jqchat.models.Room.objects.create(content_type=content_type,
                                           object_id=id,
