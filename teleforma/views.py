@@ -158,7 +158,6 @@ class UsersView(ListView):
     model = User
     template_name='telemeta/users.html'
     context_object_name = 'users'
-    paginate_by = 12
 
     def get_queryset(self):
         return User.objects.all().select_related(depth=1).order_by('last_name')
@@ -167,6 +166,17 @@ class UsersView(ListView):
         context = super(UsersView, self).get_context_data(**kwargs)
         context['trainings'] = Training.objects.all()
         context['all_users'] = User.objects.all()
+        paginator = NamePaginator(self.object_list, on="username", per_page=12)
+        try:
+            page = int(self.request.GET.get('page', '1'))
+        except ValueError:
+            page = 1
+
+        try:
+            page = paginator.page(page)
+        except (InvalidPage):
+            page = paginator.page(paginator.num_pages)
+        context['page'] = page
         return context
 
     @method_decorator(login_required)
