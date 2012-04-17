@@ -54,8 +54,21 @@
         <td></td>
         <td></td>
         <td></td>
-
-    {% endif %}
+    {% elif user.is_staff %}
+        <td>{% trans "Administrator" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    {% else %}
+        <td>{% trans "Unknown" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    {%  endif %}
     <td><a href="{% url postman_write user.username %}" class="component_icon button" id="action_orange">{% trans "Message" %}</a></td>
     </tr>
     {% endfor %}
