@@ -415,8 +415,8 @@ class NamePaginator(object):
         chunks = {}
         
         for obj in self.object_list:
-            if on: obj_str = str(getattr(obj, on))
-            else: obj_str = str(obj)
+            if on: obj_str = getattr(obj, on).encode('utf8')
+            else: obj_str = obj.encode('utf8')
             
             letter = str.upper(obj_str[0])
             
