@@ -275,6 +275,10 @@ class Media(MediaBase):
         else:
             return description
 
+    def save(self, **kwargs):
+        super(Media, self).save(**kwargs)
+        self.course.save()
+
     class Meta:
         db_table = app_label + '_' + 'media'
         ordering = ['-date_modified']
