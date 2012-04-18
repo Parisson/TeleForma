@@ -152,6 +152,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'postman.context_processors.inbox',
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
+    'django.core.context_processors.static',
 )
 
 TELEMETA_ORGANIZATION = 'Parisson'
