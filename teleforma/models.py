@@ -54,6 +54,7 @@ from django.contrib.contenttypes import generic
 from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
+from django.template.defaultfilters import slugify
 
 app_label = 'teleforma'
 
@@ -126,6 +127,10 @@ class Course(Model):
     def __unicode__(self):
         return ' - '.join([self.department.name, self.title, self.type.name])
 
+    @property
+    def slug(self):
+        return slugify(self.__unicode__())
+        
     class Meta:
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
