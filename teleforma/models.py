@@ -194,6 +194,10 @@ class Conference(Model):
     def __unicode__(self):
         return self.description
 
+    def save(self, **kwargs):
+        super(Conference, self).save(**kwargs)
+        self.course.save()
+
     class Meta:
         db_table = app_label + '_' + 'conference'
         verbose_name = _('conference')
