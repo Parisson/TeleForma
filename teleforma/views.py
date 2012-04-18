@@ -158,11 +158,11 @@ class UsersView(ListView):
     model = User
     template_name='telemeta/users.html'
     context_object_name = 'users'
-    paginate_by = 12
+    #paginate_by = 12
 
     def get_queryset(self):
         return User.objects.all().select_related(depth=1).order_by('last_name')
-
+        
     def get_context_data(self, **kwargs):
         context = super(UsersView, self).get_context_data(**kwargs)
         context['trainings'] = Training.objects.all()
