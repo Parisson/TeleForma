@@ -3,15 +3,16 @@
 {% if course.conference.all %}
 <div class="course_content">
 <div class="course_subtitle">
-    <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Conferences"%}</h3>
+    <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Live conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
     <thead>
         <tr>
         <th class="highlight">{% trans "Session" %}</th>
         <th>{% trans "Professor" %}</th>
-        <th>{% trans "URL" %}</th>
         <th>{% trans "Date begin" %}</th>
+        <th>{% trans "Streaming" %}</th>
+
         </tr>
     </thead>
     <tbody>
@@ -19,8 +20,13 @@
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.session }}</a></td>
             <td>{{ conference.professor.user.first_name }} {{ conference.professor.user.last_name }}</td>
-            <td>{{ livestream.url }}</td>
+
             <td>{{ conference.date_begin }}</td>
+             <td align="center">
+                {% if conference.streaming %}
+                <img src="images/logo_only_22.png" alt="yes" style="vertical-align:middle" />&nbsp;
+                {% endif %}
+            </td>
             </tr>
         {% endfor %}
     </tbody>
