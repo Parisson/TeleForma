@@ -3,7 +3,20 @@
 {% load teleforma_tags %}
 {% load pagination_tags %}
 
-{% paginate %}
+<div class="pagination">
+    {% for p in page.paginator.pages %}
+
+      {% if p == page %}
+          <span class="selected">{{ page }}</span>
+      {% else %}
+          <a href="?page={{ p.number }}">
+              {{ p }}
+          </a>
+      {% endif %}
+
+    {% endfor %}
+</div>
+
 
 <div id="users">
   <table class="listing" width="100%">
@@ -20,7 +33,7 @@
     </tr>
     </thead>
     <tbody id="spacing">
-    {% for user in users %}
+    {% for user in page.object_list %}
     <tr>
      <td><a href="{% url telemeta-profile-detail user.username %}">{{ user.last_name }}</a></td>
      <td><a href="{% url telemeta-profile-detail user.username %}">{{ user.first_name }}</a></td>
@@ -41,8 +54,21 @@
         <td></td>
         <td></td>
         <td></td>
-
-    {% endif %}
+    {% elif user.is_staff %}
+        <td>{% trans "Administrator" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    {% else %}
+        <td>{% trans "Unknown" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    {%  endif %}
     <td><a href="{% url postman_write user.username %}" class="component_icon button" id="action_orange">{% trans "Message" %}</a></td>
     </tr>
     {% endfor %}

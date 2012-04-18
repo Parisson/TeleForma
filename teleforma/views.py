@@ -167,6 +167,17 @@ class UsersView(ListView):
         context = super(UsersView, self).get_context_data(**kwargs)
         context['trainings'] = Training.objects.all()
         context['all_users'] = User.objects.all()
+        paginator = NamePaginator(self.object_list, on="last_name", per_page=12)
+        try:
+            page = int(self.request.GET.get('page', '1'))
+        except ValueError:
+            page = 1
+
+        try:
+            page = paginator.page(page)
+        except (InvalidPage):
+            page = paginator.page(paginator.num_pages)
+        context['page'] = page
         return context
 
     @method_decorator(login_required)
