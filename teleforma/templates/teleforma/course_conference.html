@@ -1,0 +1,58 @@
+{% extends "teleforma/course_media.html" %}
+{% load telemeta_utils %}
+{% load i18n %}
+
+
+{% block course %}
+<div class="course_media">
+
+<div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %} - {{ conference.session }} - {{ conference.professor }}
+</div>
+
+<div class="media">
+
+{% if "video" in mime_type %}
+<div class="video">
+<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
+<!-- Hello Chrome and Firefox (and Opera?) -->
+<source src="{{ livestream }}" type="{{ mime_type }}" />
+</video>
+</div>
+
+{% elif "audio" in mime_type %}
+<div class="audio">
+<iframe width='640' height='200' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src="{% url telemeta-item-player-simple  media.item.public_id 640 130 %}"></iframe>
+</div>
+{% endif %}
+
+</div>
+
+{% block general_info %}
+<div class="course_content" id="media_infos">
+<dl class="listing">
+</dl>
+</div>
+{% endblock general_info %}
+
+</div>
+{% endblock course %}
+
+{% block chat %}
+{% if room %}
+<div id="module-set" style="width: 22%">
+<div class="module">
+<h3><img src="{% url telemeta-images "search_wh2.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Tweeter" %}</h3>
+
+<div style="background: white;">
+<div id="chatwindow"><span id="loading">Loading...</span></div>
+<form id="chatform">{% csrf_token %}
+<label for="msg"></label>
+<input type="text" id="msg" size="16" />
+<input type="submit" value="{% trans "Send" %}" />
+</form>
+<!-- <script type="text/javascript">document.getElementById("msg").focus();</script> -->
+</div>
+</div>
+</div>
+{% endif %}
+{% endblock chat %}

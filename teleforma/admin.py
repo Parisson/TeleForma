@@ -49,7 +49,8 @@ admin.site.register(Speciality)
 admin.site.register(CourseType)
 admin.site.register(Oral)
 admin.site.register(Professor, ProfessorAdmin)
-
+admin.site.register(StreamingServer)
+admin.site.register(LiveStream)
 
 
 

@@ -10,14 +10,16 @@
         <tr>
         <th class="highlight">{% trans "Session" %}</th>
         <th>{% trans "Professor" %}</th>
+        <th>{% trans "URL" %}</th>
         <th>{% trans "Date begin" %}</th>
         </tr>
     </thead>
     <tbody>
         {% for conference in course.conference.all %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td>{{ conference.session }}</td>
+            <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.session }}</a></td>
             <td>{{ conference.professor.user.first_name }} {{ conference.professor.user.last_name }}</td>
+            <td>{{ livestream.url }}</td>
             <td>{{ conference.date_begin }}</td>
             </tr>
         {% endfor %}

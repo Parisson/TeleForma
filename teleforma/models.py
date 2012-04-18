@@ -60,6 +60,8 @@ app_label = 'teleforma'
 
 n_sessions = 21
 session_choices = [(str(x), str(y)) for x in range(1, n_sessions) for y in range(1, n_sessions) if x == y]
+server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
+streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
 
 
 class Organization(Model):
@@ -130,7 +132,7 @@ class Course(Model):
     @property
     def slug(self):
         return slugify(self.__unicode__())
-        
+
     class Meta:
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
@@ -181,6 +183,8 @@ class Conference(Model):
     readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
 
+    notes = generic.GenericRelation(Note)
+
     @property
     def description(self):
         return ' - '.join([self.course.department.name, self.course.title, self.course.type.name,
@@ -194,6 +198,55 @@ class Conference(Model):
         db_table = app_label + '_' + 'conference'
         verbose_name = _('conference')
         ordering = ['-date_begin']
+
+
+class StreamingServer(Model):
+
+    element_type = 'streamingserver'
+
+    host            = CharField(_('host'), max_length=255)
+    port            = CharField(_('port'), max_length=32)
+    type            = CharField(_('type'), choices=server_choices, max_length=32)
+    description     = CharField(_('description'), max_length=255, blank=True)
+    source_password = CharField(_('source password'), max_length=32)
+    admin_password  = CharField(_('admin password'), max_length=32, blank=True)
+
+    def __unicode__(self):
+        return self.host + ':' + self.port + ' - ' + self.type
+
+    class Meta:
+        db_table = app_label + '_' + 'streaming_server'
+        verbose_name = _('streaming_server')
+
+
+class LiveStream(Model):
+
+    element_type = 'livestream'
+
+    conference = ForeignKey('Conference', related_name='livestream',
+                                verbose_name=_('conference'))
+    server     = ForeignKey('StreamingServer', related_name='livestream',
+                                verbose_name=_('streaming_server'))
+    stream_type = CharField(_('Streaming type'), choices=streaming_choices, max_length=32)
+
+    @property
+    def mount_point(self):
+        slug = self.conference.course.slug
+        if self.server.type == 'stream-m':
+            return  'consume/' + slug
+        else:
+            return slug + '.' + self.stream_type
+
+    @property
+    def url(self):
+        return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
+
+    def __unicode__(self):
+        return self.conference.description
+
+    class Meta:
+        db_table = app_label + '_' + 'live_stream'
+        verbose_name = _('live_stream')
 
 
 class MediaBase(Model):
@@ -412,37 +465,39 @@ class Profile(models.Model):
         verbose_name = _('profile')
 
 
+# TOOLS
+
 class NamePaginator(object):
     """Pagination for string-based objects"""
-    
+
     def __init__(self, object_list, on=None, per_page=25):
         self.object_list = object_list
         self.count = len(object_list)
         self.pages = []
-        
+
         # chunk up the objects so we don't need to iterate over the whole list for each letter
         chunks = {}
-        
+
         for obj in self.object_list:
             if on: obj_str = getattr(obj, on).encode('utf8')
             else: obj_str = obj.encode('utf8')
-            
+
             letter = str.upper(obj_str[0])
-            
+
             if letter not in chunks: chunks[letter] = []
-            
+
             chunks[letter].append(obj)
-        
+
         # the process for assigning objects to each page
         current_page = NamePage(self)
-        
+
         for letter in string.ascii_uppercase:
-            if letter not in chunks: 
+            if letter not in chunks:
                 current_page.add([], letter)
                 continue
-            
+
             sub_list = chunks[letter] # the items in object_list starting with this letter
-            
+
             new_page_count = len(sub_list) + current_page.count
             # first, check to see if sub_list will fit or it needs to go onto a new page.
             # if assigning this list will cause the page to overflow...
@@ -454,12 +509,12 @@ class NamePaginator(object):
                 # make a new page
                 self.pages.append(current_page)
                 current_page = NamePage(self)
-            
+
             current_page.add(sub_list, letter)
-        
+
         # if we finished the for loop with a page that isn't empty, add it
         if current_page.count > 0: self.pages.append(current_page)
-        
+
     def page(self, num):
         """Returns a Page object for the given 1-based page number."""
         if len(self.pages) == 0:
@@ -468,7 +523,7 @@ class NamePaginator(object):
             return self.pages[num-1]
         else:
             raise InvalidPage
-    
+
     @property
     def num_pages(self):
         """Returns the total number of pages"""
@@ -479,37 +534,36 @@ class NamePage(object):
         self.paginator = paginator
         self.object_list = []
         self.letters = []
-    
+
     @property
     def count(self):
         return len(self.object_list)
-    
+
     @property
     def start_letter(self):
-        if len(self.letters) > 0: 
+        if len(self.letters) > 0:
             self.letters.sort(key=str.upper)
             return self.letters[0]
         else: return None
-    
+
     @property
     def end_letter(self):
-        if len(self.letters) > 0: 
+        if len(self.letters) > 0:
             self.letters.sort(key=str.upper)
             return self.letters[-1]
         else: return None
-    
+
     @property
     def number(self):
         return self.paginator.pages.index(self) + 1
-    
+
     def add(self, new_list, letter=None):
         if len(new_list) > 0: self.object_list = self.object_list + new_list
         if letter: self.letters.append(letter)
-    
+
     def __repr__(self):
         if self.start_letter == self.end_letter:
             return self.start_letter
         else:
             return '%c-%c' % (self.start_letter, self.end_letter)
-            
-            
+

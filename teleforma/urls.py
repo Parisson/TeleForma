@@ -53,6 +53,7 @@ urlpatterns = patterns('',
     url(r'^desk/medias/(?P<pk>.*)$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/documents/(?P<pk>.*)/download/', document_download, name="teleforma-document-download"),
     url(r'^desk/documents/(?P<pk>.*)/view/', document_view, name="teleforma-document-view"),
+    url(r'^desk/conferences/(?P<pk>.*)$', ConferenceView.as_view(), name="teleforma-conference-detail"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),

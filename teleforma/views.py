@@ -143,15 +143,40 @@ class MediaView(DetailView):
         context['course'] = media.course
         context['item'] = media.item
         context['notes'] = media.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="media")
-        context['room'] = get_room(name=media.item.title, content_type=content_type,
-                                   id=media.id)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(name=media.course.title, content_type=content_type,
+                                   id=media.course.id)
+#        context['room'] = get_room(name=media.item.title, content_type=content_type,
+#                                   id=media.id)
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaView, self).dispatch(*args, **kwargs)
 
+class ConferenceView(DetailView):
+
+    model = Conference
+    template_name='teleforma/course_conference.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConferenceView, self).get_context_data(**kwargs)
+        context['courses'] = get_courses(self.request.user)
+        conference = self.get_object()
+        context['mime_type'] = 'video/webm'
+        context['course'] = conference.course
+        context['notes'] = conference.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+#        context['room'] = get_room(name=conference.course.title, content_type=content_type,
+#                                   id=conference.id)
+        context['room'] = get_room(name=conference.course.title, content_type=content_type,
+                                   id=conference.course.id)
+        context['livestream'] = conference.livestream.get().url
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ConferenceView, self).dispatch(*args, **kwargs)
 
 class UsersView(ListView):
 
