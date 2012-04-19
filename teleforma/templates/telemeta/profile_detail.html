@@ -1,6 +1,7 @@
 {% extends "telemeta/base.html" %}
 {% load i18n %}
 {% load telemeta_utils %}
+{% load teleforma_tags %}
 
 {% block head_title %}{% trans "User Profile" %} : {{ usr.username }}{% endblock %}
 
@@ -11,11 +12,20 @@
   <div id="module-set-left" style="width: 25%">
   {% block modules %}
 
-    {% block module_searches %}
-    {% with searches as searches and "Searches" as title %}
-    {% include "telemeta/inc/module_searches.html" %}
+    <div class="module">
+    <h3><a href="{% url teleforma-desk %}"><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "Courses" %}</a></h3>
+    <div style="background: white;">
+    <ul>
+    {% block courses %}
+    {% with user|user_courses as courses %}
+    {% for course in courses %}
+    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
+    {% endfor %}
     {% endwith %}
-    {% endblock %}
+    {% endblock courses %}
+    </ul>
+    </div>
+    </div>
 
   {% endblock %}
 

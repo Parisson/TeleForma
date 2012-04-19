@@ -47,6 +47,10 @@ $(document).ready(function(){
 <div class="course_content" id="media_infos">
 <dl class="listing">
 {% dl_field item "title" placeholder %}
+{% if media.conference.professor %}
+<dt>{% trans "Professor" %}</dt>
+    <dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+{% endif %}
 <dt>{% field_label item "approx_duration" %}</dt>
     <dd>{{ item.approx_duration }}</a></dd>
 {% if media.conference %}

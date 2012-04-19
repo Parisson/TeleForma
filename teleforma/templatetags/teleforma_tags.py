@@ -19,6 +19,7 @@ from django.template.defaultfilters import stringfilter
 import django.utils.timezone as timezone
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
+from teleforma.views import get_courses
 
 register = template.Library()
 
@@ -58,10 +59,9 @@ class ValueFromSettings(template.Node):
     def render(self, context):
         return settings.__getattr__(str(self.arg))
 
-@register.simple_tag
-def trainings(user):
-    student = user.student.get()
-    return training.student.all()
+@register.filter
+def user_courses(user):
+    return get_courses(user)
 
 @register.filter
 def to_recipients(users):
@@ -87,3 +87,4 @@ def or_me(value, arg):
     if not isinstance(arg, (unicode, str)):
         arg = unicode(arg)
     return _('me') if value == arg else value
+
