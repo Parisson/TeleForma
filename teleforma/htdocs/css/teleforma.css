@@ -1147,7 +1147,8 @@ a.image-link {
     }
 
 #action_red {
-    background-color:  #bb1020;
+/*     background-color:  #bb1020; */
+    background-color: #d34836;
     color: #FFF;
     padding:0.8em 0.8em 0.8em 0.8em;
     }

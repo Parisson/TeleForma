@@ -12,22 +12,16 @@
   {% block modules %}
 
     {% block module_searches %}
-    {% with searches as searches and "My searches" as title %}
+    {% with searches as searches and "Searches" as title %}
     {% include "telemeta/inc/module_searches.html" %}
-    {% endwith %}
-    {% endblock %}
-
-    {% block module_all_revisions %}
-    {% with revisions as revisions and "All last changes" as title %}
-    {% include "telemeta/inc/module_revisions.html" %}
     {% endwith %}
     {% endblock %}
 
   {% endblock %}
 
-  {% if user.is_authenticated and user.username == usr.username or user.is_staff %}
+  {% if user.is_authenticated %}
    <div class="module_action">
-    <a href="{% url telemeta-profile-edit usr.username %}" class="component_icon button" id="action_blue">{% trans "Modify profile" %}</a>
+    <a href="{% url postman_write user.username %}" class="component_icon button" id="action_red">{% trans "Send a message" %}</a>
    </div>
   {%  endif %}
 
@@ -39,8 +33,9 @@
     <h1>{% trans "User profile" %} : {{ usr.username }}
     </h1>
 
-    {% if user.is_authenticated and user.username == usr.username %}
+    {% if user.is_authenticated and user.username == usr.username or user.is_staff %}
     <div id="password" style="float: right;">
+    <a href="{% url telemeta-profile-edit usr.username %}" class="component_icon button icon_edit">{% trans "Edit" %}</a>
     <a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Change password" %}</a>
     </div>
     {%  endif %}
