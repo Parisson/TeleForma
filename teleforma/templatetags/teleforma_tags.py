@@ -16,6 +16,9 @@ import os
 import datetime
 from django.conf import settings
 from django.template.defaultfilters import stringfilter
+import django.utils.timezone as timezone
+from timezones.utils import localtime_for_timezone
+from django.utils.translation import ugettext_lazy as _
 
 register = template.Library()
 
@@ -67,11 +70,20 @@ def to_recipients(users):
         list.append(user.username)
     return ':'.join(list)
 
-
-
-import django.utils.timezone as timezone
-from timezones.utils import localtime_for_timezone
-
 @register.filter
 def localtime(value, timezone):
     return localtime_for_timezone(value, timezone)
+
+@register.filter
+def or_me(value, arg):
+    """
+    Replace the value by a fixed pattern, if it equals the argument.
+
+    Typical usage: sender|or_me:user
+
+    """
+    if not isinstance(value, (unicode, str)):
+        value = unicode(value)
+    if not isinstance(arg, (unicode, str)):
+        arg = unicode(arg)
+    return _('me') if value == arg else value

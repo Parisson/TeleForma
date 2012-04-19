@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-19 11:39+0200\n"
+"POT-Creation-Date: 2012-04-19 13:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -320,12 +320,12 @@ msgstr ""
 msgid "g:i A,M j,n/j/y"
 msgstr ""
 
-#: templates/postman/base_folder.html:56 templates/postman/view.html:35
+#: templates/postman/base_folder.html:56 templates/postman/view.html:39
 #: templates/telemeta/lists.html:58
 msgid "Delete"
 msgstr ""
 
-#: templates/postman/base_folder.html:59 templates/postman/view.html:39
+#: templates/postman/base_folder.html:59 templates/postman/view.html:43
 msgid "Archive"
 msgstr ""
 
@@ -341,6 +341,7 @@ msgstr "Messages"
 #: templates/postman/base_write.html:20
 #: templates/teleforma/course_conference.html:57
 #: templates/teleforma/course_detail.html:69
+#: templates/teleforma/course_document.html:45
 #: templates/teleforma/course_media.html:72
 #: templates/teleforma/courses.html:102
 msgid "Send"
@@ -439,8 +440,8 @@ msgstr "Messages"
 msgid "Received"
 msgstr ""
 
-#: templates/postman/reply.html:3 templates/postman/view.html:43
-#: templates/postman/view.html.py:46 templates/postman/view.html:49
+#: templates/postman/reply.html:3 templates/postman/view.html:47
+#: templates/postman/view.html.py:50 templates/postman/view.html:53
 msgid "Reply"
 msgstr ""
 
@@ -468,15 +469,15 @@ msgstr ""
 msgid "Message"
 msgstr "Messages"
 
-#: templates/postman/view.html:21
+#: templates/postman/view.html:25
 msgid "Rejected"
 msgstr ""
 
-#: templates/postman/view.html:21
+#: templates/postman/view.html:25
 msgid ":"
 msgstr ""
 
-#: templates/postman/view.html:32
+#: templates/postman/view.html:36
 msgid "Back"
 msgstr ""
 
@@ -491,6 +492,7 @@ msgstr "Documents"
 
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
 #: templates/teleforma/course_conference.html:33
+#: templates/teleforma/course_document.html:21
 #: templates/teleforma/inc/document_list.html:11
 #: templates/teleforma/inc/media_list.html:11 templates/telemeta/lists.html:69
 #: templates/telemeta/search_criteria.html:97
@@ -520,31 +522,37 @@ msgstr "Conférences"
 
 #: templates/teleforma/course.html:51
 #: templates/teleforma/course_conference.html:34
-#: templates/teleforma/inc/conference_list.html:11
+#: templates/teleforma/course_document.html:22
+#: templates/teleforma/inc/conference_list.html:13
 msgid "Session"
 msgstr "Session"
 
 #: templates/teleforma/course.html:52
 #: templates/teleforma/course_conference.html:35
-#: templates/teleforma/inc/conference_list.html:12
+#: templates/teleforma/course_document.html:23
+#: templates/teleforma/inc/conference_list.html:14
 #: templates/telemeta/inc/user_list.html:51
 msgid "Professor"
 msgstr "Professeur"
 
 #: templates/teleforma/course_conference.html:36
+#: templates/teleforma/course_document.html:24
 msgid "Begin"
 msgstr ""
 
 #: templates/teleforma/course_conference.html:37
+#: templates/teleforma/course_document.html:25
 msgid "End"
 msgstr ""
 
 #: templates/teleforma/course_conference.html:38
+#: templates/teleforma/course_document.html:26
 msgid "Live"
 msgstr ""
 
 #: templates/teleforma/course_conference.html:50
 #: templates/teleforma/course_detail.html:62
+#: templates/teleforma/course_document.html:38
 #: templates/teleforma/course_media.html:65
 msgid "Local tweeter"
 msgstr "Tweeter local"
@@ -578,12 +586,22 @@ msgstr "Tweeter général"
 msgid "Live conferences"
 msgstr "Conférences en direct"
 
-#: templates/teleforma/inc/conference_list.html:13
+#: templates/teleforma/inc/conference_list.html:11
+#: templates/telemeta/lists.html:70
+#: templates/telemeta/inc/module_revisions.html:18
+msgid "Type"
+msgstr ""
+
+#: templates/teleforma/inc/conference_list.html:12
+msgid "Room"
+msgstr ""
+
+#: templates/teleforma/inc/conference_list.html:15
 #, fuzzy
 msgid "Date begin"
 msgstr "Date d'ajout"
 
-#: templates/teleforma/inc/conference_list.html:14
+#: templates/teleforma/inc/conference_list.html:16
 msgid "Streaming"
 msgstr "Diffusion"
 
@@ -678,11 +696,6 @@ msgstr ""
 
 #: templates/telemeta/lists.html:55 templates/telemeta/profile_detail.html:38
 msgid "Edit"
-msgstr ""
-
-#: templates/telemeta/lists.html:70
-#: templates/telemeta/inc/module_revisions.html:18
-msgid "Type"
 msgstr ""
 
 #: templates/telemeta/lists.html:71
@@ -856,6 +869,10 @@ msgstr ""
 #: templates/telemeta/inc/user_list.html:65
 msgid "Unknown"
 msgstr ""
+
+#: templatetags/teleforma_tags.py:89
+msgid "me"
+msgstr "moi"
 
 #~ msgid "Modify profile"
 #~ msgstr "Modifier le profil"
