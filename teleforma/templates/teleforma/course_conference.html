@@ -13,7 +13,7 @@
 
 {% if "video" in mime_type %}
 <div class="video">
-<video width="640" height="360" controls preload="auto">
+<video width="640" height="360" controls autoplay preload="auto">
 <!-- Hello Chrome and Firefox (and Opera?) -->
 <source src="{{ livestream }}" type="{{ mime_type }}" />
 </video>
