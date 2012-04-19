@@ -48,9 +48,17 @@ $(document).ready(function(){
 <dl class="listing">
 {% dl_field item "title" placeholder %}
 <dt>{% field_label item "approx_duration" %}</dt>
-<dd>{{ item.approx_duration }}</a></dd>
-<dt>{% trans "Recording date" %}</dt>
-<dd>{% if item.recorded_from_date %}{{ item.recorded_from_date }}{% endif %}{% if item.recorded_from_date and item.recorded_to_date%} - {% endif %}{% if item.recorded_to_date %}{{ item.recorded_to_date}}{% endif %}</dd>
+    <dd>{{ item.approx_duration }}</a></dd>
+{% if media.conference %}
+<dt>{% trans "Begin date" %}</dt>
+    <dd>{{ media.conference.date_begin }}</dd>
+<dt>{% trans "End date" %}</dt>
+    <dd>{{ media.conference.date_end }}</dd>
+{% endif %}
+<dt>{% trans "Date added" %}</dt>
+    <dd>{{ media.date_added }}</dd>
+<dt>{% trans "Mime type" %}</dt>
+    <dd>{{ mime_type }}</dd>
 </dl>
 </div>
 {% endblock general_info %}
