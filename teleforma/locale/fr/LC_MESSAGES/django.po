@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-19 21:48+0200\n"
+"POT-Creation-Date: 2012-04-20 14:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -341,7 +341,7 @@ msgstr "Messages"
 #: templates/postman/base_write.html:20
 #: templates/teleforma/course_conference.html:57
 #: templates/teleforma/course_detail.html:69
-#: templates/teleforma/course_document.html:45
+#: templates/teleforma/course_document.html:87
 #: templates/teleforma/course_media.html:84
 #: templates/teleforma/courses.html:102
 msgid "Send"
@@ -492,7 +492,7 @@ msgstr "Supports écrits"
 
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
 #: templates/teleforma/course_conference.html:33
-#: templates/teleforma/course_document.html:21
+#: templates/teleforma/course_document.html:68
 #: templates/teleforma/inc/document_list.html:11
 #: templates/teleforma/inc/media_list.html:11 templates/telemeta/lists.html:69
 #: templates/telemeta/search_criteria.html:97
@@ -522,14 +522,12 @@ msgstr "Conférences"
 
 #: templates/teleforma/course.html:51
 #: templates/teleforma/course_conference.html:34
-#: templates/teleforma/course_document.html:22
 #: templates/teleforma/inc/conference_list.html:13
 msgid "Session"
 msgstr "Session"
 
 #: templates/teleforma/course.html:52
 #: templates/teleforma/course_conference.html:35
-#: templates/teleforma/course_document.html:23
 #: templates/teleforma/course_media.html:51
 #: templates/teleforma/inc/conference_list.html:14
 #: templates/telemeta/inc/user_list.html:51
@@ -537,23 +535,20 @@ msgid "Professor"
 msgstr "Professeur"
 
 #: templates/teleforma/course_conference.html:36
-#: templates/teleforma/course_document.html:24
 msgid "Begin"
-msgstr ""
+msgstr "Début"
 
 #: templates/teleforma/course_conference.html:37
-#: templates/teleforma/course_document.html:25
 msgid "End"
-msgstr ""
+msgstr "Fin"
 
 #: templates/teleforma/course_conference.html:38
-#: templates/teleforma/course_document.html:26
 msgid "Live"
-msgstr ""
+msgstr "En direct"
 
 #: templates/teleforma/course_conference.html:50
 #: templates/teleforma/course_detail.html:62
-#: templates/teleforma/course_document.html:38
+#: templates/teleforma/course_document.html:80
 #: templates/teleforma/course_media.html:77
 msgid "Local tweeter"
 msgstr "Tweeter local"
@@ -604,7 +599,7 @@ msgstr ""
 
 #: templates/teleforma/inc/conference_list.html:12
 msgid "Room"
-msgstr ""
+msgstr "Salle"
 
 #: templates/teleforma/inc/conference_list.html:16
 msgid "Streaming"
@@ -665,9 +660,8 @@ msgid "Admin"
 msgstr ""
 
 #: templates/telemeta/base.html:106
-#, fuzzy
 msgid "Profile"
-msgstr "profil"
+msgstr "Profil"
 
 #: templates/telemeta/base.html:108
 msgid "Lists"
@@ -804,6 +798,10 @@ msgstr ""
 #: templates/telemeta/profile_detail.html:82
 msgid "Apply"
 msgstr ""
+
+#: templates/telemeta/profile_detail.html:91
+msgid "Login as"
+msgstr "Se connecter en tant que"
 
 #: templates/telemeta/search_criteria.html:5
 #: templates/telemeta/search_criteria.html:76

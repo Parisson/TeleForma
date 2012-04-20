@@ -64,6 +64,7 @@ urlpatterns = patterns('',
     url(r'^users/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
     url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
     url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training, name="teleforma-training-users-export"),
+    url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',

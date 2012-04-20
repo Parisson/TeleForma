@@ -5,7 +5,7 @@ import mimetypes
 from jsonrpc import jsonrpc_method
 
 from django.utils.decorators import method_decorator
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_backends
 from django.template import RequestContext, loader
 from django import template
 from django.http import HttpResponse, HttpResponseRedirect
@@ -227,6 +227,20 @@ class UsersView(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UsersView, self).dispatch(*args, **kwargs)
+
+
+class UserLoginView(View):
+
+    def get(self, request, id):
+        user = User.objects.get(id=id)
+        backend = get_backends()[0]
+        user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+        login(self.request, user)
+        return redirect('teleforma-desk')
+
+    @method_decorator(permission_required('is_superuser'))
+    def dispatch(self, *args, **kwargs):
+        return super(UserLoginView, self).dispatch(*args, **kwargs)
 
 
 class UsersTrainingView(UsersView):
