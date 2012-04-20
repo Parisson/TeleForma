@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-20 14:46+0200\n"
+"POT-Creation-Date: 2012-04-20 14:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -572,6 +572,7 @@ msgid "Mime type"
 msgstr "Type mime"
 
 #: templates/teleforma/courses.html:22
+#: templates/telemeta/profile_detail.html:16
 msgid "My courses"
 msgstr "Mes matières"
 
@@ -725,8 +726,8 @@ msgid "User Profile"
 msgstr "profil"
 
 #: templates/telemeta/profile_detail.html:16
-msgid "Courses"
-msgstr "Matières"
+msgid "His courses"
+msgstr "Ses matières"
 
 #: templates/telemeta/profile_detail.html:34
 msgid "Send a message"
@@ -799,7 +800,7 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:91
+#: templates/telemeta/profile_detail.html:92
 msgid "Login as"
 msgstr "Se connecter en tant que"
 
@@ -878,6 +879,9 @@ msgstr ""
 #: templatetags/teleforma_tags.py:89
 msgid "me"
 msgstr "moi"
+
+#~ msgid "Courses"
+#~ msgstr "Matières"
 
 #~ msgid "Date begin"
 #~ msgstr "Date de début"

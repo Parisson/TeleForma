@@ -13,7 +13,7 @@
   {% block modules %}
 
     <div class="module">
-    <h3><a href="{% url teleforma-desk %}"><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "Courses" %}</a></h3>
+    <h3><a href="{% url teleforma-desk %}"><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
     <div style="background: white;">
     <ul>
     {% block courses %}
