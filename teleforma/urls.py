@@ -40,7 +40,7 @@ from teleforma.models import *
 from teleforma.views import *
 from jsonrpc import jsonrpc_site
 
-htdocs_forma = os.path.dirname(__file__) + '/htdocs'
+htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
 
 urlpatterns = patterns('',
@@ -49,11 +49,12 @@ urlpatterns = patterns('',
     url(r'^', include('telemeta.urls')),
 
     url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
-    url(r'^desk/courses/(?P<pk>.*)$', CourseView.as_view(), name="teleforma-course-detail"),
-    url(r'^desk/medias/(?P<pk>.*)$', MediaView.as_view(), name="teleforma-media-detail"),
-    url(r'^desk/documents/(?P<pk>.*)/download/', document_download, name="teleforma-document-download"),
-    url(r'^desk/documents/(?P<pk>.*)/view/', document_view, name="teleforma-document-view"),
-    url(r'^desk/conferences/(?P<pk>.*)$', ConferenceView.as_view(), name="teleforma-conference-detail"),
+    url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
+    url(r'^desk/medias/(?P<pk>.*)/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-detail"),
+    url(r'^desk/documents/(?P<pk>.*)/download/$', document_download, name="teleforma-document-download"),
+#    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-view"),
+    url(r'^desk/conferences/(?P<pk>.*)/$', ConferenceView.as_view(), name="teleforma-conference-detail"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),
@@ -66,13 +67,13 @@ urlpatterns = patterns('',
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'/css'},
+        {'document_root': htdocs_forma+'css'},
         name="teleforma-css"),
     url(r'images/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'/images'},
+        {'document_root': htdocs_forma+'images'},
         name="teleforma-images"),
     url(r'^js/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'/js'},
+        {'document_root': htdocs_forma+'js'},
         name="teleforma-js"),
 
     # JSON RPC

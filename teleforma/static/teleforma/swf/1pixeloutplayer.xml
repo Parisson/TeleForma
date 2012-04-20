@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="plugin" group="content">
+	<name>Content - 1pixeloutplayer</name>
+	<author>Duvien</author>
+	<creationDate>June 2008</creationDate>
+	<copyright>(C) 2008 duvien.com</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<authorEmail>contact@duvien.com</authorEmail>
+	<authorUrl>http://duvien.com</authorUrl>
+	<version>1.5.2</version>
+	<description>DESC1PIXELOUT</description>
+		<files>
+			<filename plugin="1pixeloutplayer">1pixeloutplayer.php</filename>
+			<folder>1pixelout</folder>
+		</files>
+		<languages>
+			<language tag="en-GB">en-GB.plg_content_1pixeloutplayer.ini</language>
+		</languages>
+		<params>
+			<param name="bg" type="text" default="f8f8f8" label="Background" description="Background color (see diagram)" />
+			<param name="leftbg" type="text" default="eeeeee" label="Left Background" description="Left background (see diagram)" />
+			<param name="lefticon" type="text" default="666666" label="Left Icon" description="Left icon (see diagram)" />
+			<param name="rightbg" type="text" default="cccccc" label="Right Background" description="Right background (see diagram)" />
+			<param name="rightbghover" type="text" default="999999" label="Right Background Hover" description="The color the right background will change to on mouseover" />
+			<param name="righticon" type="text" default="666666" label="Right Icon" description="Right icon (see diagram)" />
+			<param name="righticonhover" type="text" default="ffffff" label="Right Icon Hover" description="The color the right icon will change to on mouseover" />
+			<param name="text" type="text" default="666666" label="Text" description="Text colour (see diagram)" />
+			<param name="slider" type="text" default="666666" label="Slider" description="Slider colour (see diagram)" />
+			<param name="track" type="text" default="FFFFFF" label="Track" description="Progress track colour (see diagram)" />
+			<param name="border" type="text" default="666666" label="Border" description="Progress track border colour (see diagram)" />
+			<param name="loader" type="text" default="9FFFB8" label="Loader" description="Loader bar colour (see diagram)" />
+			<param name="loop" type="radio" default="no" label="Loop" description="The track will be looped indefinitely (default value is no)">
+				<option value="no">no</option>
+				<option value="yes">yes</option>
+			</param>
+			<param name="defaultpath" type="text" default="" label="Default Path" description="Default directory containing all your mp3 files, starting from the base directory of your Joomla installation. Leave blank for no default. Leading slash (/) will be ignored. Defaults can be overridden by any player. See instructions for more details." />
+		</params>
+</install>

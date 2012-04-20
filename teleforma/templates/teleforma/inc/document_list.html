@@ -18,7 +18,7 @@
     <tbody>
         {% for document in course.document.all %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-        <td><a href="{% url teleforma-document-view document.id %}" target="_blank">{{ document.title }}</a></td>
+        <td><a href="{% url teleforma-document-detail document.id %}" target="_blank">{{ document.title }}</a></td>
         <td>{{ document.description }}</td>
         <td align="center">
         {% if document.is_annal %}
@@ -26,7 +26,7 @@
         {% endif %}
         </td>
         <td>{{ document.date_added }}</td>
-        <td align="center"><a href="{% url teleforma-document-view document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" />&nbsp;</a></td>
+        <td align="center"><a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a></td>
         </tr>
     {% endfor %}
     </tbody>

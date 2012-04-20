@@ -70,7 +70,7 @@ def document_download(request, pk):
     extension = mimetypes.guess_extension(mimetype)
     response = HttpResponse(fsock, mimetype=mimetype)
     response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                     (unicode(document), extension)
+                                     (unicode(document.title.decode('utf8')), extension)
     return response
 
 def document_view(request, pk):
@@ -151,6 +151,29 @@ class MediaView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaView, self).dispatch(*args, **kwargs)
+
+
+class DocumentView(DetailView):
+
+    model = Document
+    template_name='teleforma/course_document.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DocumentView, self).get_context_data(**kwargs)
+        context['courses'] = get_courses(self.request.user)
+        document = self.get_object()
+
+#        context['mime_type'] = view.item_analyze(media.item)
+        context['course'] = document.course
+        context['notes'] = document.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="document")
+        context['room'] = get_room(name=document.title, content_type=content_type,
+                                   id=document.id)
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DocumentView, self).dispatch(*args, **kwargs)
 
 class ConferenceView(DetailView):
 
