@@ -88,7 +88,7 @@
 
   </div>
 
-{% if user.is_staff %}
+{% if user.username != usr.username and user.is_staff %}
 <a href="{% url teleforma-user-login usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
 {% endif %}
 
