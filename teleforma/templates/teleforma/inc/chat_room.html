@@ -4,11 +4,11 @@
 
 <div class="module">
         <h3><img src="{% url telemeta-images "vox_wh.png" %}" alt="rss" style="vertical-align:middle" />{% trans title %}</h3>
-        <div style="background: white;">
+        <div style="background: transparent;">
         <div id="chatwindow"><span id="loading">Loading...</span></div>
         <form id="chatform">{% csrf_token %}
         <label for="msg"></label>
-        <div class="msg-black">
+        <div class="msg">
         <input type="text" id="msg" size="25" />
         <input type="submit" value="{% trans "Send" %}" />
         </div>
