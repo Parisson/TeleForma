@@ -211,6 +211,7 @@ class UsersView(ListView):
         context = super(UsersView, self).get_context_data(**kwargs)
         context['trainings'] = Training.objects.all()
         context['all_users'] = User.objects.all()
+        context['iejs'] = IEJ.objects.all()
         paginator = NamePaginator(self.object_list, on="last_name", per_page=12)
         try:
             page = int(self.request.GET.get('page', '1'))
@@ -246,18 +247,34 @@ class UserLoginView(View):
 class UsersTrainingView(UsersView):
 
     def get_queryset(self):
-        self.trainings = Training.objects.filter(id=self.args[0])
-        return User.objects.filter(student__training__in=self.trainings).order_by('last_name')
+        self.training = Training.objects.filter(id=self.args[0])
+        return User.objects.filter(student__training__in=self.training).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)
         context['training'] = Training.objects.get(id=self.args[0])
-        context['all_users'] = User.objects.filter(student__training__in=self.trainings).all()
+        context['all_users'] = User.objects.filter(student__training__in=self.training).all()
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UsersTrainingView, self).dispatch(*args, **kwargs)
+
+class UsersIejView(UsersView):
+
+    def get_queryset(self):
+        self.iej = IEJ.objects.filter(id=self.args[0])
+        return User.objects.filter(student__iej__in=self.iej).order_by('last_name')
+
+    def get_context_data(self, **kwargs):
+        context = super(UsersIejView, self).get_context_data(**kwargs)
+        context['iej'] = IEJ.objects.get(id=self.args[0])
+        context['all_users'] = User.objects.filter(student__iej__in=self.iej).all()
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UsersIejView, self).dispatch(*args, **kwargs)
 
 
 class UsersXLSExport(object):

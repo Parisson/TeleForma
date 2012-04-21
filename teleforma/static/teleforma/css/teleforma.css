@@ -1552,6 +1552,11 @@ input,textarea{
     font-size: 0.8125em;
 }
 
+.msg-black {
+    font-size: 0.9em;
+    background-image: url(/static/telemeta/images/tw_hd.png);
+    }
+
 #users {
     padding: 0.8em 0em 0em 0em;
     background-color: #FFF;

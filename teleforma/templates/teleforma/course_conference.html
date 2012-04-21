@@ -46,19 +46,9 @@
 {% block chat %}
 {% if room %}
 <div id="module-set" style="width: 22%">
-<div class="module">
-<h3><img src="{% url telemeta-images "vox_wh.png" %}" alt="rss" style="vertical-align:middle" />{% trans "Local tweeter" %}</h3>
-
-<div style="background: white;">
-<div id="chatwindow"><span id="loading">Loading...</span></div>
-<form id="chatform">{% csrf_token %}
-<label for="msg"></label>
-<input type="text" id="msg" size="16" />
-<input type="submit" value="{% trans "Send" %}" />
-</form>
-<!-- <script type="text/javascript">document.getElementById("msg").focus();</script> -->
-</div>
-</div>
+{% with trans "Local tweeter" as title %}
+{% include "teleforma/inc/chat_room.html" %}
+{% endwith %}
 </div>
 {% endif %}
 {% endblock chat %}

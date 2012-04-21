@@ -11,6 +11,7 @@
 
 {% block content %}
 <div id="module-set-left" style="width: 20%">
+
 <div class="module">
 <h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "Trainings" %}</h3>
 <div style="background: white;">
@@ -23,6 +24,20 @@
 </ul>
 </div>
 </div>
+
+<div class="module">
+<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "IEJ" %}</h3>
+<div style="background: white;">
+<ul>
+{% block iej %}
+{% for iej in iejs %}
+<li><a href="{% url teleforma-iej-users iej.id %}">{{ iej.name|lower|capfirst }}</a></li>
+{% endfor %}
+{% endblock iej %}
+</ul>
+</div>
+</div>
+
 
 {% if all_users %}
 <div class="module_action">
@@ -40,7 +55,7 @@
 </div>
 {% endif %}
 
-<div class="course_title">{% trans "Users" %}{% if training %} - {{ training }}{% else %} - {% trans "All trainings" %}{% endif %}</div>
+<div class="course_title">{% trans "Users" %}{% if training %} - {{ training }}{% elif iej %} - {{ iej }}{% endif %}</div>
 <br />
  {% if users %}
   {% include "telemeta/inc/user_list.html" %}
