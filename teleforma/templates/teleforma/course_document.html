@@ -76,7 +76,7 @@ PDFJS.getDocument('{% url teleforma-document-download document.id %}').then(func
 {% block chat %}
 {% if room %}
 <div id="module-set" style="width: 22%">
-{% with trans "Local tweeter" as title %}
+{% with "Local tweeter" as title %}
 {% include "teleforma/inc/chat_room.html" %}
 {% endwith %}
 </div>
