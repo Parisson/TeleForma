@@ -213,6 +213,7 @@ class UsersView(ListView):
         context['trainings'] = Training.objects.all()
         context['all_users'] = User.objects.all()
         context['iejs'] = IEJ.objects.all()
+        context['courses'] = Course.objects.all()
         paginator = NamePaginator(self.object_list, on="last_name", per_page=12)
         try:
             page = int(self.request.GET.get('page', '1'))
@@ -277,6 +278,21 @@ class UsersIejView(UsersView):
     def dispatch(self, *args, **kwargs):
         return super(UsersIejView, self).dispatch(*args, **kwargs)
 
+class UsersCourseView(UsersView):
+
+    def get_queryset(self):
+        self.course = Course.objects.filter(id=self.args[0])
+        return User.objects.filter(student__training__courses__in=self.course)
+
+    def get_context_data(self, **kwargs):
+        context = super(UsersCourseView, self).get_context_data(**kwargs)
+        context['course'] = Course.objects.get(id=self.args[0])
+        context['all_users'] = User.objects.filter(student__training__courses__in=self.course).all()
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UsersCourseView, self).dispatch(*args, **kwargs)
 
 class UsersXLSExport(object):
 

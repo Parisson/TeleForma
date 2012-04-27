@@ -16,11 +16,11 @@
 <h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "Trainings" %}</h3>
 <div style="background: white;">
 <ul>
-{% block courses %}
+{% block trainings %}
 {% for training in trainings %}
 <li><a href="{% url teleforma-training-users training.id %}">{{ training.code|lower|capfirst }}</a></li>
 {% endfor %}
-{% endblock courses %}
+{% endblock trainings %}
 </ul>
 </div>
 </div>
@@ -38,6 +38,18 @@
 </div>
 </div>
 
+<div class="module">
+<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="playlists" style="vertical-align:middle" />{% trans "Courses" %}</h3>
+<div style="background: white;">
+<ul>
+{% block courses %}
+{% for course in courses %}
+<li><a href="{% url teleforma-course-users course.id %}">{{ course }}</a></li>
+{% endfor %}
+{% endblock courses %}
+</ul>
+</div>
+</div>
 
 {% if all_users %}
 <div class="module_action">
@@ -55,7 +67,7 @@
 </div>
 {% endif %}
 
-<div class="course_title">{% trans "Users" %}{% if training %} - {{ training }}{% elif iej %} - {{ iej }}{% endif %}</div>
+<div class="course_title">{% trans "Users" %}{% if training %} - {{ training }}{% elif iej %} - {{ iej }}{% elif course %} - {{ course }}{% endif %}</div>
 <br />
  {% if users %}
   {% include "telemeta/inc/user_list.html" %}
