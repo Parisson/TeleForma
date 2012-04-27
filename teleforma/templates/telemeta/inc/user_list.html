@@ -5,18 +5,13 @@
 
 <div class="pagination">
     {% for p in page.paginator.pages %}
-
       {% if p == page %}
-          <span class="selected">{{ page }}</span>
+       <span class="selected">{{ page }}</span>
       {% else %}
-          <a href="?page={{ p.number }}">
-              {{ p }}
-          </a>
+       <a href="?page={{ p.number }}">{{ p }}</a>
       {% endif %}
-
     {% endfor %}
 </div>
-
 
 <div id="users">
   <table class="listing" width="100%">

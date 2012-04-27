@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <div id="module-set-left" style="width: 25%">
+  <div id="module-set-left" style="width: 20%">
   {% block modules %}
 
     <div class="module">
@@ -34,10 +34,9 @@
     <a href="{% url postman_write user.username %}" class="component_icon button" id="action_red">{% trans "Send a message" %}</a>
    </div>
   {%  endif %}
-
  </div>
 
-<div class="desk_media">
+<div class="desk_large">
 <div class="course">
 
     <h1>{% trans "User profile" %} : {{ usr.username }}
@@ -56,20 +55,27 @@
      <dl class="listing">
       <dt>{% trans "First Name" %}</dt><dd>{{ usr.first_name }}</dd>
       <dt>{% trans "Last Name" %}</dt><dd>{{ usr.last_name }}</dd>
+
+      {% if usr.student.get %}
+        <dt>{% trans "IEJ" %}</dt><dd>{{ usr.student.get.iej }}</dd>
+        <dt>{% trans "Training" %}</dt><dd>{{ usr.student.get.training }}</dd>
+        <dt>{% trans "Procedure"%}</dt><dd>{{ usr.student.get.procedure.code }}</dd>
+        <dt>{% trans "Oral spe"%}</dt><dd>{{ usr.student.get.oral_speciality.code }}</dd>
+        <dt>{% trans "Written spe"%}</dt><dd>{{ usr.student.get.written_speciality.code }}</dd>
+        <dt>{% trans "Oral 1"%}</dt><dd>{{ usr.student.get.oral_2.code }}</dd>
+        <dt>{% trans "Oral 2"%}</dt><dd>{{ usr.student.get.oral_1.code }}</dd>
+      {% endif %}
+
+      {% if user.is_staff or user.is_superuser %}
       <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
+      <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }} {{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
+      <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
+      {% endif %}
 
-      <dt>{% trans "Institution" %}</dt><dd>{% if profile %}{{ profile.institution }}{% endif %}</dd>
-      <dt>{% trans "Department" %}</dt><dd>{% if profile %}{{ profile.department }}{% endif %}</dd>
-      <dt>{% trans "Function" %}</dt><dd>{% if profile %}{{ profile.function }}{% endif %}</dd>
-      <dt>{% trans "Attachment" %}</dt><dd>{% if profile %}{{ profile.attachment }}{% endif %}</dd>
-      <dt>{% trans "Address" %}</dt><dd>{% if profile %}{{ profile.address }}{% endif %}</dd>
-      <dt>{% trans "Telephone" %}</dt><dd>{% if profile %}{{ profile.telephone }}{% endif %}</dd>
-      <dt>{% trans "Expiration date" %}</dt><dd>{% if profile %}{{ profile.expiration_date }}{% endif %}</dd>
-
-      <dt>{% trans "Is staff" %}</dt><dd>{{ usr.is_staff }}</dd>
-      <dt>{% trans "Is superuser" %}</dt><dd>{{ usr.is_superuser }}</dd>
-      <dt>{% blocktrans count user.groups.all.count as counter %}Group{% plural %}Groups{% endblocktrans %}</dt><dd>{% for group in usr.groups.all %}{{ group }} {% endfor %}</dd>
+      <dt>{% trans "Join date" %}</dt><dd>{{ usr.date_joined }}</dd>
+      <dt>{% trans "Expiration date" %}</dt><dd>{{ usr.profile.get.expiration_date }}</dd>
       <dt>{% trans "Last login" %}</dt><dd>{{ usr.last_login }}</dd>
+
       {% if user.is_authenticated and user.username == usr.username %}
       <dt>{% trans "Language" %}</dt><dd><form id="setlang" action="/i18n/setlang/" method="post">{% csrf_token %}
         <input name="next" type="hidden" value="" />
