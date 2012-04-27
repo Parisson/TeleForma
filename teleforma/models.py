@@ -461,7 +461,6 @@ class Profile(models.Model):
     country         = CharField(_('Country'), max_length=255, blank=True)
     language        = CharField(_('Language'), max_length=255, blank=True)
     telephone       = CharField(_('Telephone'), max_length=255, blank=True)
-    date_added      = DateTimeField(_('date added'), auto_now_add=True)
     expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = BooleanField(_('Password initialization'))
 

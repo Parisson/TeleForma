@@ -117,9 +117,11 @@ class CoursesView(ListView):
     model = Course
     template_name='teleforma/courses.html'
 
+    def get_queryset(self):
+        return get_courses(self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
-        context['object_list'] = get_courses(self.request.user)
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         return context
@@ -304,7 +306,7 @@ class UsersXLSExport(object):
                 row.write(11, profile.postal_code)
                 row.write(12, profile.city)
                 row.write(13, profile.telephone)
-                row.write(14, profile.date_added.strftime("%d/%m/%Y"))
+                row.write(14, user.date_joined.strftime("%d/%m/%Y"))
             return counter + 1
         else:
             return counter

@@ -9,6 +9,7 @@ from teleforma.models import *
 import logging
 import codecs
 import xlrd
+import datetime
 
 class Command(BaseCommand):
     help = "Import users from a XLS file (see an example in example/data/"
@@ -21,16 +22,19 @@ class Command(BaseCommand):
         first_name  = row[1].value
         email       = row[9].value
         #FIXME:
-        email       = self.admin_email
+        #email       = self.admin_email
         username = slugify(first_name)[0] + '.' + slugify(last_name)
+        username = username[:30]
+        date = row[14].value
+        date_joined = datetime.datetime(*xlrd.xldate_as_tuple(date, self.book.datemode))
 
         #FIXME: not for prod
-        #user = User.objects.get(username=username)
-        #user.delete()
+        user = User.objects.filter(username=username)
+        if user:
+            user[0].delete()
 
         user, created = User.objects.get_or_create(username=username, first_name=first_name,
-                                     last_name=last_name, email=email)
-
+                                     last_name=last_name, email=email, date_joined = date_joined)
 
         if created:
             student = Student.objects.filter(user=user)
@@ -43,7 +47,7 @@ class Command(BaseCommand):
             student.oral_speciality, c = Speciality.objects.get_or_create(code=row[6].value)
             student.oral_1, c = Oral.objects.get_or_create(code=row[7].value)
             student.oral_2, c = Oral.objects.get_or_create(code=row[8].value)
-            student.category, c = Category.objects.get_or_create(name=row[15].value)
+            student.category, c = Category.objects.get_or_create(name='Estivale')
             profile, created = Profile.objects.get_or_create(user=user)
             profile.address = row[10].value
             profile.postal_code = int(row[11].value)
@@ -55,8 +59,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file = args[0]
-        book = xlrd.open_workbook(file)
-        sheet = book.sheet_by_index(0)
+        self.book = xlrd.open_workbook(file)
+        sheet = self.book.sheet_by_index(0)
         col = sheet.col(0)
         for i in range(self.first_row, len(col)):
             self.import_user(sheet.row(i))
