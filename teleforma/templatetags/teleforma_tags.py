@@ -23,6 +23,10 @@ from teleforma.views import get_courses
 
 register = template.Library()
 
+# more translations for template variables
+title = _('General tweeter')
+title = _('Local tweeter')
+
 class TeleFormaVersionNode(template.Node):
     def render(self, context):
         from teleforma import __version__

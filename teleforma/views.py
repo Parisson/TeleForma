@@ -21,6 +21,7 @@ from django.core.context_processors import csrf
 from django.forms.models import modelformset_factory, inlineformset_factory
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
