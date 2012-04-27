@@ -61,12 +61,18 @@ urlpatterns = patterns('',
 
     # Users
     url(r'^users/$', UsersView.as_view(), name="teleforma-users"),
-    url(r'^users/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
-    url(r'^users/by_iej/(\w+)/$', UsersIejView.as_view(), name="teleforma-iej-users"),
-    url(r'^users/by_course/(\w+)/$', UsersCourseView.as_view(), name="teleforma-course-users"),
-    url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
-    url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training, name="teleforma-training-users-export"),
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
+    url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
+
+    url(r'^users/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
+    url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training, name="teleforma-training-users-export"),
+
+    url(r'^users/by_iej/(\w+)/$', UsersIejView.as_view(), name="teleforma-iej-users"),
+    url(r'^users/by_iej/(?P<id>.*)/export/$', user_export.by_iej, name="teleforma-iej-users-export"),
+
+    url(r'^users/by_course/(\w+)/$', UsersCourseView.as_view(), name="teleforma-course-users"),
+    url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course, name="teleforma-course-users-export"),
+
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',

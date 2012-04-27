@@ -63,7 +63,7 @@
 
 {% if user.is_staff %}
 <div style="float:right;">
-<a href="{% if training %}{% url teleforma-training-users-export training.id %}{% else %}{% url teleforma-users-xls-export %}{% endif %}" class="component_icon button icon_csv">XLS Export</a>
+<a href="{% if training %}{% url teleforma-training-users-export training.id %}{% elif iej %}{% url teleforma-iej-users-export iej.id %}{% elif course %}{% url teleforma-course-users-export course.id %}{% else %}{% url teleforma-users-xls-export %}{% endif %}" class="component_icon button icon_csv">XLS Export</a>
 </div>
 {% endif %}
 

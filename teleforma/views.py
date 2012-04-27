@@ -329,6 +329,7 @@ class UsersXLSExport(object):
 
     @method_decorator(permission_required('is_superuser'))
     def export(self, request):
+        self.users = self.users.order_by('last_name')
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')
         row = self.sheet.row(0)
@@ -362,6 +363,18 @@ class UsersXLSExport(object):
 
     @method_decorator(permission_required('is_superuser'))
     def by_training(self, request, id):
-        trainings = Training.objects.filter(id=id)
-        self.users = User.objects.all().select_related(depth=2).filter(student__training__in=trainings)
+        training = Training.objects.filter(id=id)
+        self.users = User.objects.filter(student__training__in=training)
+        return self.export(request)
+
+    @method_decorator(permission_required('is_superuser'))
+    def by_iej(self, request, id):
+        iej = IEJ.objects.filter(id=id)
+        self.users = User.objects.filter(student__iej__in=iej)
+        return self.export(request)
+
+    @method_decorator(permission_required('is_superuser'))
+    def by_course(self, request, id):
+        course = Course.objects.filter(id=id)
+        self.users = User.objects.filter(student__training__courses__in=course)
         return self.export(request)
