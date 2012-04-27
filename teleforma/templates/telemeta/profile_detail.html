@@ -31,7 +31,7 @@
 
   {% if user.is_authenticated %}
    <div class="module_action">
-    <a href="{% url postman_write user.username %}" class="component_icon button" id="action_red">{% trans "Send a message" %}</a>
+    <a href="{% url postman_write usr.username %}" class="component_icon button" id="action_red">{% trans "Send a message" %}</a>
    </div>
   {%  endif %}
  </div>
@@ -58,8 +58,8 @@
       <dt>{% trans "Username" %}</dt><dd>{{ usr.username }}</dd>
 
       {% if usr.student.get %}
-        <dt>{% trans "IEJ" %}</dt><dd>{{ usr.student.get.iej }}</dd>
-        <dt>{% trans "Training" %}</dt><dd>{{ usr.student.get.training }}</dd>
+        <dt>{% trans "IEJ" %}</dt><dd><a href="{% url teleforma-iej-users usr.student.get.iej.id %}">{{ usr.student.get.iej }}</a></dd>
+        <dt>{% trans "Training" %}</dt><dd><a href="{% url teleforma-training-users usr.student.get.training.id %}">{{ usr.student.get.training }}</a></dd>
         <dt>{% trans "Procedure"%}</dt><dd>{{ usr.student.get.procedure.code }}</dd>
         <dt>{% trans "Oral spe"%}</dt><dd>{{ usr.student.get.oral_speciality.code }}</dd>
         <dt>{% trans "Written spe"%}</dt><dd>{{ usr.student.get.written_speciality.code }}</dd>
