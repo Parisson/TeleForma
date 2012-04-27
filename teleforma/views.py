@@ -212,7 +212,6 @@ class UsersView(ListView):
     def get_context_data(self, **kwargs):
         context = super(UsersView, self).get_context_data(**kwargs)
         context['trainings'] = Training.objects.all()
-        context['all_users'] = User.objects.all()
         context['iejs'] = IEJ.objects.all()
         context['courses'] = Course.objects.all()
         paginator = NamePaginator(self.object_list, on="last_name", per_page=12)
@@ -256,7 +255,6 @@ class UsersTrainingView(UsersView):
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)
         context['training'] = Training.objects.get(id=self.args[0])
-        context['all_users'] = self.object_list.all()
         return context
 
     @method_decorator(login_required)
@@ -272,7 +270,6 @@ class UsersIejView(UsersView):
     def get_context_data(self, **kwargs):
         context = super(UsersIejView, self).get_context_data(**kwargs)
         context['iej'] = IEJ.objects.get(id=self.args[0])
-        context['all_users'] = self.object_list.all()
         return context
 
     @method_decorator(login_required)
@@ -288,7 +285,6 @@ class UsersCourseView(UsersView):
     def get_context_data(self, **kwargs):
         context = super(UsersCourseView, self).get_context_data(**kwargs)
         context['course'] = Course.objects.get(id=self.args[0])
-        context['all_users'] = self.object_list.all()
         return context
 
     @method_decorator(login_required)

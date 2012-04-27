@@ -51,9 +51,9 @@
 </div>
 </div>
 
-{% if all_users %}
+{% if users %}
 <div class="module_action">
-<a href="{% url postman_write all_users|to_recipients %}" class="component_icon button" id="action_orange">{% trans "Grouped message" %}</a>
+<a href="{% url postman_write users|to_recipients %}" class="component_icon button" id="action_orange">{% trans "Grouped message" %}</a>
 </div>
 {% endif %}
 
