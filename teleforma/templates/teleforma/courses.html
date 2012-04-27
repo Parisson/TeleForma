@@ -23,7 +23,7 @@ $(document).ready(function(){
 <div style="background: white;">
 <ul>
 {% block courses %}
-{% for course in object_list %}
+{% for course in courses %}
 <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
 {% endfor %}
 {% endblock courses %}

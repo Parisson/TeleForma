@@ -34,7 +34,6 @@ import jqchat.models
 from xlwt import Workbook
 
 
-
 def render(request, template, data = None, mimetype = None):
     return render_to_response(template, data, context_instance=RequestContext(request),
                               mimetype=mimetype)
@@ -50,7 +49,6 @@ def get_courses(user):
         courses = Course.objects.all()
     else:
         courses = None
-    courses = courses.order_by('-date_modified')
     return courses
 
 def stream_from_file(__file):
@@ -118,10 +116,11 @@ class CoursesView(ListView):
     template_name='teleforma/courses.html'
 
     def get_queryset(self):
-        return get_courses(self.request.user)
+        return get_courses(self.request.user).order_by('-date_modified')
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
+        context['courses'] = self.object_list.order_by('title')
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         return context
