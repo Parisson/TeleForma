@@ -127,7 +127,7 @@ class Course(Model):
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return ' - '.join([self.department.name, self.title, self.type.name])
+        return ' - '.join([self.title, self.type.name])
 
     @property
     def slug(self):
