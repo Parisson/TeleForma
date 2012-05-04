@@ -85,6 +85,10 @@ class Department(Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def slug(self):
+        return slugify(self.__unicode__())
+
     class Meta:
         db_table = app_label + '_' + 'department'
         verbose_name = _('department')
@@ -236,7 +240,7 @@ class LiveStream(Model):
 
     @property
     def mount_point(self):
-        slug = self.conference.course.slug
+        slug = self.conference.course.department.slug + '-' + self.conference.course.slug
         if self.server.type == 'stream-m':
             return  'consume/' + slug
         else:
