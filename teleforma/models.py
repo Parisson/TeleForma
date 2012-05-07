@@ -117,7 +117,7 @@ class CourseType(Model):
 
     class Meta:
         db_table = app_label + '_' + 'course_type'
-        verbose_name = _('type')
+        verbose_name = _('course type')
 
 class Course(Model):
 
@@ -278,12 +278,27 @@ class MediaBase(Model):
         abstract = True
 
 
+class DocumentType(Model):
+
+    name            = CharField(_('name'), max_length=255)
+    description     = CharField(_('description'), max_length=255, blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        db_table = app_label + '_' + 'document_type'
+        verbose_name = _('document type')
+
+
 class Document(MediaBase):
 
     element_type = 'document'
 
     course          = ForeignKey('Course', related_name='document', verbose_name='course')
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
+                                 blank=True, null=True)
+    type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
