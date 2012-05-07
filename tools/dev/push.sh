@@ -7,24 +7,15 @@ do
     echo "Push $branch to origin:"
     git push origin $branch
 
-    if [[ $branch == *master* ]]; then
-        echo "Push $branch to github:"
-        git push github $branch
-    fi
-
 done
 
 git push --tags
-git push --tags github
 
-ssh vcs.parisson.com "cd /var/git/telemeta.git; git update-server-info"
+ssh vcs.parisson.com "cd /var/git/teleforma.git; git update-server-info"
 
-#echo "Update jimi.parisson.com:"
-echo "Update angus.parisson.com:"
-ssh angus.parisson.com "cd /home/telemeta/telemeta-prod; git pull origin production; \
-                        cd /home/telemeta/telemeta; git pull origin master; \
-                        cd /home/telemeta/demo/; ./manage.py migrate telemeta --delete-ghost-migrations;
-                        cd /home/telemeta/sandbox/; ./manage.py migrate telemeta --delete-ghost-migrations; 
-                        cd /home/telemeta/parisson/; ./manage.py migrate telemeta --delete-ghost-migrations; "
+echo "Update sandbox @ angus.parisson.com:"
+ssh angus.parisson.com "cd /home/teleforma/teleforma; git pull; \
+                        cd /home/teleforma/sandbox/; ./manage.py migrate --delete-ghost-migrations; \
+                        ./manage.py collectstatic "
 
 echo "Done !"
