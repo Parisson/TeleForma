@@ -94,7 +94,7 @@ class Department(Model):
         verbose_name = _('department')
 
 
-class Category(Model):
+class Period(Model):
 
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
@@ -103,9 +103,8 @@ class Category(Model):
         return self.name
 
     class Meta:
-        db_table = app_label + '_' + 'category'
-        verbose_name = _('category')
-        verbose_name_plural = _('categories')
+        db_table = app_label + '_' + 'period'
+        verbose_name = _('period')
 
 class CourseType(Model):
 
@@ -146,10 +145,10 @@ class Course(Model):
 class Professor(Model):
 
     user            = ForeignKey(User, related_name='professor', verbose_name=_('user'), unique=True)
-    courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
-                                        blank=True, null=True)
     training        = ForeignKey('Training', related_name='professor',
                                  verbose_name=_('training'), blank=True, null=True)
+    courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
+                                        blank=True, null=True)
 
     def __unicode__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -387,17 +386,15 @@ class Training(Model):
 
     code            = CharField(_('code'), max_length=255)
     name            = CharField(_('name'), max_length=255, blank=True)
-    category        = ForeignKey('Category', related_name='course', verbose_name=_('category'),
+    period          = ForeignKey('Period', related_name='training', verbose_name=_('period'),
                                  blank=True, null=True)
-    courses         = ManyToManyField('Course', related_name="training", verbose_name=_('courses'),
-                                        blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligation'))
 
     def __unicode__(self):
         code = self.code
-        if self.category:
-            code += ' - ' + self.category.name
+        if self.period:
+            code += ' - ' + self.period.name
         return code
 
     class Meta:
@@ -405,62 +402,31 @@ class Training(Model):
         verbose_name = _('training')
 
 
-class Procedure(Model):
-
-    name           = CharField(_('name'), max_length=255, blank=True)
-    code           = CharField(_('code'), max_length=255)
-
-    def __unicode__(self):
-        return self.code
-
-    class Meta:
-        db_table = app_label + '_' + 'procedure'
-        verbose_name = _('procedure')
-
-
-class Speciality(Model):
-
-    name           = CharField(_('name'), max_length=255, blank=True)
-    code           = CharField(_('code'), max_length=255)
-
-    def __unicode__(self):
-        return self.code
-
-    class Meta:
-        db_table = app_label + '_' + 'speciality'
-        verbose_name = _('speciality')
-
-
-class Oral(Model):
-
-    name           = CharField(_('name'), max_length=255, blank=True)
-    code           = CharField(_('code'), max_length=255)
-
-    def __unicode__(self):
-        return self.code
-
-    class Meta:
-        db_table = app_label + '_' + 'oral'
-        verbose_name = _('oral')
-
-
 class Student(Model):
 
     user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
-    category        = ForeignKey('Category', related_name='student', verbose_name=_('category'))
+    period          = ForeignKey('Period', related_name='student', verbose_name=_('period'))
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
-    training        = ForeignKey('Training', related_name='student',
-                                 verbose_name=_('training'), blank=True, null=True)
-    procedure       = ForeignKey('Procedure', related_name='student',
-                                 verbose_name=_('procedure'), blank=True, null=True)
-    oral_speciality = ForeignKey('Speciality', related_name='student_oral_spe',
-                                 verbose_name=_('oral speciality'), blank=True, null=True)
-    written_speciality = ForeignKey('Speciality', related_name='student_written_spe',
-                                verbose_name=_('written speciality'), blank=True, null=True)
-    oral_1          = ForeignKey('Oral', related_name='oral_1',
-                                 verbose_name=_('oral 1'), blank=True, null=True)
-    oral_2          = ForeignKey('Oral', related_name='oral_2',
-                                 verbose_name=_('oral 1'), blank=True, null=True)
+    training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
+    synthesis_note  = ManyToManyField('Course', related_name="student_synthesis_note",
+                                        verbose_name=_('synthesis notes'),
+                                        blank=True, null=True)
+    obligation      = ManyToManyField('Course', related_name="student_obligation",
+                                        verbose_name=_('obligations'),
+                                        blank=True, null=True)
+    procedure       = ManyToManyField('Course', related_name="student_procedure",
+                                        verbose_name=_('procedures'),
+                                        blank=True, null=True)
+    oral_speciality = ManyToManyField('Course', related_name="student_oral_speciality",
+                                        verbose_name=_('oral specialities'),
+                                        blank=True, null=True)
+    written_speciality = ManyToManyField('Course', related_name="student_written_speciality",
+                                        verbose_name=_('written specialities'),
+                                        blank=True, null=True)
+    oral_1          = ManyToManyField('Course', related_name="student_oral_1", verbose_name=_('oral 1'),
+                                        blank=True, null=True)
+    oral_2          = ManyToManyField('Course', related_name="student_oral_2", verbose_name=_('oral 2'),
+                                        blank=True, null=True)
 
     def __unicode__(self):
         return self.user.username
@@ -474,9 +440,9 @@ class Profile(models.Model):
     "User profile extension"
 
     user            = ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
-    address         = TextField(_('Address'))
-    postal_code     = CharField(_('Postal code'), max_length=255)
-    city            = CharField(_('City'), max_length=255)
+    address         = TextField(_('Address'), blank=True)
+    postal_code     = CharField(_('Postal code'), max_length=255, blank=True)
+    city            = CharField(_('City'), max_length=255, blank=True)
     country         = CharField(_('Country'), max_length=255, blank=True)
     language        = CharField(_('Language'), max_length=255, blank=True)
     telephone       = CharField(_('Telephone'), max_length=255, blank=True)
@@ -489,7 +455,6 @@ class Profile(models.Model):
 
 
 # TOOLS
-
 class NamePaginator(object):
     """Pagination for string-based objects"""
 
