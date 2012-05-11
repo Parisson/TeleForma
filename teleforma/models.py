@@ -126,6 +126,7 @@ class Course(Model):
     type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
+    number          = IntegerField(_('number'), blank=True)
 
     notes = generic.GenericRelation(Note)
 

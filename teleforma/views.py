@@ -45,7 +45,13 @@ def get_courses(user):
     if professor:
         courses = user.professor.get().courses.all()
     elif student:
-        courses = user.student.get().training.courses.all()
+        student = user.student.get()
+        courses = []
+        course_list = [student.obligation.all(), student.procedure.all(), student.written_speciality.all(),
+                   student.oral_speciality.all(), student.oral_1.all(), student.oral_2.all()]
+        for course in course_list:
+            for c in course:
+                courses.append(c)
     elif user.is_staff:
         courses = Course.objects.all()
     else:
@@ -117,11 +123,11 @@ class CoursesView(ListView):
     template_name='teleforma/courses.html'
 
     def get_queryset(self):
-        return get_courses(self.request.user).order_by('-date_modified')
+        return get_courses(self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
-        context['courses'] = self.object_list.order_by('title')
+        context['courses'] = self.object_list
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         return context
