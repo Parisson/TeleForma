@@ -17,6 +17,15 @@ class Command(BaseCommand):
     first_row = 2
     admin_email = 'webmaster@parisson.com'
 
+    def get_first_course(self, code):
+        courses = Course.objects.filter(code=code)
+        if courses:
+            return [courses[0]]
+        else:
+            course = Course(code=code)
+            course.save()
+            return [course]
+
     def import_user(self, row):
         last_name   = row[0].value
         first_name  = row[1].value
@@ -40,14 +49,17 @@ class Command(BaseCommand):
             student = Student.objects.filter(user=user)
             if not student:
                 student = Student(user=user)
-            student.iej, c = IEJ.objects.get_or_create(name=row[2].value)
-            student.training, c = Training.objects.get_or_create(code=row[3].value)
-            student.procedure, c = Procedure.objects.get_or_create(code=row[4].value)
-            student.written_speciality, c = Speciality.objects.get_or_create(code=row[5].value)
-            student.oral_speciality, c = Speciality.objects.get_or_create(code=row[6].value)
-            student.oral_1, c = Oral.objects.get_or_create(code=row[7].value)
-            student.oral_2, c = Oral.objects.get_or_create(code=row[8].value)
-            student.category, c = Category.objects.get_or_create(name='Estivale')
+                student.period, c = Period.objects.get_or_create(name='Estivale')
+                student.iej, c = IEJ.objects.get_or_create(name=row[2].value)
+                student.training, c = Training.objects.get_or_create(code=row[3].value)
+                student.save()
+
+            student.procedure = self.get_first_course(row[4].value)
+            student.written_speciality = self.get_first_course(row[5].value)
+            student.oral_speciality = self.get_first_course(row[6].value)
+            student.oral_1 = self.get_first_course(row[7].value)
+            student.oral_2 = self.get_first_course(row[8].value)
+
             profile, created = Profile.objects.get_or_create(user=user)
             profile.address = row[10].value
             profile.postal_code = int(row[11].value)
