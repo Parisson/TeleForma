@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-05 01:45+0200\n"
+"POT-Creation-Date: 2012-06-05 01:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,17 +132,13 @@ msgstr ""
 msgid "admin password"
 msgstr ""
 
-#: models.py:228
+#: models.py:228 models.py:238
 msgid "streaming server"
 msgstr "serveur de diffusion"
 
-#: models.py:238
-msgid "streaming_server"
-msgstr ""
-
 #: models.py:239
 msgid "Streaming type"
-msgstr ""
+msgstr "Type de flux"
 
 #: models.py:258
 msgid "live stream"
@@ -558,7 +554,6 @@ msgid "End"
 msgstr "Fin"
 
 #: templates/teleforma/course_conference.html:38
-#: templates/teleforma/inc/conference_list.html:6
 msgid "Live"
 msgstr "Direct"
 
@@ -593,6 +588,11 @@ msgstr "Mes notes"
 msgid "New note"
 msgstr "Nouvelle note"
 
+#: templates/teleforma/inc/conference_list.html:6
+#, fuzzy
+msgid "Live conferences"
+msgstr "Conférence en direct"
+
 #: templates/teleforma/inc/conference_list.html:11
 #: templates/telemeta/lists.html:70
 #: templates/telemeta/inc/module_revisions.html:18
@@ -621,8 +621,8 @@ msgid "Download"
 msgstr "Télécharger"
 
 #: templates/teleforma/inc/media_list.html:6
-msgid "Differed"
-msgstr "Différé"
+msgid "Passed conferences"
+msgstr "Conférences passées"
 
 #: templates/telemeta/base.html:68
 msgid "Desk"
@@ -876,8 +876,8 @@ msgstr "Tweeter local"
 msgid "me"
 msgstr "moi"
 
-#~ msgid "Live conferences"
-#~ msgstr "Conférences en direct"
+#~ msgid "Differed"
+#~ msgstr "Différé"
 
 #~ msgid "category"
 #~ msgstr "catégorie"

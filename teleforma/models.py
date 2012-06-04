@@ -235,7 +235,7 @@ class LiveStream(Model):
     conference = ForeignKey('Conference', related_name='livestream',
                                 verbose_name=_('conference'))
     server     = ForeignKey('StreamingServer', related_name='livestream',
-                                verbose_name=_('streaming_server'))
+                                verbose_name=_('streaming server'))
     stream_type = CharField(_('Streaming type'), choices=streaming_choices, max_length=32)
 
     @property
