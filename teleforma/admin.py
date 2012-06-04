@@ -45,6 +45,8 @@ admin.site.register(Training, TrainingAdmin)
 admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
+admin.site.register(Payment)
+
 
 
 
