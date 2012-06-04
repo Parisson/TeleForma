@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-05 01:29+0200\n"
+"POT-Creation-Date: 2012-06-05 01:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,7 +60,7 @@ msgstr "date de modification"
 msgid "number"
 msgstr ""
 
-#: models.py:142 models.py:178
+#: models.py:142 models.py:178 models.py:344
 msgid "course"
 msgstr "matière"
 
@@ -132,7 +132,11 @@ msgstr ""
 msgid "admin password"
 msgstr ""
 
-#: models.py:228 models.py:238
+#: models.py:228
+msgid "streaming server"
+msgstr "serveur de diffusion"
+
+#: models.py:238
 msgid "streaming_server"
 msgstr ""
 
@@ -141,8 +145,8 @@ msgid "Streaming type"
 msgstr ""
 
 #: models.py:258
-msgid "live_stream"
-msgstr ""
+msgid "live stream"
+msgstr "stream en direct"
 
 #: models.py:266
 msgid "credits"
@@ -556,7 +560,7 @@ msgstr "Fin"
 #: templates/teleforma/course_conference.html:38
 #: templates/teleforma/inc/conference_list.html:6
 msgid "Live"
-msgstr "En direct"
+msgstr "Direct"
 
 #: templates/teleforma/course_detail.html:50
 #: templates/teleforma/courses.html:81

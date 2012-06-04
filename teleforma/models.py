@@ -225,7 +225,7 @@ class StreamingServer(Model):
 
     class Meta:
         db_table = app_label + '_' + 'streaming_server'
-        verbose_name = _('streaming_server')
+        verbose_name = _('streaming server')
 
 
 class LiveStream(Model):
@@ -255,7 +255,7 @@ class LiveStream(Model):
 
     class Meta:
         db_table = app_label + '_' + 'live_stream'
-        verbose_name = _('live_stream')
+        verbose_name = _('live stream')
 
 
 class MediaBase(Model):
