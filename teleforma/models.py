@@ -411,7 +411,7 @@ class Student(Model):
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
     synthesis_note  = ManyToManyField('Course', related_name="student_synthesis_note",
-                                        verbose_name=_('synthesis notes'),
+                                        verbose_name=_('synthesis note'),
                                         blank=True, null=True)
     obligation      = ManyToManyField('Course', related_name="student_obligation",
                                         verbose_name=_('obligations'),

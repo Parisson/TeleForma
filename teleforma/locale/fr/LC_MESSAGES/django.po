@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-04 21:37+0200\n"
+"POT-Creation-Date: 2012-06-05 01:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr "organisation"
 msgid "department"
 msgstr "département"
 
-#: models.py:107 models.py:390 models.py:409
+#: models.py:107 models.py:390 models.py:410
 msgid "period"
 msgstr "période"
 
@@ -64,11 +64,11 @@ msgstr ""
 msgid "course"
 msgstr "matière"
 
-#: models.py:148 models.py:408 models.py:443
+#: models.py:148 models.py:409 models.py:448
 msgid "user"
 msgstr "utilisateur"
 
-#: models.py:150 models.py:403 models.py:411
+#: models.py:150 models.py:404 models.py:412
 msgid "training"
 msgstr "formation"
 
@@ -153,14 +153,13 @@ msgstr "crédits"
 msgid "published"
 msgstr "publié"
 
-#: models.py:268
+#: models.py:268 models.py:468
 msgid "date added"
 msgstr "date d'ajout"
 
 #: models.py:291
-#, fuzzy
 msgid "document type"
-msgstr "Aucun document"
+msgstr "type de document"
 
 #: models.py:303
 msgid "annal"
@@ -175,7 +174,7 @@ msgstr "fichier"
 msgid "IEJ"
 msgstr "IEJ"
 
-#: models.py:392
+#: models.py:392 models.py:414
 msgid "synthesis note"
 msgstr "note de synthèse"
 
@@ -183,80 +182,86 @@ msgstr "note de synthèse"
 msgid "obligation"
 msgstr "obligation"
 
-#: models.py:410
+#: models.py:394
+msgid "cost (€)"
+msgstr ""
+
+#: models.py:411
 msgid "iej"
 msgstr "iej"
 
-#: models.py:413
-#, fuzzy
-msgid "synthesis notes"
-msgstr "note de synthèse"
-
-#: models.py:416
-#, fuzzy
+#: models.py:417
 msgid "obligations"
-msgstr "obligation"
+msgstr "obligations"
 
-#: models.py:419
-#, fuzzy
+#: models.py:420
 msgid "procedures"
-msgstr "procédure"
+msgstr "procédures"
 
-#: models.py:422
+#: models.py:423
 msgid "oral specialities"
 msgstr "spécialités orales"
 
-#: models.py:425
+#: models.py:426
 msgid "written specialities"
 msgstr "spécialités écrites"
 
-#: models.py:427
+#: models.py:428
 msgid "oral 1"
 msgstr ""
 
-#: models.py:429
+#: models.py:430
 msgid "oral 2"
 msgstr ""
 
-#: models.py:437
+#: models.py:441 models.py:466
 msgid "student"
 msgstr "étudiant"
 
-#: models.py:444 templates/telemeta/profile_detail.html:72
+#: models.py:449 templates/telemeta/profile_detail.html:72
 msgid "Address"
 msgstr ""
 
-#: models.py:445
+#: models.py:450
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models.py:446
+#: models.py:451
 msgid "City"
 msgstr "Ville"
 
-#: models.py:447
+#: models.py:452
 msgid "Country"
 msgstr "Pays"
 
-#: models.py:448 templates/telemeta/profile_detail.html:81
+#: models.py:453 templates/telemeta/profile_detail.html:81
 msgid "Language"
 msgstr "Langue"
 
-#: models.py:449 templates/telemeta/profile_detail.html:73
+#: models.py:454 templates/telemeta/profile_detail.html:73
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models.py:450
+#: models.py:455
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models.py:451
+#: models.py:456
 msgid "Password initialization"
 msgstr ""
 
-#: models.py:455
+#: models.py:460
 msgid "profile"
 msgstr "profil"
+
+#: models.py:467
+msgid "amount (€)"
+msgstr ""
+
+#: models.py:472
+#, fuzzy
+msgid "payment"
+msgstr "département"
 
 #: templates/postman/archives.html:3
 #, fuzzy
