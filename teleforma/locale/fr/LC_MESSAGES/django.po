@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-05 01:03+0200\n"
+"POT-Creation-Date: 2012-06-05 01:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,9 +121,8 @@ msgid "port"
 msgstr ""
 
 #: models.py:218 models.py:301
-#, fuzzy
 msgid "type"
-msgstr "type mime"
+msgstr "type"
 
 #: models.py:220
 msgid "source password"
@@ -259,9 +258,8 @@ msgid "amount (€)"
 msgstr ""
 
 #: models.py:472
-#, fuzzy
 msgid "payment"
-msgstr "département"
+msgstr "paiement"
 
 #: templates/postman/archives.html:3
 #, fuzzy
@@ -526,7 +524,6 @@ msgid "Date added"
 msgstr "Date d'ajout"
 
 #: templates/teleforma/course.html:31
-#: templates/teleforma/inc/media_list.html:6
 msgid "Medias"
 msgstr "Médias"
 
@@ -557,6 +554,7 @@ msgid "End"
 msgstr "Fin"
 
 #: templates/teleforma/course_conference.html:38
+#: templates/teleforma/inc/conference_list.html:6
 msgid "Live"
 msgstr "En direct"
 
@@ -591,10 +589,6 @@ msgstr "Mes notes"
 msgid "New note"
 msgstr "Nouvelle note"
 
-#: templates/teleforma/inc/conference_list.html:6
-msgid "Live conferences"
-msgstr "Conférences en direct"
-
 #: templates/teleforma/inc/conference_list.html:11
 #: templates/telemeta/lists.html:70
 #: templates/telemeta/inc/module_revisions.html:18
@@ -621,6 +615,10 @@ msgstr "Date de modification"
 #: templates/teleforma/inc/document_list.html:15
 msgid "Download"
 msgstr "Télécharger"
+
+#: templates/teleforma/inc/media_list.html:6
+msgid "Differed"
+msgstr "Différé"
 
 #: templates/telemeta/base.html:68
 msgid "Desk"
@@ -873,6 +871,9 @@ msgstr "Tweeter local"
 #: templatetags/teleforma_tags.py:93
 msgid "me"
 msgstr "moi"
+
+#~ msgid "Live conferences"
+#~ msgstr "Conférences en direct"
 
 #~ msgid "category"
 #~ msgstr "catégorie"
