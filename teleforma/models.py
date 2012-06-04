@@ -126,7 +126,7 @@ class Course(Model):
     type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
-    number          = IntegerField(_('number'), blank=True)
+    number          = IntegerField(_('number'), blank=True, null=True)
 
     notes = generic.GenericRelation(Note)
 
@@ -341,7 +341,7 @@ class Media(MediaBase):
 
     element_type = 'media'
 
-    course          = ForeignKey('Course', related_name='media', verbose_name='course')
+    course          = ForeignKey('Course', related_name='media', verbose_name=_('course'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
                                  blank=True, null=True)
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
