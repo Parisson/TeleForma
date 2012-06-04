@@ -18,13 +18,11 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
 
     def get_first_course(self, code):
-        courses = Course.objects.filter(code=code)
+        courses = Course.objects.filter(code__in=code)
         if courses:
             return [courses[0]]
         else:
-            course = Course(code=code)
-            course.save()
-            return [course]
+            raise 'You should first create a course with this code:' + code
 
     def import_user(self, row):
         last_name   = row[0].value
