@@ -8,17 +8,16 @@
 <table class="listing" width="100%">
     <thead>
         <tr>
-        <th>{% trans "Download" %}</th>
         <th class="highlight">{% trans "Title" %}</th>
         <th>{% trans "Description" %}</th>
         <th>{% trans "Annal" %}</th>
         <th>{% trans "Date modified" %}</th>
+        <th>{% trans "Download" %}</th>
         </tr>
     </thead>
     <tbody>
         {% for document in course.document.all %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-        <td align="center"><a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a></td>
         <td><a href="{% url teleforma-document-detail document.id %}" target="_blank">{{ document.title }}</a></td>
         <td>{{ document.description }}</td>
         <td align="center">
@@ -27,6 +26,7 @@
         {% endif %}
         </td>
         <td>{{ document.date_added }}</td>
+        <td align="center"><a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a></td>
         </tr>
     {% endfor %}
     </tbody>

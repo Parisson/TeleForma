@@ -264,10 +264,10 @@ class MediaBase(Model):
     title           = CharField(_('title'), max_length=255, blank=True)
     description     = CharField(_('description'), max_length=255, blank=True)
     credits         = CharField(_('credits'), max_length=255, blank=True)
-    is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     code            = CharField(_('code'), max_length=255, blank=True)
+    is_published    = BooleanField(_('published'))
 
     notes = generic.GenericRelation(Note)
 
