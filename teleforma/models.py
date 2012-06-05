@@ -123,7 +123,8 @@ class Course(Model):
     department      = ForeignKey('Department', related_name='course', verbose_name=_('department'))
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
+    type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'),
+                                 blank=True, null=True)
     code            = CharField(_('code'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     number          = IntegerField(_('number'), blank=True, null=True)
@@ -131,7 +132,10 @@ class Course(Model):
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return ' - '.join([self.title, self.type.name])
+        if self.type:
+            return ' - '.join([self.title, self.type.name])
+        else:
+            return self.title
 
     @property
     def slug(self):
@@ -295,7 +299,7 @@ class Document(MediaBase):
 
     element_type = 'document'
 
-    course          = ForeignKey('Course', related_name='document', verbose_name='course')
+    course          = ForeignKey('Course', related_name='document', verbose_name=_('course'))
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
                                  blank=True, null=True)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
@@ -391,7 +395,7 @@ class Training(Model):
                                  blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligation'))
-    cost            = FloatField(_('cost'), blank=True)
+    cost            = FloatField(_('cost'), blank=True, null=True)
 
     def __unicode__(self):
         code = self.code
@@ -410,6 +414,7 @@ class Student(Model):
     period          = ForeignKey('Period', related_name='student', verbose_name=_('period'))
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
+    network_only    = BooleanField(_('network only'))
     synthesis_note  = ManyToManyField('Course', related_name="student_synthesis_note",
                                         verbose_name=_('synthesis note'),
                                         blank=True, null=True)
@@ -464,7 +469,7 @@ class Payment(models.Model):
     "Student payment"
 
     student = ForeignKey(Student, related_name="payment", verbose_name=_('student'))
-    amount  = FloatField(_('amount (€)'))
+    amount  = FloatField(_('amount'))
     date_added = DateTimeField(_('date added'), auto_now_add=True)
 
     def __unicode__(self):

@@ -18,11 +18,12 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
 
     def get_first_course(self, code):
-        courses = Course.objects.filter(code__in=code)
+        courses = Course.objects.filter(code=code)
+        print courses
         if courses:
             return [courses[0]]
         else:
-            raise 'You should first create a course with this code:' + code
+            raise BaseException('You should first create a course with this code: ' + code)
 
     def import_user(self, row):
         last_name   = row[0].value
@@ -35,7 +36,7 @@ class Command(BaseCommand):
         date = row[14].value
         date_joined = datetime.datetime(*xlrd.xldate_as_tuple(date, self.book.datemode))
 
-        #FIXME: not for prod
+        #FIXME: NOT for production
         user = User.objects.filter(username=username)
         if user:
             user.delete()
