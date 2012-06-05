@@ -391,7 +391,7 @@ class Training(Model):
                                  blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligation'))
-    cost            = FloatField(_('cost (€)'))
+    cost            = FloatField(_('cost'), blank=True)
 
     def __unicode__(self):
         code = self.code
@@ -439,7 +439,7 @@ class Student(Model):
     class Meta:
         db_table = app_label + '_' + 'student'
         verbose_name = _('student')
-        ordering = ['user']
+        ordering = ['user__last_name']
 
 
 class Profile(models.Model):
@@ -467,9 +467,14 @@ class Payment(models.Model):
     amount  = FloatField(_('amount (€)'))
     date_added = DateTimeField(_('date added'), auto_now_add=True)
 
+    def __unicode__(self):
+        return ' - '.join([str(self.date_added), self.student.user.last_name + ' ' + \
+                        self.student.user.first_name,  str(self.amount)])
+
     class Meta:
         db_table = app_label + '_' + 'payment'
         verbose_name = _('payment')
+        ordering = ['-date_added']
 
 
 # TOOLS

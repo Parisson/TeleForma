@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-05 02:07+0200\n"
+"POT-Creation-Date: 2012-06-05 02:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,11 +48,11 @@ msgstr "type de matière"
 msgid "title"
 msgstr "titre"
 
-#: models.py:127 models.py:270 models.py:388
+#: models.py:127 models.py:269 models.py:388
 msgid "code"
 msgstr "cote"
 
-#: models.py:128 models.py:269
+#: models.py:128 models.py:268
 msgid "date modified"
 msgstr "date de modification"
 
@@ -148,13 +148,13 @@ msgstr "stream en direct"
 msgid "credits"
 msgstr "crédits"
 
-#: models.py:267
-msgid "published"
-msgstr "publié"
-
-#: models.py:268 models.py:468
+#: models.py:267 models.py:468
 msgid "date added"
 msgstr "date d'ajout"
+
+#: models.py:270
+msgid "published"
+msgstr "publié"
 
 #: models.py:291
 msgid "document type"
@@ -182,8 +182,8 @@ msgid "obligation"
 msgstr "obligation"
 
 #: models.py:394
-msgid "cost (€)"
-msgstr ""
+msgid "cost"
+msgstr "coût"
 
 #: models.py:411
 msgid "iej"
@@ -558,7 +558,7 @@ msgid "Live"
 msgstr "Direct"
 
 #: templates/teleforma/course_detail.html:50
-#: templates/teleforma/courses.html:81
+#: templates/teleforma/courses.html:83
 msgid "No document"
 msgstr "Aucun document"
 
