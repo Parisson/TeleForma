@@ -65,13 +65,12 @@ $(document).ready(function(){
         {% endwith %}
         {% endblock %}
 
+
         {% block conference %}
         {% with course as course %}
         {% include "teleforma/inc/conference_list.html" %}
         {% endwith %}
         {% endblock %}
-        {% else %}
-
 
         {% block media %}
         {% with course as course %}
@@ -79,6 +78,7 @@ $(document).ready(function(){
         {% endwith %}
         {% endblock %}
 
+        {% else %}
         <div class="course_content">
          <p>{% trans "No document" %}</p>
         </div>
