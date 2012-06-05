@@ -33,15 +33,15 @@ $(document).ready(function(){
 {% endwith %}
 {% endblock %}
 
-{% block media %}
-{% with course as course and %}
-{% include "teleforma/inc/media_list.html" %}
-{% endwith %}
-{% endblock %}
-
 {% block conference %}
 {% with course as course and %}
 {% include "teleforma/inc/conference_list.html" %}
+{% endwith %}
+{% endblock %}
+
+{% block media %}
+{% with course as course and %}
+{% include "teleforma/inc/media_list.html" %}
 {% endwith %}
 {% endblock %}
 

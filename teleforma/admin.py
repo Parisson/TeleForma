@@ -30,21 +30,29 @@ class TrainingAdmin(admin.ModelAdmin):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
 
+class DocumentAdmin(admin.ModelAdmin):
+    exclude = ['readers']
+
+class MediaAdmin(admin.ModelAdmin):
+    exclude = ['readers']
+
 admin.site.register(Organization)
 admin.site.register(Department)
 admin.site.register(Period)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Conference)
 admin.site.register(IEJ)
-admin.site.register(Document)
+admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
-admin.site.register(Media)
+admin.site.register(Media, MediaAdmin)
 admin.site.register(Room)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(Training, TrainingAdmin)
 admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
+admin.site.register(Payment)
+
 
 
 

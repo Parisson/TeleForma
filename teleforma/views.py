@@ -297,6 +297,7 @@ class UsersCourseView(UsersView):
     def dispatch(self, *args, **kwargs):
         return super(UsersCourseView, self).dispatch(*args, **kwargs)
 
+
 class UsersXLSExport(object):
 
     first_row = 2

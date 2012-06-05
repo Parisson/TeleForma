@@ -126,7 +126,7 @@ class Course(Model):
     type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
-    number          = IntegerField(_('number'), blank=True)
+    number          = IntegerField(_('number'), blank=True, null=True)
 
     notes = generic.GenericRelation(Note)
 
@@ -225,7 +225,7 @@ class StreamingServer(Model):
 
     class Meta:
         db_table = app_label + '_' + 'streaming_server'
-        verbose_name = _('streaming_server')
+        verbose_name = _('streaming server')
 
 
 class LiveStream(Model):
@@ -235,7 +235,7 @@ class LiveStream(Model):
     conference = ForeignKey('Conference', related_name='livestream',
                                 verbose_name=_('conference'))
     server     = ForeignKey('StreamingServer', related_name='livestream',
-                                verbose_name=_('streaming_server'))
+                                verbose_name=_('streaming server'))
     stream_type = CharField(_('Streaming type'), choices=streaming_choices, max_length=32)
 
     @property
@@ -255,7 +255,7 @@ class LiveStream(Model):
 
     class Meta:
         db_table = app_label + '_' + 'live_stream'
-        verbose_name = _('live_stream')
+        verbose_name = _('live stream')
 
 
 class MediaBase(Model):
@@ -264,10 +264,10 @@ class MediaBase(Model):
     title           = CharField(_('title'), max_length=255, blank=True)
     description     = CharField(_('description'), max_length=255, blank=True)
     credits         = CharField(_('credits'), max_length=255, blank=True)
-    is_published    = BooleanField(_('published'))
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     code            = CharField(_('code'), max_length=255, blank=True)
+    is_published    = BooleanField(_('published'))
 
     notes = generic.GenericRelation(Note)
 
@@ -341,7 +341,7 @@ class Media(MediaBase):
 
     element_type = 'media'
 
-    course          = ForeignKey('Course', related_name='media', verbose_name='course')
+    course          = ForeignKey('Course', related_name='media', verbose_name=_('course'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
                                  blank=True, null=True)
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
@@ -391,6 +391,7 @@ class Training(Model):
                                  blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligation'))
+    cost            = FloatField(_('cost'), blank=True)
 
     def __unicode__(self):
         code = self.code
@@ -410,7 +411,7 @@ class Student(Model):
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
     synthesis_note  = ManyToManyField('Course', related_name="student_synthesis_note",
-                                        verbose_name=_('synthesis notes'),
+                                        verbose_name=_('synthesis note'),
                                         blank=True, null=True)
     obligation      = ManyToManyField('Course', related_name="student_obligation",
                                         verbose_name=_('obligations'),
@@ -430,11 +431,15 @@ class Student(Model):
                                         blank=True, null=True)
 
     def __unicode__(self):
-        return self.user.username
+        try:
+            return self.user.last_name + ' ' + self.user.first_name
+        except:
+            return ''
 
     class Meta:
         db_table = app_label + '_' + 'student'
         verbose_name = _('student')
+        ordering = ['user__last_name']
 
 
 class Profile(models.Model):
@@ -453,6 +458,23 @@ class Profile(models.Model):
     class Meta:
         db_table = app_label + '_' + 'profiles'
         verbose_name = _('profile')
+
+
+class Payment(models.Model):
+    "Student payment"
+
+    student = ForeignKey(Student, related_name="payment", verbose_name=_('student'))
+    amount  = FloatField(_('amount (€)'))
+    date_added = DateTimeField(_('date added'), auto_now_add=True)
+
+    def __unicode__(self):
+        return ' - '.join([str(self.date_added), self.student.user.last_name + ' ' + \
+                        self.student.user.first_name,  str(self.amount)])
+
+    class Meta:
+        db_table = app_label + '_' + 'payment'
+        verbose_name = _('payment')
+        ordering = ['-date_added']
 
 
 # TOOLS
