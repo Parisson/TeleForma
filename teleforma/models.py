@@ -127,7 +127,7 @@ class Course(Model):
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     number          = IntegerField(_('number'), blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
-    obligation      = BooleanField(_('obligation'))
+    obligation      = BooleanField(_('obligations'))
 
     notes = generic.GenericRelation(Note)
 
