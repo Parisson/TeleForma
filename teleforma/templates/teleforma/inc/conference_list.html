@@ -8,27 +8,27 @@
     <table class="listing" width="100%">
     <thead>
         <tr>
+        <th>{% trans "Streaming" %}</th>
         <th class="highlight">{% trans "Type" %}</th>
         <th >{% trans "Room" %}</th>
         <th >{% trans "Session" %}</th>
         <th>{% trans "Professor" %}</th>
         <th>{% trans "Begin date" %}</th>
-        <th>{% trans "Streaming" %}</th>
         </tr>
     </thead>
     <tbody>
         {% for conference in course.conference.all %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
+            <td align="center">
+                {% if conference.streaming %}
+                <a href="{% url teleforma-conference-detail conference.id %}"><img src="images/media-record.png" alt="yes" style="vertical-align:middle" /></a>
+                {% endif %}
+            </td>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.course.type }}</a></td>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.room }}</a></td>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.session }}</a></td>
             <td><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></td>
             <td>{{ conference.date_begin }}</td>
-             <td align="center">
-                {% if conference.streaming %}
-                <a href="{% url teleforma-conference-detail conference.id %}"><img src="images/media-record.png" alt="yes" style="vertical-align:middle" /></a>
-                {% endif %}
-            </td>
             </tr>
         {% endfor %}
     </tbody>
