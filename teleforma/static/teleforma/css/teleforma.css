@@ -840,7 +840,7 @@ table.listing th, table.listing thead, table.listing td {
     border-bottom: 1px solid #dfdfdf;
     font-weight: normal;
 }
-table.listing thead { background: #e8eaf0 }
+table.listing thead { background: #fafafa; /*background: #e8eaf0*/ }
 table.listing thead th {
     font-size: 0.9em;
     padding: 3px .5em 3px;
