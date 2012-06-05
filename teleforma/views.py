@@ -177,12 +177,13 @@ class MediaView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
+        context['all_courses'] = get_courses(self.request.user)
         media = self.get_object()
         view = ItemView()
         context['mime_type'] = view.item_analyze(media.item)
         context['course'] = media.course
         context['item'] = media.item
+        context['type'] = media.course_type
         context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="media")
         context['room'] = get_room(name=media.item.title, content_type=content_type,
@@ -223,10 +224,11 @@ class ConferenceView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
+        context['all_courses'] = get_courses(self.request.user)
         conference = self.get_object()
         context['mime_type'] = 'video/webm'
         context['course'] = conference.course
+        context['type'] = conference.course_type
         context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="conference")
         context['room'] = get_room(name=conference.course.title, content_type=content_type,

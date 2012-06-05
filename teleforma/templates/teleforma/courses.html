@@ -62,22 +62,15 @@ $(document).ready(function(){
         </div>
 
         {% block document %}
-        {% with course as course and type as type %}
-        {% include "teleforma/inc/document_list.html" %}
-        {% endwith %}
+         {% include "teleforma/inc/document_list.html" %}
         {% endblock %}
 
-
         {% block conference %}
-        {% with course as course %}
-        {% include "teleforma/inc/conference_list.html" %}
-        {% endwith %}
+         {% include "teleforma/inc/conference_list.html" %}
         {% endblock %}
 
         {% block media %}
-        {% with course as course %}
-        {% include "teleforma/inc/media_list.html" %}
-        {% endwith %}
+         {% include "teleforma/inc/media_list.html" %}
         {% endblock %}
 
       </div>

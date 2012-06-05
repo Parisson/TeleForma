@@ -1,6 +1,7 @@
+{% load telemeta_utils %}
 {% load i18n %}
 
-{% if course.media.all %}
+{% if course.media.all|from_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
     <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Passed conferences"%}</h3>
@@ -14,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for media in course.media.all %}
+        {% for media in course.media.all|from_type:type %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td><a href="{% url teleforma-media-detail media.id %}">{{ media.item.title }}</a></td>
             <td>{{ media.item.description }}</td>

@@ -194,7 +194,7 @@ class Conference(Model):
 
     @property
     def description(self):
-        return ' - '.join([self.course.department.name, self.course.title, self.course.type.name,
+        return ' - '.join([self.course.department.name, self.course.title, self.course_type.name,
                            self.session, self.professor.user.first_name, self.professor.user.last_name,
                            str(self.date_begin)])
 
