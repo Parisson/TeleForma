@@ -434,6 +434,8 @@ class Student(Model):
                                         blank=True, null=True)
     oral_2          = ManyToManyField('Course', related_name="student_oral_2", verbose_name=_('oral 2'),
                                         blank=True, null=True)
+    options         = ManyToManyField('Course', related_name="student_options", verbose_name=_('options'),
+                                        blank=True, null=True)
 
     def __unicode__(self):
         try:

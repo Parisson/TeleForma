@@ -17,12 +17,63 @@ class Command(BaseCommand):
     first_row = 2
     admin_email = 'webmaster@parisson.com'
 
-    def get_first_course(self, code):
+    opts = {'0': '', '1':'Cours', '2':'Correction', '3':'Cours + Correction'}
+
+    trainings = [{'training':'APPROFONDIE 1',
+                    'synthesis_note':2,
+                    'obligation':3,
+                    'procedure':3,
+                    'written_speciality':2,
+                    'oral_speciality':1},
+                {'training':'APPROFONDIE 2',
+                    'synthesis_note':0,
+                    'obligation':3,
+                    'procedure':3,
+                    'written_speciality':2,
+                    'oral_speciality':1},
+                {'training':'OPT. COURS 1',
+                    'synthesis_note':2,
+                    'obligation':1,
+                    'procedure':1,
+                    'written_speciality':1,
+                    'oral_speciality':1,
+                    'oral_1':1,
+                    'oral_2':1},
+                {'training':'OPT. CORRECTION 1',
+                    'synthesis_note':2,
+                    'obligation':2,
+                    'procedure':2,
+                    'written_speciality':2,
+                    'oral_speciality':1,
+                    'oral_1':1,
+                    'oral_2':1},
+                {'training':'OPT. CORRECTION 2',
+                    'synthesis_note':0,
+                    'obligation':2,
+                    'procedure':2,
+                    'written_speciality':2,
+                    'oral_speciality':1,
+                    'oral_1':1,
+                    'oral_2':1},
+                {'training':'OPT. CORRECTION 3',
+                    'synthesis_note':2,
+                    'obligation':0,
+                    'procedure':0,
+                    'written_speciality':0,
+                    'oral_speciality':1,
+                    'oral_1':1,
+                    'oral_2':1},
+                         ]
+
+    def get_courses(self, code):
         courses = Course.objects.filter(code=code)
         if courses:
             return [courses[0]]
         else:
             raise BaseException('You should first create a course with this code: ' + code)
+
+    def get_training(self, code):
+        return ''
 
     def import_user(self, row):
         last_name   = row[0].value
@@ -49,14 +100,14 @@ class Command(BaseCommand):
                 student = Student(user=user)
                 student.period, c = Period.objects.get_or_create(name='Estivale')
                 student.iej, c = IEJ.objects.get_or_create(name=row[2].value)
-                student.training, c = Training.objects.get_or_create(code=row[3].value)
+                student.training, c = get_training(code=row[3].value)
                 student.save()
 
-            student.procedure = self.get_first_course(row[4].value)
-            student.written_speciality = self.get_first_course(row[5].value)
-            student.oral_speciality = self.get_first_course(row[6].value)
-            student.oral_1 = self.get_first_course(row[7].value)
-            student.oral_2 = self.get_first_course(row[8].value)
+            student.procedure = self.get_courses('procedure', row[4].value)
+            student.written_speciality = self.get_courses('written_speciality', row[5].value)
+            student.oral_speciality = self.get_courses('oral_speciality', row[6].value)
+            student.oral_1 = self.get_courses('oral_1', row[7].value)
+            student.oral_2 = self.get_courses('oral_2', row[8].value)
 
             profile, created = Profile.objects.get_or_create(user=user)
             profile.address = row[10].value
