@@ -23,11 +23,9 @@ $(document).ready(function(){
 <div style="background: white;">
 <ul>
 {% block courses %}
- {% for c in courses %}
+ {% for c in object_list %}
   {% for course in c.courses %}
-   {% for type in c.types %}
-    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }} - {{ type }}</a></li>
-   {% endfor %}
+    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
   {% endfor %}
  {% endfor %}
 {% endblock courses %}

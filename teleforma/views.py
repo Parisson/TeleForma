@@ -84,6 +84,7 @@ def get_courses(user):
         courses = None
     return courses
 
+
 def stream_from_file(__file):
     chunk_size = 0x10000
     f = open(__file, 'r')
@@ -130,8 +131,15 @@ class CourseView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
         course = self.get_object()
+        all_courses = get_courses(self.request.user)
+        courses = []
+        for c in all_courses:
+            for co in c['courses']:
+                if co == course:
+                    courses.append({'courses': c['courses'], 'types': c['types']})
+        context['courses'] = courses
+        context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
@@ -153,7 +161,6 @@ class CoursesView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
-        context['courses'] = self.object_list
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         return context
