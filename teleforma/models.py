@@ -328,7 +328,7 @@ class Document(MediaBase):
             self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
     def __unicode__(self):
-        return  ' - '.join([self.title, unicode(self.course)])
+        return  ' - '.join([unicode(self.course), unicode(self.course_type), self.title ])
 
     def set_read(self, user):
         pass
@@ -446,12 +446,6 @@ class Student(Model):
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
     platform_only   = BooleanField(_('platform only'))
-    synthesis_note  = ManyToManyField('Course', related_name="student_synthesis_note",
-                                        verbose_name=_('synthesis note'),
-                                        blank=True, null=True)
-    obligation      = ManyToManyField('Course', related_name="student_obligation",
-                                        verbose_name=_('obligations'),
-                                        blank=True, null=True)
     procedure       = ManyToManyField('Course', related_name="student_procedure",
                                         verbose_name=_('procedures'),
                                         blank=True, null=True)

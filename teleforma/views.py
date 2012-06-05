@@ -42,18 +42,44 @@ def render(request, template, data = None, mimetype = None):
 def get_courses(user):
     professor = user.professor.all()
     student = user.student.all()
+
     if professor:
-        courses = user.professor.get().courses.all()
+        professor = user.professor.get()
+        courses = [{'courses': professor.courses.all(),
+                    'types': CourseType.objects.all()},
+                    ]
     elif student:
         student = user.student.get()
-        courses = []
-        course_list = [student.obligation.all(), student.procedure.all(), student.written_speciality.all(),
-                   student.oral_speciality.all(), student.oral_1.all(), student.oral_2.all()]
-        for course in course_list:
-            for c in course:
-                courses.append(c)
+
+        courses =      [{'courses': student.procedure.all(),
+                        'types':student.training.procedure.all()},
+                        {'courses': student.written_speciality.all(),
+                        'types':student.training.written_speciality.all()},
+                        {'courses': student.oral_speciality.all(),
+                        'types':student.training.oral_speciality.all()},
+                        {'courses': student.oral_1.all(),
+                        'types':student.training.oral_1.all()},
+                        {'courses': student.oral_2.all(),
+                        'types':student.training.oral_2.all()},
+                        {'courses': student.options.all(),
+                        'types':student.training.options.all()},
+                        ]
+
+        synthesis_note = student.training.synthesis_note.all()
+        if synthesis_note:
+            c = Course.objects.filter(synthesis_note=True)
+            t = student.training.synthesis_note.all()
+            courses.append({'courses': c, 'types': t})
+        obligation = student.training.obligation.all()
+        if obligation:
+            c = Course.objects.filter(obligation=True)
+            t = student.training.obligation.all()
+            courses.append({'courses': c, 'types': t})
+
     elif user.is_staff:
-        courses = Course.objects.all()
+        courses = [{'courses': Course.objects.all(),
+                    'types': CourseType.objects.all()},
+                   ]
     else:
         courses = None
     return courses

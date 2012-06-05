@@ -1,6 +1,7 @@
+{% load telemeta_utils %}
 {% load i18n %}
 
-{% if course.document.all %}
+{% if course.document.all|from_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
 <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Documents"%}</h3>
@@ -16,7 +17,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for document in course.document.all %}
+        {% for document in course.document.all|from_type:type %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
         <td><a href="{% url teleforma-document-detail document.id %}" target="_blank">{{ document.title }}</a></td>
         <td>{{ document.description }}</td>
@@ -32,4 +33,11 @@
     </tbody>
 </table>
 </div>
+
+{% else %}
+<div class="course_content">
+  <p>{% trans "No document" %}</p>
+</div>
+
+
 {% endif %}

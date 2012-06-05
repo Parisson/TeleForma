@@ -23,9 +23,13 @@ $(document).ready(function(){
 <div style="background: white;">
 <ul>
 {% block courses %}
-{% for course in courses %}
-<li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
-{% endfor %}
+ {% for c in courses %}
+  {% for course in c.courses %}
+   {% for type in c.types %}
+    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }} - {{ type }}</a></li>
+   {% endfor %}
+  {% endfor %}
+ {% endfor %}
 {% endblock courses %}
 </ul>
 </div>
@@ -52,15 +56,15 @@ $(document).ready(function(){
 
 {% block course %}
 <div class="desk_center">
-    {% for course in object_list %}
+    {% for c in object_list %}
+     {% for course in c.courses %}
+      {% for type in c.types %}
       <div class="course">
-        <div class="course_title">{{ course.title }} - {{ course.type }}{% if course.description %} - {{ course.description }}{% endif %}
+        <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
-        {% if course.conference.all or course.document.all or course.media.all %}
-
         {% block document %}
-        {% with course as course %}
+        {% with course as course and type as type %}
         {% include "teleforma/inc/document_list.html" %}
         {% endwith %}
         {% endblock %}
@@ -78,12 +82,9 @@ $(document).ready(function(){
         {% endwith %}
         {% endblock %}
 
-        {% else %}
-        <div class="course_content">
-         <p>{% trans "No document" %}</p>
-        </div>
-        {% endif %}
       </div>
+    {% endfor %}
+    {% endfor %}
     {% endfor %}
 
 </div>

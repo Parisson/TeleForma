@@ -11,12 +11,12 @@ admin.site.unregister(User)
 
 class StudentProfileInline(admin.StackedInline):
     model = Student
-    filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+    filter_horizontal = ['procedure', 'oral_speciality',
                          'written_speciality', 'oral_1', 'oral_2', 'options']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
-    filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+    filter_horizontal = ['procedure', 'oral_speciality',
                          'written_speciality', 'oral_1', 'oral_2', 'options']
 
 class ProfessorProfileInline(admin.StackedInline):
