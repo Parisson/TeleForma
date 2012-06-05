@@ -10,7 +10,6 @@
     <thead>
         <tr>
         <th class="highlight">{% trans "Title" %}</th>
-        <th>{% trans "Description" %}</th>
         <th>{% trans "Annal" %}</th>
         <th>{% trans "Date modified" %}</th>
         <th>{% trans "Download" %}</th>
@@ -19,15 +18,14 @@
     <tbody>
         {% for document in course.document.all|from_type:type %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-        <td><a href="{% url teleforma-document-detail document.id %}" target="_blank">{{ document.title }}</a></td>
-        <td>{{ document.description }}</td>
+        <td>{% if document.file %}<a href="{% url teleforma-document-detail document.id %}" target="_blank">{% endif %}{{ document.title }}{% if document.file %}</a>{% endif %}</td>
         <td align="center">
         {% if document.is_annal %}
           <img src="images/ok.png" alt="yes" style="vertical-align:middle" />&nbsp;
         {% endif %}
         </td>
         <td>{{ document.date_added }}</td>
-        <td align="center"><a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a></td>
+        <td align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a>{% endif %}</td>
         </tr>
     {% endfor %}
     </tbody>
