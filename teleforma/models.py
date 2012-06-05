@@ -123,19 +123,16 @@ class Course(Model):
     department      = ForeignKey('Department', related_name='course', verbose_name=_('department'))
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'),
-                                 blank=True, null=True)
     code            = CharField(_('code'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     number          = IntegerField(_('number'), blank=True, null=True)
+    synthesis_note  = BooleanField(_('synthesis note'))
+    obligation      = BooleanField(_('obligation'))
 
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        if self.type:
-            return ' - '.join([self.title, self.type.name])
-        else:
-            return self.title
+        return self.title
 
     @property
     def slug(self):
@@ -180,6 +177,7 @@ class Room(Model):
 class Conference(Model):
 
     course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
+    course_type     = ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
     professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'))
     session         = CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
@@ -236,11 +234,17 @@ class LiveStream(Model):
 
     element_type = 'livestream'
 
-    conference = ForeignKey('Conference', related_name='livestream',
-                                verbose_name=_('conference'))
+    course          = ForeignKey('Course', related_name='livestream',
+                                 verbose_name=_('course'))
+    course_type     = ForeignKey('CourseType', related_name='livestream',
+                                 verbose_name=_('course type'))
+    conference      = ForeignKey('Conference', related_name='livestream',
+                                verbose_name=_('conference'),
+                                blank=True, null=True)
     server     = ForeignKey('StreamingServer', related_name='livestream',
                                 verbose_name=_('streaming server'))
-    stream_type = CharField(_('Streaming type'), choices=streaming_choices, max_length=32)
+    stream_type = CharField(_('Streaming type'),
+                            choices=streaming_choices, max_length=32)
 
     @property
     def mount_point(self):
@@ -300,6 +304,7 @@ class Document(MediaBase):
     element_type = 'document'
 
     course          = ForeignKey('Course', related_name='document', verbose_name=_('course'))
+    course_type     = ForeignKey('CourseType', related_name='document', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
                                  blank=True, null=True)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
@@ -346,6 +351,7 @@ class Media(MediaBase):
     element_type = 'media'
 
     course          = ForeignKey('Course', related_name='media', verbose_name=_('course'))
+    course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
                                  blank=True, null=True)
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
@@ -393,8 +399,33 @@ class Training(Model):
     name            = CharField(_('name'), max_length=255, blank=True)
     period          = ForeignKey('Period', related_name='training', verbose_name=_('period'),
                                  blank=True, null=True)
-    synthesis_note  = BooleanField(_('synthesis note'))
-    obligation      = BooleanField(_('obligation'))
+    synthesis_note  = ManyToManyField('CourseType', related_name="training_synthesis_note",
+                                        verbose_name=_('synthesis note'),
+                                        blank=True, null=True)
+    obligation      = ManyToManyField('CourseType', related_name="training_obligation",
+                                        verbose_name=_('obligations'),
+                                        blank=True, null=True)
+    procedure       = ManyToManyField('CourseType', related_name="training_procedure",
+                                        verbose_name=_('procedure'),
+                                        blank=True, null=True)
+    written_speciality = ManyToManyField('CourseType', related_name="training_written_speciality",
+                                        verbose_name=_('written speciality'),
+                                        blank=True, null=True)
+    oral_speciality = ManyToManyField('CourseType', related_name="training_oral_speciality",
+                                        verbose_name=_('oral speciality'),
+                                        blank=True, null=True)
+    oral_1          = ManyToManyField('CourseType', related_name="training_oral_1",
+                                        verbose_name=_('oral 1'),
+                                        blank=True, null=True)
+    oral_2          = ManyToManyField('CourseType', related_name="training_oral_2",
+                                        verbose_name=_('oral 1'),
+                                        blank=True, null=True)
+    options         = ManyToManyField('CourseType', related_name="training_options",
+                                        verbose_name=_('options'),
+                                        blank=True, null=True)
+    magistral_courses = ManyToManyField('Course', related_name="training_magistral_courses",
+                                        verbose_name=_('magitral courses'),
+                                        blank=True, null=True)
     cost            = FloatField(_('cost'), blank=True, null=True)
 
     def __unicode__(self):
@@ -414,7 +445,7 @@ class Student(Model):
     period          = ForeignKey('Period', related_name='student', verbose_name=_('period'))
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
-    network_only    = BooleanField(_('network only'))
+    platform_only   = BooleanField(_('platform only'))
     synthesis_note  = ManyToManyField('Course', related_name="student_synthesis_note",
                                         verbose_name=_('synthesis note'),
                                         blank=True, null=True)

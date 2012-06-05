@@ -12,9 +12,18 @@ admin.site.unregister(User)
 class StudentProfileInline(admin.StackedInline):
     model = Student
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2']
+                         'written_speciality', 'oral_1', 'oral_2', 'options']
+
+class StudentAdmin(admin.ModelAdmin):
+    model = Student
+    filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+                         'written_speciality', 'oral_1', 'oral_2', 'options']
 
 class ProfessorProfileInline(admin.StackedInline):
+    model = Professor
+    filter_horizontal = ['courses']
+
+class ProfessorAdmin(admin.ModelAdmin):
     model = Professor
     filter_horizontal = ['courses']
 
@@ -26,6 +35,8 @@ class UserProfileAdmin(UserAdmin):
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
+    filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+                         'written_speciality', 'oral_1', 'oral_2', 'magistral_courses']
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course
@@ -52,6 +63,8 @@ admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Payment)
+admin.site.register(Student, StudentAdmin)
+admin.site.register(Professor, ProfessorAdmin)
 
 
 
