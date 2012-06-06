@@ -98,3 +98,7 @@ def yes_no(bool):
         return _('Yes')
     else:
         return _('No')
+
+@register.filter
+def from_type(docs, type):
+    return docs.filter(course_type=type)
