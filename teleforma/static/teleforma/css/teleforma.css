@@ -455,7 +455,6 @@ form.login .submit {
 
 #menu a, #menu a:visited{
     display:inline-block;
-    color: #fff;
     text-decoration:none;
     border-bottom-width:.5em;
     border-bottom-style: solid;
@@ -470,10 +469,12 @@ form.login .submit {
     font-size: 14px;
     padding: .5em 1em;
 }
+
 #menu a:hover, #menu a.active{
     background-color: #FFF;
     color: #000000;
 }
+
 
 #menu .darkblue { border-bottom-color: #0f3179; }
 /* #menu .blue { border-bottom-color:  #357ae8; } */
