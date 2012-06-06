@@ -12,7 +12,6 @@
         <th class="highlight">{% trans "Session" %}</th>
         <th>{% trans "Professor" %}</th>
         <th>{% trans "Begin date" %}</th>
-        <th >{% trans "Room" %}</th>
         <th>{% trans "Streaming" %}</th>
         </tr>
     </thead>
@@ -21,8 +20,7 @@
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.session }}</a></td>
             <td><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></td>
-            <td>{{ conference.date_begin }}</td>
-            <td>{{ conference.room }}</td>
+            <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.date_begin }}</a></td>
              <td align="center">
                 {% if conference.streaming %}
                 <img src="images/media-record.png" alt="yes" style="vertical-align:middle" />

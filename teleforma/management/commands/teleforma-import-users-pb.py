@@ -73,7 +73,14 @@ class Command(BaseCommand):
             raise BaseException('You should first create a course with this code: ' + code)
 
     def get_training(self, code):
-        return ''
+        platform_only = False
+        if 'I' in code[0:2]:
+            platform_only = True
+            code = code[3:]
+            training = Training.objects.get(code=code)
+        else:
+            training = Training.objects.get(code=code)
+        return platform_only, training
 
     def import_user(self, row):
         last_name   = row[0].value
@@ -98,16 +105,17 @@ class Command(BaseCommand):
             student = Student.objects.filter(user=user)
             if not student:
                 student = Student(user=user)
-                student.period, c = Period.objects.get_or_create(name='Estivale')
+                student.platform_only, student.training = gat_training(code=row[3].value)
+                student.period = Period.objects.get(name='Estivale')
                 student.iej, c = IEJ.objects.get_or_create(name=row[2].value)
-                student.training, c = get_training(code=row[3].value)
+
                 student.save()
 
-            student.procedure = self.get_courses('procedure', row[4].value)
-            student.written_speciality = self.get_courses('written_speciality', row[5].value)
-            student.oral_speciality = self.get_courses('oral_speciality', row[6].value)
-            student.oral_1 = self.get_courses('oral_1', row[7].value)
-            student.oral_2 = self.get_courses('oral_2', row[8].value)
+            student.procedure = self.get_courses(row[4].value)
+            student.written_speciality = self.get_course(row[5].value)
+            student.oral_speciality = self.get_course(row[6].value)
+            student.oral_1 = self.get_course(row[7].value)
+            student.oral_2 = self.get_course(row[8].value)
 
             profile, created = Profile.objects.get_or_create(user=user)
             profile.address = row[10].value
