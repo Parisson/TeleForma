@@ -81,6 +81,11 @@ def get_courses(user):
             c = Course.objects.filter(obligation=True)
             t = student.training.obligation.all()
             courses.append({'courses': c, 'types': t})
+        magistral = student.training.magistral.all()
+        if magistral:
+            c = Course.objects.filter(magistral=True)
+            t = student.training.magistral.all()
+            courses.append({'courses': c, 'types': t})
 
     elif user.is_staff:
         courses = [{'courses': Course.objects.all(),

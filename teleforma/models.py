@@ -128,6 +128,7 @@ class Course(Model):
     number          = IntegerField(_('number'), blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligations'))
+    magistral       = BooleanField(_('magistral'))
 
     notes = generic.GenericRelation(Note)
 
@@ -424,8 +425,8 @@ class Training(Model):
     options         = ManyToManyField('CourseType', related_name="training_options",
                                         verbose_name=_('options'),
                                         blank=True, null=True)
-    magistral_courses = ManyToManyField('Course', related_name="training_magistral_courses",
-                                        verbose_name=_('magitral courses'),
+    magistral       = ManyToManyField('CourseType', related_name="training_magistral",
+                                        verbose_name=_('magistral'),
                                         blank=True, null=True)
     cost            = FloatField(_('cost'), blank=True, null=True)
 

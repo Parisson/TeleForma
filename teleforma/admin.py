@@ -31,7 +31,7 @@ class UserProfileAdmin(UserAdmin):
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral_courses']
+                         'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral']
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course
