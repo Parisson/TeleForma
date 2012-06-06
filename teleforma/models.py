@@ -147,8 +147,8 @@ class Course(Model):
 class Professor(Model):
 
     user            = ForeignKey(User, related_name='professor', verbose_name=_('user'), unique=True)
-    training        = ForeignKey('Training', related_name='professor',
-                                 verbose_name=_('training'), blank=True, null=True)
+    training        = ForeignKey('Training', related_name='professor', verbose_name=_('training'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
 
@@ -178,7 +178,8 @@ class Conference(Model):
 
     course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
     course_type     = ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
-    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'))
+    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     session         = CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
     room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
@@ -240,7 +241,7 @@ class LiveStream(Model):
                                  verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='livestream',
                                 verbose_name=_('conference'),
-                                blank=True, null=True)
+                                blank=True, null=True, on_delete=models.SET_NULL)
     server     = ForeignKey('StreamingServer', related_name='livestream',
                                 verbose_name=_('streaming server'))
     stream_type = CharField(_('Streaming type'),
@@ -306,7 +307,7 @@ class Document(MediaBase):
     course          = ForeignKey('Course', related_name='document', verbose_name=_('course'))
     course_type     = ForeignKey('CourseType', related_name='document', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
@@ -353,7 +354,7 @@ class Media(MediaBase):
     course          = ForeignKey('Course', related_name='media', verbose_name=_('course'))
     course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
     is_live         = BooleanField(_('is live'))
