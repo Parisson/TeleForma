@@ -25,9 +25,8 @@ class Command(BaseCommand):
         types = CourseType.objects.all()
 
         for code in file.readlines():
-            for type in types:
-                course, created = Course.objects.get_or_create(code=code, department=department,
-                                                           title=code.replace('_', ' '), type=type )
+            course, created = Course.objects.get_or_create(code=code, department=department,
+                                                           title=code.replace('_', ' '))
 
 
 

@@ -39,24 +39,57 @@ def render(request, template, data = None, mimetype = None):
     return render_to_response(template, data, context_instance=RequestContext(request),
                               mimetype=mimetype)
 
+def get_course(obj):
+    course = []
+    if obj and obj.code != 'X':
+        course = Course.objects.filter(id=obj.id)
+    return course
+
 def get_courses(user):
     professor = user.professor.all()
     student = user.student.all()
+
     if professor:
-        courses = user.professor.get().courses.all()
+        professor = user.professor.get()
+        courses = [{'courses': professor.courses.all(),
+                    'types': CourseType.objects.all()},
+                    ]
     elif student:
         student = user.student.get()
-        courses = []
-        course_list = [student.obligation.all(), student.procedure.all(), student.written_speciality.all(),
-                   student.oral_speciality.all(), student.oral_1.all(), student.oral_2.all()]
-        for course in course_list:
-            for c in course:
-                courses.append(c)
+
+        courses =      [{'courses': get_course(student.procedure),
+                        'types':student.training.procedure.all()},
+                        {'courses': get_course(student.written_speciality),
+                        'types':student.training.written_speciality.all()},
+                        {'courses': get_course(student.oral_speciality),
+                        'types':student.training.oral_speciality.all()},
+                        {'courses': get_course(student.oral_1),
+                        'types':student.training.oral_1.all()},
+                        {'courses': get_course(student.oral_2),
+                        'types':student.training.oral_2.all()},
+                        {'courses': get_course(student.options),
+                        'types':student.training.options.all()},
+                        ]
+
+        synthesis_note = student.training.synthesis_note.all()
+        if synthesis_note:
+            c = Course.objects.filter(synthesis_note=True)
+            t = student.training.synthesis_note.all()
+            courses.append({'courses': c, 'types': t})
+        obligation = student.training.obligation.all()
+        if obligation:
+            c = Course.objects.filter(obligation=True)
+            t = student.training.obligation.all()
+            courses.append({'courses': c, 'types': t})
+
     elif user.is_staff:
-        courses = Course.objects.all()
+        courses = [{'courses': Course.objects.all(),
+                    'types': CourseType.objects.all()},
+                   ]
     else:
         courses = None
     return courses
+
 
 def stream_from_file(__file):
     chunk_size = 0x10000
@@ -104,8 +137,15 @@ class CourseView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
         course = self.get_object()
+        all_courses = get_courses(self.request.user)
+        courses = []
+        for c in all_courses:
+            for co in c['courses']:
+                if co == course:
+                    courses.append({'courses': c['courses'].filter(id=course.id), 'types': c['types']})
+        context['courses'] = courses
+        context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
@@ -127,7 +167,6 @@ class CoursesView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
-        context['courses'] = self.object_list
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         return context
@@ -144,12 +183,13 @@ class MediaView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
+        context['all_courses'] = get_courses(self.request.user)
         media = self.get_object()
         view = ItemView()
         context['mime_type'] = view.item_analyze(media.item)
         context['course'] = media.course
         context['item'] = media.item
+        context['type'] = media.course_type
         context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="media")
         context['room'] = get_room(name=media.item.title, content_type=content_type,
@@ -190,10 +230,11 @@ class ConferenceView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
+        context['all_courses'] = get_courses(self.request.user)
         conference = self.get_object()
         context['mime_type'] = 'video/webm'
         context['course'] = conference.course
+        context['type'] = conference.course_type
         context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="conference")
         context['room'] = get_room(name=conference.course.title, content_type=content_type,
@@ -286,7 +327,7 @@ class UsersCourseView(UsersView):
 
     def get_queryset(self):
         self.course = Course.objects.filter(id=self.args[0])
-        return User.objects.filter(student__training__courses__in=self.course)
+        return User.objects.filter(student__written_speciality__in=self.course)
 
     def get_context_data(self, **kwargs):
         context = super(UsersCourseView, self).get_context_data(**kwargs)

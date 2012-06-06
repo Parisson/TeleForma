@@ -24,6 +24,7 @@
     <th>{% trans "Written spe"%}</th>
     <th>{% trans "Oral 1"%}</th>
     <th>{% trans "Oral 2"%}</th>
+    <th>{% trans "Options"%}</th>
     <th>{% trans "Write"%}</th>
     </tr>
     </thead>
@@ -36,11 +37,12 @@
      {% if user.student.get %}
       {% with user.student.get as student %}
         <td>{{ student.iej.name }}</td>
-        <td>{{ student.procedure.all.0.code }}</td>
-        <td>{{ student.oral_speciality.all.0.code }}</td>
-        <td>{{ student.written_speciality.all.0.code }}</td>
-        <td>{{ student.oral_1.all.0.code }}</td>
-        <td>{{ student.oral_2.all.0.code }}</td>
+        <td>{{ student.procedure.code }}</td>
+        <td>{{ student.oral_speciality.code }}</td>
+        <td>{{ student.written_speciality.code }}</td>
+        <td>{{ student.oral_1.code }}</td>
+        <td>{{ student.oral_2.code }}</td>
+        <td>{{ student.options.code }}</td>
      {% endwith %}
     {% elif user.professor.get %}
         <td>{% trans "Professor" %}</td>

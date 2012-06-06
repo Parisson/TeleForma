@@ -13,45 +13,38 @@ $(document).ready(function(){
 {% endblock extra_javascript %}
 
 {% block courses %}
-{% for course in courses %}
-<li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
-{% endfor %}
+ {% for c in all_courses %}
+  {% for course in c.courses %}
+    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+  {% endfor %}
+ {% endfor %}
 {% endblock courses %}
 
 {% block course %}
 <div class="desk_media">
-<div class="course">
+    {% for c in courses %}
+     {% for course in c.courses %}
+      {% for type in c.types %}
+      <div class="course">
+        <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
+        </div>
 
-<div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}
-</div>
+        {% block conference %}
+         {% include "teleforma/inc/conference_list.html" %}
+        {% endblock %}
 
-{% if course.conference.all or course.document.all or course.media.all %}
+        {% block media %}
+         {% include "teleforma/inc/media_list.html" %}
+        {% endblock %}
 
-{% block document %}
-{% with course as course and %}
-{% include "teleforma/inc/document_list.html" %}
-{% endwith %}
-{% endblock %}
+        {% block document %}
+         {% include "teleforma/inc/document_list.html" %}
+        {% endblock %}
 
-{% block conference %}
-{% with course as course and %}
-{% include "teleforma/inc/conference_list.html" %}
-{% endwith %}
-{% endblock %}
-
-{% block media %}
-{% with course as course and %}
-{% include "teleforma/inc/media_list.html" %}
-{% endwith %}
-{% endblock %}
-
-{% else %}
-<div class="course_content">
-<p>{% trans "No document" %}</p>
-</div>
-{% endif %}
-
-</div>
+        </div>
+      {% endfor %}
+     {% endfor %}
+    {% endfor %}
 </div>
 {% endblock course %}
 

@@ -1,6 +1,7 @@
+{% load telemeta_utils %}
 {% load i18n %}
 
-{% if course.media.all %}
+{% if course.media.all|from_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
     <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Passed conferences"%}</h3>
@@ -8,17 +9,19 @@
     <table class="listing" width="100%">
     <thead>
         <tr>
-        <th class="highlight">{% trans "Title" %}</th>
-        <th>{% trans "Description" %}</th>
-        <th>{% trans "Date modified" %}</th>
+        <th class="highlight">{% trans "Session" %}</th>
+        <th>{% trans "Professor" %}</th>
+        <th>{% trans "Begin date" %}</th>
+        <th>{% trans "Duration" %}</th>
         </tr>
     </thead>
     <tbody>
-        {% for media in course.media.all %}
+        {% for media in course.media.all|from_type:type %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td><a href="{% url teleforma-media-detail media.id %}">{{ media.item.title }}</a></td>
-            <td>{{ media.item.description }}</td>
-            <td>{{ media.date_modified }}</td>
+            <td><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.session }}</a></td>
+            <td><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></td>
+            <td><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.date_begin }}</a></td>
+            <td>{{ media.item.approx_duration }}</td>
             </tr>
         {% endfor %}
     </tbody>
