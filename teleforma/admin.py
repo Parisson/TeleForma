@@ -11,14 +11,9 @@ admin.site.unregister(User)
 
 class StudentProfileInline(admin.StackedInline):
     model = Student
-    filter_horizontal = ['procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2', 'options']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
-    filter_horizontal = ['procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2', 'options']
-
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
     filter_horizontal = ['courses']
@@ -36,7 +31,7 @@ class UserProfileAdmin(UserAdmin):
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2', 'magistral_courses']
+                         'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral_courses']
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course

@@ -39,6 +39,12 @@ def render(request, template, data = None, mimetype = None):
     return render_to_response(template, data, context_instance=RequestContext(request),
                               mimetype=mimetype)
 
+def get_course(obj):
+    course = []
+    if obj:
+        course = Course.objects.filter(id=obj.id)
+    return course
+
 def get_courses(user):
     professor = user.professor.all()
     student = user.student.all()
@@ -51,17 +57,17 @@ def get_courses(user):
     elif student:
         student = user.student.get()
 
-        courses =      [{'courses': student.procedure.all(),
+        courses =      [{'courses': get_course(student.procedure),
                         'types':student.training.procedure.all()},
-                        {'courses': student.written_speciality.all(),
+                        {'courses': get_course(student.written_speciality),
                         'types':student.training.written_speciality.all()},
-                        {'courses': student.oral_speciality.all(),
+                        {'courses': get_course(student.oral_speciality),
                         'types':student.training.oral_speciality.all()},
-                        {'courses': student.oral_1.all(),
+                        {'courses': get_course(student.oral_1),
                         'types':student.training.oral_1.all()},
-                        {'courses': student.oral_2.all(),
+                        {'courses': get_course(student.oral_2),
                         'types':student.training.oral_2.all()},
-                        {'courses': student.options.all(),
+                        {'courses': get_course(student.options),
                         'types':student.training.options.all()},
                         ]
 

@@ -446,20 +446,20 @@ class Student(Model):
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
     platform_only   = BooleanField(_('platform only'))
-    procedure       = ManyToManyField('Course', related_name="student_procedure",
-                                        verbose_name=_('procedures'),
+    procedure       = ForeignKey('Course', related_name="procedure",
+                                        verbose_name=_('procedure'),
                                         blank=True, null=True)
-    oral_speciality = ManyToManyField('Course', related_name="student_oral_speciality",
-                                        verbose_name=_('oral specialities'),
+    oral_speciality = ForeignKey('Course', related_name="oral_speciality",
+                                        verbose_name=_('oral speciality'),
                                         blank=True, null=True)
-    written_speciality = ManyToManyField('Course', related_name="student_written_speciality",
-                                        verbose_name=_('written specialities'),
+    written_speciality = ForeignKey('Course', related_name="written_speciality",
+                                        verbose_name=_('written speciality'),
                                         blank=True, null=True)
-    oral_1          = ManyToManyField('Course', related_name="student_oral_1", verbose_name=_('oral 1'),
+    oral_1          = ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
                                         blank=True, null=True)
-    oral_2          = ManyToManyField('Course', related_name="student_oral_2", verbose_name=_('oral 2'),
+    oral_2          = ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
                                         blank=True, null=True)
-    options         = ManyToManyField('Course', related_name="student_options", verbose_name=_('options'),
+    options          = ForeignKey('Course', related_name="options", verbose_name=_('options'),
                                         blank=True, null=True)
 
     def __unicode__(self):
