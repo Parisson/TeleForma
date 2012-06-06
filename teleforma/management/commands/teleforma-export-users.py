@@ -26,13 +26,16 @@ class Command(BaseCommand):
             row.write(1, user.first_name)
             row.write(9, user.email)
             row.write(2, unicode(student.iej))
-            row.write(3, unicode(student.training.code))
-            row.write(4, unicode(student.procedure))
-            row.write(5, unicode(student.written_speciality))
-            row.write(6, unicode(student.oral_speciality))
-            row.write(7, unicode(student.oral_1))
-            row.write(8, unicode(student.oral_2))
-            row.write(15, unicode(student.category))
+            code = student.training.code
+            if student.platform_only:
+                code = 'I - ' + code
+            row.write(3, unicode(code))
+            row.write(4, unicode(student.procedure.code))
+            row.write(5, unicode(student.written_speciality.code))
+            row.write(6, unicode(student.oral_speciality.code))
+            row.write(7, unicode(student.oral_1.code))
+            row.write(8, unicode(student.oral_2.code))
+            row.write(15, unicode(student.period))
 
             profile = Profile.objects.filter(user=user)
             if profile:

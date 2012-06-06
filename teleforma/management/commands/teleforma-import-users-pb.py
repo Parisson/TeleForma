@@ -34,6 +34,16 @@ class Command(BaseCommand):
             training = Training.objects.get(code=code)
         return platform_only, training
 
+    def get_iej(self, name):
+        iejs = IEJ.objects.filter(name=name)
+        if iejs:
+            iej = iejs[0]
+        elif not name:
+            iej = None
+        else:
+            iej, c = IEJ.objects.get_or_create(name=name)
+        return iej
+
     def import_user(self, row):
         last_name   = row[0].value
         first_name  = row[1].value
@@ -57,15 +67,9 @@ class Command(BaseCommand):
             student = Student.objects.filter(user=user)
             if not student:
                 student = Student(user=user)
-                student.platform_only, student.training = self.get_training(code=row[3].value)
+                student.platform_only, student.training = self.get_training(row[3].value)
                 student.period = Period.objects.get(name='Estivale')
-                name = row[2].value
-                iejs = IEJ.objects.filter(name=name)
-                if iejs:
-                    iej = iejs[0]
-                else:
-                    iej = None
-                student.iej = iej
+                student.iej = self.get_iej(row[2].value)
                 student.save()
 
             student.procedure = self.get_courses(row[4].value)

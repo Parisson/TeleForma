@@ -62,6 +62,7 @@
       {% if usr.student.get %}
         <dt>{% trans "IEJ" %}</dt><dd><a href="{% url teleforma-iej-users usr.student.get.iej.id %}">{{ usr.student.get.iej }}</a></dd>
         <dt>{% trans "Training" %}</dt><dd><a href="{% url teleforma-training-users usr.student.get.training.id %}">{{ usr.student.get.training }}</a></dd>
+        <dt>{% trans "Platform only" %}</dt><dd>{{ usr.student.get.platform_only|yes_no }}</dd>
         <dt>{% trans "Procedure"%}</dt><dd>{{ usr.student.get.procedure}}</dd>
         <dt>{% trans "Oral spe"%}</dt><dd>{{ usr.student.get.oral_speciality }}</dd>
         <dt>{% trans "Written spe"%}</dt><dd>{{ usr.student.get.written_speciality }}</dd>

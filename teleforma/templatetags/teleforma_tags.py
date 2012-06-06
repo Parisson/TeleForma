@@ -92,3 +92,9 @@ def or_me(value, arg):
         arg = unicode(arg)
     return _('me') if value == arg else value
 
+@register.filter
+def yes_no(bool):
+    if bool:
+        return _('Yes')
+    else:
+        return _('No')

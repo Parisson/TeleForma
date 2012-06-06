@@ -338,6 +338,11 @@ class UsersCourseView(UsersView):
     def dispatch(self, *args, **kwargs):
         return super(UsersCourseView, self).dispatch(*args, **kwargs)
 
+def get_course_code(obj):
+    if obj:
+        return unicode(obj.code)
+    else:
+        return ''
 
 class UsersXLSExport(object):
 
@@ -352,12 +357,15 @@ class UsersXLSExport(object):
             row.write(1, user.first_name)
             row.write(9, user.email)
             row.write(2, unicode(student.iej))
-            row.write(3, unicode(student.training.code))
-            row.write(4, unicode(student.procedure))
-            row.write(5, unicode(student.written_speciality))
-            row.write(6, unicode(student.oral_speciality))
-            row.write(7, unicode(student.oral_1))
-            row.write(8, unicode(student.oral_2))
+            code = student.training.code
+            if student.platform_only:
+                code = 'I - ' + code
+            row.write(3, unicode(code))
+            row.write(4, get_course_code(student.procedure))
+            row.write(5, get_course_code(student.written_speciality))
+            row.write(6, get_course_code(student.oral_speciality))
+            row.write(7, get_course_code(student.oral_1))
+            row.write(8, get_course_code(student.oral_2))
 
             profile = Profile.objects.filter(user=user)
             if profile:
@@ -376,22 +384,30 @@ class UsersXLSExport(object):
         self.users = self.users.order_by('last_name')
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')
+
         row = self.sheet.row(0)
-        row.write(0, 'NOM')
-        row.write(1, 'PRENOM')
-        row.write(2, 'IEJ')
-        row.write(3, 'FORMATION')
-        row.write(4, 'PROC')
-        row.write(5, 'Ecrit Spe')
-        row.write(6, 'Oral Spe')
-        row.write(7, 'ORAL 1')
-        row.write(8, 'ORAL 2')
-        row.write(9, 'MAIL')
-        row.write(10, 'ADRESSE')
-        row.write(11, 'CP')
-        row.write(12, 'VILLE')
-        row.write(13, 'TEL')
-        row.write(14, "Date d'inscription")
+        cols = [{'name':'NOM', 'width':5000},
+                {'name':'PRENOM', 'width':5000},
+                {'name':'IEJ', 'width':2500},
+                {'name':'FORMATION', 'width':5000},
+                {'name':'PROC', 'width':2500},
+                {'name':'Ecrit Spe', 'width':2500},
+                {'name':'Oral Spe', 'width':2500},
+                {'name':'ORAL 1', 'width':2500},
+                {'name':'ORAL 2', 'width':2500},
+                {'name':'MAIL', 'width':7500},
+                {'name':'ADRESSE', 'width':7500},
+                {'name':'CP', 'width':2500},
+                {'name':'VILLE', 'width':5000},
+                {'name':'TEL', 'width':5000},
+                {'name':"Date d'inscription", 'width':5000}
+                ]
+        i = 0
+        for col in cols:
+            row.write(i, col['name'])
+            self.sheet.col(i).width = col['width']
+            i += 1
+
         counter = 0
         for user in self.users:
             counter = self.export_user(counter, user)
