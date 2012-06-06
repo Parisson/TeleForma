@@ -20,16 +20,15 @@ class Command(BaseCommand):
     def get_courses(self, code):
         courses = Course.objects.filter(code=code)
         if courses:
-            return [courses[0]]
+            return courses[0]
         else:
-            raise BaseException('You should first create a course with this code: ' + code)
+            return None
 
     def get_training(self, code):
         platform_only = False
         if 'I' in code[0:2]:
             platform_only = True
-            code = code[3:]
-            print code
+            code = code[4:]
             training = Training.objects.get(code=code)
         else:
             training = Training.objects.get(code=code)

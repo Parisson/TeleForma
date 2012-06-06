@@ -41,7 +41,7 @@ def render(request, template, data = None, mimetype = None):
 
 def get_course(obj):
     course = []
-    if obj:
+    if obj and obj.code != 'X':
         course = Course.objects.filter(id=obj.id)
     return course
 
