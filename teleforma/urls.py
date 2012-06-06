@@ -38,10 +38,12 @@ from django.views.generic import *
 from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
+from telemeta.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
+profile_view = ProfileView()
 
 urlpatterns = patterns('',
 
@@ -61,6 +63,8 @@ urlpatterns = patterns('',
 
     # Users
     url(r'^users/$', UsersView.as_view(), name="teleforma-users"),
+    url(r'^users/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail,
+                               name="teleforma-profile-detail"),
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
     url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
 
