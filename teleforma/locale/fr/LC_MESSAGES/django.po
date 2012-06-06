@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-06 12:01+0200\n"
+"POT-Creation-Date: 2012-06-06 12:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -770,7 +770,7 @@ msgstr "Formation"
 
 #: templates/telemeta/profile_detail.html:65
 msgid "Platform only"
-msgstr ""
+msgstr "Plateforme seulement"
 
 #: templates/telemeta/profile_detail.html:66
 #: templates/telemeta/inc/user_list.html:22
