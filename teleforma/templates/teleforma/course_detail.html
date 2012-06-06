@@ -29,16 +29,16 @@ $(document).ready(function(){
         <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
-        {% block document %}
-         {% include "teleforma/inc/document_list.html" %}
-        {% endblock %}
-
         {% block conference %}
          {% include "teleforma/inc/conference_list.html" %}
         {% endblock %}
 
         {% block media %}
          {% include "teleforma/inc/media_list.html" %}
+        {% endblock %}
+
+        {% block document %}
+         {% include "teleforma/inc/document_list.html" %}
         {% endblock %}
 
         </div>
