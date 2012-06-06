@@ -442,8 +442,10 @@ class Training(Model):
 class Student(Model):
 
     user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
-    period          = ForeignKey('Period', related_name='student', verbose_name=_('period'))
-    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
+    period          = ForeignKey('Period', related_name='student', verbose_name=_('period'),
+                                  blank=True, null=True, on_delete=models.SET_NULL)
+    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
     platform_only   = BooleanField(_('platform only'))
     procedure       = ForeignKey('Course', related_name="procedure",

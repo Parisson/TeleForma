@@ -59,8 +59,13 @@ class Command(BaseCommand):
                 student = Student(user=user)
                 student.platform_only, student.training = self.get_training(code=row[3].value)
                 student.period = Period.objects.get(name='Estivale')
-                student.iej, c = IEJ.objects.get_or_create(name=row[2].value)
-
+                name = row[2].value
+                iejs = IEJ.objects.filter(name=name)
+                if iejs:
+                    iej = iejs[0]
+                else:
+                    iej = None
+                student.iej = iej
                 student.save()
 
             student.procedure = self.get_courses(row[4].value)
