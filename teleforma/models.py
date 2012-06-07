@@ -142,7 +142,7 @@ class Course(Model):
     class Meta:
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
-        ordering = ['number']
+        ordering = ['-date_modified']
 
 
 class Professor(Model):
