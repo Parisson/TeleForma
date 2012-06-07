@@ -88,9 +88,13 @@ def get_courses(user):
             courses.append({'courses': c, 'types': t})
 
     elif user.is_staff:
-        courses = [{'courses': Course.objects.all().order_by('number'),
+        courses = [{'courses': Course.objects.all(),
                     'types': CourseType.objects.all()},
                    ]
+        course_menu = [{'courses': courses[0]['courses'].order_by('number'),
+                        'types': courses[0]['types']},
+                      ]
+        print course_menu
     else:
         courses = None
     return courses

@@ -292,6 +292,7 @@ class DocumentType(Model):
 
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
+    number          = IntegerField(_('number'), blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -299,6 +300,7 @@ class DocumentType(Model):
     class Meta:
         db_table = app_label + '_' + 'document_type'
         verbose_name = _('document type')
+        ordering = ['number']
 
 
 class Document(MediaBase):

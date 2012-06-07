@@ -42,11 +42,14 @@ class DocumentAdmin(admin.ModelAdmin):
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
 
+class ConferenceAdmin(admin.ModelAdmin):
+    exclude = ['readers']
+
 admin.site.register(Organization)
 admin.site.register(Department)
 admin.site.register(Period)
 admin.site.register(Course, CourseAdmin)
-admin.site.register(Conference)
+admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(IEJ)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
