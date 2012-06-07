@@ -19,7 +19,7 @@
         {% for conference in course.conference.all|from_course_type:type %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.session }}</a></td>
-            <td><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></td>
+            <td>{% if conference.professor.user %}<a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a>{% endif %}</td>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.date_begin }}</a></td>
              <td align="center">
                 {% if conference.streaming %}

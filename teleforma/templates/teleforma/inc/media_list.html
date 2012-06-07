@@ -20,7 +20,7 @@
          {% if media.published or user.is_staff %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.session }}</a></td>
-            <td>{% if media.conference %}<a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a>{% endif %}</td>
+            <td>{% if media.conference.professor.user %}<a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a>{% endif %}</td>
             <td>{% if media.conference.date_begin %}<a href="{% url teleforma-media-detail media.id %}">{{ media.conference.date_begin }}</a>{% endif %}</td>
             <td>{{ media.item.approx_duration }}</td>
             </tr>

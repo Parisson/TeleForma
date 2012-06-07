@@ -148,8 +148,6 @@ class Course(Model):
 class Professor(Model):
 
     user            = ForeignKey(User, related_name='professor', verbose_name=_('user'), unique=True)
-    training        = ForeignKey('Training', related_name='professor', verbose_name=_('training'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
     courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
 
@@ -446,8 +444,8 @@ class Training(Model):
 class Student(Model):
 
     user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
-    period          = ForeignKey('Period', related_name='student', verbose_name=_('period'),
-                                  blank=True, null=True, on_delete=models.SET_NULL)
+    period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
+                                  blank=True, null=True)
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))

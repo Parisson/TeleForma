@@ -65,13 +65,14 @@ class Command(BaseCommand):
 
         if created:
             student = Student.objects.filter(user=user)
-            if not student:
-                student = Student(user=user)
-                student.platform_only, student.training = self.get_training(row[3].value)
-                student.period = Period.objects.get(name='Estivale')
-                student.iej = self.get_iej(row[2].value)
-                student.save()
+            if student:
+                student.delete()
+            student = Student(user=user)
+            student.platform_only, student.training = self.get_training(row[3].value)
+            student.iej = self.get_iej(row[2].value)
+            student.save()
 
+            student.period = Period.objects.filter(name='Estivale')
             student.procedure = self.get_courses(row[4].value)
             student.written_speciality = self.get_courses(row[5].value)
             student.oral_speciality = self.get_courses(row[6].value)

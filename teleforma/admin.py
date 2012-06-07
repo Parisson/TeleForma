@@ -11,9 +11,11 @@ admin.site.unregister(User)
 
 class StudentProfileInline(admin.StackedInline):
     model = Student
+    filter_horizontal = ['period']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
+
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
     filter_horizontal = ['courses']
@@ -35,6 +37,7 @@ class TrainingAdmin(admin.ModelAdmin):
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course
+    ordering = ['number']
 
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']

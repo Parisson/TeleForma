@@ -56,7 +56,6 @@ def get_courses(user):
                     ]
     elif student:
         student = user.student.get()
-
         courses =      [{'courses': get_course(student.procedure),
                         'types':student.training.procedure.all()},
                         {'courses': get_course(student.written_speciality),
@@ -94,7 +93,7 @@ def get_courses(user):
         course_menu = [{'courses': courses[0]['courses'].order_by('number'),
                         'types': courses[0]['types']},
                       ]
-        print course_menu
+
     else:
         courses = None
     return courses
