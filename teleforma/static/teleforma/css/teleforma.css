@@ -1575,3 +1575,10 @@ input,textarea{
     padding: 1em 0em 0em 0em;
     margin: 0em 0em -0.8em 0em;
     }
+
+.doc_type_title {
+    padding: 0em 0em 0em 1.5em;
+    font-weight: bold;
+    font-size: 0.8125em;
+    text-align: center;
+    }

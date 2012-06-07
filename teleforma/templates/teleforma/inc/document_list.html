@@ -1,11 +1,15 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-{% if course.document.all|from_type:type %}
+{% if course.document.all|from_course_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
 <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Documents"%}</h3>
 </div>
+
+{% for doc_type in doc_types %}
+{% if course.document.all|from_doc_type:doc_type %}
+<span class="doc_type_title">{{ doc_type }}</span>
 <table class="listing" width="100%">
     <thead>
         <tr>
@@ -16,7 +20,8 @@
         </tr>
     </thead>
     <tbody>
-        {% for document in course.document.all|from_type:type %}
+        {% for document in course.document.all|from_course_type:type %}
+        {% if document.type == doc_type %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
         <td>{% if document.file %}<a href="{% url teleforma-document-detail document.id %}" target="_blank">{% endif %}{{ document.title }}{% if document.file %}</a>{% endif %}</td>
         <td align="center">
@@ -27,9 +32,12 @@
         <td>{{ document.date_added }}</td>
         <td align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a>{% endif %}</td>
         </tr>
+        {% endif %}
     {% endfor %}
     </tbody>
 </table>
+{% endif %}
+{% endfor %}
 </div>
 
 {% else %}

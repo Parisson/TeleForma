@@ -21,7 +21,7 @@ $(document).ready(function(){
 {% endblock courses %}
 
 {% block course %}
-<div class="desk_media">
+<div class="desk_center">
     {% for c in courses %}
      {% for course in c.courses %}
       {% for type in c.types %}
@@ -50,7 +50,7 @@ $(document).ready(function(){
 
 {% block chat %}
 {% if room %}
-<div id="module-set" style="width: 24%">
+<div id="module-set" style="width: 22%">
 {% with "Local tweeter" as title %}
 {% include "teleforma/inc/chat_room.html" %}
 {% endwith %}

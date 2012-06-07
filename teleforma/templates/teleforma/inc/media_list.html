@@ -1,7 +1,7 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-{% if course.media.all|from_type:type %}
+{% if course.media.all|from_course_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
     <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Passed conferences"%}</h3>
@@ -16,7 +16,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for media in course.media.all|from_type:type %}
+        {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.session }}</a></td>

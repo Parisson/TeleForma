@@ -346,7 +346,7 @@ class Document(MediaBase):
 
     class Meta:
         db_table = app_label + '_' + 'document'
-        ordering = ['-date_modified']
+        ordering = ['-date_added']
 
 
 class Media(MediaBase):

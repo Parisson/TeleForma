@@ -159,6 +159,7 @@ class CourseView(DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
+        context['doc_types'] = DocumentType.objects.all()
         return context
 
     @method_decorator(login_required)
@@ -178,6 +179,7 @@ class CoursesView(ListView):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
+        context['doc_types'] = DocumentType.objects.all()
         return context
 
     @method_decorator(login_required)
