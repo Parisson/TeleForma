@@ -23,10 +23,10 @@ $(document).ready(function(){
 <div style="background: white;">
 <ul>
 {% block courses %}
- {% for c in object_list %}
-  {% for course in c.courses %}
-    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
-  {% endfor %}
+{% for c in object_list %}
+  {% with c.course as course %}
+   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+  {% endwith %}
  {% endfor %}
 {% endblock courses %}
 </ul>
@@ -55,7 +55,7 @@ $(document).ready(function(){
 {% block course %}
 <div class="desk_center">
     {% for c in object_list %}
-     {% for course in c.courses %}
+     {% with c.course as course %}
       {% for type in c.types %}
       <div class="course">
         <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
@@ -74,10 +74,9 @@ $(document).ready(function(){
         {% endblock %}
 
       </div>
-    {% endfor %}
-    {% endfor %}
-    {% endfor %}
-
+     {% endfor %}
+    {% endwith %}
+   {% endfor %}
 </div>
 {% endblock course %}
 </div>

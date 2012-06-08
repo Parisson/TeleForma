@@ -39,63 +39,64 @@ def render(request, template, data = None, mimetype = None):
     return render_to_response(template, data, context_instance=RequestContext(request),
                               mimetype=mimetype)
 
-def get_course(obj):
-    course = []
-    if obj and obj.code != 'X':
-        course = Course.objects.filter(id=obj.id)
-    return course
+
+def format_courses(courses, course=None, queryset=None, types=None):
+    if queryset:
+        for c in queryset:
+            if c and c.code != 'X':
+                courses.append({'course': c, 'types': types.all(), 'date': c.date_modified})
+    elif course:
+        courses.append({'course': course, 'types': types.all(), 'date': course.date_modified})
+    return courses
 
 def get_courses(user):
     professor = user.professor.all()
     student = user.student.all()
+    courses = []
 
     if professor:
         professor = user.professor.get()
-        courses = [{'courses': professor.courses.all(),
-                    'types': CourseType.objects.all()},
-                    ]
+        courses = format_courses(courses, queryset=professor.courses.all(),
+                                  types=CourseType.objects.all())
+
     elif student:
         student = user.student.get()
-        courses =      [{'courses': get_course(student.procedure),
-                        'types':student.training.procedure.all()},
-                        {'courses': get_course(student.written_speciality),
-                        'types':student.training.written_speciality.all()},
-                        {'courses': get_course(student.oral_speciality),
-                        'types':student.training.oral_speciality.all()},
-                        {'courses': get_course(student.oral_1),
-                        'types':student.training.oral_1.all()},
-                        {'courses': get_course(student.oral_2),
-                        'types':student.training.oral_2.all()},
-                        {'courses': get_course(student.options),
-                        'types':student.training.options.all()},
-                        ]
+        s_courses = {student.procedure:student.training.procedure,
+                           student.written_speciality:student.training.written_speciality,
+                           student.oral_speciality:student.training.oral_speciality,
+                           student.oral_1:student.training.oral_1,
+                           student.oral_2:student.training.oral_2,
+                           student.options:student.training.options,
+                        }
 
-        synthesis_note = student.training.synthesis_note.all()
+        for course in s_courses:
+            courses = format_courses(courses, course=course,
+                               types=s_courses[course])
+
+        synthesis_note = student.training.synthesis_note
         if synthesis_note:
-            c = Course.objects.filter(synthesis_note=True)
-            t = student.training.synthesis_note.all()
-            courses.append({'courses': c, 'types': t})
-        obligation = student.training.obligation.all()
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(synthesis_note=True),
+                            types=synthesis_note)
+
+        obligation = student.training.obligation
         if obligation:
-            c = Course.objects.filter(obligation=True)
-            t = student.training.obligation.all()
-            courses.append({'courses': c, 'types': t})
-        magistral = student.training.magistral.all()
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(obligation=True),
+                            types=obligation)
+
+        magistral = student.training.magistral
         if magistral:
-            c = Course.objects.filter(magistral=True)
-            t = student.training.magistral.all()
-            courses.append({'courses': c, 'types': t})
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(magistral=True),
+                            types=magistral)
 
     elif user.is_staff:
-        courses = [{'courses': Course.objects.all(),
-                    'types': CourseType.objects.all()},
-                   ]
-        course_menu = [{'courses': courses[0]['courses'].order_by('number'),
-                        'types': courses[0]['types']},
-                      ]
-
+        courses = format_courses(courses, queryset=Course.objects.all(),
+                    types=CourseType.objects)
     else:
         courses = None
+
     return courses
 
 
@@ -116,7 +117,7 @@ def document_download(request, pk):
     extension = mimetypes.guess_extension(mimetype)
     response = HttpResponse(fsock, mimetype=mimetype)
     response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                     (unicode(document.title.decode('utf8')), extension)
+                                     (document.title.encode('utf8'), extension)
     return response
 
 def document_view(request, pk):
