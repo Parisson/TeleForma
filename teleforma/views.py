@@ -44,9 +44,12 @@ def format_courses(courses, course=None, queryset=None, types=None):
     if queryset:
         for c in queryset:
             if c and c.code != 'X':
-                courses.append({'course': c, 'types': types.all(), 'date': c.date_modified})
+                courses.append({'course': c, 'types': types.all(),
+                'date': c.date_modified})
     elif course:
-        courses.append({'course': course, 'types': types.all(), 'date': course.date_modified})
+        if course.code != 'X':
+            courses.append({'course': course, 'types': types.all(),
+            'date': course.date_modified})
     return courses
 
 def get_courses(user):
