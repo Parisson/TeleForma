@@ -91,14 +91,13 @@ def get_courses(user):
                             queryset=Course.objects.filter(magistral=True),
                             types=magistral)
 
-        courses = sorted(courses, key=lambda k: k['date'], reverse=True)
-
     elif user.is_staff:
         courses = format_courses(courses, queryset=Course.objects.all(),
                     types=CourseType.objects)
     else:
         courses = None
 
+    courses = sorted(courses, key=lambda k: k['date'], reverse=True)
     return courses
 
 
