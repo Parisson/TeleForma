@@ -11,10 +11,16 @@ admin.site.unregister(User)
 
 class StudentProfileInline(admin.StackedInline):
     model = Student
-    filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2']
+    filter_horizontal = ['period']
+
+class StudentAdmin(admin.ModelAdmin):
+    model = Student
 
 class ProfessorProfileInline(admin.StackedInline):
+    model = Professor
+    filter_horizontal = ['courses']
+
+class ProfessorAdmin(admin.ModelAdmin):
     model = Professor
     filter_horizontal = ['courses']
 
@@ -26,9 +32,12 @@ class UserProfileAdmin(UserAdmin):
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
+    filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+                         'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral']
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course
+    ordering = ['number']
 
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
@@ -36,11 +45,14 @@ class DocumentAdmin(admin.ModelAdmin):
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
 
+class ConferenceAdmin(admin.ModelAdmin):
+    exclude = ['readers']
+
 admin.site.register(Organization)
 admin.site.register(Department)
 admin.site.register(Period)
 admin.site.register(Course, CourseAdmin)
-admin.site.register(Conference)
+admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(IEJ)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
@@ -52,6 +64,8 @@ admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Payment)
+admin.site.register(Student, StudentAdmin)
+admin.site.register(Professor, ProfessorAdmin)
 
 
 

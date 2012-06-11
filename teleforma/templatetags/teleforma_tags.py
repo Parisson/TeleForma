@@ -92,3 +92,17 @@ def or_me(value, arg):
         arg = unicode(arg)
     return _('me') if value == arg else value
 
+@register.filter
+def yes_no(bool):
+    if bool:
+        return _('Yes')
+    else:
+        return _('No')
+
+@register.filter
+def from_course_type(docs, type):
+    return docs.filter(course_type=type)
+
+@register.filter
+def from_doc_type(docs, type):
+    return docs.filter(type=type)

@@ -97,7 +97,8 @@ alt="logo" />
  <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
  {% endif %}
 
- <li><a href="#accounts#" class="blue"><img src="{% url telemeta-images "user_tr.png" %}" alt="user" style="vertical-align:middle" width="13px" />{% if user.first_name and user.last_name %}
+ <li style="a.active{background-image:{{ STATIC_URL }}telemeta/images/user_tr_bk.png; background-repeat: no-repeat;
+    background-position: 1ex .5ex;}"><a href="#accounts#" class="blue">{% if user.first_name and user.last_name %}
  {{ user.first_name }} {{ user.last_name }}
  {% else %}
  {{ user.username }}

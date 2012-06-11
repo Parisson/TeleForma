@@ -22,7 +22,7 @@ $(document).ready(function(){
 {% block course %}
 <div class="course_media">
 
-<div class="course_title">{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %}{% if media.item %} - {{ media.item }}{% endif %}
+<div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}{% if media.item %} - {{ media.item }}{% endif %}
 </div>
 
 <div class="media">

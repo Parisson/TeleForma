@@ -17,12 +17,32 @@ class Command(BaseCommand):
     first_row = 2
     admin_email = 'webmaster@parisson.com'
 
-    def get_first_course(self, code):
+    def get_courses(self, code):
         courses = Course.objects.filter(code=code)
         if courses:
-            return [courses[0]]
+            return courses[0]
         else:
-            raise BaseException('You should first create a course with this code: ' + code)
+            return None
+
+    def get_training(self, code):
+        platform_only = False
+        if 'I' in code[0:2]:
+            platform_only = True
+            code = code[4:]
+            training = Training.objects.get(code=code)
+        else:
+            training = Training.objects.get(code=code)
+        return platform_only, training
+
+    def get_iej(self, name):
+        iejs = IEJ.objects.filter(name=name)
+        if iejs:
+            iej = iejs[0]
+        elif not name:
+            iej = None
+        else:
+            iej, c = IEJ.objects.get_or_create(name=name)
+        return iej
 
     def import_user(self, row):
         last_name   = row[0].value
@@ -45,18 +65,19 @@ class Command(BaseCommand):
 
         if created:
             student = Student.objects.filter(user=user)
-            if not student:
-                student = Student(user=user)
-                student.period, c = Period.objects.get_or_create(name='Estivale')
-                student.iej, c = IEJ.objects.get_or_create(name=row[2].value)
-                student.training, c = Training.objects.get_or_create(code=row[3].value)
-                student.save()
+            if student:
+                student.delete()
+            student = Student(user=user)
+            student.platform_only, student.training = self.get_training(row[3].value)
+            student.iej = self.get_iej(row[2].value)
+            student.save()
 
-            student.procedure = self.get_first_course(row[4].value)
-            student.written_speciality = self.get_first_course(row[5].value)
-            student.oral_speciality = self.get_first_course(row[6].value)
-            student.oral_1 = self.get_first_course(row[7].value)
-            student.oral_2 = self.get_first_course(row[8].value)
+            student.period = Period.objects.filter(name='Estivale')
+            student.procedure = self.get_courses(row[4].value)
+            student.written_speciality = self.get_courses(row[5].value)
+            student.oral_speciality = self.get_courses(row[6].value)
+            student.oral_1 = self.get_courses(row[7].value)
+            student.oral_2 = self.get_courses(row[8].value)
 
             profile, created = Profile.objects.get_or_create(user=user)
             profile.address = row[10].value

@@ -123,15 +123,17 @@ class Course(Model):
     department      = ForeignKey('Department', related_name='course', verbose_name=_('department'))
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    type            = ForeignKey('CourseType', related_name='course', verbose_name=_('course type'))
     code            = CharField(_('code'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     number          = IntegerField(_('number'), blank=True, null=True)
+    synthesis_note  = BooleanField(_('synthesis note'))
+    obligation      = BooleanField(_('obligations'))
+    magistral       = BooleanField(_('magistral'))
 
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return ' - '.join([self.title, self.type.name])
+        return self.title
 
     @property
     def slug(self):
@@ -146,8 +148,6 @@ class Course(Model):
 class Professor(Model):
 
     user            = ForeignKey(User, related_name='professor', verbose_name=_('user'), unique=True)
-    training        = ForeignKey('Training', related_name='professor',
-                                 verbose_name=_('training'), blank=True, null=True)
     courses         = ManyToManyField('Course', related_name="professor", verbose_name=_('courses'),
                                         blank=True, null=True)
 
@@ -176,7 +176,9 @@ class Room(Model):
 class Conference(Model):
 
     course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
-    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'))
+    course_type     = ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
+    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     session         = CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
     room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
@@ -192,7 +194,7 @@ class Conference(Model):
 
     @property
     def description(self):
-        return ' - '.join([self.course.department.name, self.course.title, self.course.type.name,
+        return ' - '.join([self.course.department.name, self.course.title, self.course_type.name,
                            self.session, self.professor.user.first_name, self.professor.user.last_name,
                            str(self.date_begin)])
 
@@ -232,11 +234,17 @@ class LiveStream(Model):
 
     element_type = 'livestream'
 
-    conference = ForeignKey('Conference', related_name='livestream',
-                                verbose_name=_('conference'))
+    course          = ForeignKey('Course', related_name='livestream',
+                                 verbose_name=_('course'))
+    course_type     = ForeignKey('CourseType', related_name='livestream',
+                                 verbose_name=_('course type'))
+    conference      = ForeignKey('Conference', related_name='livestream',
+                                verbose_name=_('conference'),
+                                blank=True, null=True, on_delete=models.SET_NULL)
     server     = ForeignKey('StreamingServer', related_name='livestream',
                                 verbose_name=_('streaming server'))
-    stream_type = CharField(_('Streaming type'), choices=streaming_choices, max_length=32)
+    stream_type = CharField(_('Streaming type'),
+                            choices=streaming_choices, max_length=32)
 
     @property
     def mount_point(self):
@@ -282,6 +290,7 @@ class DocumentType(Model):
 
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
+    number          = IntegerField(_('number'), blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -289,15 +298,17 @@ class DocumentType(Model):
     class Meta:
         db_table = app_label + '_' + 'document_type'
         verbose_name = _('document type')
+        ordering = ['number']
 
 
 class Document(MediaBase):
 
     element_type = 'document'
 
-    course          = ForeignKey('Course', related_name='document', verbose_name='course')
+    course          = ForeignKey('Course', related_name='document', verbose_name=_('course'))
+    course_type     = ForeignKey('CourseType', related_name='document', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
@@ -319,7 +330,7 @@ class Document(MediaBase):
             self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
     def __unicode__(self):
-        return  ' - '.join([self.title, unicode(self.course)])
+        return  ' - '.join([unicode(self.course), unicode(self.course_type), self.title ])
 
     def set_read(self, user):
         pass
@@ -333,7 +344,7 @@ class Document(MediaBase):
 
     class Meta:
         db_table = app_label + '_' + 'document'
-        ordering = ['-date_modified']
+        ordering = ['-date_added']
 
 
 class Media(MediaBase):
@@ -342,8 +353,9 @@ class Media(MediaBase):
     element_type = 'media'
 
     course          = ForeignKey('Course', related_name='media', verbose_name=_('course'))
+    course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
     is_live         = BooleanField(_('is live'))
@@ -389,9 +401,34 @@ class Training(Model):
     name            = CharField(_('name'), max_length=255, blank=True)
     period          = ForeignKey('Period', related_name='training', verbose_name=_('period'),
                                  blank=True, null=True)
-    synthesis_note  = BooleanField(_('synthesis note'))
-    obligation      = BooleanField(_('obligation'))
-    cost            = FloatField(_('cost'), blank=True)
+    synthesis_note  = ManyToManyField('CourseType', related_name="training_synthesis_note",
+                                        verbose_name=_('synthesis note'),
+                                        blank=True, null=True)
+    obligation      = ManyToManyField('CourseType', related_name="training_obligation",
+                                        verbose_name=_('obligations'),
+                                        blank=True, null=True)
+    procedure       = ManyToManyField('CourseType', related_name="training_procedure",
+                                        verbose_name=_('procedure'),
+                                        blank=True, null=True)
+    written_speciality = ManyToManyField('CourseType', related_name="training_written_speciality",
+                                        verbose_name=_('written speciality'),
+                                        blank=True, null=True)
+    oral_speciality = ManyToManyField('CourseType', related_name="training_oral_speciality",
+                                        verbose_name=_('oral speciality'),
+                                        blank=True, null=True)
+    oral_1          = ManyToManyField('CourseType', related_name="training_oral_1",
+                                        verbose_name=_('oral 1'),
+                                        blank=True, null=True)
+    oral_2          = ManyToManyField('CourseType', related_name="training_oral_2",
+                                        verbose_name=_('oral 2'),
+                                        blank=True, null=True)
+    options         = ManyToManyField('CourseType', related_name="training_options",
+                                        verbose_name=_('options'),
+                                        blank=True, null=True)
+    magistral       = ManyToManyField('CourseType', related_name="training_magistral",
+                                        verbose_name=_('magistral'),
+                                        blank=True, null=True)
+    cost            = FloatField(_('cost'), blank=True, null=True)
 
     def __unicode__(self):
         code = self.code
@@ -407,27 +444,26 @@ class Training(Model):
 class Student(Model):
 
     user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
-    period          = ForeignKey('Period', related_name='student', verbose_name=_('period'))
-    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'))
+    period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
+                                  blank=True, null=True)
+    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
-    synthesis_note  = ManyToManyField('Course', related_name="student_synthesis_note",
-                                        verbose_name=_('synthesis note'),
+    platform_only   = BooleanField(_('platform only'))
+    procedure       = ForeignKey('Course', related_name="procedure",
+                                        verbose_name=_('procedure'),
                                         blank=True, null=True)
-    obligation      = ManyToManyField('Course', related_name="student_obligation",
-                                        verbose_name=_('obligations'),
+    oral_speciality = ForeignKey('Course', related_name="oral_speciality",
+                                        verbose_name=_('oral speciality'),
                                         blank=True, null=True)
-    procedure       = ManyToManyField('Course', related_name="student_procedure",
-                                        verbose_name=_('procedures'),
+    written_speciality = ForeignKey('Course', related_name="written_speciality",
+                                        verbose_name=_('written speciality'),
                                         blank=True, null=True)
-    oral_speciality = ManyToManyField('Course', related_name="student_oral_speciality",
-                                        verbose_name=_('oral specialities'),
+    oral_1          = ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
                                         blank=True, null=True)
-    written_speciality = ManyToManyField('Course', related_name="student_written_speciality",
-                                        verbose_name=_('written specialities'),
+    oral_2          = ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
                                         blank=True, null=True)
-    oral_1          = ManyToManyField('Course', related_name="student_oral_1", verbose_name=_('oral 1'),
-                                        blank=True, null=True)
-    oral_2          = ManyToManyField('Course', related_name="student_oral_2", verbose_name=_('oral 2'),
+    options          = ForeignKey('Course', related_name="options", verbose_name=_('options'),
                                         blank=True, null=True)
 
     def __unicode__(self):
@@ -464,7 +500,7 @@ class Payment(models.Model):
     "Student payment"
 
     student = ForeignKey(Student, related_name="payment", verbose_name=_('student'))
-    amount  = FloatField(_('amount (€)'))
+    amount  = FloatField(_('amount'))
     date_added = DateTimeField(_('date added'), auto_now_add=True)
 
     def __unicode__(self):

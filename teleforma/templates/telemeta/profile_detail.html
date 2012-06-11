@@ -17,10 +17,12 @@
     <div style="background: white;">
     <ul>
     {% block courses %}
-    {% with user|user_courses as courses %}
-    {% for course in courses %}
-    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
-    {% endfor %}
+    {% with usr|user_courses as courses %}
+     {% for c in courses %}
+       {% with c.course as course %}
+       <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
+       {% endwith %}
+     {% endfor %}
     {% endwith %}
     {% endblock courses %}
     </ul>
@@ -60,11 +62,13 @@
       {% if usr.student.get %}
         <dt>{% trans "IEJ" %}</dt><dd><a href="{% url teleforma-iej-users usr.student.get.iej.id %}">{{ usr.student.get.iej }}</a></dd>
         <dt>{% trans "Training" %}</dt><dd><a href="{% url teleforma-training-users usr.student.get.training.id %}">{{ usr.student.get.training }}</a></dd>
-        <dt>{% trans "Procedure"%}</dt><dd>{% for proc in usr.student.get.procedure.all %}{{ proc }}, {% endfor %}</dd>
-        <dt>{% trans "Oral spe"%}</dt><dd>{% for spec in usr.student.get.oral_speciality.all %}{{ spec }}, {% endfor %}</dd>
-        <dt>{% trans "Written spe"%}</dt><dd>{% for spec in usr.student.get.written_speciality.all %}{{ spec }}, {% endfor %}</dd>
-        <dt>{% trans "Oral 1"%}</dt><dd>{% for oral in usr.student.get.oral_1.all %}{{ oral }}, {% endfor %}</dd>
-        <dt>{% trans "Oral 2"%}</dt><dd>{% for oral in usr.student.get.oral_2.all %}{{ oral }}, {% endfor %}</dd>
+        <dt>{% trans "Platform only" %}</dt><dd>{{ usr.student.get.platform_only|yes_no }}</dd>
+        <dt>{% trans "Procedure"%}</dt><dd>{{ usr.student.get.procedure}}</dd>
+        <dt>{% trans "Oral spe"%}</dt><dd>{{ usr.student.get.oral_speciality }}</dd>
+        <dt>{% trans "Written spe"%}</dt><dd>{{ usr.student.get.written_speciality }}</dd>
+        <dt>{% trans "Oral 1"%}</dt><dd>{{ usr.student.get.oral_1 }}</dd>
+        <dt>{% trans "Oral 2"%}</dt><dd>{{ usr.student.get.oral_2 }}</dd>
+        <dt>{% trans "Options"%}</dt><dd>{{ usr.student.get.options }}</dd>
       {% endif %}
 
       {% if user.is_staff or user.is_superuser %}

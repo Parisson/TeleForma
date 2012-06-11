@@ -455,7 +455,6 @@ form.login .submit {
 
 #menu a, #menu a:visited{
     display:inline-block;
-    color: #fff;
     text-decoration:none;
     border-bottom-width:.5em;
     border-bottom-style: solid;
@@ -470,10 +469,12 @@ form.login .submit {
     font-size: 14px;
     padding: .5em 1em;
 }
+
 #menu a:hover, #menu a.active{
     background-color: #FFF;
     color: #000000;
 }
+
 
 #menu .darkblue { border-bottom-color: #0f3179; }
 /* #menu .blue { border-bottom-color:  #357ae8; } */
@@ -840,7 +841,7 @@ table.listing th, table.listing thead, table.listing td {
     border-bottom: 1px solid #dfdfdf;
     font-weight: normal;
 }
-table.listing thead { background: #e8eaf0 }
+table.listing thead { background: #fafafa; /*background: #e8eaf0*/ }
 table.listing thead th {
     font-size: 0.9em;
     padding: 3px .5em 3px;
@@ -1573,4 +1574,11 @@ input,textarea{
 #paginate_fix {
     padding: 1em 0em 0em 0em;
     margin: 0em 0em -0.8em 0em;
+    }
+
+.doc_type_title {
+    padding: 0em 0em 0em 1.5em;
+    font-weight: bold;
+    font-size: 0.8125em;
+    text-align: center;
     }

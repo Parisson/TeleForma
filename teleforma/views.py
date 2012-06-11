@@ -39,24 +39,70 @@ def render(request, template, data = None, mimetype = None):
     return render_to_response(template, data, context_instance=RequestContext(request),
                               mimetype=mimetype)
 
+
+def format_courses(courses, course=None, queryset=None, types=None):
+    if queryset:
+        for c in queryset:
+            if c and c.code != 'X':
+                courses.append({'course': c, 'types': types.all(),
+                'date': c.date_modified})
+    elif course:
+        if course.code != 'X':
+            courses.append({'course': course, 'types': types.all(),
+            'date': course.date_modified})
+    return courses
+
 def get_courses(user):
     professor = user.professor.all()
     student = user.student.all()
+    courses = []
+
     if professor:
-        courses = user.professor.get().courses.all()
+        professor = user.professor.get()
+        courses = format_courses(courses, queryset=professor.courses.all(),
+                                  types=CourseType.objects.all())
+
     elif student:
         student = user.student.get()
-        courses = []
-        course_list = [student.obligation.all(), student.procedure.all(), student.written_speciality.all(),
-                   student.oral_speciality.all(), student.oral_1.all(), student.oral_2.all()]
-        for course in course_list:
-            for c in course:
-                courses.append(c)
+        s_courses = {student.procedure:student.training.procedure,
+                           student.written_speciality:student.training.written_speciality,
+                           student.oral_speciality:student.training.oral_speciality,
+                           student.oral_1:student.training.oral_1,
+                           student.oral_2:student.training.oral_2,
+                           student.options:student.training.options,
+                        }
+
+        for course in s_courses:
+            courses = format_courses(courses, course=course,
+                               types=s_courses[course])
+
+        synthesis_note = student.training.synthesis_note
+        if synthesis_note:
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(synthesis_note=True),
+                            types=synthesis_note)
+
+        obligation = student.training.obligation
+        if obligation:
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(obligation=True),
+                            types=obligation)
+
+        magistral = student.training.magistral
+        if magistral:
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(magistral=True),
+                            types=magistral)
+
     elif user.is_staff:
-        courses = Course.objects.all()
+        courses = format_courses(courses, queryset=Course.objects.all(),
+                    types=CourseType.objects)
     else:
         courses = None
+
+    courses = sorted(courses, key=lambda k: k['date'], reverse=True)
     return courses
+
 
 def stream_from_file(__file):
     chunk_size = 0x10000
@@ -75,7 +121,7 @@ def document_download(request, pk):
     extension = mimetypes.guess_extension(mimetype)
     response = HttpResponse(fsock, mimetype=mimetype)
     response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                     (unicode(document.title.decode('utf8')), extension)
+                                     (document.title.encode('utf8'), extension)
     return response
 
 def document_view(request, pk):
@@ -104,12 +150,19 @@ class CourseView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
         course = self.get_object()
+        all_courses = get_courses(self.request.user)
+        courses = []
+        for c in all_courses:
+            if c['course'] == course:
+                courses = format_courses(courses, course=course, types=c['types'])
+        context['courses'] = courses
+        context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
+        context['doc_types'] = DocumentType.objects.all()
         return context
 
     @method_decorator(login_required)
@@ -127,9 +180,9 @@ class CoursesView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
-        context['courses'] = self.object_list
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
+        context['doc_types'] = DocumentType.objects.all()
         return context
 
     @method_decorator(login_required)
@@ -144,12 +197,13 @@ class MediaView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
+        context['all_courses'] = get_courses(self.request.user)
         media = self.get_object()
         view = ItemView()
         context['mime_type'] = view.item_analyze(media.item)
         context['course'] = media.course
         context['item'] = media.item
+        context['type'] = media.course_type
         context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="media")
         context['room'] = get_room(name=media.item.title, content_type=content_type,
@@ -190,10 +244,11 @@ class ConferenceView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
+        context['all_courses'] = get_courses(self.request.user)
         conference = self.get_object()
         context['mime_type'] = 'video/webm'
         context['course'] = conference.course
+        context['type'] = conference.course_type
         context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="conference")
         context['room'] = get_room(name=conference.course.title, content_type=content_type,
@@ -286,7 +341,7 @@ class UsersCourseView(UsersView):
 
     def get_queryset(self):
         self.course = Course.objects.filter(id=self.args[0])
-        return User.objects.filter(student__training__courses__in=self.course)
+        return User.objects.filter(student__written_speciality__in=self.course)
 
     def get_context_data(self, **kwargs):
         context = super(UsersCourseView, self).get_context_data(**kwargs)
@@ -297,6 +352,11 @@ class UsersCourseView(UsersView):
     def dispatch(self, *args, **kwargs):
         return super(UsersCourseView, self).dispatch(*args, **kwargs)
 
+def get_course_code(obj):
+    if obj:
+        return unicode(obj.code)
+    else:
+        return ''
 
 class UsersXLSExport(object):
 
@@ -311,12 +371,15 @@ class UsersXLSExport(object):
             row.write(1, user.first_name)
             row.write(9, user.email)
             row.write(2, unicode(student.iej))
-            row.write(3, unicode(student.training.code))
-            row.write(4, unicode(student.procedure))
-            row.write(5, unicode(student.written_speciality))
-            row.write(6, unicode(student.oral_speciality))
-            row.write(7, unicode(student.oral_1))
-            row.write(8, unicode(student.oral_2))
+            code = student.training.code
+            if student.platform_only:
+                code = 'I - ' + code
+            row.write(3, unicode(code))
+            row.write(4, get_course_code(student.procedure))
+            row.write(5, get_course_code(student.written_speciality))
+            row.write(6, get_course_code(student.oral_speciality))
+            row.write(7, get_course_code(student.oral_1))
+            row.write(8, get_course_code(student.oral_2))
 
             profile = Profile.objects.filter(user=user)
             if profile:
@@ -335,22 +398,30 @@ class UsersXLSExport(object):
         self.users = self.users.order_by('last_name')
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')
+
         row = self.sheet.row(0)
-        row.write(0, 'NOM')
-        row.write(1, 'PRENOM')
-        row.write(2, 'IEJ')
-        row.write(3, 'FORMATION')
-        row.write(4, 'PROC')
-        row.write(5, 'Ecrit Spe')
-        row.write(6, 'Oral Spe')
-        row.write(7, 'ORAL 1')
-        row.write(8, 'ORAL 2')
-        row.write(9, 'MAIL')
-        row.write(10, 'ADRESSE')
-        row.write(11, 'CP')
-        row.write(12, 'VILLE')
-        row.write(13, 'TEL')
-        row.write(14, "Date d'inscription")
+        cols = [{'name':'NOM', 'width':5000},
+                {'name':'PRENOM', 'width':5000},
+                {'name':'IEJ', 'width':2500},
+                {'name':'FORMATION', 'width':6000},
+                {'name':'PROC', 'width':2500},
+                {'name':'Ecrit Spe', 'width':3000},
+                {'name':'Oral Spe', 'width':3000},
+                {'name':'ORAL 1', 'width':3000},
+                {'name':'ORAL 2', 'width':3000},
+                {'name':'MAIL', 'width':7500},
+                {'name':'ADRESSE', 'width':7500},
+                {'name':'CP', 'width':2500},
+                {'name':'VILLE', 'width':5000},
+                {'name':'TEL', 'width':5000},
+                {'name':"Date d'inscription", 'width':5000}
+                ]
+        i = 0
+        for col in cols:
+            row.write(i, col['name'])
+            self.sheet.col(i).width = col['width']
+            i += 1
+
         counter = 0
         for user in self.users:
             counter = self.export_user(counter, user)

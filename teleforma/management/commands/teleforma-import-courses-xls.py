@@ -25,20 +25,21 @@ class Command(BaseCommand):
         sheet = self.book.sheet_by_index(0)
         col = sheet.col(0)
 
-        types = CourseType.objects.all()
+        for course in Course.objects.all():
+            course.delete()
+
         department = os.path.splitext(os.path.basename(path))[0]
         organization, created = Organization.objects.get_or_create(name=organization)
         department, created = Department.objects.get_or_create(name=department,
                                                                organization=organization)
 
         for i in range(self.first_row, len(col)):
-            for type in types:
-                course, created = Course.objects.get_or_create(title=sheet.row(i)[0].value,
+            course, created = Course.objects.get_or_create(title=sheet.row(i)[0].value,
                                                                code=sheet.row(i)[1].value,
                                                                number=int(sheet.row(i)[2].value),
                                                                department=department,
-                                                               type=type )
+                                                            )
 
-                if created:
-                    print 'imported: ' + course.title
+            if created:
+                print 'imported: ' + course.title
 
