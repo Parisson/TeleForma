@@ -224,7 +224,6 @@ class DocumentView(DetailView):
         context = super(DocumentView, self).get_context_data(**kwargs)
         context['courses'] = get_courses(self.request.user)
         document = self.get_object()
-
 #        context['mime_type'] = view.item_analyze(media.item)
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)

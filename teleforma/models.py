@@ -306,7 +306,8 @@ class Document(MediaBase):
     element_type = 'document'
 
     course          = ForeignKey('Course', related_name='document', verbose_name=_('course'))
-    course_type     = ForeignKey('CourseType', related_name='document', verbose_name=_('course type'))
+    course_type     = ManyToManyField('CourseType', related_name='document',
+                                      verbose_name=_('course type'), blank=True, null=True)
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
@@ -330,7 +331,8 @@ class Document(MediaBase):
             self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
     def __unicode__(self):
-        return  ' - '.join([unicode(self.course), unicode(self.course_type), self.title ])
+        types = ' - '.join([unicode(t) for t in self.course_type.all()])
+        return  ' - '.join([unicode(self.course), unicode(types), self.title ])
 
     def set_read(self, user):
         pass
