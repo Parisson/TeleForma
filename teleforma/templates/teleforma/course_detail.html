@@ -13,17 +13,17 @@ $(document).ready(function(){
 {% endblock extra_javascript %}
 
 {% block courses %}
- {% for c in all_courses %}
-  {% for course in c.courses %}
-    <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
-  {% endfor %}
+{% for c in all_courses %}
+  {% with c.course as course %}
+   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+  {% endwith %}
  {% endfor %}
 {% endblock courses %}
 
 {% block course %}
 <div class="desk_center">
     {% for c in courses %}
-     {% for course in c.courses %}
+     {% with c.course as course %}
       {% for type in c.types %}
       <div class="course">
         <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
@@ -43,7 +43,7 @@ $(document).ready(function(){
 
         </div>
       {% endfor %}
-     {% endfor %}
+     {% endwith %}
     {% endfor %}
 </div>
 {% endblock course %}

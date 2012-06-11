@@ -154,9 +154,8 @@ class CourseView(DetailView):
         all_courses = get_courses(self.request.user)
         courses = []
         for c in all_courses:
-            for co in c['courses']:
-                if co == course:
-                    courses.append({'courses': c['courses'].filter(id=course.id), 'types': c['types']})
+            if c['course'] == course:
+                courses = format_courses(courses, course=course, types=c['types'])
         context['courses'] = courses
         context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
