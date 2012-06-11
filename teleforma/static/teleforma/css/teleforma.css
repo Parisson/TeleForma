@@ -869,7 +869,7 @@ table.listing tbody td, table.listing tbody th {
     font-weight: normal;
 }
 table.listing tbody td {
-    padding: 0.8em 0em 0.8em 0.8em;
+    padding: 0.5em 0em 0.5em 0.8em;
     font-weight: normal;
     font-size: 0.9em;
 }
