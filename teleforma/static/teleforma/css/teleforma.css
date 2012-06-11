@@ -367,12 +367,16 @@ label.disabled { color: #d7d7d7 }
 }
 
 form.login {
-    font-size: 0.8em;
+    font-size: 0.9em;
     float: left;
     margin-top: 2em;
     margin-bottom: 4em;
-    padding: .5em;
-    border: 1px dotted #888;
+    border: 0px dotted #888;
+    padding: 1em;
+    background-color: #FFF;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
 }
 
 .login-error {
@@ -390,7 +394,8 @@ form.login label {
 
 form.login .submit {
     float: right;
-    margin-top: 1em;
+    margin-top: 0em;
+    padding: 0.3em;
 }
 
 /* Search form */
@@ -869,7 +874,7 @@ table.listing tbody td, table.listing tbody th {
     font-weight: normal;
 }
 table.listing tbody td {
-    padding: 0.8em 0em 0.8em 0.8em;
+    padding: 0.5em 0em 0.5em 0.8em;
     font-weight: normal;
     font-size: 0.9em;
 }

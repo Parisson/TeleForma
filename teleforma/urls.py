@@ -46,6 +46,8 @@ user_export = UsersXLSExport()
 profile_view = ProfileView()
 
 urlpatterns = patterns('',
+    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+        name="teleforma-login"),
 
     # Telemeta
     url(r'^', include('telemeta.urls')),
