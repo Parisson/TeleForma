@@ -68,8 +68,7 @@ alt="logo" />
  <li><a href="{% url teleforma-desk %}" class="violet">{% trans "Desk" %}</a>
  </li>
  {% else %}
-  <li><a href="{% url telemeta-home %}" class="violet">{% trans "Home" %}</a></li>
-  <li><a href="{% url telemeta-login %}" class="blue">{% trans "Sign in" %}</a></li>
+  <li><a href="{% url teleforma-login %}" class="violet">{% trans "Home" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
