@@ -25,7 +25,6 @@
     <th>{% trans "Written spe"%}</th>
     <th>{% trans "Oral 1"%}</th>
     <th>{% trans "Oral 2"%}</th>
-    <th>{% trans "Options"%}</th>
     <th>{% trans "Write"%}</th>
     </tr>
     </thead>
@@ -44,7 +43,6 @@
         <td>{{ student.written_speciality.code }}</td>
         <td>{{ student.oral_1.code }}</td>
         <td>{{ student.oral_2.code }}</td>
-        <td>{{ student.options.code }}</td>
      {% endwith %}
     {% elif user.professor.get %}
         <td>{% trans "Professor" %}</td>

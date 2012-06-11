@@ -17,11 +17,11 @@
     <div style="background: white;">
     <ul>
     {% block courses %}
-    {% with user|user_courses as courses %}
+    {% with usr|user_courses as courses %}
      {% for c in courses %}
-      {% for course in c.courses %}
+       {% with c.course as course %}
        <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
-      {% endfor %}
+       {% endwith %}
      {% endfor %}
     {% endwith %}
     {% endblock courses %}
