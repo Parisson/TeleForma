@@ -21,7 +21,6 @@
     </thead>
     <tbody>
         {% for document in course.document.all|from_course_type:type %}
-        {% if document.type == doc_type %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
         <td>{% if document.file %}<a href="{% url teleforma-document-detail document.id %}" target="_blank">{% endif %}{{ document.title }}{% if document.file %}</a>{% endif %}</td>
         <td align="center">
@@ -32,7 +31,6 @@
         <td>{{ document.date_added }}</td>
         <td align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a>{% endif %}</td>
         </tr>
-        {% endif %}
     {% endfor %}
     </tbody>
 </table>
