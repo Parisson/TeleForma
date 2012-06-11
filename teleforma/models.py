@@ -526,12 +526,18 @@ class NamePaginator(object):
         chunks = {}
 
         for obj in self.object_list:
-            if on: obj_str = getattr(obj, on).encode('utf8')
-            else: obj_str = obj.encode('utf8')
+            if on:
+                obj_str = getattr(obj, on).encode('utf8')
+            else:
+                obj_str = obj.encode('utf8')
 
-            letter = str.upper(obj_str[0])
+            if len(obj_str):
+                letter = str.upper(obj_str[0])
+            else:
+                letter = ''
 
-            if letter not in chunks: chunks[letter] = []
+            if letter not in chunks:
+                chunks[letter] = []
 
             chunks[letter].append(obj)
 
@@ -605,8 +611,10 @@ class NamePage(object):
         return self.paginator.pages.index(self) + 1
 
     def add(self, new_list, letter=None):
-        if len(new_list) > 0: self.object_list = self.object_list + new_list
-        if letter: self.letters.append(letter)
+        if len(new_list) > 0:
+            self.object_list = self.object_list + new_list
+        if letter:
+            self.letters.append(letter)
 
     def __repr__(self):
         if self.start_letter == self.end_letter:
