@@ -52,7 +52,7 @@ def format_courses(courses, course=None, queryset=None, types=None):
             'date': course.date_modified, 'number': course.number})
     return courses
 
-def get_courses(user):
+def get_courses(user, date_order=False, num_order=False):
     professor = user.professor.all()
     student = user.student.all()
     courses = []
@@ -100,7 +100,11 @@ def get_courses(user):
     else:
         courses = None
 
-    courses = sorted(courses, key=lambda k: k['date'], reverse=True)
+    if date_order:
+        courses = sorted(courses, key=lambda k: k['date'], reverse=True)
+    if num_order:
+        courses = sorted(courses, key=lambda k: k['number'])
+
     return courses
 
 
@@ -151,13 +155,13 @@ class CourseView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         course = self.get_object()
-        all_courses = get_courses(self.request.user)
+        all_courses = get_courses(self.request.user, num_order=True)
         courses = []
         for c in all_courses:
             if c['course'] == course:
                 courses = format_courses(courses, course=course, types=c['types'])
         context['courses'] = courses
-        context['all_courses'] = sorted(all_courses, key=lambda k: k['number'])
+        context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
@@ -176,7 +180,7 @@ class CoursesView(ListView):
     template_name='teleforma/courses.html'
 
     def get_queryset(self):
-        return get_courses(self.request.user)
+        return get_courses(self.request.user, date_order=True)
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
