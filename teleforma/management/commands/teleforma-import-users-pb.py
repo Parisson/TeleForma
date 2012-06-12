@@ -29,9 +29,9 @@ class Command(BaseCommand):
         if 'I' in code[0:2]:
             platform_only = True
             code = code[4:]
-            training = Training.objects.get(code=code)
+            training, c = Training.objects.get_or_create(code=code)
         else:
-            training = Training.objects.get(code=code)
+            training, c = Training.objects.get_or_create(code=code)
         return platform_only, training
 
     def get_iej(self, name):
