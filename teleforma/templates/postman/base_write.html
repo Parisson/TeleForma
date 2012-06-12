@@ -12,13 +12,35 @@
 {% block content %}
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
+<!--<div style="padding-top: 0.5em;">
+<select id="_professorSelect" name="professors" onchange="update_recipients();">
+<option>{% trans "Choose a professor" %}</option>
+<option value="admin">me</option>
+<option value="a.abou-el-haja">You</option>
+</select>
+</div>-->
+<div class="write_content">
 <form id="_messageForm" action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" method="post">{% csrf_token %}
 <table>
 {% block pm_write_recipient %}{% endblock %}
 {{ form.as_table }}
 </table>
-<a href="#" class="component_icon button icon_next" onclick="f=document.getElementById('_messageForm'); f.submit(); return false;">{% trans "Send" %}</a>
 </form>
+<a href="#" class="component_icon button icon_next" id="send_button">{% trans "Send" %}</a>
+</div>
 </div>
 <script type="text/javascript">document.getElementById("id_subject").focus();</script>
+<script type="text/javascript">
+function update_recipients() {
+$("#_professorSelect").click(function () {
+      var htmlStr = $(this).val();
+      $("#id_recipients").val(htmlStr);
+    });
+}
+
+$('#send_button').click(function() {
+  $('#_messageForm').submit();
+});
+
+</script>
 {% endblock %}
