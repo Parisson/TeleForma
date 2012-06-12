@@ -50,6 +50,15 @@ class Command(BaseCommand):
         email       = row[9].value
         username = slugify(first_name)[0] + '.' + slugify(last_name)
         username = username[:30]
+        users = User.objects.filter(username=username)
+        i = 1
+        while users:
+            username = slugify(first_name)[i] + '.' + slugify(last_name)
+            users = User.objects.filter(username=username)
+            if not users:
+                break
+            i += 1
+
         date = row[14].value
         date_joined = datetime.datetime(*xlrd.xldate_as_tuple(date, self.book.datemode))
 
