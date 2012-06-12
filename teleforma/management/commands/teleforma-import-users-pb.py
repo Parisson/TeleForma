@@ -48,17 +48,15 @@ class Command(BaseCommand):
         last_name   = row[0].value
         first_name  = row[1].value
         email       = row[9].value
-        #FIXME:
-        email       = self.admin_email
         username = slugify(first_name)[0] + '.' + slugify(last_name)
         username = username[:30]
         date = row[14].value
         date_joined = datetime.datetime(*xlrd.xldate_as_tuple(date, self.book.datemode))
 
         #FIXME: NOT for production
-        user = User.objects.filter(username=username)
-        if user:
-            user.delete()
+#        user = User.objects.filter(username=username)
+#        if user:
+#            user.delete()
 
         user, created = User.objects.get_or_create(username=username, first_name=first_name,
                                      last_name=last_name, email=email, date_joined = date_joined)
