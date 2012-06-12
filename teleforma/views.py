@@ -45,11 +45,11 @@ def format_courses(courses, course=None, queryset=None, types=None):
         for c in queryset:
             if c and c.code != 'X':
                 courses.append({'course': c, 'types': types.all(),
-                'date': c.date_modified})
+                'date': c.date_modified, 'number': c.number})
     elif course:
         if course.code != 'X':
             courses.append({'course': course, 'types': types.all(),
-            'date': course.date_modified})
+            'date': course.date_modified, 'number': course.number})
     return courses
 
 def get_courses(user):
@@ -157,7 +157,7 @@ class CourseView(DetailView):
             if c['course'] == course:
                 courses = format_courses(courses, course=course, types=c['types'])
         context['courses'] = courses
-        context['all_courses'] = all_courses
+        context['all_courses'] = sorted(all_courses, key=lambda k: k['number'])
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
@@ -183,6 +183,7 @@ class CoursesView(ListView):
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
+        context['all_courses'] = sorted(self.object_list, key=lambda k: k['number'])
         return context
 
     @method_decorator(login_required)
