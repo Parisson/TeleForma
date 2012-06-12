@@ -250,7 +250,7 @@ class LiveStream(Model):
     @property
     def mount_point(self):
         slug = '-'.join([self.conference.course.department.slug, self.conference.course.slug,
-                         self.conference.course_type.name])
+                         self.conference.course_type.name.lower()])
         if self.server.type == 'stream-m':
             return  'consume/' + slug
         else:
