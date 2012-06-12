@@ -45,14 +45,14 @@ def format_courses(courses, course=None, queryset=None, types=None):
         for c in queryset:
             if c and c.code != 'X':
                 courses.append({'course': c, 'types': types.all(),
-                'date': c.date_modified})
+                'date': c.date_modified, 'number': c.number})
     elif course:
         if course.code != 'X':
             courses.append({'course': course, 'types': types.all(),
-            'date': course.date_modified})
+            'date': course.date_modified, 'number': course.number})
     return courses
 
-def get_courses(user):
+def get_courses(user, date_order=False, num_order=False):
     professor = user.professor.all()
     student = user.student.all()
     courses = []
@@ -100,7 +100,11 @@ def get_courses(user):
     else:
         courses = None
 
-    courses = sorted(courses, key=lambda k: k['date'], reverse=True)
+    if date_order:
+        courses = sorted(courses, key=lambda k: k['date'], reverse=True)
+    if num_order:
+        courses = sorted(courses, key=lambda k: k['number'])
+
     return courses
 
 
@@ -151,7 +155,7 @@ class CourseView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         course = self.get_object()
-        all_courses = get_courses(self.request.user)
+        all_courses = get_courses(self.request.user, num_order=True)
         courses = []
         for c in all_courses:
             if c['course'] == course:
@@ -176,13 +180,14 @@ class CoursesView(ListView):
     template_name='teleforma/courses.html'
 
     def get_queryset(self):
-        return get_courses(self.request.user)
+        return get_courses(self.request.user, date_order=True)
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
+        context['all_courses'] = sorted(self.object_list, key=lambda k: k['number'])
         return context
 
     @method_decorator(login_required)

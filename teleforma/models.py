@@ -237,7 +237,8 @@ class LiveStream(Model):
     course          = ForeignKey('Course', related_name='livestream',
                                  verbose_name=_('course'))
     course_type     = ForeignKey('CourseType', related_name='livestream',
-                                 verbose_name=_('course type'))
+                                 verbose_name=_('course type'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     conference      = ForeignKey('Conference', related_name='livestream',
                                 verbose_name=_('conference'),
                                 blank=True, null=True, on_delete=models.SET_NULL)
@@ -248,7 +249,8 @@ class LiveStream(Model):
 
     @property
     def mount_point(self):
-        slug = self.conference.course.department.slug + '-' + self.conference.course.slug
+        slug = '-'.join([self.conference.course.department.slug, self.conference.course.slug,
+                         self.conference.course_type.name.lower()])
         if self.server.type == 'stream-m':
             return  'consume/' + slug
         else:
