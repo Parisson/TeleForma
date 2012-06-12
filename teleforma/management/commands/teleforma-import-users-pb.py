@@ -96,6 +96,3 @@ class Command(BaseCommand):
         for i in range(self.first_row, len(col)):
             self.import_user(sheet.row(i))
 
-
-
-

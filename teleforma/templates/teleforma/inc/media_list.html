@@ -9,7 +9,8 @@
     <table class="listing" width="100%">
     <thead>
         <tr>
-        <th class="highlight">{% trans "Session" %}</th>
+        <th class="highlight">{% trans "Title" %}</th>
+        <th>{% trans "Session" %}</th>
         <th>{% trans "Professor" %}</th>
         <th>{% trans "Begin date" %}</th>
         <th>{% trans "Duration" %}</th>
@@ -19,6 +20,7 @@
         {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
+            <td><a href="{% url teleforma-media-detail media.id %}">{{ media.title }}</a></td>
             <td><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.session }}</a></td>
             <td>{% if media.conference.professor.user %}<a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a>{% endif %}</td>
             <td>{% if media.conference.date_begin %}<a href="{% url teleforma-media-detail media.id %}">{{ media.conference.date_begin }}</a>{% endif %}</td>
