@@ -12,13 +12,13 @@
 {% block content %}
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
-<!--<div style="padding-top: 0.5em;">
+<div style="padding-top: 0.5em;">
 <select id="_professorSelect" name="professors" onchange="update_recipients();">
 <option>{% trans "Choose a professor" %}</option>
 <option value="admin">me</option>
 <option value="a.abou-el-haja">You</option>
 </select>
-</div>-->
+</div>
 <div class="write_content">
 <form id="_messageForm" action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" method="post">{% csrf_token %}
 <table>

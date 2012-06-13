@@ -457,11 +457,11 @@ class Student(Model):
     procedure       = ForeignKey('Course', related_name="procedure",
                                         verbose_name=_('procedure'),
                                         blank=True, null=True)
-    oral_speciality = ForeignKey('Course', related_name="oral_speciality",
-                                        verbose_name=_('oral speciality'),
-                                        blank=True, null=True)
     written_speciality = ForeignKey('Course', related_name="written_speciality",
                                         verbose_name=_('written speciality'),
+                                        blank=True, null=True)
+    oral_speciality = ForeignKey('Course', related_name="oral_speciality",
+                                        verbose_name=_('oral speciality'),
                                         blank=True, null=True)
     oral_1          = ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
                                         blank=True, null=True)

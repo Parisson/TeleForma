@@ -12,9 +12,11 @@ admin.site.unregister(User)
 class StudentProfileInline(admin.StackedInline):
     model = Student
     filter_horizontal = ['period']
+    exclude = ['options']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
+    exclude = ['options']
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
@@ -33,7 +35,8 @@ class UserProfileAdmin(UserAdmin):
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral']
+                         'written_speciality', 'oral_1', 'oral_2','magistral']
+    exclude = ['options']
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course
