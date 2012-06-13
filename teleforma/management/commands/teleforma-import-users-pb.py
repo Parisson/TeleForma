@@ -51,15 +51,11 @@ class Command(BaseCommand):
         username = slugify(first_name)[0] + '.' + slugify(last_name)
         username = username[:30]
 
-        #FIXME: NOT for production
         users = User.objects.filter(username=username)
-        if users:
-            for user in users:
-                user.delete()
-
         i = 1
         while users:
             username = slugify(first_name)[:i] + '.' + slugify(last_name)
+            username = username[:30]
             users = User.objects.filter(username=username)
             if not users:
                 break
