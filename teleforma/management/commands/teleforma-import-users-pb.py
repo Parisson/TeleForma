@@ -50,10 +50,16 @@ class Command(BaseCommand):
         email       = row[9].value
         username = slugify(first_name)[0] + '.' + slugify(last_name)
         username = username[:30]
+
+        #FIXME: NOT for production
+        user = User.objects.filter(username=username)
+        if user:
+            user.delete()
+
         users = User.objects.filter(username=username)
         i = 1
         while users:
-            username = slugify(first_name)[i] + '.' + slugify(last_name)
+            username = slugify(first_name)[:i] + '.' + slugify(last_name)
             users = User.objects.filter(username=username)
             if not users:
                 break
@@ -61,11 +67,6 @@ class Command(BaseCommand):
 
         date = row[14].value
         date_joined = datetime.datetime(*xlrd.xldate_as_tuple(date, self.book.datemode))
-
-        #FIXME: NOT for production
-#        user = User.objects.filter(username=username)
-#        if user:
-#            user.delete()
 
         user, created = User.objects.get_or_create(username=username, first_name=first_name,
                                      last_name=last_name, email=email, date_joined = date_joined)
