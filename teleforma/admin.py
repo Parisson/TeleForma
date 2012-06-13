@@ -4,10 +4,6 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
-admin.site.unregister(User)
-
-#class UserProfileInline(admin.StackedInline):
-#	model = UserProfile
 
 class StudentProfileInline(admin.StackedInline):
     model = Student
@@ -27,7 +23,7 @@ class ProfessorAdmin(admin.ModelAdmin):
     filter_horizontal = ['courses']
 
 class ProfileInline(admin.StackedInline):
-	model = Profile
+    model = Profile
 
 class UserProfileAdmin(UserAdmin):
     inlines = [StudentProfileInline, ProfessorProfileInline, ProfileInline]
@@ -52,6 +48,7 @@ class MediaAdmin(admin.ModelAdmin):
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
 
+admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
 admin.site.register(Period)
@@ -70,9 +67,3 @@ admin.site.register(LiveStream)
 admin.site.register(Payment)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Professor, ProfessorAdmin)
-
-
-
-
-
-
