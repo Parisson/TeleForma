@@ -59,7 +59,7 @@ PDFJS.getDocument('{% url teleforma-document-download document.id %}').then(func
 {% if document.title %}<h4>{{ document.title }}</h4>{% endif %}
 </div>
 
-{% if not access %}
+{% if access_error %}
   <p>{{ access_error }}</p>
   <p>{{ message }}</p>
 

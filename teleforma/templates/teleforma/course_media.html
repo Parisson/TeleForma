@@ -25,6 +25,11 @@ $(document).ready(function(){
 <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}{% if media.item %} - {{ media.item }}{% endif %}
 </div>
 
+{% if access_error %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+
+{% else %}
 <div class="media">
 
 {% if "video" in mime_type %}
@@ -42,6 +47,7 @@ $(document).ready(function(){
 {% endif %}
 
 </div>
+{% endif %}
 
 {% block general_info %}
 <div class="course_content" id="media_infos">
