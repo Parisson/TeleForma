@@ -118,23 +118,6 @@ def stream_from_file(__file):
             break
         yield __chunk
 
-def document_download(request, pk):
-    document = Document.objects.get(id=pk)
-    fsock = open(document.file.path, 'r')
-    mimetype = mimetypes.guess_type(document.file.path)[0]
-    extension = mimetypes.guess_extension(mimetype)
-    response = HttpResponse(fsock, mimetype=mimetype)
-    response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                     (document.title.encode('utf8'), extension)
-    return response
-
-def document_view(request, pk):
-    document = Document.objects.get(id=pk)
-    fsock = open(document.file.path, 'r')
-    mimetype = mimetypes.guess_type(document.file.path)[0]
-    extension = mimetypes.guess_extension(mimetype)
-    response = HttpResponse(fsock, mimetype=mimetype)
-    return response
 
 def get_room(content_type=None, id=None, name=None):
     rooms = jqchat.models.Room.objects.filter(content_type=content_type,
@@ -224,10 +207,21 @@ class DocumentView(DetailView):
 
     model = Document
     template_name='teleforma/course_document.html'
+    access_error = ugettext('Access not allowed')
+    message = ugettext('Please login or contact the website administator to get a private access.')
+
+
+    def get_access(self, obj, courses):
+        access = False
+        for course in courses:
+            if obj.course == course['course']:
+                access = True
+        return access
 
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
-        context['courses'] = get_courses(self.request.user)
+        all_courses = get_courses(self.request.user)
+        context['all_courses'] = all_courses
         document = self.get_object()
 #        context['mime_type'] = view.item_analyze(media.item)
         context['course'] = document.course
@@ -235,11 +229,41 @@ class DocumentView(DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="document")
         context['room'] = get_room(name=document.title, content_type=content_type,
                                    id=document.id)
+        access = self.get_access(document, all_courses)
+        if not access:
+            context['access_error'] = self.access_error
+            context['message'] = self.message
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(DocumentView, self).dispatch(*args, **kwargs)
+
+    def download(self, request, pk):
+        courses = get_courses(request.user)
+        document = Document.objects.get(id=pk)
+        if self.get_access(document, courses):
+            fsock = open(document.file.path, 'r')
+            mimetype = mimetypes.guess_type(document.file.path)[0]
+            extension = mimetypes.guess_extension(mimetype)
+            response = HttpResponse(fsock, mimetype=mimetype)
+            response['Content-Disposition'] = "attachment; filename=%s%s" % \
+                                             (document.title.encode('utf8'), extension)
+            return response
+        else:
+            return redirect('teleforma-document-detail', document.id)
+
+    def view(self, request, pk):
+        courses = get_courses(request.user)
+        document = Document.objects.get(id=pk)
+        if self.get_access(document, courses):
+            fsock = open(document.file.path, 'r')
+            mimetype = mimetypes.guess_type(document.file.path)[0]
+            extension = mimetypes.guess_extension(mimetype)
+            response = HttpResponse(fsock, mimetype=mimetype)
+            return response
+        else:
+            return redirect('teleforma-document-detail', document.id)
 
 class ConferenceView(DetailView):
 

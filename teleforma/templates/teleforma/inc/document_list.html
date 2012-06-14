@@ -22,7 +22,7 @@
     <tbody>
         {% for document in course.document.all|from_course_type:type|from_doc_type:doc_type %}
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-        <td>{% if document.file %}<a href="{% url teleforma-document-detail document.id %}" target="_blank">{% endif %}{{ document.title }}{% if document.file %}</a>{% endif %}</td>
+        <td>{% if document.file %}<a href="{% url teleforma-document-view document.id %}" target="_blank">{% endif %}{{ document.title }}{% if document.file %}</a>{% endif %}</td>
         <td align="center">
         {% if document.is_annal %}
           <img src="images/ok.png" alt="yes" style="vertical-align:middle" />&nbsp;

@@ -44,6 +44,7 @@ from jsonrpc import jsonrpc_site
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
 profile_view = ProfileView()
+document = DocumentView()
 
 urlpatterns = patterns('',
 #    url(r'^$', HomeView.as_view(), name='teleforma-home'),
@@ -53,13 +54,19 @@ urlpatterns = patterns('',
     # Telemeta
     url(r'^', include('telemeta.urls')),
 
+    # Desk
     url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
     url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
     url(r'^desk/medias/(?P<pk>.*)/$', MediaView.as_view(), name="teleforma-media-detail"),
-    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-detail"),
-    url(r'^desk/documents/(?P<pk>.*)/download/$', document_download, name="teleforma-document-download"),
+    url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
+        name="teleforma-document-detail"),
+    url(r'^desk/documents/(?P<pk>.*)/download/$', document.download,
+        name="teleforma-document-download"),
+    url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
+        name="teleforma-document-view"),
 #    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-view"),
-    url(r'^desk/conferences/(?P<pk>.*)/$', ConferenceView.as_view(), name="teleforma-conference-detail"),
+    url(r'^desk/conferences/(?P<pk>.*)/$', ConferenceView.as_view(),
+        name="teleforma-conference-detail"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),
@@ -72,13 +79,15 @@ urlpatterns = patterns('',
     url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
 
     url(r'^users/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
-    url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training, name="teleforma-training-users-export"),
+    url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training,
+        name="teleforma-training-users-export"),
 
     url(r'^users/by_iej/(\w+)/$', UsersIejView.as_view(), name="teleforma-iej-users"),
     url(r'^users/by_iej/(?P<id>.*)/export/$', user_export.by_iej, name="teleforma-iej-users-export"),
 
     url(r'^users/by_course/(\w+)/$', UsersCourseView.as_view(), name="teleforma-course-users"),
-    url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course, name="teleforma-course-users-export"),
+    url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course,
+        name="teleforma-course-users-export"),
 
 
 # CSS+Images (FIXME: for developement only)

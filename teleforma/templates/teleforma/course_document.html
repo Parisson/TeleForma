@@ -55,12 +55,19 @@ PDFJS.getDocument('{% url teleforma-document-download document.id %}').then(func
 {% block course %}
 <div class="course_media">
 
-<div class="course_title">{{ document.title }}{% if document.description %} - {{ document.description }}{% endif %}
+<div class="course_title">{{ document.course.title }}{% for type in document.course_type.all%} - {{ type }}{% endfor %}{% if document.type %} - {{ document.type }}{% endif %}<br />
+{% if document.title %}<h4>{{ document.title }}</h4>{% endif %}
 </div>
 
+{% if not access %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+
+{% else %}
 <div class="media">
 <canvas id="the-canvas" style="border:1px solid black;"/>
 </div>
+{% endif %}
 
 {% block general_info %}
 <div class="course_content" id="media_infos">
