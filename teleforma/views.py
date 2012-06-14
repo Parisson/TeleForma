@@ -138,8 +138,8 @@ def get_access(obj, courses):
             access = True
     return access
 
-access_error = ugettext('Access not allowed')
-contact_message = ugettext('Please login or contact the website administator to get a private access.')
+access_error = _('Access not allowed.')
+contact_message = _('Please login or contact the website administator to get a private access.')
 
 
 class CourseView(DetailView):
