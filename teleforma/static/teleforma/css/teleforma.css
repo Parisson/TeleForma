@@ -1329,6 +1329,7 @@ input,textarea{
 #module-set {
     float: right;
     clear: right;
+    padding-right: 1em;
 }
 
 #module-set .module {
@@ -1400,7 +1401,7 @@ input,textarea{
 
 .desk_center {
     float: left;
-    width:52%;
+    width:50%;
     padding: 0em 2em 0em 2em;
     max-height: 550px;
     overflow-y: auto;
