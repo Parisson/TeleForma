@@ -9,12 +9,11 @@
     <table class="listing" width="100%">
     <tbody>
         {% for stream in course.livestream.all|from_course_type:type %}
-            <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}><a href="{% url teleforma-conference-detail conference.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/network-wireless.png" style="vertical-align:middle" alt="" /> {{ stream.slug }}</a></td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}>{% if conference.professor.user %}<a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a>{% endif %}</td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.date_begin }}</a></td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} align="center">
-                {% if conference.streaming %}
+            <tr>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="60%"><a href="{% url teleforma-conference-detail conference.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/network-wireless.png" style="vertical-align:middle" alt="" /> {{ stream.slug }}</a></td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="35%">{{ stream.conference.date_begin }}</td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="5%" align="center">
+                {% if stream.streaming %}
                 <img src="images/media-record.png" alt="yes" style="vertical-align:middle" />
                 {% endif %}
             </td>
