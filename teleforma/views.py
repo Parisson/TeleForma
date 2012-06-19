@@ -52,10 +52,15 @@ def format_courses(courses, course=None, queryset=None, types=None):
             'date': course.date_modified, 'number': course.number})
     return courses
 
+
 def get_courses(user, date_order=False, num_order=False):
+    courses = []
+
+    if not user.is_authenticated():
+        return courses
+
     professor = user.professor.all()
     student = user.student.all()
-    courses = []
 
     if professor:
         professor = user.professor.get()
@@ -131,6 +136,17 @@ def get_room(content_type=None, id=None, name=None):
     return room
 
 
+def get_access(obj, courses):
+    access = False
+    for course in courses:
+        if obj.course == course['course']:
+            access = True
+    return access
+
+access_error = _('Access not allowed.')
+contact_message = _('Please login or contact the website administator to get a private access.')
+
+
 class CourseView(DetailView):
 
     model = Course
@@ -185,7 +201,8 @@ class MediaView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
-        context['all_courses'] = get_courses(self.request.user)
+        all_courses = get_courses(self.request.user)
+        context['all_courses'] = all_courses
         media = self.get_object()
         view = ItemView()
         context['mime_type'] = view.item_analyze(media.item)
@@ -196,6 +213,10 @@ class MediaView(DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="media")
         context['room'] = get_room(name=media.item.title, content_type=content_type,
                                    id=media.id)
+        access = get_access(media, all_courses)
+        if not access:
+            context['access_error'] = access_error
+            context['message'] = contact_message
         return context
 
     @method_decorator(login_required)
@@ -207,16 +228,7 @@ class DocumentView(DetailView):
 
     model = Document
     template_name='teleforma/course_document.html'
-    access_error = ugettext('Access not allowed')
-    message = ugettext('Please login or contact the website administator to get a private access.')
 
-
-    def get_access(self, obj, courses):
-        access = False
-        for course in courses:
-            if obj.course == course['course']:
-                access = True
-        return access
 
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
@@ -229,10 +241,10 @@ class DocumentView(DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="document")
         context['room'] = get_room(name=document.title, content_type=content_type,
                                    id=document.id)
-        access = self.get_access(document, all_courses)
+        access = get_access(document, all_courses)
         if not access:
-            context['access_error'] = self.access_error
-            context['message'] = self.message
+            context['access_error'] = access_error
+            context['message'] = contact_message
         return context
 
     @method_decorator(login_required)
@@ -242,7 +254,7 @@ class DocumentView(DetailView):
     def download(self, request, pk):
         courses = get_courses(request.user)
         document = Document.objects.get(id=pk)
-        if self.get_access(document, courses):
+        if get_access(document, courses):
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)
@@ -256,7 +268,7 @@ class DocumentView(DetailView):
     def view(self, request, pk):
         courses = get_courses(request.user)
         document = Document.objects.get(id=pk)
-        if self.get_access(document, courses):
+        if get_access(document, courses):
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)

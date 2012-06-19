@@ -1,27 +1,19 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-{% if course.conference.all|from_course_type:type %}
+{% if course.livestream.all|from_course_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
-    <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Live conference"%}</h3>
+    <h3><img src="{% url telemeta-images "item_title.png" %}" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
-    <thead>
-        <tr>
-        <th class="highlight">{% trans "Session" %}</th>
-        <th>{% trans "Professor" %}</th>
-        <th>{% trans "Begin date" %}</th>
-        <th>{% trans "Streaming" %}</th>
-        </tr>
-    </thead>
     <tbody>
-        {% for conference in course.conference.all|from_course_type:type %}
+        {% for stream in course.livestream.all|from_course_type:type %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.session }}</a></td>
-            <td>{% if conference.professor.user %}<a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a>{% endif %}</td>
-            <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.date_begin }}</a></td>
-             <td align="center">
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}><a href="{% url teleforma-conference-detail conference.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/network-wireless.png" style="vertical-align:middle" alt="" /> {{ stream.slug }}</a></td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}>{% if conference.professor.user %}<a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a>{% endif %}</td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.date_begin }}</a></td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} align="center">
                 {% if conference.streaming %}
                 <img src="images/media-record.png" alt="yes" style="vertical-align:middle" />
                 {% endif %}

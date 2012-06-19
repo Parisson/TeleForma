@@ -248,20 +248,27 @@ class LiveStream(Model):
                             choices=streaming_choices, max_length=32)
 
     @property
+    def slug(self):
+        slug = '-'.join([self.course.department.slug, self.course.slug,
+                         self.course_type.name.lower()])
+        return slug
+
+    @property
     def mount_point(self):
-        slug = '-'.join([self.conference.course.department.slug, self.conference.course.slug,
-                         self.conference.course_type.name.lower()])
         if self.server.type == 'stream-m':
-            return  'consume/' + slug
+            return  'consume/' + self.slug
         else:
-            return slug + '.' + self.stream_type
+            return self.slug + '.' + self.stream_type
 
     @property
     def url(self):
         return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
 
     def __unicode__(self):
-        return self.conference.description
+        if self.conference:
+            return self.conference.description
+        else:
+            return self.slug
 
     class Meta:
         db_table = app_label + '_' + 'live_stream'

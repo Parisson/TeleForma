@@ -4,27 +4,18 @@
 {% if course.media.all|from_course_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
-    <h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Passed conferences"%}</h3>
+    <h3><img src="{% url telemeta-images "item_title.png" %}" width="10px" alt="" /> {% trans "Passed conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
-    <thead>
-        <tr>
-        <th class="highlight">{% trans "Title" %}</th>
-        <th>{% trans "Session" %}</th>
-        <th>{% trans "Professor" %}</th>
-        <th>{% trans "Begin date" %}</th>
-        <th>{% trans "Duration" %}</th>
-        </tr>
-    </thead>
     <tbody>
         {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
-            <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td><a href="{% url teleforma-media-detail media.id %}">{{ media.title }}</a></td>
-            <td><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.session }}</a></td>
-            <td>{% if media.conference.professor.user %}<a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a>{% endif %}</td>
-            <td>{% if media.conference.date_begin %}<a href="{% url teleforma-media-detail media.id %}">{{ media.conference.date_begin }}</a>{% endif %}</td>
-            <td>{{ media.item.approx_duration }}</td>
+            <tr>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}><a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/tool-animator.png" style="vertical-align:middle" alt="" /> {{ media.title }}</a></td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.session }}</a></td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}>{% if media.conference.professor.user %}<a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a>{% endif %}</td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}>{% if media.conference.date_begin %}<a href="{% url teleforma-media-detail media.id %}">{{ media.conference.date_begin }}</a>{% endif %}</td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %}>{{ media.item.approx_duration }}</td>
             </tr>
          {% endif %}
         {% endfor %}
