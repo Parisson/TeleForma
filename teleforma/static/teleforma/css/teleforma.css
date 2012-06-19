@@ -1466,6 +1466,7 @@ input,textarea{
     border-radius: 8px 0px 8px 8px;
     padding: 0em 0em 0em 0em;
     margin-top: 0.8em;
+    border: 1px solid #dfdfdf;
 }
 
 .course_subtitle {
