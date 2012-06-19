@@ -4,13 +4,13 @@
 {% if course.livestream.all|from_course_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
-    <h3><img src="{% url telemeta-images "item_title.png" %}" width="10px" alt="" /> {% trans "Live conference"%}</h3>
+    <h3><img src="{% url telemeta-images "item_title.png" %}" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
         {% for stream in course.livestream.all|from_course_type:type %}
             <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-            <td><a href="{% url teleforma-conference-detail conference.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/network-wireless_r.png" style="vertical-align:middle" alt="" /> {{ stream.slug }}</a></td>
+            <td><a href="{% url teleforma-conference-detail conference.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/network-wireless.png" style="vertical-align:middle" alt="" /> {{ stream.slug }}</a></td>
             <td>{% if conference.professor.user %}<a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a>{% endif %}</td>
             <td><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.date_begin }}</a></td>
              <td align="center">

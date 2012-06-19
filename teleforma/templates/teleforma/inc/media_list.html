@@ -11,7 +11,7 @@
         {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
             <tr>
-            <td><a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/tool-animator_r.png" style="vertical-align:middle" alt="" /> {{ media.title }}</a></td>
+            <td><a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/tool-animator.png" style="vertical-align:middle" alt="" /> {{ media.title }}</a></td>
             <td><a href="{% url teleforma-media-detail media.id %}">{{ media.conference.session }}</a></td>
             <td>{% if media.conference.professor.user %}<a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a>{% endif %}</td>
             <td>{% if media.conference.date_begin %}<a href="{% url teleforma-media-detail media.id %}">{{ media.conference.date_begin }}</a>{% endif %}</td>
