@@ -106,3 +106,25 @@ def from_course_type(docs, type):
 @register.filter
 def from_doc_type(docs, type):
     return docs.filter(type=type)
+
+@register.assignment_tag
+def get_professors():
+    return Professor.objects.all()
+
+@register.assignment_tag
+def get_admins():
+    return User.objects.filter(is_staff=True)
+
+@register.assignment_tag
+def get_trainings():
+    return Training.objects.all()
+
+@register.assignment_tag
+def get_eijs():
+    return IEJ.objects.all()
+
+@register.assignment_tag
+def get_courses():
+    return Course.objects.all()
+
+

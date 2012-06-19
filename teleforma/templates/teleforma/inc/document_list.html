@@ -4,32 +4,24 @@
 {% if course.document.all|from_course_type:type %}
 <div class="course_content">
 <div class="course_subtitle">
-<h3><img src="{% url telemeta-images "item_title.png" %}" style="vertical-align:middle" /> {% trans "Documents"%}</h3>
+<h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Documents"%}</h3>
 </div>
 
 {% for doc_type in doc_types %}
 {% if course.document.all|from_course_type:type|from_doc_type:doc_type %}
 <span class="doc_type_title">{{ doc_type }}</span>
 <table class="listing" width="100%">
-    <thead>
-        <tr>
-        <th class="highlight">{% trans "Title" %}</th>
-        <th>{% trans "Annal" %}</th>
-        <th>{% trans "Date modified" %}</th>
-        <th>{% trans "Download" %}</th>
-        </tr>
-    </thead>
     <tbody>
         {% for document in course.document.all|from_course_type:type|from_doc_type:doc_type %}
-        <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-        <td>{% if document.file %}<a href="{% url teleforma-document-view document.id %}" target="_blank">{% endif %}{{ document.title }}{% if document.file %}</a>{% endif %}</td>
-        <td align="center">
+        <tr>
+        <td>{% if document.file %}<a href="{% url teleforma-document-view document.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/icon_doc_16.png" style="vertical-align:middle" alt="" />{% endif %} {{ document.title }}{% if document.file %}</a>{% endif %}</td>
+        <!--<td align="center">
         {% if document.is_annal %}
           <img src="images/ok.png" alt="yes" style="vertical-align:middle" />&nbsp;
         {% endif %}
-        </td>
+        </td>-->
         <td>{{ document.date_added }}</td>
-        <td align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" /></a>{% endif %}</td>
+        <td align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{% url telemeta-images "download.png" %}" width="16px"  style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
         </tr>
     {% endfor %}
     </tbody>

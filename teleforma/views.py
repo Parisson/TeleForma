@@ -52,13 +52,15 @@ def format_courses(courses, course=None, queryset=None, types=None):
             'date': course.date_modified, 'number': course.number})
     return courses
 
+
 def get_courses(user, date_order=False, num_order=False):
+    courses = []
+
     if not user.is_authenticated():
-        return []
+        return courses
 
     professor = user.professor.all()
     student = user.student.all()
-    courses = []
 
     if professor:
         professor = user.professor.get()

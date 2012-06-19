@@ -885,9 +885,9 @@ table.listing tbody td a:hover, table.listing tbody th a:hover {
     background-color: transparent;
 }
 table.listing tbody tr { border-top: 1px solid #ddd }
-table.listing tbody tr.even { background-color: #fcfcfc }
-table.listing tbody tr.odd { background-color: #f7f7f7 }
-table.listing tbody tr:hover { background: #f7f8fa !important }
+table.listing tbody tr.even { background-color: transparent }
+table.listing tbody tr.odd { background-color: transparent }
+table.listing tbody tr:hover { background: transparent !important }
 
 table td.error {
     color: red;
@@ -1464,7 +1464,6 @@ input,textarea{
 
 .course_subtitle {
     padding: 0.3em;
-
 }
 
 .course_content p {
