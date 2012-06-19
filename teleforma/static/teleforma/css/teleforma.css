@@ -59,7 +59,7 @@ a img { border: none; }
 #content {
     /*margin-top: 1em;*/
     position: relative;
-    margin-left: 5%;
+    margin-left: 3%;
     margin-right: 2em;
     margin-bottom: 0em;
 }
@@ -846,6 +846,12 @@ table.listing th, table.listing thead, table.listing td {
     border-bottom: 1px solid #dfdfdf;
     font-weight: normal;
 }
+
+table.listing td.border-top {
+    border-top: 1px solid #dfdfdf;
+}
+
+
 table.listing thead { background: #fafafa; /*background: #e8eaf0*/ }
 table.listing thead th {
     font-size: 0.9em;
@@ -874,7 +880,7 @@ table.listing tbody td, table.listing tbody th {
     font-weight: normal;
 }
 table.listing tbody td {
-    padding: 0.5em 0em 0.5em 0.8em;
+    padding: 0.5em 0em 0.5em 0em;
     font-weight: normal;
     font-size: 0.9em;
 }
@@ -884,7 +890,7 @@ table.listing tbody td.tmp {
 table.listing tbody td a:hover, table.listing tbody th a:hover {
     background-color: transparent;
 }
-table.listing tbody tr { border-top: 1px solid #ddd }
+table.listing tbody tr { border-top: 1px solid #dfdfdf; }
 table.listing tbody tr.even { background-color: transparent }
 table.listing tbody tr.odd { background-color: transparent }
 table.listing tbody tr:hover { background: transparent !important }
@@ -1395,7 +1401,7 @@ input,textarea{
 .desk_center {
     float: left;
     width:52%;
-    padding: 0em 2em 0em 1em;
+    padding: 0em 2em 0em 2em;
     max-height: 550px;
     overflow-y: auto;
     }
@@ -1586,4 +1592,3 @@ input,textarea{
     font-size: 0.8125em;
     text-align: center;
     }
-
