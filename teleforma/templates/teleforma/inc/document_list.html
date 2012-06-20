@@ -21,7 +21,7 @@
         {% endif %}
         </td>-->
         <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="35%">{{ document.date_added }}</td>
-        <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="5%" align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %} class="component_icon button icon_download""><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+        <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="5%" align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
         </tr>
     {% endfor %}
     </tbody>
