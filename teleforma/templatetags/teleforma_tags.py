@@ -141,11 +141,11 @@ def from_doc_type(docs, type):
     return docs.filter(type=type)
 
 @register.assignment_tag
-def get_professors():
+def get_all_professors():
     return Professor.objects.all()
 
 @register.assignment_tag
-def get_admins():
+def get_all_admins():
     return User.objects.filter(is_staff=True)
 
 @register.assignment_tag
