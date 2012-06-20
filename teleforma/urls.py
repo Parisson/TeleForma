@@ -45,6 +45,7 @@ htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
 profile_view = ProfileView()
 document = DocumentView()
+media = MediaView()
 
 urlpatterns = patterns('',
 #    url(r'^$', HomeView.as_view(), name='teleforma-home'),
@@ -57,7 +58,10 @@ urlpatterns = patterns('',
     # Desk
     url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
     url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
-    url(r'^desk/medias/(?P<pk>.*)/$', MediaView.as_view(), name="teleforma-media-detail"),
+
+    url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),
     url(r'^desk/documents/(?P<pk>.*)/download/$', document.download,
@@ -65,6 +69,7 @@ urlpatterns = patterns('',
     url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
         name="teleforma-document-view"),
 #    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-view"),
+
     url(r'^desk/conferences/(?P<pk>.*)/$', ConferenceView.as_view(),
         name="teleforma-conference-detail"),
 

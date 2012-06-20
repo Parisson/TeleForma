@@ -223,6 +223,26 @@ class MediaView(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(MediaView, self).dispatch(*args, **kwargs)
 
+    def download(self, request, pk):
+        courses = get_courses(request.user)
+        media = Media.objects.get(id=pk)
+        if get_access(media, courses):
+            path = media.item.file.path
+            filename, ext = os.path.splitext(path)
+            filename = filename.split(os.sep)[-1]
+            fsock = open(media.item.file.path, 'r')
+            view = ItemView()
+            mimetype = view.item_analyze(media.item)
+            extension = mimetypes.guess_extension(mimetype)
+            if not extension:
+                extension = ext
+            response = HttpResponse(fsock, mimetype=mimetype)
+
+            response['Content-Disposition'] = "attachment; filename=%s%s" % \
+                                             (filename.encode('utf8'), extension)
+            return response
+        else:
+            return redirect('teleforma-media-detail', media.id)
 
 class DocumentView(DetailView):
 
@@ -235,7 +255,6 @@ class DocumentView(DetailView):
         all_courses = get_courses(self.request.user)
         context['all_courses'] = all_courses
         document = self.get_object()
-#        context['mime_type'] = view.item_analyze(media.item)
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="document")
