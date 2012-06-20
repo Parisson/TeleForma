@@ -186,7 +186,6 @@ class Conference(Model):
     comment         = CharField(_('comment'), max_length=255, blank=True)
     date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
-    streaming       = BooleanField(_('is live'))
     readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
 
@@ -246,6 +245,7 @@ class LiveStream(Model):
                                 verbose_name=_('streaming server'))
     stream_type = CharField(_('Streaming type'),
                             choices=streaming_choices, max_length=32)
+    streaming       = BooleanField(_('streaming'))
 
     @property
     def slug(self):

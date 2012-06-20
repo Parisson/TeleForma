@@ -38,15 +38,18 @@
  <tbody>{% for message in pm_messages %}
   <tr>
    <td><input type="checkbox" {% if by_conversation and message.thread_id %}name="tpks" value="{{ message.thread_id }}"{% else %}name="pks" value="{{ message.pk }}"{% endif %} /></td>
-   {% block pm_sender_cell %}   <td>{% if message.is_new %}<strong>{% endif %}{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}{% if message.is_new %}</strong>{% endif %}</td>{% endblock %}
-{% block pm_recipient_cell %}   <td>{{ message.obfuscated_recipient|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</td>{% endblock %}
+
+   {% block pm_sender_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}">{% if message.is_new %}<strong>{% endif %}{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}{% if message.is_new %}</strong>{% endif %}</a></td>{% endblock %}
+
+   {% block pm_recipient_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}">{{ message.obfuscated_recipient|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</a></td>{% endblock %}
+
    <td>{% if message.is_new %}<strong>{% endif %}{% if message.is_replied %}<em>{% endif %}
-{% block pm_subject %}
+   {% block pm_subject %}
     <a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}">
     {% include "postman/inc_subject_ex.html" %}
-    </a>
-{% endblock %}
+    </a>{% endblock %}
    {% if message.is_replied %}</em>{% endif %}{% if message.is_new %}</strong>{% endif %}</td>
+
    <td>{{ message.sent_at|compact_date:_("g:i A,M j,n/j/y") }}</td>
   </tr>{% endfor %}
  </tbody>

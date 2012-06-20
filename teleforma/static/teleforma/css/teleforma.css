@@ -1160,7 +1160,7 @@ a.image-link {
 
 #action_red {
 /*     background-color:  #bb1020; */
-    background-color: #d34836;
+    background-color: #bb0000;
     color: #FFF;
     padding:0.8em 0.8em 0.8em 0.8em;
     }
@@ -1482,7 +1482,7 @@ input,textarea{
 .course_media {
     float: left;
     background-color: transparent;
-    margin: 0em 0em 2em 1em;
+    margin: 0em 0em 2em 2em;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1515,6 +1515,7 @@ input,textarea{
 
 .pm_body {
     padding: 0em 0em 0em 0em;
+    border: 1px solid #dfdfdf;
     }
 
 .pm_message {
@@ -1524,6 +1525,7 @@ input,textarea{
     border-radius: 8px 0px 8px 8px;
     padding: 0.5em 0.8em 0.8em 0.8em;
     margin: 0em 0em 1em 0em;
+    border: 1px solid #dfdfdf;
     }
 
 #pm_messages {
@@ -1536,6 +1538,7 @@ input,textarea{
     padding: 0.8em 0.8em 0.8em 1em;
     width: 100%;
     margin-top : 1em;
+    border: 1px solid #dfdfdf;
     }
 
 #pm_messages td {
@@ -1575,6 +1578,7 @@ input,textarea{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
+    border: 1px solid #dfdfdf;
     }
 
 #spacing td {
