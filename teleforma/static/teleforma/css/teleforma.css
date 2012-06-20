@@ -1515,7 +1515,6 @@ input,textarea{
 
 .pm_body {
     padding: 0em 0em 0em 0em;
-    border: 1px solid #dfdfdf;
     }
 
 .pm_message {
@@ -1545,6 +1544,10 @@ input,textarea{
     font-weight: normal;
     font-size: 1em;
 
+    }
+
+#id_body {
+    font-size: 1.1em;
     }
 
 .pm_buttons {

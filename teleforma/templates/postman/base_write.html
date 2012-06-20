@@ -16,24 +16,33 @@
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
 
-{% if user.student.all %}
+{% if user.student.all or user.is_staff %}
 <div style="padding-top: 0.5em;">
 
+<select id="_adminSelect" name="admins" onchange="update_recipients();">
+<option>{% trans "to an administrator" %}</option>
+{% get_all_admins as admins %}
+{% for a in admins %}
+<option value="{{ a.username }}">{{a.first_name}} {{a.last_name}}</option>
+{% endfor %}
+</select>
+
 <select id="_professorSelect" name="professors" onchange="update_recipients();">
-<option>{% trans "Choose a professor" %}</option>
-{% get_professors as professors %}
+<option>{% trans "to a professor" %}</option>
+{% get_all_professors as professors %}
 {% for p in professors %}
 <option value="{{ p.user.username }}">{{p.user.first_name}} {{p.user.last_name}}</option>
 {% endfor %}
 </select>
 
-<select id="_adminSelect" name="admins" onchange="update_recipients();">
-<option>{% trans "Choose an administrator" %}</option>
-{% get_admins as admins %}
-{% for a in admins %}
-<option value="{{ a.username }}">{{a.first_name}} {{a.last_name}}</option>
+<select id="_iejSelect" name="iejs" onchange="update_recipients();">
+<option>{% trans "to an IEJ" %}</option>
+{% get_all_iejs as iejs %}
+{% for i in iejs %}
+<option value="{{ i.name }}">{{i.name}}</option>
 {% endfor %}
 </select>
+
 
 </div>
 {% endif %}
@@ -59,9 +68,12 @@ $("#_adminSelect").click(function () {
       var htmlStr = $(this).val();
       $("#id_recipients").val(htmlStr);
     });
+$("#_iejSelect").click(function () {
+      var htmlStr = $(this).val();
+      $("#id_recipients").val(htmlStr);
+    });
 
 }
-
 
 $('#send_button').click(function() {
   $('#_messageForm').submit();
