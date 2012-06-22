@@ -180,4 +180,4 @@ DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 
 POSTMAN_AUTO_MODERATE_AS=True
 
-FILE_PROTECTION_METHOD = 'xsendfile'
+#FILE_PROTECTION_METHOD = 'xsendfile'
