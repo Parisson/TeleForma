@@ -33,20 +33,20 @@
                 {% if stream.streaming %}
                 <img src="{{ STATIC_URL }}teleforma/images/network-wireless.png" style="vertical-align:middle" title="streaming" />
                 <img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" title="recording" />
-                {% endif %}
+                <script type="text/javascript">
+                    function update_snapshots_callback_{{ stream.course.code }}() {
+                        var d = 1000;
+                        var refresh = function(){
+                        $("#snapshot-{{ stream.course.code }}").attr("src","{{ stream.snapshot_url }}");
+                        };
+                        setInterval(refresh,d);
+                    };
+                    update_snapshots_callback_{{ stream.course.code }}();
+                    </script>
+              {% endif %}
             </td>
             </tr>
-         <script type="text/javascript">
-            function update_snapshots_callback_{{ stream.course.code }}() {
-                var d = 1;
-                var refresh = function(){
-                $("#snapshot-{{ stream.course.code }}").attr("src","{{ stream.snapshot_url }}");
-                };
-            refresh();
-            setInterval(refresh,d);
-            };
-            update_snapshots_callback_{{ stream.course.code }}();
-            </script>
+
         {% endfor %}
     </tbody>
     </table>
