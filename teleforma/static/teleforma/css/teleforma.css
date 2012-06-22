@@ -641,7 +641,7 @@ dl dt {
 }
 
 dl.listing dt {
-    width: 18em;
+    width: 30%;
     background-color: #f9f9f9;
     border: .1em solid #eee;
     border-right: .3em solid #ddd;
@@ -649,6 +649,7 @@ dl.listing dt {
     margin-right: .8em;
     color: #444;
 }
+
 dl.listing dt.group {
     float: none;
     margin-top: .9em;
@@ -658,7 +659,7 @@ dl.listing dt.group {
     width: 18.2em;
 }
 dl.listing dd {
-    margin-left: 19.4em;
+    margin-left: 30%;
     font-weight: bold;
 }
 

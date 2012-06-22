@@ -261,6 +261,14 @@ class LiveStream(Model):
             return self.slug + '.' + self.stream_type
 
     @property
+    def snapshot_url(self):
+        url = ''
+        if self.server.type == 'stream-m':
+            url = 'http://' + self.server.host + ':' + self.server.port + \
+                    '/snapshot/' + self.slug
+        return url
+
+    @property
     def url(self):
         return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
 
