@@ -10,14 +10,11 @@
     <tbody>
         {% for stream in course.livestream.all|from_course_type:type %}
             <tr>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="30%">
-             {% if stream.streaming %}
+            {% if stream.streaming %}
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="230px">
                <a href="{% url teleforma-conference-detail stream.conference.id %}" title="{% trans "View" %}">
-               <img id="snapshot-{{ stream.course.code }}" src="{{ stream.snapshot_url }}" width="100%" alt="snapshot" />
+               <img id="snapshot-{{ stream.course.code }}-{{ stream.course_type }}" src="{{ stream.snapshot_url }}" width="100%" alt="snapshot" />
                </a>
-             {% else %}
-               {% trans "The conference is not started yet. Please wait..." %}
-             {% endif %}
             </td>
             <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
@@ -34,17 +31,22 @@
                 <img src="{{ STATIC_URL }}teleforma/images/network-wireless.png" style="vertical-align:middle" title="streaming" />
                 <img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" title="recording" />
                 <script type="text/javascript">
-                    function update_snapshots_callback_{{ stream.course.code }}() {
-                        var d = 1000;
+                    function update_snapshots_callback_{{ stream.course.code }}_{{ stream.course_type }}() {
+                        var d = 3000;
                         var refresh = function(){
-                        $("#snapshot-{{ stream.course.code }}").attr("src","{{ stream.snapshot_url }}");
+                        $("#snapshot-{{ stream.course.code }}-{{ stream.course_type }}").attr("src","{{ stream.snapshot_url }}");
                         };
                         setInterval(refresh,d);
                     };
-                    update_snapshots_callback_{{ stream.course.code }}();
+                    update_snapshots_callback_{{ stream.course.code }}_{{ stream.course_type }}();
                     </script>
               {% endif %}
             </td>
+            {% else %}
+            <div style="padding-left: 1em;">
+               {% trans "The conference is not started yet. Please wait..." %}
+            </div>
+             {% endif %}
             </tr>
 
         {% endfor %}
