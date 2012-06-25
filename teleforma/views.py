@@ -319,6 +319,31 @@ class ConferenceView(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
+
+class ConferenceNewView(DetailView):
+
+    model = Conference
+    template_name='teleforma/course_conference.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConferenceNewView, self).get_context_data(**kwargs)
+        context['all_courses'] = get_courses(self.request.user)
+        conference = Conference()
+        context['mime_type'] = 'video/webm'
+        context['course'] = conference.course
+        context['type'] = conference.course_type
+        context['notes'] = conference.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="conference")
+        context['room'] = get_room(name=conference.course.title, content_type=content_type,
+                                   id=conference.id)
+        context['livestream'] = conference.livestream.get().url
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ConferenceView, self).dispatch(*args, **kwargs)
+
+
 class UsersView(ListView):
 
     model = User

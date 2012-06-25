@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     'timezones',
     'jqchat',
 #    'follow',
+     'telecaster',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -181,3 +182,5 @@ DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 POSTMAN_AUTO_MODERATE_AS=True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
+
+TELECASTER_CONF = '/etc/telecaster/telecaster.xml'

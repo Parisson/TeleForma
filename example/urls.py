@@ -20,6 +20,7 @@ urlpatterns = patterns('',
 
     # TeleForma
     (r'^', include('teleforma.urls')),
+    (r'^telecaster/', include('telecaster.urls')),
 
     # Languages
     (r'^i18n/', include('django.conf.urls.i18n')),
