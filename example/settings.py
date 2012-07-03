@@ -11,7 +11,8 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Guillaume Pellerin', 'yomguy@parisson.com'),
+    ('Guillaume Pellerin', 'webmaster@parisson.com'),
+    ('Lists', 'lists@parisson.com'),
 )
 
 MANAGERS = ADMINS
@@ -155,7 +156,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
 )
 
-TELEMETA_ORGANIZATION = 'Parisson'
+TELEMETA_ORGANIZATION = 'Pré-Barreau'
 TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
 TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
 TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
@@ -175,9 +176,11 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-EMAIL_HOST = 'smtp.free.fr'
+EMAIL_HOST = 'smtp.numericable.fr'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
+SERVER_EMAIL = 'webmaster@parisson.com'
+EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
 
-POSTMAN_AUTO_MODERATE_AS=True
+POSTMAN_AUTO_MODERATE_AS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'

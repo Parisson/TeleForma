@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-03 12:06+0200\n"
+"POT-Creation-Date: 2012-07-03 18:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -383,26 +383,22 @@ msgstr ""
 msgid "No messages."
 msgstr "Messages"
 
-#: templates/postman/base_write.html:23
+#: templates/postman/base_write.html:13
 msgid "to an administrator"
 msgstr "à un administrateur"
 
-#: templates/postman/base_write.html:31
+#: templates/postman/base_write.html:21
 msgid "to a professor"
 msgstr "à un professeur"
 
-#: templates/postman/base_write.html:39
-msgid "to an IEJ"
-msgstr "à un IEJ"
-
-#: templates/postman/base_write.html:57
+#: templates/postman/base_write.html:38
 #: templates/teleforma/inc/chat_room.html:13
 msgid "Send"
 msgstr ""
 
 #: templates/postman/email_user.txt:1
-msgid "Dear user,"
-msgstr ""
+msgid "Hello"
+msgstr "Bonjour"
 
 #: templates/postman/email_user.txt:3 templates/postman/email_visitor.txt:3
 #, python-format
@@ -444,19 +440,19 @@ msgstr ""
 "Vous pouvez lire et répondre à ce message depuis votre bureau e-learning en "
 "suivant ce lien :"
 
-#: templates/postman/email_user.txt:18 templates/postman/email_visitor.txt:14
+#: templates/postman/email_user.txt:19 templates/postman/email_visitor.txt:14
 msgid "Thank you again for your interest in our services."
 msgstr ""
 
-#: templates/postman/email_user.txt:19 templates/postman/email_visitor.txt:16
+#: templates/postman/email_user.txt:20 templates/postman/email_visitor.txt:16
 msgid "The site administrator"
 msgstr ""
 
-#: templates/postman/email_user.txt:19
+#: templates/postman/email_user.txt:20
 msgid "of"
 msgstr "de"
 
-#: templates/postman/email_user.txt:21 templates/postman/email_visitor.txt:18
+#: templates/postman/email_user.txt:22 templates/postman/email_visitor.txt:18
 msgid ""
 "Note: This message is issued by an automated system.\n"
 "Do not reply, this would not be taken into account."
@@ -517,7 +513,7 @@ msgstr ""
 msgid "Conversation"
 msgstr ""
 
-#: templates/postman/view.html:9 templates/telemeta/inc/user_list.html:69
+#: templates/postman/view.html:9 templates/telemeta/inc/user_list.html:72
 #, fuzzy
 msgid "Message"
 msgstr "Messages"
@@ -901,11 +897,11 @@ msgstr ""
 msgid "Criteria"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:55
+#: templates/telemeta/inc/user_list.html:56
 msgid "Administrator"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:62
+#: templates/telemeta/inc/user_list.html:64
 msgid "Unknown"
 msgstr ""
 
@@ -928,6 +924,9 @@ msgstr ""
 #: templatetags/teleforma_tags.py:133
 msgid "No"
 msgstr ""
+
+#~ msgid "to an IEJ"
+#~ msgstr "à un IEJ"
 
 #~ msgid "Annal"
 #~ msgstr "Annale"

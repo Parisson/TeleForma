@@ -2,16 +2,6 @@
 {% load i18n %}
 {% load teleforma_tags %}
 
-{% block extrahead %}{{ block.super }}
-{% if is_autocompleted %}
-{# using the available admin jQuery is enough #}
-<script type="text/javascript" src="{% load adminmedia %}{% admin_media_prefix %}js/jquery.min.js"></script>
-{# <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.min.js"></script> #}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.autocomplete.min.js"></script>
-<link href="{{ MEDIA_URL }}css/jquery.autocomplete.css" type="text/css" media="all" rel="stylesheet" />
-{% endif %}
-{% endblock %}
-
 {% block content %}
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
