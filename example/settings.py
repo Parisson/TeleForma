@@ -175,7 +175,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'smtp.free.fr'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 
 POSTMAN_AUTO_MODERATE_AS=True

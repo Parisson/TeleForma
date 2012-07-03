@@ -289,7 +289,7 @@ fieldset.iefix { background: transparent; border: none; padding: 0; margin: 0 }
 fieldset.iefix p { margin: 0 }
 legend { color: #999; padding: 0 .25em; font-size: 90%; font-weight: bold }
 label.disabled { color: #d7d7d7 }
-.buttons { margin: .5em .5em .5em 0 }
+.buttons { margin: 1em .5em .5em 0 }
 .buttons form, .buttons form div { display: inline }
 .buttons input { margin: 1em .5em .1em 0 }
 .inlinebuttons input {
@@ -717,9 +717,8 @@ dl.dublincore dd.caption {
 
 /* infos item/collection */
 .infos, .extraInfos {
-
-    margin-bottom: 15px;
-    padding: 0.8em;
+    margin-bottom: 1em;
+    padding: 0.8em 0.8em 0em 0.8em;
 }
 
 .infos dl, .infos table {
