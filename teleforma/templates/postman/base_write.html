@@ -35,6 +35,7 @@
 {% endfor %}
 </select>
 
+{% if user.is_staff %}
 <select id="_iejSelect" name="iejs" onchange="update_recipients();">
 <option>{% trans "to an IEJ" %}</option>
 {% get_all_iejs as iejs %}
@@ -42,7 +43,7 @@
 <option value="{{ i.name }}">{{i.name}}</option>
 {% endfor %}
 </select>
-
+{% endif %}
 
 </div>
 {% endif %}
