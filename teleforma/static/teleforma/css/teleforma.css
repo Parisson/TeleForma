@@ -25,12 +25,12 @@ a:link:hover, a:visited:hover {
     text-decoration: underline;
 }*/
 a, a:visited {
-    color: #4f628a;  /* #BB0000 */
+    color: #355ea2;  /* #BB0000  #030250 */
     text-decoration:none;
 }
 a:hover {
     background-color: transparent;
-    color: #4f628a; /* #BB0000 */
+    color: #355ea2 ; /* #BB0000 #4888f0 */
     text-decoration: underline;
 }
 
