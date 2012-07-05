@@ -1382,6 +1382,17 @@ input,textarea{
             color: #FFF;
             }
 
+#module-set-left .module div {
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
+       }
+#module-set-left .module ul {
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
+       }
+
 #module-set-left .module ul {
         margin: 0em 0em 0em 0.3em;
         font-size: 0.9125em;
@@ -1567,6 +1578,9 @@ input,textarea{
     overflow: auto;
     background-color: white;
     font-size: 0.8125em;
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
 }
 
 .msg {
