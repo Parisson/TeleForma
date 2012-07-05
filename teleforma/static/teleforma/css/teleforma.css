@@ -1366,9 +1366,9 @@ input,textarea{
         background-image: url(/static/telemeta/images/tw_hd.png);
         padding: 0.2em;
         margin: 0em 0em 1.5em 0em;
-        -moz-border-radius: 8px 0px 8px 8px;
-        -webkit-border-radius: 8px 0px 8px 8px;
-        border-radius: 8px 0px 8px 8px;
+        -moz-border-radius: 8px 0px 11px 11px;
+        -webkit-border-radius: 8px 0px 11px 11px;
+        border-radius: 8px 0px 11px 11px;
         }
 
 #module-set-left .module h3 {
