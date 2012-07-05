@@ -1366,9 +1366,9 @@ input,textarea{
         background-image: url(/static/telemeta/images/tw_hd.png);
         padding: 0.2em;
         margin: 0em 0em 1.5em 0em;
-        -moz-border-radius: 8px 0px 8px 8px;
-        -webkit-border-radius: 8px 0px 8px 8px;
-        border-radius: 8px 0px 8px 8px;
+        -moz-border-radius: 8px 0px 11px 11px;
+        -webkit-border-radius: 8px 0px 11px 11px;
+        border-radius: 8px 0px 11px 11px;
         }
 
 #module-set-left .module h3 {
@@ -1381,6 +1381,17 @@ input,textarea{
 #module-set-left .module h3 a {
             color: #FFF;
             }
+
+#module-set-left .module div {
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
+       }
+#module-set-left .module ul {
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
+       }
 
 #module-set-left .module ul {
         margin: 0em 0em 0em 0.3em;
@@ -1568,6 +1579,9 @@ input,textarea{
     overflow: auto;
     background-color: white;
     font-size: 0.8125em;
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
 }
 
 .msg {
