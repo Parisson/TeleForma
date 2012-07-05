@@ -758,16 +758,14 @@ dl.dublincore dd.caption {
     color: #000000 !important;
     text-decoration: none;
     margin: 0;
-    background: #fff url(images/more.png) no-repeat left top;
+    background: transparent url(/static/telemeta/css/more.png) no-repeat left top;
     background-position: 0 -16px;
     padding-bottom: 2px;
     padding-left: 16px;
     border-bottom: none !important;
     outline: none;
-    background: transparent;
 }
 .extraInfos h4 a:hover {
-    background-color: transparent;
     border-bottom: none;
     color: #000000 !important;
     text-decoration:none;
