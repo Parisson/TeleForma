@@ -1587,6 +1587,13 @@ input,textarea{
     font-size: 0.9em;
     }
 
+.msg input {
+    -moz-border-radius: 8px 8px 8px 8px;
+     -webkit-border-radius: 8px 8px 8px 8px;
+     border-radius: 8px 8px 8px 8px;
+    }
+
+
 #users {
     padding: 0.8em 0em 0em 0em;
     background-color: #FFF;
