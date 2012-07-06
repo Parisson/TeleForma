@@ -25,12 +25,12 @@ a:link:hover, a:visited:hover {
     text-decoration: underline;
 }*/
 a, a:visited {
-    color: #BB0000;
+    color: #355ea2;  /* #BB0000  #030250 */
     text-decoration:none;
 }
 a:hover {
     background-color: transparent;
-    color: #BB0000;
+    color: #355ea2 ; /* #BB0000 #4888f0 */
     text-decoration: underline;
 }
 
@@ -1397,7 +1397,7 @@ input,textarea{
         margin: 0em 0em 0em 0.3em;
         font-size: 0.9125em;
         background-color: #FFF;
-        color: #0000 ;
+        color: #000 ;
         font-weight: normal;
         max-height: 400px;
         overflow-y: auto;
@@ -1405,6 +1405,7 @@ input,textarea{
 
 #module-set-left .module a {
     display:inline-block;
+    font-weight: bold;
     }
 
 
