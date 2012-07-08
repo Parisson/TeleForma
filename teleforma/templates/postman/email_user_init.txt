@@ -1,0 +1,19 @@
+{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}{% trans "Hello" %} {{ usr.first_name }} {{ usr.last_name }},
+
+Suite à votre inscription à la formation estivale 2012 du Pré-Barreau, vous trouverez ci-dessous un lien vous invitant à choisir votre mot de passe à la plateforme e-learning.
+
+http://{{ site.name }}/account/reset_password
+
+Cette plateforme vous permettra d’accéder tout au long de votre formation aux différents documents - fascicules de cours (selon la formule choisie), fascicules d’actualisation, sujets et corrigés -  ainsi qu’à l’ensemble de vos enseignements. La messagerie intégrée vous permet de communiquer avec les administrateurs, les utilisateurs et le corps enseignant. Une page d'aide est également disponible pour vous assister lors de la découverte de ces nouveaux services.
+
+Nous vous rappelons que votre formation commencera le vendredi 20 juillet 2012 par une séance de méthodologie à la note de synthèse (2h) et aux épreuves juridiques (2h).
+
+Ainsi, vous composerez sur la première note de synthèse dès le samedi 21 juillet et sur les épreuves juridiques les lundi 23 et mardi 24 juillet.
+
+Votre emploi du temps vous sera communiqué vers le 16 juillet.
+
+{% trans "Best regards" %},
+{% trans "The site administrator" %} {% trans "of" %} {% organization %}
+
+{% blocktrans %}Note: This message is issued by an automated system.
+Do not reply, this would not be taken into account.{% endblocktrans %}{% endautoescape %}

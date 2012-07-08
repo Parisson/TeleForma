@@ -523,7 +523,7 @@ class Profile(models.Model):
     language        = CharField(_('Language'), max_length=255, blank=True)
     telephone       = CharField(_('Telephone'), max_length=255, blank=True)
     expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
-    init_password   = BooleanField(_('Password initialization'))
+    init_password   = BooleanField(_('Password initialized'))
 
     class Meta:
         db_table = app_label + '_' + 'profiles'
