@@ -1,1 +1,1 @@
-{% load i18n %}{% autoescape off %}{% blocktrans with site.name as sitename %}Initialization of your account for {{ organization }} on the site {{ sitename }}{% endblocktrans %}{% endautoescape %}
+{% load i18n %}{% autoescape off %}{% blocktrans %}Initialization of your e-learning account at {{ organization }}{% endblocktrans %}{% endautoescape %}

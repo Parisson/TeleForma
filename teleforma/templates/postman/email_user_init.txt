@@ -13,7 +13,7 @@ Ainsi, vous composerez sur la première note de synthèse dès le samedi 21 juil
 Votre emploi du temps vous sera communiqué vers le 16 juillet.
 
 {% trans "Best regards" %},
-{% trans "The site administrator" %} {% trans "of" %} {% organization %}
+{% trans "The site administrator" %} {% trans "of the" %} {% organization %}
 
 {% blocktrans %}Note: This message is issued by an automated system.
 Do not reply, this would not be taken into account.{% endblocktrans %}{% endautoescape %}
