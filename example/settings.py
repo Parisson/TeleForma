@@ -11,7 +11,8 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Guillaume Pellerin', 'yomguy@parisson.com'),
+    ('Guillaume Pellerin', 'webmaster@parisson.com'),
+    ('Lists', 'lists@parisson.com'),
 )
 
 MANAGERS = ADMINS
@@ -155,7 +156,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
 )
 
-TELEMETA_ORGANIZATION = 'Parisson'
+TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
 TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
 TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
 TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
@@ -168,16 +169,20 @@ TELEMETA_STREAMING_FORMATS = ('mp3', 'webm')
 TELEMETA_DOWNLOAD_FORMATS = ('wav', 'mp3', 'webm')
 TELEMETA_PUBLIC_ACCESS_PERIOD = 51
 TELEMETA_DEFAULT_GRAPHER_SIZES = ['360x130', '640x130']
-TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_joydiv'
+TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_contour_wh'
 
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'smtp.free.fr'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
+SERVER_EMAIL = 'webmaster@parisson.com'
+EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
 
-POSTMAN_AUTO_MODERATE_AS=True
+POSTMAN_AUTO_MODERATE_AS = True
 
-FILE_PROTECTION_METHOD = 'xsendfile'
+#FILE_PROTECTION_METHOD = 'xsendfile'
+
+GOOGLE_ANALYTICS_MODEL = True

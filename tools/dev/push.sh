@@ -14,8 +14,7 @@ git push --tags
 ssh vcs.parisson.com "cd /var/git/teleforma.git; git update-server-info"
 
 echo "Update sandbox @ angus.parisson.com:"
-ssh angus.parisson.com "cd /home/teleforma/teleforma; git pull; \
-                        cd /home/teleforma/teleforma-dev; git pull origin dev; \
+ssh angus.parisson.com "cd /home/teleforma/teleforma-dev; git pull origin dev; \
                         cd /home/teleforma/sandbox/; ./manage.py migrate --delete-ghost-migrations; \
                         ./manage.py collectstatic "
 

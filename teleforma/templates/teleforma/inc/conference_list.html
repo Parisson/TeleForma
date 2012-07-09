@@ -10,16 +10,40 @@
     <tbody>
         {% for stream in course.livestream.all|from_course_type:type %}
             <tr>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="60%"><a href="{% url teleforma-conference-detail conference.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/network-wireless.png" style="vertical-align:middle" alt="" /> {{ stream.slug }}</a></td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="35%">{{ stream.conference.date_begin }}</td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="5%" align="center">
-                {% if stream.streaming %}
-                <img src="images/media-record.png" alt="yes" style="vertical-align:middle" />
-                {% endif %}
+            {% if stream.streaming %}
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="230px">
+               <a href="{% url teleforma-conference-detail stream.conference.id %}" title="{% trans "View" %}">
+               <img id="snapshot-{{ stream.course.code }}-{{ stream.course_type }}" src="{{ stream.snapshot_url }}" width="100%" alt="snapshot" />
+               </a>
             </td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
+                <div>
+                    <dl class="listing" style="font-size: 1.2em;">
+                    <dt>{% trans "Title" %}</dt><dd>{{ stream.conference.course.title }}</dd>
+                    <dt>{% trans "Session" %}</dt><dd>{{ stream.conference.session }}</dd>
+                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail stream.conference.professor.user.username %}" target="_blank">{{ stream.conference.professor }}</a></dd>
+                    <dt>{% trans "Begin" %}</dt><dd>{{ stream.conference.date_begin }}</dd>
+                    </dl>
+                 </div>
+            </td>
+            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="10%" align="center">
+                {% if stream.streaming %}
+                <img src="{{ STATIC_URL }}teleforma/images/network-wireless.png" style="vertical-align:middle" title="streaming" />
+                <img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" title="recording" />
+              {% endif %}
+            </td>
+            {% else %}
+            <div style="padding-left: 1em;">
+
+            </div>
+             {% endif %}
             </tr>
+
         {% endfor %}
     </tbody>
     </table>
 </div>
+
+
+
 {% endif %}

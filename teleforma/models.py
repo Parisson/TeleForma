@@ -80,7 +80,8 @@ class Department(Model):
 
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
-    organization    = ForeignKey('Organization', related_name='department', verbose_name=_('organization'))
+    organization    = ForeignKey('Organization', related_name='department',
+                                 verbose_name=_('organization'))
 
     def __unicode__(self):
         return self.name
@@ -120,7 +121,8 @@ class CourseType(Model):
 
 class Course(Model):
 
-    department      = ForeignKey('Department', related_name='course', verbose_name=_('department'))
+    department      = ForeignKey('Department', related_name='course',
+                                 verbose_name=_('department'))
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     code            = CharField(_('code'), max_length=255)
@@ -175,6 +177,7 @@ class Room(Model):
 
 class Conference(Model):
 
+    public_id       = CharField(_('public_id'), max_length=255, blank=True)
     course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
     course_type     = ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
     professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
@@ -203,6 +206,18 @@ class Conference(Model):
     def save(self, **kwargs):
         super(Conference, self).save(**kwargs)
         self.course.save()
+
+    def to_dict(self):
+        dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label':'public_id'},
+                {'id':'organization','value': self.organization, 'class':'', 'label':'Organization'},
+                {'id': 'department', 'value': self.department , 'class':'', 'label':'Department'},
+                {'id' : 'conference', 'value': self.conference, 'class':'' , 'label': 'Conference'},
+                {'id': 'professor', 'value': self.professor, 'class':'' , 'label': 'Professor'},
+                {'id': 'session', 'value': self.session, 'class':'' , 'label': 'Session'},
+                {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
+                {'id': 'started', 'value': str(self.started), 'class':'' , 'label': 'Started'},
+                ]
+        return dict
 
     class Meta:
         db_table = app_label + '_' + 'conference'
@@ -259,6 +274,14 @@ class LiveStream(Model):
             return  'consume/' + self.slug
         else:
             return self.slug + '.' + self.stream_type
+
+    @property
+    def snapshot_url(self):
+        url = ''
+        if self.server.type == 'stream-m':
+            url = 'http://' + self.server.host + ':' + self.server.port + \
+                    '/snapshot/' + self.slug
+        return url
 
     @property
     def url(self):
@@ -500,7 +523,7 @@ class Profile(models.Model):
     language        = CharField(_('Language'), max_length=255, blank=True)
     telephone       = CharField(_('Telephone'), max_length=255, blank=True)
     expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
-    init_password   = BooleanField(_('Password initialization'))
+    init_password   = BooleanField(_('Password initialized'))
 
     class Meta:
         db_table = app_label + '_' + 'profiles'

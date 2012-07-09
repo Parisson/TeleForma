@@ -1,0 +1,29 @@
+{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}{% trans "Hello" %} {{ usr.first_name }} {{ usr.last_name }},
+
+Suite à votre inscription à la formation estivale 2012 du Pré-Barreau, nous vous invitons à initialiser votre compte sur notre plateforme e-learning interactive et multi-média. Pour cela, merci de cliquer sur le lien suivant puis d'indiquez votre adresse e-mail :
+
+http://{{ site.name }}/accounts/password_reset/
+
+Vous recevrez alors un second e-mail vous invitant à initialiser votre mot de passe personnel.
+Une fois la procédure accomplie, vous pourrez vous connecter à l'adresse suivante :
+
+http://{{ site.name }}
+
+à l'aide de votre nom d'utilisateur : {{ usr.username }}
+
+Cette plateforme vous permet d’accéder tout au long de votre formation aux différents documents - fascicules de cours (selon la formule choisie), fascicules d’actualisation, sujets et corrigés - ainsi qu’à l’ensemble de vos enseignements à la demande ou en direct. La messagerie intégrée vous donne aussi la possibilité de communiquer avec les administrateurs et les professeurs. Une page d'aide sera bientôt disponible pour vous assister lors de la découverte de ces nouveaux services.
+
+
+Nous vous rappelons que votre formation commencera le vendredi 20 juillet 2012 par une séance de méthodologie à la note de synthèse (2h) et aux épreuves juridiques (2h).
+
+Ainsi, vous composerez sur la première note de synthèse dès le samedi 21 juillet et sur les épreuves juridiques les lundi 23 et mardi 24 juillet.
+
+Votre emploi du temps vous sera communiqué vers le 16 juillet.
+
+
+{% trans "Best regards" %},
+{% trans "The site administrator" %} {% trans "of the" %} {% organization %}
+
+
+{% blocktrans %}Note: This message is issued by an automated system.
+Do not reply, this would not be taken into account.{% endblocktrans %}{% endautoescape %}

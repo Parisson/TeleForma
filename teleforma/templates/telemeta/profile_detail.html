@@ -31,9 +31,9 @@
 
   {% endblock %}
 
-  {% if user.is_authenticated %}
+  {% if user.is_authenticated and user.username != usr.username %}
    <div class="module_action">
-    <a href="{% url postman_write usr.username %}" class="component_icon button" id="action_red">{% trans "Send a message" %}</a>
+    <a href="{% url postman_write usr.username %}" class="component_icon button" id="action_orange">{% trans "Send a message" %}</a>
    </div>
   {%  endif %}
  </div>
@@ -44,12 +44,13 @@
     <h1>{% trans "User profile" %} : {{ usr.username }}
     </h1>
 
-    {% if user.is_authenticated and user.username == usr.username or user.is_staff %}
     <div id="password" style="float: right;">
-    <a href="{% url telemeta-profile-edit usr.username %}" class="component_icon button icon_edit">{% trans "Edit" %}</a>
+    {% if user.is_authenticated and user.username == usr.username %}
     <a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Change password" %}</a>
-    </div>
+    {% elif user.is_staff %}
+        <a href="{% url teleforma-user-login usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
     {%  endif %}
+    </div>
 
    <div class="course_content">
 
@@ -99,9 +100,9 @@
 
   </div>
 
-{% if user.username != usr.username and user.is_staff %}
-<a href="{% url teleforma-user-login usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
-{% endif %}
+<div class="buttons">
+<!--<a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Password reset" %}</a>-->
+</div>
 
 </div>
 </div>
