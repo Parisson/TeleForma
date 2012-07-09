@@ -104,7 +104,7 @@
 <div class="buttons">
 {% if user.username != usr.username and user.is_staff %}
 <a href="{% url teleforma-user-login usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
-<a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Password reinitialization" %}</a>
+<a href="{% url telemeta-password-change usr.id %}" class="component_icon button icon_login">{% trans "Password reset" %}</a>
 {% endif %}
 </div>
 

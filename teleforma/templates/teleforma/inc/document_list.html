@@ -7,22 +7,28 @@
 <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Documents"%}</h3>
 </div>
 
+{% with course.document.all as docs %}
 {% for doc_type in doc_types %}
-{% if course.document.all|from_course_type:type|from_doc_type:doc_type %}
+{% if docs|from_course_type:type|from_doc_type:doc_type and not type_counter > 1 %}
 <span class="doc_type_title">{{ doc_type }}</span>
 <table class="listing" width="100%">
     <tbody>
-        {% for document in course.document.all|from_course_type:type|from_doc_type:doc_type %}
+        {% for doc in docs|from_course_type:type|from_doc_type:doc_type %}
+        {% if doc.course_type.all|length > 1 and type_counter > 1 %}
+        {% else %}
         <tr>
-        <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="60%">{% if document.file %}<a href="{% url teleforma-document-view document.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ document.title }}{% if document.file %}</a>{% endif %}</td>
-        <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="35%">{{ document.date_modified }}</td>
-        <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="5%" align="center">{% if document.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="60%">{% if doc.file %}<a href="{% url teleforma-document-view document.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="35%">{{ doc.date_modified }}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if doc.file %}<a href="{% url teleforma-document-download document.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
         </tr>
+        {% endif %}
     {% endfor %}
     </tbody>
 </table>
 {% endif %}
 {% endfor %}
+{% endwith %}
+
 </div>
 
 {% else %}

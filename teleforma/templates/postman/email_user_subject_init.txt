@@ -1,1 +1,1 @@
-{% load i18n %}{% autoescape off %}{% blocktrans %}Initialization of your e-learning account at {{ organization }}{% endblocktrans %}{% endautoescape %}
+{% load i18n %}{% autoescape off %}{% blocktrans %}{{ organization }} : initialization of your e-learning account{% endblocktrans %}{% endautoescape %}

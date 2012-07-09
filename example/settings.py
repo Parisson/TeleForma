@@ -176,7 +176,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-EMAIL_HOST = 'smtp.numericable.fr'
+EMAIL_HOST = 'smtp.free.fr'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 SERVER_EMAIL = 'webmaster@parisson.com'
 EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
@@ -184,3 +184,5 @@ EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
 POSTMAN_AUTO_MODERATE_AS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
+
+GOOGLE_ANALYTICS_MODEL = True

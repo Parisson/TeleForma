@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-08 15:43+0200\n"
+"POT-Creation-Date: 2012-07-09 11:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -266,7 +266,7 @@ msgstr "Date d'expiration"
 
 #: models.py:526
 msgid "Password initialized"
-msgstr ""
+msgstr "Mot de passe initialisé"
 
 #: models.py:530
 msgid "profile"
@@ -445,7 +445,7 @@ msgid "Thank you again for your interest in our services."
 msgstr ""
 
 #: templates/postman/email_user.txt:20
-#: templates/postman/email_user_init.txt:16
+#: templates/postman/email_user_init.txt:25
 #: templates/postman/email_visitor.txt:16
 msgid "The site administrator"
 msgstr ""
@@ -455,18 +455,18 @@ msgid "of"
 msgstr "de"
 
 #: templates/postman/email_user.txt:22
-#: templates/postman/email_user_init.txt:18
+#: templates/postman/email_user_init.txt:28
 #: templates/postman/email_visitor.txt:18
 msgid ""
 "Note: This message is issued by an automated system.\n"
 "Do not reply, this would not be taken into account."
 msgstr ""
 
-#: templates/postman/email_user_init.txt:15
+#: templates/postman/email_user_init.txt:24
 msgid "Best regards"
-msgstr ""
+msgstr "Cordialement"
 
-#: templates/postman/email_user_init.txt:16
+#: templates/postman/email_user_init.txt:25
 msgid "of the"
 msgstr "du"
 
@@ -478,8 +478,8 @@ msgstr ""
 
 #: templates/postman/email_user_subject_init.txt:1
 #, python-format
-msgid "Initialization of your e-learning account at %(organization)s"
-msgstr "Initialisation de votre compte e-learning du %(organization)s"
+msgid "%(organization)s : initialization of your e-learning account"
+msgstr "%(organization)s : initialisation de votre compte e-learning"
 
 #: templates/postman/email_visitor.txt:1
 msgid "Dear visitor,"
@@ -640,17 +640,17 @@ msgid "Live conferences"
 msgstr "Conférences en direct"
 
 #: templates/teleforma/inc/conference_list.html:15
-#: templates/teleforma/inc/document_list.html:17
+#: templates/teleforma/inc/document_list.html:20
 #: templates/teleforma/inc/media_list.html:14
 msgid "View"
 msgstr ""
 
-#: templates/teleforma/inc/document_list.html:19
+#: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/media_list.html:17
 msgid "Download"
 msgstr "Télécharger"
 
-#: templates/teleforma/inc/document_list.html:30
+#: templates/teleforma/inc/document_list.html:36
 msgid "No document"
 msgstr "Aucun document"
 
@@ -867,8 +867,8 @@ msgid "Login as"
 msgstr "Se connecter en tant que"
 
 #: templates/telemeta/profile_detail.html:107
-msgid "Password reinitialization"
-msgstr ""
+msgid "Password reset"
+msgstr "Réinitialisation du mot de passe"
 
 #: templates/telemeta/search_criteria.html:5
 #: templates/telemeta/search_criteria.html:76
