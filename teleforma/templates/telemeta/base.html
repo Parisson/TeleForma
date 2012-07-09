@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load telemeta_utils %}
 {% load teleforma_tags %}
-{% ifloaded "googletools" %}{% load googletools %}{% endifloaded %}
+{% ifloaded googletools %}{% load googletools %}{% endifloaded %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
@@ -172,7 +172,7 @@ alt="logo" />
 {% endblock layout %}
 
 {% block analytics %}
-{% ifloaded "googletools" %}
+{% ifloaded googletools %}
 {% analytics_code %}
 {% endifloaded %}
 {% endblock analytics %}
