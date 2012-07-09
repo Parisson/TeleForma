@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'timezones',
     'jqchat',
 #    'follow',
+    'googletools',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
