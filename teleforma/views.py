@@ -99,7 +99,7 @@ def get_courses(user, date_order=False, num_order=False):
                             queryset=Course.objects.filter(magistral=True),
                             types=magistral)
 
-    elif user.is_staff:
+    elif user.is_staff or user.is_superuser:
         courses = format_courses(courses, queryset=Course.objects.all(),
                     types=CourseType.objects)
     else:
