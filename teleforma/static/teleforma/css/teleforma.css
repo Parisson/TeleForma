@@ -266,6 +266,11 @@ input[type=button], input[type=submit], input[type=reset] {
     padding: .1em .5em;
     font-weight: bold;
     cursor: pointer;
+    -moz-border-radius: 8px 0px 8px 8px;
+     -webkit-border-radius: 8px 0px 8px 8px;
+     border-radius: 8px 0px 8px 8px;
+    }
+
 }
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
     background: #8D8C94;

@@ -36,7 +36,7 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
         users = User.objects.filter(is_staff=True)
         for user in users:
-            profile = Profile.objects.get(user=user)
+            profile, c = Profile.objects.get_or_create(user=user)
             if profile:
                 profile.init_password = False
                 if not profile.init_password and user.is_active:
