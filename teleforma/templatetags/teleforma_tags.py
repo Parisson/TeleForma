@@ -142,7 +142,7 @@ def from_doc_type(docs, type):
 
 @register.assignment_tag
 def get_all_professors():
-    return Professor.objects.all().order_by('user')
+    return Professor.objects.all().order_by('user__first_name')
 
 @register.assignment_tag
 def get_all_admins():
