@@ -361,7 +361,7 @@ class UserLoginView(View):
         login(self.request, user)
         return redirect('teleforma-desk')
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def dispatch(self, *args, **kwargs):
         return super(UserLoginView, self).dispatch(*args, **kwargs)
 
@@ -452,7 +452,7 @@ class UsersXLSExport(object):
         else:
             return counter
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def export(self, request):
         self.users = self.users.order_by('last_name')
         self.book = Workbook()
@@ -489,24 +489,24 @@ class UsersXLSExport(object):
         self.book.save(response)
         return response
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def all(self, request):
         self.users = User.objects.all()
         return self.export(request)
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def by_training(self, request, id):
         training = Training.objects.filter(id=id)
         self.users = User.objects.filter(student__training__in=training)
         return self.export(request)
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def by_iej(self, request, id):
         iej = IEJ.objects.filter(id=id)
         self.users = User.objects.filter(student__iej__in=iej)
         return self.export(request)
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def by_course(self, request, id):
         course = Course.objects.filter(id=id)
         self.users = User.objects.filter(student__training__courses__in=course)

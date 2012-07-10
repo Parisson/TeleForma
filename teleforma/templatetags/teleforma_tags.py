@@ -146,7 +146,7 @@ def get_all_professors():
 
 @register.assignment_tag
 def get_all_admins():
-    return User.objects.filter(is_staff=True)
+    return User.objects.filter(is_superuser=True)
 
 @register.assignment_tag
 def get_all_trainings():
