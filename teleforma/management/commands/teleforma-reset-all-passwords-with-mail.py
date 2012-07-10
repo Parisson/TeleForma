@@ -37,7 +37,7 @@ class Command(BaseCommand):
             profile, c = Profile.objects.get_or_create(user=user)
             student = user.student.all()
             if profile and student and user.is_active:
-                if not profile.init_password :
+                if not profile.init_password and user.email:
                     self.init_password_email(user)
                     profile.init_password = True
                     profile.save()
