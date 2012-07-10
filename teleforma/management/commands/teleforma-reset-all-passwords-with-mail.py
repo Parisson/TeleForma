@@ -21,25 +21,25 @@ class Command(BaseCommand):
     subject_template = 'postman/email_user_subject_init.txt'
     language_code = 'fr_FR'
 
-    def init_password_email(self, user, profile):
+    def init_password_email(self, user):
         site = Site.objects.get_current()
         ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'usr': user}
         subject = render_to_string(self.subject_template, ctx_dict)
         subject = ''.join(subject.splitlines())
         message = render_to_string(self.message_template, ctx_dict)
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
-        profile.init_password = True
-        profile.save()
 
     def handle(self, *args, **options):
-#        users = User.objects.all()
+        users = User.objects.all()
         translation.activate(self.language_code)
-        users = User.objects.filter(is_staff=True)
+#        users = User.objects.filter(is_staff=True)
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
-            if profile:
-                profile.init_password = False
-                if not profile.init_password and user.is_active:
-                    self.init_password_email(user, profile)
+            student = user.student.all()
+            if profile and student and user.is_active:
+                if not profile.init_password :
+                    self.init_password_email(user)
+                    profile.init_password = True
+                    profile.save()
                     print user.username
 
