@@ -244,6 +244,7 @@ class MediaView(DetailView):
         else:
             return redirect('teleforma-media-detail', media.id)
 
+
 class DocumentView(DetailView):
 
     model = Document
