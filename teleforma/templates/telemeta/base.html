@@ -94,7 +94,7 @@ alt="logo" />
  </li>
  <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
   {% else %}
-   <li><a href="{% url telemeta-flatpage "help" %}" class="green">{% trans "Help" %}</a></li>
+   <li><a href="{% url teleforma-help %}" class="green">{% trans "Help" %}</a></li>
  {% endif %}
 
  <li style="a.active{background-image:{{ STATIC_URL }}telemeta/images/user_tr_bk.png; background-repeat: no-repeat;
@@ -107,7 +107,7 @@ alt="logo" />
     <li><a href="{% url telemeta-profile-detail user.username %}" class="yellow">{% trans "Profile" %}</a></li>
     {% if user.is_staff %}
     <li><a href="{% url telemeta-desk-lists %}">{% trans "Lists" %}</a></li>
-    <li><a href="{% url telemeta-flatpage "help" %}">{% trans "Help" %}</a></li>
+    <li><a href="{% url teleforma-help %}">{% trans "Help" %}</a></li>
     {% endif %}
     <li><a href="{% url telemeta-logout %}">{% trans "Sign out" %}</a></li>
     </ul>
@@ -151,7 +151,7 @@ alt="logo" />
     <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{% url telemeta-images "logo_mini_2.png" %}"
    alt="Telemeta Powered"/></a>
     <p class="left">
-    {% trans "Powered by" %} <a href="{% telemeta_url %}" target="_blank"><br /><strong>TeleForma {% teleforma_version %}</strong></a><br />
+    {% trans "Powered by" %} <a href="http://parisson.com" target="_blank"><br /><strong>TeleForma {% teleforma_version %}</strong></a><br />
     </p>
    </td>
    <td>

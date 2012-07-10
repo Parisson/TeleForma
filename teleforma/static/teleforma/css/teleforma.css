@@ -99,14 +99,14 @@ a img { border: none; }
 }
 
 #logo_wrapper {
-    width: 3%;
-    margin: 0 auto;
+    width: 2%;
+    margin: 0em auto;
     float: left;
 }
 
 #logo {
-    width: 3%;
-    margin:0px auto;
+    width: 2%;
+    margin:0em auto;
     padding-top: 0.6em;
     padding-bottom: 0.5em;
     }

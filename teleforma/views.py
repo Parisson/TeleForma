@@ -511,3 +511,19 @@ class UsersXLSExport(object):
         course = Course.objects.filter(id=id)
         self.users = User.objects.filter(student__training__courses__in=course)
         return self.export(request)
+
+
+class HelpView(TemplateView):
+
+    template_name='teleforma/help.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HelpView, self).get_context_data(**kwargs)
+        context['page_content'] = pages.get_page_content(self.request, 'help',
+                                                         ignore_slash_issue=True)
+        return context
+
+    def dispatch(self, *args, **kwargs):
+        return super(HelpView, self).dispatch(*args, **kwargs)
+
+
