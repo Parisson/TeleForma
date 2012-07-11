@@ -99,7 +99,7 @@ def get_courses(user, date_order=False, num_order=False):
                             queryset=Course.objects.filter(magistral=True),
                             types=magistral)
 
-    elif user.is_staff:
+    elif user.is_staff or user.is_superuser:
         courses = format_courses(courses, queryset=Course.objects.all(),
                     types=CourseType.objects)
     else:
@@ -244,6 +244,7 @@ class MediaView(DetailView):
         else:
             return redirect('teleforma-media-detail', media.id)
 
+
 class DocumentView(DetailView):
 
     model = Document
@@ -386,7 +387,7 @@ class UserLoginView(View):
         login(self.request, user)
         return redirect('teleforma-desk')
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def dispatch(self, *args, **kwargs):
         return super(UserLoginView, self).dispatch(*args, **kwargs)
 
@@ -477,7 +478,7 @@ class UsersXLSExport(object):
         else:
             return counter
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def export(self, request):
         self.users = self.users.order_by('last_name')
         self.book = Workbook()
@@ -514,25 +515,41 @@ class UsersXLSExport(object):
         self.book.save(response)
         return response
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def all(self, request):
         self.users = User.objects.all()
         return self.export(request)
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def by_training(self, request, id):
         training = Training.objects.filter(id=id)
         self.users = User.objects.filter(student__training__in=training)
         return self.export(request)
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def by_iej(self, request, id):
         iej = IEJ.objects.filter(id=id)
         self.users = User.objects.filter(student__iej__in=iej)
         return self.export(request)
 
-    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(permission_required('is_staff'))
     def by_course(self, request, id):
         course = Course.objects.filter(id=id)
         self.users = User.objects.filter(student__training__courses__in=course)
         return self.export(request)
+
+
+class HelpView(TemplateView):
+
+    template_name='teleforma/help.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HelpView, self).get_context_data(**kwargs)
+        context['page_content'] = pages.get_page_content(self.request, 'help',
+                                                         ignore_slash_issue=True)
+        return context
+
+    def dispatch(self, *args, **kwargs):
+        return super(HelpView, self).dispatch(*args, **kwargs)
+
+

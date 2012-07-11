@@ -55,6 +55,9 @@ urlpatterns = patterns('',
     # Telemeta
     url(r'^', include('telemeta.urls')),
 
+    # Help
+    url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
+
     # Desk
     url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
     url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
