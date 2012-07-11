@@ -75,6 +75,8 @@ urlpatterns = patterns('',
 
     url(r'^desk/conferences/(?P<pk>.*)/$', ConferenceView.as_view(),
         name="teleforma-conference-detail"),
+    url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
+        name="teleforma-conference-record"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),

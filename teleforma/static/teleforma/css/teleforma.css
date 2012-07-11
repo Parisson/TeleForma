@@ -1343,9 +1343,9 @@ input,textarea{
     background-repeat:repeat;
     padding: 0.2em;
     margin: 2em 1em 0em 0em;
-    -moz-border-radius: 8px 0px 8px 8px;
-    -webkit-border-radius: 8px 0px 8px 8px;
-    border-radius: 8px 0px 8px 8px;
+    -moz-border-radius: 8px 0px 11px 11px;
+    -webkit-border-radius: 8px 0px 11px 11px;
+    border-radius: 8px 0px 11px 11px;
 }
 
 #module-set .module h3 {
@@ -1354,6 +1354,13 @@ input,textarea{
     font-weight: bold;
     margin-top: 0.2em;
     margin-bottom: 0.2em;
+}
+
+#module-set .module div {
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
+        background-color: #FFF;
 }
 
 #module-set .module a:hover {
@@ -1382,7 +1389,6 @@ input,textarea{
             font-weight: bold;
             }
 
-
 #module-set-left .module h3 a {
             color: #FFF;
             }
@@ -1392,6 +1398,7 @@ input,textarea{
         -webkit-border-radius: 8px 0px 8px 8px;
         border-radius: 8px 0px 8px 8px;
        }
+
 #module-set-left .module ul {
         -moz-border-radius: 8px 0px 8px 8px;
         -webkit-border-radius: 8px 0px 8px 8px;
@@ -1625,4 +1632,8 @@ input,textarea{
     font-weight: bold;
     font-size: 0.8125em;
     text-align: center;
+    }
+
+.status {
+    padding: 0.5em;
     }
