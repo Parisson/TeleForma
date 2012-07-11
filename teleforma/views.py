@@ -29,7 +29,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 
 from teleforma.models import *
 from teleforma.forms import *
@@ -330,6 +330,17 @@ class ConferenceView(DetailView):
         context['livestream'] = conference.livestream.get().url
         return context
 
+    @jsonrpc_method('teleforma.conference_stop')
+    def stop(request, id):
+        conference = Conference.objects.get(id=id)
+        for stream in conference.livestream.all():
+            stream.streaming = False
+            stream.save()
+        for station in conference.livestream.all():
+            station.started = False
+            station.save()
+        conference.delete()
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
@@ -340,7 +351,6 @@ class ConferenceRecordView(FormView):
     model = Conference
     form_class = ConferenceForm
     template_name='teleforma/course_conference_record.html'
-    success_url = reverse_lazy('teleforma-conference-detail')
     hidden_fields = ['started', 'date_begin', 'date_end', 'public_id', 'readers']
 
     def get_context_data(self, **kwargs):
@@ -351,10 +361,20 @@ class ConferenceRecordView(FormView):
         context['hidden_fields'] = self.hidden_fields
         return context
 
+    def get_success_url(self):
+        return reverse('teleforma-conference-detail', kwargs={'pk':self.conference.id})
+
     def form_valid(self, form):
         form.save()
-        station = Station(conference=form.instance)
-        station.start()
+        self.conference = form.instance
+        station = Station(conference=self.conference)
+#        station.start()
+        station.save()
+        server, c= StreamingServer.objects.get_or_create(host='localhost')
+        stream = LiveStream(conference=self.conference, server=server,
+                            stream_type='webm', streaming=True)
+        stream.save()
+        return super(ConferenceRecordView, self).form_valid(form)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

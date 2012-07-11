@@ -2,6 +2,31 @@
 {% load telemeta_utils %}
 {% load i18n %}
 
+{% block module-action %}
+{% if "telecaster"|installed %}
+<script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+var conferenceUtils = {
+    stop : function(id){
+        json([id],'teleforma.conference_stop',function(){
+            location.href = '{% url teleforma-desk %}';});
+    }}
+
+jQuery(window).ready(function(){
+    var a = jQuery('#action_red');
+    var f = conferenceUtils;
+    a.unbind('click').click(function(){
+        f.stop({{conference.id}});return false;});
+    });
+
+</script>
+<div class="module_action">
+<a href="#" class="component_icon button" id="action_red">{% trans "STOP" %}</a>
+</div>
+
+{% endif %}
+{% endblock module-action %}
 
 {% block course %}
 <div class="course_media">

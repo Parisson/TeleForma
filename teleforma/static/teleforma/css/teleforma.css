@@ -1356,12 +1356,6 @@ input,textarea{
     margin-bottom: 0.2em;
 }
 
-#module-set .module div {
-        -moz-border-radius: 8px 0px 8px 8px;
-        -webkit-border-radius: 8px 0px 8px 8px;
-        border-radius: 8px 0px 8px 8px;
-        background-color: #FFF;
-}
 
 #module-set .module a:hover {
     text-decoration: none;
@@ -1639,6 +1633,10 @@ input,textarea{
 
 .status {
     padding: 0.5em;
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
+        background-color: #FFF;
     }
 
 .warning {

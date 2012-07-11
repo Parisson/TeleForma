@@ -208,8 +208,10 @@ class Conference(Model):
 
     @property
     def description(self):
-        return ' - '.join([self.course.department.name, self.course.title, self.course_type.name,
-                           self.session, self.professor.user.first_name, self.professor.user.last_name,
+        return ' - '.join([self.course.department.name, self.course.title,
+                           self.course_type.name, self.session,
+                           self.professor.user.first_name,
+                           self.professor.user.last_name,
                            str(self.date_begin)])
 
     def __unicode__(self):
@@ -258,11 +260,6 @@ class LiveStream(Model):
 
     element_type = 'livestream'
 
-    course          = ForeignKey('Course', related_name='livestream',
-                                 verbose_name=_('course'))
-    course_type     = ForeignKey('CourseType', related_name='livestream',
-                                 verbose_name=_('course type'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
     conference      = ForeignKey('Conference', related_name='livestream',
                                 verbose_name=_('conference'),
                                 blank=True, null=True, on_delete=models.SET_NULL)
@@ -274,8 +271,9 @@ class LiveStream(Model):
 
     @property
     def slug(self):
-        slug = '-'.join([self.course.department.slug, self.course.slug,
-                         self.course_type.name.lower()])
+        slug = '-'.join([self.conference.course.department.slug,
+                         self.conference.course.slug,
+                         self.conference.course_type.name.lower()])
         return slug
 
     @property
