@@ -1332,7 +1332,7 @@ input,textarea{
 #module-set {
     float: right;
     clear: right;
-    padding-right: 1em;
+    padding-right: 0em;
 }
 
 #module-set .module {
@@ -1342,7 +1342,7 @@ input,textarea{
     background-color:#ebebeb;
     background-repeat:repeat;
     padding: 0.2em;
-    margin: 2em 2.5em 0em 0em;
+    margin: 2em 1em 0em 0em;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1416,8 +1416,8 @@ input,textarea{
 
 .desk_center {
     float: left;
-    width:50%;
-    padding: 0em 2em 0em 2em;
+    width: 50%;
+    padding: 0em 3em 0em 2em;
     max-height: 550px;
     overflow-y: auto;
     }
