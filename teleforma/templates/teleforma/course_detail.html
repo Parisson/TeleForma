@@ -38,7 +38,9 @@ $(document).ready(function(){
         {% endblock %}
 
         {% block document %}
-         {% include "teleforma/inc/document_list.html" %}
+         {% with forloop.counter as type_counter %}
+          {% include "teleforma/inc/document_list.html" %}
+         {% endwith %}
         {% endblock %}
 
         </div>
