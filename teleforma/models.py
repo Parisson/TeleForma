@@ -69,7 +69,7 @@ class ShortTextField(models.TextField):
 
     def formfield(self, **kwargs):
          kwargs.update(
-            {"widget": Textarea(attrs={'rows':3, 'cols':40})}
+            {"widget": Textarea(attrs={'rows':2, 'cols':40})}
          )
          return super(ShortTextField, self).formfield(**kwargs)
 

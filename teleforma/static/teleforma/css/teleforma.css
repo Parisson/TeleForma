@@ -1634,6 +1634,18 @@ input,textarea{
     text-align: center;
     }
 
+
+/* TeleCaster */
+
 .status {
     padding: 0.5em;
+    }
+
+.warning {
+    color: red;
+    font-weight: bold;
+}
+
+.default {
+    color: green;
     }
