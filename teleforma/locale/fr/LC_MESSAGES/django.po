@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-09 11:47+0200\n"
+"POT-Creation-Date: 2012-07-12 16:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,273 +18,273 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: models.py:69 models.py:81 models.py:100 models.py:112 models.py:167
-#: models.py:323 models.py:419 models.py:435
+#: models.py:81 models.py:93 models.py:112 models.py:124 models.py:179
+#: models.py:338 models.py:434 models.py:450
 msgid "name"
 msgstr "nom"
 
-#: models.py:70 models.py:82 models.py:101 models.py:113 models.py:127
-#: models.py:168 models.py:235 models.py:305 models.py:324 models.py:420
+#: models.py:82 models.py:94 models.py:113 models.py:125 models.py:139
+#: models.py:180 models.py:254 models.py:320 models.py:339 models.py:435
 msgid "description"
 msgstr "description"
 
-#: models.py:77 models.py:84 models.py:166
+#: models.py:89 models.py:96 models.py:178
 msgid "organization"
 msgstr "organisation"
 
-#: models.py:95 models.py:125
+#: models.py:107 models.py:137
 msgid "department"
 msgstr "département"
 
-#: models.py:108 models.py:436 models.py:481
+#: models.py:120 models.py:451 models.py:496
 msgid "period"
 msgstr "période"
 
-#: models.py:120 models.py:182 models.py:254 models.py:342 models.py:390
+#: models.py:132 models.py:194 models.py:357 models.py:405
 msgid "course type"
 msgstr "type de matière"
 
-#: models.py:126 models.py:304
+#: models.py:138 models.py:319
 msgid "title"
 msgstr "titre"
 
-#: models.py:128 models.py:309 models.py:434
+#: models.py:140 models.py:324 models.py:449
 msgid "code"
 msgstr "cote"
 
-#: models.py:129 models.py:308
+#: models.py:141 models.py:323
 msgid "date modified"
 msgstr "date de modification"
 
-#: models.py:130 models.py:325
+#: models.py:142 models.py:340
 msgid "number"
 msgstr ""
 
-#: models.py:131 models.py:439
+#: models.py:143 models.py:454
 msgid "synthesis note"
 msgstr "note de synthèse"
 
-#: models.py:132 models.py:442
+#: models.py:144 models.py:457
 msgid "obligations"
 msgstr "obligations"
 
-#: models.py:133 models.py:463
+#: models.py:145 models.py:478
 #, fuzzy
 msgid "magistral"
 msgstr "Cours magistraux"
 
-#: models.py:146 models.py:181 models.py:252 models.py:340 models.py:389
+#: models.py:158 models.py:193 models.py:355 models.py:404
 msgid "course"
 msgstr "matière"
 
-#: models.py:152 models.py:480 models.py:518
+#: models.py:164 models.py:495 models.py:533
 msgid "user"
 msgstr "utilisateur"
 
-#: models.py:153
+#: models.py:165
 msgid "courses"
 msgstr "matières"
 
-#: models.py:161 models.py:183
+#: models.py:173 models.py:195
 msgid "professor"
 msgstr "professeur"
 
-#: models.py:175 models.py:187
+#: models.py:187 models.py:199
 msgid "room"
 msgstr "salle"
 
-#: models.py:180
+#: models.py:192
 #, fuzzy
 msgid "public_id"
 msgstr "publié"
 
-#: models.py:185
+#: models.py:197
 msgid "session"
 msgstr "session"
 
-#: models.py:189
+#: models.py:201
 msgid "comment"
 msgstr ""
 
-#: models.py:190
+#: models.py:202
 msgid "begin date"
 msgstr "date de début"
 
-#: models.py:191
+#: models.py:203
 msgid "end date"
 msgstr "date de fin"
 
-#: models.py:192 models.py:349 models.py:396
+#: models.py:204 models.py:364 models.py:411
 msgid "readers"
 msgstr ""
 
-#: models.py:224 models.py:257 models.py:343 models.py:391
+#: models.py:243 models.py:271 models.py:358 models.py:406
 msgid "conference"
 msgstr "conférence"
 
-#: models.py:232
+#: models.py:251
 msgid "host"
 msgstr ""
 
-#: models.py:233
+#: models.py:252
 msgid "port"
 msgstr ""
 
-#: models.py:234 models.py:345
+#: models.py:253 models.py:360
 msgid "type"
 msgstr "type"
 
-#: models.py:236
+#: models.py:255
 msgid "source password"
 msgstr ""
 
-#: models.py:237
+#: models.py:256
 msgid "admin password"
 msgstr ""
 
-#: models.py:244 models.py:260
+#: models.py:263 models.py:274
 msgid "streaming server"
 msgstr "serveur de diffusion"
 
-#: models.py:261
+#: models.py:275
 msgid "Streaming type"
 msgstr "Type de flux"
 
-#: models.py:263
+#: models.py:277
 #, fuzzy
 msgid "streaming"
 msgstr "Diffusion"
 
-#: models.py:298
+#: models.py:313
 msgid "live stream"
 msgstr "stream en direct"
 
-#: models.py:306
+#: models.py:321
 msgid "credits"
 msgstr "crédits"
 
-#: models.py:307 models.py:538
+#: models.py:322 models.py:553
 msgid "date added"
 msgstr "date d'ajout"
 
-#: models.py:310
+#: models.py:325
 msgid "published"
 msgstr "publié"
 
-#: models.py:332
+#: models.py:347
 msgid "document type"
 msgstr "type de document"
 
-#: models.py:347
+#: models.py:362
 msgid "annal"
 msgstr "annale"
 
-#: models.py:348
+#: models.py:363
 msgid "file"
 msgstr "fichier"
 
-#: models.py:395
+#: models.py:410
 msgid "is live"
 msgstr "en direct"
 
-#: models.py:427 models.py:428 templates/telemeta/profile_detail.html:65
+#: models.py:442 models.py:443 templates/telemeta/profile_detail.html:64
 #: templates/telemeta/users.html:29 templates/telemeta/inc/user_list.html:21
 msgid "IEJ"
 msgstr "IEJ"
 
-#: models.py:445 models.py:488
+#: models.py:460 models.py:503
 msgid "procedure"
 msgstr "procédure"
 
-#: models.py:448 models.py:491
+#: models.py:463 models.py:506
 msgid "written speciality"
 msgstr "spécialité écrit"
 
-#: models.py:451 models.py:494
+#: models.py:466 models.py:509
 msgid "oral speciality"
 msgstr "spécialité orale"
 
-#: models.py:454 models.py:496
+#: models.py:469 models.py:511
 msgid "oral 1"
 msgstr ""
 
-#: models.py:457 models.py:498
+#: models.py:472 models.py:513
 msgid "oral 2"
 msgstr ""
 
-#: models.py:460 models.py:500
+#: models.py:475 models.py:515
 msgid "options"
 msgstr "options"
 
-#: models.py:465
+#: models.py:480
 msgid "cost"
 msgstr "coût"
 
-#: models.py:475 models.py:485
+#: models.py:490 models.py:500
 msgid "training"
 msgstr "formation"
 
-#: models.py:483
+#: models.py:498
 msgid "iej"
 msgstr "iej"
 
-#: models.py:486
+#: models.py:501
 msgid "platform only"
 msgstr "plateforme seulement"
 
-#: models.py:511 models.py:536
+#: models.py:526 models.py:551
 msgid "student"
 msgstr "étudiant"
 
-#: models.py:519 templates/telemeta/profile_detail.html:78
+#: models.py:534 templates/telemeta/profile_detail.html:77
 msgid "Address"
 msgstr ""
 
-#: models.py:520
+#: models.py:535
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models.py:521
+#: models.py:536
 msgid "City"
 msgstr "Ville"
 
-#: models.py:522
+#: models.py:537
 msgid "Country"
 msgstr "Pays"
 
-#: models.py:523 templates/telemeta/profile_detail.html:87
+#: models.py:538 templates/telemeta/profile_detail.html:86
 msgid "Language"
 msgstr "Langue"
 
-#: models.py:524 templates/telemeta/profile_detail.html:79
+#: models.py:539 templates/telemeta/profile_detail.html:78
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models.py:525
+#: models.py:540
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models.py:526
+#: models.py:541
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
-#: models.py:530
+#: models.py:545
 msgid "profile"
 msgstr "profil"
 
-#: models.py:537
+#: models.py:552
 msgid "amount"
 msgstr "montant"
 
-#: models.py:546
+#: models.py:561
 msgid "payment"
 msgstr "paiement"
 
-#: views.py:146
+#: views.py:154
 msgid "Access not allowed."
 msgstr "Accès non autorisé."
 
-#: views.py:147
+#: views.py:155
 msgid ""
 "Please login or contact the website administator to get a private access."
 msgstr ""
@@ -315,7 +315,7 @@ msgstr ""
 msgid "Sent Messages"
 msgstr "Messages"
 
-#: templates/postman/base.html:17 templates/telemeta/base.html:88
+#: templates/postman/base.html:17 templates/telemeta/base.html:89
 msgid "Archives"
 msgstr ""
 
@@ -340,7 +340,9 @@ msgstr "Messages"
 msgid "Sorry, this page number is invalid."
 msgstr ""
 
-#: templates/postman/base_folder.html:31 templates/telemeta/lists.html:75
+#: templates/postman/base_folder.html:31
+#: templates/teleforma/course_conference_record.html:53
+#: templates/telemeta/lists.html:75
 msgid "Action"
 msgstr ""
 
@@ -557,9 +559,9 @@ msgid "Documents"
 msgstr "Supports écrits"
 
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
-#: templates/teleforma/course_conference.html:33
+#: templates/teleforma/course_conference.html:62
 #: templates/teleforma/course_document.html:74
-#: templates/teleforma/inc/conference_list.html:22
+#: templates/teleforma/inc/conference_list.html:24
 #: templates/telemeta/lists.html:69 templates/telemeta/search_criteria.html:97
 #: templates/telemeta/inc/module_revisions.html:17
 msgid "Title"
@@ -571,7 +573,7 @@ msgstr "Description"
 
 #: templates/teleforma/course.html:20 templates/teleforma/course.html.py:36
 #: templates/teleforma/course.html:53 templates/teleforma/course_media.html:68
-#: templates/telemeta/profile_detail.html:82
+#: templates/telemeta/profile_detail.html:81
 msgid "Date added"
 msgstr "Date d'ajout"
 
@@ -584,31 +586,53 @@ msgid "Conferences"
 msgstr "Conférences"
 
 #: templates/teleforma/course.html:51
-#: templates/teleforma/course_conference.html:34
-#: templates/teleforma/inc/conference_list.html:23
+#: templates/teleforma/course_conference.html:63
+#: templates/teleforma/inc/conference_list.html:25
 msgid "Session"
 msgstr "Session"
 
 #: templates/teleforma/course.html:52
-#: templates/teleforma/course_conference.html:35
+#: templates/teleforma/course_conference.html:64
 #: templates/teleforma/course_media.html:57
-#: templates/teleforma/inc/conference_list.html:24
+#: templates/teleforma/inc/conference_list.html:26
 #: templates/telemeta/inc/user_list.html:48
 msgid "Professor"
 msgstr "Professeur"
 
-#: templates/teleforma/course_conference.html:36
-#: templates/teleforma/inc/conference_list.html:25
+#: templates/teleforma/course_conference.html:29
+msgid "STOP"
+msgstr "STOP"
+
+#: templates/teleforma/course_conference.html:65
+msgid "Room"
+msgstr "Salle"
+
+#: templates/teleforma/course_conference.html:66
+#: templates/teleforma/inc/conference_list.html:27
 msgid "Begin"
 msgstr "Début"
 
-#: templates/teleforma/course_conference.html:37
+#: templates/teleforma/course_conference.html:67
 msgid "End"
 msgstr "Fin"
 
-#: templates/teleforma/course_conference.html:38
+#: templates/teleforma/course_conference.html:68
 msgid "Live"
 msgstr "Direct"
+
+#: templates/teleforma/course_conference.html:81
+#: templates/teleforma/course_conference_record.html:68
+msgid "Status"
+msgstr ""
+
+#: templates/teleforma/course_conference_record.html:25
+#: templates/teleforma/courses.html:43
+msgid "New conference"
+msgstr "Nouvelle conférence"
+
+#: templates/teleforma/course_conference_record.html:54
+msgid "Record and stream"
+msgstr "Enregistrer et diffuser"
 
 #: templates/teleforma/course_media.html:63
 msgid "Begin date"
@@ -622,24 +646,29 @@ msgstr "Date de fin"
 msgid "Mime type"
 msgstr "Type mime"
 
-#: templates/teleforma/courses.html:22
+#: templates/teleforma/courses.html:26
 #: templates/telemeta/profile_detail.html:16
 msgid "My courses"
 msgstr "Mes matières"
 
-#: templates/teleforma/courses.html:38
+#: templates/teleforma/courses.html:50
 msgid "My notes"
 msgstr "Mes notes"
 
-#: templates/teleforma/courses.html:48
+#: templates/teleforma/courses.html:60
 msgid "New note"
 msgstr "Nouvelle note"
 
-#: templates/teleforma/inc/conference_list.html:7
+#: templates/teleforma/help.html:11 templates/telemeta/base.html:98
+#: templates/telemeta/base.html.py:111
+msgid "Help"
+msgstr ""
+
+#: templates/teleforma/inc/conference_list.html:8
 msgid "Live conferences"
 msgstr "Conférences en direct"
 
-#: templates/teleforma/inc/conference_list.html:15
+#: templates/teleforma/inc/conference_list.html:17
 #: templates/teleforma/inc/document_list.html:20
 #: templates/teleforma/inc/media_list.html:14
 msgid "View"
@@ -658,60 +687,56 @@ msgstr "Aucun document"
 msgid "Passed conferences"
 msgstr "Conférences en différé"
 
-#: templates/telemeta/base.html:71
+#: templates/telemeta/base.html:73
 msgid "Desk"
 msgstr "Bureau"
 
-#: templates/telemeta/base.html:74
+#: templates/telemeta/base.html:76
 msgid "Home"
 msgstr "Accueil"
 
-#: templates/telemeta/base.html:79
+#: templates/telemeta/base.html:81
 msgid "Messaging"
 msgstr "Messagerie"
 
-#: templates/telemeta/base.html:82 templates/telemeta/users.html:6
+#: templates/telemeta/base.html:84 templates/telemeta/users.html:6
 #: templates/telemeta/users.html.py:70
 msgid "Users"
 msgstr ""
 
-#: templates/telemeta/base.html:90 templates/telemeta/search_criteria.html:69
+#: templates/telemeta/base.html:91 templates/telemeta/search_criteria.html:69
 msgid "Search"
 msgstr ""
 
-#: templates/telemeta/base.html:91
+#: templates/telemeta/base.html:92
 msgid "Collections"
 msgstr ""
 
-#: templates/telemeta/base.html:92
+#: templates/telemeta/base.html:93
 msgid "Items"
 msgstr ""
 
-#: templates/telemeta/base.html:95
+#: templates/telemeta/base.html:96
 msgid "Admin"
 msgstr ""
 
-#: templates/telemeta/base.html:97 templates/telemeta/base.html.py:110
-msgid "Help"
-msgstr ""
-
-#: templates/telemeta/base.html:107
+#: templates/telemeta/base.html:108
 msgid "Profile"
 msgstr "Profil"
 
-#: templates/telemeta/base.html:109
+#: templates/telemeta/base.html:110
 msgid "Lists"
 msgstr ""
 
-#: templates/telemeta/base.html:112
+#: templates/telemeta/base.html:113
 msgid "Sign out"
 msgstr ""
 
-#: templates/telemeta/base.html:154
+#: templates/telemeta/base.html:155
 msgid "Powered by"
 msgstr ""
 
-#: templates/telemeta/base.html:164
+#: templates/telemeta/base.html:165
 msgid "Legal notices"
 msgstr ""
 
@@ -727,7 +752,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: templates/telemeta/lists.html:55 templates/telemeta/profile_detail.html:49
+#: templates/telemeta/lists.html:55
 msgid "Edit"
 msgstr ""
 
@@ -788,85 +813,84 @@ msgstr "Envoyer un message"
 msgid "User profile"
 msgstr "profil"
 
-#: templates/telemeta/profile_detail.html:51
+#: templates/telemeta/profile_detail.html:49
 msgid "Change password"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:60
+#: templates/telemeta/profile_detail.html:51
+msgid "Login as"
+msgstr "Se connecter en tant que"
+
+#: templates/telemeta/profile_detail.html:59
 #: templates/telemeta/inc/user_list.html:20
 msgid "First Name"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:61
+#: templates/telemeta/profile_detail.html:60
 #: templates/telemeta/inc/user_list.html:19
 msgid "Last Name"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:62
+#: templates/telemeta/profile_detail.html:61
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: templates/telemeta/profile_detail.html:66
+#: templates/telemeta/profile_detail.html:65
 #: templates/telemeta/inc/user_list.html:22
 msgid "Training"
 msgstr "Formation"
 
-#: templates/telemeta/profile_detail.html:67
+#: templates/telemeta/profile_detail.html:66
 msgid "Platform only"
 msgstr "Plateforme seulement"
 
-#: templates/telemeta/profile_detail.html:68
+#: templates/telemeta/profile_detail.html:67
 #: templates/telemeta/inc/user_list.html:23
 msgid "Procedure"
 msgstr "Procédure"
 
-#: templates/telemeta/profile_detail.html:69
+#: templates/telemeta/profile_detail.html:68
 #: templates/telemeta/inc/user_list.html:24
 msgid "Oral spe"
 msgstr "Oral Spé"
 
-#: templates/telemeta/profile_detail.html:70
+#: templates/telemeta/profile_detail.html:69
 #: templates/telemeta/inc/user_list.html:25
 msgid "Written spe"
 msgstr "Ecrit Spé"
 
-#: templates/telemeta/profile_detail.html:71
+#: templates/telemeta/profile_detail.html:70
 #: templates/telemeta/inc/user_list.html:26
 msgid "Oral 1"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:72
+#: templates/telemeta/profile_detail.html:71
 #: templates/telemeta/inc/user_list.html:27
 msgid "Oral 2"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:73
-#, fuzzy
+#: templates/telemeta/profile_detail.html:72
 msgid "Options"
-msgstr "options"
+msgstr "Options"
 
-#: templates/telemeta/profile_detail.html:77
+#: templates/telemeta/profile_detail.html:76
 msgid "Email"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:83
+#: templates/telemeta/profile_detail.html:82
 #, fuzzy
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
-#: templates/telemeta/profile_detail.html:84
+#: templates/telemeta/profile_detail.html:83
 msgid "Last login"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:95
+#: templates/telemeta/profile_detail.html:94
 msgid "Apply"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:106
-msgid "Login as"
-msgstr "Se connecter en tant que"
-
-#: templates/telemeta/profile_detail.html:107
+#: templates/telemeta/profile_detail.html:104
 msgid "Password reset"
 msgstr "Réinitialisation du mot de passe"
 
@@ -969,9 +993,6 @@ msgstr ""
 #~ msgid "written specialities"
 #~ msgstr "spécialités écrites"
 
-#~ msgid "Room"
-#~ msgstr "Salle"
-
 #~ msgid "Differed"
 #~ msgstr "Différé"
 
@@ -997,9 +1018,6 @@ msgstr ""
 
 #~ msgid "Date begin"
 #~ msgstr "Date de début"
-
-#~ msgid "Recording date"
-#~ msgstr "date de d'enregistrement"
 
 #~ msgid "Modify profile"
 #~ msgstr "Modifier le profil"
