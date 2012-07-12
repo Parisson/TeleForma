@@ -2,6 +2,7 @@
 
 import mimetypes
 import datetime
+import random
 
 from jsonrpc import jsonrpc_method
 
@@ -159,6 +160,11 @@ def get_host(request):
     if ':' in host:
         host = host.split(':')[0]
     return host
+
+
+def get_random_hash():
+    hash = random.getrandbits(128)
+    return "%032x" % hash
 
 
 class CourseView(DetailView):
@@ -339,10 +345,10 @@ class ConferenceView(DetailView):
         for stream in conference.livestream.all():
             stream.delete()
         for station in conference.station.all():
+            station.started = False
+            station.save()
             station.stop()
-            station.delete()
 
-    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
@@ -367,10 +373,12 @@ class ConferenceRecordView(FormView):
 
     def form_valid(self, form):
         form.save()
+        uuid = get_random_hash()
         self.conference = form.instance
         self.conference.date_begin = datetime.datetime.now()
+        self.conference.public_id = uuid
         self.conference.save()
-        station = Station(conference=self.conference)
+        station = Station(conference=self.conference, public_id=uuid)
         station.setup(settings.TELECASTER_CONF)
         station.start()
         station.save()

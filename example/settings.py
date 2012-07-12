@@ -187,4 +187,4 @@ POSTMAN_AUTO_MODERATE_AS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
-TELECASTER_CONF = '/etc/telecaster/telecaster.xml'
+TELECASTER_CONF = '/etc/telecaster/deefuzzer_mp3.xml'
