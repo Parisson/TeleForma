@@ -1647,3 +1647,16 @@ input,textarea{
 .default {
     color: green;
     }
+
+.conference_form {
+    font-size: 1em;
+    }
+
+.conference_form select {
+    font-size: 1.2em;
+    height: 2em;
+    }
+
+.conference_form textarea {
+    font-size: 1.2em;
+    }

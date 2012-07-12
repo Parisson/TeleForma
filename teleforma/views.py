@@ -1,6 +1,7 @@
 # Create your views here.
 
 import mimetypes
+import datetime
 
 from jsonrpc import jsonrpc_method
 
@@ -333,13 +334,13 @@ class ConferenceView(DetailView):
     @jsonrpc_method('teleforma.conference_stop')
     def stop(request, id):
         conference = Conference.objects.get(id=id)
+        conference.date_end = datetime.datetime.now()
+        conference.save()
         for stream in conference.livestream.all():
-            stream.streaming = False
-            stream.save()
-        for station in conference.livestream.all():
-            station.started = False
-            station.save()
-        conference.delete()
+            stream.delete()
+        for station in conference.station.all():
+            station.stop()
+            station.delete()
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -367,8 +368,11 @@ class ConferenceRecordView(FormView):
     def form_valid(self, form):
         form.save()
         self.conference = form.instance
+        self.conference.date_begin = datetime.datetime.now()
+        self.conference.save()
         station = Station(conference=self.conference)
-#        station.start()
+        station.setup(settings.TELECASTER_CONF)
+        station.start()
         station.save()
         server, c= StreamingServer.objects.get_or_create(host='localhost')
         stream = LiveStream(conference=self.conference, server=server,

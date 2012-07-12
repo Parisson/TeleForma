@@ -214,6 +214,13 @@ class Conference(Model):
                            self.professor.user.last_name,
                            str(self.date_begin)])
 
+    @property
+    def slug(self):
+        slug = '-'.join([self.course.department.slug,
+                         self.course.slug,
+                         self.course_type.name.lower()])
+        return slug
+
     def __unicode__(self):
         return self.description
 
