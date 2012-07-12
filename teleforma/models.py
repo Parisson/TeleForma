@@ -49,12 +49,13 @@ from django.forms import ModelForm, TextInput, Textarea
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from teleforma.fields import *
 from django.contrib.contenttypes import generic
 from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
+import django.db.models as models
+from south.modelsinspector import add_introspection_rules
 
 app_label = 'teleforma'
 
@@ -62,6 +63,17 @@ n_sessions = 21
 session_choices = [(str(x), str(y)) for x in range(1, n_sessions) for y in range(1, n_sessions) if x == y]
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
+
+
+class ShortTextField(models.TextField):
+
+    def formfield(self, **kwargs):
+         kwargs.update(
+            {"widget": Textarea(attrs={'rows':2, 'cols':40})}
+         )
+         return super(ShortTextField, self).formfield(**kwargs)
+
+add_introspection_rules([], ["^teleforma\.models\.ShortTextField"])
 
 
 class Organization(Model):
@@ -186,7 +198,7 @@ class Conference(Model):
                                       max_length=16, default="1")
     room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
-    comment         = CharField(_('comment'), max_length=255, blank=True)
+    comment         = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
     readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
@@ -196,9 +208,18 @@ class Conference(Model):
 
     @property
     def description(self):
-        return ' - '.join([self.course.department.name, self.course.title, self.course_type.name,
-                           self.session, self.professor.user.first_name, self.professor.user.last_name,
+        return ' - '.join([self.course.department.name, self.course.title,
+                           self.course_type.name, self.session,
+                           self.professor.user.first_name,
+                           self.professor.user.last_name,
                            str(self.date_begin)])
+
+    @property
+    def slug(self):
+        slug = '-'.join([self.course.department.slug,
+                         self.course.slug,
+                         self.course_type.name.lower()])
+        return slug
 
     def __unicode__(self):
         return self.description
@@ -209,13 +230,11 @@ class Conference(Model):
 
     def to_dict(self):
         dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label':'public_id'},
-                {'id':'organization','value': self.organization, 'class':'', 'label':'Organization'},
-                {'id': 'department', 'value': self.department , 'class':'', 'label':'Department'},
-                {'id' : 'conference', 'value': self.conference, 'class':'' , 'label': 'Conference'},
+                {'id':'organization','value': self.course.department.organization, 'class':'', 'label':'Organization'},
+                {'id': 'department', 'value': self.course.department , 'class':'', 'label':'Department'},
                 {'id': 'professor', 'value': self.professor, 'class':'' , 'label': 'Professor'},
                 {'id': 'session', 'value': self.session, 'class':'' , 'label': 'Session'},
                 {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
-                {'id': 'started', 'value': str(self.started), 'class':'' , 'label': 'Started'},
                 ]
         return dict
 
@@ -248,11 +267,6 @@ class LiveStream(Model):
 
     element_type = 'livestream'
 
-    course          = ForeignKey('Course', related_name='livestream',
-                                 verbose_name=_('course'))
-    course_type     = ForeignKey('CourseType', related_name='livestream',
-                                 verbose_name=_('course type'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
     conference      = ForeignKey('Conference', related_name='livestream',
                                 verbose_name=_('conference'),
                                 blank=True, null=True, on_delete=models.SET_NULL)
@@ -264,8 +278,9 @@ class LiveStream(Model):
 
     @property
     def slug(self):
-        slug = '-'.join([self.course.department.slug, self.course.slug,
-                         self.course_type.name.lower()])
+        slug = '-'.join([self.conference.course.department.slug,
+                         self.conference.course.slug,
+                         self.conference.course_type.name.lower()])
         return slug
 
     @property

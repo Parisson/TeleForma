@@ -1,22 +1,24 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-{% if course.livestream.all|from_course_type:type %}
+{% with course.conference.all|from_course_type:type as conferences %}
+{% if conferences %}
 <div class="course_content">
 <div class="course_subtitle">
     <h3><img src="{% url telemeta-images "item_title.png" %}" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
-        {% for stream in course.livestream.all|from_course_type:type %}
+       {% for conference in conferences %}
+        {% for stream in conference.livestream.all %}
             <tr>
             {% if stream.streaming %}
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="230px">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
                <a href="{% url teleforma-conference-detail stream.conference.id %}" title="{% trans "View" %}">
                <img id="snapshot-{{ stream.course.code }}-{{ stream.course_type }}" src="{{ stream.snapshot_url }}" width="100%" alt="snapshot" />
                </a>
             </td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
                     <dt>{% trans "Title" %}</dt><dd>{{ stream.conference.course.title }}</dd>
@@ -26,7 +28,7 @@
                     </dl>
                  </div>
             </td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="10%" align="center">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
                 {% if stream.streaming %}
                 <img src="{{ STATIC_URL }}teleforma/images/network-wireless.png" style="vertical-align:middle" title="streaming" />
                 <img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" title="recording" />
@@ -38,12 +40,10 @@
             </div>
              {% endif %}
             </tr>
-
+        {% endfor %}
         {% endfor %}
     </tbody>
     </table>
 </div>
-
-
-
 {% endif %}
+{% endwith %}

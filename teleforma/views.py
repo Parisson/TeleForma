@@ -1,6 +1,7 @@
 # Create your views here.
 
 import mimetypes
+import datetime
 
 from jsonrpc import jsonrpc_method
 
@@ -28,17 +29,24 @@ from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.views.generic.edit import FormView
+from django.core.urlresolvers import reverse, reverse_lazy
 
 from teleforma.models import *
+from teleforma.forms import *
 from telemeta.views.base import *
 import jqchat.models
 from xlwt import Workbook
+
+try:
+    from telecaster.models import *
+except:
+    pass
 
 
 def render(request, template, data = None, mimetype = None):
     return render_to_response(template, data, context_instance=RequestContext(request),
                               mimetype=mimetype)
-
 
 def format_courses(courses, course=None, queryset=None, types=None):
     if queryset:
@@ -145,6 +153,12 @@ def get_access(obj, courses):
 
 access_error = _('Access not allowed.')
 contact_message = _('Please login or contact the website administator to get a private access.')
+
+def get_host(request):
+    host = request.META['HTTP_HOST']
+    if ':' in host:
+        host = host.split(':')[0]
+    return host
 
 
 class CourseView(DetailView):
@@ -297,6 +311,7 @@ class DocumentView(DetailView):
         else:
             return redirect('teleforma-document-detail', document.id)
 
+
 class ConferenceView(DetailView):
 
     model = Conference
@@ -316,9 +331,59 @@ class ConferenceView(DetailView):
         context['livestream'] = conference.livestream.get().url
         return context
 
+    @jsonrpc_method('teleforma.conference_stop')
+    def stop(request, id):
+        conference = Conference.objects.get(id=id)
+        conference.date_end = datetime.datetime.now()
+        conference.save()
+        for stream in conference.livestream.all():
+            stream.delete()
+        for station in conference.station.all():
+            station.stop()
+            station.delete()
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
+
+
+class ConferenceRecordView(FormView):
+
+    model = Conference
+    form_class = ConferenceForm
+    template_name='teleforma/course_conference_record.html'
+    hidden_fields = ['started', 'date_begin', 'date_end', 'public_id', 'readers']
+
+    def get_context_data(self, **kwargs):
+        context = super(ConferenceRecordView, self).get_context_data(**kwargs)
+        context['all_courses'] = get_courses(self.request.user)
+        context['mime_type'] = 'video/webm'
+        context['host'] = get_host(self.request)
+        context['hidden_fields'] = self.hidden_fields
+        return context
+
+    def get_success_url(self):
+        return reverse('teleforma-conference-detail', kwargs={'pk':self.conference.id})
+
+    def form_valid(self, form):
+        form.save()
+        self.conference = form.instance
+        self.conference.date_begin = datetime.datetime.now()
+        self.conference.save()
+        station = Station(conference=self.conference)
+        station.setup(settings.TELECASTER_CONF)
+        station.start()
+        station.save()
+        server, c= StreamingServer.objects.get_or_create(host='localhost')
+        stream = LiveStream(conference=self.conference, server=server,
+                            stream_type='webm', streaming=True)
+        stream.save()
+        return super(ConferenceRecordView, self).form_valid(form)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
+
 
 class UsersView(ListView):
 

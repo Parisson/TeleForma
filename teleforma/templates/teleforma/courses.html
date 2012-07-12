@@ -1,4 +1,6 @@
 {% extends "telemeta/base.html" %}
+{% load teleforma_tags %}
+{% load telemeta_utils %}
 {% load i18n %}
 
 
@@ -33,8 +35,15 @@ $(document).ready(function(){
 {% endblock courses %}
 </ul>
 </div>
-
 </div>
+
+{% block module-action %}
+{% if "telecaster"|installed %}
+<div class="module_action">
+<a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
+</div>
+{% endif %}
+{% endblock module-action %}
 
 {% block notes %}
 <!--<div class="module">

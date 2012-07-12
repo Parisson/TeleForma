@@ -145,7 +145,8 @@ INSTALLED_APPS = (
     'timezones',
     'jqchat',
 #    'follow',
-    'googletools',
+     'googletools',
+     'telecaster',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -157,7 +158,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
 )
 
-TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
+TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
 TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
 TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
 TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
@@ -186,4 +187,4 @@ POSTMAN_AUTO_MODERATE_AS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
-GOOGLE_ANALYTICS_MODEL = True
+TELECASTER_CONF = '/etc/telecaster/telecaster.xml'

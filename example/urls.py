@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 js_info_dict = {
-    'packages': ('telemeta',),
+    'packages': ('telemeta','telecaster'),
 }
 
 urlpatterns = patterns('',
@@ -20,6 +20,7 @@ urlpatterns = patterns('',
 
     # TeleForma
     (r'^', include('teleforma.urls')),
+    (r'^telecaster/', include('telecaster.urls')),
 
     # Languages
     (r'^i18n/', include('django.conf.urls.i18n')),

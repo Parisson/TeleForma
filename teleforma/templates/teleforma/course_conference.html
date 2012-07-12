@@ -1,7 +1,36 @@
 {% extends "teleforma/course_media.html" %}
 {% load telemeta_utils %}
+{% load teleforma_tags %}
 {% load i18n %}
 
+{% block module-action %}
+{% if "telecaster"|installed %}
+<script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
+{% if 'telecaster'|installed %}
+<script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
+{% endif %}
+<script type="text/javascript">
+
+var conferenceUtils = {
+    stop : function(id){
+        json([id],'teleforma.conference_stop',function(){
+            location.href = '{% url teleforma-desk %}';});
+    }}
+
+jQuery(window).ready(function(){
+    var a = jQuery('#action_red');
+    var f = conferenceUtils;
+    a.unbind('click').click(function(){
+        f.stop({{conference.id}});return false;});
+    });
+
+</script>
+<div class="module_action">
+<a href="#" class="component_icon button" id="action_red">{% trans "STOP" %}</a>
+</div>
+
+{% endif %}
+{% endblock module-action %}
 
 {% block course %}
 <div class="course_media">
@@ -33,9 +62,10 @@
 <dt>{% trans "Title" %}</dt><dd>{{ conference.course.title }}</dd>
 <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
 <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
+<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>
 <dt>{% trans "Begin" %}</dt><dd>{{ conference.date_begin }}</dd>
-<dt>{% trans "End" %}</dt><dd>{{ conference.date_end }}</dd>
-<dt>{% trans "Live" %}</dt><dd>{{ conference.streaming }}</dd>
+<dt>{% trans "End" %}</dt><dd>{{ conference.date_end|yes_no }}</dd>
+<dt>{% trans "Live" %}</dt><dd>{{ conference.streaming|yes_no }}</dd>
 </dl>
 </div>
 {% endblock general_info %}
@@ -44,11 +74,27 @@
 {% endblock course %}
 
 {% block chat %}
-{% if room %}
 <div id="module-set" style="width: 22%">
+
+{% if 'telecaster'|installed %}
+<div class="module">
+ <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+ <div id="server_status_table_wrapper" class="status"></div>
+</div>
+{% endif %}
+
+{% if room %}
 {% with "Local tweeter" as title %}
 {% include "teleforma/inc/chat_room.html" %}
 {% endwith %}
-</div>
 {% endif %}
+
+</div>
+
+{% if 'telecaster'|installed %}
+<script type="text/javascript">
+server_status_callback();
+</script>
+{% endif %}
+
 {% endblock chat %}

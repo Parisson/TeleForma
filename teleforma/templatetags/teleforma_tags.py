@@ -134,7 +134,10 @@ def yes_no(bool):
 
 @register.filter
 def from_course_type(docs, type):
-    return docs.filter(course_type=type)
+    if docs:
+        return docs.filter(course_type=type)
+    else:
+        return False
 
 @register.filter
 def from_doc_type(docs, type):
