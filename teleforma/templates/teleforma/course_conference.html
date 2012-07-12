@@ -39,21 +39,24 @@ jQuery(window).ready(function(){
 </div>
 
 <div class="media">
-
-{% if "video" in mime_type %}
+{% for livestream in livestreams %}
+{% if "webm" == livestream.stream_type %}
 <div class="video">
 <video width="640" height="360" controls autoplay preload="auto">
 <!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ livestream }}" type="{{ mime_type }}" />
+<source src="{{ livestream.url }}" type="video/webm" />
 </video>
 </div>
 
-{% elif "audio" in mime_type %}
+{% elif "mp3" == livestream.stream_type %}
 <div class="audio">
-<iframe width='640' height='200' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src="{% url telemeta-item-player-simple  media.item.public_id 640 130 %}"></iframe>
+<audio controls autoplay preload="auto">
+<!-- Hello Chrome and Firefox (and Opera?) -->
+<source src="{{ livestream.url }}" type="audio/mpeg" />
+</audio>
 </div>
 {% endif %}
-
+{% endfor %}
 </div>
 
 {% block general_info %}

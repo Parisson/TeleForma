@@ -41,6 +41,7 @@ from xlwt import Workbook
 
 try:
     from telecaster.models import *
+    from telecaster.tools import *
 except:
     pass
 
@@ -327,14 +328,13 @@ class ConferenceView(DetailView):
         context = super(ConferenceView, self).get_context_data(**kwargs)
         context['all_courses'] = get_courses(self.request.user)
         conference = self.get_object()
-        context['mime_type'] = 'video/webm'
         context['course'] = conference.course
         context['type'] = conference.course_type
         context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="conference")
         context['room'] = get_room(name=conference.course.title, content_type=content_type,
                                    id=conference.id)
-        context['livestream'] = conference.livestream.get().url
+        context['livestreams'] = conference.livestream.all()
         return context
 
     @jsonrpc_method('teleforma.conference_stop')
@@ -354,6 +354,7 @@ class ConferenceView(DetailView):
 
 
 class ConferenceRecordView(FormView):
+    "Conference record form : TeleCaster module required"
 
     model = Conference
     form_class = ConferenceForm
@@ -378,14 +379,22 @@ class ConferenceRecordView(FormView):
         self.conference.date_begin = datetime.datetime.now()
         self.conference.public_id = uuid
         self.conference.save()
-        station = Station(conference=self.conference, public_id=uuid)
-        station.setup(settings.TELECASTER_CONF)
-        station.start()
-        station.save()
-        server, c= StreamingServer.objects.get_or_create(host='localhost')
-        stream = LiveStream(conference=self.conference, server=server,
-                            stream_type='webm', streaming=True)
-        stream.save()
+        status = Status()
+        status.get_hosts()
+
+        stations = settings.TELECASTER_CONF
+        for station in stations:
+            type = station['type']
+            conf = station['conf']
+            port = station['port']
+            server, c= StreamingServer.objects.get_or_create(host=status.ip, port=port)
+            station = Station(conference=self.conference, public_id=uuid)
+            station.setup(conf)
+            station.start()
+            station.save()
+            stream = LiveStream(conference=self.conference, server=server,
+                            stream_type=type, streaming=True)
+            stream.save()
         return super(ConferenceRecordView, self).form_valid(form)
 
     @method_decorator(login_required)

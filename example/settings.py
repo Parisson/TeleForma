@@ -187,4 +187,5 @@ POSTMAN_AUTO_MODERATE_AS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
-TELECASTER_CONF = '/etc/telecaster/deefuzzer_mp3.xml'
+TELECASTER_CONF = [{'type':'mp3','conf':'/etc/telecaster/deefuzzer_mp3.xml', 'port':'8000'},
+                   {'type':'webm','conf':'/etc/telecaster/deefuzzer_webm.xml', 'port':'8080'}, ]
