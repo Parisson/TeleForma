@@ -165,7 +165,6 @@ def get_all_courses():
 
 @register.assignment_tag
 def get_telecaster():
-    print settings.INSTALLED_APPS
     return 'telecaster' in settings.INSTALLED_APPS
 
 @register.assignment_tag
