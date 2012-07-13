@@ -387,7 +387,8 @@ class ConferenceRecordView(FormView):
             type = station['type']
             conf = station['conf']
             port = station['port']
-            server, c= StreamingServer.objects.get_or_create(host=status.ip, port=port)
+            server_type = station['server_type']
+            server, c = StreamingServer.objects.get_or_create(host=status.ip, port=port, type=server_type)
             station = Station(conference=self.conference, public_id=uuid)
             station.setup(conf)
             station.start()
