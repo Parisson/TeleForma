@@ -9,7 +9,7 @@
 
 {% with course.document.all as docs %}
 {% for doc_type in doc_types %}
-{% if docs|from_course_type:type|from_doc_type:doc_type and not type_counter > 1 %}
+{% if docs|from_course_type:type|from_doc_type:doc_type and not type_counter > 2 %}
 <span class="doc_type_title">{{ doc_type }}</span>
 <table class="listing" width="100%">
     <tbody>

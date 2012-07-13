@@ -48,7 +48,7 @@ class Command(BaseCommand):
         last_name   = row[0].value
         first_name  = row[1].value
         email       = row[9].value
-        #FIXME:
+        #FIXME: NOT for production
         email       = self.admin_email
         username = slugify(first_name)[0] + '.' + slugify(last_name)
         username = username[:30]
