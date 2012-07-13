@@ -32,7 +32,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         users = User.objects.all()
         translation.activate(self.language_code)
-#        users = User.objects.filter(is_staff=True)
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
             student = user.student.all()
