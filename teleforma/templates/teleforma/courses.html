@@ -38,6 +38,7 @@ $(document).ready(function(){
 </div>
 
 {% block module-action %}
+{% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module_action">
 <a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>

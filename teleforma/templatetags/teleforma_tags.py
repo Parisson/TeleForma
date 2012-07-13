@@ -164,9 +164,10 @@ def get_all_courses():
     return Course.objects.all()
 
 @register.assignment_tag
-def telecaster():
+def get_telecaster():
+    print settings.INSTALLED_APPS
     return 'telecaster' in settings.INSTALLED_APPS
 
 @register.assignment_tag
-def googletools():
+def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
