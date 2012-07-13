@@ -163,4 +163,10 @@ def get_all_iejs():
 def get_all_courses():
     return Course.objects.all()
 
+@register.assignment_tag
+def telecaster():
+    return 'telecaster' in settings.INSTALLED_APPS
 
+@register.assignment_tag
+def googletools():
+    return 'googletools' in settings.INSTALLED_APPS
