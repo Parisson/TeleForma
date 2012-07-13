@@ -3,7 +3,7 @@
 {% load teleforma_tags %}
 
 <div class="module">
-        <h3><img src="{% url telemeta-images "vox_wh.png" %}" alt="rss" style="vertical-align:middle" />{% trans title %}</h3>
+        <h3><img src="{{STATIC_URL}}telemeta/images/vox_wh.png" %}" alt="rss" style="vertical-align:middle" />{% trans title %}</h3>
         <div style="background: transparent;">
         <div id="chatwindow"><span id="loading">Loading...</span></div>
         <form id="chatform">{% csrf_token %}
