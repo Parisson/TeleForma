@@ -409,7 +409,6 @@ class Media(MediaBase):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
-    is_live         = BooleanField(_('is live'))
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
 
