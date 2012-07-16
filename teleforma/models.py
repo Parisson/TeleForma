@@ -403,25 +403,31 @@ class Media(MediaBase):
 
     element_type = 'media'
 
-    course          = ForeignKey('Course', related_name='media', verbose_name=_('course'))
-    course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
+    course          = ForeignKey('Course', related_name='media', verbose_name=_('course'),
+                                 blank=True, null=True)
+    course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
+                                 blank=True, null=True)
     items           = ManyToManyField(telemeta.models.media.MediaItem, related_name='media',
                                  verbose_name='items', blank=True, null=True)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
 
     def __unicode__(self):
-        description = self.course.title
-        if self.item:
-            return description + ' _ ' + self.item.title
+        if self.course:
+            return self.course.title
+        elif self.conference:
+            return self.conference
         else:
-            return description
+            return self.title
 
     def save(self, **kwargs):
         super(Media, self).save(**kwargs)
-        self.course.save()
+        if self.course:
+            self.course.save()
+        elif self.conference:
+            self.conference.course.save()
 
     class Meta:
         db_table = app_label + '_' + 'media'
