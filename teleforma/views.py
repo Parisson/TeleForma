@@ -363,9 +363,12 @@ class ConferenceRecordView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
+        from telecaster.tools import *
         context['all_courses'] = get_courses(self.request.user)
         context['mime_type'] = 'video/webm'
-        context['host'] = get_host(self.request)
+        status = Status()
+        status.update()
+        context['host'] = status.ip
         context['hidden_fields'] = self.hidden_fields
         return context
 
@@ -387,7 +390,8 @@ class ConferenceRecordView(FormView):
             type = station['type']
             conf = station['conf']
             port = station['port']
-            server, c= StreamingServer.objects.get_or_create(host=status.ip, port=port)
+            server_type = station['server_type']
+            server, c = StreamingServer.objects.get_or_create(host=status.ip, port=port, type=server_type)
             station = Station(conference=self.conference, public_id=uuid)
             station.setup(conf)
             station.start()
