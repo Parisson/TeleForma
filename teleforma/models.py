@@ -407,8 +407,8 @@ class Media(MediaBase):
     course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
-                                 verbose_name='item', blank=True, null=True)
+    items           = ManyToManyField(telemeta.models.media.MediaItem, related_name='media',
+                                 verbose_name='items', blank=True, null=True)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
 
