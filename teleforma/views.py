@@ -363,7 +363,6 @@ class ConferenceRecordView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
-        from telecaster.tools import *
         context['all_courses'] = get_courses(self.request.user)
         context['mime_type'] = 'video/webm'
         status = Status()
