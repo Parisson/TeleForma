@@ -404,6 +404,36 @@ class ConferenceRecordView(FormView):
     def dispatch(self, *args, **kwargs):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 
+    def create(self, data):
+        if isinstance(conference, dict):
+            conf, c = Conference.objects.get_or_create(public_id=conference['id'])
+            if c:
+                c.course = Course.objects.get(code=conference['course_id'])
+                c.course_type = CourseType.objects.get(name=conference['course_type'])
+                user = User.objects.get(username=conference['professor_id'])
+                c.session = conference['session']
+                c.professor = Professor.objects.get(user=user)
+                c.room = Room.objects.get(name=conference['room'])
+                c.save()
+                #TODO: dates
+        else:
+            raise 'Error : Bad Conference dictionnary'
+
+    @jsonrpc_method('teleforma.update_conferences')
+    def update(request, data):
+        if isinstance(data, list):
+            for conference in data:
+                self.create(conference)
+        else:
+            raise 'Error : Bad Conference dictionnary list'
+
+    @jsonrpc_method('teleforma.add_conference')
+    def add(request, data):
+        # playlist_resource must be a dict
+        if isinstance(data, dict):
+            self.create(data)
+        else:
+            raise 'Error : Bad Conference dictionnary'
 
 class UsersView(ListView):
 
