@@ -42,12 +42,12 @@ class Command(BaseCommand):
         all_conferences = Conference.objects.all()
         i = 1
         #FIXME:
-        medias = Media.objects.all()
-        for media in medias:
-            media.delete()
-        items = MediaItem.objects.all()
-        for item in items:
-            item.delete()
+        #medias = Media.objects.all()
+        #for media in medias:
+        #    media.delete()
+        #items = MediaItem.objects.all()
+        #for item in items:
+        #    item.delete()
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
@@ -65,7 +65,6 @@ class Command(BaseCommand):
                     department_name = root_list[-4]
                     organization_name = root_list[-5]
                     path = os.sep.join(root_list[-5:]) + os.sep + filename
-                    print path
                     
                     department, created = Department.objects.get_or_create(name=department_name, organization=organization)
                     conference, created = Conference.objects.get_or_create(public_id=public_id)
@@ -79,6 +78,7 @@ class Command(BaseCommand):
                             break
 
                     if not exist:
+                        print path
                         collection_id = '_'.join([department_name, course_id, course_type])
                         collections = MediaCollection.objects.filter(code=collection_id)
                         if not collections:
