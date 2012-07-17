@@ -101,6 +101,9 @@ class Command(BaseCommand):
                         item.save()
                         media, c = Media.objects.get_or_create(conference=conference)
                         media.items.add(item)
+                        media.course = conference.course
+                        media.course_type = conference.course_type
+                        media.save()
                         self.logger.info('Imported: ' + path)
                         i += 1
 
