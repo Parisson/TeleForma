@@ -28,7 +28,7 @@ class Command(BaseCommand):
     args = 'organization'
     spacer = '_-_'
     formats = ['mp3', 'webm']
-    logger = Logger('/var/log/telecaster/import.log')
+    logger = Logger('/tmp/import.log')
 
     def handle(self, *args, **options):
         organization_name = args[0]
@@ -39,10 +39,11 @@ class Command(BaseCommand):
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
+                print filename
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1]
 
-                if ext in formats:
+                if ext in self.formats:
                     path = root + os.sep + filename
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
