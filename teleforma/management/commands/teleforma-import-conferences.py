@@ -28,31 +28,46 @@ class Command(BaseCommand):
     args = 'organization'
     spacer = '_-_'
     formats = ['mp3', 'webm']
-    logger = Logger('/tmp/import.log')
+    logger = logging.getLogger('myapp')
+    hdlr = logging.FileHandler('/tmp/import.log')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr)
 
     def handle(self, *args, **options):
         organization_name = args[0]
         organization = Organization.objects.get(name=organization_name)
-        self.media_dir = settings.MEDIA_ROOT + os.sep + organization.name
+        self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
         all_conferences = Conference.objects.all()
+        i = 1
+        #FIXME:
+        medias = Media.objects.all()
+        for media in medias:
+            media.delete()
+        items = MediaItem.objects.all()
+        for item in items:
+            item.delete()
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
-                print filename
                 name = os.path.splitext(filename)[0]
-                ext = os.path.splitext(filename)[1]
-
+                ext = os.path.splitext(filename)[1][1:]
+                
                 if ext in self.formats:
                     path = root + os.sep + filename
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
-                    course_id = root_list[-2].split(self.spacer)[0]
-                    course_type = root_list[-2].split(self.spacer)[1].lower()
-                    department_name = root_list[-3]
-                    date = root_list[-4]
-
-                    department, created = Department.objects.get_or_create(name=department_name)
+                    course = root_list[-2]
+                    course_id = course.split(self.spacer)[0]
+                    course_type = course.split(self.spacer)[1].lower()
+                    date = root_list[-3]
+                    department_name = root_list[-4]
+                    organization_name = root_list[-5]
+                    path = os.sep.join(root_list[-5:]) + os.sep + filename
+                    print path
+                    
+                    department, created = Department.objects.get_or_create(name=department_name, organization=organization)
                     conference, created = Conference.objects.get_or_create(public_id=public_id)
 
                     exist = False
@@ -64,14 +79,28 @@ class Command(BaseCommand):
                             break
 
                     if not exist:
-                        collection_id = '_'.join(department_name, course_id, course_type)
-                        collection, c = MediaCollection.objects.get_or_create(public_id=collection_id,
-                                                            title=collection_id.replace('_', ' - '))
-                        item = MediaItem.objects.create(collection=collection,
-                                         public_id='_'.join(collection_id, public_id, ext),
-                                         title=name,
-                                         file=path)
+                        collection_id = '_'.join([department_name, course_id, course_type])
+                        collections = MediaCollection.objects.filter(code=collection_id)
+                        if not collections:
+                            collection = MediaCollection(code=collection_id,title=collection_id)
+                            collection.save()
+                        else:
+                            collection = collections[0]
+                        
+                        id = '_'.join([collection_id, public_id, ext, str(i)])                       
+                        
+                        items = MediaItem.objects.filter(collection=collection, code=id)
+                        if not items:
+                            item = MediaItem(collection=collection, code=id)
+                            item.save()
+                        else:
+                            item = items[0]
+
+                        item.title = name
+                        item.file = path
+                        item.save()
                         media, c = Media.objects.get_or_create(conference=conference)
                         media.items.add(item)
-                        logger.info('Imported: ' + path)
+                        self.logger.info('Imported: ' + path)
+                        i += 1
 

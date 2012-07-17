@@ -418,7 +418,7 @@ class Media(MediaBase):
         if self.course:
             return self.course.title
         elif self.conference:
-            return self.conference
+            return self.conference.description
         else:
             return self.title
 
