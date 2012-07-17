@@ -25,12 +25,15 @@ class Logger:
 class Command(BaseCommand):
     help = "Import conferences from the MEDIA_ROOT directory "
     admin_email = 'webmaster@parisson.com'
-    media_dir = settings.MEDIA_ROOT+os.sep+'items'
+    args = 'organization'
     spacer = '_-_'
     formats = ['mp3', 'webm']
     logger = Logger('/var/log/telecaster/import.log')
 
     def handle(self, *args, **options):
+        organization_name = args[0]
+        organization = Organization.objects.get(name=organization_name)
+        self.media_dir = settings.MEDIA_ROOT + os.sep + organization.name
         file_list = []
         all_conferences = Conference.objects.all()
 
