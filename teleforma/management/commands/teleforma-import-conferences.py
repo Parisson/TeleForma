@@ -117,7 +117,7 @@ class Command(BaseCommand):
                             filename, ext = os.path.splitext(file)
                             if ext[1:] in self.image_formats:
                                 related = MediaItemRelated(item=item)
-                                related.file = root + os.sep + file
+                                related.file = dir + os.sep + file
                                 related.title = 'preview'
                                 related.set_mime_type()
                                 related.save()
