@@ -371,9 +371,6 @@ class ConferenceRecordView(FormView):
         status.update()
         context['host'] = status.ip
         context['hidden_fields'] = self.hidden_fields
-        content_type = ContentType.objects.get(app_label="teleforma", model="conference")
-        context['room'] = get_room(name=conference.course.title, content_type=content_type,
-                                   id=conference.id)
         return context
 
     def get_success_url(self):
@@ -414,7 +411,7 @@ class ConferenceRecordView(FormView):
         f = open(path, 'w')
         f.write(img.read())
         f.close()
-        command = '/usr/bin/dwepb ' + path + ' -o ' + dir + os.sep + 'preview.png &'
+        command = '/usr/bin/dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
         os.system(command)
 
     @method_decorator(login_required)

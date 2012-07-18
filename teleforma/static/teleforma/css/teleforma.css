@@ -340,8 +340,9 @@ label.disabled { color: #d7d7d7 }
     -webkit-border-radius: 5px 5px 5px 5px;
     border-radius: 5px 5px 5px 5px;
 }
+
 #quick_search_pattern {
-    background: #FFF url(search_bg.png) no-repeat;
+    background: #FFF;
     padding: .4em .1em;
     padding-left: 25px;
     width: 180px;
