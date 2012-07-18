@@ -12,14 +12,16 @@
         {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="35%">
                 <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
                  {% if media.item.related.all %}
                  {% for related in media.item.related.all %}
                   {% if related.title == "preview" %}
-                  <img src="{% url telemeta-item-related media.item.code related.id %}" style="max-width: 230px; max-height: 200px;" alt="snapshot" />
+                  <img src="{% url telemeta-item-related media.item.code related.id %}" width="100%" alt="snapshot" />
                   {% endif %}
                  {% endfor %}
+                 {% elif %}
+                  snapshot
                  {% endif %}
                 </a>
             </td>
