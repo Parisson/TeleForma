@@ -400,13 +400,14 @@ class ConferenceRecordView(FormView):
             stream = LiveStream(conference=self.conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
+            time.sleep(2)
+
             if server_type == 'stream-m':
                 self.snapshot(stream.snapshot_url, station.output_dir)
 
         return super(ConferenceRecordView, self).form_valid(form)
 
     def snapshot(self, url, dir):
-        print url
         img = urllib.urlopen(url)
         path = dir + os.sep + 'preview.webp'
         f = open(path, 'w')
