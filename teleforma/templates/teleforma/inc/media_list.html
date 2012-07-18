@@ -16,7 +16,7 @@
                 <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
                  {% if media.item.related.all %}
                  {% for related in media.item.related %}
-                  {% if related.title == "preview"}
+                  {% if related.title == "preview" %}
                   <img src="{% url telemeta-item-related media.item.code related.id %}" style="max-width: 230px; max-height: 200px;" alt="snapshot" />
                   {% endif %}
                  {% endfor %}
