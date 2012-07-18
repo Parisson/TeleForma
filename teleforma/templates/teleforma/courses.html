@@ -95,7 +95,6 @@ $(document).ready(function(){
 {% endblock course %}
 
 
-{% block chat %}
 <div id="module-set" style="width: 22%">
 
 {% block status %}
@@ -112,14 +111,16 @@ server_status_callback();
 {% endif %}
 {% endblock status %}
 
+{% block chat %}
 {% if room %}
 {% with "General tweeter" as title %}
 {% include "teleforma/inc/chat_room.html" %}
 {% endwith %}
 {% endif %}
+{% endblock chat %}
 
 </div>
-{% endblock chat %}
+
 
 {% endblock content %}
 
