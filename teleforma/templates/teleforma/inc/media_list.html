@@ -12,7 +12,7 @@
         {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="35%">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
                 <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
                  {% if media.item.related.all %}
                  {% for related in media.item.related.all %}
