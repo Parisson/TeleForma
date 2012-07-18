@@ -44,7 +44,6 @@ class DocumentAdmin(admin.ModelAdmin):
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    filter_horizontal = ['items']
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']

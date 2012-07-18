@@ -56,6 +56,7 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import django.db.models as models
 from south.modelsinspector import add_introspection_rules
+from telemeta.models import *
 
 app_label = 'teleforma'
 
@@ -416,8 +417,9 @@ class Media(MediaBase):
                                  blank=True, null=True)
     course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
                                  blank=True, null=True)
-    items           = ManyToManyField(telemeta.models.media.MediaItem, related_name='media',
-                                 verbose_name='items', blank=True, null=True)
+    item            = ForeignKey(MediaItem, related_name='media',
+                                 verbose_name='item', blank=True, null=True)
+    type            = CharField(_('type'), choices=streaming_choices, max_length=32)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
 

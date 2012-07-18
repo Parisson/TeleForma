@@ -123,8 +123,8 @@ class Command(BaseCommand):
                                 related.save()
                                 break
 
-                        media, c = Media.objects.get_or_create(conference=conference)
-                        media.items.add(item)
+                        media, c = Media.objects.get_or_create(conference=conference, type=ext)
+                        media.item = item
                         media.course = conference.course
                         media.course_type = conference.course_type
                         media.save()
