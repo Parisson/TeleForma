@@ -78,11 +78,14 @@ class Command(BaseCommand):
                             break
 
                     streaming = False
-                    stations = conference.station.filter(started=True)
-                    ids = [station.public_id for station in stations]
-                    for id in ids:
-                        if id == public_id:
-                            streaming = True
+                    try:
+                        stations = conference.station.filter(started=True)
+                        ids = [station.public_id for station in stations]
+                        for id in ids:
+                            if id == public_id:
+                                streaming = True
+                    except:
+                        pass
 
                     if not exist and not streaming:
                         print path
