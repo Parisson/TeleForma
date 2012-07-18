@@ -447,7 +447,6 @@ class ConferenceRecordView(FormView):
         except:
             pass
 
-
 class UsersView(ListView):
 
     model = User
