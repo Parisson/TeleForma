@@ -32,7 +32,7 @@ $(document).ready(function(){
 {% else %}
 <div class="media">
 
-{% if "video" in mime_type %}
+{% if "video" in media.item.mime_type %}
 <div class="video">
 <video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
 <!-- Hello Chrome and Firefox (and Opera?) -->
@@ -40,7 +40,7 @@ $(document).ready(function(){
 </video>
 </div>
 
-{% elif "audio" in mime_type %}
+{% elif "audio" in media.item.mime_type %}
 <div class="audio">
 <iframe width='640' height='200' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src="{% url telemeta-item-player-contour  media.item.public_id 640 130 %}"></iframe>
 </div>
