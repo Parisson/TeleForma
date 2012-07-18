@@ -402,7 +402,8 @@ class ConferenceRecordView(FormView):
             stream.save()
             if server_type == 'stream-m':
                 time.sleep(5)
-                self.snapshot(stream.snapshot_url, station.output_dir)
+#                self.snapshot(stream.snapshot_url, station.output_dir)
+                self.snapshot('http://localhost:8080/consume/safe', station.output_dir)
 
         return super(ConferenceRecordView, self).form_valid(form)
 
