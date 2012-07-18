@@ -41,11 +41,21 @@
 <script src="{% url telemeta-timeside "js/libs/jquery-1.6.min.js" %}" type="text/javascript"></script>
 <script src="{% url telemeta-js "locale.js" %}" type="text/javascript"></script>
 <script src="{% url telemeta-js "application.js" %}" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}jqchat/jqchat.js" type="text/javascript" ></script>
+
 {% if user.is_authenticated %}
 <script type='text/javascript'>var CURRENT_USER_NAME="{{ user.username }}";</script>
 {% else %}
 <script type='text/javascript'>var CURRENT_USER_NAME=undefined;</script>
 {% endif %}
+
+{% block js-status %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
+<script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
+{% endif %}
+{% endblock js-status %}
 
 {% endblock %}
 

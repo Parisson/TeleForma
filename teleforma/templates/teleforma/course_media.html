@@ -10,12 +10,6 @@
 <link href="{% url telemeta-video-js "video-js.css" %}" rel="stylesheet">
 {% endif %}
 
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
-<script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
-{% endif %}
-
-<script type="text/javascript" src="{{ STATIC_URL }}jqchat/jqchat.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     InitChatWindow("{% url jqchat_ajax room.id %}", null);
@@ -84,6 +78,7 @@ $(document).ready(function(){
 {% block chat %}
 <div id="module-set" style="width: 22%">
 
+{% block status %}
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module">
@@ -95,6 +90,7 @@ $(document).ready(function(){
 server_status_callback();
 </script>
 {% endif %}
+{% endblock status %}
 
 {% if room %}
 {% with "Local tweeter" as title %}

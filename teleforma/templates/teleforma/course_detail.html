@@ -2,20 +2,11 @@
 {% load i18n %}
 
 {% block extra_javascript %}
-
-<script type="text/javascript" src="{{ STATIC_URL }}jqchat/jqchat.js"></script>
-
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
-<script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
-{% endif %}
-
 <script type="text/javascript">
 $(document).ready(function(){
     InitChatWindow("{% url jqchat_ajax room.id %}", null);
     });
 </script>
-
 {% endblock extra_javascript %}
 
 {% block courses %}
@@ -59,6 +50,7 @@ $(document).ready(function(){
 {% block chat %}
 <div id="module-set" style="width: 22%">
 
+{% block status %}
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module">
@@ -69,7 +61,8 @@ $(document).ready(function(){
 server_status_callback();
 </script>
 {% endif %}
-}
+{% endblock status %}
+
 {% if room %}
 {% with "Local tweeter" as title %}
 {% include "teleforma/inc/chat_room.html" %}

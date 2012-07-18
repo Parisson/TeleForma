@@ -4,9 +4,6 @@
 {% load i18n %}
 
 {% block extra_javascript %}
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
-<script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
 <script type="text/javascript">
 
 jQuery(window).ready(function(){
@@ -14,9 +11,7 @@ jQuery(window).ready(function(){
     var f = jQuery('#_StationForm');
     a.unbind('click').click(function(){f.submit();return false;});
     });
-
 </script>
-{% endif %}}
 {% endblock extra_javascript %}
 
 {% block module-action %}
