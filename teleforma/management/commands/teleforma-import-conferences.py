@@ -53,7 +53,7 @@ class Command(BaseCommand):
             for filename in files:
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
-                
+
                 if ext in self.formats:
                     path = root + os.sep + filename
                     root_list = root.split(os.sep)
@@ -65,7 +65,7 @@ class Command(BaseCommand):
                     department_name = root_list[-4]
                     organization_name = root_list[-5]
                     path = os.sep.join(root_list[-5:]) + os.sep + filename
-                    
+
                     department, created = Department.objects.get_or_create(name=department_name, organization=organization)
                     conference, created = Conference.objects.get_or_create(public_id=public_id)
 
@@ -77,7 +77,14 @@ class Command(BaseCommand):
                             exist = True
                             break
 
-                    if not exist:
+                    streaming = False
+                    stations = conference.station.filter(started=True)
+                    ids = [station.public_id for station in stations]
+                    for id in ids:
+                        if id == public_id:
+                            streaming = True
+
+                    if not exist and not streaming:
                         print path
                         collection_id = '_'.join([department_name, course_id, course_type])
                         collections = MediaCollection.objects.filter(code=collection_id)
@@ -86,9 +93,9 @@ class Command(BaseCommand):
                             collection.save()
                         else:
                             collection = collections[0]
-                        
-                        id = '_'.join([collection_id, public_id, ext, str(i)])                       
-                        
+
+                        id = '_'.join([collection_id, public_id, ext, str(i)])
+
                         items = MediaItem.objects.filter(collection=collection, code=id)
                         if not items:
                             item = MediaItem(collection=collection, code=id)
