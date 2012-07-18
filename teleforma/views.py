@@ -400,7 +400,8 @@ class ConferenceRecordView(FormView):
             stream = LiveStream(conference=self.conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
-            self.snapshot(stream, station.output_dir)
+            if server_type == 'stream-m':
+                self.snapshot(stream, station.output_dir)
 
         return super(ConferenceRecordView, self).form_valid(form)
 
