@@ -14,7 +14,9 @@
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="35%">
                 <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
+                 {% if media.item.related %}
                   <img src="{% url telemeta-item-related media.item.public_id media.item.related.id %}" style="max-width: 230px; max-height: 200px;" alt="snapshot" />
+                 {% endif %}
                 </a>
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
