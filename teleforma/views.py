@@ -412,7 +412,7 @@ class ConferenceRecordView(FormView):
         f = open(path, 'w')
         f.write(img.read())
         f.close()
-        command = 'dwepb ' + path + ' -o ' + dir + os.sep + 'preview.png'
+        command = '/usr/bin/dwepb ' + path + ' -o ' + dir + os.sep + 'preview.png'
         os.system(command)
 
     @method_decorator(login_required)
