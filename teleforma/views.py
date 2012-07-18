@@ -406,7 +406,6 @@ class ConferenceRecordView(FormView):
         return super(ConferenceRecordView, self).form_valid(form)
 
     def snapshot(self, url, dir):
-        print url
         img = urllib.urlopen(url)
         path = dir + os.sep + 'preview.webp'
         f = open(path, 'w')
