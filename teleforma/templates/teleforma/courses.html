@@ -99,13 +99,25 @@ $(document).ready(function(){
 
 
 {% block chat %}
-{% if room %}
 <div id="module-set" style="width: 22%">
+
+<div class="module">
+ <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+ <div id="server_status_table_wrapper" class="status"></div>
+</div>
+</div>
+
+<script type="text/javascript">
+server_status_callback();
+</script>
+
+{% if room %}
 {% with "General tweeter" as title %}
 {% include "teleforma/inc/chat_room.html" %}
 {% endwith %}
-</div>
 {% endif %}
+
+</div>
 {% endblock chat %}
 
 {% endblock content %}
