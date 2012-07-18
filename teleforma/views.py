@@ -3,6 +3,7 @@
 import mimetypes
 import datetime
 import random
+import urllib
 import urllib2
 import json
 
@@ -404,7 +405,7 @@ class ConferenceRecordView(FormView):
         return super(ConferenceRecordView, self).form_valid(form)
 
     def snapshot(self, stream, dir):
-        img = urllib2.urlopen(stream.snapshot_url())
+        img = urllib.urlopen(stream.snapshot_url)
         path = dir + os.sep + 'preview.webp'
         f = open(path, 'w')
         f.write(img.read())
