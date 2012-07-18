@@ -4,8 +4,6 @@
 {% load i18n %}
 
 {% block module-action %}
-
-
 <script type="text/javascript">
     var conferenceUtils = {
         stop : function(id){
@@ -70,28 +68,3 @@
 
 </div>
 {% endblock course %}
-
-{% block chat %}
-<div id="module-set" style="width: 22%">
-
-{% block status %}
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
-<div class="module">
- <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
- <div id="server_status_table_wrapper" class="status"></div>
-</div>
-<script type="text/javascript">
-server_status_callback();
-</script>
-{% endif %}
-{% endblock status %}
-
-{% if room %}
-{% with "Local tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% endif %}
-
-</div>
-{% endblock chat %}
