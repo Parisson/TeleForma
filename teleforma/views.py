@@ -399,7 +399,18 @@ class ConferenceRecordView(FormView):
             stream = LiveStream(conference=self.conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
+            self.snapshot(stream, station.output_dir)
+
         return super(ConferenceRecordView, self).form_valid(form)
+
+    def snapshot(self, stream, dir):
+        img = urllib2.urlopen(stream.snapshot_url)
+        path = dir + os.sep + 'preview.webp'
+        f = open(path, 'w')
+        f.write(img.read())
+        f.close()
+        command = 'dwepb ' + path + ' -o ' + dir + os.sep + 'preview.png'
+        os.system(command)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
