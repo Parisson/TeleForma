@@ -3,6 +3,8 @@
 import mimetypes
 import datetime
 import random
+import urllib2
+import json
 
 from jsonrpc import jsonrpc_method
 
@@ -408,7 +410,7 @@ class ConferenceRecordView(FormView):
         if isinstance(conference, dict):
             conf, c = Conference.objects.get_or_create(public_id=conference['id'])
             if c:
-                c.course = Course.objects.get(code=conference['course_id'])
+                c.course = Course.objects.get(code=conference['course_code'])
                 c.course_type = CourseType.objects.get(name=conference['course_type'])
                 user = User.objects.get(username=conference['professor_id'])
                 c.session = conference['session']
@@ -434,6 +436,17 @@ class ConferenceRecordView(FormView):
             self.create(data)
         else:
             raise 'Error : Bad Conference dictionnary'
+
+    def push(self, conference):
+        domain = conference.course.department.domain
+        data = {"id":"jsonrpc", "params":"'%s'", "method":"'teleforma.add_conference'",
+                    "jsonrpc":"1.0"} % conference.to_id_dict()
+        jdata = json.dumps(data)
+        try:
+            urllib2.urlopen('http://' + domain + '/', jdata)
+        except:
+            pass
+
 
 class UsersView(ListView):
 

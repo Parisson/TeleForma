@@ -94,6 +94,7 @@ class Department(Model):
     description     = CharField(_('description'), max_length=255, blank=True)
     organization    = ForeignKey('Organization', related_name='department',
                                  verbose_name=_('organization'))
+    domain          = CharField(_('Master domain'), max_length=255, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -239,6 +240,12 @@ class Conference(Model):
                 {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
                 ]
         return dict
+
+    def to_id_dict(self):
+        data = {'id': self.public_id, 'course_code': self.course.code,
+                'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
+                'session': self.session, 'room': self.room.name,  }
+        return data
 
     class Meta:
         db_table = app_label + '_' + 'conference'
