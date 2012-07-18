@@ -47,13 +47,3 @@ $(document).ready(function(){
 </div>
 {% endblock course %}
 
-<div id="module-set" style="width: 22%">
-{% block chat %}
-{% if room %}
-{% with "Local tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% endif %}
-{% endblock chat %}
-</div>
-
