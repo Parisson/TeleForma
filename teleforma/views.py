@@ -401,12 +401,13 @@ class ConferenceRecordView(FormView):
                             stream_type=type, streaming=True)
             stream.save()
             if server_type == 'stream-m':
-                self.snapshot(stream, station.output_dir)
+                self.snapshot(stream.snapshot_url, station.output_dir)
 
         return super(ConferenceRecordView, self).form_valid(form)
 
-    def snapshot(self, stream, dir):
-        img = urllib.urlopen(stream.snapshot_url)
+    def snapshot(self, url, dir):
+        print url
+        img = urllib.urlopen(url)
         path = dir + os.sep + 'preview.webp'
         f = open(path, 'w')
         f.write(img.read())
