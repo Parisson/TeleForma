@@ -406,17 +406,17 @@ class ConferenceRecordView(FormView):
     def dispatch(self, *args, **kwargs):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 
-    def create(self, data):
+    def create(self, conference):
         if isinstance(conference, dict):
             conf, c = Conference.objects.get_or_create(public_id=conference['id'])
             if c:
-                c.course = Course.objects.get(code=conference['course_code'])
-                c.course_type = CourseType.objects.get(name=conference['course_type'])
+                conf.course = Course.objects.get(code=conference['course_code'])
+                conf.course_type = CourseType.objects.get(name=conference['course_type'])
                 user = User.objects.get(username=conference['professor_id'])
-                c.session = conference['session']
-                c.professor = Professor.objects.get(user=user)
-                c.room = Room.objects.get(name=conference['room'])
-                c.save()
+                conf.session = conference['session']
+                conf.professor = Professor.objects.get(user=user)
+                conf.room = Room.objects.get(name=conference['room'])
+                conf.save()
                 #TODO: dates
         else:
             raise 'Error : Bad Conference dictionnary'
