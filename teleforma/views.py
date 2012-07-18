@@ -401,7 +401,7 @@ class ConferenceRecordView(FormView):
                             stream_type=type, streaming=True)
             stream.save()
             if server_type == 'stream-m':
-                time.sleep(5)
+                #FIXME:
 #                self.snapshot(stream.snapshot_url, station.output_dir)
                 self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
 
