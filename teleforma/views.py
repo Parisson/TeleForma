@@ -227,8 +227,7 @@ class MediaView(DetailView):
         all_courses = get_courses(self.request.user)
         context['all_courses'] = all_courses
         media = self.get_object()
-        view = ItemView()
-        context['mime_type'] = view.item_analyze(media.item)
+        context['mime_type'] = media.item.mime_type
         context['course'] = media.course
         context['item'] = media.item
         context['type'] = media.course_type
@@ -440,7 +439,7 @@ class ConferenceRecordView(FormView):
     def push(self, conference):
         url = 'http://' + conference.course.department.domain + '/'
         data = {"id":"jsonrpc", "params":"'%s'", "method":"'teleforma.add_conference'",
-                                    "jsonrpc":"1.0"} % conference.to_id_dict()
+                                    "jsonrpc":"1.0"} % conference.to_json_dict()
         jdata = json.dumps(data)
         try:
             urllib2.urlopen(url, jdata)

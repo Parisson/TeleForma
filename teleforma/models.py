@@ -241,7 +241,7 @@ class Conference(Model):
                 ]
         return dict
 
-    def to_id_dict(self):
+    def to_json_dict(self):
         data = {'id': self.public_id, 'course_code': self.course.code,
                 'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
                 'session': self.session, 'room': self.room.name,  }
