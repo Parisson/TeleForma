@@ -75,8 +75,7 @@ class Command(BaseCommand):
                     exist = False
                     medias = conference.media.all()
                     for media in medias:
-                        items = media.items.filter(file=path)
-                        if items:
+                        if media.item.file == path:
                             exist = True
                             break
 
