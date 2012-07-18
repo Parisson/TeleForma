@@ -112,7 +112,7 @@ class Command(BaseCommand):
                         item.file = path
                         item.save()
 
-                        files = os.path.listdir(root)
+                        files = os.listdir(root)
                         for file in files:
                             filename, ext = os.path.splitext(file)
                             if ext[1:] in self.image_formats:
