@@ -5,6 +5,7 @@
 
 {% block module-action %}
 <script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
+
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
@@ -78,6 +79,7 @@ jQuery(window).ready(function(){
 {% block chat %}
 <div id="module-set" style="width: 22%">
 
+{% block status %}
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module">
@@ -85,7 +87,7 @@ jQuery(window).ready(function(){
  <div id="server_status_table_wrapper" class="status"></div>
 </div>
 {% endif %}
-
+{% endblock status %}
 
 {% if room %}
 {% with "Local tweeter" as title %}
