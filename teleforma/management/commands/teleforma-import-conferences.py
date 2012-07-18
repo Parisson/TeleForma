@@ -27,7 +27,8 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     args = 'organization'
     spacer = '_-_'
-    formats = ['mp3', 'webm']
+    media_formats = ['mp3', 'webm']
+    image_formats = ['png', 'jpg']
     logger = logging.getLogger('myapp')
     hdlr = logging.FileHandler('/tmp/import.log')
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -41,21 +42,21 @@ class Command(BaseCommand):
         file_list = []
         all_conferences = Conference.objects.all()
         i = 1
+
         #FIXME:
-        #medias = Media.objects.all()
-        #for media in medias:
-        #    media.delete()
-        #items = MediaItem.objects.all()
-        #for item in items:
-        #    item.delete()
+        medias = Media.objects.all()
+        for media in medias:
+            media.delete()
+        items = MediaItem.objects.all()
+        for item in items:
+            item.delete()
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
 
-                if ext in self.formats:
-                    path = root + os.sep + filename
+                if ext in self.media_formats:
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
                     course = root_list[-2]
@@ -64,7 +65,9 @@ class Command(BaseCommand):
                     date = root_list[-3]
                     department_name = root_list[-4]
                     organization_name = root_list[-5]
-                    path = os.sep.join(root_list[-5:]) + os.sep + filename
+                    dir = os.sep.join(root_list[-5:])
+                    path = dir + os.sep + filename
+                    collection_id = '_'.join([department_name, course_id, course_type])
 
                     department, created = Department.objects.get_or_create(name=department_name, organization=organization)
                     conference, created = Conference.objects.get_or_create(public_id=public_id)
@@ -89,7 +92,6 @@ class Command(BaseCommand):
 
                     if not exist and not streaming:
                         print path
-                        collection_id = '_'.join([department_name, course_id, course_type])
                         collections = MediaCollection.objects.filter(code=collection_id)
                         if not collections:
                             collection = MediaCollection(code=collection_id,title=collection_id)
@@ -109,6 +111,18 @@ class Command(BaseCommand):
                         item.title = name
                         item.file = path
                         item.save()
+
+                        files = os.path.listdir(root)
+                        for file in files:
+                            filename, ext = os.path.splitext(file)
+                            if ext[1:] in self.image_formats:
+                                related = MediaItemRelated(item=item)
+                                related.file = root + os.sep + file
+                                related.title = 'preview'
+                                related.set_mime_type()
+                                related.save()
+                                break
+
                         media, c = Media.objects.get_or_create(conference=conference)
                         media.items.add(item)
                         media.course = conference.course
