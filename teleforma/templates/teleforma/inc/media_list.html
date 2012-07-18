@@ -14,11 +14,7 @@
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="35%">
                 <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
-
-                {% thumbnail media.item.related.file "x230" as im %}
-                  <img src="{{ im.url }}" style="max-width: 420px; max-height: 200px;" alt="snapshot" />
-                {% endthumbnail %}
-
+                  <img src="{% url telemeta-item-related media.item.public_id media.item.related.id %}" style="max-width: 230px; max-height: 200px;" alt="snapshot" />
                 </a>
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
