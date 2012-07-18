@@ -438,14 +438,15 @@ class ConferenceRecordView(FormView):
             raise 'Error : Bad Conference dictionnary'
 
     def push(self, conference):
-        domain = conference.course.department.domain
+        url = 'http://' + conference.course.department.domain + '/'
         data = {"id":"jsonrpc", "params":"'%s'", "method":"'teleforma.add_conference'",
-                    "jsonrpc":"1.0"} % conference.to_id_dict()
+                                    "jsonrpc":"1.0"} % conference.to_id_dict()
         jdata = json.dumps(data)
         try:
-            urllib2.urlopen('http://' + domain + '/', jdata)
+            urllib2.urlopen(url, jdata)
         except:
             pass
+
 
 class UsersView(ListView):
 
