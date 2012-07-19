@@ -192,7 +192,7 @@ def get_video_id(media):
 def get_host(url, host):
     u = urlparse(url)
     if host == '127.0.0.1' or host == 'localhost':
-        nu = u.scheme + '://' + host + u.path
+        nu = u.scheme + '://' + host + ':' + u.port + u.path
         return nu
     else:
         return url
