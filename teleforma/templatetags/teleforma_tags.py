@@ -192,7 +192,7 @@ def get_video_id(media):
 def get_host(url, host):
     u = urlparse(url)
     if host == '127.0.0.1' or host == 'localhost':
-        u['netloc'] = host
+        u.netloc = host
         return u.geturl()
     else:
         return url
