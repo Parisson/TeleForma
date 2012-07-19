@@ -37,7 +37,7 @@
 <div class="video">
 <video width="640" height="360" controls autoplay preload="auto">
 <!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ livestream.url }}" type="video/webm" />
+<source src="{{ livestream.url|get_host:host }}" type="video/webm" />
 </video>
 </div>
 
@@ -45,7 +45,7 @@
 <div class="audio">
 <audio controls autoplay preload="auto">
 <!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ livestream.url }}" type="audio/mpeg" />
+<source src="{{ livestream.url|get_host:host }}" type="audio/mpeg" />
 </audio>
 </div>
 {% endif %}
