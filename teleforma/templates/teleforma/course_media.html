@@ -27,7 +27,7 @@ $(document).ready(function(){
 {% endblock module-action %}
 
 {% block course %}
-{% get_audio_conference:media.conference as audio_id %}
+{% get_audio_conference:media.conference.code as audio_id %}
 <div class="course_media">
 
 <div class="course_title">
