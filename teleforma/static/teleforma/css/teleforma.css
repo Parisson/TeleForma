@@ -1248,6 +1248,9 @@ a.image-link {
 .icon_download{
     background-image: url('/static/teleforma/images/download_media.png');
 }
+.icon_clap{
+    background-image: url('/static/teleforma/images/tool_animator.png');
+}
 .icon_rss,.icon_rss:hover{
     background: url('/static/telemeta/images/feed-icon-14x14.png') no-repeat;
     background-position: 0ex .8ex;

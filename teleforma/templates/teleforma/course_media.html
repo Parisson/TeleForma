@@ -31,12 +31,21 @@ $(document).ready(function(){
 <div class="course_media">
 
 <div class="course_title">
-    <div>
+    <table><tr><td>
         {{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
+    </td>
+    <td>
+    <div style="float: right;">
+        {% if "video" in media.item.mime_type %}
+        <a href="{% url teleforma-media-detail media|get_audio_id %}" class="component_icon button icon_clap">{% trans "Audio" %}</a>
+        {% endif %}
+        {% if "audio" in media.item.mime_type %}
+        <a href="{% url teleforma-media-detail media|get_video_id %}" class="component_icon button icon_clap">{% trans "Video" %}</a>
+        {% endif %}
     </div>
-    <div style="float: right; display:inline-block;">
-        <a href="{% url teleforma-media-detail media|get_audio_id %}" class="component_icon button icon_filter">{% trans "Audio" %}</a>
-    </div>
+    </td>
+    </tr>
+    </table>
 </div>
 
 {% if access_error %}
