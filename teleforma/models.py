@@ -56,6 +56,7 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import django.db.models as models
 from south.modelsinspector import add_introspection_rules
+from telemeta.models import *
 
 app_label = 'teleforma'
 
@@ -94,6 +95,7 @@ class Department(Model):
     description     = CharField(_('description'), max_length=255, blank=True)
     organization    = ForeignKey('Organization', related_name='department',
                                  verbose_name=_('organization'))
+    domain          = CharField(_('Master domain'), max_length=255, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -210,11 +212,17 @@ class Conference(Model):
 
     @property
     def description(self):
-        return ' - '.join([self.course.department.name, self.course.title,
+        if self.professor:
+            list = [self.course.department.name, self.course.title,
                            self.course_type.name, self.session,
                            self.professor.user.first_name,
                            self.professor.user.last_name,
-                           str(self.date_begin)])
+                           str(self.date_begin)]
+        else:
+            list = [self.course.department.name, self.course.title,
+                           self.course_type.name, self.session,
+                           str(self.date_begin)]
+        return ' - '.join(list)
 
     @property
     def slug(self):
@@ -239,6 +247,12 @@ class Conference(Model):
                 {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
                 ]
         return dict
+
+    def to_json_dict(self):
+        data = {'id': self.public_id, 'course_code': self.course.code,
+                'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
+                'session': self.session, 'room': self.room.name,  }
+        return data
 
     class Meta:
         db_table = app_label + '_' + 'conference'
@@ -403,26 +417,32 @@ class Media(MediaBase):
 
     element_type = 'media'
 
-    course          = ForeignKey('Course', related_name='media', verbose_name=_('course'))
-    course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'))
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    item            = ForeignKey(telemeta.models.media.MediaItem, related_name='media',
+    course          = ForeignKey('Course', related_name='media', verbose_name=_('course'),
+                                 blank=True, null=True)
+    course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
+                                 blank=True, null=True)
+    item            = ForeignKey(MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
-    is_live         = BooleanField(_('is live'))
+    type            = CharField(_('type'), choices=streaming_choices, max_length=32)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
 
     def __unicode__(self):
-        description = self.course.title
-        if self.item:
-            return description + ' _ ' + self.item.title
+        if self.course:
+            return self.course.title
+        elif self.conference:
+            return self.conference.description
         else:
-            return description
+            return self.title
 
     def save(self, **kwargs):
         super(Media, self).save(**kwargs)
-        self.course.save()
+        if self.course:
+            self.course.save()
+        elif self.conference:
+            self.conference.course.save()
 
     class Meta:
         db_table = app_label + '_' + 'media'

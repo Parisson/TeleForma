@@ -2,14 +2,11 @@
 {% load i18n %}
 
 {% block extra_javascript %}
-
-<script type="text/javascript" src="{{ STATIC_URL }}jqchat/jqchat.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     InitChatWindow("{% url jqchat_ajax room.id %}", null);
     });
 </script>
-
 {% endblock extra_javascript %}
 
 {% block courses %}
@@ -50,12 +47,3 @@ $(document).ready(function(){
 </div>
 {% endblock course %}
 
-{% block chat %}
-{% if room %}
-<div id="module-set" style="width: 22%">
-{% with "Local tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-</div>
-{% endif %}
-{% endblock chat %}

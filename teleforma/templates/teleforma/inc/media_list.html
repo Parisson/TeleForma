@@ -1,4 +1,5 @@
 {% load teleforma_tags %}
+{% load thumbnail %}
 {% load i18n %}
 
 {% if course.media.all|from_course_type:type %}
@@ -10,12 +11,34 @@
     <tbody>
         {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
+          {% if media.type == 'webm' %}
             <tr>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="40%"><a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/tool-animator.png" style="vertical-align:middle" alt="" /> {{ media.title }} - {{ media.conference.session }}</a></td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="20%">{% if media.conference.professor.user %}<a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a>{% endif %}</td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="35%">{% if media.conference.date_begin %}{{ media.conference.date_begin }}{% endif %}</td>
-            <td {% if forloop.counter0 == 0 %}class="border-top"{% endif %} width="5%" align="center">{% if media.item.file %}<a href="{% url teleforma-media-download media.id %}"><img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
+                <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
+                 {% if media.item.related.all %}
+                 {% for related in media.item.related.all %}
+                  {% if related.title == "preview" %}
+                  <img src="{% url telemeta-item-related media.item.code related.id %}" width="100%" alt="snapshot" />
+                  {% endif %}
+                 {% endfor %}
+                 {% else %}
+                  snapshot
+                 {% endif %}
+                </a>
+            </td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
+                <div>
+                    <dl class="listing" style="font-size: 1.2em;">
+                    <dt>{% trans "Title" %}</dt><dd>{{ media.conference.course.title }}</dd>
+                    <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
+                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+                    <dt>{% trans "Begin" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+                    </dl>
+                 </div>
+            </td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">{% if media.item.file %}<a href="{% url teleforma-media-download media.id %}"><img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
             </tr>
+          {% endif %}
          {% endif %}
         {% endfor %}
     </tbody>

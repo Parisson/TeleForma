@@ -5,14 +5,11 @@
 
 
 {% block extra_javascript %}
-
-<script type="text/javascript" src="{{ STATIC_URL }}jqchat/jqchat.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     InitChatWindow("{% url jqchat_ajax room.id %}", null);
     });
 </script>
-
 {% endblock extra_javascript %}
 
 
@@ -98,16 +95,30 @@ $(document).ready(function(){
 {% endblock course %}
 
 
+<div id="module-set" style="width: 22%">
+
+{% block status %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
+<div class="module">
+ <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+ <div id="server_status_table_wrapper" class="status"></div>
+</div>
+
+<script type="text/javascript">
+server_status_callback();
+</script>
+{% endif %}
+{% endblock status %}
+
 {% block chat %}
 {% if room %}
-<div id="module-set" style="width: 22%">
 {% with "General tweeter" as title %}
 {% include "teleforma/inc/chat_room.html" %}
 {% endwith %}
-</div>
 {% endif %}
 {% endblock chat %}
 
+</div>
+
 {% endblock content %}
-
-

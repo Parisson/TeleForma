@@ -170,3 +170,19 @@ def get_telecaster():
 @register.assignment_tag
 def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
+
+@register.filter
+def get_audio_id(media):
+    medias = media.conference.media.all()
+    for m in medias:
+        if m.type == "mp3":
+            break
+    return m.id
+
+@register.filter
+def get_video_id(media):
+    medias = media.conference.media.all()
+    for m in medias:
+        if m.type == "webm":
+            break
+    return m.id

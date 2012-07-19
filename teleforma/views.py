@@ -3,6 +3,9 @@
 import mimetypes
 import datetime
 import random
+import urllib
+import urllib2
+import json
 
 from jsonrpc import jsonrpc_method
 
@@ -225,8 +228,7 @@ class MediaView(DetailView):
         all_courses = get_courses(self.request.user)
         context['all_courses'] = all_courses
         media = self.get_object()
-        view = ItemView()
-        context['mime_type'] = view.item_analyze(media.item)
+        context['mime_type'] = media.item.mime_type
         context['course'] = media.course
         context['item'] = media.item
         context['type'] = media.course_type
@@ -365,7 +367,9 @@ class ConferenceRecordView(FormView):
         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
         context['all_courses'] = get_courses(self.request.user)
         context['mime_type'] = 'video/webm'
-        context['host'] = get_host(self.request)
+        status = Status()
+        status.update()
+        context['host'] = status.ip
         context['hidden_fields'] = self.hidden_fields
         return context
 
@@ -396,11 +400,66 @@ class ConferenceRecordView(FormView):
             stream = LiveStream(conference=self.conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
+            if server_type == 'stream-m':
+                #FIXME:
+#                self.snapshot(stream.snapshot_url, station.output_dir)
+                self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+
         return super(ConferenceRecordView, self).form_valid(form)
+
+    def snapshot(self, url, dir):
+        img = urllib.urlopen(url)
+        path = dir + os.sep + 'preview.webp'
+        f = open(path, 'w')
+        f.write(img.read())
+        f.close()
+        command = '/usr/bin/dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
+        os.system(command)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
+
+    def create(self, conference):
+        if isinstance(conference, dict):
+            conf, c = Conference.objects.get_or_create(public_id=conference['id'])
+            if c:
+                conf.course = Course.objects.get(code=conference['course_code'])
+                conf.course_type = CourseType.objects.get(name=conference['course_type'])
+                user = User.objects.get(username=conference['professor_id'])
+                conf.session = conference['session']
+                conf.professor = Professor.objects.get(user=user)
+                conf.room = Room.objects.get(name=conference['room'])
+                conf.save()
+                #TODO: dates
+        else:
+            raise 'Error : Bad Conference dictionnary'
+
+    @jsonrpc_method('teleforma.update_conferences')
+    def update(request, data):
+        if isinstance(data, list):
+            for conference in data:
+                self.create(conference)
+        else:
+            raise 'Error : Bad Conference dictionnary list'
+
+    @jsonrpc_method('teleforma.add_conference')
+    def add(request, data):
+        # playlist_resource must be a dict
+        if isinstance(data, dict):
+            self.create(data)
+        else:
+            raise 'Error : Bad Conference dictionnary'
+
+    def push(self, conference):
+        url = 'http://' + conference.course.department.domain + '/'
+        data = {"id":"jsonrpc", "params":"'%s'", "method":"'teleforma.add_conference'",
+                                    "jsonrpc":"1.0"} % conference.to_json_dict()
+        jdata = json.dumps(data)
+        try:
+            urllib2.urlopen(url, jdata)
+        except:
+            pass
 
 
 class UsersView(ListView):

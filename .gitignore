@@ -13,6 +13,8 @@ var
 sdist
 develop-eggs
 .installed.cfg
+.directory
+*.e4p
 
 # Installer logs
 pip-log.txt
