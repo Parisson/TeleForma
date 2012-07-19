@@ -12,7 +12,7 @@
         {% for media in course.media.all|from_course_type:type %}
          {% if media.published or user.is_staff %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="35%">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
                 <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
                  {% if media.item.related.all %}
                  {% for related in media.item.related.all %}
@@ -35,7 +35,7 @@
                     </dl>
                  </div>
             </td>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if media.item.file %}<a href="{% url teleforma-media-download media.id %}"><img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">{% if media.item.file %}<a href="{% url teleforma-media-download media.id %}"><img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
             </tr>
          {% endif %}
         {% endfor %}
