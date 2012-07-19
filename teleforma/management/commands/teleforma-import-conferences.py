@@ -44,12 +44,12 @@ class Command(BaseCommand):
         i = 1
 
         #FIXME:
-        medias = Media.objects.all()
-        for media in medias:
-            media.delete()
-        items = MediaItem.objects.all()
-        for item in items:
-            item.delete()
+#        medias = Media.objects.all()
+#        for media in medias:
+#            media.delete()
+#        items = MediaItem.objects.all()
+#        for item in items:
+#            item.delete()
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
