@@ -1367,7 +1367,7 @@ input,textarea{
 
 #module-set-left .module {
         border: 1px solid #000;
-        background-image: repeat-y url(/static/telemeta/images/tw_hd.png) 0 0;
+        background: repeat-y url(/static/telemeta/images/tw_hd.png) 0 0;
         padding: 0.2em;
         margin: 0em 0em 1.5em 0em;
         -moz-border-radius: 8px 0px 11px 11px;
