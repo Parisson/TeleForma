@@ -35,6 +35,15 @@ class Command(BaseCommand):
     hdlr.setFormatter(formatter)
     logger.addHandler(hdlr)
 
+
+    def cleanup(self):
+        medias = Media.objects.all()
+        for media in medias:
+            media.delete()
+        items = MediaItem.objects.all()
+        for item in items:
+            item.delete()
+
     def handle(self, *args, **options):
         organization_name = args[0]
         organization = Organization.objects.get(name=organization_name)
@@ -43,14 +52,8 @@ class Command(BaseCommand):
         all_conferences = Conference.objects.all()
         i = 1
 
-        #FIXME:
-#        medias = Media.objects.all()
-#        for media in medias:
-#            media.delete()
-#        items = MediaItem.objects.all()
-#        for item in items:
-#            item.delete()
-
+	self.cleanup()
+		
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
                 name = os.path.splitext(filename)[0]
@@ -75,8 +78,8 @@ class Command(BaseCommand):
                     exist = False
                     medias = conference.media.all()
                     for media in medias:
-                        print media.item.file
                         if media.item.file == path:
+                            print path
                             exist = True
                             break
 
