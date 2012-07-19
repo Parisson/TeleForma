@@ -222,7 +222,7 @@ class Conference(Model):
             list = [self.course.department.name, self.course.title,
                            self.course_type.name, self.session,
                            str(self.date_begin)]
-        return ' - '.join()
+        return ' - '.join(list)
 
     @property
     def slug(self):
