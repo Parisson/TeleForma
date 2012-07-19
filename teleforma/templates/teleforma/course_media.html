@@ -34,7 +34,7 @@ $(document).ready(function(){
     <div>
         {{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
     </div>
-    <div style="float: right;">
+    <div style="float: right; display:inline-block;">
         <a href="{% url teleforma-media-detail media|get_audio_id %}" class="component_icon button icon_filter">{% trans "Audio" %}</a>
     </div>
 </div>
