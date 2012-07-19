@@ -1650,6 +1650,7 @@ input,textarea{
 
 .default {
     color: green;
+    font-weight: bold;
     }
 
 .conference_form {
