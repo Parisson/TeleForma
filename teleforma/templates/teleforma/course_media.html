@@ -29,7 +29,16 @@ $(document).ready(function(){
 {% block course %}
 <div class="course_media">
 
-<div class="course_title">{{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
+<div class="course_title">
+    <div>
+        {{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
+    </div>
+    {% block extrabuttons %}
+    {% get_audio_conference:media.conference as audio_id %}
+    <div style="float: right;">
+        <a href="{% url teleforma-media-detail audio_id %}" class="component_icon button icon_filter">{% trans "Audio" %}</a>
+    </div>
+    {% endblock extrabuttons %}
 </div>
 
 {% if access_error %}
