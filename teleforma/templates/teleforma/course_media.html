@@ -67,6 +67,11 @@ $(document).ready(function(){
 <dt>{% trans "Mime type" %}</dt><dd>{{ mime_type }}</dd>
 </dl>
 </div>
+
+{% if media.item.file %}
+<a href="{% url teleforma-media-download media.id %}" class="component_icon button icon_download">{% trans "Download" %}</a>
+{% endif %}
+
 {% endblock general_info %}
 
 </div>
