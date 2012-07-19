@@ -117,8 +117,8 @@ class Command(BaseCommand):
 
                         files = os.listdir(root)
                         for file in files:
-                            filename, ext = os.path.splitext(file)
-                            if ext[1:] in self.image_formats:
+                            filename, extension = os.path.splitext(file)
+                            if extension[1:] in self.image_formats:
                                 related = MediaItemRelated(item=item)
                                 related.file = dir + os.sep + file
                                 related.title = 'preview'
