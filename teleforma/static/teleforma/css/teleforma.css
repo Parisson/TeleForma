@@ -1422,7 +1422,7 @@ input,textarea{
 .desk_center {
     float: left;
     width: 50%;
-    padding: 0em 3em 1em 2em;
+    padding: 0em 3em 0em 2em;
     max-height: 540px;
     overflow-y: auto;
     }
