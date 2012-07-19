@@ -18,6 +18,12 @@ $(document).ready(function(){
 
 {% endblock extra_javascript %}
 
+{% block module-action %}
+{% if media.item.file %}
+<a href="{% url teleforma-media-download media.id %}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+{% endif %}
+{% endblock module-action %}
+
 {% block course %}
 <div class="course_media">
 
@@ -67,11 +73,6 @@ $(document).ready(function(){
 <dt>{% trans "Mime type" %}</dt><dd>{{ mime_type }}</dd>
 </dl>
 </div>
-
-<br /><br />
-{% if media.item.file %}
-<a href="{% url teleforma-media-download media.id %}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
-{% endif %}
 
 {% endblock general_info %}
 
