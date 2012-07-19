@@ -212,11 +212,17 @@ class Conference(Model):
 
     @property
     def description(self):
-        return ' - '.join([self.course.department.name, self.course.title,
+        if self.professor:
+            list = [self.course.department.name, self.course.title,
                            self.course_type.name, self.session,
                            self.professor.user.first_name,
                            self.professor.user.last_name,
-                           str(self.date_begin)])
+                           str(self.date_begin)]
+        else:
+            list = [self.course.department.name, self.course.title,
+                           self.course_type.name, self.session,
+                           str(self.date_begin)]
+        return ' - '.join()
 
     @property
     def slug(self):
