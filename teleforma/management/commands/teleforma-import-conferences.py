@@ -129,6 +129,6 @@ class Command(BaseCommand):
                         media.course_type = conference.course_type
                         media.type = ext
                         media.save()
-                        logger.info(path)
+                        logger.logger.info(path)
                         i += 1
 
