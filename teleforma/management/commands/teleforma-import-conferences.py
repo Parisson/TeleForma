@@ -52,7 +52,7 @@ class Command(BaseCommand):
         all_conferences = Conference.objects.all()
         i = 1
 
-        self.cleanup()
+        #self.cleanup()
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
@@ -79,7 +79,6 @@ class Command(BaseCommand):
                     medias = conference.media.all()
                     for media in medias:
                         if media.item.file == path:
-                            print path
                             exist = True
                             break
 

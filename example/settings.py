@@ -188,5 +188,5 @@ POSTMAN_AUTO_MODERATE_AS = True
 TELECASTER_CONF = [{'type':'mp3','server_type':'icecast','conf':'/etc/telecaster/deefuzzer_mp3.xml', 'port':'8000'},
                    {'type':'webm','server_type':'stream-m','conf':'/etc/telecaster/deefuzzer_webm.xml', 'port':'8080'}, ]
 
-TELECASTER_RSYNC_SERVER = 'telecaster@jimi.parisson.com:archives/'+TELEMETA_ORGANIZATION+'/'
+TELECASTER_RSYNC_SERVER = 'telecaster@jimi.parisson.com:archives/'
 TELECASTER_RSYNC_LOG = '/var/log/telecaster/rsync.log'
