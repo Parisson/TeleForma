@@ -27,7 +27,6 @@ $(document).ready(function(){
 {% endblock module-action %}
 
 {% block course %}
-{% get_audio_conference:media.conference.code as audio_id %}
 <div class="course_media">
 
 <div class="course_title">
@@ -35,7 +34,7 @@ $(document).ready(function(){
         {{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
     </div>
     <div style="float: right;">
-        <a href="{% url teleforma-media-detail audio_id %}" class="component_icon button icon_filter">{% trans "Audio" %}</a>
+        <a href="{% url teleforma-media-detail media|get_audio_id %}" class="component_icon button icon_filter">{% trans "Audio" %}</a>
     </div>
 </div>
 

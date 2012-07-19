@@ -171,11 +171,10 @@ def get_telecaster():
 def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
 
-@register.assignment_tag
-def get_audio_conference(conference_code):
-    conference = Conference.objects.get(code=conference_code)
-    medias = Media.objects.filter(conference=conference)
+@register.filter
+def get_audio_id(media):
+    medias = Media.objects.filter(conference=media.conference)
     for media in medias:
         if media.type == "mp3":
             break
-    return media
+    return media.id
