@@ -70,7 +70,7 @@ $(document).ready(function(){
 
 <br /><br />
 {% if media.item.file %}
-<a href="{% url teleforma-media-download media.id %}" class="component_icon button icon_download" id="action_red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% trans "Download" %}</a>
+<a href="{% url teleforma-media-download media.id %}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" />&nbps;{% trans "Download" %}</a>
 {% endif %}
 
 {% endblock general_info %}
