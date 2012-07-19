@@ -174,7 +174,7 @@ def get_googletools():
 @register.filter
 def get_audio_id(media):
     medias = Media.objects.filter(conference=media.conference)
-    for media in medias:
-        if media.type == "mp3":
+    for m in medias:
+        if m.type == "mp3":
             break
     return media.id
