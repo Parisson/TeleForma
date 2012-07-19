@@ -25,15 +25,10 @@ class Logger:
 class Command(BaseCommand):
     help = "Import conferences from the MEDIA_ROOT directory "
     admin_email = 'webmaster@parisson.com'
-    args = 'organization'
+    args = 'organization log_file'
     spacer = '_-_'
     media_formats = ['mp3', 'webm']
     image_formats = ['png', 'jpg']
-    logger = logging.getLogger('myapp')
-    hdlr = logging.FileHandler('/tmp/import.log')
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-    hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr)
 
 
     def cleanup(self):
@@ -46,13 +41,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         organization_name = args[0]
+        log_file = args[1]
+        logger = Logger(log_file)
+
         organization = Organization.objects.get(name=organization_name)
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
         all_conferences = Conference.objects.all()
         i = 1
 
-        #self.cleanup()
+        self.cleanup()
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
@@ -131,6 +129,6 @@ class Command(BaseCommand):
                         media.course_type = conference.course_type
                         media.type = ext
                         media.save()
-                        self.logger.info('Imported: ' + path)
+                        logger.info(path)
                         i += 1
 
