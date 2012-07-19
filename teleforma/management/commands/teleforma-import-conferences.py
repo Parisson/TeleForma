@@ -75,7 +75,7 @@ class Command(BaseCommand):
 
                     conference, c = Conference.objects.get_or_create(public_id=public_id)
                     conference.course = Course.objects.get(code=course_id)
-                    conference.course = Course.objects.get(name=course_type)
+                    conference.course_type = CourseType.objects.get(name=course_type)
                     conference.save()
 
                     exist = False
