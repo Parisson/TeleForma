@@ -126,11 +126,11 @@ class Command(BaseCommand):
                                 related.save()
                                 break
 
-                        media, c = Media.objects.get_or_create(conference=conference, type=(ext, ext))
+                        media, c = Media(conference=conference)
                         media.item = item
                         media.course = conference.course
                         media.course_type = conference.course_type
-                        media.type = (ext, ext)
+                        media.type = ext
                         media.save()
                         self.logger.info('Imported: ' + path)
                         i += 1
