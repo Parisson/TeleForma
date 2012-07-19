@@ -70,8 +70,13 @@ class Command(BaseCommand):
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
 
-                    department, created = Department.objects.get_or_create(name=department_name, organization=organization)
-                    conference, created = Conference.objects.get_or_create(public_id=public_id)
+                    department, c = Department.objects.get_or_create(name=department_name,
+                                                                     organization=organization)
+
+                    conference, c = Conference.objects.get_or_create(public_id=public_id)
+                    conference.course = Course.objects.get(code=course_id)
+                    conference.course = Course.objects.get(name=course_type)
+                    conference.save()
 
                     exist = False
                     medias = conference.media.all()

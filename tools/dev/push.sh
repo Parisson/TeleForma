@@ -16,6 +16,6 @@ ssh vcs.parisson.com "cd /var/git/teleforma.git; git update-server-info"
 echo "Update sandbox @ angus.parisson.com:"
 ssh angus.parisson.com "cd /var/teleforma/teleforma-dev; git pull origin dev; \
                         cd /var/teleforma/sandbox/; ./manage.py migrate --delete-ghost-migrations; \
-                        ./manage.py collectstatic "
+                        ./manage.py collectstatic --ignore archives --ignore Pre-Barreau --ignore cache "
 
 echo "Done !"
