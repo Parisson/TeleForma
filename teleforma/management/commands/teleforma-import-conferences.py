@@ -50,7 +50,7 @@ class Command(BaseCommand):
         all_conferences = Conference.objects.all()
         i = 1
 
-        self.cleanup()
+#        self.cleanup()
 
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
@@ -91,7 +91,6 @@ class Command(BaseCommand):
                         pass
 
                     if not exist and not streaming:
-                        print path
                         collections = MediaCollection.objects.filter(code=collection_id)
                         if not collections:
                             collection = MediaCollection(code=collection_id,title=collection_id)
