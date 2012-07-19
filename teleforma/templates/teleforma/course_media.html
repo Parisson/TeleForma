@@ -31,11 +31,7 @@ $(document).ready(function(){
 <div class="course_media">
 
 <div class="course_title">
-    <table><tr><td>
-        {{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
-    </td>
-    <td>
-    <div style="float: right;">
+    <div style="float: right; font-size: 0.9em;">
         {% if "video" in media.item.mime_type %}
         <a href="{% url teleforma-media-detail media|get_audio_id %}" class="component_icon button icon_clap">{% trans "Audio" %}</a>
         {% endif %}
@@ -43,9 +39,9 @@ $(document).ready(function(){
         <a href="{% url teleforma-media-detail media|get_video_id %}" class="component_icon button icon_clap">{% trans "Video" %}</a>
         {% endif %}
     </div>
-    </td>
-    </tr>
-    </table>
+
+    {{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
+
 </div>
 
 {% if access_error %}
