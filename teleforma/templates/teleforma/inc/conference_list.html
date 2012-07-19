@@ -11,7 +11,7 @@
     <tbody>
        {% for conference in conferences %}
         {% for stream in conference.livestream.all %}
-         {% if stream.stream_type == 'webm' }
+         {% if stream.stream_type == 'webm' %}
             <tr>
             {% if stream.streaming %}
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
