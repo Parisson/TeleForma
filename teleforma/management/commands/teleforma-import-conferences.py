@@ -52,8 +52,19 @@ class Command(BaseCommand):
         all_conferences = Conference.objects.all()
         i = 1
 
+<<<<<<< HEAD
 	self.cleanup()
 		
+=======
+        #FIXME:
+        medias = Media.objects.all()
+        for media in medias:
+            media.delete()
+        items = MediaItem.objects.all()
+        for item in items:
+            item.delete()
+
+>>>>>>> 278a443740c34a129f84eb61a443b547a678cb48
         for root, dirs, files in os.walk(self.media_dir):
             for filename in files:
                 name = os.path.splitext(filename)[0]
