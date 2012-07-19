@@ -598,7 +598,7 @@ color:#FFF;
     border-bottom: 1px solid #000;
     height: 30px;
     padding: 0em 0.5em 10px 0.5em;
-    margin-top: 2em;
+    margin-top: 1.5em;
 }
 #footer :link, #footer :visited { color: #FFF; }
 #footer hr { display: none }
@@ -1423,7 +1423,7 @@ input,textarea{
     float: left;
     width: 50%;
     padding: 0em 3em 0em 2em;
-    max-height: 540px;
+    max-height: 550px;
     overflow-y: auto;
     }
 
