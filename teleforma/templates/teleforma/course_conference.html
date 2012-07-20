@@ -19,12 +19,9 @@
         });
 </script>
 
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
 <div class="module_action">
 <a href="#" class="component_icon button" id="action_red">{% trans "S T O P" %}</a>
 </div>
-{% endif %}
 
 {% endblock module-action %}
 
@@ -71,3 +68,11 @@
 
 </div>
 {% endblock course %}
+
+{% block chat %}
+{% if room %}
+{% with "Local tweeter" as title %}
+{% include "teleforma/inc/chat_room.html" %}
+{% endwith %}
+{% endif %}
+{% endblock chat %}
