@@ -53,6 +53,7 @@ import django.utils.timezone as timezone
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
 from teleforma.views import get_courses
+from urlparse import urlparse
 
 register = template.Library()
 
@@ -186,3 +187,12 @@ def get_video_id(media):
         if m.type == "webm":
             break
     return m.id
+
+@register.filter
+def get_host(url, host):
+    u = urlparse(url)
+    if host == '127.0.0.1' or host == 'localhost':
+        nu = u.scheme + '://' + host + ':' + str(u.port) + u.path
+        return nu
+    else:
+        return url

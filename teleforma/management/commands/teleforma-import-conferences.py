@@ -70,64 +70,70 @@ class Command(BaseCommand):
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
 
-                    department, created = Department.objects.get_or_create(name=department_name, organization=organization)
-                    conference, created = Conference.objects.get_or_create(public_id=public_id)
+                    department, c = Department.objects.get_or_create(name=department_name,
+                                                                     organization=organization)
 
-                    exist = False
-                    medias = conference.media.all()
-                    for media in medias:
-                        if media.item.file == path:
-                            exist = True
-                            break
+                    if Conference.objects.filter(public_id=public_id):
+                        conference = Conference.objects.get(public_id=public_id)
+                        conference.course = Course.objects.get(code=course_id)
+                        conference.course_type = CourseType.objects.get(name=course_type)
+                        conference.save()
 
-                    streaming = False
-                    try:
-                        stations = conference.station.filter(started=True)
-                        ids = [station.public_id for station in stations]
-                        for id in ids:
-                            if id == public_id:
-                                streaming = True
-                    except:
-                        pass
-
-                    if not exist and not streaming:
-                        collections = MediaCollection.objects.filter(code=collection_id)
-                        if not collections:
-                            collection = MediaCollection(code=collection_id,title=collection_id)
-                            collection.save()
-                        else:
-                            collection = collections[0]
-
-                        id = '_'.join([collection_id, public_id, ext, str(i)])
-
-                        items = MediaItem.objects.filter(collection=collection, code=id)
-                        if not items:
-                            item = MediaItem(collection=collection, code=id)
-                            item.save()
-                        else:
-                            item = items[0]
-
-                        item.title = name
-                        item.file = path
-                        item.save()
-
-                        files = os.listdir(root)
-                        for file in files:
-                            filename, extension = os.path.splitext(file)
-                            if extension[1:] in self.image_formats:
-                                related = MediaItemRelated(item=item)
-                                related.file = dir + os.sep + file
-                                related.title = 'preview'
-                                related.set_mime_type()
-                                related.save()
+                        exist = False
+                        medias = conference.media.all()
+                        for media in medias:
+                            if media.item.file == path:
+                                exist = True
                                 break
 
-                        media = Media(conference=conference)
-                        media.item = item
-                        media.course = conference.course
-                        media.course_type = conference.course_type
-                        media.type = ext
-                        media.save()
-                        logger.logger.info(path)
-                        i += 1
+                        streaming = False
+                        try:
+                            stations = conference.station.filter(started=True)
+                            ids = [station.public_id for station in stations]
+                            for id in ids:
+                                if id == public_id:
+                                    streaming = True
+                        except:
+                            pass
+
+                        if not exist and not streaming:
+                            collections = MediaCollection.objects.filter(code=collection_id)
+                            if not collections:
+                                collection = MediaCollection(code=collection_id,title=collection_id)
+                                collection.save()
+                            else:
+                                collection = collections[0]
+
+                            id = '_'.join([collection_id, public_id, ext, str(i)])
+
+                            items = MediaItem.objects.filter(collection=collection, code=id)
+                            if not items:
+                                item = MediaItem(collection=collection, code=id)
+                                item.save()
+                            else:
+                                item = items[0]
+
+                            item.title = name
+                            item.file = path
+                            item.save()
+
+                            files = os.listdir(root)
+                            for file in files:
+                                filename, extension = os.path.splitext(file)
+                                if extension[1:] in self.image_formats:
+                                    related = MediaItemRelated(item=item)
+                                    related.file = dir + os.sep + file
+                                    related.title = 'preview'
+                                    related.set_mime_type()
+                                    related.save()
+                                    break
+
+                            media = Media(conference=conference)
+                            media.item = item
+                            media.course = conference.course
+                            media.course_type = conference.course_type
+                            media.type = ext
+                            media.save()
+                            logger.logger.info(path)
+                            i += 1
 

@@ -337,6 +337,7 @@ class ConferenceView(DetailView):
         context['room'] = get_room(name=conference.course.title, content_type=content_type,
                                    id=conference.id)
         context['livestreams'] = conference.livestream.all()
+        context['host'] = get_host(self.request)
         return context
 
     @jsonrpc_method('teleforma.conference_stop')
