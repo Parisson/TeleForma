@@ -61,7 +61,7 @@ $(document).ready(function(){
 
 {% elif "audio" in media.mime_type %}
 <div class="audio">
-<audio width="640" height="80">
+<audio controls preload="auto">
 <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
 </audio>
 </div>

@@ -432,7 +432,11 @@ class Media(MediaBase):
 
     def set_mime_type(self):
         if self.item.file:
-            self.mime_type = mimetypes.guess_type(self.item.file.path)[0]
+            mime_type = mimetypes.guess_type(self.item.file.path)[0]
+            if mime_type == 'audio/mpeg':
+                self.mime_type = 'audio/mp3'
+            else:
+                self.mime_type = mime_type
             self.save()
 
     def __unicode__(self):
