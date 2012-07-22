@@ -22,7 +22,7 @@ $(document).ready(function(){
 {% block module-action %}
 {% if media.item.file %}
 <div class="module_action">
-<a href="{% url teleforma-media-download media.id %}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+<a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
 </div>
 {% endif %}
 {% endblock module-action %}
