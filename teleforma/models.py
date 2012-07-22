@@ -433,6 +433,7 @@ class Media(MediaBase):
     def set_mime_type(self):
         if self.item.file:
             self.mime_type = mimetypes.guess_type(self.item.file.path)[0]
+            self.save()
 
     def __unicode__(self):
         if self.course:
@@ -448,7 +449,6 @@ class Media(MediaBase):
             self.course.save()
         elif self.conference:
             self.conference.course.save()
-        self.set_mime_type()
 
     class Meta:
         db_table = app_label + '_' + 'media'
