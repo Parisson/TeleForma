@@ -6,7 +6,12 @@ Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc ac
 
 Néanmoins, le format des flux vidéo n'est peut-être pas compatible avec tous les navigateurs de vos appareils informatiques. Dans ce cas, nous vous conseillons vivement d'installer et d'utiliser les navigateurs libres et gratuits `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ ou `Chrome <https://www.google.com/chrome?hl=fr>`_ pour lesquels sont garantis tous nos accès multimédias.
 
+Si vous rencontrez des problèmes à la lecture des médias en streaming, nous vous recommandons de télécharger l'archive à l'aide du boutton de ma page de la conférence vidéo ou audio, puis de le lire avec le lecteur libre, gratuit et multi-plateforme : `VLC <http://www.videolan.org/vlc/>`_.
+
+Pour la lecture des fichiers MP3, par exemple en mobilité, sur votre iPhone ou Android, tout lecteur audio basique devrait faire l'affaire après téléchargement de l'archive.
+
 |
+
 
 Démonstrations
 ==============
