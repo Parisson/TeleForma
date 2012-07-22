@@ -33,10 +33,10 @@ $(document).ready(function(){
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
         {% if "video" in media.mime_type %}
-        <a href="{{ MEDIA_URL }}{% media|get_audio_url %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url teleforma-media-detail media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
         {% endif %}
         {% if "audio" in media.mime_type %}
-        <a href="{{ MEDIA_URL }}{% media|get_video_url %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url teleforma-media-detail media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
         {% endif %}
     </div>
 
