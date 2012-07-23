@@ -45,7 +45,7 @@
 
 {% for livestream in livestreams %}
 {% if "mp3" == livestream.stream_type %}
-<div class="audio">
+<div class="audio" style="margin-top:1em;">
 <audio controls autoplay preload="auto">
 <!-- Hello Chrome and Firefox (and Opera?) -->
 <source src="{{ livestream.url|get_host:host }}" type="audio/mpeg" />
