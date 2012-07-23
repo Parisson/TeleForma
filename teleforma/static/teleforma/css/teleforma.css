@@ -1583,7 +1583,7 @@ input,textarea{
 
 #chatwindow {
     min-height: 10em;
-    max-height: 34em;
+    max-height: 39em;
     border-bottom: 1px solid;
     padding: 0.8em;
     overflow: auto;
