@@ -4,11 +4,11 @@ Recommandations
 
 Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
 
-Néanmoins, le format des flux vidéo n'est peut-être pas compatible avec tous les navigateurs de vos appareils informatiques. Dans ce cas, nous vous conseillons vivement d'installer et d'utiliser les navigateurs libres et gratuits `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ ou `Chrome <https://www.google.com/chrome?hl=fr>`_ pour lesquels sont garantis tous nos accès multimédias.
+Néanmoins, le format des flux vidéo n'est peut-être pas compatible avec tous les navigateurs de vos appareils informatiques. Dans ce cas, nous vous conseillons vivement d'installer et d'utiliser le navigateur ouvert et gratuit `Chrome <https://www.google.com/chrome?hl=fr>`_  avec lequel nous garantissons tous nos accès multimédias, en direct, comme en différé. Aussi `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ pourra lire les vidéos mais pas peut-être pas l'audio selon votre installation. Nous y travaillons. Safari, dans l'immédiat ne vous permet pas de visionner les vidéos.
 
-Si vous rencontrez des problèmes à la lecture des médias en streaming, nous vous recommandons de télécharger l'archive à l'aide du boutton de ma page de la conférence vidéo ou audio, puis de le lire avec le lecteur libre, gratuit et multi-plateforme : `VLC <http://www.videolan.org/vlc/>`_.
+En attendant que nous puissions convenir à tous les formats demandés et si vous rencontrez des problèmes à la lecture des médias en streaming, nous vous recommandons alors de télécharger les archives à l'aide du boutton "Télécharger" de la conférence vidéo ou audio, puis de les relire avec le lecteur libre, gratuit et multi-plateforme : `VLC <http://www.videolan.org/vlc/>`_ (VideoLan).
 
-Pour la lecture des fichiers MP3, par exemple en mobilité, sur votre iPhone ou Android, tout lecteur audio basique devrait faire l'affaire après téléchargement de l'archive.
+Pour la lecture des fichiers MP3 sur des réseaux à faible débit, en mobilité sur votre iPhone ou Android par exemple, tout lecteur audio basique devrait faire l'affaire après téléchargement de l'archive. Pour les vidéos, un lecteur compatible WebM est nécessaire (MX Player sur Android).
 
 |
 
