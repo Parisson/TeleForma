@@ -1409,7 +1409,7 @@ input,textarea{
         background-color: #FFF;
         color: #000 ;
         font-weight: normal;
-        max-height: 400px;
+        max-height: 500px;
         overflow-y: auto;
         }
 
@@ -1583,7 +1583,7 @@ input,textarea{
 
 #chatwindow {
     min-height: 10em;
-    max-height: 39em;
+    max-height: 42em;
     border-bottom: 1px solid;
     padding: 0.8em;
     overflow: auto;
