@@ -18,7 +18,7 @@
                  {% if media.item.related.all %}
                  {% for related in media.item.related.all %}
                   {% if related.title == "preview" %}
-                  <img src="{% url telemeta-item-related media.item.code related.id %}" width="100%" alt="snapshot" />
+                  <img src="{{ MEDIA_URL }}{{ related.file }}" width="100%" alt="snapshot" />
                   {% endif %}
                  {% endfor %}
                  {% else %}
@@ -36,7 +36,7 @@
                     </dl>
                  </div>
             </td>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">{% if media.item.file %}<a href="{% url teleforma-media-download media.id %}"><img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">{% if media.item.file %}<a href="{{ MEDIA_URL }}{{ media.item.file }}"><img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
             </tr>
           {% endif %}
          {% endif %}

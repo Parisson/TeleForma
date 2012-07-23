@@ -73,7 +73,6 @@ class Command(BaseCommand):
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
                     if Conference.objects.filter(public_id=public_id):
-                        print path
                         conference = Conference.objects.get(public_id=public_id)
                         conference.course = Course.objects.get(code=course_id)
                         conference.course_type = CourseType.objects.get(name=course_type)
@@ -133,6 +132,7 @@ class Command(BaseCommand):
                             media.course = conference.course
                             media.course_type = conference.course_type
                             media.type = ext
+                            media.set_mime_type()
                             media.save()
                             logger.logger.info(path)
                             i += 1

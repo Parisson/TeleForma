@@ -64,6 +64,7 @@ n_sessions = 21
 session_choices = [(str(x), str(y)) for x in range(1, n_sessions) for y in range(1, n_sessions) if x == y]
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
+mimetypes.add_type('video/webm','.webm')
 
 
 class ShortTextField(models.TextField):
@@ -339,7 +340,7 @@ class MediaBase(Model):
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     code            = CharField(_('code'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
-
+    mime_type       = CharField(_('mime type'), blank=True)
     notes = generic.GenericRelation(Note)
 
     def get_fields(self):
@@ -390,8 +391,7 @@ class Document(MediaBase):
         return 'image' in self.mime_type or is_url_image
 
     def set_mime_type(self):
-        if self.file:
-            self.mime_type = mimetypes.guess_type(self.file.path)[0]
+        self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
     def __unicode__(self):
         types = ' - '.join([unicode(t) for t in self.course_type.all()])
@@ -406,6 +406,7 @@ class Document(MediaBase):
     def save(self, **kwargs):
         super(Document, self).save(**kwargs)
         self.course.save()
+        self.set_mime_type()
 
     class Meta:
         db_table = app_label + '_' + 'document'
@@ -428,6 +429,15 @@ class Media(MediaBase):
     type            = CharField(_('type'), choices=streaming_choices, max_length=32)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
+
+    def set_mime_type(self):
+        if self.item.file:
+            mime_type = mimetypes.guess_type(self.item.file.path)[0]
+            if mime_type == 'audio/mpeg':
+                self.mime_type = 'audio/mp3'
+            else:
+                self.mime_type = mime_type
+            self.save()
 
     def __unicode__(self):
         if self.course:
