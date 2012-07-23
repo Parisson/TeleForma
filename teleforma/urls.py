@@ -75,7 +75,7 @@ urlpatterns = patterns('',
 
     url(r'^desk/conferences/(?P<pk>.*)/$', ConferenceView.as_view(),
         name="teleforma-conference-detail"),
-    url(r'^desk/conferences/(?P<pk>.*)/audio/$', ConferenceView.as_view(template_name="teleforma/course_conference_audio.html"),
+    url(r'^desk/conferences/(?P<pk>.+)/audio/$', ConferenceView.as_view(template_name="teleforma/course_conference_audio.html"),
         name="teleforma-conference-audio"),
     url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
         name="teleforma-conference-record"),
