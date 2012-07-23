@@ -37,6 +37,12 @@
 </div>
 
 <div class="media">
+{% if access_error %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+
+{% else %}
+
 {% for livestream in livestreams %}
 {% if "mp3" == livestream.stream_type %}
 <div class="audio">
@@ -47,6 +53,8 @@
 </div>
 {% endif %}
 {% endfor %}
+
+{% endif %}
 </div>
 
 {% block general_info %}

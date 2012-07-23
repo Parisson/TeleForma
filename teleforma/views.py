@@ -328,7 +328,8 @@ class ConferenceView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
-        context['all_courses'] = get_courses(self.request.user)
+        all_courses = get_courses(self.request.user)
+        context['all_courses'] = all_courses
         conference = self.get_object()
         context['course'] = conference.course
         context['type'] = conference.course_type
@@ -338,6 +339,10 @@ class ConferenceView(DetailView):
                                    id=conference.id)
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
+        access = get_access(conference, all_courses)
+        if not access:
+            context['access_error'] = access_error
+            context['message'] = contact_message
         return context
 
     @jsonrpc_method('teleforma.conference_stop')
@@ -352,6 +357,7 @@ class ConferenceView(DetailView):
             station.save()
             station.stop()
 
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
