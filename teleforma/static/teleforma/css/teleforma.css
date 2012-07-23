@@ -1409,7 +1409,7 @@ input,textarea{
         background-color: #FFF;
         color: #000 ;
         font-weight: normal;
-        max-height: 500px;
+        max-height: 450px;
         overflow-y: auto;
         }
 
