@@ -178,8 +178,7 @@ def get_audio_id(media):
     for m in medias:
         if 'audio' in m.mime_type:
             return m.id
-        else:
-            return ''
+    return
 
 @register.filter
 def get_video_id(media):
