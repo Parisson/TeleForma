@@ -252,7 +252,13 @@ class Conference(Model):
     def to_json_dict(self):
         data = {'id': self.public_id, 'course_code': self.course.code,
                 'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
-                'session': self.session, 'room': self.room.name,  }
+                'session': self.session, 'room': self.room.name, 'streams':[] }
+        streams = self.livestream.all()
+        if streams:
+            for stream in streams:
+                data['streams'].append({'host': stream.server.host,
+                                        'port': stream.server.port,
+                                        'type': stream.server.type })
         return data
 
     class Meta:

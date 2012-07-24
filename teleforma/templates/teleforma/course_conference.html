@@ -7,15 +7,15 @@
 <script type="text/javascript">
     var conferenceUtils = {
         stop : function(id){
-            json([id],'teleforma.conference_stop',function(){
-                location.href = '{% url teleforma-desk %}';});
+            json([id],'teleforma.stop_conference',function(){
+                location.href = '{% url teleforma-conference-record %}';});
         }}
 
     jQuery(window).ready(function(){
         var a = jQuery('#action_red');
         var f = conferenceUtils;
         a.unbind('click').click(function(){
-            f.stop({{conference.id}});return false;});
+            f.stop({{conference.code}});return false;});
         });
 </script>
 
