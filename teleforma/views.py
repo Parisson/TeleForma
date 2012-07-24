@@ -356,6 +356,8 @@ class ConferenceView(DetailView):
             station.started = False
             station.save()
             station.stop()
+        if 'telecaster' in settings.INSTALLED_APPS:
+            self.push(conference)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
