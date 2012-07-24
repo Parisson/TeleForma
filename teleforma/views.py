@@ -357,9 +357,12 @@ class ConferenceView(DetailView):
             station.save()
             station.stop()
         if 'telecaster' in settings.INSTALLED_APPS:
-            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
-            s = ServiceProxy(url)
-            s.teleforma.stop_conference(conference.public_id)
+            try:
+                url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+                s = ServiceProxy(url)
+                s.teleforma.stop_conference(conference.public_id)
+            except:
+                pass
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
