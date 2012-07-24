@@ -459,7 +459,8 @@ class ConferenceRecordView(FormView):
                     host = stream['host']
                     port = stream['port']
                     server_type = stream['type']
-                    server, c = StreamingServer.objects.get_or_create(host=settings.TELECASTER_MASTER_SERVER,
+                    site = Site.objects.all()
+                    server, c = StreamingServer.objects.get_or_create(host=site[0],
                                                                       port=port,
                                                                       type=server_type)
                     stream = LiveStream(conference=conf, server=server,
