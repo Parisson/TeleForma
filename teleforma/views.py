@@ -459,7 +459,7 @@ class ConferenceRecordView(FormView):
                     host = stream['host']
                     port = stream['port']
                     server_type = stream['type']
-                    server, c = StreamingServer.objects.get_or_create(host=status.ip,
+                    server, c = StreamingServer.objects.get_or_create(host=host,
                                                                       port=port,
                                                                       type=server_type)
                     stream = LiveStream(conference=conf, server=server,
