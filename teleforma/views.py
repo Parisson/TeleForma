@@ -359,7 +359,7 @@ class ConferenceView(DetailView):
         if 'telecaster' in settings.INSTALLED_APPS:
             url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
             s = ServiceProxy(url)
-            s.teleforma.stop_conference(conference.code)
+            s.teleforma.stop_conference(conference.public_id)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
