@@ -346,8 +346,8 @@ class ConferenceView(DetailView):
         return context
 
     @jsonrpc_method('teleforma.stop_conference')
-    def stop(request, code):
-        conference = Conference.objects.get(code=code)
+    def stop(request, public_id):
+        conference = Conference.objects.get(public_id=public_id)
         conference.date_end = datetime.datetime.now()
         conference.save()
         for stream in conference.livestream.all():
