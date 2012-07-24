@@ -382,7 +382,8 @@ class ConferenceRecordView(FormView):
         status.update()
         context['host'] = status.ip
         context['hidden_fields'] = self.hidden_fields
-        context['room'] = jqchat.models.Room.objects.create()
+        content_type = ContentType.objects.get(app_label="teleforma", model="conference")
+        context['room'] = jqchat.models.Room.objects.create(name='new')
         return context
 
     def get_success_url(self):
