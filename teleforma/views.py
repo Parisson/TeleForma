@@ -417,10 +417,10 @@ class ConferenceRecordView(FormView):
 #                self.snapshot(stream.snapshot_url, station.output_dir)
                 self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
 
-            try:
-                self.push(self.conference)
-            except:
-                pass
+        try:
+            self.push(self.conference)
+        except:
+            pass
 
         return super(ConferenceRecordView, self).form_valid(form)
 
@@ -459,7 +459,7 @@ class ConferenceRecordView(FormView):
                     host = stream['host']
                     port = stream['port']
                     server_type = stream['type']
-                    server, c = StreamingServer.objects.get_or_create(host=host,
+                    server, c = StreamingServer.objects.get_or_create(host=settings.TELECASTER_MASTER_SERVER,
                                                                       port=port,
                                                                       type=server_type)
                     stream = LiveStream(conference=conf, server=server,
