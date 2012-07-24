@@ -258,7 +258,8 @@ class Conference(Model):
             for stream in streams:
                 data['streams'].append({'host': stream.server.host,
                                         'port': stream.server.port,
-                                        'type': stream.server.type })
+                                        'server_type': stream.server.type,
+                                        'stream_type': stream.stream_type  })
         return data
 
     class Meta:

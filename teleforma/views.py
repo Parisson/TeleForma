@@ -458,13 +458,14 @@ class ConferenceRecordView(FormView):
                 for stream in conference['streams']:
                     host = stream['host']
                     port = stream['port']
-                    server_type = stream['type']
+                    server_type = stream['server_type']
+                    stream_type = stream['stream_type']
                     site = Site.objects.all()
                     server, c = StreamingServer.objects.get_or_create(host=site[0],
                                                                       port=port,
                                                                       type=server_type)
                     stream = LiveStream(conference=conf, server=server,
-                                        stream_type=type, streaming=True)
+                                        stream_type=stream_type, streaming=True)
                     stream.save()
         else:
             raise 'Error : Bad Conference dictionnary'
