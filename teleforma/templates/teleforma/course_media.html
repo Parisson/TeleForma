@@ -76,7 +76,7 @@ $(document).ready(function(){
         <a href="{% url teleforma-media-detail media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
         {% endif %}
         {% if user.is_staff %}
-        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_delete{% else %}component_icon button icon_ok{% endif %}">{% if media.is_published %}{% trans "Reject" %}{% else %}{% trans "Publish" %}{% endif %}</a>
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans "Published" %}{% else %}{% trans "Rejected" %}{% endif %}</a>
         {% endif %}
     </div>
 
