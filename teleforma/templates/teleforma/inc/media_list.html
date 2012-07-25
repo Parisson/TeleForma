@@ -31,7 +31,9 @@
                     <dl class="listing" style="font-size: 1.2em;">
                     <dt>{% trans "Title" %}</dt><dd>{{ media.conference.course.title }}</dd>
                     <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
+                    {% if media.conference.professor %}
                     <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+                    {% endif %}
                     <dt>{% trans "Begin" %}</dt><dd>{{ media.conference.date_begin }}</dd>
                     </dl>
                  </div>
