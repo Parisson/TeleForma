@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-25 20:53+0200\n"
+"POT-Creation-Date: 2012-07-25 21:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,7 +171,9 @@ msgstr "crédits"
 msgid "date added"
 msgstr "date d'ajout"
 
-#: models.py:356
+#: models.py:356 templates/teleforma/course_media.html:27
+#: templates/teleforma/course_media.html:79
+#: templates/teleforma/inc/media_list.html:43
 msgid "published"
 msgstr "publié"
 
@@ -542,10 +544,10 @@ msgstr ""
 msgid "Message"
 msgstr "Messages"
 
-#: templates/postman/view.html:25 templates/teleforma/course_media.html:79
-#: templates/teleforma/inc/media_list.html:45
+#: templates/postman/view.html:25
+#, fuzzy
 msgid "Rejected"
-msgstr "Rejeté"
+msgstr "rejeté"
 
 #: templates/postman/view.html:25
 msgid ":"
@@ -661,24 +663,17 @@ msgstr "Nouvelle conférence"
 msgid "Record and stream"
 msgstr "Enregistrer et diffuser"
 
-#: templates/teleforma/course_media.html:27
-msgid "Reject"
-msgstr "Rejeter"
-
 #: templates/teleforma/course_media.html:34
-msgid "Publish"
-msgstr "Publier"
+#: templates/teleforma/course_media.html:79
+#: templates/teleforma/inc/media_list.html:45
+msgid "rejected"
+msgstr "rejeté"
 
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/media_list.html:49
 msgid "Download"
 msgstr "Télécharger"
-
-#: templates/teleforma/course_media.html:79
-#: templates/teleforma/inc/media_list.html:43
-msgid "Published"
-msgstr "Publié"
 
 #: templates/teleforma/course_media.html:123
 msgid "Begin date"
@@ -1015,6 +1010,12 @@ msgstr ""
 #: templatetags/teleforma_tags.py:134
 msgid "No"
 msgstr ""
+
+#~ msgid "Reject"
+#~ msgstr "Rejeter"
+
+#~ msgid "Publish"
+#~ msgstr "Publier"
 
 #~ msgid "is live"
 #~ msgstr "en direct"

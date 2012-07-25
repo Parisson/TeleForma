@@ -40,9 +40,9 @@
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
             {% if media.is_published and user.is_staff %}
-             <img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans 'Published' %}" />
+             <img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans 'published' %}" />
             {% elif not media.is_published and user.is_staff %}
-             <img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans 'Rejected' %}" />
+             <img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans 'rejected' %}" />
             {% endif %}
             {% if media.item.file %}
              <a href="{{ MEDIA_URL }}{{ media.item.file }}">
