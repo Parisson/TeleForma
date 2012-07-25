@@ -257,7 +257,7 @@ class Conference(Model):
 
         if self.room:
             data['room'] = self.room.name
-            date['organization'] = self.room.organization.name
+            data['organization'] = self.room.organization.name
 
         streams = self.livestream.all()
         if streams:
