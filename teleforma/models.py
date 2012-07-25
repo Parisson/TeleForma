@@ -236,8 +236,9 @@ class Conference(Model):
         return self.description
 
     def save(self, **kwargs):
-        super(Conference, self).save(**kwargs)
         self.course.save()
+        super(Conference, self).save(**kwargs)
+
 
     def to_dict(self):
         dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label':'public_id'},
@@ -417,9 +418,9 @@ class Document(MediaBase):
         return user in self.readers
 
     def save(self, **kwargs):
-        super(Document, self).save(**kwargs)
         self.course.save()
         self.set_mime_type()
+        super(Document, self).save(**kwargs)
 
     class Meta:
         db_table = app_label + '_' + 'document'
@@ -461,11 +462,12 @@ class Media(MediaBase):
             return self.title
 
     def save(self, **kwargs):
-        super(Media, self).save(**kwargs)
         if self.course:
             self.course.save()
         elif self.conference:
             self.conference.course.save()
+        super(Media, self).save(**kwargs)
+
 
     class Meta:
         db_table = app_label + '_' + 'media'
