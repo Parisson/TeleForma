@@ -33,7 +33,7 @@ $(document).ready(function(){
                 p.toggleClass('component_icon button icon_edit')
                 p.html('Publish')
                 });
-         },
+         }
         }
 
     jQuery(window).ready(function(){
@@ -42,12 +42,10 @@ $(document).ready(function(){
         p.unbind('click').click(function() {
             if (p.hasClass('icon_edit')){
                 f.publish('{{media.id}}');
-                alert('{{media.id}}');
                 return false;
                 }
             if (p.hasClass('icon_speaker')) {
                 f.unpublish('{{media.id}}');
-                alert('{{media.id}}');
                 return false;
                 }
             }
@@ -78,7 +76,7 @@ $(document).ready(function(){
         <a href="{% url teleforma-media-detail media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
         {% endif %}
         {% if user.is_staff %}
-        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_speaker{% else %}component_icon button icon_edit{% endif %}">Publish</a>
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_speaker{% else %}component_icon button icon_edit{% endif %}">{% if media.is_published %}Unpublish{% else %}Publish{% endif %}</a>
         {% endif %}
     </div>
 
