@@ -253,10 +253,11 @@ class Conference(Model):
         data = {'id': self.public_id, 'course_code': self.course.code,
                 'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
                 'session': self.session,
-                'organization': self.course.department.organization.name, 'streams':[] }
+                'streams':[] }
 
         if self.room:
             data['room'] = self.room.name
+            date['organization'] = self.room.organization.name
 
         streams = self.livestream.all()
         if streams:

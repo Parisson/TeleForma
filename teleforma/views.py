@@ -453,9 +453,13 @@ class ConferenceRecordView(FormView):
                 conf.session = conference['session']
                 user = User.objects.get(username=conference['professor_id'])
                 conf.professor = Professor.objects.get(user=user)
-                organization = Organization.objects.get(name=conference['organization'])
-                conf.room = Room.objects.get_or_create(name=conference['room'],
+                try:
+                    organization = Organization.objects.get_or_create(name=conference['organization'])
+                    conf.room = Room.objects.get_or_create(name=conference['room'],
                                                        organization=organization)
+                except:
+                    pass
+
                 conf.date_begin = datetime.datetime.now()
                 conf.save()
                 course.save()
