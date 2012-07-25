@@ -432,7 +432,7 @@ class ConferenceRecordView(FormView):
             if server_type == 'stream-m':
                 #FIXME:
 #                self.snapshot(stream.snapshot_url, station.output_dir)
-                self.snapshot('http://'+status.ip+':8080/snapshot/safe', station.output_dir)
+                self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
 
         try:
             self.push(self.conference)
