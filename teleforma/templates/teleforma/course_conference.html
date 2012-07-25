@@ -10,7 +10,9 @@
     var conferenceUtils = {
         stop : function(id){
             json([id],'teleforma.stop_conference',function(){
-                location.href = '{% url teleforma-conference-record %}';});
+                location.href = '{% url teleforma-conference-record %}';
+                }
+                );
         }}
 
     jQuery(window).ready(function(){
