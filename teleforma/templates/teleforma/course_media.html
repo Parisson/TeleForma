@@ -22,10 +22,10 @@ $(document).ready(function(){
     var mediaUtils = {
         publish : function(id){
             json([id],'teleforma.publish_media',function(){return false;});
-         }
+         };
         unpublish : function(id){
             json([id],'teleforma.unpublish_media',function(){return false;});
-         }
+         };
         }
 
     jQuery(window).ready(function(){
@@ -37,13 +37,13 @@ $(document).ready(function(){
                 p.removeClass('component_icon button icon_edit').addClass('component_icon button icon_speaker')
                 p.html('Unpublish')
                 return false;
-                }
+                };
             if (p.hasClass('component_icon button icon_speaker')){
                 f.unpublish('{{media.id}}');
                 p.removeClass('component_icon button icon_speaker').addClass('component_icon button icon_edit')
                 p.html('Publish')
                 return false;
-                }
+                };
             });
         });
 </script>
