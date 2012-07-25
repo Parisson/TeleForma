@@ -229,7 +229,9 @@ class MediaView(DetailView):
         all_courses = get_courses(self.request.user)
         context['all_courses'] = all_courses
         media = self.get_object()
-        context['mime_type'] = media.item.mime_type
+        if not media.mime_type:
+            media.set_mime_type()
+        context['mime_type'] = media.mime_type
         context['course'] = media.course
         context['item'] = media.item
         context['type'] = media.course_type
