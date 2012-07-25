@@ -252,7 +252,12 @@ class Conference(Model):
     def to_json_dict(self):
         data = {'id': self.public_id, 'course_code': self.course.code,
                 'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
-                'session': self.session, 'room': self.room.name, 'streams':[] }
+                'session': self.session,
+                'organization': self.course.department.organization.name, 'streams':[] }
+
+        if self.room:
+            data['room'] = self.room.name
+
         streams = self.livestream.all()
         if streams:
             for stream in streams:
