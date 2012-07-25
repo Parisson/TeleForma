@@ -417,7 +417,7 @@ class ConferenceRecordView(FormView):
             if server_type == 'stream-m':
                 #FIXME:
 #                self.snapshot(stream.snapshot_url, station.output_dir)
-                self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+                self.snapshot('http://'+status.ip+'localhost:8080/snapshot/safe', station.output_dir)
 
         try:
             self.push(self.conference)
@@ -434,8 +434,7 @@ class ConferenceRecordView(FormView):
         f = open(path, 'w')
         f.write(img.read())
         f.close()
-        command = '/usr/bin/dwebp ' + path + ' -scale ' + str(width) + ' ' + str(height) + \
-                    ' -o ' + dir + os.sep + 'preview.png &'
+        command = '/usr/bin/dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
         os.system(command)
 
     @method_decorator(login_required)
