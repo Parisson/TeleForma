@@ -34,6 +34,7 @@ class FixCheckMedia(object):
                     source = root + os.sep + file
                     self.fix_mp3(source, path)
                     os.system('rm ' + root + os.sep + fix_log)
+                    os.system('touch ' + root + os.sep + 'mp3.fixed')
 
 
     def fix_webm(self, path):
