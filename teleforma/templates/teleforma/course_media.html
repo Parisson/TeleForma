@@ -42,10 +42,12 @@ $(document).ready(function(){
         p.unbind('click').click(function() {
             if (p.hasClass('icon_edit')){
                 f.publish('{{media.id}}');
+                alert('{{media.id}}');
                 return false;
                 }
             if (p.hasClass('icon_speaker')) {
                 f.unpublish('{{media.id}}');
+                alert('{{media.id}}');
                 return false;
                 }
             });
