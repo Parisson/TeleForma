@@ -26,14 +26,14 @@ $(document).ready(function(){
                 p.toggleClass('component_icon button icon_speaker')
                 p.html('Unpublish')
                 });
-         }
+         },
         unpublish : function(id){
             var p = jQuery('#publish');
             json([id],'teleforma.unpublish_media',function(){
                 p.toggleClass('component_icon button icon_edit')
                 p.html('Publish')
                 });
-         }
+         },
         }
 
     jQuery(window).ready(function(){
