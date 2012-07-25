@@ -24,14 +24,14 @@ $(document).ready(function(){
             var p = jQuery('#publish');
             json([id],'teleforma.publish_media',function(){
                 p.removeClass('icon_delete').addClass('icon_ok')
-                p.html('{% trans "published" %}')
+                p.html('{% trans " published" %}')
                 });
          },
         unpublish : function(id){
             var p = jQuery('#publish');
             json([id],'teleforma.unpublish_media',function(){
                 p.removeClass('icon_ok').addClass('icon_delete')
-                p.html('{% trans "rejected" %}')
+                p.html('{% trans " rejected" %}')
                 });
          }
         }
@@ -76,7 +76,7 @@ $(document).ready(function(){
         <a href="{% url teleforma-media-detail media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
         {% endif %}
         {% if user.is_staff %}
-        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans "published" %}{% else %}{% trans "rejected" %}{% endif %}</a>
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
 
