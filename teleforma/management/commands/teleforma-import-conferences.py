@@ -74,9 +74,6 @@ class Command(BaseCommand):
                                                                      organization=organization)
                     if Conference.objects.filter(public_id=public_id):
                         conference = Conference.objects.get(public_id=public_id)
-                        conference.course = Course.objects.get(code=course_id)
-                        conference.course_type = CourseType.objects.get(name=course_type)
-                        conference.save()
 
                         exist = False
                         medias = conference.media.all()
@@ -134,6 +131,7 @@ class Command(BaseCommand):
                             media.type = ext
                             media.set_mime_type()
                             media.save()
+                            conference.save()
                             logger.logger.info(path)
                             i += 1
 
