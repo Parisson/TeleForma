@@ -35,6 +35,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse, reverse_lazy
+from jsonrpc.proxy import ServiceProxy
 
 from teleforma.models import *
 from teleforma.forms import *
@@ -228,7 +229,9 @@ class MediaView(DetailView):
         all_courses = get_courses(self.request.user)
         context['all_courses'] = all_courses
         media = self.get_object()
-        context['mime_type'] = media.item.mime_type
+        if not media.mime_type:
+            media.set_mime_type()
+        context['mime_type'] = media.mime_type
         context['course'] = media.course
         context['item'] = media.item
         context['type'] = media.course_type
@@ -272,7 +275,6 @@ class DocumentView(DetailView):
 
     model = Document
     template_name='teleforma/course_document.html'
-
 
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
@@ -345,9 +347,9 @@ class ConferenceView(DetailView):
             context['message'] = contact_message
         return context
 
-    @jsonrpc_method('teleforma.conference_stop')
-    def stop(request, id):
-        conference = Conference.objects.get(id=id)
+    @jsonrpc_method('teleforma.stop_conference')
+    def stop(request, public_id):
+        conference = Conference.objects.get(public_id=public_id)
         conference.date_end = datetime.datetime.now()
         conference.save()
         for stream in conference.livestream.all():
@@ -356,6 +358,13 @@ class ConferenceView(DetailView):
             station.started = False
             station.save()
             station.stop()
+        if 'telecaster' in settings.INSTALLED_APPS:
+            try:
+                url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+                s = ServiceProxy(url)
+                s.teleforma.stop_conference(conference.public_id)
+            except:
+                pass
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -410,11 +419,18 @@ class ConferenceRecordView(FormView):
             if server_type == 'stream-m':
                 #FIXME:
 #                self.snapshot(stream.snapshot_url, station.output_dir)
-                self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+                self.snapshot('http://'+status.ip+':8080/snapshot/safe', station.output_dir)
+
+        try:
+            self.push(self.conference)
+        except:
+            pass
 
         return super(ConferenceRecordView, self).form_valid(form)
 
     def snapshot(self, url, dir):
+        width = 160
+        height = 90
         img = urllib.urlopen(url)
         path = dir + os.sep + 'preview.webp'
         f = open(path, 'w')
@@ -427,46 +443,46 @@ class ConferenceRecordView(FormView):
     def dispatch(self, *args, **kwargs):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 
-    def create(self, conference):
+    @jsonrpc_method('teleforma.create_conference')
+    def create(request, conference):
         if isinstance(conference, dict):
-            conf, c = Conference.objects.get_or_create(public_id=conference['id'])
+            course = Course.objects.get(code=conference['course_code'])
+            course_type = CourseType.objects.get(name=conference['course_type'])
+            conf, c = Conference.objects.get_or_create(public_id=conference['id'],
+                                                       course=course, course_type=course_type)
             if c:
-                conf.course = Course.objects.get(code=conference['course_code'])
-                conf.course_type = CourseType.objects.get(name=conference['course_type'])
-                user = User.objects.get(username=conference['professor_id'])
                 conf.session = conference['session']
+                user = User.objects.get(username=conference['professor_id'])
                 conf.professor = Professor.objects.get(user=user)
-                conf.room = Room.objects.get(name=conference['room'])
+                try:
+                    organization = Organization.objects.get_or_create(name=conference['organization'])
+                    conf.room = Room.objects.get_or_create(name=conference['room'],
+                                                       organization=organization)
+                except:
+                    pass
+
+                conf.date_begin = datetime.datetime.now()
                 conf.save()
-                #TODO: dates
-        else:
-            raise 'Error : Bad Conference dictionnary'
-
-    @jsonrpc_method('teleforma.update_conferences')
-    def update(request, data):
-        if isinstance(data, list):
-            for conference in data:
-                self.create(conference)
-        else:
-            raise 'Error : Bad Conference dictionnary list'
-
-    @jsonrpc_method('teleforma.add_conference')
-    def add(request, data):
-        # playlist_resource must be a dict
-        if isinstance(data, dict):
-            self.create(data)
+                course.save()
+                for stream in conference['streams']:
+                    host = stream['host']
+                    port = stream['port']
+                    server_type = stream['server_type']
+                    stream_type = stream['stream_type']
+                    site = Site.objects.all()
+                    server, c = StreamingServer.objects.get_or_create(host=site[0],
+                                                                      port=port,
+                                                                      type=server_type)
+                    stream = LiveStream(conference=conf, server=server,
+                                        stream_type=stream_type, streaming=True)
+                    stream.save()
         else:
             raise 'Error : Bad Conference dictionnary'
 
     def push(self, conference):
-        url = 'http://' + conference.course.department.domain + '/'
-        data = {"id":"jsonrpc", "params":"'%s'", "method":"'teleforma.add_conference'",
-                                    "jsonrpc":"1.0"} % conference.to_json_dict()
-        jdata = json.dumps(data)
-        try:
-            urllib2.urlopen(url, jdata)
-        except:
-            pass
+        url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+        s.teleforma.create_conference(conference.to_json_dict())
 
 
 class UsersView(ListView):
