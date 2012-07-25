@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-25 04:37+0200\n"
+"POT-Creation-Date: 2012-07-25 10:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: models.py:83 models.py:95 models.py:115 models.py:127 models.py:184
-#: models.py:368 models.py:479 models.py:495
+#: models.py:369 models.py:481 models.py:497
 msgid "name"
 msgstr "nom"
 
 #: models.py:84 models.py:96 models.py:116 models.py:128 models.py:142
-#: models.py:185 models.py:284 models.py:350 models.py:369 models.py:480
+#: models.py:185 models.py:285 models.py:351 models.py:370 models.py:482
 msgid "description"
 msgstr "description"
 
@@ -40,48 +40,48 @@ msgstr ""
 msgid "department"
 msgstr "département"
 
-#: models.py:123 models.py:496 models.py:541
+#: models.py:123 models.py:498 models.py:543
 msgid "period"
 msgstr "période"
 
-#: models.py:135 models.py:199 models.py:387 models.py:438
+#: models.py:135 models.py:199 models.py:388 models.py:439
 msgid "course type"
 msgstr "type de matière"
 
-#: models.py:141 models.py:349
+#: models.py:141 models.py:350
 msgid "title"
 msgstr "titre"
 
-#: models.py:143 models.py:354 models.py:494
+#: models.py:143 models.py:355 models.py:496
 msgid "code"
 msgstr "cote"
 
-#: models.py:144 models.py:353
+#: models.py:144 models.py:354
 msgid "date modified"
 msgstr "date de modification"
 
-#: models.py:145 models.py:370
+#: models.py:145 models.py:371
 msgid "number"
 msgstr ""
 
-#: models.py:146 models.py:499
+#: models.py:146 models.py:501
 msgid "synthesis note"
 msgstr "note de synthèse"
 
-#: models.py:147 models.py:502
+#: models.py:147 models.py:504
 msgid "obligations"
 msgstr "obligations"
 
-#: models.py:148 models.py:523
+#: models.py:148 models.py:525
 #, fuzzy
 msgid "magistral"
 msgstr "Cours magistraux"
 
-#: models.py:161 models.py:198 models.py:385 models.py:436
+#: models.py:161 models.py:198 models.py:386 models.py:437
 msgid "course"
 msgstr "matière"
 
-#: models.py:168 models.py:540 models.py:578
+#: models.py:168 models.py:542 models.py:580
 msgid "user"
 msgstr "utilisateur"
 
@@ -118,170 +118,170 @@ msgstr "date de début"
 msgid "end date"
 msgstr "date de fin"
 
-#: models.py:209 models.py:394 models.py:443
+#: models.py:209 models.py:395 models.py:444
 msgid "readers"
 msgstr ""
 
-#: models.py:273 models.py:301 models.py:388 models.py:434
+#: models.py:274 models.py:302 models.py:389 models.py:435
 msgid "conference"
 msgstr "conférence"
 
-#: models.py:281
+#: models.py:282
 msgid "host"
 msgstr ""
 
-#: models.py:282
+#: models.py:283
 msgid "port"
 msgstr ""
 
-#: models.py:283 models.py:390 models.py:442
+#: models.py:284 models.py:391 models.py:443
 msgid "type"
 msgstr "type"
 
-#: models.py:285
+#: models.py:286
 msgid "source password"
 msgstr ""
 
-#: models.py:286
+#: models.py:287
 msgid "admin password"
 msgstr ""
 
-#: models.py:293 models.py:304
+#: models.py:294 models.py:305
 msgid "streaming server"
 msgstr "serveur de diffusion"
 
-#: models.py:305
+#: models.py:306
 msgid "Streaming type"
 msgstr "Type de flux"
 
-#: models.py:307
+#: models.py:308
 #, fuzzy
 msgid "streaming"
 msgstr "Diffusion"
 
-#: models.py:343
+#: models.py:344
 msgid "live stream"
 msgstr "stream en direct"
 
-#: models.py:351
+#: models.py:352
 msgid "credits"
 msgstr "crédits"
 
-#: models.py:352 models.py:598
+#: models.py:353 models.py:600
 msgid "date added"
 msgstr "date d'ajout"
 
-#: models.py:355
+#: models.py:356
 msgid "published"
 msgstr "publié"
 
-#: models.py:356
+#: models.py:357
 #, fuzzy
 msgid "mime type"
 msgstr "Type mime"
 
-#: models.py:377
+#: models.py:378
 msgid "document type"
 msgstr "type de document"
 
-#: models.py:392
+#: models.py:393
 msgid "annal"
 msgstr "annale"
 
-#: models.py:393
+#: models.py:394
 msgid "file"
 msgstr "fichier"
 
-#: models.py:487 models.py:488 templates/telemeta/profile_detail.html:64
+#: models.py:489 models.py:490 templates/telemeta/profile_detail.html:64
 #: templates/telemeta/users.html:29 templates/telemeta/inc/user_list.html:21
 msgid "IEJ"
 msgstr "IEJ"
 
-#: models.py:505 models.py:548
+#: models.py:507 models.py:550
 msgid "procedure"
 msgstr "procédure"
 
-#: models.py:508 models.py:551
+#: models.py:510 models.py:553
 msgid "written speciality"
 msgstr "spécialité écrit"
 
-#: models.py:511 models.py:554
+#: models.py:513 models.py:556
 msgid "oral speciality"
 msgstr "spécialité orale"
 
-#: models.py:514 models.py:556
+#: models.py:516 models.py:558
 msgid "oral 1"
 msgstr ""
 
-#: models.py:517 models.py:558
+#: models.py:519 models.py:560
 msgid "oral 2"
 msgstr ""
 
-#: models.py:520 models.py:560
+#: models.py:522 models.py:562
 msgid "options"
 msgstr "options"
 
-#: models.py:525
+#: models.py:527
 msgid "cost"
 msgstr "coût"
 
-#: models.py:535 models.py:545
+#: models.py:537 models.py:547
 msgid "training"
 msgstr "formation"
 
-#: models.py:543
+#: models.py:545
 msgid "iej"
 msgstr "iej"
 
-#: models.py:546
+#: models.py:548
 msgid "platform only"
 msgstr "plateforme seulement"
 
-#: models.py:571 models.py:596
+#: models.py:573 models.py:598
 msgid "student"
 msgstr "étudiant"
 
-#: models.py:579 templates/telemeta/profile_detail.html:77
+#: models.py:581 templates/telemeta/profile_detail.html:77
 msgid "Address"
 msgstr ""
 
-#: models.py:580
+#: models.py:582
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models.py:581
+#: models.py:583
 msgid "City"
 msgstr "Ville"
 
-#: models.py:582
+#: models.py:584
 msgid "Country"
 msgstr "Pays"
 
-#: models.py:583 templates/telemeta/profile_detail.html:86
+#: models.py:585 templates/telemeta/profile_detail.html:86
 msgid "Language"
 msgstr "Langue"
 
-#: models.py:584 templates/telemeta/profile_detail.html:78
+#: models.py:586 templates/telemeta/profile_detail.html:78
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models.py:585
+#: models.py:587
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models.py:586
+#: models.py:588
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
-#: models.py:590
+#: models.py:592
 msgid "profile"
 msgstr "profil"
 
-#: models.py:597
+#: models.py:599
 msgid "amount"
 msgstr "montant"
 
-#: models.py:606
+#: models.py:608
 msgid "payment"
 msgstr "paiement"
 
@@ -719,6 +719,11 @@ msgstr "Conférences en direct"
 #: templates/teleforma/inc/media_list.html:17
 msgid "View"
 msgstr ""
+
+#: templates/teleforma/inc/conference_list.html:19
+#: templates/teleforma/inc/media_list.html:21
+msgid "Click here"
+msgstr "Cliquez ici"
 
 #: templates/teleforma/inc/document_list.html:36
 msgid "No document"
