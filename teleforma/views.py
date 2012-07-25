@@ -271,6 +271,19 @@ class MediaView(DetailView):
             return redirect('teleforma-media-detail', media.id)
 
 
+    @jsonrpc_method('teleforma.publish_media')
+    def publish(request, id):
+        media = Media.objects.get(id=id)
+        media.is_published = True
+        media.save()
+
+    @jsonrpc_method('teleforma.unpublish_media')
+    def unpublish(request, id):
+        media = Media.objects.get(id=id)
+        media.is_published = False
+        media.save()
+
+
 class DocumentView(DetailView):
 
     model = Document

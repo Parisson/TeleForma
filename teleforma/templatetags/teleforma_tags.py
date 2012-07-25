@@ -186,8 +186,7 @@ def get_video_id(media):
     for m in medias:
         if 'video' in m.mime_type:
             return m.id
-        else:
-            return ''
+    return
 
 @register.filter
 def get_host(url, host):

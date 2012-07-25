@@ -4,11 +4,15 @@
 {% load i18n %}
 
 {% block module-action %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
 <script type="text/javascript">
     var conferenceUtils = {
         stop : function(id){
             json([id],'teleforma.stop_conference',function(){
-                location.href = '{% url teleforma-conference-record %}';});
+                location.href = '{% url teleforma-conference-record %}';
+                }
+                );
         }}
 
     jQuery(window).ready(function(){
@@ -19,13 +23,10 @@
         });
 </script>
 
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
 <div class="module_action">
 <a href="#" class="component_icon button" id="action_red">{% trans "S T O P" %}</a>
 </div>
 {% endif %}
-
 {% endblock module-action %}
 
 {% block course %}
