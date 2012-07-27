@@ -57,7 +57,7 @@ $(document).ready(function(){
 {% endblock extra_javascript %}
 
 {% block module-action %}
-{% if media.item.file %}
+{% if media.item.file and media.is_published %}
 <div class="module_action">
 <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
 </div>
@@ -124,6 +124,7 @@ $(document).ready(function(){
 <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
 <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
 <dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>
+<dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>
 {% endif %}
 <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
 <dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
