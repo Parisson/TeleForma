@@ -526,7 +526,7 @@ class UsersView(ListView):
         context['page'] = page
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(permission_required('is_staff'))
     def dispatch(self, *args, **kwargs):
         return super(UsersView, self).dispatch(*args, **kwargs)
 

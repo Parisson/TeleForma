@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-25 10:52+0200\n"
+"POT-Creation-Date: 2012-07-25 21:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,6 +172,7 @@ msgid "date added"
 msgstr "date d'ajout"
 
 #: models.py:356
+#, fuzzy
 msgid "published"
 msgstr "publié"
 
@@ -320,7 +321,7 @@ msgstr ""
 msgid "Sent Messages"
 msgstr "Messages"
 
-#: templates/postman/base.html:17 templates/telemeta/base.html:102
+#: templates/postman/base.html:17 templates/telemeta/base.html:101
 msgid "Archives"
 msgstr ""
 
@@ -543,8 +544,9 @@ msgid "Message"
 msgstr "Messages"
 
 #: templates/postman/view.html:25
+#, fuzzy
 msgid "Rejected"
-msgstr ""
+msgstr "rejeté"
 
 #: templates/postman/view.html:25
 msgid ":"
@@ -594,7 +596,7 @@ msgid "Conferences"
 msgstr "Conférences"
 
 #: templates/teleforma/course.html:51
-#: templates/teleforma/course_conference.html:69
+#: templates/teleforma/course_conference.html:71
 #: templates/teleforma/course_conference_audio.html:68
 #: templates/teleforma/course_media.html:83
 #: templates/teleforma/course_media.html:125
@@ -604,11 +606,11 @@ msgid "Session"
 msgstr "Session"
 
 #: templates/teleforma/course.html:52
-#: templates/teleforma/course_conference.html:68
+#: templates/teleforma/course_conference.html:69
 #: templates/teleforma/course_conference_audio.html:67
 #: templates/teleforma/course_media.html:118
 #: templates/teleforma/inc/conference_list.html:27
-#: templates/teleforma/inc/media_list.html:34
+#: templates/teleforma/inc/media_list.html:35
 #: templates/telemeta/inc/user_list.html:48
 msgid "Professor"
 msgstr "Professeur"
@@ -623,25 +625,25 @@ msgstr "S T O P"
 msgid "Audio"
 msgstr ""
 
-#: templates/teleforma/course_conference.html:70
+#: templates/teleforma/course_conference.html:72
 #: templates/teleforma/course_conference_audio.html:69
 #: templates/teleforma/course_media.html:126
 msgid "Room"
 msgstr "Salle"
 
-#: templates/teleforma/course_conference.html:71
+#: templates/teleforma/course_conference.html:73
 #: templates/teleforma/course_conference_audio.html:70
 #: templates/teleforma/inc/conference_list.html:28
-#: templates/teleforma/inc/media_list.html:35
+#: templates/teleforma/inc/media_list.html:37
 msgid "Begin"
 msgstr "Début"
 
-#: templates/teleforma/course_conference.html:72
+#: templates/teleforma/course_conference.html:74
 #: templates/teleforma/course_conference_audio.html:71
 msgid "End"
 msgstr "Fin"
 
-#: templates/teleforma/course_conference.html:73
+#: templates/teleforma/course_conference.html:75
 #: templates/teleforma/course_conference_audio.html:72
 msgid "Live"
 msgstr "Direct"
@@ -662,17 +664,19 @@ msgstr "Enregistrer et diffuser"
 
 #: templates/teleforma/course_media.html:27
 #: templates/teleforma/course_media.html:79
-msgid "Reject"
-msgstr "Rejeter"
+#: templates/teleforma/inc/media_list.html:43
+msgid " published"
+msgstr " publié"
 
 #: templates/teleforma/course_media.html:34
 #: templates/teleforma/course_media.html:79
-msgid "Publish"
-msgstr "Publier"
+#: templates/teleforma/inc/media_list.html:45
+msgid " rejected"
+msgstr " rejeté"
 
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/inc/document_list.html:22
-#: templates/teleforma/inc/media_list.html:39
+#: templates/teleforma/inc/media_list.html:49
 msgid "Download"
 msgstr "Télécharger"
 
@@ -705,8 +709,8 @@ msgstr "Nouvelle note"
 msgid "Status"
 msgstr ""
 
-#: templates/teleforma/help.html:11 templates/telemeta/base.html:111
-#: templates/telemeta/base.html.py:124
+#: templates/teleforma/help.html:11 templates/telemeta/base.html:110
+#: templates/telemeta/base.html.py:123
 msgid "Help"
 msgstr ""
 
@@ -733,56 +737,56 @@ msgstr "Aucun document"
 msgid "Passed conferences"
 msgstr "Conférences en différé"
 
-#: templates/telemeta/base.html:86
+#: templates/telemeta/base.html:85
 msgid "Desk"
 msgstr "Bureau"
 
-#: templates/telemeta/base.html:89
+#: templates/telemeta/base.html:88
 msgid "Home"
 msgstr "Accueil"
 
-#: templates/telemeta/base.html:94
+#: templates/telemeta/base.html:93
 msgid "Messaging"
 msgstr "Messagerie"
 
-#: templates/telemeta/base.html:97 templates/telemeta/users.html:6
+#: templates/telemeta/base.html:96 templates/telemeta/users.html:6
 #: templates/telemeta/users.html.py:70
 msgid "Users"
 msgstr ""
 
-#: templates/telemeta/base.html:104 templates/telemeta/search_criteria.html:69
+#: templates/telemeta/base.html:103 templates/telemeta/search_criteria.html:69
 msgid "Search"
 msgstr ""
 
-#: templates/telemeta/base.html:105
+#: templates/telemeta/base.html:104
 msgid "Collections"
 msgstr ""
 
-#: templates/telemeta/base.html:106
+#: templates/telemeta/base.html:105
 msgid "Items"
 msgstr ""
 
-#: templates/telemeta/base.html:109
+#: templates/telemeta/base.html:108
 msgid "Admin"
 msgstr ""
 
-#: templates/telemeta/base.html:121
+#: templates/telemeta/base.html:120
 msgid "Profile"
 msgstr "Profil"
 
-#: templates/telemeta/base.html:123
+#: templates/telemeta/base.html:122
 msgid "Lists"
 msgstr ""
 
-#: templates/telemeta/base.html:126
+#: templates/telemeta/base.html:125
 msgid "Sign out"
 msgstr ""
 
-#: templates/telemeta/base.html:169
+#: templates/telemeta/base.html:167
 msgid "Powered by"
 msgstr ""
 
-#: templates/telemeta/base.html:179
+#: templates/telemeta/base.html:177
 msgid "Legal notices"
 msgstr ""
 
@@ -1011,6 +1015,12 @@ msgstr ""
 #: templatetags/teleforma_tags.py:134
 msgid "No"
 msgstr ""
+
+#~ msgid "Reject"
+#~ msgstr "Rejeter"
+
+#~ msgid "Publish"
+#~ msgstr "Publier"
 
 #~ msgid "is live"
 #~ msgstr "en direct"

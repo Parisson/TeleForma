@@ -19,12 +19,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-<title>{%block head_title %}{% description %} - Telemeta{% endblock %}</title>
+<title>{%block head_title %}{% description %} - TeleForma{% endblock %}</title>
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% url telemeta-css "telemeta.css" %}" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/teleforma.css" />
-<link rel="alternate" href="rss" title="RSS 2.0" type="application/rss+xml" />
+
 <!--[if IE]>
 <link rel="stylesheet" type="text/css" href="{% url telemeta-css "telemeta_ie.css" %}" />
 <![endif]-->
@@ -37,10 +37,9 @@
 
 {% block javascript %}
 <script src="{% url django.views.i18n.javascript_catalog %}" type="text/javascript"></script>
-<!--<script src="{% url telemeta-js "jquery-1.6.min.js" %}" type="text/javascript"></script>-->
-<script src="{% url telemeta-timeside "js/libs/jquery-1.6.min.js" %}" type="text/javascript"></script>
-<script src="{% url telemeta-js "locale.js" %}" type="text/javascript"></script>
-<script src="{% url telemeta-js "application.js" %}" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}teleforma/js/jquery-1.6.min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}telemeta/js/locale.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}telemeta/js/application.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}jqchat/jqchat.js" type="text/javascript" ></script>
 
@@ -163,8 +162,7 @@ alt="logo" />
  <table width="100%">
   <tr>
    <td>
-    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{% url telemeta-images "logo_mini_2.png" %}"
-   alt="Telemeta Powered"/></a>
+    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{{ STATIC_URL }}telemeta/images/logo_mini_2.png" alt="Telemeta Powered"/></a>
     <p class="left">
     {% trans "Powered by" %} <a href="http://parisson.com" target="_blank"><br /><strong>TeleForma {% teleforma_version %}</strong></a><br />
     </p>
