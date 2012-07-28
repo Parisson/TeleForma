@@ -100,6 +100,17 @@ $(document).ready(function(){
 </div>
 
 {% elif "audio" in media.mime_type %}
+
+{% if media.item.related.all %}
+ {% for related in media.item.related.all %}
+  {% if related.title == "preview" %}
+   <img src="{{ MEDIA_URL }}{{ related.file }}" width="320px" alt="" />
+  {% endif %}
+ {% endfor %}
+{% else %}
+ snapshot
+{% endif %}
+
 <div class="audio" style="margin-top:1em;">
 <audio controls preload="auto">
 <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
