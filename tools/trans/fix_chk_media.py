@@ -18,38 +18,70 @@ class FixCheckMedia(object):
                 ext = os.path.splitext(filename)[1][1:]
                 dir_files = os.listdir(root)
 
-                fix_log = 'webm.fixed'
-                if ext == 'webm' and not fix_log in dir_files:
-                    print path
-                    self.fix_webm(path)
-                    os.system('touch ' + root + os.sep + fix_log)
-
-                fix_log = 'mp3.tofix'
-                if ext == 'mp3' and fix_log in dir_files:
+		fixed_log = 'mp3_fixed'
+                tofix_log = 'mp3.tofix'
+                if ext == 'mp3' and tofix_log in dir_files and not fixed_log in dir_files:
                     print path
                     for file in dir_files:
                         ext = os.path.splitext(file)[1][1:]
                         if ext == 'webm':
                             break
                     source = root + os.sep + file
-                    self.fix_mp3(source, path)
-                    os.system('rm ' + root + os.sep + fix_log)
-                    os.system('touch ' + root + os.sep + 'mp3.fixed')
+                    os.system('touch ' + root + os.sep + fixed_log)
+                    os.system('rm ' + root + os.sep + tofix_log)
+                    if os.path.getsize(source):
+                        self.fix_mp3(source, path)
+                        #pass
+
+                fixed_log = 'webm.fixed'
+                tofix_log = 'webm.tofix'
+
+                if ext == 'webm' and not fixed_log in dir_files:
+                    print path
+                    os.system('touch ' + root + os.sep + fixed_log)
+                    if os.path.getsize(path):
+                        self.fix_webm(path)
+                        #pass
+
+                if ext == 'webm' and tofix_log in dir_files:
+                    print path
+                    os.system('touch ' + root + os.sep + fixed_log)
+                    os.system('rm ' + root + os.sep + tofix_log)
+                    if os.path.getsize(path):
+                        self.hard_fix_webm(path):
+                        #pass
+
+
+    def hard_fix_webm(self, path):
+        try:
+            tmp_file = self.tmp_dir + 'out.webm '
+            command = 'ffmpeg -loglevel 0 -i '+ path + ' -vcodec libvpx -vb 500k -acodec libvorbis -ab 96k -f webm -y ' + tmp_file + ' > /dev/null'
+            print command
+            os.system(command)
+            command = 'mv '  + tmp_file + path
+            os.system(command)
+        except:
+            pass
 
 
     def fix_webm(self, path):
-        command = 'ffmpeg -i '+ path + ' -vcodec copy -acodec copy -f webm -y ' + self.tmp_dir + 'out.webm'
-        print command
-        os.system(command)
-        command = 'mv '  + self.tmp_dir + 'out.webm ' + path
-        print command
-        os.system(command)
-
+        try:
+            tmp_file = self.tmp_dir + 'out.webm '
+            command = 'ffmpeg -loglevel quiet -i '+ path + ' -vcodec copy -acodec copy -f webm -y ' + tmp_file + ' > /dev/null'
+            print command
+            os.system(command)
+            command = 'mv '  + tmp_file + path
+            os.system(command)
+        except:
+            pass
 
     def fix_mp3(self, source, path):
-        command = 'ffmpeg -i '+ source + ' -aq 9 -y ' + path
-        print command
-        os.system(command)
+        try:
+            command = 'ffmpeg -loglevel quiet -i '+ source + ' -ab 96k -y ' + path + ' > /dev/null'
+            print command
+            os.system(command)
+        except:
+            pass
 
 
 
