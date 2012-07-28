@@ -104,7 +104,7 @@ $(document).ready(function(){
 {% if media.item.related.all %}
  {% for related in media.item.related.all %}
   {% if related.title == "preview" %}
-   <img src="{{ MEDIA_URL }}{{ related.file }}" width="320px" alt="" />
+   <img src="{{ MEDIA_URL }}{{ related.file }}" width="300px" alt="" />
   {% endif %}
  {% endfor %}
 {% else %}
