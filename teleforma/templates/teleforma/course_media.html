@@ -92,7 +92,7 @@ $(document).ready(function(){
 <div class="media">
 
 {% if "video" in media.mime_type %}
-<div class="video">
+<div class="video" style="margin-top:1em;">
 <video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
 <!-- Hello Chrome and Firefox (and Opera?) -->
 <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
