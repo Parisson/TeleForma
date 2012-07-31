@@ -13,8 +13,8 @@
          {% if media.is_published or user.is_staff %}
           {% if media.type == 'webm' %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
-                <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
+                <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}" target="_blank">
                  {% if media.item.related.all %}
                  {% for related in media.item.related.all %}
                   {% if related.title == "preview" %}
@@ -35,6 +35,9 @@
                     <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
                     {% endif %}
                     <dt>{% trans "Begin" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+                    {% if media.conference.comment %}
+                    <dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>
+                    {% endif %}
                     </dl>
                  </div>
             </td>
