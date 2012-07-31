@@ -204,7 +204,7 @@ class CoursesView(ListView):
     template_name='teleforma/courses.html'
 
     def get_queryset(self):
-        return get_courses(self.request.user, date_order=True)
+        return get_courses(self.request.user, date_order=True)[:10]
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
