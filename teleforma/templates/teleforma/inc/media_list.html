@@ -13,8 +13,8 @@
          {% if media.is_published or user.is_staff %}
           {% if media.type == 'webm' %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
-                <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}" target="_blank" style="vertical-align:middle">
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
+                <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}" target="_blank">
                  {% if media.item.related.all %}
                  {% for related in media.item.related.all %}
                   {% if related.title == "preview" %}
