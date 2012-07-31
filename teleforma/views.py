@@ -204,14 +204,15 @@ class CoursesView(ListView):
     template_name='teleforma/courses.html'
 
     def get_queryset(self):
-        return get_courses(self.request.user, date_order=True)[:10]
+        self.all_courses = get_courses(self.request.user, date_order=True)
+        return self.all_courses[:10]
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
-        context['all_courses'] = sorted(self.object_list, key=lambda k: k['number'])
+        context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
         return context
 
     @method_decorator(login_required)
