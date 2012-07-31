@@ -19,18 +19,19 @@ class FixCheckMedia(object):
                 ext = os.path.splitext(filename)[1][1:]
                 dir_files = os.listdir(root)
 
-		fixed_log = 'mp3.fixed'
+                fixed_log = 'mp3.fixed'
                 tofix_log = 'mp3.tofix'
+
                 if ext == 'mp3' and tofix_log in dir_files and not fixed_log in dir_files:
                     print path
                     for file in dir_files:
                         source_ext = os.path.splitext(file)[1][1:]
                         if source_ext == 'webm':
                             source = root + os.sep + file
-                            os.system('touch ' + root + os.sep + fixed_log)
-                            os.system('rm ' + root + os.sep + tofix_log)
                             if os.path.getsize(source):
                                 self.fix_mp3(source, path)
+                                os.system('touch ' + root + os.sep + fixed_log)
+                                os.system('rm ' + root + os.sep + tofix_log)
                             break
                             #pass
 
@@ -39,24 +40,24 @@ class FixCheckMedia(object):
 
                 if ext == 'webm' and not fixed_log in dir_files:
                     print path
-                    os.system('touch ' + root + os.sep + fixed_log)
                     if os.path.getsize(path):
                         self.fix_webm(path)
+                        os.system('touch ' + root + os.sep + fixed_log)
                         #pass
 
-                if ext == 'webm' and tofix_log in dir_files:
-                    print path
-                    os.system('touch ' + root + os.sep + fixed_log)
-                    os.system('rm ' + root + os.sep + tofix_log)
-                    if os.path.getsize(path):
-                        self.hard_fix_webm(path)
+                #if ext == 'webm' and tofix_log in dir_files:
+                #    print path
+                #    os.system('touch ' + root + os.sep + fixed_log)
+                #    os.system('rm ' + root + os.sep + tofix_log)
+                #    if os.path.getsize(path):
+                #        self.hard_fix_webm(path)
                         #pass
 
 
     def hard_fix_webm(self, path):
         try:
             tmp_file = self.tmp_dir + 'out.webm '
-            command = 'ffmpeg -loglevel 0 -i '+ path + ' -vcodec libvpx -vb 500k -acodec libvorbis -ab 96k -f webm -y ' + tmp_file + ' > /dev/null'
+            command = 'ffmpeg -loglevel 0 -i '+ path + ' -vcodec libvpx -vb 500k -acodec libvorbis -aq 7 -f webm -y ' + tmp_file + ' > /dev/null'
             print command
             os.system(command)
             command = 'mv '  + tmp_file + path
@@ -78,7 +79,7 @@ class FixCheckMedia(object):
 
     def fix_mp3(self, source, path):
         try:
-            command = 'ffmpeg -loglevel 0 -i '+ source + ' -ab 96k -y ' + path + ' > /dev/null'
+            command = 'ffmpeg -loglevel 0 -i '+ source + ' -aq 6 -y ' + path + ' > /dev/null'
             print command
             os.system(command)
         except:
@@ -91,18 +92,18 @@ def get_pids(name, args=None):
         if proc.cmdline:
             if name == proc.name:
                 if args:
-                    if args in proc.cmdline[-1]:
+                    if args in proc.cmdline:
                         pids.append(proc.pid)
                 else:
                     pids.append(proc.pid)
     return pids
 
-
-print datetime.datetime.now() 
 dir = sys.argv[-1]
+
 path =  os.path.abspath(__file__)
 pids = get_pids('python2.6',args=path)
 
+print datetime.datetime.now()
 if len(pids) <= 1:
     print 'starting process...'
     f = FixCheckMedia(dir)
@@ -110,5 +111,3 @@ if len(pids) <= 1:
     print 'process finished.\n'
 else:
     print 'already started !\n'
-
-
