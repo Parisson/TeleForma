@@ -14,7 +14,7 @@
           {% if media.type == 'webm' %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-                <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}" target="_blank">
+                <a href="{% url teleforma-media-detail media.id %}" title="{% trans "View" %}">
                  {% if media.item.related.all %}
                  {% for related in media.item.related.all %}
                   {% if related.title == "preview" %}
