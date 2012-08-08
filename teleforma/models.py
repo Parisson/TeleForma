@@ -454,12 +454,12 @@ class Media(MediaBase):
             self.save()
 
     def __unicode__(self):
-        if self.course:
-            return self.course.title
-        elif self.conference:
+        if self.conference:
             return self.conference.description
+        elif self.course:
+            return self.course.title + ' ' + self.course_type.name
         else:
-            return self.title
+            return self.item.file
 
     def save(self, **kwargs):
         if self.course:
