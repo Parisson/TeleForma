@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-29 00:39+0200\n"
+"POT-Creation-Date: 2012-08-10 01:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,8 +193,9 @@ msgstr "annale"
 msgid "file"
 msgstr "fichier"
 
-#: models.py:489 models.py:490 templates/telemeta/profile_detail.html:64
-#: templates/telemeta/users.html:29 templates/telemeta/inc/user_list.html:21
+#: models.py:489 models.py:490 templates/telemeta/profile_detail.html:65
+#: templates/telemeta/profile_detail.html:68 templates/telemeta/users.html:28
+#: templates/telemeta/inc/user_list.html:21
 msgid "IEJ"
 msgstr "IEJ"
 
@@ -242,7 +243,7 @@ msgstr "plateforme seulement"
 msgid "student"
 msgstr "étudiant"
 
-#: models.py:581 templates/telemeta/profile_detail.html:77
+#: models.py:581 templates/telemeta/profile_detail.html:82
 msgid "Address"
 msgstr ""
 
@@ -258,11 +259,11 @@ msgstr "Ville"
 msgid "Country"
 msgstr "Pays"
 
-#: models.py:585 templates/telemeta/profile_detail.html:86
+#: models.py:585 templates/telemeta/profile_detail.html:91
 msgid "Language"
 msgstr "Langue"
 
-#: models.py:586 templates/telemeta/profile_detail.html:78
+#: models.py:586 templates/telemeta/profile_detail.html:83
 msgid "Telephone"
 msgstr "Téléphone"
 
@@ -583,7 +584,7 @@ msgstr "Description"
 #: templates/teleforma/course.html:20 templates/teleforma/course.html.py:36
 #: templates/teleforma/course.html:53
 #: templates/teleforma/course_media.html:141
-#: templates/telemeta/profile_detail.html:81
+#: templates/telemeta/profile_detail.html:86
 msgid "Date added"
 msgstr "Date d'ajout"
 
@@ -664,19 +665,19 @@ msgstr "Enregistrer et diffuser"
 
 #: templates/teleforma/course_media.html:27
 #: templates/teleforma/course_media.html:79
-#: templates/teleforma/inc/media_list.html:43
+#: templates/teleforma/inc/media_list.html:46
 msgid " published"
 msgstr " publié"
 
 #: templates/teleforma/course_media.html:34
 #: templates/teleforma/course_media.html:79
-#: templates/teleforma/inc/media_list.html:45
+#: templates/teleforma/inc/media_list.html:48
 msgid " rejected"
 msgstr " rejeté"
 
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/inc/document_list.html:22
-#: templates/teleforma/inc/media_list.html:49
+#: templates/teleforma/inc/media_list.html:52
 msgid "Download"
 msgstr "Télécharger"
 
@@ -689,6 +690,7 @@ msgid "End date"
 msgstr "Date de fin"
 
 #: templates/teleforma/course_media.html:139
+#: templates/teleforma/inc/media_list.html:39
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -711,12 +713,12 @@ msgstr "Nouvelle note"
 
 #: templates/teleforma/courses.html:104
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: templates/teleforma/help.html:11 templates/telemeta/base.html:110
 #: templates/telemeta/base.html.py:123
 msgid "Help"
-msgstr ""
+msgstr "Aide"
 
 #: templates/teleforma/inc/conference_list.html:8
 msgid "Live conferences"
@@ -724,12 +726,12 @@ msgstr "Conférences en direct"
 
 #: templates/teleforma/inc/conference_list.html:18
 #: templates/teleforma/inc/document_list.html:20
-#: templates/teleforma/inc/media_list.html:17
 msgid "View"
-msgstr ""
+msgstr "Voir"
 
 #: templates/teleforma/inc/conference_list.html:19
 #: templates/teleforma/inc/media_list.html:21
+#: templates/teleforma/inc/media_list.html:25
 msgid "Click here"
 msgstr "Cliquez ici"
 
@@ -740,6 +742,10 @@ msgstr "Aucun document"
 #: templates/teleforma/inc/media_list.html:8
 msgid "Passed conferences"
 msgstr "Conférences en différé"
+
+#: templates/teleforma/inc/media_list.html:17
+msgid "Play"
+msgstr "Lire"
 
 #: templates/telemeta/base.html:85
 msgid "Desk"
@@ -754,7 +760,7 @@ msgid "Messaging"
 msgstr "Messagerie"
 
 #: templates/telemeta/base.html:96 templates/telemeta/users.html:6
-#: templates/telemeta/users.html.py:70
+#: templates/telemeta/users.html.py:69
 msgid "Users"
 msgstr ""
 
@@ -889,62 +895,63 @@ msgstr ""
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: templates/telemeta/profile_detail.html:65
+#: templates/telemeta/profile_detail.html:66
+#: templates/telemeta/profile_detail.html:69
 #: templates/telemeta/inc/user_list.html:22
 msgid "Training"
 msgstr "Formation"
 
-#: templates/telemeta/profile_detail.html:66
+#: templates/telemeta/profile_detail.html:71
 msgid "Platform only"
 msgstr "Plateforme seulement"
 
-#: templates/telemeta/profile_detail.html:67
+#: templates/telemeta/profile_detail.html:72
 #: templates/telemeta/inc/user_list.html:23
 msgid "Procedure"
 msgstr "Procédure"
 
-#: templates/telemeta/profile_detail.html:68
+#: templates/telemeta/profile_detail.html:73
 #: templates/telemeta/inc/user_list.html:24
 msgid "Oral spe"
 msgstr "Oral Spé"
 
-#: templates/telemeta/profile_detail.html:69
+#: templates/telemeta/profile_detail.html:74
 #: templates/telemeta/inc/user_list.html:25
 msgid "Written spe"
 msgstr "Ecrit Spé"
 
-#: templates/telemeta/profile_detail.html:70
+#: templates/telemeta/profile_detail.html:75
 #: templates/telemeta/inc/user_list.html:26
 msgid "Oral 1"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:71
+#: templates/telemeta/profile_detail.html:76
 #: templates/telemeta/inc/user_list.html:27
 msgid "Oral 2"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:72
+#: templates/telemeta/profile_detail.html:77
 msgid "Options"
 msgstr "Options"
 
-#: templates/telemeta/profile_detail.html:76
+#: templates/telemeta/profile_detail.html:81
 msgid "Email"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:82
+#: templates/telemeta/profile_detail.html:87
 #, fuzzy
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
-#: templates/telemeta/profile_detail.html:83
+#: templates/telemeta/profile_detail.html:88
 msgid "Last login"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:94
+#: templates/telemeta/profile_detail.html:99
 msgid "Apply"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:104
+#: templates/telemeta/profile_detail.html:109
 msgid "Password reset"
 msgstr "Réinitialisation du mot de passe"
 
@@ -967,19 +974,19 @@ msgstr ""
 msgid "Year of publication"
 msgstr "obligation"
 
-#: templates/telemeta/users.html:16
+#: templates/telemeta/users.html:15
 msgid "Trainings"
 msgstr "Formations"
 
-#: templates/telemeta/users.html:42
+#: templates/telemeta/users.html:41
 msgid "Courses"
 msgstr "Matières"
 
-#: templates/telemeta/users.html:56
+#: templates/telemeta/users.html:55
 msgid "Grouped message"
 msgstr "Message groupé"
 
-#: templates/telemeta/users.html:75
+#: templates/telemeta/users.html:74
 #, fuzzy
 msgid "No users"
 msgstr "Pas d'utilisateurs"
