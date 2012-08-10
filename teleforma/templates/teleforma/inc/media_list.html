@@ -18,7 +18,7 @@
             {% if media.item.related.all %}
              {% for related in media.item.related.all %}
               {% if related.title == "preview" %}
-                <div style="background-image: url('{{ MEDIA_URL }}{{ related.file }}'); background-size: 100%;">
+                <div style="background: no-repeat url('{{ MEDIA_URL }}{{ related.file }}') 0 0; background-size: 100%;">
                  <img src="{{ STATIC_URL }}teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
               {% endif %}
