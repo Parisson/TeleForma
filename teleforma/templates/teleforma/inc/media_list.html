@@ -15,7 +15,7 @@
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
             <a href="{% url teleforma-media-detail media.id %}" title="{% trans "Play" %}">
-	   {% if media.item.related.all %}
+            {% if media.item.related.all %}
              {% for related in media.item.related.all %}
               {% if related.title == "preview" %}
                 <div style="background: no-repeat url('{{ MEDIA_URL }}{{ related.file }}') 0 0; background-size: 100%;">

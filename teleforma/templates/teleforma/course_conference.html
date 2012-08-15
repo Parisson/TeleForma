@@ -37,7 +37,8 @@
         <a href="{% url teleforma-conference-audio conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
     </div>
 
-{{ course.title }}{% if course.description %} - {{ course.description }}{% endif %} - {{ conference.session }} - {{ conference.professor }}
+{{ course.title }} - {{ type }} - {% trans "Session" %} {{ conference.session }}
+
 </div>
 
 <div class="media">
