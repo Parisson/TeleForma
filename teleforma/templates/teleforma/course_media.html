@@ -80,7 +80,7 @@ $(document).ready(function(){
         {% endif %}
     </div>
 
-    {{ course.title }} - {{ type }}{% if media.conference %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
+    <a href="{% url teleforma-course-detail course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
 
 </div>
 
@@ -125,21 +125,25 @@ $(document).ready(function(){
 {% block general_info %}
 <div class="course_content" id="media_infos">
 <dl class="listing">
-{% dl_field item "title" placeholder %}
+
+{% if media.conference %}
 {% if media.conference.professor %}
 <dt>{% trans "Professor" %}</dt>
     <dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
 {% endif %}
-
-{% if media.conference %}
+<dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
+{% if media.conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
 <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
-<dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
-<dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>
-<dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>
-{% endif %}
+{% if media.conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>{% endif %}
+{% if user.is_staff or user.is_superuser %}
+<dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
 <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
+{% endif %}
+{% endif %}
+
 <dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
+
 </dl>
 </div>
 

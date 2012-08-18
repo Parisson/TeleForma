@@ -48,7 +48,7 @@ class MediaAdmin(admin.ModelAdmin):
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['public_id']
+    search_fields = ['public_id', 'id']
 
 
 admin.site.unregister(User)
