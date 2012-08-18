@@ -127,11 +127,12 @@ $(document).ready(function(){
 <dl class="listing">
 
 {% if media.conference %}
+<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ media.course.title }}</a> - {{ media.conference.course_type }}</dd>
+<dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
 {% if media.conference.professor %}
 <dt>{% trans "Professor" %}</dt>
     <dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
 {% endif %}
-<dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
 {% if media.conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
 <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
