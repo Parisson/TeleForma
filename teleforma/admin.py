@@ -44,6 +44,7 @@ class DocumentAdmin(admin.ModelAdmin):
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
+    search_fields = ['id']
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
