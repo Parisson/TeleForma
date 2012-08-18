@@ -18,8 +18,8 @@
             {% if media.item.related.all %}
              {% for related in media.item.related.all %}
               {% if related.title == "preview" %}
-               {% thumbnail related.file "168x94" as im %}
-                <div style="background: no-repeat url('{{ im.url }}') 0 0; background-size: 100%;">
+               {% thumbnail related.file "168x96" as im %}
+                <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
                  <img src="{{ STATIC_URL }}teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
                {% endthumbnail %}
