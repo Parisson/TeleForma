@@ -127,7 +127,7 @@ $(document).ready(function(){
 <dl class="listing">
 
 {% if media.conference %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ media.course.title }}</a> - {{ media.conference.course_type }}</dd>
+<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
 {% if media.conference.professor %}
 <dt>{% trans "Professor" %}</dt>
@@ -140,12 +140,11 @@ $(document).ready(function(){
 {% if user.is_staff or user.is_superuser %}
 <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
 <dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
-<dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
-<dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
-{% endif %}
-{% endif %}
-
 <dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
+<dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
+<dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
+{% endif %}
+{% endif %}
 
 </dl>
 </div>

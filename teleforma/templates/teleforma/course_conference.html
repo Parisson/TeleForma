@@ -67,7 +67,7 @@
 <dl class="listing">
 
 {% if conference.professor %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ conference.course.title }}</a> - {{ conference.course_type }}</dd>
+<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
 <dt>{% trans "Professor" %}</dt>
     <dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
