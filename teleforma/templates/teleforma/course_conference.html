@@ -78,9 +78,9 @@
 <dt>{% trans "Live" %}</dt><dd>{{ conference.streaming|yes_no }}</dd>
 {% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %}
 {% if user.is_staff or user.is_superuser %}
+<dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
 <dt>{% trans "Conference ID" %}</dt><dd>{{ conference.public_id }}</dd>
 {% endif %}
-<dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
 
 </dl>
 </div>
