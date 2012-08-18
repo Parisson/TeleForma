@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-10 01:21+0200\n"
+"POT-Creation-Date: 2012-08-19 00:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -567,11 +567,10 @@ msgid "Documents"
 msgstr "Supports écrits"
 
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
-#: templates/teleforma/course_conference.html:67
 #: templates/teleforma/course_conference_audio.html:66
 #: templates/teleforma/course_document.html:73
 #: templates/teleforma/inc/conference_list.html:25
-#: templates/teleforma/inc/media_list.html:32 templates/telemeta/lists.html:69
+#: templates/teleforma/inc/media_list.html:36 templates/telemeta/lists.html:69
 #: templates/telemeta/search_criteria.html:97
 #: templates/telemeta/inc/module_revisions.html:17
 msgid "Title"
@@ -597,21 +596,22 @@ msgid "Conferences"
 msgstr "Conférences"
 
 #: templates/teleforma/course.html:51
+#: templates/teleforma/course_conference.html:40
 #: templates/teleforma/course_conference.html:71
 #: templates/teleforma/course_conference_audio.html:68
 #: templates/teleforma/course_media.html:83
-#: templates/teleforma/course_media.html:137
+#: templates/teleforma/course_media.html:131
 #: templates/teleforma/inc/conference_list.html:26
-#: templates/teleforma/inc/media_list.html:33
+#: templates/teleforma/inc/media_list.html:37
 msgid "Session"
 msgstr "Session"
 
 #: templates/teleforma/course.html:52
-#: templates/teleforma/course_conference.html:69
+#: templates/teleforma/course_conference.html:72
 #: templates/teleforma/course_conference_audio.html:67
-#: templates/teleforma/course_media.html:130
+#: templates/teleforma/course_media.html:133
 #: templates/teleforma/inc/conference_list.html:27
-#: templates/teleforma/inc/media_list.html:35
+#: templates/teleforma/inc/media_list.html:39
 #: templates/telemeta/inc/user_list.html:48
 msgid "Professor"
 msgstr "Professeur"
@@ -626,33 +626,62 @@ msgstr "S T O P"
 msgid "Audio"
 msgstr ""
 
-#: templates/teleforma/course_conference.html:72
-#: templates/teleforma/course_conference_audio.html:69
-#: templates/teleforma/course_media.html:138
-msgid "Room"
-msgstr "Salle"
-
-#: templates/teleforma/course_conference.html:73
-#: templates/teleforma/course_conference_audio.html:70
-#: templates/teleforma/inc/conference_list.html:28
-#: templates/teleforma/inc/media_list.html:37
-msgid "Begin"
-msgstr "Début"
-
-#: templates/teleforma/course_conference.html:74
-#: templates/teleforma/course_conference_audio.html:71
-msgid "End"
-msgstr "Fin"
+#: templates/teleforma/course_conference.html:70
+#: templates/teleforma/course_media.html:130
+msgid "Course"
+msgstr "Matière"
 
 #: templates/teleforma/course_conference.html:75
+#: templates/teleforma/course_media.html:136
+#: templates/teleforma/inc/media_list.html:43
+msgid "Comment"
+msgstr "Commentaire"
+
+#: templates/teleforma/course_conference.html:76
+#: templates/teleforma/course_media.html:137
+msgid "Begin date"
+msgstr "Date de début"
+
+#: templates/teleforma/course_conference.html:77
+#: templates/teleforma/course_media.html:138
+msgid "End date"
+msgstr "Date de fin"
+
+#: templates/teleforma/course_conference.html:78
 #: templates/teleforma/course_conference_audio.html:72
 msgid "Live"
 msgstr "Direct"
+
+#: templates/teleforma/course_conference.html:79
+#: templates/teleforma/course_conference_audio.html:69
+#: templates/teleforma/course_media.html:139
+msgid "Room"
+msgstr "Salle"
+
+#: templates/teleforma/course_conference.html:81
+#: templates/teleforma/course_media.html:143
+msgid "Conference ID"
+msgstr "ID Conférence"
+
+#: templates/teleforma/course_conference.html:83
+#: templates/teleforma/course_media.html:147
+msgid "Mime type"
+msgstr "Type mime"
 
 #: templates/teleforma/course_conference_audio.html:36
 #: templates/teleforma/course_media.html:76
 msgid "Video"
 msgstr ""
+
+#: templates/teleforma/course_conference_audio.html:70
+#: templates/teleforma/inc/conference_list.html:28
+#: templates/teleforma/inc/media_list.html:41
+msgid "Begin"
+msgstr "Début"
+
+#: templates/teleforma/course_conference_audio.html:71
+msgid "End"
+msgstr "Fin"
 
 #: templates/teleforma/course_conference_record.html:23
 #: templates/teleforma/courses.html:41
@@ -665,38 +694,25 @@ msgstr "Enregistrer et diffuser"
 
 #: templates/teleforma/course_media.html:27
 #: templates/teleforma/course_media.html:79
-#: templates/teleforma/inc/media_list.html:46
+#: templates/teleforma/inc/media_list.html:50
 msgid " published"
 msgstr " publié"
 
 #: templates/teleforma/course_media.html:34
 #: templates/teleforma/course_media.html:79
-#: templates/teleforma/inc/media_list.html:48
+#: templates/teleforma/inc/media_list.html:52
 msgid " rejected"
 msgstr " rejeté"
 
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/inc/document_list.html:22
-#: templates/teleforma/inc/media_list.html:52
+#: templates/teleforma/inc/media_list.html:56
 msgid "Download"
 msgstr "Télécharger"
 
-#: templates/teleforma/course_media.html:135
-msgid "Begin date"
-msgstr "Date de début"
-
-#: templates/teleforma/course_media.html:136
-msgid "End date"
-msgstr "Date de fin"
-
-#: templates/teleforma/course_media.html:139
-#: templates/teleforma/inc/media_list.html:39
-msgid "Comment"
-msgstr "Commentaire"
-
 #: templates/teleforma/course_media.html:142
-msgid "Mime type"
-msgstr "Type mime"
+msgid "Date modified"
+msgstr "Date de modification"
 
 #: templates/teleforma/courses.html:23
 #: templates/telemeta/profile_detail.html:16
@@ -730,8 +746,8 @@ msgid "View"
 msgstr "Voir"
 
 #: templates/teleforma/inc/conference_list.html:19
-#: templates/teleforma/inc/media_list.html:21
-#: templates/teleforma/inc/media_list.html:25
+#: templates/teleforma/inc/media_list.html:23
+#: templates/teleforma/inc/media_list.html:29
 msgid "Click here"
 msgstr "Cliquez ici"
 
@@ -1044,9 +1060,6 @@ msgstr ""
 
 #~ msgid "Annal"
 #~ msgstr "Annale"
-
-#~ msgid "Date modified"
-#~ msgstr "Date de modification"
 
 #~ msgid "Duration"
 #~ msgstr "Durée"

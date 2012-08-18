@@ -138,8 +138,9 @@ $(document).ready(function(){
 <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
 {% if media.conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>{% endif %}
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
 <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
+<dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
+<dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
 {% endif %}
 {% endif %}
 
