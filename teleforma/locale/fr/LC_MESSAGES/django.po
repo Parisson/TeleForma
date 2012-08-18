@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-19 00:03+0200\n"
+"POT-Creation-Date: 2012-08-19 00:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -664,7 +664,7 @@ msgid "Conference ID"
 msgstr "ID Conférence"
 
 #: templates/teleforma/course_conference.html:83
-#: templates/teleforma/course_media.html:147
+#: templates/teleforma/course_media.html:148
 msgid "Mime type"
 msgstr "Type mime"
 
@@ -713,6 +713,10 @@ msgstr "Télécharger"
 #: templates/teleforma/course_media.html:142
 msgid "Date modified"
 msgstr "Date de modification"
+
+#: templates/teleforma/course_media.html:144
+msgid "Media ID"
+msgstr "ID Média"
 
 #: templates/teleforma/courses.html:23
 #: templates/telemeta/profile_detail.html:16
