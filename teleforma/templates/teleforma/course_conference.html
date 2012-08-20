@@ -70,7 +70,7 @@
 <dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
 <dt>{% trans "Professor" %}</dt>
-    <dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
+    <dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
 {% endif %}
 {% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
