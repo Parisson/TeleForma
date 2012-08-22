@@ -298,14 +298,14 @@ class LiveStream(Model):
 
     element_type = 'livestream'
 
-    conference      = ForeignKey('Conference', related_name='livestream',
+    conference   = ForeignKey('Conference', related_name='livestream',
                                 verbose_name=_('conference'),
                                 blank=True, null=True, on_delete=models.SET_NULL)
-    server     = ForeignKey('StreamingServer', related_name='livestream',
+    server       = ForeignKey('StreamingServer', related_name='livestream',
                                 verbose_name=_('streaming server'))
-    stream_type = CharField(_('Streaming type'),
+    stream_type  = CharField(_('Streaming type'),
                             choices=streaming_choices, max_length=32)
-    streaming       = BooleanField(_('streaming'))
+    streaming    = BooleanField(_('streaming'))
 
     @property
     def slug(self):

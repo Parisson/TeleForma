@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-19 00:05+0200\n"
+"POT-Creation-Date: 2012-08-22 10:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -582,7 +582,7 @@ msgstr "Description"
 
 #: templates/teleforma/course.html:20 templates/teleforma/course.html.py:36
 #: templates/teleforma/course.html:53
-#: templates/teleforma/course_media.html:141
+#: templates/teleforma/course_media.html:142
 #: templates/telemeta/profile_detail.html:86
 msgid "Date added"
 msgstr "Date d'ajout"
@@ -652,6 +652,11 @@ msgstr "Date de fin"
 msgid "Live"
 msgstr "Direct"
 
+#: templates/teleforma/course_conference.html:78
+#: templatetags/teleforma_tags.py:132
+msgid "Yes"
+msgstr "Oui"
+
 #: templates/teleforma/course_conference.html:79
 #: templates/teleforma/course_conference_audio.html:69
 #: templates/teleforma/course_media.html:139
@@ -659,14 +664,9 @@ msgid "Room"
 msgstr "Salle"
 
 #: templates/teleforma/course_conference.html:81
-#: templates/teleforma/course_media.html:143
+#: templates/teleforma/course_media.html:145
 msgid "Conference ID"
 msgstr "ID Conférence"
-
-#: templates/teleforma/course_conference.html:83
-#: templates/teleforma/course_media.html:148
-msgid "Mime type"
-msgstr "Type mime"
 
 #: templates/teleforma/course_conference_audio.html:36
 #: templates/teleforma/course_media.html:76
@@ -710,7 +710,11 @@ msgstr " rejeté"
 msgid "Download"
 msgstr "Télécharger"
 
-#: templates/teleforma/course_media.html:142
+#: templates/teleforma/course_media.html:141
+msgid "Mime type"
+msgstr "Type mime"
+
+#: templates/teleforma/course_media.html:143
 msgid "Date modified"
 msgstr "Date de modification"
 
@@ -1039,13 +1043,9 @@ msgstr "Tweeter local"
 msgid "me"
 msgstr "moi"
 
-#: templatetags/teleforma_tags.py:132
-msgid "Yes"
-msgstr ""
-
 #: templatetags/teleforma_tags.py:134
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #~ msgid "Reject"
 #~ msgstr "Rejeter"

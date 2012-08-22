@@ -75,10 +75,9 @@
 {% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
 {% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end|yes_no }}</dd>{% endif %}
-<dt>{% trans "Live" %}</dt><dd>{{ conference.streaming|yes_no }}</dd>
+<dt>{% trans "Live" %}</dt><dd>{% trans "Yes" %}</dd>
 {% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %}
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
 <dt>{% trans "Conference ID" %}</dt><dd>{{ conference.public_id }}</dd>
 {% endif %}
 
