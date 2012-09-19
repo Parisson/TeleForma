@@ -69,8 +69,9 @@ And even if Telemeta suits you, please give us some feedback !
 Related projects
 ================
 
- * `Telemeta <http://telemeta.org>`_ - open web audio CMS
- * `TimeSide <http://code.google.com/p/timeside/>`_ - open web audio components
+`Telemeta <http://telemeta.org>`_ - open web audio CMS
+
+`TimeSide <http://code.google.com/p/timeside/>`_ - open web audio components
 
 
 Contact
@@ -92,7 +93,7 @@ You are welcome to participate to the development of the TeleForma project.
 
 To get the lastest development version, you need git and run::
 
-    $ git clone git://github.com/yomguy/teleforma.git
+    git clone git://github.com/yomguy/teleforma.git
 
 
 License
