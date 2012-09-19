@@ -39,7 +39,7 @@ from jsonrpc.proxy import ServiceProxy
 
 from teleforma.models import *
 from teleforma.forms import *
-from telemeta.views.base import *
+from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
 
