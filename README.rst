@@ -1,4 +1,4 @@
-=========================================
+==========================================
 TeleForma : open web e-learning platform
 ==========================================
 
@@ -16,6 +16,7 @@ Key features
 It is based on Django and fully written in Python, HTML5, CSS and JavaScript.
 
 keywords: social e-learning, live conferencing, hypermedia private access
+
 
 Screenshot
 ==========
