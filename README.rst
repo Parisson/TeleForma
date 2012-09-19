@@ -33,15 +33,6 @@ Screenshots
 See http://files.parisson.org/gallery/main.php/v/Screenshots/teleforma/
 
 
-Demo
-====
-
-http://teleforma.parisson.com
-
-login: demo
-password: demo
-
-
 Installation
 ============
 
