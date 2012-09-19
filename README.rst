@@ -21,7 +21,7 @@ keywords: social e-learning, live conferencing, hypermedia private access
 Screenshot
 ==========
 
-.. image:: https://picasaweb.google.com/lh/photo/ZAvNjz2Hm4L9IHoWM5625tMTjNZETYmyPJy0liipFm0?feat=directlink
+.. image:: http://lh4.googleusercontent.com/-71_mireCGvs/UESuTDr3HTI/AAAAAAAABHE/dpOSg795QBM/s912/teleforma%2008%2003.png
 
 
 News
