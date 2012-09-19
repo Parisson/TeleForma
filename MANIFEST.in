@@ -5,8 +5,9 @@ include README.rst
 exclude *.cfg
 recursive-include example *
 recursive-include teleforma/templates *
-recursive-include telecampus/static *
-recursive-include telecampus/pages *
+recursive-include teleforma/static *
+recursive-include teleforma/pages *
+
 global-exclude *.pyc
 prune dist
 prune build
