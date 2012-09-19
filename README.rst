@@ -23,18 +23,16 @@ Screenshots
 
 .. image:: http://files.parisson.org/gallery/main.php?g2_view=core.DownloadItem&g2_itemId=142870&g2_serialNumber=2
    :width: 200 px
-    :scale: 30 %
     :align: left
 
 .. image:: http://files.parisson.org/gallery/main.php?g2_view=core.DownloadItem&g2_itemId=142873&g2_serialNumber=2
     :width: 200 px
-    :scale: 30 %
-    :align: center
+    :align: left
 
 .. image:: http://files.parisson.org/gallery/main.php?g2_view=core.DownloadItem&g2_itemId=142863&g2_serialNumber=2
     :width: 200 px
     :scale: 30 %
-    :align: right
+    :align: left
 
 
 News
