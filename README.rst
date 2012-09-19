@@ -18,10 +18,20 @@ It is based on Django and fully written in Python, HTML5, CSS and JavaScript.
 keywords: social e-learning, live conferencing, hypermedia private access
 
 
-Screenshot
-==========
+Screenshots
+===========
 
-.. image:: http://lh4.googleusercontent.com/-71_mireCGvs/UESuTDr3HTI/AAAAAAAABHE/dpOSg795QBM/s912/teleforma%2008%2003.png
+.. image:: http://files.parisson.org/gallery/main.php?g2_view=core.DownloadItem&g2_itemId=142870&g2_serialNumber=2
+    :scale: 30 %
+    :align: left
+
+.. image:: http://files.parisson.org/gallery/main.php?g2_view=core.DownloadItem&g2_itemId=142873&g2_serialNumber=2
+    :scale: 30 %
+    :align: center
+
+.. image:: http://files.parisson.org/gallery/main.php?g2_view=core.DownloadItem&g2_itemId=142863&g2_serialNumber=2
+    :scale: 30 %
+    :align: right
 
 
 News
