@@ -70,9 +70,8 @@ And even if Telemeta suits you, please give us some feedback !
 Related projects
 ================
 
-`Telemeta <http://telemeta.org>`_ - open web audio CMS
-
-`TimeSide <http://code.google.com/p/timeside/>`_ - open web audio components
+ * `Telemeta <http://telemeta.org>`_ - open web audio CMS
+ * `TimeSide <http://code.google.com/p/timeside/>`_ - open web audio components
 
 
 Contact
