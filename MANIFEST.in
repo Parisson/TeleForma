@@ -2,13 +2,10 @@ include AUTHORS
 include LICENSE
 include CHANGELOG
 include README.rst
-include INSTALL.rst
 exclude *.cfg
-recursive-include doc *
 recursive-include example *
-recursive-include telecampus/locale *
-recursive-include telecampus/templates *
-recursive-include telecampus/htdocs *
+recursive-include teleforma/templates *
+recursive-include telecampus/static *
 recursive-include telecampus/pages *
 global-exclude *.pyc
 prune dist
