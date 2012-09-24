@@ -14,7 +14,7 @@ $(document).ready(function(){
 <script type="text/javascript" src="{{ STATIC_URL }}teleforma/js/pdf-min.js"></script>
 
 <script type="text/javascript">
-    PDFJS.workerSrc = '{% url telemeta-js "pdf-min.js" %}';
+    PDFJS.workerSrc = '{{ STATIC_URL }}telemeta/js/pdf-min.js';
 </script>
 
 <script type="text/javascript">

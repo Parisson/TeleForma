@@ -12,7 +12,7 @@
 <div id="module-set-left" style="width: 20%">
 
 <div class="module">
-<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="Trainings" style="vertical-align:middle" />{% trans "Trainings" %}</h3>
+<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="Trainings" style="vertical-align:middle" />{% trans "Trainings" %}</h3>
 <div style="background: white;">
 <ul>
 {% block trainings %}
@@ -25,7 +25,7 @@
 </div>
 
 <div class="module">
-<h3><img src="{% url telemeta-images "module_world.png" %}" alt="IEJ" style="vertical-align:middle" /> {% trans "IEJ" %}</h3>
+<h3><img src="{{ STATIC_URL }}telemeta/images/module_world.png" alt="IEJ" style="vertical-align:middle" /> {% trans "IEJ" %}</h3>
 <div style="background: white;">
 <ul>
 {% block iej %}
@@ -38,7 +38,7 @@
 </div>
 
 <div class="module">
-<h3><img src="{% url telemeta-images "module_playlist.png" %}" alt="Courses" style="vertical-align:middle" />{% trans "Courses" %}</h3>
+<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="Courses" style="vertical-align:middle" />{% trans "Courses" %}</h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
