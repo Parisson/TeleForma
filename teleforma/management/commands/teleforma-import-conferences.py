@@ -84,11 +84,9 @@ class Command(BaseCommand):
 
                         streaming = False
                         try:
-                            stations = conference.station.filter(started=True)
-                            ids = [station.public_id for station in stations]
-                            for id in ids:
-                                if id == public_id:
-                                    streaming = True
+                            stations = conference.station.filter(started=True, public_id=public_id)
+                            if stations:
+                                streaming = True
                         except:
                             pass
 
