@@ -42,7 +42,8 @@ import urllib
 import string
 import datetime
 import mimetypes
-import telemeta
+
+from telemeta.models import *
 import django.db.models as models
 from django.db.models import *
 from django.forms import ModelForm, TextInput, Textarea
@@ -56,7 +57,6 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import django.db.models as models
 from south.modelsinspector import add_introspection_rules
-from telemeta.models import *
 
 app_label = 'teleforma'
 
@@ -474,142 +474,6 @@ class Media(MediaBase):
         ordering = ['-date_modified']
 
 
-# STUDENT
-
-class IEJ(Model):
-
-    name            = CharField(_('name'), max_length=255)
-    description     = CharField(_('description'), max_length=255, blank=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        db_table = app_label + '_' + 'iej'
-        verbose_name = _('IEJ')
-        verbose_name_plural = _('IEJ')
-        ordering = ['name']
-
-
-class Training(Model):
-
-    code            = CharField(_('code'), max_length=255)
-    name            = CharField(_('name'), max_length=255, blank=True)
-    period          = ForeignKey('Period', related_name='training', verbose_name=_('period'),
-                                 blank=True, null=True)
-    synthesis_note  = ManyToManyField('CourseType', related_name="training_synthesis_note",
-                                        verbose_name=_('synthesis note'),
-                                        blank=True, null=True)
-    obligation      = ManyToManyField('CourseType', related_name="training_obligation",
-                                        verbose_name=_('obligations'),
-                                        blank=True, null=True)
-    procedure       = ManyToManyField('CourseType', related_name="training_procedure",
-                                        verbose_name=_('procedure'),
-                                        blank=True, null=True)
-    written_speciality = ManyToManyField('CourseType', related_name="training_written_speciality",
-                                        verbose_name=_('written speciality'),
-                                        blank=True, null=True)
-    oral_speciality = ManyToManyField('CourseType', related_name="training_oral_speciality",
-                                        verbose_name=_('oral speciality'),
-                                        blank=True, null=True)
-    oral_1          = ManyToManyField('CourseType', related_name="training_oral_1",
-                                        verbose_name=_('oral 1'),
-                                        blank=True, null=True)
-    oral_2          = ManyToManyField('CourseType', related_name="training_oral_2",
-                                        verbose_name=_('oral 2'),
-                                        blank=True, null=True)
-    options         = ManyToManyField('CourseType', related_name="training_options",
-                                        verbose_name=_('options'),
-                                        blank=True, null=True)
-    magistral       = ManyToManyField('CourseType', related_name="training_magistral",
-                                        verbose_name=_('magistral'),
-                                        blank=True, null=True)
-    cost            = FloatField(_('cost'), blank=True, null=True)
-
-    def __unicode__(self):
-        code = self.code
-        if self.period:
-            code += ' - ' + self.period.name
-        return code
-
-    class Meta:
-        db_table = app_label + '_' + 'training'
-        verbose_name = _('training')
-
-
-class Student(Model):
-
-    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
-    period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
-                                  blank=True, null=True)
-    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
-    training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
-    platform_only   = BooleanField(_('platform only'))
-    procedure       = ForeignKey('Course', related_name="procedure",
-                                        verbose_name=_('procedure'),
-                                        blank=True, null=True)
-    written_speciality = ForeignKey('Course', related_name="written_speciality",
-                                        verbose_name=_('written speciality'),
-                                        blank=True, null=True)
-    oral_speciality = ForeignKey('Course', related_name="oral_speciality",
-                                        verbose_name=_('oral speciality'),
-                                        blank=True, null=True)
-    oral_1          = ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
-                                        blank=True, null=True)
-    oral_2          = ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
-                                        blank=True, null=True)
-    options          = ForeignKey('Course', related_name="options", verbose_name=_('options'),
-                                        blank=True, null=True)
-
-    def __unicode__(self):
-        try:
-            return self.user.last_name + ' ' + self.user.first_name
-        except:
-            return ''
-
-    class Meta:
-        db_table = app_label + '_' + 'student'
-        verbose_name = _('student')
-        ordering = ['user__last_name']
-
-
-class Profile(models.Model):
-    "User profile extension"
-
-    user            = ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
-    address         = TextField(_('Address'), blank=True)
-    postal_code     = CharField(_('Postal code'), max_length=255, blank=True)
-    city            = CharField(_('City'), max_length=255, blank=True)
-    country         = CharField(_('Country'), max_length=255, blank=True)
-    language        = CharField(_('Language'), max_length=255, blank=True)
-    telephone       = CharField(_('Telephone'), max_length=255, blank=True)
-    expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
-    init_password   = BooleanField(_('Password initialized'))
-
-    class Meta:
-        db_table = app_label + '_' + 'profiles'
-        verbose_name = _('profile')
-
-
-class Payment(models.Model):
-    "Student payment"
-
-    student = ForeignKey(Student, related_name="payment", verbose_name=_('student'))
-    amount  = FloatField(_('amount'))
-    date_added = DateTimeField(_('date added'), auto_now_add=True)
-
-    def __unicode__(self):
-        return ' - '.join([str(self.date_added), self.student.user.last_name + ' ' + \
-                        self.student.user.first_name,  str(self.amount)])
-
-    class Meta:
-        db_table = app_label + '_' + 'payment'
-        verbose_name = _('payment')
-        ordering = ['-date_added']
-
-
-# TOOLS
 class NamePaginator(object):
     """Pagination for string-based objects"""
 
