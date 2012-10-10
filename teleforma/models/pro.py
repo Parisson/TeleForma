@@ -66,6 +66,7 @@ class Seminar(Model):
     doc_correct     = ForeignKey(Document, related_name=_("seminar"),
                                         verbose_name=_('doc_correct'),
                                         blank=True, null=True)
+
     suscribers      = ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
                                         blank=True, null=True)
 
@@ -82,11 +83,11 @@ class Seminar(Model):
 
 class Answer(Model):
 
-    seminar = ForeignKey(Seminar, related_name=_("answer"), verbose_name=_('seminar') )
     user = ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
     question = ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
     answer = TextField(_('answer'))
-    characters = IntegerField(_('numbers of characters'))
+    status = IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    validated	= BooleanField(_('validated'))
 
     def __unicode__(self):
         return '-'.join([self.seminar, self.question, self.user])
@@ -103,6 +104,9 @@ class Question(Model):
     question = TextField(_('question'))
     rank = IntegerField(_('rank'))
     weight = IntegerField(_('weight'))
+    min_num_char = IntegerField(_('minimum numbers of characters'))
+    status = IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+
 
     def __unicode__(self):
         return '-'.join([self.seminar, self.rank, self.title])
@@ -110,4 +114,16 @@ class Question(Model):
     class Meta:
         db_table = app_label + '_' + 'question'
         verbose_name = _('Question')
+
+class TestimonialTheme(Model):
+
+    organization = ForeignKey(Organization, related_name='testimonial_theme',
+                                 verbose_name=_('organization'))
+    text = TextField(_('text'))
+
+
+class Testimonial(Model):
+
+    seminar = ForeignKey(Seminar, verbose_name=_('seminar'))
+    user = ForeignKey(User, related_name=_("testimonial"), verbose_name=_('user'))
 
