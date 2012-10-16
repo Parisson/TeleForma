@@ -51,6 +51,14 @@ class ConferenceAdmin(admin.ModelAdmin):
     search_fields = ['public_id', 'id']
 
 
+class SeminarQuestionInline(admin.StackedInline):
+    model = Question
+
+class SeminarAdmin(admin.ModelAdmin):
+    inlines = [SeminarQuestionInline,]
+    exclude = ['suscribers']
+
+
 admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
@@ -67,6 +75,9 @@ admin.site.register(Training, TrainingAdmin)
 admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
-admin.site.register(Payment)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Professor, ProfessorAdmin)
+admin.site.register(Seminar, SeminarAdmin)
+admin.site.register(Question)
+
+

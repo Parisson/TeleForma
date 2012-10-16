@@ -34,7 +34,7 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
-from django.db.models import as models
+import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
@@ -44,20 +44,20 @@ class Seminar(Model):
 
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
     title           = models.CharField(_('title'), max_length=255, blank=True)
-    price           = models.FloatField(_('price'))
-    status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    price           = models.FloatField(_('price'), blank=True, null=True)
+    status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1, blank=True)
     rank            = models.IntegerField(_('rank'))
 
-    doc_1           = models.ForeignKey(Document, related_name=_("seminar"), 
+    doc_1           = models.ForeignKey(Document, related_name="seminar_doc1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
     media           = models.ForeignKey(Media, related_name="seminar",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    doc_2           = models.ForeignKey(Document, related_name="seminar",
+    doc_2           = models.ForeignKey(Document, related_name="seminar_doc2",
                                         verbose_name=_('document 2'),
                                         blank=True, null=True)
-    doc_correct     = models.ForeignKey(Document, related_name=_("seminar"),
+    doc_correct     = models.ForeignKey(Document, related_name="seminar_doccorrect",
                                         verbose_name=_('correction document'),
                                         blank=True, null=True)
 
@@ -69,27 +69,11 @@ class Seminar(Model):
     duration        = DurationField(_('duration'))
 
     def __unicode__(self):
-        return '-'.join([self.course, self.rank, self.title])
+        return ' - '.join([self.course.title, str(self.rank), self.title])
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar'
         verbose_name = _('Seminar')
-
-
-class Answer(Model):
-
-    user        = models.ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
-    question    = models.ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
-    answer      = models.TextField(_('answer'))
-    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
-    validated   = models.BooleanField(_('validated'))
-
-    def __unicode__(self):
-        return '-'.join([self.seminar, self.question, self.user])
-
-    class Meta:
-        db_table = app_label + '_' + 'answer'
-        verbose_name = _('Answer')
 
 
 class Question(Model):
@@ -104,11 +88,27 @@ class Question(Model):
 
 
     def __unicode__(self):
-        return '-'.join([self.seminar, self.rank, self.title])
+        return ' - '.join([self.seminar.__unicode__(), str(self.rank), self.title])
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'question'
         verbose_name = _('Question')
+
+
+class Answer(Model):
+
+    user        = models.ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
+    question    = models.ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
+    answer      = models.TextField(_('answer'))
+    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    validated   = models.BooleanField(_('validated'))
+
+    def __unicode__(self):
+        return ' - '.join([self.question, self.user])
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'answer'
+        verbose_name = _('Answer')
 
 
 class TestimonialTheme(Model):

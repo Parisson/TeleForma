@@ -50,7 +50,7 @@ class IEJ(Model):
     def __unicode__(self):
         return self.name
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'iej'
         verbose_name = _('IEJ')
         verbose_name_plural = _('IEJ')
@@ -98,7 +98,7 @@ class Training(Model):
             code += ' - ' + self.period.name
         return code
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'training'
         verbose_name = _('training')
 
@@ -134,7 +134,7 @@ class Student(Model):
         except:
             return ''
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
         verbose_name = _('student')
         ordering = ['user__last_name']
@@ -153,7 +153,7 @@ class Profile(models.Model):
     expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = BooleanField(_('Password initialized'))
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
         verbose_name = _('profile')
 

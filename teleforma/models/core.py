@@ -43,11 +43,10 @@ import string
 import datetime
 import mimetypes
 
+from django.db.models import *
 from telemeta.models import *
 from teleforma.fields import *
 import django.db.models as models
-from django.db.models import *
-from django.forms import ModelForm, TextInput, Textarea
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -56,13 +55,15 @@ from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
-import django.db.models as models
-from south.modelsinspector import add_introspection_rules
 
 app_label = 'teleforma'
 
+
 def get_n_choices(n):
     return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]
+
+def get_nint_choices(n):
+    return [(x, y) for x in range(1, n) for y in range(1, n) if x == y]
 
 session_choices = get_n_choices(21)
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
@@ -75,7 +76,11 @@ STATUS_CHOICES = (
         (3, _('Private')),
     )
 
-WEIGHT_CHOICES = get_n_choices(5)
+WEIGHT_CHOICES = get_nint_choices(5)
+
+
+class MetaCore:
+    app_label = app_label
 
 
 class Organization(Model):
@@ -86,7 +91,7 @@ class Organization(Model):
     def __unicode__(self):
         return self.name
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'organization'
         verbose_name = _('organization')
 
@@ -105,7 +110,7 @@ class Department(Model):
     def slug(self):
         return slugify(self.__unicode__())
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'department'
         verbose_name = _('department')
 
@@ -118,7 +123,7 @@ class Period(Model):
     def __unicode__(self):
         return self.name
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'period'
         verbose_name = _('period')
 
@@ -130,7 +135,7 @@ class CourseType(Model):
     def __unicode__(self):
         return self.name
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
 
@@ -141,7 +146,7 @@ class Course(Model):
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     code            = CharField(_('code'), max_length=255)
-    date_modified   = DateTimeField(_('date modified'), auto_now=True)
+    date_modified   = DateTimeField(_('date modified'), auto_now=True, null=True)
     number          = IntegerField(_('number'), blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligations'))
@@ -156,7 +161,7 @@ class Course(Model):
     def slug(self):
         return slugify(self.__unicode__())
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
         ordering = ['number']
@@ -173,7 +178,7 @@ class Professor(Model):
     def __unicode__(self):
         return self.user.first_name + ' ' + self.user.last_name
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
         verbose_name = _('professor')
 
@@ -187,7 +192,7 @@ class Room(Model):
     def __unicode__(self):
         return self.organization.name + ' - ' + self.name
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'room'
         verbose_name = _('room')
 
@@ -269,7 +274,7 @@ class Conference(Model):
                                         'stream_type': stream.stream_type  })
         return data
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
         verbose_name = _('conference')
         ordering = ['-date_begin']
@@ -289,7 +294,7 @@ class StreamingServer(Model):
     def __unicode__(self):
         return self.host + ':' + self.port + ' - ' + self.type
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'streaming_server'
         verbose_name = _('streaming server')
 
@@ -339,7 +344,7 @@ class LiveStream(Model):
         else:
             return self.slug
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'live_stream'
         verbose_name = _('live stream')
 
@@ -354,14 +359,14 @@ class MediaBase(Model):
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     code            = CharField(_('code'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
-    mime_type       = CharField(_('mime type'), blank=True)
-    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
+    mime_type       = CharField(_('mime type'), max_length=255, blank=True)
+    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
     notes = generic.GenericRelation(Note)
 
     def get_fields(self):
         return self._meta.fields
 
-    class Meta:
+    class Meta(MetaCore):
         abstract = True
 
 
@@ -374,7 +379,7 @@ class DocumentType(Model):
     def __unicode__(self):
         return self.name
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'document_type'
         verbose_name = _('document type')
         ordering = ['number']
@@ -423,7 +428,7 @@ class Document(MediaBase):
         self.set_mime_type()
         super(Document, self).save(**kwargs)
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'document'
         ordering = ['-date_added']
 
@@ -470,7 +475,7 @@ class Media(MediaBase):
         super(Media, self).save(**kwargs)
 
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
         ordering = ['-date_modified']
 
