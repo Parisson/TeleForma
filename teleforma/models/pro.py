@@ -34,44 +34,39 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
-from django.db.models import *
+from django.db.models import as models
 from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
 
-STATUS_CHOICES = (
-		(1, _('Draft')),
-		(2, _('Public')),
-		(3, _('Close')),
-	)
-
 
 class Seminar(Model):
 
-    course          = ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
-    title           = CharField(_('title'), max_length=255, blank=True)
-    price           = FloatField(_('price'))
-    status			    = IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
-    rank            = IntegerField(_('rank'))
+    course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
+    title           = models.CharField(_('title'), max_length=255, blank=True)
+    price           = models.FloatField(_('price'))
+    status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    rank            = models.IntegerField(_('rank'))
 
-    doc_1           = ForeignKey(Document, related_name=_("seminar"),
-                                        verbose_name=_('doc 1'),
+    doc_1           = models.ForeignKey(Document, related_name=_("seminar"), 
+                                        verbose_name=_('document 1'),
                                         blank=True, null=True)
-    media           = ForeignKey(Media, related_name="seminar",
+    media           = models.ForeignKey(Media, related_name="seminar",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    doc_2           = ForeignKey(Document, related_name="seminar",
-                                        verbose_name=_('doc 2'),
+    doc_2           = models.ForeignKey(Document, related_name="seminar",
+                                        verbose_name=_('document 2'),
                                         blank=True, null=True)
-    doc_correct     = ForeignKey(Document, related_name=_("seminar"),
-                                        verbose_name=_('doc_correct'),
-                                        blank=True, null=True)
-
-    suscribers      = ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
+    doc_correct     = models.ForeignKey(Document, related_name=_("seminar"),
+                                        verbose_name=_('correction document'),
                                         blank=True, null=True)
 
-    date_added      = DateTimeField(_('date added'), auto_now_add=True)
-    date_modified   = DateTimeField(_('date modified'), auto_now=True)
+    suscribers      = models.ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
+                                        blank=True, null=True)
+
+    date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
+    date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
+    duration        = DurationField(_('duration'))
 
     def __unicode__(self):
         return '-'.join([self.course, self.rank, self.title])
@@ -83,11 +78,11 @@ class Seminar(Model):
 
 class Answer(Model):
 
-    user = ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
-    question = ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
-    answer = TextField(_('answer'))
-    status = IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
-    validated	= BooleanField(_('validated'))
+    user        = models.ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
+    question    = models.ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
+    answer      = models.TextField(_('answer'))
+    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    validated   = models.BooleanField(_('validated'))
 
     def __unicode__(self):
         return '-'.join([self.seminar, self.question, self.user])
@@ -99,13 +94,13 @@ class Answer(Model):
 
 class Question(Model):
 
-    seminar = ForeignKey(Seminar, verbose_name=_('seminar'))
-    title = CharField(_('title'), max_length=255, blank=True)
-    question = TextField(_('question'))
-    rank = IntegerField(_('rank'))
-    weight = IntegerField(_('weight'))
-    min_num_char = IntegerField(_('minimum numbers of characters'))
-    status = IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    seminar     = models.ForeignKey(Seminar, verbose_name=_('seminar'))
+    title       = models.CharField(_('title'), max_length=255, blank=True)
+    question    = models.TextField(_('question'))
+    rank        = models.IntegerField(_('rank'))
+    weight      = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
+    min_nchar   = models.IntegerField(_('minimum numbers of characters'))
+    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
 
 
     def __unicode__(self):
@@ -115,15 +110,18 @@ class Question(Model):
         db_table = app_label + '_' + 'question'
         verbose_name = _('Question')
 
+
 class TestimonialTheme(Model):
 
-    organization = ForeignKey(Organization, related_name='testimonial_theme',
+    organization = models.ForeignKey(Organization, related_name='testimonial_theme',
                                  verbose_name=_('organization'))
-    text = TextField(_('text'))
-
+    text         = models.TextField(_('text'))
+    doc_1        = models.ForeignKey(Document, related_name=_("seminar"), 
+                                        blank=True, null=True)
 
 class Testimonial(Model):
 
-    seminar = ForeignKey(Seminar, verbose_name=_('seminar'))
-    user = ForeignKey(User, related_name=_("testimonial"), verbose_name=_('user'))
+    seminar     = models.ForeignKey(Seminar, verbose_name=_('seminar'))
+    user        = models.ForeignKey(User, related_name=_("testimonial"), verbose_name=_('user'))
+
 

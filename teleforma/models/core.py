@@ -60,11 +60,21 @@ from south.modelsinspector import add_introspection_rules
 
 app_label = 'teleforma'
 
-n_sessions = 21
-session_choices = [(str(x), str(y)) for x in range(1, n_sessions) for y in range(1, n_sessions) if x == y]
+def get_n_choices(n):
+    return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]
+
+session_choices = get_n_choices(21)
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
 mimetypes.add_type('video/webm','.webm')
+
+STATUS_CHOICES = (
+        (1, _('Draft')),
+        (2, _('Public')),
+        (3, _('Private')),
+    )
+
+WEIGHT_CHOICES = get_n_choices(5)
 
 
 class ShortTextField(models.TextField):
@@ -355,6 +365,7 @@ class MediaBase(Model):
     code            = CharField(_('code'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     mime_type       = CharField(_('mime type'), blank=True)
+    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
     notes = generic.GenericRelation(Note)
 
     def get_fields(self):

@@ -125,7 +125,7 @@ class Student(Model):
                                         blank=True, null=True)
     oral_2          = ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
                                         blank=True, null=True)
-    options          = ForeignKey('Course', related_name="options", verbose_name=_('options'),
+    options         = ForeignKey('Course', related_name="options", verbose_name=_('options'),
                                         blank=True, null=True)
 
     def __unicode__(self):
