@@ -44,6 +44,7 @@ import datetime
 import mimetypes
 
 from telemeta.models import *
+from teleforma.fields import *
 import django.db.models as models
 from django.db.models import *
 from django.forms import ModelForm, TextInput, Textarea
@@ -75,17 +76,6 @@ STATUS_CHOICES = (
     )
 
 WEIGHT_CHOICES = get_n_choices(5)
-
-
-class ShortTextField(models.TextField):
-
-    def formfield(self, **kwargs):
-         kwargs.update(
-            {"widget": Textarea(attrs={'rows':2, 'cols':40})}
-         )
-         return super(ShortTextField, self).formfield(**kwargs)
-
-add_introspection_rules([], ["^teleforma\.models\.ShortTextField"])
 
 
 class Organization(Model):
