@@ -417,20 +417,46 @@ class Document(MediaBase):
         types = ' - '.join([unicode(t) for t in self.course_type.all()])
         return  ' - '.join([unicode(self.course), unicode(types), self.title ])
 
-    def set_read(self, user):
-        pass
-
-    def get_read(self, user):
-        return user in self.readers
-
     def save(self, **kwargs):
+        super(Document, self).save(**kwargs)
         self.course.save()
         self.set_mime_type()
-        super(Document, self).save(**kwargs)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document'
         ordering = ['-date_added']
+
+
+class DocumentSimple(MediaBase):
+
+    element_type = 'document_simple'
+
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
+
+    def is_image(self):
+        is_url_image = False
+        if self.url:
+            url_types = ['.png', '.jpg', '.gif', '.jpeg']
+            for type in url_types:
+                if type in self.url or type.upper() in self.url:
+                    is_url_image = True
+        return 'image' in self.mime_type or is_url_image
+
+    def set_mime_type(self):
+        self.mime_type = mimetypes.guess_type(self.file.path)[0]
+
+    def __unicode__(self):
+        return self.title
+
+    def save(self, **kwargs):
+        super(DocumentSimple, self).save(**kwargs)
+        self.set_mime_type()
+        
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'document_simple'
+        ordering = ['-date_added']
+
 
 
 class Media(MediaBase):
