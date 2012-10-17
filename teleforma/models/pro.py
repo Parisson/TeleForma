@@ -106,6 +106,11 @@ class Answer(Model):
     def __unicode__(self):
         return ' - '.join([self.question, self.user])
 
+    def validate(self):
+        if len(self.answer) >= self.question.min_nchar:
+            self.validated = True
+            self.save()
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'answer'
         verbose_name = _('Answer')
