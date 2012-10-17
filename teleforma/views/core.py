@@ -531,7 +531,6 @@ class ConferenceRecordView(FormView):
         s.teleforma.create_conference(conference.to_json_dict())
 
 
-
 class HelpView(TemplateView):
 
     template_name='teleforma/help.html'
