@@ -67,6 +67,7 @@ class Seminar(Model):
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
     duration        = DurationField(_('approximative duration'))
+    keywords        = models.CharField(_('keywords'), max_length=1024, blank=True)
 
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.rank), self.title])
