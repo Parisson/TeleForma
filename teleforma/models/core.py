@@ -71,9 +71,9 @@ streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', '
 mimetypes.add_type('video/webm','.webm')
 
 STATUS_CHOICES = (
-        (1, _('Draft')),
-        (2, _('Public')),
-        (3, _('Private')),
+        (1, _('Private')),
+        (2, _('Draft')),
+        (3, _('Public')),
     )
 
 WEIGHT_CHOICES = get_nint_choices(5)
@@ -432,6 +432,8 @@ class DocumentSimple(MediaBase):
     element_type = 'document_simple'
 
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
+    readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
+                                        blank=True, null=True)
 
     def is_image(self):
         is_url_image = False

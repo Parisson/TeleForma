@@ -45,8 +45,9 @@ class Seminar(Model):
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
     title           = models.CharField(_('title'), max_length=255, blank=True)
     price           = models.FloatField(_('price'), blank=True, null=True)
-    status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1, blank=True)
+    status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2, blank=True)
     rank            = models.IntegerField(_('rank'))
+    concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
 
     doc_1           = models.ForeignKey(DocumentSimple, related_name="seminar_doc1", 
                                         verbose_name=_('document 1'),
@@ -60,7 +61,6 @@ class Seminar(Model):
     doc_correct     = models.ForeignKey(DocumentSimple, related_name="seminar_doccorrect",
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
-
     suscribers      = models.ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
                                         blank=True, null=True)
 
@@ -85,7 +85,7 @@ class Question(Model):
     rank        = models.IntegerField(_('rank'))
     weight      = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
     min_nchar   = models.IntegerField(_('minimum numbers of characters'))
-    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
 
     def __unicode__(self):
@@ -101,7 +101,7 @@ class Answer(Model):
     user        = models.ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
     question    = models.ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
     answer      = models.TextField(_('answer'))
-    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=1)
+    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
     validated   = models.BooleanField(_('validated'))
 
     def __unicode__(self):
