@@ -170,7 +170,7 @@ class CourseView(DetailView):
         context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        if settings.TELEFORMA_GENERAL_TWEETER:
+        if settings.TELEFORMA_GLOBAL_TWEETER:
             context['room'] = get_room(name='site')
         else:
             context['room'] = get_room(name=course.title, content_type=content_type,
@@ -223,7 +223,7 @@ class MediaView(DetailView):
         context['type'] = media.course_type
         context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="media")
-        if settings.TELEFORMA_GENERAL_TWEETER:
+        if settings.TELEFORMA_GLOBAL_TWEETER:
             context['room'] = get_room(name='site')
         else:
             context['room'] = get_room(name=media.item.title, content_type=content_type,
@@ -286,7 +286,7 @@ class DocumentView(DetailView):
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="document")
-        if settings.TELEFORMA_GENERAL_TWEETER:
+        if settings.TELEFORMA_GLOBAL_TWEETER:
             context['room'] = get_room(name='site')
         else:
             context['room'] = get_room(name=document.title, content_type=content_type,
@@ -342,7 +342,7 @@ class ConferenceView(DetailView):
         context['type'] = conference.course_type
         context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="conference")
-        if settings.TELEFORMA_GENERAL_TWEETER:
+        if settings.TELEFORMA_GLOBAL_TWEETER:
             context['room'] = get_room(name='site')
         else:
             context['room'] = get_room(name=conference.course.title, content_type=content_type,
