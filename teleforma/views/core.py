@@ -459,8 +459,6 @@ class ConferenceRecordView(FormView):
         except:
             pass
 
-        return super(ConferenceRecordView, self).form_valid(form)
-
     def snapshot(self, url, dir):
         width = 160
         height = 90
