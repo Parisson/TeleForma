@@ -154,6 +154,8 @@ def get_random_hash():
     return "%032x" % hash
 
 def get_periods(user):
+    periods = None
+
     professor = user.professor.all()
     if professor:
         professor = user.professor.get()
@@ -171,6 +173,9 @@ def get_periods(user):
             student = user.ae_student.get()
             periods = student.period.all()
 
+    if user.is_staff or user.is_superuser:
+        periods = Period.objects.all()
+    
     return periods
     
 
