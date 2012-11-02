@@ -170,7 +170,10 @@ class CourseView(DetailView):
         context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=course.title, content_type=content_type,
+        if settings.TELEFORMA_GENERAL_TWEETER:
+            context['room'] = get_room(name='site')
+        else:
+            context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
         return context
@@ -181,7 +184,6 @@ class CourseView(DetailView):
 
 
 class CoursesView(ListView):
-
 
     model = Course
     template_name='teleforma/courses.html'
@@ -221,7 +223,10 @@ class MediaView(DetailView):
         context['type'] = media.course_type
         context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="media")
-        context['room'] = get_room(name=media.item.title, content_type=content_type,
+        if settings.TELEFORMA_GENERAL_TWEETER:
+            context['room'] = get_room(name='site')
+        else:
+            context['room'] = get_room(name=media.item.title, content_type=content_type,
                                    id=media.id)
         access = get_access(media, all_courses)
         if not access:
@@ -281,7 +286,10 @@ class DocumentView(DetailView):
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="document")
-        context['room'] = get_room(name=document.title, content_type=content_type,
+        if settings.TELEFORMA_GENERAL_TWEETER:
+            context['room'] = get_room(name='site')
+        else:
+            context['room'] = get_room(name=document.title, content_type=content_type,
                                    id=document.id)
         access = get_access(document, all_courses)
         if not access:
@@ -334,7 +342,10 @@ class ConferenceView(DetailView):
         context['type'] = conference.course_type
         context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="conference")
-        context['room'] = get_room(name=conference.course.title, content_type=content_type,
+        if settings.TELEFORMA_GENERAL_TWEETER:
+            context['room'] = get_room(name='site')
+        else:
+            context['room'] = get_room(name=conference.course.title, content_type=content_type,
                                    id=conference.id)
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)

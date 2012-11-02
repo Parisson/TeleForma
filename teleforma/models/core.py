@@ -208,6 +208,8 @@ class Conference(Model):
                                       max_length=16, default="1")
     room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
+    period          = ForeignKey('Period', related_name='conference', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
@@ -394,6 +396,8 @@ class Document(MediaBase):
                                       verbose_name=_('course type'), blank=True, null=True)
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
+    period          = ForeignKey('Period', related_name='document', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
@@ -431,6 +435,8 @@ class DocumentSimple(MediaBase):
 
     element_type = 'document_simple'
 
+    period          = ForeignKey('Period', related_name='document_simple', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
     readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
                                         blank=True, null=True)
@@ -472,6 +478,8 @@ class Media(MediaBase):
                                  blank=True, null=True)
     course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
                                  blank=True, null=True)
+    period          = ForeignKey('Period', related_name='media', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     item            = ForeignKey(MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
     type            = CharField(_('type'), choices=streaming_choices, max_length=32)
