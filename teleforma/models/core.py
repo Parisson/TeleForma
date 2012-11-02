@@ -200,6 +200,10 @@ class Room(Model):
 class Conference(Model):
 
     public_id       = CharField(_('public_id'), max_length=255, blank=True)
+    department      = ForeignKey('Department', related_name='conference', verbose_name=_('department'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
+    period          = ForeignKey('Period', related_name='conference', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
     course_type     = ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
     professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
@@ -208,8 +212,6 @@ class Conference(Model):
                                       max_length=16, default="1")
     room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
-    period          = ForeignKey('Period', related_name='conference', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
@@ -248,9 +250,10 @@ class Conference(Model):
 
 
     def to_dict(self):
-        dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label':'public_id'},
-                {'id':'organization','value': self.course.department.organization, 'class':'', 'label':'Organization'},
-                {'id': 'department', 'value': self.course.department , 'class':'', 'label':'Department'},
+        dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
+                {'id':'organization','value': self.course.department.organization, 'class':'', 'label': 'Organization'},
+                {'id': 'department', 'value': self.course.department , 'class':'', 'label': 'Department'},
+                {'id': 'period', 'value': self.period, 'class':'', 'label': 'Period'},
                 {'id': 'professor', 'value': self.professor, 'class':'' , 'label': 'Professor'},
                 {'id': 'session', 'value': self.session, 'class':'' , 'label': 'Session'},
                 {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
@@ -260,6 +263,7 @@ class Conference(Model):
     def to_json_dict(self):
         data = {'id': self.public_id, 'course_code': self.course.code,
                 'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
+                'period': self.period,
                 'session': self.session,
                 'streams':[] }
 

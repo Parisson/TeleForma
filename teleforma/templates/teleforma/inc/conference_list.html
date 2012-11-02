@@ -9,7 +9,7 @@
 </div>
     <table class="listing" width="100%">
     <tbody>
-       {% for conference in conferences %}
+       {% for conference in conferences|from_periods:periods %}
         {% for stream in conference.livestream.all %}
          {% if stream.stream_type == 'webm' %}
             <tr>
