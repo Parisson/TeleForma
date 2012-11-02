@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-02 15:09+0100\n"
+"POT-Creation-Date: 2012-11-02 15:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -38,6 +38,10 @@ msgstr "matières"
 #: models/ae.py:62
 msgid "AE student"
 msgstr "Etudiant AE"
+
+#: models/ae.py:63
+msgid "AE students"
+msgstr "Etudiants AE"
 
 #: models/core.py:74
 msgid "Private"
