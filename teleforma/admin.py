@@ -5,10 +5,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 
-class StudentProfileInline(admin.StackedInline):
+class CRFPAStudentProfileInline(admin.StackedInline):
     model = Student
     filter_horizontal = ['period']
     exclude = ['options']
+
+class AEStudentProfileInline(admin.StackedInline):
+    model = AEStudent
+    filter_horizontal = ['courses']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
@@ -26,7 +30,8 @@ class ProfileInline(admin.StackedInline):
     model = Profile
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [StudentProfileInline, ProfessorProfileInline, ProfileInline]
+    inlines = [CRFPAStudentProfileInline, AEStudentProfileInline,
+                 ProfessorProfileInline, ProfileInline]
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training

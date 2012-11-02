@@ -191,3 +191,8 @@ TELECASTER_CONF = [{'type':'mp3','server_type':'icecast','conf':'/etc/telecaster
 TELECASTER_RSYNC_SERVER = 'telecaster@jimi.parisson.com:archives/'
 TELECASTER_RSYNC_LOG = '/var/log/telecaster/rsync.log'
 TELECASTER_MASTER_SERVER = 'angus.parisson.com'
+
+# CRFPA or AE or PRO
+TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
+
+

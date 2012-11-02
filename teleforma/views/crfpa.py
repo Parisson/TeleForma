@@ -33,8 +33,67 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-
 from teleforma.views.core import *
+
+
+def get_crfpa_courses(user, date_order=False, num_order=False):
+    courses = []
+
+    if not user.is_authenticated():
+        return courses
+
+    professor = user.professor.all()
+    student = user.student.all()
+
+    if professor:
+        professor = user.professor.get()
+        courses = format_courses(courses, queryset=professor.courses.all(),
+                                  types=CourseType.objects.all())
+
+    elif student:
+        student = user.student.get()
+        s_courses = {student.procedure:student.training.procedure,
+                           student.written_speciality:student.training.written_speciality,
+                           student.oral_speciality:student.training.oral_speciality,
+                           student.oral_1:student.training.oral_1,
+                           student.oral_2:student.training.oral_2,
+                           student.options:student.training.options,
+                        }
+
+        for course in s_courses:
+            courses = format_courses(courses, course=course,
+                               types=s_courses[course])
+
+        synthesis_note = student.training.synthesis_note
+        if synthesis_note:
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(synthesis_note=True),
+                            types=synthesis_note)
+
+        obligation = student.training.obligation
+        if obligation:
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(obligation=True),
+                            types=obligation)
+
+        magistral = student.training.magistral
+        if magistral:
+            courses = format_courses(courses,
+                            queryset=Course.objects.filter(magistral=True),
+                            types=magistral)
+
+    elif user.is_staff or user.is_superuser:
+        courses = format_courses(courses, queryset=Course.objects.all(),
+                    types=CourseType.objects)
+    else:
+        courses = None
+
+    if date_order:
+        courses = sorted(courses, key=lambda k: k['date'], reverse=True)
+    if num_order:
+        courses = sorted(courses, key=lambda k: k['number'])
+
+    return courses
 
 
 class UsersView(ListView):
