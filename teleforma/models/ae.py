@@ -60,4 +60,5 @@ class AEStudent(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'ae_student'
         verbose_name = _('AE student')
+        verbose_name_plural = _('AE students')
         ordering = ['user__last_name']
