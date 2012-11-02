@@ -12,7 +12,7 @@ class CRFPAStudentProfileInline(admin.StackedInline):
 
 class AEStudentProfileInline(admin.StackedInline):
     model = AEStudent
-    filter_horizontal = ['courses']
+    filter_horizontal = ['period', 'courses']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
