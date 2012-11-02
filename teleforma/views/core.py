@@ -153,6 +153,26 @@ def get_random_hash():
     hash = random.getrandbits(128)
     return "%032x" % hash
 
+def get_periods(user):
+    professor = user.professor.all()
+    if professor:
+        professor = user.professor.get()
+        periods = Period.objects.all()
+
+    if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
+        student = user.crfpa_student.all()
+        if student:
+            student = user.crfpa_student.get()
+            periods = student.period.all() 
+
+    elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
+        student = user.ae_student.all()
+        if student:
+            student = user.ae_student.get()
+            periods = student.period.all()
+
+    return periods
+    
 
 class CourseView(DetailView):
 
@@ -176,6 +196,7 @@ class CourseView(DetailView):
             context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
+        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -198,6 +219,7 @@ class CoursesView(ListView):
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
         context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
+        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -232,6 +254,7 @@ class MediaView(DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
+        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -295,6 +318,7 @@ class DocumentView(DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
+        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -353,6 +377,7 @@ class ConferenceView(DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
+        context['periods'] = get_periods(self.request.user)
         return context
 
     @jsonrpc_method('teleforma.stop_conference')
