@@ -30,7 +30,7 @@ class ProfileInline(admin.StackedInline):
     model = Profile
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [CRFPAStudentProfileInline, AEStudentProfileInline,
+    inlines = [AEStudentProfileInline,
                  ProfessorProfileInline, ProfileInline]
 
 class TrainingAdmin(admin.ModelAdmin):
