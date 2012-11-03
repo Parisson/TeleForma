@@ -82,31 +82,24 @@ except:
     pass
 
 
-def render(request, template, data = None, mimetype = None):
-    return render_to_response(template, data, context_instance=RequestContext(request),
-                              mimetype=mimetype)
-
 def format_courses(courses, course=None, queryset=None, types=None):
-    if queryset:
-        for c in queryset:
-            if c and c.code != 'X':
-                courses.append({'course': c, 'types': types.all(),
-                'date': c.date_modified, 'number': c.number})
-    elif course:
-        if course.code != 'X':
-            courses.append({'course': course, 'types': types.all(),
-            'date': course.date_modified, 'number': course.number})
-    return courses
-
+    if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
+        from teleforma.views.crfpa import format_crfpa_courses
+        return format_crfpa_courses(courses, course, queryset, types)
+    
+    elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
+        from teleforma.views.ae import format_ae_courses
+        return format_ae_courses(courses, course, queryset, types)
+    
 
 def get_courses(user, date_order=False, num_order=False):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
-        return get_crfpa_courses(user, date_order=False, num_order=False)
+        return get_crfpa_courses(user, date_order, num_order)
     
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
-        return get_ae_courses(user, date_order=False, num_order=False)
+        return get_ae_courses(user, date_order, num_order)
     
 
 def stream_from_file(__file):

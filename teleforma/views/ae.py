@@ -36,6 +36,20 @@
 from teleforma.views.core import *
 
 
+def format_ae_courses(courses, course=None, queryset=None, types=None):
+    if queryset:
+        for c in queryset:
+            if c and c.code != 'X':
+                courses.append({'course': c, 'types': c.types.all(),
+                'date': c.date_modified, 'number': c.number})
+    elif course:
+        if course.code != 'X':
+            courses.append({'course': course, 'types': course.types.all(),
+            'date': course.date_modified, 'number': course.number})
+
+    return courses
+
+
 def get_ae_courses(user, date_order=False, num_order=False):
     courses = []
 
@@ -44,30 +58,25 @@ def get_ae_courses(user, date_order=False, num_order=False):
 
     professor = user.professor.all()
     student = user.ae_student.all()
-    types = CourseType.objects.all()
 
     if professor:
         professor = user.professor.get()
-        courses = format_courses(courses, queryset=professor.courses.all(),
-                                  types=types)
+        courses = format_ae_courses(courses, queryset=professor.courses.all())
 
     elif student:
         student = user.ae_student.get()
         s_courses = student.courses.all()
 
         for course in s_courses:
-            courses = format_courses(courses, course=course,
-                               types=types)
+            courses = format_ae_courses(courses, course=course)
 
         magistrals = Course.objects.filter(magistral=True)
         if magistrals:
-            courses = format_courses(courses,
-                            queryset=magistrals,
-                            types=types)
+            courses = format_ae_courses(courses,
+                            queryset=magistrals)
 
     elif user.is_staff or user.is_superuser:
-        courses = format_courses(courses, queryset=Course.objects.all(),
-                    types=types)
+        courses = format_ae_courses(courses, queryset=Course.objects.all())
     else:
         courses = None
 

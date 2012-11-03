@@ -23,7 +23,7 @@ $(document).ready(function(){
      {% with c.course as course %}
       {% for type in c.types %}
       <div class="course">
-        <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
+        <div class="course_title">{{ course.title }}{% if type.name != "None" %} - {{ type }}{% endif %}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
         {% block conference %}
