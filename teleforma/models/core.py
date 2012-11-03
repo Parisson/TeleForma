@@ -139,6 +139,7 @@ class CourseType(Model):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
 
+
 class Course(Model):
 
     department      = ForeignKey('Department', related_name='course',
@@ -151,6 +152,9 @@ class Course(Model):
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligations'))
     magistral       = BooleanField(_('magistral'))
+    types           = ManyToManyField('CourseType', related_name="course",
+                                        verbose_name=_('types'),
+                                        blank=True, null=True)
 
     notes = generic.GenericRelation(Note)
 

@@ -36,6 +36,19 @@
 from teleforma.views.core import *
 
 
+def format_crfpa_courses(courses, course=None, queryset=None, types=None):
+    if queryset:
+        for c in queryset:
+            if c and c.code != 'X':
+                courses.append({'course': c, 'types': types.all(),
+                'date': c.date_modified, 'number': c.number})
+    elif course:
+        if course.code != 'X':
+            courses.append({'course': course, 'types': types.all(),
+            'date': course.date_modified, 'number': course.number})
+    return courses
+
+
 def get_crfpa_courses(user, date_order=False, num_order=False):
     courses = []
 
@@ -47,7 +60,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
 
     if professor:
         professor = user.professor.get()
-        courses = format_courses(courses, queryset=professor.courses.all(),
+        courses = format_crfpa_courses(courses, queryset=professor.courses.all(),
                                   types=CourseType.objects.all())
 
     elif student:
@@ -61,29 +74,29 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
                         }
 
         for course in s_courses:
-            courses = format_courses(courses, course=course,
+            courses = format_crfpa_courses(courses, course=course,
                                types=s_courses[course])
 
         synthesis_note = student.training.synthesis_note
         if synthesis_note:
-            courses = format_courses(courses,
+            courses = format_crfpa_courses(courses,
                             queryset=Course.objects.filter(synthesis_note=True),
                             types=synthesis_note)
 
         obligation = student.training.obligation
         if obligation:
-            courses = format_courses(courses,
+            courses = format_crfpa_courses(courses,
                             queryset=Course.objects.filter(obligation=True),
                             types=obligation)
 
         magistral = student.training.magistral
         if magistral:
-            courses = format_courses(courses,
+            courses = format_crfpa_courses(courses,
                             queryset=Course.objects.filter(magistral=True),
                             types=magistral)
 
     elif user.is_staff or user.is_superuser:
-        courses = format_courses(courses, queryset=Course.objects.all(),
+        courses = format_crfpa_courses(courses, queryset=Course.objects.all(),
                     types=CourseType.objects)
     else:
         courses = None

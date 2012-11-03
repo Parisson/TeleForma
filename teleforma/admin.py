@@ -42,6 +42,7 @@ class TrainingAdmin(admin.ModelAdmin):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     ordering = ['number']
+    filter_horizontal = ['types']
 
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
