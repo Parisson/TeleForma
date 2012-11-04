@@ -391,7 +391,7 @@ class ConferenceView(DetailView):
             station.stop()
         if 'telecaster' in settings.INSTALLED_APPS:
             try:
-                url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+                url = 'http://' + conference.department.domain + '/json/'
                 s = ServiceProxy(url)
                 s.teleforma.stop_conference(conference.public_id)
             except:
@@ -457,6 +457,8 @@ class ConferenceRecordView(FormView):
         except:
             pass
 
+        return super(ConferenceRecordView, self).form_valid(form)
+
     def snapshot(self, url, dir):
         width = 160
         height = 90
@@ -481,8 +483,9 @@ class ConferenceRecordView(FormView):
                                                        course=course, course_type=course_type)
             if c:
                 conf.session = conference['session']
-                user = User.objects.get(username=conference['professor_id'])
-                conf.professor = Professor.objects.get(user=user)
+                if conference['professor_id']:
+                    user = User.objects.get(username=conference['professor_id'])
+                    conf.professor = Professor.objects.get(user=user)
                 try:
                     organization, c = Organization.objects.get_or_create(name=conference['organization'])
                     conf.room, c = Room.objects.get_or_create(name=conference['room'],
@@ -492,6 +495,7 @@ class ConferenceRecordView(FormView):
 
                 conf.date_begin = datetime.datetime.now()
                 conf.period, c = Period.objects.get_or_create(name=conference['period'])
+                conf.department = conference['department']
                 conf.save()
                 course.save()
                 for stream in conference['streams']:
@@ -510,7 +514,7 @@ class ConferenceRecordView(FormView):
             raise 'Error : Bad Conference dictionnary'
 
     def push(self, conference):
-        url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        url = 'http://' + conference.department.domain + '/json/'
         s = ServiceProxy(url)
         s.teleforma.create_conference(conference.to_json_dict())
 
