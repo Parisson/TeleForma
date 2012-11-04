@@ -457,6 +457,8 @@ class ConferenceRecordView(FormView):
         except:
             pass
 
+        
+
     def snapshot(self, url, dir):
         width = 160
         height = 90
