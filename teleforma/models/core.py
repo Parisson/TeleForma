@@ -269,7 +269,7 @@ class Conference(Model):
                 'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
                 'period': self.period, 'department': self.department,
                 'session': self.session,
-                'streams':[] }
+                'streams': [] }
 
         if self.room:
             data['room'] = self.room.name
