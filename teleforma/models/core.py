@@ -267,7 +267,7 @@ class Conference(Model):
     def to_json_dict(self):
         data = {'id': self.public_id, 'course_code': self.course.code,
                 'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
-                'period': self.period,
+                'period': self.period, 'department': self.department,
                 'session': self.session,
                 'streams':[] }
 

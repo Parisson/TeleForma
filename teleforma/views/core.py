@@ -481,8 +481,9 @@ class ConferenceRecordView(FormView):
                                                        course=course, course_type=course_type)
             if c:
                 conf.session = conference['session']
-                user = User.objects.get(username=conference['professor_id'])
-                conf.professor = Professor.objects.get(user=user)
+                if conference['professor_id']:
+                    user = User.objects.get(username=conference['professor_id'])
+                    conf.professor = Professor.objects.get(user=user)
                 try:
                     organization, c = Organization.objects.get_or_create(name=conference['organization'])
                     conf.room, c = Room.objects.get_or_create(name=conference['room'],
@@ -492,6 +493,7 @@ class ConferenceRecordView(FormView):
 
                 conf.date_begin = datetime.datetime.now()
                 conf.period, c = Period.objects.get_or_create(name=conference['period'])
+                conf.department = conference['department']
                 conf.save()
                 course.save()
                 for stream in conference['streams']:
