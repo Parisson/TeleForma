@@ -484,8 +484,9 @@ class ConferenceRecordView(FormView):
             if c:
                 conf.session = conference['session']
                 if conference['professor_id']:
-                    user = User.objects.get(username=conference['professor_id'])
-                    conf.professor = Professor.objects.get(user=user)
+                    user = User.objects.filter(username=conference['professor_id'])
+                    if user:
+                        conf.professor = Professor.objects.get(user=user[0])
                 try:
                     organization, c = Organization.objects.get_or_create(name=conference['organization'])
                     conf.room, c = Room.objects.get_or_create(name=conference['room'],
