@@ -265,10 +265,14 @@ class Conference(Model):
         return dict
 
     def to_json_dict(self):
-        data = {'id': self.public_id, 'course_code': self.course.code,
-                'course_type': self.course_type.name, 'professor_id': self.professor.user.username,
-                'period': self.period, 'department': self.department,
+        data = {'id': self.public_id, 
+                'course_code': self.course.code,
+                'course_type': self.course_type.name, 
+                'professor_id': self.professor.user.username,
+                'period': self.period.name, 
+                'department': self.department.name,
                 'session': self.session,
+                'comment': self.comment,
                 'streams': [] }
 
         if self.room:
