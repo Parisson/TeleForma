@@ -495,7 +495,7 @@ class ConferenceRecordView(FormView):
 
                 conf.date_begin = datetime.datetime.now()
                 conf.period, c = Period.objects.get_or_create(name=conference['period'])
-                conf.department = conference['department']
+                conf.department, c = Department.objects.get_or_create(name=conference['department'])
                 conf.save()
                 course.save()
                 for stream in conference['streams']:
