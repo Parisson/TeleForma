@@ -36,14 +36,14 @@
 from teleforma.views.core import *
 
 
-def format_crfpa_courses(courses, course=None, queryset=None, types=None):
+def format_crfpa_courses(courses, course=None, queryset=None, types=None, admin=False):
     if queryset:
         for c in queryset:
-            if c and c.code != 'X':
+            if c and (c.code != 'X' or admin == True):
                 courses.append({'course': c, 'types': types.all(),
                 'date': c.date_modified, 'number': c.number})
     elif course:
-        if course.code != 'X':
+        if course.code != 'X' or admin == True:
             courses.append({'course': course, 'types': types.all(),
             'date': course.date_modified, 'number': course.number})
     return courses
@@ -97,7 +97,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
 
     elif user.is_staff or user.is_superuser:
         courses = format_crfpa_courses(courses, queryset=Course.objects.all(),
-                    types=CourseType.objects)
+                    types=CourseType.objects, admin=True)
     else:
         courses = None
 
