@@ -180,7 +180,10 @@ class Professor(Model):
                                         blank=True, null=True)
 
     def __unicode__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+        if self.user.first_name or self.user.last_name:
+            return self.user.first_name + ' ' + self.user.last_name
+        else:
+            return self.user.username
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
