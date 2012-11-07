@@ -36,14 +36,14 @@
 from teleforma.views.core import *
 
 
-def format_ae_courses(courses, course=None, queryset=None, types=None):
+def format_ae_courses(courses, course=None, queryset=None, types=None, admin=False):
     if queryset:
         for c in queryset:
-            if c and c.code != 'X':
+            if c and (c.code != 'X' or admin == True):
                 courses.append({'course': c, 'types': c.types.all(),
                 'date': c.date_modified, 'number': c.number})
     elif course:
-        if course.code != 'X':
+        if course.code != 'X' or admin == True:
             courses.append({'course': course, 'types': course.types.all(),
             'date': course.date_modified, 'number': course.number})
 
@@ -76,7 +76,7 @@ def get_ae_courses(user, date_order=False, num_order=False):
                             queryset=magistrals)
 
     elif user.is_staff or user.is_superuser:
-        courses = format_ae_courses(courses, queryset=Course.objects.all())
+        courses = format_ae_courses(courses, queryset=Course.objects.all(), admin=True)
     else:
         courses = None
 
