@@ -37,7 +37,7 @@
         <a href="{% url teleforma-conference-audio conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
     </div>
 
-<a href="{% url teleforma-course-detail course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }} - {% trans "Session" %} {{ conference.session }}
+<a href="{% url teleforma-course-detail course.id %}" style="color: #000;">{{ course.title }}</a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
 
 </div>
 
