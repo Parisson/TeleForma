@@ -478,7 +478,11 @@ class ConferenceRecordView(FormView):
     def create(request, conference):
         if isinstance(conference, dict):
             course = Course.objects.get(code=conference['course_code'])
-            course_type = CourseType.objects.get(name=conference['course_type'])
+            if conference['course_type']:
+                course_type = CourseType.objects.get(name=conference['course_type'])
+            else:
+                course_type, cc = CourseType.objects.get_or_create(name='None')
+
             conf, c = Conference.objects.get_or_create(public_id=conference['id'],
                                                        course=course, course_type=course_type)
             if c:
