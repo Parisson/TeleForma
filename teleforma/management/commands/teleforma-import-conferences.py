@@ -128,6 +128,8 @@ class Command(BaseCommand):
                             media.course_type = conference.course_type
                             media.type = ext
                             media.set_mime_type()
+                            if conference.period:
+                                media.period = conference.period
                             media.save()
                             conference.save()
                             logger.logger.info(path)
