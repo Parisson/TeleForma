@@ -487,6 +487,12 @@ class ConferenceRecordView(FormView):
                     user = User.objects.filter(username=conference['professor_id'])
                     if user:
                         conf.professor = Professor.objects.get(user=user[0])
+                    else:
+                        user = User(username=conference['professor_id'])
+                        user.save()
+                        professor = Professor(user=user)
+                        professor.save()
+                        conf.professor = professor
                 try:
                     organization, c = Organization.objects.get_or_create(name=conference['organization'])
                     conf.room, c = Room.objects.get_or_create(name=conference['room'],
