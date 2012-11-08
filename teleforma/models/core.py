@@ -188,7 +188,7 @@ class Professor(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
         verbose_name = _('professor')
-        ordering = self.last_name
+        ordering = ['self.last_name']
 
 
 class Room(Model):
