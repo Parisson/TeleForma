@@ -181,13 +181,14 @@ class Professor(Model):
 
     def __unicode__(self):
         if self.user.first_name or self.user.last_name:
-            return self.user.first_name + ' ' + self.user.last_name
+            return self.user.last_name + ' ' + self.user.first_name
         else:
             return self.user.username
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
         verbose_name = _('professor')
+        ordering = self.last_name
 
 
 class Room(Model):
