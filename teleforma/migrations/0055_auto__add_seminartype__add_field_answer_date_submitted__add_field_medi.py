@@ -8,19 +8,101 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'SeminarType'
+        db.create_table('teleforma_seminar_type', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+        ))
+        db.send_create_signal('teleforma', ['SeminarType'])
+
+        # Adding field 'Answer.date_submitted'
+        db.add_column('teleforma_answer', 'date_submitted',
+                      self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True),
+                      keep_default=False)
+
         # Adding field 'Media.period'
         db.add_column('teleforma_media', 'period',
                       self.gf('telemeta.models.core.ForeignKey')(related_name='media', on_delete=models.SET_NULL, default=None, to=orm['teleforma.Period'], blank=True, null=True),
                       keep_default=False)
+
+        # Adding M2M table for field types on 'Course'
+        db.create_table('teleforma_course_types', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('course', models.ForeignKey(orm['teleforma.course'], null=False)),
+            ('coursetype', models.ForeignKey(orm['teleforma.coursetype'], null=False))
+        ))
+        db.create_unique('teleforma_course_types', ['course_id', 'coursetype_id'])
 
         # Adding field 'Document.period'
         db.add_column('teleforma_document', 'period',
                       self.gf('telemeta.models.core.ForeignKey')(related_name='document', on_delete=models.SET_NULL, default=None, to=orm['teleforma.Period'], blank=True, null=True),
                       keep_default=False)
 
+        # Adding field 'Seminar.type'
+        db.add_column('teleforma_seminar', 'type',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='seminar', null=True, to=orm['teleforma.SeminarType']),
+                      keep_default=False)
+
+        # Adding field 'Seminar.sub_title'
+        db.add_column('teleforma_seminar', 'sub_title',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=1024, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Seminar.description'
+        db.add_column('teleforma_seminar', 'description',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=1024, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Seminar.level'
+        db.add_column('teleforma_seminar', 'level',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Seminar.date_begin'
+        db.add_column('teleforma_seminar', 'date_begin',
+                      self.gf('django.db.models.fields.DateField')(null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Seminar.date_end'
+        db.add_column('teleforma_seminar', 'date_end',
+                      self.gf('django.db.models.fields.DateField')(null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Seminar.media_preview'
+        db.add_column('teleforma_seminar', 'media_preview',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='seminar_media_preview', null=True, to=orm['teleforma.Media']),
+                      keep_default=False)
+
+        # Adding M2M table for field professor on 'Seminar'
+        db.create_table('teleforma_seminar_professor', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('seminar', models.ForeignKey(orm['teleforma.seminar'], null=False)),
+            ('professor', models.ForeignKey(orm['teleforma.professor'], null=False))
+        ))
+        db.create_unique('teleforma_seminar_professor', ['seminar_id', 'professor_id'])
+
+
+        # Changing field 'Seminar.date_modified'
+        db.alter_column('teleforma_seminar', 'date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True))
+
+        # Changing field 'Seminar.rank'
+        db.alter_column('teleforma_seminar', 'rank', self.gf('django.db.models.fields.IntegerField')(null=True))
+
+        # Changing field 'Seminar.date_added'
+        db.alter_column('teleforma_seminar', 'date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True))
+        # Adding field 'Question.description'
+        db.add_column('teleforma_question', 'description',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=1024, blank=True),
+                      keep_default=False)
+
         # Adding field 'DocumentSimple.period'
         db.add_column('teleforma_document_simple', 'period',
                       self.gf('telemeta.models.core.ForeignKey')(related_name='document_simple', on_delete=models.SET_NULL, default=None, to=orm['teleforma.Period'], blank=True, null=True),
+                      keep_default=False)
+
+        # Adding field 'Conference.department'
+        db.add_column('teleforma_conference', 'department',
+                      self.gf('telemeta.models.core.ForeignKey')(related_name='conference', on_delete=models.SET_NULL, default=None, to=orm['teleforma.Department'], blank=True, null=True),
                       keep_default=False)
 
         # Adding field 'Conference.period'
@@ -29,14 +111,62 @@ class Migration(SchemaMigration):
                       keep_default=False)
 
     def backwards(self, orm):
+        # Deleting model 'SeminarType'
+        db.delete_table('teleforma_seminar_type')
+
+        # Deleting field 'Answer.date_submitted'
+        db.delete_column('teleforma_answer', 'date_submitted')
+
         # Deleting field 'Media.period'
         db.delete_column('teleforma_media', 'period_id')
+
+        # Removing M2M table for field types on 'Course'
+        db.delete_table('teleforma_course_types')
 
         # Deleting field 'Document.period'
         db.delete_column('teleforma_document', 'period_id')
 
+        # Deleting field 'Seminar.type'
+        db.delete_column('teleforma_seminar', 'type_id')
+
+        # Deleting field 'Seminar.sub_title'
+        db.delete_column('teleforma_seminar', 'sub_title')
+
+        # Deleting field 'Seminar.description'
+        db.delete_column('teleforma_seminar', 'description')
+
+        # Deleting field 'Seminar.level'
+        db.delete_column('teleforma_seminar', 'level')
+
+        # Deleting field 'Seminar.date_begin'
+        db.delete_column('teleforma_seminar', 'date_begin')
+
+        # Deleting field 'Seminar.date_end'
+        db.delete_column('teleforma_seminar', 'date_end')
+
+        # Deleting field 'Seminar.media_preview'
+        db.delete_column('teleforma_seminar', 'media_preview_id')
+
+        # Removing M2M table for field professor on 'Seminar'
+        db.delete_table('teleforma_seminar_professor')
+
+
+        # Changing field 'Seminar.date_modified'
+        db.alter_column('teleforma_seminar', 'date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, default=datetime.datetime(2012, 11, 12, 0, 0)))
+
+        # Changing field 'Seminar.rank'
+        db.alter_column('teleforma_seminar', 'rank', self.gf('django.db.models.fields.IntegerField')(default=1))
+
+        # Changing field 'Seminar.date_added'
+        db.alter_column('teleforma_seminar', 'date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, default=datetime.datetime(2012, 11, 12, 0, 0)))
+        # Deleting field 'Question.description'
+        db.delete_column('teleforma_question', 'description')
+
         # Deleting field 'DocumentSimple.period'
         db.delete_column('teleforma_document_simple', 'period_id')
+
+        # Deleting field 'Conference.department'
+        db.delete_column('teleforma_conference', 'department_id')
 
         # Deleting field 'Conference.period'
         db.delete_column('teleforma_conference', 'period_id')
@@ -84,7 +214,7 @@ class Migration(SchemaMigration):
             'content': ('django.db.models.fields.TextField', [], {}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
-            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2012, 11, 2, 0, 0)'}),
+            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2012, 11, 12, 0, 0)'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'markup': ('django.db.models.fields.CharField', [], {'default': "'m'", 'max_length': '1'}),
             'modified': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
@@ -113,10 +243,11 @@ class Migration(SchemaMigration):
         'teleforma.answer': {
             'Meta': {'object_name': 'Answer'},
             'answer': ('django.db.models.fields.TextField', [], {}),
+            'date_submitted': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'question': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'answer'", 'to': "orm['teleforma.Question']"}),
+            'question': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'answer'", 'to': "orm['teleforma.Question']"}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'answer'", 'to': "orm['auth.User']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'answer'", 'to': "orm['auth.User']"}),
             'validated': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         'teleforma.conference': {
@@ -126,6 +257,7 @@ class Migration(SchemaMigration):
             'course_type': ('telemeta.models.core.ForeignKey', [], {'related_name': "'conference'", 'to': "orm['teleforma.CourseType']"}),
             'date_begin': ('telemeta.models.core.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'date_end': ('telemeta.models.core.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'department': ('telemeta.models.core.ForeignKey', [], {'related_name': "'conference'", 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': "orm['teleforma.Department']", 'blank': 'True', 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'period': ('telemeta.models.core.ForeignKey', [], {'related_name': "'conference'", 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': "orm['teleforma.Period']", 'blank': 'True', 'null': 'True'}),
             'professor': ('telemeta.models.core.ForeignKey', [], {'related_name': "'conference'", 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': "orm['teleforma.Professor']", 'blank': 'True', 'null': 'True'}),
@@ -145,7 +277,8 @@ class Migration(SchemaMigration):
             'number': ('telemeta.models.core.IntegerField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'obligation': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
             'synthesis_note': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
-            'title': ('telemeta.models.core.CharField', [], {'default': "''", 'max_length': '255', 'blank': 'True'})
+            'title': ('telemeta.models.core.CharField', [], {'default': "''", 'max_length': '255', 'blank': 'True'}),
+            'types': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'course'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.CourseType']"})
         },
         'teleforma.coursetype': {
             'Meta': {'object_name': 'CourseType', 'db_table': "'teleforma_course_type'"},
@@ -272,6 +405,7 @@ class Migration(SchemaMigration):
         },
         'teleforma.question': {
             'Meta': {'object_name': 'Question'},
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'min_nchar': ('django.db.models.fields.IntegerField', [], {}),
             'question': ('django.db.models.fields.TextField', [], {}),
@@ -292,20 +426,33 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Seminar'},
             'concerned': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'blank': 'True'}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'seminar'", 'to': "orm['teleforma.Course']"}),
-            'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'date_begin': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'date_end': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'blank': 'True'}),
             'doc_1': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar_doc1'", 'null': 'True', 'to': "orm['teleforma.DocumentSimple']"}),
             'doc_2': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar_doc2'", 'null': 'True', 'to': "orm['teleforma.DocumentSimple']"}),
             'doc_correct': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar_doccorrect'", 'null': 'True', 'to': "orm['teleforma.DocumentSimple']"}),
             'duration': ('telemeta.models.core.DurationField', [], {'default': "'0'", 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'keywords': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'blank': 'True'}),
-            'media': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar'", 'null': 'True', 'to': "orm['teleforma.Media']"}),
+            'level': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'media': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar_media'", 'null': 'True', 'to': "orm['teleforma.Media']"}),
+            'media_preview': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar_media_preview'", 'null': 'True', 'to': "orm['teleforma.Media']"}),
             'price': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'rank': ('django.db.models.fields.IntegerField', [], {}),
+            'professor': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'seminar'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.Professor']"}),
+            'rank': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '2', 'blank': 'True'}),
+            'sub_title': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'blank': 'True'}),
             'suscribers': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'seminar'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['auth.User']"}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'type': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar'", 'null': 'True', 'to': "orm['teleforma.SeminarType']"})
+        },
+        'teleforma.seminartype': {
+            'Meta': {'object_name': 'SeminarType', 'db_table': "'teleforma_seminar_type'"},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         'teleforma.streamingserver': {
             'Meta': {'object_name': 'StreamingServer', 'db_table': "'teleforma_streaming_server'"},
@@ -334,17 +481,17 @@ class Migration(SchemaMigration):
         },
         'teleforma.testimonial': {
             'Meta': {'object_name': 'Testimonial'},
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "u'testimonial'", 'null': 'True', 'to': "orm['teleforma.DocumentSimple']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'testimonial'", 'null': 'True', 'to': "orm['teleforma.DocumentSimple']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'seminar': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['teleforma.Seminar']"}),
-            'template': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'testimonial'", 'to': "orm['teleforma.TestimonialTemplate']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'testimonial'", 'to': "orm['auth.User']"})
+            'seminar': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'testimonial'", 'to': "orm['teleforma.Seminar']"}),
+            'template': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'testimonial'", 'to': "orm['teleforma.TestimonialTemplate']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'testimonial'", 'to': "orm['auth.User']"})
         },
         'teleforma.testimonialtemplate': {
             'Meta': {'object_name': 'TestimonialTemplate', 'db_table': "'teleforma_testimonial_template'"},
             'comments': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'testimonial_template'", 'to': "orm['teleforma.DocumentSimple']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'testimonial_template'", 'to': "orm['teleforma.DocumentSimple']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'organization': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'testimonial_template'", 'to': "orm['teleforma.Organization']"})
         },
