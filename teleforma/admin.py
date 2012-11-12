@@ -48,6 +48,9 @@ class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
 
+class DocumentSimpleAdmin(admin.ModelAdmin):
+    exclude = ['readers']
+
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id']
@@ -63,6 +66,7 @@ class SeminarQuestionInline(admin.StackedInline):
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
     exclude = ['suscribers']
+    filter_horizontal = ['professor']
 
 
 admin.site.unregister(User)
@@ -73,7 +77,7 @@ admin.site.register(Course, CourseAdmin)
 admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(IEJ)
 admin.site.register(Document, DocumentAdmin)
-admin.site.register(DocumentSimple)
+admin.site.register(DocumentSimple, DocumentSimpleAdmin)
 admin.site.register(DocumentType)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(Room)

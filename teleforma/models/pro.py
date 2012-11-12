@@ -40,9 +40,31 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 
 
+class MediaPro(MediaBase):
+    "Pro media resource handling multiple (audio and video) media types"
+
+    element_type    = 'media_pro'
+
+    readers         = ManyToManyField(User, related_name="media_pro", 
+                                        verbose_name=_('readers'),
+                                        blank=True, null=True)
+    audio_items     = ManyToManyField(MediaItem, related_name="media_pro_audio",
+                                        verbose_name=_('audio items'),
+                                        blank=True, null=True)
+    video_items     = ManyToManyField(MediaItem, related_name="media_pro_video", 
+                                        verbose_name=_('video items'),
+                                        blank=True, null=True)
+    
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'pro_media'
+
+
 class SeminarType(Model):
 
     name            = models.CharField(_('name'), max_length=255, blank=True)
+
+    def __unicode__(self):
+        return self.name
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar_type'
@@ -73,10 +95,10 @@ class Seminar(Model):
     doc_1           = models.ForeignKey(DocumentSimple, related_name="seminar_doc1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
-    media           = models.ForeignKey(Media, related_name="seminar_media",
+    media           = models.ForeignKey(MediaPro, related_name="seminar_media",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    media_preview   = models.ForeignKey(Media, related_name="seminar_media_preview",
+    media_preview   = models.ForeignKey(MediaPro, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
     doc_2           = models.ForeignKey(DocumentSimple, related_name="seminar_doc2",
