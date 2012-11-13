@@ -55,7 +55,7 @@ class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id']
 
-class MediaProAdmin(admin.ModelAdmin):
+class MediaPackageAdmin(admin.ModelAdmin):
     exclude = ['readers', 'mime_type']
     search_fields = ['id']
 
@@ -83,7 +83,7 @@ admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentSimple, DocumentSimpleAdmin)
 admin.site.register(DocumentType)
 admin.site.register(Media, MediaAdmin)
-admin.site.register(MediaPro, MediaProAdmin)
+admin.site.register(MediaPackage, MediaPackageAdmin)
 admin.site.register(Room)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(Training, TrainingAdmin)
