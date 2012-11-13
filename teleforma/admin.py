@@ -55,10 +55,13 @@ class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id']
 
+class MediaProAdmin(admin.ModelAdmin):
+    exclude = ['readers', 'mime_type']
+    search_fields = ['id']
+
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['public_id', 'id']
-
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
@@ -80,6 +83,7 @@ admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentSimple, DocumentSimpleAdmin)
 admin.site.register(DocumentType)
 admin.site.register(Media, MediaAdmin)
+admin.site.register(MediaPro, MediaProAdmin)
 admin.site.register(Room)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(Training, TrainingAdmin)

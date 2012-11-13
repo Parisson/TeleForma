@@ -40,23 +40,23 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 
 
-class MediaPro(MediaBase):
-    "Pro media resource handling multiple (audio and video) media types"
+class MediaPackage(MediaBase):
+    "Media resource package handling multiple (audio and video) media types"
 
     element_type    = 'media_pro'
 
-    readers         = ManyToManyField(User, related_name="media_pro", 
+    readers         = ManyToManyField(User, related_name="media_package", 
                                         verbose_name=_('readers'),
                                         blank=True, null=True)
-    audio_items     = ManyToManyField(MediaItem, related_name="media_pro_audio",
+    audio_items     = ManyToManyField(MediaItem, related_name="media_package_audio",
                                         verbose_name=_('audio items'),
                                         blank=True, null=True)
-    video_items     = ManyToManyField(MediaItem, related_name="media_pro_video", 
+    video_items     = ManyToManyField(MediaItem, related_name="media_package_video", 
                                         verbose_name=_('video items'),
                                         blank=True, null=True)
     
     class Meta(MetaCore):
-        db_table = app_label + '_' + 'pro_media'
+        db_table = app_label + '_' + 'media_package'
 
 
 class SeminarType(Model):
@@ -95,10 +95,10 @@ class Seminar(Model):
     doc_1           = models.ForeignKey(DocumentSimple, related_name="seminar_doc1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
-    media           = models.ForeignKey(MediaPro, related_name="seminar_media",
+    media           = models.ForeignKey(MediaPackage, related_name="seminar_media",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    media_preview   = models.ForeignKey(MediaPro, related_name="seminar_media_preview",
+    media_preview   = models.ForeignKey(MediaPackage, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
     doc_2           = models.ForeignKey(DocumentSimple, related_name="seminar_doc2",
@@ -125,7 +125,7 @@ class Seminar(Model):
 
 class Question(Model):
 
-    seminar     = models.ForeignKey(Seminar, verbose_name=_('seminar'))
+    seminar     = models.ForeignKey(Seminar, related_name="question", verbose_name=_('seminar'))
     title       = models.CharField(_('title'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=1024, blank=True)
     question    = models.TextField(_('question'))
@@ -200,4 +200,22 @@ class Evaluation(Model):
     seminar     = models.ForeignKey(Seminar, related_name="evaluation", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="evaluation", verbose_name=_('user'))
     #TODO
+
+
+class Scenario(Model):
+
+    def __init__(self, seminar):
+        self.seminar = seminar
+        self.steps = []
+        self.steps.append(self.seminar.doc_1)
+        self.steps.append(self.seminar.media)
+        self.steps.append(self.seminar.doc_2)
+        for question in self.seminar.question.all():
+            self.steps.append(question)
+        self.steps.append(self.seminar.doc_correct)
+        self.steps.append(self.seminar.evaluation.all()[0])
+        for testimonial in self.seminar.testimonial.all():
+            self.steps.append(testimonial)
+        
+        
 
