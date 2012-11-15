@@ -68,7 +68,6 @@ class SeminarQuestionInline(admin.StackedInline):
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    exclude = ['suscribers']
     filter_horizontal = ['professor']
 
 

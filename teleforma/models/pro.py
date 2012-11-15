@@ -43,18 +43,26 @@ from teleforma.models.core import *
 class MediaPackage(MediaBase):
     "Media resource package handling multiple (audio and video) media types"
 
-    element_type    = 'media_pro'
+    element_type    = 'media_package'
 
-    readers         = ManyToManyField(User, related_name="media_package", 
+    readers         = models.ManyToManyField(User, related_name="media_package", 
                                         verbose_name=_('readers'),
                                         blank=True, null=True)
-    audio_items     = ManyToManyField(MediaItem, related_name="media_package_audio",
+    audio_items     = models.ManyToManyField(MediaItem, related_name="media_package_audio",
                                         verbose_name=_('audio items'),
                                         blank=True, null=True)
-    video_items     = ManyToManyField(MediaItem, related_name="media_package_video", 
+    video_items     = models.ManyToManyField(MediaItem, related_name="media_package_video", 
                                         verbose_name=_('video items'),
                                         blank=True, null=True)
     
+    def __str__(self):
+        if self.title:
+            return self.title.encode('utf8')
+        elif self.audio_items:
+            return self.audio_items.all()[0].title.encode('utf8')
+        elif self.video_items:
+            return self.video_items.all()[0].title.encode('utf8')
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media_package'
 
@@ -83,7 +91,8 @@ class Seminar(Model):
     level           = models.CharField(_('level'), max_length=255, blank=True)
     price           = models.FloatField(_('price'), blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
-    ##TODO: plan detail 
+    magistral       = models.BooleanField(_('magistral'))
+    ##TODO: plan detail ?
 
     keywords        = models.CharField(_('keywords'), max_length=1024, blank=True)
     duration        = DurationField(_('approximative duration'))
@@ -108,11 +117,8 @@ class Seminar(Model):
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
 
-    suscribers      = models.ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
-                                        blank=True, null=True)
-
-    date_added      = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
-    date_modified   = models.DateTimeField(_('date modified'), auto_now=True, null=True)
+    date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
+    date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2, blank=True)
 
     def __unicode__(self):
@@ -202,7 +208,7 @@ class Evaluation(Model):
     #TODO
 
 
-class Scenario(Model):
+class ScenarioPro(Model):
 
     def __init__(self, seminar):
         self.seminar = seminar
@@ -217,5 +223,24 @@ class Scenario(Model):
         for testimonial in self.seminar.testimonial.all():
             self.steps.append(testimonial)
         
-        
+
+class Auditor(Model):
+
+    user            = models.ForeignKey(User, related_name='auditor', verbose_name=_('user'), unique=True)
+    platform_only   = models.BooleanField(_('platform only'))
+    seminars        = models.ManyToManyField('Seminar', related_name="auditor",
+                                        verbose_name=_('seminars'),
+                                        blank=True, null=True)
+    
+    def __unicode__(self):
+        try:
+            return self.user.last_name + ' ' + self.user.first_name
+        except:
+            return ''
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'auditor'
+        verbose_name = _('Auditor')
+        verbose_name_plural = _('Auditor')
+        ordering = ['user__last_name']
 

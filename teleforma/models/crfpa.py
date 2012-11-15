@@ -136,7 +136,7 @@ class Student(Model):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
-        verbose_name = _('CRFPA student')
+        verbose_name = _('student')
         ordering = ['user__last_name']
 
 

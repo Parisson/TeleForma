@@ -37,6 +37,103 @@
 from teleforma.views.core import *
 
 
+def format_pro_seminars(seminars, seminar=None, queryset=None, types=None, admin=False):
+    if queryset:
+        for s in queryset:
+            if s and (c.code != 'X' or admin == True):
+                seminars.append({'seminar': s,
+                'date': s.date_modified, 'number': s.rank})
+    elif seminar:
+        if seminar.code != 'X' or admin == True:
+            seminars.append({'seminar': seminar,
+            'date': seminar.date_modified, 'number': seminar.rank})
+
+    return seminars
+
+
+def get_pro_seminars(user, date_order=False, num_order=False):
+    seminars = []
+
+    if not user.is_authenticated():
+        return None
+
+    professor = user.professor.all()
+    student = user.pro_student.all()
+
+    if professor:
+        professor = user.professor.get()
+        seminars = format_pro_seminars(seminars, queryset=professor.seminar.all())
+
+    elif student:
+        student = user.pro_student.get()
+        s_seminars = student.seminars.all()
+
+        for course in s_seminars:
+            seminars = format_pro_seminars(seminars, seminar=seminar)
+
+        magistrals = Seminar.objects.filter(magistral=True)
+        if magistrals:
+            seminars = format_pro_seminars(seminars,
+                            queryset=magistrals)
+
+    elif user.is_staff or user.is_superuser:
+        seminars = format_pro_seminars(seminars, queryset=Seminar.objects.all(), admin=True)
+    else:
+        seminars = None
+
+    if date_order:
+        seminars = sorted(seminars, key=lambda k: k['date'], reverse=True)
+    if num_order:
+        seminars = sorted(seminars, key=lambda k: k['number'])
+
+    return seminars
+
+
+
+def seminar_progress(user, seminar):    
+    """return the user progress of a seminar in percent"""
+
+    progress = 0
+    total = 0
+    
+    docs = [seminar.doc_1, seminar.doc_2, seminar.media, seminar.doc_correct]
+    for doc in docs:
+        total += doc.weight
+        if user in doc.readers:
+            progress += doc.weight
+    
+    questions = Question.objects.filter(seminar=seminar, status=3)
+    for question in questions:
+        total += question.weight
+        answer = Answer.objects.filter(question=question, validated=True, user=user)
+        if answer:
+            progress += question.weight
+
+    return int(progress*100/total)
+
+
+class SeminarsView(ListView):
+
+    model = Seminar
+    template_name='teleforma/seminars.html'
+
+    def get_queryset(self):
+        self.all_courses = get_courses(self.request.user, date_order=True)
+        return self.all_courses[:10]
+
+    def get_context_data(self, **kwargs):
+        context = super(SeminarView, self).get_context_data(**kwargs)
+        context['notes'] = Note.objects.filter(author=self.request.user)
+        context['room'] = get_room(name='site')
+        context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
+        context['periods'] = get_periods(self.request.user)
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SeminarView, self).dispatch(*args, **kwargs)
+
+
 class SeminarView(DetailView):
 
     model = Seminar
@@ -53,27 +150,6 @@ class SeminarView(DetailView):
         context['seminars'] = Seminar.objects.filter(suscribers__in=user)
         context['progress'] = self.progress(user, seminar)
         return context
-
-    def progress(user, seminar):    
-        """return the user progress of a seminar in percent"""
-
-        progress = 0
-        total = 0
-        
-        docs = [seminar.doc_1, seminar.doc_2, seminar.media, seminar.doc_correct]
-        for doc in docs:
-            total += doc.weight
-            if user in doc.readers:
-                progress += doc.weight
-        
-        questions = Question.objects.filter(seminar=seminar, status=3)
-        for question in questions:
-            total += question.weight
-            answer = Answer.objects.filter(question=question, validated=True, user=user)
-            if answer:
-                progress += question.weight
-
-        return int(progress*100/total)
 
 
 class AnswerView(FormView):
