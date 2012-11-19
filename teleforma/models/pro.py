@@ -208,7 +208,7 @@ class Evaluation(Model):
     #TODO
 
 
-class ScenarioPro(Model):
+class SeminarScenario1(Model):
 
     def __init__(self, seminar):
         self.seminar = seminar

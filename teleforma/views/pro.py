@@ -36,6 +36,8 @@
 
 from teleforma.views.core import *
 
+scenario = SeminarScenario1
+
 
 def format_pro_seminars(seminars, seminar=None, queryset=None, types=None, admin=False):
     if queryset:
