@@ -104,10 +104,10 @@ class Seminar(Model):
     doc_1           = models.ForeignKey(DocumentSimple, related_name="seminar_doc1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
-    media           = models.ForeignKey(MediaPackage, related_name="seminar_media",
+    media           = models.ManyToManyField(MediaPackage, related_name="seminar_media",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    media_preview   = models.ForeignKey(MediaPackage, related_name="seminar_media_preview",
+    media_preview   = models.ManyToManyField(MediaPackage, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
     doc_2           = models.ForeignKey(DocumentSimple, related_name="seminar_doc2",
@@ -146,6 +146,7 @@ class Question(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'question'
         verbose_name = _('Question')
+        ordering = ['rank']
 
 
 class Answer(Model):

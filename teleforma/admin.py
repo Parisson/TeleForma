@@ -68,7 +68,7 @@ class SeminarQuestionInline(admin.StackedInline):
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    filter_horizontal = ['professor']
+    filter_horizontal = ['professor', 'media', 'media_preview']
 
 
 admin.site.unregister(User)
