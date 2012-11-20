@@ -228,11 +228,20 @@ class SeminarScenario1(Model):
 class Auditor(Model):
 
     user            = models.ForeignKey(User, related_name='auditor', verbose_name=_('user'), unique=True)
-    platform_only   = models.BooleanField(_('platform only'))
     seminars        = models.ManyToManyField('Seminar', related_name="auditor",
                                         verbose_name=_('seminars'),
                                         blank=True, null=True)
-    
+
+    platform_only   = BooleanField(_('platform only'))
+    address         = TextField(_('Address'), blank=True)
+    postal_code     = CharField(_('Postal code'), max_length=255, blank=True)
+    city            = CharField(_('City'), max_length=255, blank=True)
+    country         = CharField(_('Country'), max_length=255, blank=True)
+    language        = CharField(_('Language'), max_length=255, blank=True)
+    telephone       = CharField(_('Telephone'), max_length=255, blank=True)
+    expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
+    init_password   = BooleanField(_('Password initialized'))
+
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -242,6 +251,6 @@ class Auditor(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'auditor'
         verbose_name = _('Auditor')
-        verbose_name_plural = _('Auditor')
         ordering = ['user__last_name']
+
 

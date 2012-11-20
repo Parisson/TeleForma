@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 
+class ProfileInline(admin.StackedInline):
+    model = Profile
+
 class CRFPAStudentProfileInline(admin.StackedInline):
     model = Student
     filter_horizontal = ['period']
@@ -13,6 +16,10 @@ class CRFPAStudentProfileInline(admin.StackedInline):
 class AEStudentProfileInline(admin.StackedInline):
     model = AEStudent
     filter_horizontal = ['period', 'courses']
+
+class AuditorProfileInline(admin.StackedInline):
+    model = Auditor
+    filter_horizontal = ['seminars']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
@@ -26,12 +33,9 @@ class ProfessorAdmin(admin.ModelAdmin):
     model = Professor
     filter_horizontal = ['courses']
 
-class ProfileInline(admin.StackedInline):
-    model = Profile
-
 class UserProfileAdmin(UserAdmin):
-    inlines = [AEStudentProfileInline,
-                 ProfessorProfileInline, ProfileInline]
+    inlines = [ProfessorProfileInline, AuditorProfileInline]
+
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
@@ -71,26 +75,33 @@ class SeminarAdmin(admin.ModelAdmin):
     filter_horizontal = ['professor', 'media', 'media_preview']
 
 
+
 admin.site.unregister(User)
+admin.site.register(User, UserProfileAdmin)
+
 admin.site.register(Organization)
 admin.site.register(Department)
 admin.site.register(Period)
+admin.site.register(Training, TrainingAdmin)
+
 admin.site.register(Course, CourseAdmin)
+admin.site.register(CourseType)
 admin.site.register(Conference, ConferenceAdmin)
 admin.site.register(IEJ)
+
+admin.site.register(Seminar, SeminarAdmin)
+admin.site.register(Question)
+admin.site.register(Testimonial)
+admin.site.register(TestimonialTemplate)
+admin.site.register(SeminarType)
+
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentSimple, DocumentSimpleAdmin)
 admin.site.register(DocumentType)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(MediaPackage, MediaPackageAdmin)
 admin.site.register(Room)
-admin.site.register(User, UserProfileAdmin)
-admin.site.register(Training, TrainingAdmin)
-admin.site.register(CourseType)
+
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
-admin.site.register(Seminar, SeminarAdmin)
-admin.site.register(Question)
-admin.site.register(Testimonial)
-admin.site.register(TestimonialTemplate)
-admin.site.register(SeminarType)
+
