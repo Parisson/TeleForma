@@ -193,7 +193,7 @@ class Testimonial(Model):
     seminar     = models.ForeignKey(Seminar, related_name="testimonial", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
     template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial", 
-                                    verbose_name=_('testimonial_template'))
+                                    verbose_name=_('template'))
     document    = models.ForeignKey(DocumentSimple, related_name="testimonial", 
                                         blank=True, null=True)
 
