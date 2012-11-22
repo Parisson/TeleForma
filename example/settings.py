@@ -146,7 +146,8 @@ INSTALLED_APPS = (
     'jqchat',
 #    'follow',
      'googletools',
-     'telecaster',
+#     'telecaster',
+     'tinymce',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
