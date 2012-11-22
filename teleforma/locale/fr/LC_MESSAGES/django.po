@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-20 18:25+0100\n"
+"POT-Creation-Date: 2012-11-22 18:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: models/ae.py:46 models/core.py:177 models/crfpa.py:108 models/crfpa.py:146
-#: models/pro.py:154 models/pro.py:194 models/pro.py:208 models/pro.py:230
+#: models/pro.py:155 models/pro.py:195 models/pro.py:209 models/pro.py:231
 msgid "user"
 msgstr "utilisateur"
 
@@ -27,7 +27,7 @@ msgstr "utilisateur"
 msgid "period"
 msgstr "période"
 
-#: models/ae.py:49 models/crfpa.py:114 models/pro.py:235
+#: models/ae.py:49 models/crfpa.py:114 models/pro.py:236
 msgid "platform only"
 msgstr "plateforme seulement"
 
@@ -57,18 +57,18 @@ msgstr "Publié"
 
 #: models/core.py:88 models/core.py:100 models/core.py:120 models/core.py:132
 #: models/core.py:196 models/core.py:392 models/crfpa.py:47 models/crfpa.py:63
-#: models/pro.py:72
+#: models/pro.py:73
 msgid "name"
 msgstr "nom"
 
 #: models/core.py:89 models/core.py:101 models/core.py:121 models/core.py:133
 #: models/core.py:148 models/core.py:197 models/core.py:307 models/core.py:373
-#: models/core.py:393 models/crfpa.py:48 models/pro.py:89 models/pro.py:136
-#: models/pro.py:178
+#: models/core.py:393 models/crfpa.py:48 models/pro.py:90 models/pro.py:137
+#: models/pro.py:179
 msgid "description"
 msgstr "description"
 
-#: models/core.py:96 models/core.py:103 models/core.py:195 models/pro.py:177
+#: models/core.py:96 models/core.py:103 models/core.py:195 models/pro.py:178
 msgid "organization"
 msgstr "organisation"
 
@@ -84,7 +84,7 @@ msgstr "département"
 msgid "course type"
 msgstr "type de matière"
 
-#: models/core.py:147 models/core.py:372 models/pro.py:87 models/pro.py:135
+#: models/core.py:147 models/core.py:372 models/pro.py:88 models/pro.py:136
 msgid "title"
 msgstr "titre"
 
@@ -92,7 +92,7 @@ msgstr "titre"
 msgid "code"
 msgstr "cote"
 
-#: models/core.py:150 models/core.py:376 models/pro.py:121
+#: models/core.py:150 models/core.py:376 models/pro.py:122
 msgid "date modified"
 msgstr "date de modification"
 
@@ -108,7 +108,7 @@ msgstr "note de synthèse"
 msgid "obligations"
 msgstr "obligations"
 
-#: models/core.py:154 models/crfpa.py:91 models/pro.py:94
+#: models/core.py:154 models/crfpa.py:91 models/pro.py:95
 msgid "magistral"
 msgstr "magistral"
 
@@ -117,11 +117,11 @@ msgid "types"
 msgstr "types"
 
 #: models/core.py:170 models/core.py:214 models/core.py:409 models/core.py:492
-#: models/pro.py:86
+#: models/pro.py:87
 msgid "course"
 msgstr "matière"
 
-#: models/core.py:190 models/core.py:216 models/pro.py:102
+#: models/core.py:190 models/core.py:216 models/pro.py:103
 msgid "professor"
 msgstr "professeur"
 
@@ -142,16 +142,16 @@ msgstr "session"
 msgid "comment"
 msgstr "commentaire"
 
-#: models/core.py:223 models/pro.py:99
+#: models/core.py:223 models/pro.py:100
 msgid "begin date"
 msgstr "date de début"
 
-#: models/core.py:224 models/pro.py:100
+#: models/core.py:224 models/pro.py:101
 msgid "end date"
 msgstr "date de fin"
 
 #: models/core.py:225 models/core.py:420 models/core.py:456 models/core.py:501
-#: models/pro.py:49
+#: models/pro.py:50
 msgid "readers"
 msgstr ""
 
@@ -167,7 +167,7 @@ msgstr "hôte"
 msgid "port"
 msgstr "port"
 
-#: models/core.py:306 models/core.py:416 models/core.py:500 models/pro.py:84
+#: models/core.py:306 models/core.py:416 models/core.py:500 models/pro.py:85
 msgid "type"
 msgstr "type"
 
@@ -199,7 +199,7 @@ msgstr "stream en direct"
 msgid "credits"
 msgstr "crédits"
 
-#: models/core.py:375 models/pro.py:120
+#: models/core.py:375 models/pro.py:121
 msgid "date added"
 msgstr "date d'ajout"
 
@@ -211,9 +211,9 @@ msgstr "publié"
 msgid "mime type"
 msgstr "Type mime"
 
-#: models/core.py:380 models/pro.py:139
+#: models/core.py:380 models/pro.py:140
 msgid "weight"
-msgstr ""
+msgstr "poids"
 
 #: models/core.py:401
 msgid "document type"
@@ -274,38 +274,38 @@ msgstr "iej"
 msgid "student"
 msgstr "étudiant"
 
-#: models/crfpa.py:147 models/pro.py:236
+#: models/crfpa.py:147 models/pro.py:237
 #: templates/telemeta/profile_detail.html:82
 msgid "Address"
 msgstr "Adresse"
 
-#: models/crfpa.py:148 models/pro.py:237
+#: models/crfpa.py:148 models/pro.py:238
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models/crfpa.py:149 models/pro.py:238
+#: models/crfpa.py:149 models/pro.py:239
 msgid "City"
 msgstr "Ville"
 
-#: models/crfpa.py:150 models/pro.py:239
+#: models/crfpa.py:150 models/pro.py:240
 msgid "Country"
 msgstr "Pays"
 
-#: models/crfpa.py:151 models/pro.py:240
+#: models/crfpa.py:151 models/pro.py:241
 #: templates/telemeta/profile_detail.html:91
 msgid "Language"
 msgstr "Langue"
 
-#: models/crfpa.py:152 models/pro.py:241
+#: models/crfpa.py:152 models/pro.py:242
 #: templates/telemeta/profile_detail.html:83
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models/crfpa.py:153 models/pro.py:242
+#: models/crfpa.py:153 models/pro.py:243
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models/crfpa.py:154 models/pro.py:243
+#: models/crfpa.py:154 models/pro.py:244
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
@@ -313,127 +313,131 @@ msgstr "Mot de passe initialisé"
 msgid "profile"
 msgstr "profil"
 
-#: models/pro.py:52
+#: models/pro.py:53
 msgid "audio items"
 msgstr ""
 
-#: models/pro.py:55
+#: models/pro.py:56
 msgid "video items"
 msgstr ""
 
-#: models/pro.py:79
+#: models/pro.py:80
 msgid "Seminar type"
 msgstr "Type de séminaire"
 
-#: models/pro.py:88
+#: models/pro.py:89
 msgid "sub title"
 msgstr "sous-titre"
 
-#: models/pro.py:90
-msgid "public concerned"
-msgstr ""
-
 #: models/pro.py:91
-msgid "level"
-msgstr ""
+msgid "public concerned"
+msgstr "public concerné"
 
 #: models/pro.py:92
+msgid "level"
+msgstr "niveau"
+
+#: models/pro.py:93
 msgid "price"
 msgstr "prix"
 
-#: models/pro.py:93 models/pro.py:138
+#: models/pro.py:94 models/pro.py:139
 msgid "rank"
-msgstr ""
+msgstr "rang"
 
-#: models/pro.py:97
+#: models/pro.py:96
+msgid "index"
+msgstr "index"
+
+#: models/pro.py:98
 msgid "keywords"
 msgstr "mots clés"
 
-#: models/pro.py:98
+#: models/pro.py:99
 msgid "approximative duration"
 msgstr "durée approximative"
 
-#: models/pro.py:105
+#: models/pro.py:106
 msgid "document 1"
 msgstr "document 1"
 
-#: models/pro.py:108
+#: models/pro.py:109
 msgid "media"
 msgstr "médias"
 
-#: models/pro.py:111
+#: models/pro.py:112
 msgid "media_preview"
 msgstr ""
 
-#: models/pro.py:114
+#: models/pro.py:115
 msgid "document 2"
 msgstr "document 2"
 
-#: models/pro.py:117
+#: models/pro.py:118
 msgid "corrected document"
 msgstr "document corrigé"
 
-#: models/pro.py:122 models/pro.py:141 models/pro.py:157
+#: models/pro.py:123 models/pro.py:142 models/pro.py:158
 msgid "status"
 msgstr "status"
 
-#: models/pro.py:129
+#: models/pro.py:130
 msgid "Seminar"
 msgstr "Sémimaire"
 
-#: models/pro.py:134 models/pro.py:193 models/pro.py:207
+#: models/pro.py:135 models/pro.py:194 models/pro.py:208
 msgid "seminar"
 msgstr "séminaire"
 
-#: models/pro.py:137 models/pro.py:155
+#: models/pro.py:138 models/pro.py:156
 msgid "question"
 msgstr "question"
 
-#: models/pro.py:140
+#: models/pro.py:141
 msgid "minimum numbers of characters"
 msgstr "nombre de caractère minimum"
 
-#: models/pro.py:148
+#: models/pro.py:149
 msgid "Question"
 msgstr "Questions"
 
-#: models/pro.py:156
+#: models/pro.py:157
 msgid "answer"
 msgstr "réponse"
 
-#: models/pro.py:158
+#: models/pro.py:159
 msgid "validated"
 msgstr "validé"
 
-#: models/pro.py:159
+#: models/pro.py:160
 msgid "date submitted"
 msgstr "date de soumission"
 
-#: models/pro.py:171
+#: models/pro.py:172
 msgid "Answer"
 msgstr "Réponse"
 
-#: models/pro.py:179
+#: models/pro.py:180
 msgid "comments"
 msgstr "commentaires"
 
-#: models/pro.py:181 models/pro.py:196
+#: models/pro.py:182 models/pro.py:197
 msgid "template"
 msgstr "modèle"
 
-#: models/pro.py:188
+#: models/pro.py:189
 msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
-#: models/pro.py:202
+#: models/pro.py:203
 msgid "Testimonial"
 msgstr "Attestation"
 
-#: models/pro.py:232
+#: models/pro.py:233
 msgid "seminars"
 msgstr "séminaires"
 
-#: models/pro.py:253
+#: models/pro.py:254
 msgid "Auditor"
 msgstr "Auditeur"
 
