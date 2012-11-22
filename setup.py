@@ -21,6 +21,7 @@ setup(
         'django-extensions',
         'django-notes',
         'django-timezones',
+        'django-tinymce',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',

@@ -38,6 +38,7 @@ import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
+import tinymce.models
 
 
 class MediaPackage(MediaBase):
@@ -92,7 +93,7 @@ class Seminar(Model):
     price           = models.FloatField(_('price'), blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
     magistral       = models.BooleanField(_('magistral'))
-    ##TODO: plan detail ?
+    index           = tinymce.models.HTMLField(_('index'), blank=True)
 
     keywords        = models.CharField(_('keywords'), max_length=1024, blank=True)
     duration        = DurationField(_('approximative duration'))
