@@ -19,11 +19,13 @@ class Command(BaseCommand):
     def import_professors(self, data):
         professors = json.loads(data)
         for professor in professors:
-            user, c = User.objects.get_or_create(username=professor['username'],
-                                                 first_name=professor['first_name'],
-                                                 last_name=professor['last_name'],
-                                                 email=professor['email'])
-            if c:
+            user = User.objects.filter(username=professor['username'])
+            if not user:
+                user = User(username=professor['username'],
+                            first_name=professor['first_name'],
+                            last_name=professor['last_name'],
+                            email=professor['email'])
+                user.save()
                 p = Professor(user=user)
                 p.save()
                 for code in professor['courses']:
