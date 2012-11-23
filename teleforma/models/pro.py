@@ -209,6 +209,10 @@ class Evaluation(Model):
     user        = models.ForeignKey(User, related_name="evaluation", verbose_name=_('user'))
     #TODO
 
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'evaluation'
+        verbose_name = _('Evaluation')
+
 
 class SeminarScenario1(Model):
 
