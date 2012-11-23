@@ -76,7 +76,7 @@ STATUS_CHOICES = (
         (3, _('Public')),
     )
 
-WEIGHT_CHOICES = get_nint_choices(5)
+WEIGHT_CHOICES = get_nint_choices(6)
 
 
 class MetaCore:
@@ -450,8 +450,6 @@ class DocumentSimple(MediaBase):
 
     element_type = 'document_simple'
 
-    period          = ForeignKey('Period', related_name='document_simple', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
     readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
                                         blank=True, null=True)

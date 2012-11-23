@@ -102,7 +102,7 @@ class Seminar(Model):
     professor       = models.ManyToManyField('Professor', related_name='seminar', 
                                             verbose_name=_('professor'), blank=True, null=True)
 
-    doc_1           = models.ForeignKey(DocumentSimple, related_name="seminar_doc1", 
+    doc_1           = models.ManyToManyField(DocumentSimple, related_name="seminar_doc1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
     media           = models.ManyToManyField(MediaPackage, related_name="seminar_media",
@@ -111,10 +111,10 @@ class Seminar(Model):
     media_preview   = models.ManyToManyField(MediaPackage, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
-    doc_2           = models.ForeignKey(DocumentSimple, related_name="seminar_doc2",
+    doc_2           = models.ManyToManyField(DocumentSimple, related_name="seminar_doc2",
                                         verbose_name=_('document 2'),
                                         blank=True, null=True)
-    doc_correct     = models.ForeignKey(DocumentSimple, related_name="seminar_doccorrect",
+    doc_correct     = models.ManyToManyField(DocumentSimple, related_name="seminar_doccorrect",
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
 
@@ -135,8 +135,8 @@ class Question(Model):
     seminar     = models.ForeignKey(Seminar, related_name="question", verbose_name=_('seminar'))
     title       = models.CharField(_('title'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=1024, blank=True)
-    question    = models.TextField(_('question'))
-    rank        = models.IntegerField(_('rank'))
+    question    = tinymce.models.HTMLField(_('question'), blank=True)
+    rank        = models.IntegerField(_('rank'), blank=True)
     weight      = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
     min_nchar   = models.IntegerField(_('minimum numbers of characters'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
