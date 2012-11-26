@@ -55,6 +55,7 @@ class MediaPackage(MediaBase):
     video_items     = models.ManyToManyField(MediaItem, related_name="media_package_video", 
                                         verbose_name=_('video items'),
                                         blank=True, null=True)
+    rank            = models.IntegerField(_('rank'), blank=True, null=True)
     
     def __str__(self):
         if self.title:
@@ -197,6 +198,7 @@ class Testimonial(Model):
                                     verbose_name=_('template'))
     document    = models.ForeignKey(DocumentSimple, related_name="testimonial", 
                                         blank=True, null=True)
+    rank            = models.IntegerField(_('rank'), blank=True, null=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'
@@ -219,16 +221,19 @@ class SeminarScenario1(Model):
     def __init__(self, seminar):
         self.seminar = seminar
         self.steps = []
-        self.steps.append(self.seminar.doc_1)
-        self.steps.append(self.seminar.media)
-        self.steps.append(self.seminar.doc_2)
-        for question in self.seminar.question.all():
-            self.steps.append(question)
-        self.steps.append(self.seminar.doc_correct)
+
+        self.append(self.seminar.doc_1)
+        self.append(self.seminar.media)
+        self.append(self.seminar.doc_2)
+        self.append(self.seminar.question)
+        self.append(self.seminar.doc_correct)
         self.steps.append(self.seminar.evaluation.all()[0])
-        for testimonial in self.seminar.testimonial.all():
-            self.steps.append(testimonial)
+        self.append(self.seminar.testimonial)
         
+    def append(self, models):
+        for mod in models.all().order_by('rank'):
+            self.steps.append(mod)
+
 
 class Auditor(Model):
 
