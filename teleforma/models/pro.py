@@ -69,7 +69,7 @@ class MediaPackage(MediaBase):
         db_table = app_label + '_' + 'media_package'
 
 
-class SeminarType(Model):
+class SeminarType(models.Model):
 
     name            = models.CharField(_('name'), max_length=255, blank=True)
 
@@ -81,7 +81,7 @@ class SeminarType(Model):
         verbose_name = _('Seminar type')
 
 
-class Seminar(Model):
+class Seminar(models.Model):
 
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
@@ -131,8 +131,10 @@ class Seminar(Model):
         verbose_name = _('Seminar')
 
 
-class Question(Model):
+class Question(models.Model):
 
+    element_type = 'question'
+    
     seminar     = models.ForeignKey(Seminar, related_name="question", verbose_name=_('seminar'))
     title       = models.CharField(_('title'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=1024, blank=True)
@@ -151,7 +153,7 @@ class Question(Model):
         ordering = ['rank']
 
 
-class Answer(Model):
+class Answer(models.Model):
 
     user        = models.ForeignKey(User, related_name="answer", verbose_name=_('user'))
     question    = models.ForeignKey(Question, related_name="answer", verbose_name=_('question'))
@@ -173,7 +175,7 @@ class Answer(Model):
         verbose_name = _('Answer')
 
 
-class TestimonialTemplate(Model):
+class TestimonialTemplate(models.Model):
 
     organization = models.ForeignKey(Organization, related_name='testimonial_template',
                                  verbose_name=_('organization'))
@@ -190,7 +192,7 @@ class TestimonialTemplate(Model):
         verbose_name = _('Testimonial template')
 
 
-class Testimonial(Model):
+class Testimonial(models.Model):
 
     seminar     = models.ForeignKey(Seminar, related_name="testimonial", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
@@ -205,7 +207,7 @@ class Testimonial(Model):
         verbose_name = _('Testimonial')
 
 
-class Evaluation(Model):
+class Evaluation(models.Model):
 
     seminar     = models.ForeignKey(Seminar, related_name="evaluation", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="evaluation", verbose_name=_('user'))
@@ -235,7 +237,7 @@ class SeminarScenario1():
             self.steps.append(mod)
 
 
-class Auditor(Model):
+class Auditor(models.Model):
 
     user            = models.ForeignKey(User, related_name='auditor', verbose_name=_('user'), unique=True)
     seminars        = models.ManyToManyField('Seminar', related_name="auditor",
@@ -272,7 +274,8 @@ class SeminarRevision(models.Model):
     date        = models.DateTimeField(_('date modified'), auto_now=True)
     progress    = models.IntegerField(_('progress'), blank=True)
 
-    class Meta:
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Revision')
         verbose_name_plural = _('Revisions')
 

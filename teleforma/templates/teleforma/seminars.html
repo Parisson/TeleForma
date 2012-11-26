@@ -1,0 +1,103 @@
+{% extends "telemeta/base.html" %}
+{% load teleforma_tags %}
+{% load telemeta_utils %}
+{% load i18n %}
+
+
+{% block content %}
+
+<div id="module-set-left" style="width: 18%">
+
+{% block modules %}
+<div class="module">
+
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+<div style="background: white;">
+<ul>
+{% block courses %}
+{% for s in all_seminars %}
+   <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
+ {% endfor %}
+{% endblock courses %}
+</ul>
+</div>
+</div>
+
+{% block module-action %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
+<div class="module_action">
+<a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
+</div>
+{% endif %}
+{% endblock module-action %}
+
+{% block notes %}
+<!--<div class="module">
+<h3><img src="{{ STATIC_URL }}telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
+<div style="background: white;">
+<ul>
+{% for note in notes %}
+<li>{{ note.content }}</li>
+{% endfor %}
+</ul>
+</div>
+</div>
+<div class="module_action">
+<a href="#" class="component_icon button" id="action_violet">{% trans "New note" %}</a>
+</div>-->
+{% endblock notes %}
+
+</div>
+{% endblock modules %}
+
+
+{% block course %}
+<div class="desk_center">
+    {% for seminar in object_list %}
+      <div class="course">
+        <div class="course_title">
+         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }} - {{ type }}{% if seminar.description %} - {{ seminar.description }}{% endif %}</a>
+        </div>
+
+        {% for step in seminar.steps %}
+
+          {% if step.element_type == 'document_simple' %}
+           {% include "teleforma/inc/document_simple_list.html" %}
+          
+          {% elif step.element_type == 'media_package' %}
+           {% include "teleforma/inc/media_package_list.html" %
+
+          {% elif step.element_type == 'question' %}
+            {% include "teleforma/inc/question_list.html" %}
+         
+          {% endif %}
+        {% endfor %}
+      
+      </div>
+     
+   {% endfor %}
+</div>
+{% endblock course %}
+
+
+<div id="module-set" style="width: 22%">
+
+{% block status %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
+<div class="module">
+ <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+ <div id="server_status_table_wrapper" class="status"></div>
+</div>
+
+<script type="text/javascript">
+server_status_callback();
+</script>
+{% endif %}
+{% endblock status %}
+
+
+</div>
+
+{% endblock content %}

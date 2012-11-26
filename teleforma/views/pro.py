@@ -40,57 +40,29 @@ from teleforma.views.core import *
 scenario = SeminarScenario1
 
 
-def format_seminars(seminars, seminar=None, queryset=None, types=None, admin=False):
-    if queryset:
-        for s in queryset:
-            if s and (c.code != 'X' or admin == True):
-                seminars.append({'seminar': s,
-                'date': s.date_modified, 'number': s.rank})
-    elif seminar:
-        if seminar.code != 'X' or admin == True:
-            seminars.append({'seminar': seminar,
-            'date': seminar.date_modified, 'number': seminar.rank})
-
-    return seminars
-
-
-def get_pro_seminars(user, date_order=False, num_order=False):
+def get_seminars(user):
     seminars = []
 
     if not user.is_authenticated():
         return None
 
     professor = user.professor.all()
-    student = user.pro_student.all()
+    auditor = user.auditor.all()
 
     if professor:
         professor = user.professor.get()
-        seminars = format_pro_seminars(seminars, queryset=professor.seminar.all())
+        seminars = professor.seminars.all()
 
-    elif student:
-        student = user.pro_student.get()
-        s_seminars = student.seminars.all()
-
-        for course in s_seminars:
-            seminars = format_pro_seminars(seminars, seminar=seminar)
-
-        magistrals = Seminar.objects.filter(magistral=True)
-        if magistrals:
-            seminars = format_pro_seminars(seminars,
-                            queryset=magistrals)
+    elif auditor:
+        auditor = user.pro_auditor.get()
+        s_seminars = auditor.seminars.all()
 
     elif user.is_staff or user.is_superuser:
-        seminars = format_pro_seminars(seminars, queryset=Seminar.objects.all(), admin=True)
+        seminars = Seminar.objects.all()
     else:
         seminars = None
 
-    if date_order:
-        seminars = sorted(seminars, key=lambda k: k['date'], reverse=True)
-    if num_order:
-        seminars = sorted(seminars, key=lambda k: k['number'])
-
     return seminars
-
 
 
 def seminar_progress(user, seminar):    
@@ -116,26 +88,18 @@ def seminar_progress(user, seminar):
     return int(progress*100/total)
 
 
-class SeminarsView(ListView):
+def total_progress(user):
+    """return the user progress of all seminars in percent"""
 
-    model = Seminar
-    template_name='teleforma/seminars.html'
+    revisions = user.seminar_revision.all()
+    progress = 0
+    n = 0
 
-    def get_queryset(self):
-        self.all_courses = get_courses(self.request.user, date_order=True)
-        return self.all_courses[:10]
+    for revision in revisions:
+        total += revision.progress
+        n += 1
 
-    def get_context_data(self, **kwargs):
-        context = super(SeminarView, self).get_context_data(**kwargs)
-        context['notes'] = Note.objects.filter(author=self.request.user)
-        context['room'] = get_room(name='site')
-        context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
-        context['periods'] = get_periods(self.request.user)
-        return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(SeminarView, self).dispatch(*args, **kwargs)
+    return int(total/n)
 
 
 class SeminarView(DetailView):
@@ -151,9 +115,33 @@ class SeminarView(DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         user = self.request.user
         seminar = self.get_object()
-        context['seminars'] = Seminar.objects.filter(suscribers__in=user)
-        context['progress'] = self.progress(user, seminar)
+        context['all_seminars'] = get_seminars(user)
+        context['progress'] = seminar_progress(user, seminar)
+        context['total_progress'] = total_progress(user)
+        context['scenario'] = scenario(seminar)
         return context
+
+
+class SeminarsView(ListView):
+
+    model = Seminar
+    template_name='teleforma/seminars.html'
+
+    def get_queryset(self):
+        self.all_courses = get_courses(self.request.user, date_order=True)
+        return self.all_courses[:10]
+
+    def get_context_data(self, **kwargs):
+        context = super(SeminarView, self).get_context_data(**kwargs)
+        context['all_seminars'] = get_seminars(user)
+        context['total_progress'] = total_progress(user)
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SeminarView, self).dispatch(*args, **kwargs)
+
+
 
 
 class AnswerView(FormView):
