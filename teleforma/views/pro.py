@@ -36,10 +36,11 @@
 
 from teleforma.views.core import *
 
+
 scenario = SeminarScenario1
 
 
-def format_pro_seminars(seminars, seminar=None, queryset=None, types=None, admin=False):
+def format_seminars(seminars, seminar=None, queryset=None, types=None, admin=False):
     if queryset:
         for s in queryset:
             if s and (c.code != 'X' or admin == True):
@@ -98,11 +99,12 @@ def seminar_progress(user, seminar):
     progress = 0
     total = 0
     
-    docs = [seminar.doc_1, seminar.doc_2, seminar.media, seminar.doc_correct]
-    for doc in docs:
-        total += doc.weight
-        if user in doc.readers:
-            progress += doc.weight
+    objects = [seminar.doc_1, seminar.doc_2, seminar.media, seminar.doc_correct]
+    for obj in objects:
+        for item in obj:
+            total += item.weight
+            if user in item.readers:
+                progress += item.weight
     
     questions = Question.objects.filter(seminar=seminar, status=3)
     for question in questions:

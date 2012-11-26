@@ -216,7 +216,7 @@ class Evaluation(Model):
         verbose_name = _('Evaluation')
 
 
-class SeminarScenario1(Model):
+class SeminarScenario1():
 
     def __init__(self, seminar):
         self.seminar = seminar
@@ -242,15 +242,15 @@ class Auditor(Model):
                                         verbose_name=_('seminars'),
                                         blank=True, null=True)
 
-    platform_only   = BooleanField(_('platform only'))
-    address         = TextField(_('Address'), blank=True)
-    postal_code     = CharField(_('Postal code'), max_length=255, blank=True)
-    city            = CharField(_('City'), max_length=255, blank=True)
-    country         = CharField(_('Country'), max_length=255, blank=True)
-    language        = CharField(_('Language'), max_length=255, blank=True)
-    telephone       = CharField(_('Telephone'), max_length=255, blank=True)
-    expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
-    init_password   = BooleanField(_('Password initialized'))
+    platform_only   = models.BooleanField(_('platform only'))
+    address         = models.TextField(_('Address'), blank=True)
+    postal_code     = models.CharField(_('Postal code'), max_length=255, blank=True)
+    city            = models.CharField(_('City'), max_length=255, blank=True)
+    country         = models.CharField(_('Country'), max_length=255, blank=True)
+    language        = models.CharField(_('Language'), max_length=255, blank=True)
+    telephone       = models.CharField(_('Telephone'), max_length=255, blank=True)
+    expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
+    init_password   = models.BooleanField(_('Password initialized'))
 
     def __unicode__(self):
         try:
@@ -264,3 +264,20 @@ class Auditor(Model):
         ordering = ['user__last_name']
 
 
+
+class SeminarRevision(models.Model):
+
+    seminar     = models.ForeignKey(Seminar, related_name="seminar_revision", verbose_name=_('seminar'))
+    user        = models.ForeignKey(User, related_name="seminar_revision", verbose_name=_('user'))
+    date        = models.DateTimeField(_('date modified'), auto_now=True)
+    progress    = models.IntegerField(_('progress'), blank=True)
+
+    class Meta:
+        verbose_name = _('Revision')
+        verbose_name_plural = _('Revisions')
+
+    def __unicode__(self):
+        return ' '.join([seminar.title, user.last_name, str(date)])
+
+
+    
