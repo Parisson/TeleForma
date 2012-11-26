@@ -37,9 +37,6 @@
 from teleforma.views.core import *
 
 
-scenario = SeminarScenario1
-
-
 def get_seminars(user):
     seminars = []
 
@@ -96,10 +93,13 @@ def total_progress(user):
     n = 0
 
     for revision in revisions:
-        total += revision.progress
+        progress += revision.progress
         n += 1
 
-    return int(total/n)
+    if n:
+        return int(progress/n)
+    else:
+        return 0
 
 
 class SeminarView(DetailView):
@@ -118,7 +118,6 @@ class SeminarView(DetailView):
         context['all_seminars'] = get_seminars(user)
         context['progress'] = seminar_progress(user, seminar)
         context['total_progress'] = total_progress(user)
-        context['scenario'] = scenario(seminar)
         return context
 
 
@@ -128,18 +127,18 @@ class SeminarsView(ListView):
     template_name='teleforma/seminars.html'
 
     def get_queryset(self):
-        self.all_courses = get_courses(self.request.user, date_order=True)
-        return self.all_courses[:10]
+        return get_seminars(self.request.user)
 
     def get_context_data(self, **kwargs):
-        context = super(SeminarView, self).get_context_data(**kwargs)
+        context = super(SeminarsView, self).get_context_data(**kwargs)
+        user = self.request.user
         context['all_seminars'] = get_seminars(user)
         context['total_progress'] = total_progress(user)
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(SeminarView, self).dispatch(*args, **kwargs)
+        return super(SeminarsView, self).dispatch(*args, **kwargs)
 
 
 

@@ -126,15 +126,27 @@ class Seminar(models.Model):
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.rank), self.title])
 
+    @property
+    def scenario(self):
+        self.steps = []
+        self.steps.append(self.doc_1)
+        self.steps.append(self.media)
+        self.steps.append(self.doc_2)
+        self.steps.append(self.question)
+        self.steps.append(self.doc_correct)
+        self.steps.append(self.testimonial)
+        return self.steps
+        
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar'
         verbose_name = _('Seminar')
+        ordering = ['rank']
 
 
 class Question(models.Model):
 
     element_type = 'question'
-    
+
     seminar     = models.ForeignKey(Seminar, related_name="question", verbose_name=_('seminar'))
     title       = models.CharField(_('title'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=1024, blank=True)
@@ -217,24 +229,6 @@ class Evaluation(models.Model):
         db_table = app_label + '_' + 'evaluation'
         verbose_name = _('Evaluation')
 
-
-class SeminarScenario1():
-
-    def __init__(self, seminar):
-        self.seminar = seminar
-        self.steps = []
-
-        self.append(self.seminar.doc_1)
-        self.append(self.seminar.media)
-        self.append(self.seminar.doc_2)
-        self.append(self.seminar.question)
-        self.append(self.seminar.doc_correct)
-        self.steps.append(self.seminar.evaluation.all()[0])
-        self.append(self.seminar.testimonial)
-        
-    def append(self, models):
-        for mod in models.all().order_by('rank'):
-            self.steps.append(mod)
 
 
 class Auditor(models.Model):

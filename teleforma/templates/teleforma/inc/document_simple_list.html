@@ -1,0 +1,25 @@
+{% load teleforma_tags %}
+{% load i18n %}
+
+<div class="course_content">
+
+<div class="course_subtitle">
+<h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Documents"%}</h3>
+</div>
+
+
+<span class="doc_type_title">{{ doc_type }}</span>
+<table class="listing" width="100%">
+    <tbody>
+        {% for doc in docs %}
+            <tr>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="60%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="35%">{{ doc.date_modified }}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if doc.file %}<a href="{% url teleforma-document-download doc.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+

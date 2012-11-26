@@ -15,7 +15,7 @@
 <div style="background: white;">
 <ul>
 {% block courses %}
-{% for s in all_seminars %}
+{% for seminar in all_seminars %}
    <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
  {% endfor %}
 {% endblock courses %}
@@ -57,14 +57,17 @@
     {% for seminar in object_list %}
       <div class="course">
         <div class="course_title">
-         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }} - {{ type }}{% if seminar.description %} - {{ seminar.description }}{% endif %}</a>
+         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}</a>
         </div>
+        {% if seminar.description %}{{ seminar.description }}{% endif %}
 
-        {% for step in seminar.steps %}
+        {% for step in seminar.scenario %}
+        
+          {% if step.all.0.element_type == 'document_simple' %}
+           {% with step.all as docs %}
+            {% include "teleforma/inc/document_simple_list.html" %}
+           {% endwith %}
 
-          {% if step.element_type == 'document_simple' %}
-           {% include "teleforma/inc/document_simple_list.html" %}
-          
           {% elif step.element_type == 'media_package' %}
            {% include "teleforma/inc/media_package_list.html" %
 

@@ -1,56 +1,30 @@
-{% extends "teleforma/courses.html" %}
+{% extends "teleforma/seminars.html" %}
 {% load i18n %}
 
-{% block extra_javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-    });
-</script>
-{% endblock extra_javascript %}
 
-{% block courses %}
-{% for c in all_courses %}
-  {% with c.course as course %}
-   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
-  {% endwith %}
- {% endfor %}
-{% endblock courses %}
 
 {% block course %}
 <div class="desk_center">
-    {% for c in courses %}
-     {% with c.course as course %}
-      {% for type in c.types %}
       <div class="course">
-        <div class="course_title">{{ course.title }}{% if type.name != "None" %} - {{ type }}{% endif %}{% if course.description %} - {{ course.description }}{% endif %}
+        <div class="course_title">
+         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}{% if seminar.description %} - {{ seminar.description }}{% endif %}</a>
         </div>
 
-        {% block conference %}
-         {% include "teleforma/inc/conference_list.html" %}
-        {% endblock %}
+        {% for step in seminar.steps %}
 
-        {% block media %}
-         {% include "teleforma/inc/media_list.html" %}
-        {% endblock %}
+          {% if step.element_type == 'document_simple' %}
+           {% include "teleforma/inc/document_simple_list.html" %}
+          
+          {% elif step.element_type == 'media_package' %}
+           {% include "teleforma/inc/media_package_list.html" %
 
-        {% block document %}
-         {% with forloop.counter as type_counter %}
-          {% include "teleforma/inc/document_list.html" %}
-         {% endwith %}
-        {% endblock %}
-
-        </div>
-      {% endfor %}
-     {% endwith %}
-    {% endfor %}
+          {% elif step.element_type == 'question' %}
+            {% include "teleforma/inc/question_list.html" %}
+         
+          {% endif %}
+        {% endfor %}
+      
+      </div>
 </div>
 {% endblock course %}
 
-{% block chat %}
-{% if room %}
-{% with "General tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% endif %}
-{% endblock chat %}

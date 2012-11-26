@@ -454,7 +454,7 @@ class DocumentSimple(MediaBase):
     readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
-    
+
     def is_image(self):
         is_url_image = False
         if self.url:
@@ -477,7 +477,7 @@ class DocumentSimple(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_simple'
-        ordering = ['-date_added']
+        ordering = ['rank']
 
 
 
