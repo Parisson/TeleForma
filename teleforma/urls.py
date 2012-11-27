@@ -51,6 +51,8 @@ urlpatterns = patterns('',
 #    url(r'^$', HomeView.as_view(), name='teleforma-home'),
     url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
         name="teleforma-login"),
+    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+        name="home"),
 
     # Telemeta
     url(r'^', include('telemeta.urls')),
