@@ -454,6 +454,8 @@ class DocumentSimple(MediaBase):
     readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
+    type            = ForeignKey('DocumentType', related_name='document_simple', verbose_name=_('type'),
+                                 blank=True, null=True)
 
     def is_image(self):
         is_url_image = False
