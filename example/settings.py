@@ -17,14 +17,25 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#         'NAME': 'teleforma',                      # Or path to database file if using sqlite3.
+#         'USER': 'teleforma',                      # Not used with sqlite3.
+#         'PASSWORD': 'HMYsrZLEtYeBrvER',                  # Not used with sqlite3.
+#         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+#         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'teleforma',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'teleforma_test',                      # Or path to database file if using sqlite3.
         'USER': 'teleforma',                      # Not used with sqlite3.
-        'PASSWORD': 'HMYsrZLEtYeBrvER',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'PASSWORD': 'teleforma',                  # Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -72,6 +83,8 @@ MEDIA_URL = 'http://localhost:8040/'
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = '/var/www/static/'
 
+ADMIN_MEDIA_PREFIX = '/static/'
+
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
@@ -111,6 +124,14 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'pagination.middleware.PaginationMiddleware',
+
+    "mezzanine.core.request.CurrentRequestMiddleware",
+    "mezzanine.core.middleware.TemplateForDeviceMiddleware",
+    "mezzanine.core.middleware.TemplateForHostMiddleware",
+    "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
+    "mezzanine.pages.middleware.PageMiddleware",
+    "mezzanine.core.middleware.FetchFromCacheMiddleware",
+
 )
 
 ROOT_URLCONF = 'urls'
@@ -130,6 +151,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.comments',
     'telemeta',
     'jsonrpc',
     'south',
@@ -145,9 +167,19 @@ INSTALLED_APPS = (
     'timezones',
     'jqchat',
 #    'follow',
-     'googletools',
-#     'telecaster',
-     'tinymce',
+    'googletools',
+    # 'telecaster',
+    'tinymce',
+    'mezzanine',
+    "mezzanine.boot",
+    "mezzanine.conf",
+    "mezzanine.core",
+    "mezzanine.generic",
+    "mezzanine.blog",
+    "mezzanine.forms",
+    "mezzanine.pages",
+    "mezzanine.blog",
+
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -157,6 +189,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     'django.core.context_processors.static',
+    'mezzanine.conf.context_processors.settings',
 )
 
 TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
@@ -191,9 +224,37 @@ TELECASTER_CONF = [{'type':'mp3','server_type':'icecast','conf':'/etc/telecaster
 
 TELECASTER_RSYNC_SERVER = 'telecaster@jimi.parisson.com:archives/'
 TELECASTER_RSYNC_LOG = '/var/log/telecaster/rsync.log'
-TELECASTER_MASTER_SERVER = 'angus.parisson.com'
 
-# CRFPA or AE or PRO
-TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
-TELEFORMA_GLOBAL_TWEETER = False
+TELEFORMA_E_LEARNING_TYPE = 'AE'
+TELEFORMA_GLOBAL_TWEETER = True
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+}
+
+#############
+# MEZZANINE #
+#############
+
+PACKAGE_NAME_FILEBROWSER = 'filebrowser_safe'
+
+####################
+# DYNAMIC SETTINGS #
+####################
+
+# set_dynamic_settings() will rewrite globals based on what has been
+# defined so far, in order to provide some better defaults where
+# applicable. We also allow this settings module to be imported
+# without Mezzanine installed, as the case may be when using the
+# fabfile, where setting the dynamic settings below isn't strictly
+# required.
+try:
+    from mezzanine.utils.conf import set_dynamic_settings
+except ImportError:
+    pass
+else:
+    set_dynamic_settings(globals())
 
