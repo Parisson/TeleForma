@@ -39,7 +39,7 @@ from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
 import tinymce.models
-
+from mezzanine.core.models import Displayable
 
 class MediaPackage(MediaBase):
     "Media resource package handling multiple (audio and video) media types"
@@ -81,14 +81,12 @@ class SeminarType(models.Model):
         verbose_name = _('Seminar type')
 
 
-class Seminar(models.Model):
+class Seminar(Displayable):
 
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
-    title           = models.CharField(_('title'), max_length=255, blank=True)
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
-    description     = models.TextField(_('description'), blank=True)
     concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
     level           = models.CharField(_('level'), max_length=255, blank=True)
     price           = models.FloatField(_('price'), blank=True, null=True)
@@ -120,7 +118,6 @@ class Seminar(models.Model):
 
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
-    status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2, blank=True)
 
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.rank), self.title])
