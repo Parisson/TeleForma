@@ -1480,6 +1480,14 @@ input,textarea{
     font-size: 1.2em;
     }
 
+.course_description {
+    color: #000;
+    border-top: 1px solid #aaa;
+    margin-top: 0.5em;
+    padding: 0.5em 0em 0.5em 0em;
+    font-size: 0.9em;
+    }
+
 .course_content {
     background-color: #FFF;
     -moz-border-radius: 8px 0px 8px 8px;

@@ -136,7 +136,11 @@ class Seminar(models.Model):
         self.steps.append(self.doc_correct)
         self.steps.append(self.testimonial)
         return self.steps
-        
+    
+    def step_append(title, type, objects):
+        self.steps.append({'title': title, 'type': type, 'objects': objects })
+
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar'
         verbose_name = _('Seminar')

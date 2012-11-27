@@ -59,7 +59,9 @@
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}</a>
         </div>
+        <div class="course_description">
         {% if seminar.description %}{{ seminar.description }}{% endif %}
+        </div>
 
         {% for step in seminar.scenario %}
         
@@ -68,21 +70,23 @@
             {% include "teleforma/inc/document_simple_list.html" %}
            {% endwith %}
 
-          {% elif step.element_type == 'media_package' %}
-           {% include "teleforma/inc/media_package_list.html" %
+          {% elif step.all.0.element_type == 'media_package' %}
+           {% with step.all as media %}
+            {% include "teleforma/inc/media_package_list.html" %}
+           {% endwith %}
 
-          {% elif step.element_type == 'question' %}
+          {% elif step.all.0.element_type == 'question' %}
+           {% with step.all as questions %}
             {% include "teleforma/inc/question_list.html" %}
-         
+           {% endwith %}
+
           {% endif %}
+        
         {% endfor %}
-      
       </div>
-     
    {% endfor %}
 </div>
 {% endblock course %}
-
 
 <div id="module-set" style="width: 22%">
 
