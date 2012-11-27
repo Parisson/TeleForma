@@ -96,7 +96,6 @@ class Seminar(models.Model):
     magistral       = models.BooleanField(_('magistral'))
     index           = tinymce.models.HTMLField(_('index'), blank=True)
 
-    keywords        = models.CharField(_('keywords'), max_length=1024, blank=True)
     duration        = DurationField(_('approximative duration'))
     date_begin      = models.DateField(_('begin date'), blank=True, null=True)
     date_end        = models.DateField(_('end date'), blank=True, null=True)
