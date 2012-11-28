@@ -369,7 +369,7 @@ class LiveStream(Model):
 class MediaBase(Model):
     "Base media resource"
 
-    title           = CharField(_('title'), max_length=255, blank=True)
+    title           = CharField(_('title'), max_length=1024, blank=True)
     description     = CharField(_('description'), max_length=255, blank=True)
     credits         = CharField(_('credits'), max_length=255, blank=True)
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
@@ -416,7 +416,8 @@ class Document(MediaBase):
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", 
+                                 blank=True, max_length=1024)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
                                         blank=True, null=True)
 
@@ -450,7 +451,8 @@ class DocumentSimple(MediaBase):
 
     element_type = 'document_simple'
 
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", 
+                                        blank=True, max_length=1024)
     readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
