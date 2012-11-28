@@ -475,9 +475,10 @@ class DocumentSimple(MediaBase):
         return self.title
 
     def save(self, **kwargs):
-        super(DocumentSimple, self).save(**kwargs)
         self.set_mime_type()
-        
+        if not self.title:
+            self.title = os.path.splitext(os.path.split(self.file.path)[1])[0].replace('-', ' ')
+        super(DocumentSimple, self).save(**kwargs)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_simple'
