@@ -148,7 +148,7 @@ class Course(Model):
     description     = CharField(_('description'), max_length=255, blank=True)
     code            = CharField(_('code'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True, null=True)
-    number          = IntegerField(_('number'), blank=True, null=True)
+    number          = IntegerField(_('rank'), blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
     obligation      = BooleanField(_('obligations'))
     magistral       = BooleanField(_('magistral'))
@@ -454,6 +454,8 @@ class DocumentSimple(MediaBase):
     readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
+    type            = ForeignKey('DocumentType', related_name='document_simple', verbose_name=_('type'),
+                                 blank=True, null=True)
 
     def is_image(self):
         is_url_image = False

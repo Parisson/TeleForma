@@ -132,10 +132,6 @@ class Seminar(Displayable):
         self.steps.append(self.doc_correct)
         self.steps.append(self.testimonial)
         return self.steps
-    
-    def step_append(title, type, objects):
-        self.steps.append({'title': title, 'type': type, 'objects': objects })
-
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar'
@@ -209,7 +205,7 @@ class Testimonial(models.Model):
     seminar     = models.ForeignKey(Seminar, related_name="testimonial", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
     template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial", 
-                                    verbose_name=_('template'))
+                                    verbose_name=_('template'), blank=True, null=True)
     document    = models.ForeignKey(DocumentSimple, related_name="testimonial", 
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
