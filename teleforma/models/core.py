@@ -406,7 +406,8 @@ class Document(MediaBase):
 
     element_type = 'document'
 
-    course          = ForeignKey('Course', related_name='document', verbose_name=_('course'))
+    course          = ForeignKey('Course', related_name='document', verbose_name=_('course'),
+                                      blank=True, null=True)
     course_type     = ManyToManyField('CourseType', related_name='document',
                                       verbose_name=_('course type'), blank=True, null=True)
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
@@ -416,6 +417,7 @@ class Document(MediaBase):
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
+    rank            = models.IntegerField(_('rank'), blank=True, null=True)
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", 
                                  blank=True, max_length=1024)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
@@ -441,47 +443,12 @@ class Document(MediaBase):
         super(Document, self).save(**kwargs)
         self.course.save()
         self.set_mime_type()
-
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'document'
-        ordering = ['-date_added']
-
-
-class DocumentSimple(MediaBase):
-
-    element_type = 'document_simple'
-
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", 
-                                        blank=True, max_length=1024)
-    readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
-                                        blank=True, null=True)
-    rank            = models.IntegerField(_('rank'), blank=True, null=True)
-    type            = ForeignKey('DocumentType', related_name='document_simple', verbose_name=_('type'),
-                                 blank=True, null=True)
-
-    def is_image(self):
-        is_url_image = False
-        if self.url:
-            url_types = ['.png', '.jpg', '.gif', '.jpeg']
-            for type in url_types:
-                if type in self.url or type.upper() in self.url:
-                    is_url_image = True
-        return 'image' in self.mime_type or is_url_image
-
-    def set_mime_type(self):
-        self.mime_type = mimetypes.guess_type(self.file.path)[0]
-
-    def __unicode__(self):
-        return self.title
-
-    def save(self, **kwargs):
-        self.set_mime_type()
         if not self.title:
             self.title = os.path.splitext(os.path.split(self.file.path)[1])[0].replace('-', ' ')
         super(DocumentSimple, self).save(**kwargs)
 
     class Meta(MetaCore):
-        db_table = app_label + '_' + 'document_simple'
+        db_table = app_label + '_' + 'document'
         ordering = ['rank']
 
 

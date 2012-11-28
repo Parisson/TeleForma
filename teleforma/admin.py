@@ -52,9 +52,6 @@ class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
 
-class DocumentSimpleAdmin(admin.ModelAdmin):
-    exclude = ['readers']
-
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id']
@@ -95,8 +92,7 @@ admin.site.register(Testimonial)
 admin.site.register(TestimonialTemplate)
 admin.site.register(SeminarType)
 
-# admin.site.register(Document, DocumentAdmin)
-admin.site.register(DocumentSimple, DocumentSimpleAdmin)
+admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
 # admin.site.register(Media, MediaAdmin)
 admin.site.register(MediaPackage, MediaPackageAdmin)

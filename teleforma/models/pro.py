@@ -100,7 +100,7 @@ class Seminar(Displayable):
     professor       = models.ManyToManyField('Professor', related_name='seminar', 
                                             verbose_name=_('professor'), blank=True, null=True)
 
-    doc_1           = models.ManyToManyField(DocumentSimple, related_name="seminar_doc1", 
+    doc_1           = models.ManyToManyField(Document, related_name="seminar_doc1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
     media           = models.ManyToManyField(MediaPackage, related_name="seminar_media",
@@ -109,10 +109,10 @@ class Seminar(Displayable):
     media_preview   = models.ManyToManyField(MediaPackage, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
-    doc_2           = models.ManyToManyField(DocumentSimple, related_name="seminar_doc2",
+    doc_2           = models.ManyToManyField(Document, related_name="seminar_doc2",
                                         verbose_name=_('document 2'),
                                         blank=True, null=True)
-    doc_correct     = models.ManyToManyField(DocumentSimple, related_name="seminar_doccorrect",
+    doc_correct     = models.ManyToManyField(Document, related_name="seminar_doccorrect",
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
 
@@ -189,7 +189,7 @@ class TestimonialTemplate(models.Model):
                                  verbose_name=_('organization'))
     description  = models.TextField(_('description'), blank=True)
     comments     = models.TextField(_('comments'), blank=True)
-    document     = models.ForeignKey(DocumentSimple, related_name="testimonial_template",
+    document     = models.ForeignKey(Document, related_name="testimonial_template",
                                 verbose_name=_('template'))
 
     def __unicode__(self):
@@ -206,7 +206,7 @@ class Testimonial(models.Model):
     user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
     template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial", 
                                     verbose_name=_('template'), blank=True, null=True)
-    document    = models.ForeignKey(DocumentSimple, related_name="testimonial", 
+    document    = models.ForeignKey(Document, related_name="testimonial", 
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
 

@@ -70,9 +70,9 @@ def seminar_progress(user, seminar):
     
     objects = [seminar.doc_1, seminar.doc_2, seminar.media, seminar.doc_correct]
     for obj in objects:
-        for item in obj:
+        for item in obj.all():
             total += item.weight
-            if user in item.readers:
+            if user in item.readers.all():
                 progress += item.weight
     
     questions = Question.objects.filter(seminar=seminar, status=3)
@@ -101,6 +101,14 @@ def total_progress(user):
     else:
         return 0
 
+def seminar_validated(user, seminar):
+    validated = False
+    for question in seminar.question.all():
+        answers = question.answer.filter(user=user)
+        if answers:
+            validated = validated and answers[0].validated
+    return validated
+
 
 class SeminarView(DetailView):
 
@@ -118,6 +126,7 @@ class SeminarView(DetailView):
         context['all_seminars'] = get_seminars(user)
         context['progress'] = seminar_progress(user, seminar)
         context['total_progress'] = total_progress(user)
+        context['validated'] = seminar_validated(user, seminar)
         return context
 
 
