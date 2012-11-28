@@ -239,12 +239,14 @@ class Auditor(models.Model):
                                         blank=True, null=True)
 
     platform_only   = models.BooleanField(_('platform only'))
+    company         = models.CharField(_('Company'), max_length=255, blank=True)
     address         = models.TextField(_('Address'), blank=True)
     postal_code     = models.CharField(_('Postal code'), max_length=255, blank=True)
     city            = models.CharField(_('City'), max_length=255, blank=True)
     country         = models.CharField(_('Country'), max_length=255, blank=True)
     language        = models.CharField(_('Language'), max_length=255, blank=True)
     telephone       = models.CharField(_('Telephone'), max_length=255, blank=True)
+    fax             = models.CharField(_('Fax'), max_length=255, blank=True)
     expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = models.BooleanField(_('Password initialized'))
 
