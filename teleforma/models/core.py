@@ -440,12 +440,12 @@ class Document(MediaBase):
         return  ' - '.join([unicode(self.course), unicode(types), self.title ])
 
     def save(self, **kwargs):
-        super(Document, self).save(**kwargs)
-        self.course.save()
+        if self.course:
+            self.course.save()
         self.set_mime_type()
         if not self.title:
             self.title = os.path.splitext(os.path.split(self.file.path)[1])[0].replace('-', ' ')
-        super(DocumentSimple, self).save(**kwargs)
+        super(Document, self).save(**kwargs)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document'
