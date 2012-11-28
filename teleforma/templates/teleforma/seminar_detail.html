@@ -5,24 +5,52 @@
 
 {% block course %}
 <div class="desk_center">
-      <div class="course">
+    <div class="course">
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}{% if seminar.description %} - {{ seminar.description }}{% endif %}</a>
         </div>
 
-        {% for step in seminar.steps %}
+        <div class="course_description">
+        {% if seminar.description %}{{ seminar.description }}{% endif %}
+        </div>
 
-          {% if step.element_type == 'document_simple' %}
+        <div class="course_step">
+          {% trans "Read the following documents" %}
+        </div>
+          {% with seminar.doc_1 as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
-          
-          {% elif step.element_type == 'media_package' %}
-           {% include "teleforma/inc/media_package_list.html" %
+          {% endwith %}
 
-          {% elif step.element_type == 'question' %}
-            {% include "teleforma/inc/question_list.html" %}
-         
-          {% endif %}
-        {% endfor %}
+        <div class="course_step">
+          {% trans "Play the following media" %}
+        </div>
+          {% with seminar.media as media %}
+           {% include "teleforma/inc/media_package_list.html" %
+          {% endwith %}
+
+        <div class="course_step">
+          {% trans "Read the following documents" %}
+        </div>
+          {% with seminar.doc_2 as docs %}
+           {% include "teleforma/inc/document_simple_list.html" %}
+          {% endwith %}
+          
+        <div class="course_step">
+          {% trans "Respond to the following questions" %}
+        </div>
+          {% with seminar.question.all as questions %}
+           {% include "teleforma/inc/question_list.html" %}
+          {% endwith %}
+
+         {% if seminar.question.all|validated %}
+         <div class="course_step">
+          {% trans "Read the following documents" %}
+         </div>
+          {% with seminar.doc_correct as docs %}
+           {% include "teleforma/inc/document_simple_list.html" %}
+          {% endwith %}
+
+
       
       </div>
 </div>

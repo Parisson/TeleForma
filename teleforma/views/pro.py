@@ -127,12 +127,13 @@ class SeminarsView(ListView):
     template_name='teleforma/seminars.html'
 
     def get_queryset(self):
-        return get_seminars(self.request.user)
+        self.seminars = get_seminars(self.request.user)
+        return self.seminars
 
     def get_context_data(self, **kwargs):
         context = super(SeminarsView, self).get_context_data(**kwargs)
         user = self.request.user
-        context['all_seminars'] = get_seminars(user)
+        context['all_seminars'] = self.seminars
         context['total_progress'] = total_progress(user)
         return context
 
