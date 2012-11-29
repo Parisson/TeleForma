@@ -1481,11 +1481,13 @@ input,textarea{
     }
 
 .course_description {
-    color: #000;
-    border-top: 1px solid #aaa;
-    margin-top: 0.5em;
-    padding: 0.5em 0em 0.5em 0em;
-    font-size: 0.9em;
+    background-color: #FFF;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    padding: 0.5em 0.5em 1em 1em;
+    margin-top: 0.8em;
+    border: 1px solid #dfdfdf;
     }
 
 .course_content {

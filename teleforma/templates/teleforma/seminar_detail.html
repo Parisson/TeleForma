@@ -15,9 +15,7 @@
         {% if seminar.description %}{{ seminar.description }}{% endif %}
         </div>
 
-        <div class="course_step">
-          {% trans "Read the following documents" %}
-        </div>
+        
           {% with seminar.docs_1 as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
           {% endwith %}
@@ -30,24 +28,16 @@
            {% include "teleforma/inc/media_package_list.html" %}
           {% endwith %}
 -->
-        <div class="course_step">
-          {% trans "Read the following documents" %}
-        </div>
+        
           {% with seminar.docs_2 as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
           {% endwith %}
           
-        <div class="course_step">
-          {% trans "Respond to the following questions" %}
-        </div>
           {% with seminar.question as questions %}
            {% include "teleforma/inc/question_list.html" %}
           {% endwith %}
 
          {% if validated %}
-         <div class="course_step">
-          {% trans "Read the following documents" %}
-         </div>
           {% with seminar.docs_correct as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
           {% endwith %}
