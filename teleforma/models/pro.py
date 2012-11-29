@@ -100,7 +100,7 @@ class Seminar(Displayable):
     professor       = models.ManyToManyField('Professor', related_name='seminar', 
                                             verbose_name=_('professor'), blank=True, null=True)
 
-    doc_1           = models.ManyToManyField(Document, related_name="seminar_doc1", 
+    docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
     media           = models.ManyToManyField(MediaPackage, related_name="seminar_media",
@@ -109,10 +109,10 @@ class Seminar(Displayable):
     media_preview   = models.ManyToManyField(MediaPackage, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
-    doc_2           = models.ManyToManyField(Document, related_name="seminar_doc2",
+    docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",
                                         verbose_name=_('document 2'),
                                         blank=True, null=True)
-    doc_correct     = models.ManyToManyField(Document, related_name="seminar_doccorrect",
+    docs_correct    = models.ManyToManyField(Document, related_name="seminar_docs_correct",
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
 
@@ -125,11 +125,11 @@ class Seminar(Displayable):
     @property
     def scenario(self):
         self.steps = []
-        self.steps.append(self.doc_1)
+        self.steps.append(self.docs_1)
         self.steps.append(self.media)
-        self.steps.append(self.doc_2)
+        self.steps.append(self.docs_2)
         self.steps.append(self.question)
-        self.steps.append(self.doc_correct)
+        self.steps.append(self.docs_correct)
         self.steps.append(self.testimonial)
         return self.steps
 
