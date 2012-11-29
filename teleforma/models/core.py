@@ -407,7 +407,7 @@ class Document(MediaBase):
     element_type = 'document'
 
     course          = ForeignKey('Course', related_name='document', verbose_name=_('course'),
-                                      blank=True, null=True)
+                                      blank=True, null=True, on_delete=models.SET_NULL)
     course_type     = ManyToManyField('CourseType', related_name='document',
                                       verbose_name=_('course type'), blank=True, null=True)
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
@@ -436,8 +436,14 @@ class Document(MediaBase):
         self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
     def __unicode__(self):
-        types = ' - '.join([unicode(t) for t in self.course_type.all()])
-        return  ' - '.join([unicode(self.course), unicode(types), self.title ])
+        strings = []
+        if self.course:
+            strings.append(unicode(self.course))
+        if self.course_type.all():
+            types = ' - '.join([unicode(t) for t in self.course_type.all()])
+            strings.append(unicode(types))
+        strings.append(self.title)
+        return ' - '.join(strings) 
 
     def save(self, **kwargs):
         if self.course:
