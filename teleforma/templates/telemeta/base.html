@@ -117,7 +117,7 @@ alt="logo" />
  {{ user.username }}
  {% endif %}</a>
     <ul>
-    <li><a href="{% url telemeta-profile-detail user.username %}" class="yellow">{% trans "Profile" %}</a></li>
+    <li><a href="{% url teleforma-profile-detail user.username %}" class="yellow">{% trans "Profile" %}</a></li>
     {% if user.is_staff %}
     <li><a href="{% url telemeta-desk-lists %}">{% trans "Lists" %}</a></li>
     <li><a href="{% url teleforma-help %}">{% trans "Help" %}</a></li>
