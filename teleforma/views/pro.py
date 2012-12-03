@@ -152,11 +152,35 @@ class SeminarsView(ListView):
 
 
 
+class AnswerCreateView(CreateView):
 
-class AnswerView(FormView):
-
-    model = Answer
     form_class = AnswerForm
-    template_name='teleforma/answer.html'
+    template_name='teleforma/answer_form.html'
 
+    def get_success_url(self):
+        # Redirect to previous url
+        return self.request.META.get('HTTP_REFERER', None)
+
+    def form_valid(self, form):
+        messages.info(
+            self.request,
+            "You have successfully changed your email notifications"
+        )
+        return super(AnswerCreateView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.info(
+            self.request,
+            "Your submission has not been saved. Try again."
+        )
+        return super(AnswerCreateView, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerCreateView, self).get_context_data(**kwargs)
+        context['all_courses'] = get_courses(self.request.user)
+        context['question'] = Question.objects.get(pk=kwargs['pk'])
+        return context
+
+    def get_success_url(self):
+        return reverse('teleforma-seminar-detail', kwargs={'pk':self.seminar.id})
 

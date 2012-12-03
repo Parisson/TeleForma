@@ -1,6 +1,7 @@
 
 from django.forms import ModelForm
 from teleforma.models import *
+from django.forms.models import inlineformset_factory
 
 
 class ConferenceForm(ModelForm):
@@ -9,10 +10,12 @@ class ConferenceForm(ModelForm):
         model = Conference
 
 
-class AnswerForm(ModelForm):
+class QuestionForm(ModelForm):
 
     class Meta:
-        model = Answer
+        model = Question
+        # exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
 
 
+AnswerFormset = inlineformset_factory(QuestionForm, Answer, extra=1)
 

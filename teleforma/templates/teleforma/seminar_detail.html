@@ -1,7 +1,32 @@
 {% extends "teleforma/seminars.html" %}
 {% load i18n %}
 
+{% block extra_javascript %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <style>
 
+    .ui-progressbar2 .ui-progressbar-value2 { 
+      /*webkit rainbow gradient*/
+   background-image: -webkit-gradient(linear,  left top,  right top, 
+    color-stop(0.00, red), 
+    color-stop(16%, orange),
+    color-stop(32%, yellow),
+    color-stop(48%, green),
+    color-stop(60%, blue),
+    color-stop(76%, indigo),
+    color-stop(1.00, violet));
+ }
+
+    </style>
+<script type="text/javascript">
+    $(function() {
+        $( "#progressbar" ).progressbar({
+            value: {{ progress }}
+        });
+    });
+</script>
+{% endblock extra_javascript %}
 
 {% block course %}
 <div class="desk_center">

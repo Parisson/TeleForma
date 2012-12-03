@@ -132,6 +132,7 @@ def get_access(obj, courses):
             access = True
     return access
 
+
 access_error = _('Access not allowed.')
 contact_message = _('Please login or contact the website administator to get a private access.')
 
@@ -326,7 +327,9 @@ class DocumentView(DetailView):
     def download(self, request, pk):
         courses = get_courses(request.user)
         document = Document.objects.get(id=pk)
+        document.readers.add(request.user)
         if get_access(document, courses):
+            document.readers.add(request.user)
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)
@@ -340,7 +343,9 @@ class DocumentView(DetailView):
     def view(self, request, pk):
         courses = get_courses(request.user)
         document = Document.objects.get(id=pk)
+        document.readers.add(request.user)
         if get_access(document, courses):
+            document.readers.add(request.user)
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)
