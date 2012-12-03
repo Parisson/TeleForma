@@ -17,5 +17,5 @@ class QuestionForm(ModelForm):
         # exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
 
 
-AnswerFormset = inlineformset_factory(QuestionForm, Answer, extra=1)
+# AnswerFormset = inlineformset_factory(QuestionForm, Answer, extra=1)
 
