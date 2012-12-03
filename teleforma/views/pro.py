@@ -154,7 +154,7 @@ class SeminarsView(ListView):
 
 class AnswerCreateView(CreateView):
 
-    form_class = AnswerForm
+    form_class = QuestionForm
     template_name='teleforma/answer_form.html'
 
     def get_success_url(self):
