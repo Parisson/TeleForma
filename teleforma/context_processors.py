@@ -23,7 +23,7 @@ def get_local_host():
                 local_ip = ip
                 break
         except:
-        	continue
+            continue
 
     if not local_ip:
         local_ip = '127.0.0.1'
@@ -40,6 +40,9 @@ def get_http_host(request):
 def host(request):
     request_host = get_http_host(request)
     local_host = get_local_host()
+    
+    print request_host
+    print local_host
 
     if request_host.split('.')[0] == local_host.split('.')[0] or \
     				 request_host == '127.0.0.1' or request_host == 'localhost':
