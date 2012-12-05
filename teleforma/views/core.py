@@ -403,7 +403,7 @@ class ConferenceView(DetailView):
 
 
 class ConferenceRecordView(FormView):
-    "Conference record form : TeleCaster module required"
+    "Conference record form : telecaster module required"
 
     model = Conference
     form_class = ConferenceForm

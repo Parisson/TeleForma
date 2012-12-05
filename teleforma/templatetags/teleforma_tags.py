@@ -193,10 +193,7 @@ def get_video_id(media):
     return
 
 @register.filter
-def get_host(url, host):
+def set_host(url, host):
     u = urlparse(url)
-    if host == '127.0.0.1' or host == 'localhost':
-        nu = u.scheme + '://' + host + ':' + str(u.port) + u.path
-        return nu
-    else:
-        return url
+    return u.scheme + '://' + host + ':' + str(u.port) + u.path
+    
