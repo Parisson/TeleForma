@@ -23,7 +23,7 @@ def get_local_host():
                 local_ip = ip
                 break
         except:
-        	pass
+        	continue
 
     if not local_ip:
         local_ip = '127.0.0.1'
