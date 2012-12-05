@@ -19,7 +19,7 @@
              {% for related in media.item.related.all %}
               {% if related.title == "preview" %}
                {% thumbnail related.file "168x96" as im %}
-                <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
+                <div style="background: no-repeat url('{{ im.url|set_host:HOST }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
                  <img src="{{ STATIC_URL }}teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
                {% endthumbnail %}
@@ -52,7 +52,7 @@
              <img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
             {% if media.item.file %}
-             <a href="{{ MEDIA_URL }}{{ media.item.file }}">
+             <a href="{{ MEDIA_URL|set_host:HOST }}{{ media.item.file }}">
               <img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
              </a>
             {% endif %}
