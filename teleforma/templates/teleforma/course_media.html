@@ -59,7 +59,7 @@ $(document).ready(function(){
 {% block module-action %}
 {% if media.item.file and media.is_published %}
 <div class="module_action">
-<a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+<a href="{{ MEDIA_URL|set_host:HOST }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
 </div>
 {% endif %}
 {% endblock module-action %}
@@ -95,7 +95,7 @@ $(document).ready(function(){
 <div class="video">
 <video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
 <!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+<source src="{{ MEDIA_URL|set_host:HOST }}{{ media.item.file }}" type="{{ media.mime_type }}" />
 </video>
 </div>
 
@@ -105,7 +105,7 @@ $(document).ready(function(){
 {% if media.item.related.all %}
  {% for related in media.item.related.all %}
   {% if related.title == "preview" %}
-   <img src="{{ MEDIA_URL }}{{ related.file }}" width="300px" alt="" />
+   <img src="{{ MEDIA_URL|set_host:HOST }}{{ related.file }}" width="300px" alt="" />
   {% endif %}
  {% endfor %}
 {% else %}
@@ -114,7 +114,7 @@ $(document).ready(function(){
 </div>
 <div class="audio">
 <audio controls preload="auto">
-<source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+<source src="{{ MEDIA_URL|set_host:HOST }}{{ media.item.file }}" type="{{ media.mime_type }}" />
 </audio>
 </div>
 {% endif %}
