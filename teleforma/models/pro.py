@@ -103,7 +103,7 @@ class Seminar(Displayable):
     docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
-    media           = models.ManyToManyField(MediaPackage, related_name="seminar_media",
+    media           = models.ManyToManyField(MediaPackage, related_name="seminar",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
     media_preview   = models.ManyToManyField(MediaPackage, related_name="seminar_media_preview",
@@ -153,7 +153,7 @@ class Question(models.Model):
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
     def __unicode__(self):
-        return ' - '.join([self.seminar.__unicode__(), str(self.rank), self.title])
+        return ' - '.join([unicode(self.seminar), self.title, str(self.rank)])
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'question'
@@ -171,7 +171,7 @@ class Answer(models.Model):
     date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
 
     def __unicode__(self):
-        return ' - '.join([self.question, self.user])
+        return ' - '.join([unicode(self.question), self.user.username, unicode(self.date_submitted)])
 
     def validate(self):
         if len(self.answer) >= self.question.min_nchar:

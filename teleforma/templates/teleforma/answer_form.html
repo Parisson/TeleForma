@@ -1,0 +1,44 @@
+{% extends "teleforma/seminar_detail.html" %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+{% block extra_javascript %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#id_answer').live("cut copy paste",function(e) {
+      e.preventDefault();
+  });
+});
+
+</script>
+
+</script>
+{% endblock extra_javascript %}
+
+
+
+{% block course_content %}
+
+<div class="course_content">
+  <div class="course_subtitle">
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer to the following question" %}</h3>
+  </div>
+  <div style="text-align: justify;">
+    {{ question.question|safe }}
+  </div>
+</div>
+
+<br />
+<form method="post" id="_AnswerForm" action="">{% csrf_token %}
+{{ form }}
+</form>
+
+<br />
+<a href="#" class="component_icon button icon_save"
+   onclick="document.getElementById('_AnswerForm').submit(); return false;">{% trans "Save" %}</a>
+
+
+
+{% endblock course_content %}
+
+

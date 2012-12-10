@@ -7,13 +7,11 @@
 <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Respond to the following questions" %}</h3>
 </div>
 
-
-<span class="doc_type_title">{{ doc_type }}</span>
 <table class="listing" width="100%">
     <tbody>
         {% for question in questions.all %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="60%">{{ question.title }}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="60%"><a href="{% url teleforma-question-answer question.id %}">{{ question.title }}</a></td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="35%">{{ question.rank }}</td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></td>
             </tr>

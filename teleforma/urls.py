@@ -86,8 +86,8 @@ urlpatterns = patterns('',
         name="teleforma-conference-record"),
 
     # Questions
-    url(r'^desk/questions/(?P<pk>.*)/$', AnswerCreateView.as_view(),
-        name="teleforma-answer-create"),
+    url(r'^desk/questions/(?P<pk>.*)/$', AnswerView.as_view(),
+        name="teleforma-question-answer"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),

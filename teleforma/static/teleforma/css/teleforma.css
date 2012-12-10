@@ -1360,6 +1360,11 @@ input,textarea{
     margin-bottom: 0.2em;
 }
 
+#module-set .module div {
+        -moz-border-radius: 8px 8px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 8px 8px 8px;
+       }
 
 #module-set .module a:hover {
     text-decoration: none;
@@ -1472,9 +1477,9 @@ input,textarea{
 
 .course_title {
     color: #000;
-    -moz-border-radius: 8px 0px 0px 0px;
-    -webkit-border-radius: 8px 0px 0px 0px;
-    border-radius: 8px 0px 0px 0px;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
     padding: 0em;
     font-weight: bold;
     font-size: 1.2em;
@@ -1482,12 +1487,11 @@ input,textarea{
 
 .course_description {
     background-color: #FFF;
-    -moz-border-radius: 8px 0px 8px 8px;
+    padding: 0em 1em 1em 1em;
+        -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
-    padding: 0.5em 0.5em 1em 1em;
-    margin-top: 0.8em;
-    border: 1px solid #dfdfdf;
+    /*text-align: justify;*/
     }
 
 .course_content {
@@ -1675,3 +1679,48 @@ input,textarea{
 .conference_form textarea {
     font-size: 1.2em;
     }
+
+
+.ui-progressbar  { 
+    height: 10px;
+   /*webkit rainbow gradient*/
+   background-image: -webkit-gradient(linear,  left top,  right top, 
+    color-stop(0.00, blue),
+    color-stop(25%, green),
+    color-stop(50%, yellow),
+    color-stop(66%, orange),
+    color-stop(1.00, red)
+    );
+
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg); /* IE 9 */
+    -moz-transform:rotate(180deg); /* Firefox */
+    -webkit-transform:rotate(180deg); /* Safari and Chrome */
+    -o-transform:rotate(180deg); /* Opera */  
+
+        -moz-border-radius: 8px 0px 8px 8px;
+        -webkit-border-radius: 8px 0px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
+    }
+
+.messages {
+    padding: 0.5em;
+}
+
+.info {
+    color: white;
+    padding: 0.3em;
+    background-color: #3c9200; 
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.error {
+    color: white;
+    padding: 0.3em;
+    background-color: #db4b39; 
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}

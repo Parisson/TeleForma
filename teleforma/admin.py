@@ -91,13 +91,17 @@ admin.site.register(Question)
 admin.site.register(Testimonial)
 admin.site.register(TestimonialTemplate)
 admin.site.register(SeminarType)
+admin.site.register(Answer)
 
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
-# admin.site.register(Media, MediaAdmin)
+admin.site.register(Media, MediaAdmin)
 admin.site.register(MediaPackage, MediaPackageAdmin)
 admin.site.register(Room)
 
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
+
+# TELEMETA
+admin.site.register(MediaItemMarker)
 

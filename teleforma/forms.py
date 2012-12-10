@@ -16,6 +16,17 @@ class QuestionForm(ModelForm):
         model = Question
         # exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
 
+class AnswerForm(ModelForm):
+
+    def __init__(self, *args, **kwargs): 
+        super(AnswerForm, self).__init__(*args, **kwargs)
+        self.fields['answer'].widget.attrs['cols'] = 95
+        self.fields['answer'].widget.attrs['rows'] = 40
+
+    class Meta:
+        model = Answer
+        exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
+
 
 # AnswerFormset = inlineformset_factory(QuestionForm, Answer, extra=1)
 

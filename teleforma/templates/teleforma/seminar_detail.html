@@ -1,58 +1,51 @@
 {% extends "teleforma/seminars.html" %}
+{% load teleforma_tags %}
+{% load telemeta_utils %}
 {% load i18n %}
 
-{% block extra_javascript %}
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
-<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-    <style>
-
-    .ui-progressbar2 .ui-progressbar-value2 { 
-      /*webkit rainbow gradient*/
-   background-image: -webkit-gradient(linear,  left top,  right top, 
-    color-stop(0.00, red), 
-    color-stop(16%, orange),
-    color-stop(32%, yellow),
-    color-stop(48%, green),
-    color-stop(60%, blue),
-    color-stop(76%, indigo),
-    color-stop(1.00, violet));
- }
-
-    </style>
-<script type="text/javascript">
-    $(function() {
-        $( "#progressbar" ).progressbar({
-            value: {{ progress }}
-        });
-    });
-</script>
-{% endblock extra_javascript %}
 
 {% block course %}
 <div class="desk_center">
+
     <div class="course">
         
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}</a>
         </div>
 
-        <div class="course_description">
-        {% if seminar.description %}{{ seminar.description }}{% endif %}
+        {% block course_content %}
+
+        {% if messages %}
+        <div class="course_content">
+         <div class="course_subtitle">
+             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Informations" %}</h3>
+         </div>
+         <div class="messages">
+            {% for message in messages %}
+            <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+         </div>
+        </div>
+        {% endif %}
+
+        <div class="course_content">
+          {% if seminar.description %}
+            <div class="course_subtitle">
+             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Description" %}</h3>
+            </div>
+            <div class="course_description">
+              {{ seminar.description }}
+            </div>
+          {% endif %}
         </div>
 
-        
           {% with seminar.docs_1 as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
           {% endwith %}
 
-<!--
-        <div class="course_step">
-          {% trans "Play the following media" %}
-        </div>
           {% with seminar.media as medias %}
            {% include "teleforma/inc/media_package_list.html" %}
           {% endwith %}
--->
         
           {% with seminar.docs_2 as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
@@ -68,8 +61,18 @@
           {% endwith %}
         {% endif %}
 
-      
+      {% endblock course_content %}
+
       </div>
+
 </div>
 {% endblock course %}
 
+{% block local_progress %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progression" %} : {{ 100|sub:progress }}%</h3>
+ <div style="background: white;">
+  <div id="progressbar"></div>
+ </div>
+</div>
+{% endblock local_progress %}

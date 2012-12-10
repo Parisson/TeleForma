@@ -22,6 +22,7 @@
 <title>{%block head_title %}{% description %} - TeleForma{% endblock %}</title>
 
 {% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/teleforma.css" />
 
@@ -31,6 +32,7 @@
 <!--[if lte IE 6]>
 <link rel="stylesheet"type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta_ie6.css" />
 <![endif]-->
+
 {% endblock %}
 
 {% block extra_stylesheets %}{% endblock %}
@@ -42,6 +44,15 @@
 <script src="{{ STATIC_URL }}telemeta/js/application.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}jqchat/jqchat.js" type="text/javascript" ></script>
+<script src="{{ STATIC_URL }}teleforma/js/jquery-ui.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}teleforma/js/jquery.expander.min.js" type="text/javascript"></script>
+<script>
+$(function() {
+        $( "#progressbar" ).progressbar({
+            value: {{ progress }}
+        });
+    });
+</script>
 
 {% if user.is_authenticated %}
 <script type='text/javascript'>var CURRENT_USER_NAME="{{ user.username }}";</script>
@@ -59,6 +70,7 @@
 {% endblock %}
 
 {% block extra_javascript %}{% endblock %}
+
 </head>
 
 <body>
