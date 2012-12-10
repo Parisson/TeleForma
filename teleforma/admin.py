@@ -57,7 +57,7 @@ class MediaAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
 class MediaPackageAdmin(admin.ModelAdmin):
-    exclude = ['readers', 'mime_type']
+    exclude = ['mime_type']
     search_fields = ['id']
 
 class ConferenceAdmin(admin.ModelAdmin):

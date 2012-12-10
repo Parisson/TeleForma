@@ -15,8 +15,6 @@ $(document).ready(function(){
 </script>
 {% endblock extra_javascript %}
 
-
-
 {% block course_content %}
 
 <div class="course_content">
@@ -37,7 +35,9 @@ $(document).ready(function(){
 <a href="#" class="component_icon button icon_save"
    onclick="document.getElementById('_AnswerForm').submit(); return false;">{% trans "Save" %}</a>
 
-
+<a href="#" class="component_icon button icon_ok"
+   onclick="document.getElementById('id_status').value=3; 
+ document.getElementById('_AnswerForm').submit(); return false;">{% trans "Submit it" %}</a>
 
 {% endblock course_content %}
 

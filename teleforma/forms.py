@@ -25,7 +25,8 @@ class AnswerForm(ModelForm):
 
     class Meta:
         model = Answer
-        exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
+        exclude = ['user', 'question', 'validated', 'date_submitted']
+        hidden_fields = ['status']
 
 
 # AnswerFormset = inlineformset_factory(QuestionForm, Answer, extra=1)

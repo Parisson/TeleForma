@@ -1724,3 +1724,11 @@ input,textarea{
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
 }
+
+.errorlist {
+    color: red;
+}
+
+.errorlist li {
+    font-size: 1.2em;
+}

@@ -33,7 +33,6 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-
 from teleforma.views.core import *
 
 
@@ -194,6 +193,7 @@ class AnswerView(FormView):
         else:
             answer = Answer()
         initial['answer'] = answer.answer
+        initial['status'] = answer.status
         return initial
 
     def form_valid(self, form):
@@ -201,10 +201,10 @@ class AnswerView(FormView):
         answer.user = self.request.user
         answer.question = self.question
         answer.save()
-        messages.info(
-            self.request,
-            "You have successfully saved your answer"
-        )
+        if answer.status <= 2:
+            messages.info(self.request, "You have successfully saved your answer")
+        elif answer.status == 3:
+            messages.info(self.request, "You have successfully submitted your answer")
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):

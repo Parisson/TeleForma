@@ -71,6 +71,7 @@ from jsonrpc.proxy import ServiceProxy
 
 from teleforma.models import *
 from teleforma.forms import *
+from teleforma.views.pro import *
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
@@ -80,6 +81,10 @@ try:
     from telecaster.tools import *
 except:
     pass
+
+
+access_error = _('Access not allowed.')
+contact_message = _('Please login or contact the website administator to get a private access.')
 
 
 def format_courses(courses, course=None, queryset=None, types=None):
@@ -100,8 +105,11 @@ def get_courses(user, date_order=False, num_order=False):
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
         return get_ae_courses(user, date_order, num_order)
-    
 
+def get_seminars(user):
+    from teleforma.views.pro import get_seminars
+    return get_seminars(user)
+    
 def stream_from_file(__file):
     chunk_size = 0x10000
     f = open(__file, 'r')
@@ -125,16 +133,21 @@ def get_room(content_type=None, id=None, name=None):
     return room
 
 
-def get_access(obj, courses):
+def get_course_access(obj, courses):
     access = False
     for course in courses:
         if obj.course == course['course']:
             access = True
     return access
 
-
-access_error = _('Access not allowed.')
-contact_message = _('Please login or contact the website administator to get a private access.')
+def get_seminar_access(doc, user_seminars):
+    access = False
+    doc_seminars = [doc.seminar_docs_1.all(), doc.seminar_docs_2.all(), doc.seminar_docs_correct.all()]
+    for seminars in doc_seminars:
+        for seminar in seminars:
+            if seminar in user_seminars:
+                access = True
+    return access
 
 def get_host(request):
     host = request.META['HTTP_HOST']
@@ -249,7 +262,7 @@ class MediaView(DetailView):
         else:
             context['room'] = get_room(name=media.item.title, content_type=content_type,
                                    id=media.id)
-        access = get_access(media, all_courses)
+        access = get_course_access(media, all_courses)
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -263,7 +276,7 @@ class MediaView(DetailView):
     def download(self, request, pk):
         courses = get_courses(request.user)
         media = Media.objects.get(id=pk)
-        if get_access(media, courses):
+        if get_course_access(media, courses):
             path = media.item.file.path
             filename, ext = os.path.splitext(path)
             filename = filename.split(os.sep)[-1]
@@ -303,6 +316,7 @@ class DocumentView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
         all_courses = get_courses(self.request.user)
+        seminars = get_seminars(self.request.user)
         context['all_courses'] = all_courses
         document = self.get_object()
         context['course'] = document.course
@@ -313,7 +327,7 @@ class DocumentView(DetailView):
         else:
             context['room'] = get_room(name=document.title, content_type=content_type,
                                    id=document.id)
-        access = get_access(document, all_courses)
+        access = get_course_access(document, all_courses) or get_seminar_access(document, seminars)
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -325,10 +339,10 @@ class DocumentView(DetailView):
         return super(DocumentView, self).dispatch(*args, **kwargs)
 
     def download(self, request, pk):
-        courses = get_courses(request.user)
         document = Document.objects.get(id=pk)
-        document.readers.add(request.user)
-        if get_access(document, courses):
+        courses = get_courses(request.user)
+        seminars = get_seminars(request.user)
+        if get_course_access(document, courses) or get_seminar_access(document, seminars):
             document.readers.add(request.user)
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
@@ -342,9 +356,10 @@ class DocumentView(DetailView):
 
     def view(self, request, pk):
         courses = get_courses(request.user)
+        seminars = get_seminars(request.user)
         document = Document.objects.get(id=pk)
         document.readers.add(request.user)
-        if get_access(document, courses):
+        if get_course_access(document, courses) or get_seminar_access(document, seminars):
             document.readers.add(request.user)
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
@@ -376,7 +391,7 @@ class ConferenceView(DetailView):
                                    id=conference.id)
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
-        access = get_access(conference, all_courses)
+        access = get_course_access(conference, all_courses)
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
