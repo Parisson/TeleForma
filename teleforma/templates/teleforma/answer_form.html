@@ -5,8 +5,9 @@
 {% block extra_javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-  $('#id_answer').live("cut copy paste",function(e) {
+  $('#id_answer').live("paste",function(e) {
       e.preventDefault();
+      new Messi(gettext('Sorry, it is not allowed to paste text here.'), {buttons: [{id: 0, label: gettext('Close'), val: 'X'}], modal: true});
   });
 });
 
