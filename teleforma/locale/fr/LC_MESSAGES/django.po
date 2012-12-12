@@ -6,11 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-10 23:10+0100\n"
+"POT-Creation-Date: 2012-12-11 16:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
-"Language: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -460,7 +460,7 @@ msgstr "Page non trouvée"
 msgid "Server error"
 msgstr "Erreur du serveur"
 
-#: templates/admin/base.html:21 templates/telemeta/base.html:100
+#: templates/admin/base.html:21 templates/telemeta/base.html:102
 msgid "Home"
 msgstr "Accueil"
 
@@ -488,7 +488,7 @@ msgstr ""
 msgid "Sent Messages"
 msgstr "Messages"
 
-#: templates/postman/base.html:17 templates/telemeta/base.html:113
+#: templates/postman/base.html:17 templates/telemeta/base.html:115
 msgid "Archives"
 msgstr ""
 
@@ -727,15 +727,15 @@ msgstr ""
 msgid "Write"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:22
+#: templates/teleforma/answer_form.html:23
 msgid "Answer to the following question"
 msgstr "Réalisez les consultations fictives suivantes"
 
-#: templates/teleforma/answer_form.html:36
+#: templates/teleforma/answer_form.html:37
 msgid "Save"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:40
+#: templates/teleforma/answer_form.html:41
 msgid "Submit it"
 msgstr "Soumettre"
 
@@ -927,8 +927,8 @@ msgstr "Nouvelle note"
 msgid "Status"
 msgstr "Status"
 
-#: templates/teleforma/help.html:11 templates/telemeta/base.html:122
-#: templates/telemeta/base.html.py:135
+#: templates/teleforma/help.html:11 templates/telemeta/base.html:124
+#: templates/telemeta/base.html.py:137
 msgid "Help"
 msgstr "Aide"
 
@@ -940,10 +940,6 @@ msgstr "Informations"
 #: templates/teleforma/seminar_detail.html:73
 msgid "Progression"
 msgstr "Progression"
-
-#: templates/teleforma/inc/answer_form.html:11
-msgid "Respond to the following question"
-msgstr "Réalisez la consultation fictive suivante"
 
 #: templates/teleforma/inc/conference_list.html:8
 msgid "Live conferences"
@@ -992,52 +988,52 @@ msgstr "Durée"
 msgid "Answer to the following questions"
 msgstr "Réalisez les consultations fictives suivantes"
 
-#: templates/telemeta/base.html:97
+#: templates/telemeta/base.html:99
 msgid "Desk"
 msgstr "Bureau"
 
-#: templates/telemeta/base.html:105
+#: templates/telemeta/base.html:107
 msgid "Messaging"
 msgstr "Messagerie"
 
-#: templates/telemeta/base.html:108 templates/telemeta/users.html:6
+#: templates/telemeta/base.html:110 templates/telemeta/users.html:6
 #: templates/telemeta/users.html.py:69
 msgid "Users"
 msgstr ""
 
-#: templates/telemeta/base.html:115 templates/telemeta/search_criteria.html:69
+#: templates/telemeta/base.html:117 templates/telemeta/search_criteria.html:69
 msgid "Search"
 msgstr ""
 
-#: templates/telemeta/base.html:116
+#: templates/telemeta/base.html:118
 msgid "Collections"
 msgstr ""
 
-#: templates/telemeta/base.html:117
+#: templates/telemeta/base.html:119
 msgid "Items"
 msgstr ""
 
-#: templates/telemeta/base.html:120
+#: templates/telemeta/base.html:122
 msgid "Admin"
 msgstr ""
 
-#: templates/telemeta/base.html:132
+#: templates/telemeta/base.html:134
 msgid "Profile"
 msgstr "Profil"
 
-#: templates/telemeta/base.html:134
+#: templates/telemeta/base.html:136
 msgid "Lists"
 msgstr ""
 
-#: templates/telemeta/base.html:137
+#: templates/telemeta/base.html:139
 msgid "Sign out"
 msgstr ""
 
-#: templates/telemeta/base.html:179
+#: templates/telemeta/base.html:181
 msgid "Powered by"
 msgstr ""
 
-#: templates/telemeta/base.html:189
+#: templates/telemeta/base.html:191
 msgid "Legal notices"
 msgstr ""
 
@@ -1274,6 +1270,9 @@ msgid ""
 msgstr ""
 "Merci de vous connecter ou bien contactez l'administateur du site pour "
 "obtenir un accès privé."
+
+#~ msgid "Respond to the following question"
+#~ msgstr "Réalisez la consultation fictive suivante"
 
 #~ msgid "Respond to the following questions"
 #~ msgstr "Réalisez les consultations fictives suivantes"

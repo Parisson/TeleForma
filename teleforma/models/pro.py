@@ -147,7 +147,7 @@ class Question(models.Model):
     title       = models.CharField(_('title'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=1024, blank=True)
     question    = tinymce.models.HTMLField(_('question'), blank=True)
-    rank        = models.IntegerField(_('rank'), blank=True)
+    rank        = models.IntegerField(_('rank'), blank=True, null=True)
     weight      = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
     min_nchar   = models.IntegerField(_('minimum numbers of characters'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
