@@ -1,58 +1,78 @@
 {% extends "teleforma/seminars.html" %}
+{% load teleforma_tags %}
+{% load telemeta_utils %}
 {% load i18n %}
-
 
 
 {% block course %}
 <div class="desk_center">
+
     <div class="course">
+        
         <div class="course_title">
-         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}{% if seminar.description %} - {{ seminar.description }}{% endif %}</a>
+         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}</a>
         </div>
 
-        <div class="course_description">
-        {% if seminar.description %}{{ seminar.description }}{% endif %}
+        {% block course_content %}
+
+        {% if messages %}
+        <div class="course_content">
+         <div class="course_subtitle">
+             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Informations" %}</h3>
+         </div>
+         <div class="messages">
+            {% for message in messages %}
+            <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+         </div>
+        </div>
+        {% endif %}
+
+        <div class="course_content">
+          {% if seminar.description %}
+            <div class="course_subtitle">
+             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Description" %}</h3>
+            </div>
+            <div class="course_description">
+              {{ seminar.description }}
+            </div>
+          {% endif %}
         </div>
 
-        <div class="course_step">
-          {% trans "Read the following documents" %}
-        </div>
-          {% with seminar.doc_1 as docs %}
+          {% with seminar.docs_1 as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
           {% endwith %}
 
-        <div class="course_step">
-          {% trans "Play the following media" %}
-        </div>
-          {% with seminar.media as media %}
-           {% include "teleforma/inc/media_package_list.html" %
+          {% with seminar.media as medias %}
+           {% include "teleforma/inc/media_package_list.html" %}
           {% endwith %}
-
-        <div class="course_step">
-          {% trans "Read the following documents" %}
-        </div>
-          {% with seminar.doc_2 as docs %}
+        
+          {% with seminar.docs_2 as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
           {% endwith %}
           
-        <div class="course_step">
-          {% trans "Respond to the following questions" %}
-        </div>
-          {% with seminar.question.all as questions %}
+          {% with seminar.question as questions %}
            {% include "teleforma/inc/question_list.html" %}
           {% endwith %}
 
-         {% if seminar.question.all|validated %}
-         <div class="course_step">
-          {% trans "Read the following documents" %}
-         </div>
-          {% with seminar.doc_correct as docs %}
+         {% if validated %}
+          {% with seminar.docs_correct as docs %}
            {% include "teleforma/inc/document_simple_list.html" %}
           {% endwith %}
+        {% endif %}
 
+      {% endblock course_content %}
 
-      
       </div>
+
 </div>
 {% endblock course %}
 
+{% block local_progress %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progression" %} : {{ 100|sub:progress }}%</h3>
+ <div style="background: white;">
+  <div id="progressbar"></div>
+ </div>
+</div>
+{% endblock local_progress %}

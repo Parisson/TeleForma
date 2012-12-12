@@ -3,6 +3,17 @@
 {% load telemeta_utils %}
 {% load i18n %}
 
+{% block extra_javascript %}
+<script type="text/javascript">
+$(function () {
+    $('div.course_description').expander({
+        slicePoint: 220,
+        expandText: 'Lire plus',
+        userCollapseText: 'Cacher le texte',
+    });
+});
+</script>
+{% endblock extra_javascript %}
 
 {% block content %}
 
@@ -56,13 +67,22 @@
 
 <div class="desk_center">
     {% for seminar in object_list %}
+      
       <div class="course">
+
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}</a>
         </div>
 
-        <div class="course_description">
-        {% if seminar.description %}{{ seminar.description }}{% endif %}
+        <div class="course_content">
+          {% if seminar.description %}
+            <div class="course_subtitle">
+             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Description" %}</h3>
+            </div>
+            <div class="course_description">
+              {{ seminar.description }}
+            </div>
+          {% endif %}
         </div>
 
       </div>
@@ -72,6 +92,15 @@
 {% endblock course %}
 
 <div id="module-set" style="width: 22%">
+
+{% block local_progress %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Informations" %}</h3>
+ <div style="background: white;">
+  <div id="progressbar"></div>
+ </div>
+</div>
+{% endblock local_progress %}
 
 {% block status %}
 {% get_telecaster as telecaster %}
@@ -86,6 +115,7 @@ server_status_callback();
 </script>
 {% endif %}
 {% endblock status %}
+
 
 
 </div>

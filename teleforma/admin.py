@@ -52,15 +52,12 @@ class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
 
-class DocumentSimpleAdmin(admin.ModelAdmin):
-    exclude = ['readers']
-
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id']
 
 class MediaPackageAdmin(admin.ModelAdmin):
-    exclude = ['readers', 'mime_type']
+    exclude = ['mime_type']
     search_fields = ['id']
 
 class ConferenceAdmin(admin.ModelAdmin):
@@ -73,7 +70,7 @@ class SeminarQuestionInline(admin.StackedInline):
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
     filter_horizontal = ['professor', 'media', 'media_preview', 
-                         'doc_1', 'doc_2', 'doc_correct']
+                         'docs_1', 'docs_2', 'docs_correct']
 
 
 admin.site.unregister(User)
@@ -94,14 +91,17 @@ admin.site.register(Question)
 admin.site.register(Testimonial)
 admin.site.register(TestimonialTemplate)
 admin.site.register(SeminarType)
+admin.site.register(Answer)
 
-# admin.site.register(Document, DocumentAdmin)
-admin.site.register(DocumentSimple, DocumentSimpleAdmin)
+admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
-# admin.site.register(Media, MediaAdmin)
+admin.site.register(Media, MediaAdmin)
 admin.site.register(MediaPackage, MediaPackageAdmin)
 admin.site.register(Room)
 
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
+
+# TELEMETA
+admin.site.register(MediaItemMarker)
 

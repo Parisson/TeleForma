@@ -1,51 +1,65 @@
 {% load teleforma_tags %}
+{% load thumbnail %}
 {% load i18n %}
 
-{% with course.conference.all|from_course_type:type as conferences %}
-{% if conferences %}
 <div class="course_content">
 <div class="course_subtitle">
-    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
+    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Play the following conferences" %}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
-       {% for conference in conferences|from_periods:periods %}
-        {% for stream in conference.livestream.all %}
-         {% if stream.stream_type == 'webm' %}
+      {% for media in medias.all %}
+       {% if media.is_published or user.is_staff %}
+        {% with media.video_items.all.0 as item %}
+         
             <tr>
-            {% if stream.streaming %}
-            <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
-               <a href="{% url teleforma-conference-detail stream.conference.id %}" title="{% trans "View" %}">
-               <img id="snapshot-{{ stream.course.code }}-{{ stream.course_type }}" src="{{ stream.snapshot_url }}" width="100%" alt="{% trans 'Click here' %}" />
-               </a>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
+            <a href="{% url teleforma-media-detail media.id %}" title="{% trans "Play" %}">
+            {% if item.related.all %}
+             {% with item.related.all.0 as related %}
+              {% if related.title == "preview" %}
+               {% thumbnail related.file "168x96" as im %}
+                <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
+                 <img src="{{ STATIC_URL }}teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
+                </div>
+               {% endthumbnail %}
+              {% endif %}
+             {% endwith %}
+            {% else %}
+              {% trans 'Click here' %}
+            {% endif %}
+            </a>
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
-                    <dt>{% trans "Title" %}</dt><dd>{{ stream.conference.course.title }}</dd>
-                    <dt>{% trans "Session" %}</dt><dd>{{ stream.conference.session }}</dd>
-                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail stream.conference.professor.user.username %}" target="_blank">{{ stream.conference.professor }}</a></dd>
-                    <dt>{% trans "Begin" %}</dt><dd>{{ stream.conference.date_begin }}</dd>
+                    <dt>{% trans "Title" %}</dt><dd>{{ seminar.course.title }}</dd>
+                    {% if seminar.professor.all %}
+                    <dt>{% trans "Professor" %}</dt><dd>{% for professor in seminar.professor.all %}<a href="{% url telemeta-profile-detail professor.user.username %}" target="_blank">{{ professor }}</a> {% endfor %}</dd>
+                    {% endif %}
+                    {% if media.description %}
+                    <dt>{% trans "Description" %}</dt><dd>{{ media.description }}</dd>
+                    {% endif %}
+                    <dt>{% trans "Duration" %}</dt><dd>{{ item.approx_duration }}</dd>
                     </dl>
                  </div>
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
-                {% if stream.streaming %}
-                <img src="{{ STATIC_URL }}teleforma/images/network-wireless.png" style="vertical-align:middle" title="streaming" />
-                <img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" title="recording" />
-              {% endif %}
-            </td>
-            {% else %}
-            <div style="padding-left: 1em;">
-
-            </div>
-             {% endif %}
-            </tr>
+            {% if media.is_published and user.is_staff %}
+             <img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
+            {% elif not media.is_published and user.is_staff %}
+             <img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
-        {% endfor %}
-        {% endfor %}
+            {% if media.item.file %}
+             <a href="{{ MEDIA_URL }}{{ media.item.file }}">
+              <img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
+             </a>
+            {% endif %}
+            </td>
+            </tr>
+        {% endwith %}
+       {% endif %}
+      {% endfor %}
     </tbody>
     </table>
 </div>
-{% endif %}
-{% endwith %}

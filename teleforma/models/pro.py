@@ -100,19 +100,19 @@ class Seminar(Displayable):
     professor       = models.ManyToManyField('Professor', related_name='seminar', 
                                             verbose_name=_('professor'), blank=True, null=True)
 
-    doc_1           = models.ManyToManyField(DocumentSimple, related_name="seminar_doc1", 
+    docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1", 
                                         verbose_name=_('document 1'),
                                         blank=True, null=True)
-    media           = models.ManyToManyField(MediaPackage, related_name="seminar_media",
+    media           = models.ManyToManyField(MediaPackage, related_name="seminar",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
     media_preview   = models.ManyToManyField(MediaPackage, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
-    doc_2           = models.ManyToManyField(DocumentSimple, related_name="seminar_doc2",
+    docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",
                                         verbose_name=_('document 2'),
                                         blank=True, null=True)
-    doc_correct     = models.ManyToManyField(DocumentSimple, related_name="seminar_doccorrect",
+    docs_correct    = models.ManyToManyField(Document, related_name="seminar_docs_correct",
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
 
@@ -125,11 +125,11 @@ class Seminar(Displayable):
     @property
     def scenario(self):
         self.steps = []
-        self.steps.append(self.doc_1)
+        self.steps.append(self.docs_1)
         self.steps.append(self.media)
-        self.steps.append(self.doc_2)
+        self.steps.append(self.docs_2)
         self.steps.append(self.question)
-        self.steps.append(self.doc_correct)
+        self.steps.append(self.docs_correct)
         self.steps.append(self.testimonial)
         return self.steps
 
@@ -147,13 +147,13 @@ class Question(models.Model):
     title       = models.CharField(_('title'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=1024, blank=True)
     question    = tinymce.models.HTMLField(_('question'), blank=True)
-    rank        = models.IntegerField(_('rank'), blank=True)
+    rank        = models.IntegerField(_('rank'), blank=True, null=True)
     weight      = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
     min_nchar   = models.IntegerField(_('minimum numbers of characters'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
     def __unicode__(self):
-        return ' - '.join([self.seminar.__unicode__(), str(self.rank), self.title])
+        return ' - '.join([unicode(self.seminar), self.title, str(self.rank)])
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'question'
@@ -171,7 +171,7 @@ class Answer(models.Model):
     date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
 
     def __unicode__(self):
-        return ' - '.join([self.question, self.user])
+        return ' - '.join([unicode(self.question), self.user.username, unicode(self.date_submitted)])
 
     def validate(self):
         if len(self.answer) >= self.question.min_nchar:
@@ -189,7 +189,7 @@ class TestimonialTemplate(models.Model):
                                  verbose_name=_('organization'))
     description  = models.TextField(_('description'), blank=True)
     comments     = models.TextField(_('comments'), blank=True)
-    document     = models.ForeignKey(DocumentSimple, related_name="testimonial_template",
+    document     = models.ForeignKey(Document, related_name="testimonial_template",
                                 verbose_name=_('template'))
 
     def __unicode__(self):
@@ -206,7 +206,7 @@ class Testimonial(models.Model):
     user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
     template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial", 
                                     verbose_name=_('template'), blank=True, null=True)
-    document    = models.ForeignKey(DocumentSimple, related_name="testimonial", 
+    document    = models.ForeignKey(Document, related_name="testimonial", 
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
 

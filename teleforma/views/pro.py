@@ -33,7 +33,6 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-
 from teleforma.views.core import *
 
 
@@ -68,11 +67,11 @@ def seminar_progress(user, seminar):
     progress = 0
     total = 0
     
-    objects = [seminar.doc_1, seminar.doc_2, seminar.media, seminar.doc_correct]
+    objects = [seminar.docs_1, seminar.docs_2, seminar.media, seminar.docs_correct]
     for obj in objects:
-        for item in obj:
+        for item in obj.all():
             total += item.weight
-            if user in item.readers:
+            if user in item.readers.all():
                 progress += item.weight
     
     questions = Question.objects.filter(seminar=seminar, status=3)
@@ -82,7 +81,10 @@ def seminar_progress(user, seminar):
         if answer:
             progress += question.weight
 
-    return int(progress*100/total)
+    if total != 0:
+        return 100-int(progress*100/total)
+    else:
+        return 100
 
 
 def total_progress(user):
@@ -97,9 +99,17 @@ def total_progress(user):
         n += 1
 
     if n:
-        return int(progress/n)
+        return 100-int(progress/n)
     else:
-        return 0
+        return 100
+
+def seminar_validated(user, seminar):
+    validated = False
+    for question in seminar.question.all():
+        answers = question.answer.filter(user=user)
+        if answers:
+            validated = validated and answers[0].validated
+    return validated
 
 
 class SeminarView(DetailView):
@@ -113,11 +123,11 @@ class SeminarView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SeminarView, self).get_context_data(**kwargs)
-        user = self.request.user
         seminar = self.get_object()
-        context['all_seminars'] = get_seminars(user)
-        context['progress'] = seminar_progress(user, seminar)
-        context['total_progress'] = total_progress(user)
+        context['all_seminars'] = get_seminars(self.request.user)
+        context['progress'] = seminar_progress(self.request.user, seminar)
+        context['total_progress'] = total_progress(self.request.user)
+        context['validated'] = seminar_validated(self.request.user, seminar)
         return context
 
 
@@ -144,10 +154,77 @@ class SeminarsView(ListView):
 
 
 
+class AjaxableResponseMixin(object):
+    """
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return super(AjaxableResponseMixin, self).form_invalid(form)
+
+    def form_valid(self, form):
+        if self.request.is_ajax():
+            data = {
+                'pk': form.instance.pk,
+            }
+            return self.render_to_json_response(data)
+        else:
+            return super(AjaxableResponseMixin, self).form_valid(form)
+
+
 class AnswerView(FormView):
 
     model = Answer
     form_class = AnswerForm
-    template_name='teleforma/answer.html'
+    template_name='teleforma/answer_form.html'
 
+    def get_initial(self):
+        initial = {}
+        self.question = Question.objects.get(pk=self.kwargs['pk'])
+        answers = Answer.objects.filter(user=self.request.user, 
+                                        question=self.question).order_by('-date_submitted')
+        if answers:
+            answer = answers[0]
+        else:
+            answer = Answer()
+        initial['answer'] = answer.answer
+        initial['status'] = answer.status
+        return initial
+
+    def form_valid(self, form):
+        answer = form.instance
+        answer.user = self.request.user
+        answer.question = self.question
+        answer.save()
+        if answer.status <= 2:
+            messages.info(self.request, "You have successfully saved your answer")
+        elif answer.status == 3:
+            messages.info(self.request, "You have successfully submitted your answer")
+        return super(AnswerView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            "Your submission has not been saved. Try again."
+        )
+        return super(AnswerView, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerView, self).get_context_data(**kwargs)
+        context['all_seminars'] = get_seminars(self.request.user)
+        context['question'] = self.question
+        context['seminar'] = self.question.seminar
+        context['progress'] = seminar_progress(self.request.user, self.question.seminar)
+        return context
+
+    def get_success_url(self):
+        return reverse('teleforma-seminar-detail', kwargs={'pk':self.question.seminar.id})
 
