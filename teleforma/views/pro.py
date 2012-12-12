@@ -81,7 +81,10 @@ def seminar_progress(user, seminar):
         if answer:
             progress += question.weight
 
-    return 100-int(progress*100/total)
+    if total != 0:
+        return 100-int(progress*100/total)
+    else:
+        return 100
 
 
 def total_progress(user):
