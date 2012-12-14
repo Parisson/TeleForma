@@ -475,6 +475,7 @@ class Media(MediaBase):
     item            = ForeignKey(MediaItem, related_name='media',
                                  verbose_name='item', blank=True, null=True)
     type            = CharField(_('type'), choices=streaming_choices, max_length=32)
+    rank            = IntegerField(_('rank'), blank=True, null=True)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
 
@@ -490,8 +491,10 @@ class Media(MediaBase):
     def __unicode__(self):
         if self.conference:
             return self.conference.description
-        elif self.course:
+        elif self.course and self.course_type:
             return self.course.title + ' ' + self.course_type.name
+        elif self.course:
+            return self.course.title
         else:
             return self.item.file
 

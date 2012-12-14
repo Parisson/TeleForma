@@ -11,8 +11,7 @@
     <tbody>
         {% for doc in docs.all %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="60%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="35%">{{ doc.date_modified }}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="95%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if doc.file %}<a href="{% url teleforma-document-download doc.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
             </tr>
         {% endfor %}

@@ -1,5 +1,5 @@
 
-from django.forms import ModelForm
+from django.forms import ModelForm, HiddenInput
 from teleforma.models import *
 from django.forms.models import inlineformset_factory
 
@@ -22,6 +22,7 @@ class AnswerForm(ModelForm):
         super(AnswerForm, self).__init__(*args, **kwargs)
         self.fields['answer'].widget.attrs['cols'] = 95
         self.fields['answer'].widget.attrs['rows'] = 40
+        self.fields['status'].widget = HiddenInput()
 
     class Meta:
         model = Answer

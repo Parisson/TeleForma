@@ -11,8 +11,7 @@
     <tbody>
         {% for question in questions.all %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="60%"><a href="{% url teleforma-question-answer question.id %}">{{ question.title }}</a></td>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="35%">{{ question.rank }}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="60%"><a href="{% url teleforma-question-answer question.id %}">{{ question.title }} n°{{ question.rank }}</a></td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></td>
             </tr>
         {% endfor %}

@@ -62,7 +62,9 @@ def get_seminars(user):
 
 
 def seminar_progress(user, seminar):    
-    """return the user progress of a seminar in percent"""
+    """return the user progress of a seminar in percent
+    WARNING! the result is 100-progress so that we can customize the progress bar background.
+    """
 
     progress = 0
     total = 0
@@ -227,4 +229,50 @@ class AnswerView(FormView):
 
     def get_success_url(self):
         return reverse('teleforma-seminar-detail', kwargs={'pk':self.question.seminar.id})
+
+
+
+class MediaPackageView(DetailView):
+
+    model = MediaPackage
+
+    def get_context_data(self, **kwargs):
+        context = super(MediaPackageView, self).get_context_data(**kwargs)
+        media_package = self.get_object()
+        seminar = media_package.seminar.get()
+        all_seminars = get_seminars(self.request.user)
+        context['all_seminars'] = all_seminars
+        context['seminar'] = seminar
+        context['media_package'] = media_package
+        context['progress'] = seminar_progress(self.request.user, seminar)
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MediaPackageView, self).dispatch(*args, **kwargs)
+
+    @jsonrpc_method('teleforma.publish_media_package')
+    def publish(request, id):
+        media_package = MediaPackage.objects.get(id=id)
+        media_package.is_published = True
+        media_package.save()
+        for media in media_package.video.all():
+            media.is_published = True
+            media.save()
+        for media in media_package.audio.all():
+            media.is_published = True
+            media.save()
+
+    @jsonrpc_method('teleforma.unpublish_media_package')
+    def unpublish(request, id):
+        media_package = MediaPackage.objects.get(id=id)
+        media_package.is_published = False
+        media_package.save()
+        for media in media_package.video.all():
+            media.is_published = False
+            media.save()
+        for media in media_package.audio.all():
+            media.is_published = False
+            media.save()
+                
 

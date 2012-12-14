@@ -68,6 +68,13 @@ urlpatterns = patterns('',
     url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
 
+    url(r'^desk/media-packages/(?P<pk>.*)/video/$', 
+            MediaPackageView.as_view(template_name='teleforma/seminar_media_video.html'), 
+            name="teleforma-media-video"),
+    url(r'^desk/media-packages/(?P<pk>.*)/audio/$', 
+            MediaPackageView.as_view(template_name='teleforma/seminar_media_audio.html'),
+            name="teleforma-media-audio"),
+
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),
     url(r'^desk/documents/(?P<pk>.*)/download/$', document.download,

@@ -8,15 +8,14 @@
 </div>
     <table class="listing" width="100%">
     <tbody>
-      {% for media in medias.all %}
-       {% if media.is_published or user.is_staff %}
-        {% with media.video_items.all.0 as item %}
-         
+      {% for media_package in media_packages.all %}
+       {% with media_package.video.all.0 as media %}
+        {% if media.is_published or user.is_staff %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-            <a href="{% url teleforma-media-detail media.id %}" title="{% trans "Play" %}">
-            {% if item.related.all %}
-             {% with item.related.all.0 as related %}
+            <a href="{% url teleforma-media-video media_package.id %}" title="{% trans "Play" %}">
+            {% if media.item.related.all %}
+             {% with media.item.related.all.0 as related %}
               {% if related.title == "preview" %}
                {% thumbnail related.file "168x96" as im %}
                 <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
@@ -57,8 +56,9 @@
             {% endif %}
             </td>
             </tr>
-        {% endwith %}
-       {% endif %}
+        
+        {% endif %}
+       {% endwith %}
       {% endfor %}
     </tbody>
     </table>

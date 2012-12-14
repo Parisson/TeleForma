@@ -49,10 +49,10 @@ class MediaPackage(MediaBase):
     readers         = models.ManyToManyField(User, related_name="media_package", 
                                         verbose_name=_('readers'),
                                         blank=True, null=True)
-    audio_items     = models.ManyToManyField(MediaItem, related_name="media_package_audio",
+    audio           = models.ManyToManyField(Media, related_name="media_package_audio",
                                         verbose_name=_('audio items'),
                                         blank=True, null=True)
-    video_items     = models.ManyToManyField(MediaItem, related_name="media_package_video", 
+    video           = models.ManyToManyField(Media, related_name="media_package_video", 
                                         verbose_name=_('video items'),
                                         blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
