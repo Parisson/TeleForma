@@ -1732,3 +1732,23 @@ input,textarea{
 .errorlist li {
     font-size: 1.2em;
 }
+
+form .deceed{
+        background-color: white; 
+        font-weight:bold;
+        padding: 0.3em;
+        margin-top: 0.8em;
+        float: right;
+        border: 1px solid #adadad;
+        color: #b00;
+    }
+
+form .exceed{
+        background-color: white; 
+        font-weight:bold;
+        padding: 0.3em;
+        margin-top: 0.8em;
+        float: right;
+        border: 1px solid #adadad;
+        color:#080;
+    }

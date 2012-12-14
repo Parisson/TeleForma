@@ -3,6 +3,7 @@
 {% load i18n %}
 
 {% block extra_javascript %}
+<script src="{{ STATIC_URL }}teleforma/js/charCount.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function(){
   $('#id_answer').live("paste",function(e) {
@@ -10,6 +11,16 @@ $(document).ready(function(){
       new Messi(gettext('Sorry, it is not allowed to paste text here.'), {buttons: [{id: 0, label: gettext('Close'), val: 'X'}], modal: true});
   });
 });
+
+$(document).ready(function(){   
+        //default usage
+        $("#id_answer").charCount({
+                        necessary: {{question.min_nchar}},            
+                        counterText: gettext('Characters ')+' : ',
+                });
+});
+
+
 </script>
 {% endblock extra_javascript %}
 
