@@ -438,7 +438,7 @@ class Document(MediaBase):
     def __unicode__(self):
         strings = []
         if self.course:
-            strings.append(unicode(self.course))
+            strings.append(self.course.code)
         if self.course_type.all():
             types = ' - '.join([unicode(t) for t in self.course_type.all()])
             strings.append(unicode(types))
