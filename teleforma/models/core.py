@@ -486,23 +486,24 @@ class Media(MediaBase):
                 self.mime_type = 'audio/mp3'
             else:
                 self.mime_type = mime_type
-            self.save()
 
     def __unicode__(self):
-        if self.conference:
-            return self.conference.description
-        elif self.course and self.course_type:
-            return self.course.title + ' ' + self.course_type.name
+        strings = []
+        if self.course and self.course_type:
+            strings.append(self.course.code + ' ' + self.course_type.name)
         elif self.course:
-            return self.course.title
+            strings.append(self.course.code)
         else:
-            return self.item.file
+            strings.append(self.item.file)
+        strings.append(self.mime_type)
+        return ' - '.join(strings)
 
     def save(self, **kwargs):
         if self.course:
             self.course.save()
         elif self.conference:
             self.conference.course.save()
+        self.set_mime_type()
         super(Media, self).save(**kwargs)
 
 

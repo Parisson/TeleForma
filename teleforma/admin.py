@@ -59,6 +59,7 @@ class MediaAdmin(admin.ModelAdmin):
 class MediaPackageAdmin(admin.ModelAdmin):
     exclude = ['mime_type']
     search_fields = ['id']
+    filter_horizontal = ['video', 'audio']
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
