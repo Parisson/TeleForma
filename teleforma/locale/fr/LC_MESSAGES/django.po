@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-14 15:07+0100\n"
+"POT-Creation-Date: 2012-12-14 15:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -979,11 +979,11 @@ msgstr "Étape 2 : visionnez la conférence suivante"
 
 #: templates/teleforma/seminar_detail.html:68
 msgid "Step 3 : read the following documents"
-msgstr "Étape 3 : lisez le documents suivants"
+msgstr "Étape 3 : lisez les documents suivants"
 
 #: templates/teleforma/seminar_detail.html:72
 msgid "Step 3 : read the following document"
-msgstr "Étape 3 : lisez les documents suivant"
+msgstr "Étape 3 : lisez le document suivant"
 
 #: templates/teleforma/seminar_detail.html:80
 msgid "Step 4 : answer to the following questions"
