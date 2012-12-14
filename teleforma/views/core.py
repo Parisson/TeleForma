@@ -358,7 +358,6 @@ class DocumentView(DetailView):
         courses = get_courses(request.user)
         seminars = get_seminars(request.user)
         document = Document.objects.get(id=pk)
-        document.readers.add(request.user)
         if get_course_access(document, courses) or get_seminar_access(document, seminars):
             document.readers.add(request.user)
             fsock = open(document.file.path, 'r')

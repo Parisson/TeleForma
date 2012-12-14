@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-11 16:31+0100\n"
+"POT-Creation-Date: 2012-12-14 11:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: models/ae.py:46 models/core.py:177 models/crfpa.py:108 models/crfpa.py:146
 #: models/pro.py:166 models/pro.py:206 models/pro.py:221 models/pro.py:232
-#: models/pro.py:263
+#: models/pro.py:265
 msgid "user"
 msgstr "utilisateur"
 
@@ -91,12 +91,12 @@ msgstr "titre"
 msgid "code"
 msgstr "cote"
 
-#: models/core.py:150 models/core.py:376 models/pro.py:120 models/pro.py:264
+#: models/core.py:150 models/core.py:376 models/pro.py:120 models/pro.py:266
 msgid "date modified"
 msgstr "date de modification"
 
-#: models/core.py:151 models/core.py:420 models/pro.py:58 models/pro.py:95
-#: models/pro.py:150 models/pro.py:211
+#: models/core.py:151 models/core.py:420 models/core.py:478 models/pro.py:58
+#: models/pro.py:95 models/pro.py:150 models/pro.py:211
 msgid "rank"
 msgstr "rang"
 
@@ -150,7 +150,7 @@ msgstr "date de début"
 msgid "end date"
 msgstr "date de fin"
 
-#: models/core.py:225 models/core.py:423 models/core.py:478 models/pro.py:50
+#: models/core.py:225 models/core.py:423 models/core.py:479 models/pro.py:50
 msgid "readers"
 msgstr ""
 
@@ -277,38 +277,38 @@ msgstr "iej"
 msgid "student"
 msgstr "étudiant"
 
-#: models/crfpa.py:147 models/pro.py:238
+#: models/crfpa.py:147 models/pro.py:239
 #: templates/telemeta/profile_detail.html:82
 msgid "Address"
 msgstr "Adresse"
 
-#: models/crfpa.py:148 models/pro.py:239
+#: models/crfpa.py:148 models/pro.py:240
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models/crfpa.py:149 models/pro.py:240
+#: models/crfpa.py:149 models/pro.py:241
 msgid "City"
 msgstr "Ville"
 
-#: models/crfpa.py:150 models/pro.py:241
+#: models/crfpa.py:150 models/pro.py:242
 msgid "Country"
 msgstr "Pays"
 
-#: models/crfpa.py:151 models/pro.py:242
+#: models/crfpa.py:151 models/pro.py:243
 #: templates/telemeta/profile_detail.html:91
 msgid "Language"
 msgstr "Langue"
 
-#: models/crfpa.py:152 models/pro.py:243
+#: models/crfpa.py:152 models/pro.py:244
 #: templates/telemeta/profile_detail.html:83
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models/crfpa.py:153 models/pro.py:244
+#: models/crfpa.py:153 models/pro.py:246
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models/crfpa.py:154 models/pro.py:245
+#: models/crfpa.py:154 models/pro.py:247
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
@@ -372,11 +372,12 @@ msgstr "document 2"
 msgid "corrected document"
 msgstr "document corrigé"
 
-#: models/pro.py:138
+#: models/pro.py:138 templates/teleforma/seminar_media_audio.html:56
+#: templates/teleforma/seminar_media_video.html:102
 msgid "Seminar"
 msgstr "Sémimaire"
 
-#: models/pro.py:146 models/pro.py:205 models/pro.py:220 models/pro.py:262
+#: models/pro.py:146 models/pro.py:205 models/pro.py:220 models/pro.py:264
 msgid "seminar"
 msgstr "séminaire"
 
@@ -436,19 +437,27 @@ msgstr "Évaluation"
 msgid "seminars"
 msgstr "séminaires"
 
-#: models/pro.py:255
+#: models/pro.py:238
+msgid "Company"
+msgstr ""
+
+#: models/pro.py:245
+msgid "Fax"
+msgstr ""
+
+#: models/pro.py:257
 msgid "Auditor"
 msgstr "Auditeur"
 
-#: models/pro.py:265
+#: models/pro.py:267
 msgid "progress"
 msgstr ""
 
-#: models/pro.py:269
+#: models/pro.py:271
 msgid "Revision"
 msgstr "Révision"
 
-#: models/pro.py:270
+#: models/pro.py:272
 msgid "Revisions"
 msgstr "Révisions"
 
@@ -727,15 +736,15 @@ msgstr ""
 msgid "Write"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:23
+#: templates/teleforma/answer_form.html:21
 msgid "Answer to the following question"
 msgstr "Réalisez les consultations fictives suivantes"
 
-#: templates/teleforma/answer_form.html:37
+#: templates/teleforma/answer_form.html:35
 msgid "Save"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:41
+#: templates/teleforma/answer_form.html:39
 msgid "Submit it"
 msgstr "Soumettre"
 
@@ -749,7 +758,7 @@ msgstr "Supports écrits"
 #: templates/teleforma/course_document.html:73
 #: templates/teleforma/inc/conference_list.html:25
 #: templates/teleforma/inc/media_list.html:36
-#: templates/teleforma/inc/media_package_list.html:36
+#: templates/teleforma/inc/media_package_list.html:35
 #: templates/telemeta/lists.html:69 templates/telemeta/search_criteria.html:97
 #: templates/telemeta/inc/module_revisions.html:17
 msgid "Title"
@@ -758,13 +767,15 @@ msgstr "Titre"
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
 #: templates/teleforma/seminar_detail.html:34
 #: templates/teleforma/seminars.html:80
-#: templates/teleforma/inc/media_package_list.html:41
+#: templates/teleforma/inc/media_package_list.html:40
 msgid "Description"
 msgstr "Description"
 
 #: templates/teleforma/course.html:19 templates/teleforma/course.html.py:35
 #: templates/teleforma/course.html:52
 #: templates/teleforma/course_media.html:142
+#: templates/teleforma/seminar_media_audio.html:64
+#: templates/teleforma/seminar_media_video.html:110
 #: templates/telemeta/profile_detail.html:86
 msgid "Date added"
 msgstr "Date d'ajout"
@@ -794,7 +805,7 @@ msgstr "Session"
 #: templates/teleforma/course_media.html:133
 #: templates/teleforma/inc/conference_list.html:27
 #: templates/teleforma/inc/media_list.html:39
-#: templates/teleforma/inc/media_package_list.html:38
+#: templates/teleforma/inc/media_package_list.html:37
 #: templates/telemeta/inc/user_list.html:48
 msgid "Professor"
 msgstr "Professeur"
@@ -806,6 +817,7 @@ msgstr "S T O P"
 
 #: templates/teleforma/course_conference.html:37
 #: templates/teleforma/course_media.html:73
+#: templates/teleforma/seminar_media_video.html:68
 msgid "Audio"
 msgstr ""
 
@@ -853,6 +865,7 @@ msgstr "ID Conférence"
 
 #: templates/teleforma/course_conference_audio.html:36
 #: templates/teleforma/course_media.html:76
+#: templates/teleforma/seminar_media_audio.html:22
 msgid "Video"
 msgstr ""
 
@@ -877,32 +890,43 @@ msgstr "Enregistrer et diffuser"
 
 #: templates/teleforma/course_media.html:27
 #: templates/teleforma/course_media.html:79
+#: templates/teleforma/seminar_media_audio.html:25
+#: templates/teleforma/seminar_media_video.html:20
+#: templates/teleforma/seminar_media_video.html:71
 #: templates/teleforma/inc/media_list.html:50
-#: templates/teleforma/inc/media_package_list.html:49
+#: templates/teleforma/inc/media_package_list.html:48
 msgid " published"
 msgstr " publié"
 
 #: templates/teleforma/course_media.html:34
 #: templates/teleforma/course_media.html:79
+#: templates/teleforma/seminar_media_audio.html:25
+#: templates/teleforma/seminar_media_video.html:27
+#: templates/teleforma/seminar_media_video.html:71
 #: templates/teleforma/inc/media_list.html:52
-#: templates/teleforma/inc/media_package_list.html:51
+#: templates/teleforma/inc/media_package_list.html:50
 msgid " rejected"
 msgstr " rejeté"
 
 #: templates/teleforma/course_media.html:62
+#: templates/teleforma/seminar_media_audio.html:10
+#: templates/teleforma/seminar_media_video.html:56
 #: templates/teleforma/inc/document_list.html:22
-#: templates/teleforma/inc/document_simple_list.html:16
+#: templates/teleforma/inc/document_simple_list.html:15
 #: templates/teleforma/inc/media_list.html:56
-#: templates/teleforma/inc/media_package_list.html:55
-#: templates/teleforma/inc/question_list.html:16
+#: templates/teleforma/inc/media_package_list.html:54
 msgid "Download"
 msgstr "Télécharger"
 
 #: templates/teleforma/course_media.html:141
+#: templates/teleforma/seminar_media_audio.html:63
+#: templates/teleforma/seminar_media_video.html:109
 msgid "Mime type"
 msgstr "Type mime"
 
 #: templates/teleforma/course_media.html:143
+#: templates/teleforma/seminar_media_audio.html:65
+#: templates/teleforma/seminar_media_video.html:111
 msgid "Date modified"
 msgstr "Date de modification"
 
@@ -910,7 +934,7 @@ msgstr "Date de modification"
 msgid "Media ID"
 msgstr "ID Média"
 
-#: templates/teleforma/courses.html:23 templates/teleforma/seminars.html:25
+#: templates/teleforma/courses.html:23
 #: templates/telemeta/profile_detail.html:16
 msgid "My courses"
 msgstr "Mes matières"
@@ -937,9 +961,43 @@ msgstr "Aide"
 msgid "Informations"
 msgstr "Informations"
 
-#: templates/teleforma/seminar_detail.html:73
+#: templates/teleforma/seminar_detail.html:43
+msgid "Step 1 : read the following documents"
+msgstr "Étape 1 : lisez les documents suivants"
+
+#: templates/teleforma/seminar_detail.html:49
+msgid "Step 2 : view the following conferences"
+msgstr "Étape 2 : visionnez les conférences suivantes"
+
+#: templates/teleforma/seminar_detail.html:55
+msgid "Step 3 : read the following documents"
+msgstr "Étape 3 : lisez les documents suivants"
+
+#: templates/teleforma/seminar_detail.html:61
+msgid "Step 4 : answer to the following questions"
+msgstr "Étape 4 : réalisez les consultations fictives suivantes"
+
+#: templates/teleforma/seminar_detail.html:68
+msgid "Step 5 : read the following corrected documents"
+msgstr "Étape 5 : lisez les documents corrigés suivants"
+
+#: templates/teleforma/seminar_detail.html:83
 msgid "Progression"
 msgstr "Progression"
+
+#: templates/teleforma/seminar_media_audio.html:58
+#: templates/teleforma/seminar_media_video.html:104
+msgid "Professors"
+msgstr "Professeurs"
+
+#: templates/teleforma/seminar_media_audio.html:66
+#: templates/teleforma/seminar_media_video.html:112
+msgid "Media package ID"
+msgstr "ID Media pakage"
+
+#: templates/teleforma/seminars.html:25
+msgid "My seminars"
+msgstr "Mes séminaires"
 
 #: templates/teleforma/inc/conference_list.html:8
 msgid "Live conferences"
@@ -954,8 +1012,8 @@ msgstr "Voir"
 #: templates/teleforma/inc/conference_list.html:19
 #: templates/teleforma/inc/media_list.html:23
 #: templates/teleforma/inc/media_list.html:29
-#: templates/teleforma/inc/media_package_list.html:23
-#: templates/teleforma/inc/media_package_list.html:29
+#: templates/teleforma/inc/media_package_list.html:22
+#: templates/teleforma/inc/media_package_list.html:28
 msgid "Click here"
 msgstr "Cliquez ici"
 
@@ -963,30 +1021,23 @@ msgstr "Cliquez ici"
 msgid "No document"
 msgstr "Aucun document"
 
-#: templates/teleforma/inc/document_simple_list.html:7
-msgid "Read the following documents"
-msgstr "Lisez les documents suivants"
-
 #: templates/teleforma/inc/media_list.html:8
 msgid "Passed conferences"
 msgstr "Conférences en différé"
 
 #: templates/teleforma/inc/media_list.html:17
-#: templates/teleforma/inc/media_package_list.html:17
+#: templates/teleforma/inc/media_package_list.html:16
 msgid "Play"
 msgstr "Lire"
 
-#: templates/teleforma/inc/media_package_list.html:7
-msgid "Play the following conferences"
-msgstr "Visionnez les conférences suivantes"
-
-#: templates/teleforma/inc/media_package_list.html:43
+#: templates/teleforma/inc/media_package_list.html:42
 msgid "Duration"
 msgstr "Durée"
 
-#: templates/teleforma/inc/question_list.html:7
-msgid "Answer to the following questions"
-msgstr "Réalisez les consultations fictives suivantes"
+#: templates/teleforma/inc/question_list.html:15
+#, fuzzy
+msgid "Submitted"
+msgstr "Soumettre"
 
 #: templates/telemeta/base.html:99
 msgid "Desk"
@@ -1224,7 +1275,6 @@ msgid "Grouped message"
 msgstr "Message groupé"
 
 #: templates/telemeta/users.html:74
-#, fuzzy
 msgid "No users"
 msgstr "Aucun utilisateur"
 

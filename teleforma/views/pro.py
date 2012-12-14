@@ -79,7 +79,7 @@ def seminar_progress(user, seminar):
     questions = Question.objects.filter(seminar=seminar, status=3)
     for question in questions:
         total += question.weight
-        answer = Answer.objects.filter(question=question, validated=True, user=user)
+        answer = Answer.objects.filter(question=question, status=3, user=user)
         if answer:
             progress += question.weight
 
@@ -106,12 +106,14 @@ def total_progress(user):
         return 100
 
 def seminar_validated(user, seminar):
-    validated = False
+    validated = []
     for question in seminar.question.all():
-        answers = question.answer.filter(user=user)
+        answers = Answer.objects.filter(question= question, user=user, validated=True)
         if answers:
-            validated = validated and answers[0].validated
-    return validated
+            validated.append(True)
+        else:
+            validated.append(False)
+    return not False in validated
 
 
 class SeminarView(DetailView):
@@ -239,6 +241,7 @@ class MediaPackageView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(MediaPackageView, self).get_context_data(**kwargs)
         media_package = self.get_object()
+        media_package.readers.add(self.request.user)
         seminar = media_package.seminar.get()
         all_seminars = get_seminars(self.request.user)
         context['all_seminars'] = all_seminars

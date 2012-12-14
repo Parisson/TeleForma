@@ -4,7 +4,7 @@
 <div class="course_content">
 
 <div class="course_subtitle">
-<h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer to the following questions" %}</h3>
+<h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {{ title }}</h3>
 </div>
 
 <table class="listing" width="100%">
@@ -12,7 +12,7 @@
         {% for question in questions.all %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%"><a href="{% url teleforma-question-answer question.id %}">{{ question.title }} n°{{ question.rank }}</a></td>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if question|submitted:user %}<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Submitted" %}" />{% endif %}</td>
             </tr>
         {% endfor %}
     </tbody>

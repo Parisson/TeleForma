@@ -215,3 +215,12 @@ def sub(value, arg):
 def div(value, arg):
     "Divides the value by the arg"
     return int(value) / int(arg)
+
+@register.filter
+def submitted(question, user):
+    answers = Answer.objects.filter(question=question, user=user, status=3)
+    if answers:
+        return True
+    else:
+        return False
+

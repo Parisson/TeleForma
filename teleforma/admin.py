@@ -72,6 +72,9 @@ class SeminarAdmin(admin.ModelAdmin):
     filter_horizontal = ['professor', 'media', 'media_preview', 
                          'docs_1', 'docs_2', 'docs_correct']
 
+    class Media:
+        css = { 'all': ('admin/extra.css',) }
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)

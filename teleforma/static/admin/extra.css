@@ -1,0 +1,19 @@
+
+.selector {
+    width: 960px;
+    float: left;
+}
+
+.selector select {
+    width: 460px;
+    height: 17.2em;
+}
+
+.selector-available, .selector-chosen {
+    float: left;
+    width: 460px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+
