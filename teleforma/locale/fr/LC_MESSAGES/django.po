@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-14 11:49+0100\n"
+"POT-Creation-Date: 2012-12-14 15:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -961,27 +961,47 @@ msgstr "Aide"
 msgid "Informations"
 msgstr "Informations"
 
-#: templates/teleforma/seminar_detail.html:43
+#: templates/teleforma/seminar_detail.html:44
 msgid "Step 1 : read the following documents"
 msgstr "Étape 1 : lisez les documents suivants"
 
-#: templates/teleforma/seminar_detail.html:49
+#: templates/teleforma/seminar_detail.html:48
+msgid "Step 1 : read the following document"
+msgstr "Étape 1 : lisez le document suivant"
+
+#: templates/teleforma/seminar_detail.html:56
 msgid "Step 2 : view the following conferences"
 msgstr "Étape 2 : visionnez les conférences suivantes"
 
-#: templates/teleforma/seminar_detail.html:55
-msgid "Step 3 : read the following documents"
-msgstr "Étape 3 : lisez les documents suivants"
+#: templates/teleforma/seminar_detail.html:60
+msgid "Step 2 : view the following conference"
+msgstr "Étape 2 : visionnez la conférence suivante"
 
-#: templates/teleforma/seminar_detail.html:61
+#: templates/teleforma/seminar_detail.html:68
+msgid "Step 3 : read the following documents"
+msgstr "Étape 3 : lisez le documents suivants"
+
+#: templates/teleforma/seminar_detail.html:72
+msgid "Step 3 : read the following document"
+msgstr "Étape 3 : lisez les documents suivant"
+
+#: templates/teleforma/seminar_detail.html:80
 msgid "Step 4 : answer to the following questions"
 msgstr "Étape 4 : réalisez les consultations fictives suivantes"
 
-#: templates/teleforma/seminar_detail.html:68
+#: templates/teleforma/seminar_detail.html:84
+msgid "Step 4 : answer to the following question"
+msgstr "Étape 4 : réalisez la consultation fictive suivante"
+
+#: templates/teleforma/seminar_detail.html:93
 msgid "Step 5 : read the following corrected documents"
 msgstr "Étape 5 : lisez les documents corrigés suivants"
 
-#: templates/teleforma/seminar_detail.html:83
+#: templates/teleforma/seminar_detail.html:97
+msgid "Step 5 : read the following corrected document"
+msgstr "Étape 5 : lisez le document corrigé suivant"
+
+#: templates/teleforma/seminar_detail.html:113
 msgid "Progression"
 msgstr "Progression"
 
