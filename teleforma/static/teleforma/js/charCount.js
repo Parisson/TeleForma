@@ -45,7 +45,7 @@
 		};
 				
 		this.each(function() {  			
-			$(this).after('</span><'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
+			$(this).after('<'+ options.counterElement +' id="counter" class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
 			calculate(this);
 			$(this).keyup(function(){calculate(this)});
 			$(this).change(function(){calculate(this)});

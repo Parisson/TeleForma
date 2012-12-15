@@ -34,7 +34,7 @@
 
 
 from teleforma.views.core import *
-
+from django.utils.translation import ugettext_lazy as _
 
 def get_seminars(user):
     seminars = []
@@ -209,9 +209,9 @@ class AnswerView(FormView):
         answer.question = self.question
         answer.save()
         if answer.status <= 2:
-            messages.info(self.request, "You have successfully saved your answer")
+            messages.info(self.request, _("You have successfully saved your answer"))
         elif answer.status == 3:
-            messages.info(self.request, "You have successfully submitted your answer")
+            messages.info(self.request, _("You have successfully submitted your answer"))
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):

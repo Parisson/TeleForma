@@ -23,3 +23,9 @@ msgstr "Désolé, il n'est pas autorisé de coller un texte ici."
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "You must reach the required number of characters."
+msgstr "Vous devez atteindre le nombre de caractères requis."
+
+msgid "Characters"
+msgstr "Caractères"

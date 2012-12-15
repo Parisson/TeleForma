@@ -8,7 +8,7 @@
 $(document).ready(function(){
   $('#id_answer').live("paste",function(e) {
       e.preventDefault();
-      new Messi(gettext('Sorry, it is not allowed to paste text here.'), {buttons: [{id: 0, label: gettext('Close'), val: 'X'}], modal: true});
+      new Messi(gettext('Sorry, it is not allowed to paste text here.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
   });
 });
 
@@ -16,10 +16,24 @@ $(document).ready(function(){
         //default usage
         $("#id_answer").charCount({
                         necessary: {{question.min_nchar}},            
-                        counterText: gettext('Characters ')+' : ',
+                        counterText: gettext('Characters')+' : ',
                 });
 });
 
+
+$(document).ready(function(){
+        var b = $('#submit_button');
+        var c = $('#counter')
+        b.unbind('click').click(function() {
+            if (c.hasClass('deceed')){
+              new Messi(gettext('You must reach the required number of characters.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
+            }
+            if (c.hasClass('exceed')){
+                $('#id_status').value=3; 
+                $('#_AnswerForm').submit(); 
+            }
+          });
+        });
 
 </script>
 {% endblock extra_javascript %}
@@ -29,7 +43,7 @@ $(document).ready(function(){
 
 <div class="course_content">
   <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer to the following question" %}</h3>
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer to the following question" %} {% trans "with" %} {{question.min_nchar}} {% trans "words" %}</h3>
   </div>
   <div style="text-align: justify;">
     {{ question.question|safe }}
@@ -43,11 +57,10 @@ $(document).ready(function(){
 
 <br />
 <a href="#" class="component_icon button icon_save"
-   onclick="document.getElementById('_AnswerForm').submit(); return false;">{% trans "Save" %}</a>
+   onclick="document.getElementById('_AnswerForm').submit();">{% trans "Save" %}</a>
 
-<a href="#" class="component_icon button icon_ok"
-   onclick="document.getElementById('id_status').value=3; 
- document.getElementById('_AnswerForm').submit(); return false;">{% trans "Submit it" %}</a>
+<a href="#" id="submit_button" class="component_icon button icon_ok"
+">{% trans "Submit it" %}</a>
 
 {% endblock course_content %}
 

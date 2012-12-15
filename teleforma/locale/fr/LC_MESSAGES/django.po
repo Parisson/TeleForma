@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-14 15:09+0100\n"
+"POT-Creation-Date: 2012-12-15 23:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -736,15 +736,23 @@ msgstr ""
 msgid "Write"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:21
+#: templates/teleforma/answer_form.html:46
 msgid "Answer to the following question"
-msgstr "Réalisez les consultations fictives suivantes"
+msgstr "Réalisez la consultation fictive suivante"
 
-#: templates/teleforma/answer_form.html:35
+#: templates/teleforma/answer_form.html:46
+msgid "with"
+msgstr "en"
+
+#: templates/teleforma/answer_form.html:46
+msgid "words"
+msgstr "mots"
+
+#: templates/teleforma/answer_form.html:60
 msgid "Save"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:39
+#: templates/teleforma/answer_form.html:63
 msgid "Submit it"
 msgstr "Soumettre"
 
@@ -1341,14 +1349,19 @@ msgstr ""
 "Merci de vous connecter ou bien contactez l'administateur du site pour "
 "obtenir un accès privé."
 
+#: views/pro.py:212
+msgid "You have successfully saved your answer"
+msgstr "Vous avez enregistré votre reponse avec succès"
+
+#: views/pro.py:214
+msgid "You have successfully submitted your answer"
+msgstr "Vous avez soumis votre reponse avec succès"
+
 #~ msgid "Respond to the following question"
 #~ msgstr "Réalisez la consultation fictive suivante"
 
 #~ msgid "Respond to the following questions"
 #~ msgstr "Réalisez les consultations fictives suivantes"
-
-#~ msgid "keywords"
-#~ msgstr "mots clés"
 
 #~ msgid "testimonial template"
 #~ msgstr "modèlé d'attestation"
