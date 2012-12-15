@@ -1688,7 +1688,7 @@ input,textarea{
     color-stop(0.00, blue),
     color-stop(25%, green),
     color-stop(50%, yellow),
-    color-stop(66%, orange),
+    color-stop(75%, orange),
     color-stop(1.00, red)
     );
 
