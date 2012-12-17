@@ -6,8 +6,8 @@
 {% block extra_javascript %}
 <script type="text/javascript">
 $(function () {
-    $('div.course_description').expander({
-        slicePoint: 220,
+    $('div.description').expander({
+        slicePoint: 270,
         expandText: 'Lire plus',
         userCollapseText: 'Cacher le texte',
     });
@@ -87,11 +87,18 @@ $(function() {
         <div class="course_content">
           {% if seminar.description %}
             <div class="course_subtitle">
-             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Description" %}</h3>
+             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Informations" %}</h3>
             </div>
-            <div class="course_description">
-              {{ seminar.description }}
+            <div style="padding-left: 1em;">
+              <dl class="listing" style="font-size: 1em;">
+              {% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd>{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</dd>{% endif %}
+              <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
+              <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
+              <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration }}</dd>
+              <dt>{% trans "description" %}</dt><dd><div class="description">{{ seminar.description }}</div></dd>
+            </dl>
             </div>
+            
           {% endif %}
         </div>
 
