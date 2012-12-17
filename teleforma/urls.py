@@ -39,6 +39,7 @@ from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
 from telemeta.views import *
+import forms_builder.forms.urls
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
@@ -97,6 +98,7 @@ urlpatterns = patterns('',
         name="teleforma-question-answer"),
     url(r'^desk/answers/$', AnswersView.as_view(), name="teleforma-answers"),
     url(r'^desk/answers/(?P<pk>.*)/$', AnswerDetailView.as_view(), name="teleforma-answer-detail"),
+
 
     # Postman
     url(r'^messages/', include('postman.urls')),

@@ -52,6 +52,7 @@ $(function() {
             </div>
             <div class="course_description">
               <dl class="listing" style="font-size: 1.1em;">
+              <dt>{% trans "course" %}</dt><dd>{{ seminar.course }}</dd>
               {% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd>{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</dd>{% endif %}
               <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
               <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
@@ -73,11 +74,11 @@ $(function() {
 
           {% with seminar.docs_1 as docs %}
            {% if docs.all.count > 1 %}
-            {% with _("Step 1 : read the following documents") as title %}
+            {% with _("Step 1 : read these documents") as title %}
              {% include "teleforma/inc/document_simple_list.html" %}
            {% endwith %}
            {% else %}
-            {% with _("Step 1 : read the following document") as title %}
+            {% with _("Step 1 : read this document") as title %}
              {% include "teleforma/inc/document_simple_list.html" %}
             {% endwith %}
            {% endif %}
@@ -85,11 +86,11 @@ $(function() {
 
           {% with seminar.media as media_packages %}
            {% if media_packages.all.count > 1 %}
-            {% with _("Step 2 : view the following conferences") as title %}
+            {% with _("Step 2 : attend these conferences") as title %}
              {% include "teleforma/inc/media_package_list.html" %}
             {% endwith %}
            {% else %}
-            {% with _("Step 2 : view the following conference") as title %}
+            {% with _("Step 2 : attend this conference") as title %}
              {% include "teleforma/inc/media_package_list.html" %}
             {% endwith %}
            {% endif %}
@@ -97,11 +98,11 @@ $(function() {
 
           {% with seminar.docs_2 as docs %}
            {% if docs.all.count > 1 %}
-            {% with _("Step 3 : read the following documents") as title %}
+            {% with _("Step 3 : read these documents") as title %}
              {% include "teleforma/inc/document_simple_list.html" %}
            {% endwith %}
            {% else %}
-            {% with _("Step 3 : read the following document") as title %}
+            {% with _("Step 3 : read this document") as title %}
              {% include "teleforma/inc/document_simple_list.html" %}
             {% endwith %}
            {% endif %}
@@ -109,13 +110,13 @@ $(function() {
             
           {% with seminar.question as questions %}
            {% if questions.all.count > 1 %}
-            {% with _("Step 4 : answer to the following questions") as title %}
+            {% with _("Step 4 : answer to these questions") as title %}
              {% include "teleforma/inc/question_list.html" %}
             {% endwith %}
            {% else %}
 
 
-            {% with _("Step 4 : answer to the following question") as title %}
+            {% with _("Step 4 : answer to this question") as title %}
              {% include "teleforma/inc/question_list.html" %}
             {% endwith %}
            {% endif %}
@@ -124,11 +125,11 @@ $(function() {
          {% if validated %}
           {% with seminar.docs_correct as docs %}
            {% if docs.all.count > 1 %}
-            {% with _("Step 5 : read the following corrected documents") as title %}
+            {% with _("Step 5 : read these corrected documents") as title %}
              {% include "teleforma/inc/document_simple_list.html" %}
             {% endwith %}
            {% else %}
-            {% with _("Step 5 : read the following corrected document") as title %}
+            {% with _("Step 5 : read this corrected document") as title %}
              {% include "teleforma/inc/document_simple_list.html" %}
             {% endwith %}
            {% endif %}

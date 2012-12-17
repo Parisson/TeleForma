@@ -53,6 +53,7 @@ import django.utils.timezone as timezone
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
 from teleforma.views import get_courses
+from teleforma.views.pro import seminar_progress
 from urlparse import urlparse
 
 register = template.Library()
@@ -233,6 +234,18 @@ def saved(question, user):
         return ''
 
 @register.filter
+def validated(question, user):
+    answers = Answer.objects.filter(question=question, user=user, status=3)
+    if answers:
+        return answers[0].validated
+    else:
+        return False
+
+@register.filter
 def summary(text, N):
     return text[:N] + '...'
+    
+@register.filter
+def progress(seminar, user):
+    return seminar_progress(user, seminar)
     

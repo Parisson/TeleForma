@@ -82,6 +82,12 @@ $(function() {
 
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
+         <div style="float: right; font-size: 0.9em;">
+          {% if seminar|progress:user == 100 %}
+          <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
+          {% endif %}
+          </div>
+
         </div>
 
         <div class="course_content">

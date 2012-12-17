@@ -1682,7 +1682,7 @@ input,textarea{
     }
 
 .messages {
-    padding: 0.5em 1em 1em 1em;
+    padding: 0em 1em 1em 1em;
 }
 
 .info {
@@ -1766,3 +1766,9 @@ form .exceed{
     border-radius: 8px 0px 8px 8px;
     }
 
+
+#id_answer {
+    font: 1em Verdana, sans-serif;
+    line-height: 1.3em;
+    color: #333;   
+}
