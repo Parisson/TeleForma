@@ -138,4 +138,5 @@ urlpatterns = patterns('',
     url(r'^', include('jqchat.urls')),
 
     url(r'^tinymce/', include('tinymce.urls')),
+
 )

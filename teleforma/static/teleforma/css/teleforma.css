@@ -1361,9 +1361,9 @@ input,textarea{
 }
 
 #module-set .module div {
-        -moz-border-radius: 8px 8px 8px 8px;
+        -moz-border-radius: 8px 0px 8px 8px;
         -webkit-border-radius: 8px 0px 8px 8px;
-        border-radius: 8px 8px 8px 8px;
+        border-radius: 8px 0px 8px 8px;
        }
 
 #module-set .module a:hover {
@@ -1406,9 +1406,6 @@ input,textarea{
         -moz-border-radius: 8px 0px 8px 8px;
         -webkit-border-radius: 8px 0px 8px 8px;
         border-radius: 8px 0px 8px 8px;
-       }
-
-#module-set-left .module ul {
         margin: 0em 0em 0em 0.3em;
         font-size: 0.9125em;
         background-color: #FFF;
@@ -1687,7 +1684,7 @@ input,textarea{
 .info {
     color: white;
     padding: 0.3em;
-    background-color: #3c9200; 
+    background-color: green; 
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1742,6 +1739,13 @@ form .exceed{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
+        margin: 0em 0em 0em 0.3em;
+        font-size: 0.9125em;
+        background-color: #FFF;
+        color: #000 ;
+        font-weight: normal;
+        max-height: 450px;
+        overflow-y: auto;
     
 }
 
@@ -1773,4 +1777,8 @@ form .exceed{
 #progressbar-answer .ui-progressbar-value  { 
     background-color: #bb0000;
     }
+
+.ui-progressbar.beginning .ui-progressbar-value { background: red; }
+.ui-progressbar.middle .ui-progressbar-value { background: yellow; }
+.ui-progressbar.end .ui-progressbar-value { background: green; }
 

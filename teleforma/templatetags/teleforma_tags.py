@@ -224,3 +224,11 @@ def submitted(question, user):
     else:
         return False
 
+@register.filter
+def submitted(question, user):
+    answers = Answer.objects.filter(question=question, user=user)
+    if answers:
+        return answers[0].date_submitted
+    else:
+        return ''
+
