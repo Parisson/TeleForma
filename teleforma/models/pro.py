@@ -181,7 +181,7 @@ class Answer(models.Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'answer'
         verbose_name = _('Answer')
-
+        ordering = ['-date_submitted']
 
 class TestimonialTemplate(models.Model):
 
@@ -219,7 +219,8 @@ class Evaluation(models.Model):
 
     seminar     = models.ForeignKey(Seminar, related_name="evaluation", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="evaluation", verbose_name=_('user'))
-    #TODO
+    
+
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'evaluation'

@@ -29,7 +29,7 @@ $(document).ready(function(){
           new Messi(gettext('You must reach the required number of characters.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
         }
         if (c.hasClass('exceed')){
-            $('#id_status').value=3; 
+            $('#id_status').val("3"); 
             $('#_AnswerForm').submit(); 
         }
       });
@@ -69,13 +69,13 @@ $(document).ready(function(){
   <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progress" %}</h3>
  <div class="progress">
   <ul>
-    <li>{% trans "General progress" %} : {{ total_progress }}%
+    <li>{% trans "General" %} : {{ total_progress }}%
      <div id="progressbar-general"></div>
     </li>
-    <li>{% trans "Seminar progress" %} : {{ seminar_progress }}%
+    <li>{% trans "Seminar" %} : {{ seminar_progress }}%
      <div id="progressbar-seminar"></div>
     </li>
-    <li>{% trans "Answer progress" %} : <span id="answer-progress">0</span>%
+    <li>{% trans "Answer" %} : <span id="answer-progress">0</span>%
      <div id="progressbar-answer"></div>
     </li>
 

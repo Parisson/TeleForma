@@ -4,6 +4,26 @@
 {% load i18n %}
 
 
+{% block infra_javascript %}
+<script type="text/javascript">
+$(function() {
+        $( "#progressbar-general" ).progressbar({
+            value: {{ total_progress }}
+        });
+    });
+</script>
+<script type="text/javascript">
+$(function() {
+        $( "#progressbar-seminar" ).progressbar({
+            value: {{ seminar_progress }}
+        });
+    });
+</script>
+
+{% endblock infra_javascript %}
+
+
+
 {% block course %}
 <div class="desk_center">
 
@@ -112,12 +132,12 @@
 {% block progress %}
 <div class="module">
   <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progress" %}</h3>
- <div style="background: white;">
+ <div class="progress">
   <ul>
-    <li>{% trans "General progress" %} : {{ total_progress }}%
+    <li>{% trans "General" %} : {{ total_progress }}%
      <div id="progressbar-general"></div>
     </li>
-    <li>{% trans "Seminar progress" %} : {{ seminar_progress }}%
+    <li>{% trans "Seminar" %} : {{ seminar_progress }}%
      <div id="progressbar-seminar"></div>
     </li>
   </ul>

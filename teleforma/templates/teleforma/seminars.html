@@ -22,11 +22,6 @@ $(function() {
             value: {{ total_progress }}
         });
     });
-$(function() {
-        $( "#progressbar-seminar" ).progressbar({
-            value: {{ seminar_progress }}
-        });
-    });
 </script>
 {% endblock infra_javascript %}
 
@@ -110,10 +105,10 @@ $(function() {
 
 {% block progress %}
 <div class="module">
-  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Informations" %}</h3>
- <div style="background: white;">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progress" %}</h3>
+ <div class="progress">
   <ul>
-    <li>{% trans "General progress" %} : {{ total_progess }}
+    <li>{% trans "General" %} : {{ total_progress }}
      <div id="progressbar-general"></div>
     </li>
   </ul>
