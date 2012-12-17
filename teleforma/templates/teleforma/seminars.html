@@ -15,6 +15,21 @@ $(function () {
 </script>
 {% endblock extra_javascript %}
 
+{% block infra_javascript %}
+<script type="text/javascript">
+$(function() {
+        $( "#progressbar-general" ).progressbar({
+            value: {{ total_progress }}
+        });
+    });
+$(function() {
+        $( "#progressbar-seminar" ).progressbar({
+            value: {{ seminar_progress }}
+        });
+    });
+</script>
+{% endblock infra_javascript %}
+
 {% block content %}
 
 <div id="module-set-left" style="width: 18%">
@@ -93,14 +108,18 @@ $(function () {
 
 <div id="module-set" style="width: 22%">
 
-{% block local_progress %}
+{% block progress %}
 <div class="module">
   <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Informations" %}</h3>
  <div style="background: white;">
-  <div id="progressbar"></div>
+  <ul>
+    <li>{% trans "General progress" %} : {{ total_progess }}
+     <div id="progressbar-general"></div>
+    </li>
+  </ul>
  </div>
 </div>
-{% endblock local_progress %}
+{% endblock progress %}
 
 {% block status %}
 {% get_telecaster as telecaster %}

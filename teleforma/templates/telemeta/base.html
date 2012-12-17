@@ -48,13 +48,6 @@
 <script src="{{ STATIC_URL }}teleforma/js/jquery-ui.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}teleforma/js/jquery.expander.min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}teleforma/js/messi.min.js" type="text/javascript"></script>
-<script>
-$(function() {
-        $( "#progressbar" ).progressbar({
-            value: {{ progress }}
-        });
-    });
-</script>
 
 {% if user.is_authenticated %}
 <script type='text/javascript'>var CURRENT_USER_NAME="{{ user.username }}";</script>
@@ -72,6 +65,7 @@ $(function() {
 {% endblock %}
 
 {% block extra_javascript %}{% endblock %}
+{% block infra_javascript %}{% endblock %}
 
 </head>
 

@@ -108,11 +108,20 @@
 </div>
 {% endblock course %}
 
-{% block local_progress %}
+
+{% block progress %}
 <div class="module">
-  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progression" %} : {{ 100|sub:progress }}%</h3>
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progress" %}</h3>
  <div style="background: white;">
-  <div id="progressbar"></div>
+  <ul>
+    <li>{% trans "General progress" %} : {{ total_progress }}%
+     <div id="progressbar-general"></div>
+    </li>
+    <li>{% trans "Seminar progress" %} : {{ seminar_progress }}%
+     <div id="progressbar-seminar"></div>
+    </li>
+  </ul>
  </div>
 </div>
-{% endblock local_progress %}
+{% endblock progress %}
+

@@ -63,7 +63,6 @@ def get_seminars(user):
 
 def seminar_progress(user, seminar):    
     """return the user progress of a seminar in percent
-    WARNING! the result is 100-progress so that we can customize the progress bar background.
     """
 
     progress = 0
@@ -84,26 +83,27 @@ def seminar_progress(user, seminar):
             progress += question.weight
 
     if total != 0:
-        return 100-int(progress*100/total)
+        return int(progress*100/total)
     else:
-        return 100
+        return 0
 
 
 def total_progress(user):
     """return the user progress of all seminars in percent"""
 
-    revisions = user.seminar_revision.all()
     progress = 0
-    n = 0
+    auditor = user.auditor.all()
+    if auditor:
+        seminars = auditor[0].seminars.all()        
+    elif user.is_superuser or user.is_staff:
+        seminars = Seminar.objects.all()
+    for seminar in seminars:
+        progress += seminar_progress(user, seminar)
 
-    for revision in revisions:
-        progress += revision.progress
-        n += 1
-
-    if n:
-        return 100-int(progress/n)
+    if seminars:
+        return int(progress/len(seminars))
     else:
-        return 100
+        return 0
 
 def seminar_validated(user, seminar):
     validated = []
@@ -129,7 +129,7 @@ class SeminarView(DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = self.get_object()
         context['all_seminars'] = get_seminars(self.request.user)
-        context['progress'] = seminar_progress(self.request.user, seminar)
+        context['seminar_progress'] = seminar_progress(self.request.user, seminar)
         context['total_progress'] = total_progress(self.request.user)
         context['validated'] = seminar_validated(self.request.user, seminar)
         return context
@@ -146,9 +146,8 @@ class SeminarsView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(SeminarsView, self).get_context_data(**kwargs)
-        user = self.request.user
         context['all_seminars'] = self.seminars
-        context['total_progress'] = total_progress(user)
+        context['total_progress'] = total_progress(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -226,7 +225,8 @@ class AnswerView(FormView):
         context['all_seminars'] = get_seminars(self.request.user)
         context['question'] = self.question
         context['seminar'] = self.question.seminar
-        context['progress'] = seminar_progress(self.request.user, self.question.seminar)
+        context['seminar_progress'] = seminar_progress(self.request.user, self.question.seminar)
+        context['total_progress'] = total_progress(self.request.user)
         return context
 
     def get_success_url(self):
@@ -247,7 +247,8 @@ class MediaPackageView(DetailView):
         context['all_seminars'] = all_seminars
         context['seminar'] = seminar
         context['media_package'] = media_package
-        context['progress'] = seminar_progress(self.request.user, seminar)
+        context['seminar_progress'] = seminar_progress(self.request.user, seminar)
+        context['total_progress'] = total_progress(self.request.user)
         return context
 
     @method_decorator(login_required)

@@ -1680,29 +1680,6 @@ input,textarea{
     font-size: 1.2em;
     }
 
-
-.ui-progressbar  { 
-    height: 10px;
-   /*webkit rainbow gradient*/
-   background-image: -webkit-gradient(linear,  left top,  right top, 
-    color-stop(0.00, blue),
-    color-stop(25%, green),
-    color-stop(50%, yellow),
-    color-stop(75%, orange),
-    color-stop(1.00, red)
-    );
-
-    transform:rotate(180deg);
-    -ms-transform:rotate(180deg); /* IE 9 */
-    -moz-transform:rotate(180deg); /* Firefox */
-    -webkit-transform:rotate(180deg); /* Safari and Chrome */
-    -o-transform:rotate(180deg); /* Opera */  
-
-        -moz-border-radius: 8px 0px 8px 8px;
-        -webkit-border-radius: 8px 0px 8px 8px;
-        border-radius: 8px 0px 8px 8px;
-    }
-
 .messages {
     padding: 0.5em;
 }
@@ -1752,3 +1729,48 @@ form .exceed{
         border: 1px solid #adadad;
         color:#080;
     }
+
+.progress {
+    background-color: white;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+ 
+}
+
+.progress ul {
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    
+}
+
+.progress li {
+    font-size: 1.2em;
+}
+
+.ui-progressbar  {
+    margin-top: 0.5em; 
+    height: 10px;
+
+   /*webkit rainbow gradient*/
+   background-color: white;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    }
+
+#progressbar-general .ui-progressbar-value { 
+    background-color: #4f628a;
+}
+
+
+#progressbar-seminar .ui-progressbar-value  { 
+    background-color: green;
+    }
+
+
+#progressbar-answer .ui-progressbar-value  { 
+    background-color: #bb0000;
+    }
+

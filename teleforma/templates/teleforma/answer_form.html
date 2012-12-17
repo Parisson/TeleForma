@@ -59,8 +59,29 @@ $(document).ready(function(){
 <a href="#" class="component_icon button icon_save"
    onclick="document.getElementById('_AnswerForm').submit();">{% trans "Save" %}</a>
 
-<a href="#" id="submit_button" class="component_icon button icon_ok"
-">{% trans "Submit it" %}</a>
+<a href="#" id="submit_button" class="component_icon button icon_ok">{% trans "Submit it" %}</a>
 
 {% endblock course_content %}
+
+
+{% block progress %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progress" %}</h3>
+ <div class="progress">
+  <ul>
+    <li>{% trans "General progress" %} : {{ total_progress }}%
+     <div id="progressbar-general"></div>
+    </li>
+    <li>{% trans "Seminar progress" %} : {{ seminar_progress }}%
+     <div id="progressbar-seminar"></div>
+    </li>
+    <li>{% trans "Answer progress" %} : <span id="answer-progress">0</span>%
+     <div id="progressbar-answer"></div>
+    </li>
+
+  </ul>
+
+ </div>
+</div>
+{% endblock progress %}
 

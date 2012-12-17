@@ -28,7 +28,7 @@
 		}; 
 			
 		var options = $.extend(defaults, options); 
-		
+
 		function calculate(obj){
 			var count = $(obj).val().length;
 			if(count >= options.necessary){
@@ -42,10 +42,16 @@
 			}
 			
 			$(obj).next().html(options.counterText + count + ' / ' + options.necessary);
+			var percent = parseInt(count / options.necessary * 100);
+			if ( percent >= 100 ) {
+				percent = 100;
+			}
+			$('#answer-progress').html(percent);
+			$('#progressbar-answer').progressbar({ value: percent });
 		};
 				
 		this.each(function() {  			
-			$(this).after('<'+ options.counterElement +' id="counter" class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
+			$(this).after('<'+ options.counterElement +' id="counter" class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');			
 			calculate(this);
 			$(this).keyup(function(){calculate(this)});
 			$(this).change(function(){calculate(this)});
