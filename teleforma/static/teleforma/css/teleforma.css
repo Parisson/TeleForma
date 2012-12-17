@@ -1756,28 +1756,9 @@ form .exceed{
 .ui-progressbar  {
     margin-top: 0.5em; 
     height: 10px;
-
-   /*webkit rainbow gradient*/
-   background-color: white;
+    background-color: white;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
     }
 
-/*
-#progressbar-general .ui-progressbar-value { 
-    background-color: #4f628a;
-}
-
-
-#progressbar-seminar .ui-progressbar-value  { 
-    background-color: green;
-    }
-
-
-
-.ui-progressbar.beginning .ui-progressbar-value { background: red; }
-.ui-progressbar.middle .ui-progressbar-value { background: yellow; }
-.ui-progressbar.end .ui-progressbar-value { background: green; }
-
-*/

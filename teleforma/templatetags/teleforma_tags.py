@@ -220,7 +220,7 @@ def div(value, arg):
 def submitted(question, user):
     answers = Answer.objects.filter(question=question, user=user, status=3)
     if answers:
-        return True
+        return answers[0].date_submitted
     else:
         return False
 
@@ -232,4 +232,3 @@ def saved(question, user):
     else:
         return ''
 
-        

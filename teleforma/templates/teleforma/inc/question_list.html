@@ -12,7 +12,7 @@
         {% for question in questions.all %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="45%"><a href="{% url teleforma-question-answer question.id %}">{{ question.title }} n°{{ question.rank }}</a></td>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="50%">{% if question|submitted:user %}{%  trans "submitted on" %} {{ question|submitted:user }}{% elif question|saved:user %}{% trans "saved on" %} {{ question|saved:user }}{% endif %} </td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="50%">{% if question|submitted:user %}{% trans "submitted on" %} {{ question|submitted:user }}{% elif question|saved:user %}{% trans "saved on" %} {{ question|saved:user }}{% endif %} </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if question|submitted:user %}<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Submitted" %}" />{% endif %}</td>
             </tr>
         {% endfor %}

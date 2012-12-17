@@ -169,6 +169,7 @@ class Answer(models.Model):
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
     validated   = models.BooleanField(_('validated'))
     date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
+    date_added     = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
 
     def __unicode__(self):
         return ' - '.join([unicode(self.question), self.user.username, unicode(self.date_submitted)])
