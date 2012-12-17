@@ -232,3 +232,7 @@ def saved(question, user):
     else:
         return ''
 
+@register.filter
+def summary(text, N):
+    return text[:N] + '...'
+    

@@ -23,7 +23,6 @@ $(function() {
         $('#progressbar-seminar div').css({"background": color});
     });
 </script>
-
 {% endblock infra_javascript %}
 
 
@@ -38,7 +37,7 @@ $(function() {
 
           <div style="float: right; font-size: 0.9em;">
           {% if seminar_progress == 100 %}
-          <a id="validated" href="#" class="component_icon button icon_ok">{% trans " validated" %}</a>
+          <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
           {% endif %}
           </div>
 
@@ -51,8 +50,8 @@ $(function() {
           <div class="course_subtitle">
              <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Informations" %}</h3>
             </div>
-            <div style="padding-left: 1em;">
-              <dl class="listing" style="font-size: 1em;">
+            <div class="course_description">
+              <dl class="listing" style="font-size: 1.1em;">
               {% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd>{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</dd>{% endif %}
               <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
               <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
@@ -114,6 +113,8 @@ $(function() {
              {% include "teleforma/inc/question_list.html" %}
             {% endwith %}
            {% else %}
+
+
             {% with _("Step 4 : answer to the following question") as title %}
              {% include "teleforma/inc/question_list.html" %}
             {% endwith %}

@@ -1488,7 +1488,7 @@ input,textarea{
 
 .course_description {
     background-color: #FFF;
-    padding: 0em 1em 1em 1em;
+    padding: 0em 1em 0.5em 1em;
         -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;

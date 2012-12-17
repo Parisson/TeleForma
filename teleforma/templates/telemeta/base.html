@@ -108,13 +108,7 @@ alt="logo" />
 
  {% if user.is_authenticated %}
   {% if user.is_staff %}
-   <li><a href="#archives#" class="green">{% trans "Archives" %}</a>
- <ul>
- <li><a href="{% url telemeta-search-criteria %}">{% trans "Search" %}</a></li>
- <li><a href="{% url telemeta-collections %}">{% trans "Collections" %}</a></li>
- <li><a href="{% url telemeta-items %}">{% trans "Items" %}</a></li>
- </ul>
- </li>
+   <li><a href="{% url teleforma-answers %}" class="green">{% trans "Answers" %}</a></li>
  <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
   {% else %}
    <li><a href="{% url teleforma-help %}" class="green">{% trans "Help" %}</a></li>

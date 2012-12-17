@@ -28,3 +28,4 @@
 
 var rainbow = new Rainbow();
 rainbow.setSpectrum('#bb0000', '#e65911', '#f3ad17', 'green');
+

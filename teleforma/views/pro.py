@@ -200,6 +200,7 @@ class AnswerView(FormView):
             answer = Answer()
         initial['answer'] = answer.answer
         initial['status'] = answer.status
+        self.status = answer.status
         return initial
 
     def form_valid(self, form):
@@ -224,6 +225,7 @@ class AnswerView(FormView):
         context = super(AnswerView, self).get_context_data(**kwargs)
         context['all_seminars'] = get_seminars(self.request.user)
         context['question'] = self.question
+        context['status'] = self.status
         context['seminar'] = self.question.seminar
         context['seminar_progress'] = seminar_progress(self.request.user, self.question.seminar)
         context['total_progress'] = total_progress(self.request.user)
@@ -278,5 +280,64 @@ class MediaPackageView(DetailView):
         for media in media_package.audio.all():
             media.is_published = False
             media.save()
+
                 
+class AnswersView(ListView):
+
+    model = Answer
+    template_name='teleforma/answers.html'
+
+    def get_queryset(self):
+        return Answer.objects.filter(status=3)
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswersView, self).get_context_data(**kwargs)
+        all_seminars = get_seminars(self.request.user)
+        context['all_seminars'] = all_seminars
+        
+        paginator = Paginator(self.object_list, per_page=12)
+        try:
+            page = int(self.request.GET.get('page', '1'))
+        except ValueError:
+            page = 1
+
+        try:
+            page = paginator.page(page)
+        except (InvalidPage):
+            page = paginator.page(paginator.num_pages)
+        context['page'] = page
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AnswersView, self).dispatch(*args, **kwargs)
+
+
+    @jsonrpc_method('teleforma.validate_answer')
+    def validate(request, id):
+        answer = Answer.objects.get(id=id)
+        answer.validated = True
+        answer.save()
+
+    @jsonrpc_method('teleforma.reject_answer')
+    def reject(request, id):
+        answer = Answer.objects.get(id=id)
+        answer.validated = False
+        answer.status = 2
+        answer.save()
+
+
+class AnswerDetailView(DetailView):
+
+    model = Answer
+    template_name='teleforma/answer_detail.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AnswerDetailView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerDetailView, self).get_context_data(**kwargs)
+        context['all_seminars'] = get_seminars(self.request.user)
+        return context
 

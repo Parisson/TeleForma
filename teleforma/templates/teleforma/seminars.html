@@ -7,7 +7,7 @@
 <script type="text/javascript">
 $(function () {
     $('div.description').expander({
-        slicePoint: 120,
+        slicePoint: 60,
         expandText: 'Lire plus',
         userCollapseText: 'Cacher le texte',
     });
@@ -87,8 +87,8 @@ $(function() {
         <div class="course_content">
             <div class="course_subtitle">
             </div>
-            <div style="padding-left: 1em;">
-              <dl class="listing" style="font-size: 1em;">
+            <div class="course_description">
+              <dl class="listing" style="font-size: 1.1em;">
               {% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd>{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</dd>{% endif %}
               <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
               <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>

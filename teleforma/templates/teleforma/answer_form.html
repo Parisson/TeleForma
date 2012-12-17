@@ -55,11 +55,12 @@ $(document).ready(function(){
 {{ form }}
 </form>
 
+{% if status != 3 %}
 <br />
 <a href="#" class="component_icon button icon_save"
    onclick="document.getElementById('_AnswerForm').submit();">{% trans "Save" %}</a>
-
 <a href="#" id="submit_button" class="component_icon button icon_ok">{% trans "Submit it" %}</a>
+{% endif %}
 
 {% endblock course_content %}
 

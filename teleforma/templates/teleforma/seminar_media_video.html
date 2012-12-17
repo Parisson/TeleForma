@@ -12,16 +12,17 @@
 
 {% if user.is_staff %}
 <script type="text/javascript">
-    var mediaUtils = {
+
+var mediaUtils = {
         publish : function(id){
-            var p = jQuery('#publish');
+            var p = $('#publish');
             json([id],'teleforma.publish_media_package',function(){
                 p.removeClass('icon_delete').addClass('icon_ok')
                 p.html('{% trans " published" %}')
                 });
          },
         unpublish : function(id){
-            var p = jQuery('#publish');
+            var p = $('#publish');
             json([id],'teleforma.unpublish_media_package',function(){
                 p.removeClass('icon_ok').addClass('icon_delete')
                 p.html('{% trans " rejected" %}')
@@ -29,21 +30,22 @@
          }
         }
 
-    jQuery(window).ready(function(){
-        var p = jQuery('#publish');
-        var f = mediaUtils;
-        p.unbind('click').click(function() {
-            if (p.hasClass('icon_ok')){
-                f.unpublish('{{media_package.id}}');
-                return false;
-                }
-            if (p.hasClass('icon_delete')) {
-                f.publish('{{media_package.id}}');
-                return false;
-                }
+$(window).ready(function(){
+    var p = jQuery('#publish');
+    var f = mediaUtils;
+    p.unbind('click').click(function() {
+        if (p.hasClass('icon_ok')){
+            f.unpublish('{{media_package.id}}');
+            return false;
             }
-            );
-        });
+        if (p.hasClass('icon_delete')) {
+            f.publish('{{media_package.id}}');
+            return false;
+            }
+        }
+        );
+    });
+
 </script>
 {% endif %}
 

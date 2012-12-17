@@ -1,0 +1,70 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% block head_title %}{% trans "Answers" %} - {{ block.super }}{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+
+{% block infra_javascript %}
+<script type="text/javascript">
+
+var answerUtils = {
+        validate : function(id, a){
+            json([id],'teleforma.validate_answer',function(){
+                a.removeClass('icon_delete').addClass('icon_ok')
+                a.html('{% trans " validated" %}')
+                });
+         },
+        reject : function(id, a){
+            json([id],'teleforma.reject_answer',function(){
+                a.removeClass('icon_ok').addClass('icon_delete')
+                a.html('{% trans " rejected" %}')
+                });
+         }
+        }
+
+</script>
+{% endblock infra_javascript %}
+
+{% block content %}
+
+<div id="module-set-left" style="width: 18%">
+
+{% block modules %}
+<div class="module">
+
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
+<div style="background: white;">
+<ul>
+{% block courses %}
+{% for seminar in all_seminars %}
+   <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
+ {% endfor %}
+{% endblock courses %}
+</ul>
+</div>
+</div>
+
+</div>
+{% endblock modules %}
+
+<div class="desk_messages">
+
+{% if user.is_staff %}
+<div style="float:right;">
+</div>
+{% endif %}
+
+<div class="course_title">{% trans "Answers" %}</div>
+<br />
+ {% if object_list %}
+  {% include "teleforma/inc/answer_list.html" %}
+ {% else %}
+    <p class="help">{% trans "No answer" %}</p>
+ {% endif %}
+</div>
+{% endblock %}
