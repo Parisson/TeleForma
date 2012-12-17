@@ -1473,7 +1473,7 @@ input,textarea{
 
 
 .course_title {
-    color: #000;
+    color: #355ea2;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1481,6 +1481,10 @@ input,textarea{
     font-weight: bold;
     font-size: 1.2em;
     }
+
+.course_title a {
+    color: #355ea2;
+}
 
 .course_description {
     background-color: #FFF;
@@ -1678,7 +1682,7 @@ input,textarea{
     }
 
 .messages {
-    padding: 0.5em;
+    padding: 0.5em 1em 1em 1em;
 }
 
 .info {

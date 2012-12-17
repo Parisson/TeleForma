@@ -81,13 +81,11 @@ $(function() {
       <div class="course">
 
         <div class="course_title">
-         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}</a>
+         <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
         </div>
 
         <div class="course_content">
-          {% if seminar.description %}
             <div class="course_subtitle">
-             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Informations" %}</h3>
             </div>
             <div style="padding-left: 1em;">
               <dl class="listing" style="font-size: 1em;">
@@ -95,13 +93,12 @@ $(function() {
               <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
               <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
               <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration }}</dd>
-              <dt>{% trans "description" %}</dt><dd><div class="description">{{ seminar.description }}</div></dd>
+              {% if seminar.description %}
+              <dt>{% trans "description" %}</dt><dd><div class="description">{{ seminar.description|safe }}</div></dd>
+              {% endif %}
             </dl>
             </div>
-            
-          {% endif %}
         </div>
-
       </div>
    {% endfor %}
 </div>

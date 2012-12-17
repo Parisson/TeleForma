@@ -42,12 +42,14 @@
 				$(obj).next().addClass(options.cssDeceed);
 			}
 			
-			$(obj).next().html(options.counterText + count + ' / ' + options.necessary);
 			var percent = parseInt(count / options.necessary * 100);
 			if ( percent >= 100 ) {
 				percent = 100;
 			}
 			var color = '#' + rainbow.colourAt(percent);
+			$(obj).next().html(options.counterText + count + ' / ' + options.necessary);
+			$(obj).next().css({'color': color});
+			
 			$('#answer-progress').html(percent);
 			$('#progressbar-answer').progressbar({ value: percent });
 			$('#progressbar-answer div').css({"background": color});

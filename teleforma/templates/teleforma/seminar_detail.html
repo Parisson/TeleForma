@@ -34,34 +34,43 @@ $(function() {
     <div class="course">
         
         <div class="course_title">
-         <a href="{% url teleforma-seminar-detail seminar.id %}" style="color: #000;">{{ seminar.title }}</a>
+         <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
+
+          <div style="float: right; font-size: 0.9em;">
+          {% if seminar_progress == 100 %}
+          <a id="validated" href="#" class="component_icon button icon_ok">{% trans " validated" %}</a>
+          {% endif %}
+          </div>
+
         </div>
 
         {% block course_content %}
 
-        {% if messages %}
+        
         <div class="course_content">
-         <div class="course_subtitle">
+          <div class="course_subtitle">
              <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Informations" %}</h3>
-         </div>
+            </div>
+            <div style="padding-left: 1em;">
+              <dl class="listing" style="font-size: 1em;">
+              {% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd>{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</dd>{% endif %}
+              <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
+              <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
+              <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration }}</dd>
+              {% if seminar.description %}
+              <dt>{% trans "description" %}</dt><dd><div class="description">{{ seminar.description|safe }}</div></dd>
+              {% endif %}
+            </dl>
+            </div>
+        {% if messages %}
          <div class="messages">
             {% for message in messages %}
             <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
             {% endfor %}
          </div>
-        </div>
-        {% endif %}
-
-        <div class="course_content">
-          {% if seminar.description %}
-            <div class="course_subtitle">
-             <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Description" %}</h3>
-            </div>
-            <div class="course_description">
-              {{ seminar.description }}
-            </div>
-          {% endif %}
-        </div>
+         {% endif %}
+       </div>
+        
 
           {% with seminar.docs_1 as docs %}
            {% if docs.all.count > 1 %}
