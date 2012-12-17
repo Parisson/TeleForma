@@ -13,6 +13,7 @@
  *
  */
  
+
 (function($) {
 
 	$.fn.charCount = function(options){
@@ -46,8 +47,10 @@
 			if ( percent >= 100 ) {
 				percent = 100;
 			}
+			var color = '#' + rainbow.colourAt(percent);
 			$('#answer-progress').html(percent);
 			$('#progressbar-answer').progressbar({ value: percent });
+			$('#progressbar-answer div').css({"background": color});
 		};
 				
 		this.each(function() {  			

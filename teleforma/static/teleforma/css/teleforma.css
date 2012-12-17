@@ -1764,6 +1764,7 @@ form .exceed{
     border-radius: 8px 0px 8px 8px;
     }
 
+/*
 #progressbar-general .ui-progressbar-value { 
     background-color: #4f628a;
 }
@@ -1774,11 +1775,9 @@ form .exceed{
     }
 
 
-#progressbar-answer .ui-progressbar-value  { 
-    background-color: #bb0000;
-    }
 
 .ui-progressbar.beginning .ui-progressbar-value { background: red; }
 .ui-progressbar.middle .ui-progressbar-value { background: yellow; }
 .ui-progressbar.end .ui-progressbar-value { background: green; }
 
+*/

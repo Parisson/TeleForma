@@ -10,6 +10,8 @@ $(function() {
         $( "#progressbar-general" ).progressbar({
             value: {{ total_progress }}
         });
+        var color = '#' + rainbow.colourAt({{total_progress}});
+        $('#progressbar-general div').css({"background": color});
     });
 </script>
 <script type="text/javascript">
@@ -17,6 +19,8 @@ $(function() {
         $( "#progressbar-seminar" ).progressbar({
             value: {{ seminar_progress }}
         });
+        var color = '#' + rainbow.colourAt({{seminar_progress}});
+        $('#progressbar-seminar div').css({"background": color});
     });
 </script>
 

@@ -225,10 +225,11 @@ def submitted(question, user):
         return False
 
 @register.filter
-def submitted(question, user):
-    answers = Answer.objects.filter(question=question, user=user)
+def saved(question, user):
+    answers = Answer.objects.filter(question=question, user=user, status=2)
     if answers:
         return answers[0].date_submitted
     else:
         return ''
 
+        

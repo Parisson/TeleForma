@@ -18,9 +18,9 @@ $(function () {
 {% block infra_javascript %}
 <script type="text/javascript">
 $(function() {
-        $( "#progressbar-general" ).progressbar({
-            value: {{ total_progress }}
-        });
+        $('#progressbar-general').progressbar({value: {{ total_progress }}});
+        var color = '#' + rainbow.colourAt({{total_progress}});
+        $('#progressbar-general div').css({"background": color});
     });
 </script>
 {% endblock infra_javascript %}
