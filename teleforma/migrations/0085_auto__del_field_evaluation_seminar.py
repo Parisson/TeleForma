@@ -8,30 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Seminar.form'
-        db.add_column('teleforma_seminar', 'form',
-                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='seminar', null=True, to=orm['forms.Form']),
-                      keep_default=False)
-
         # Deleting field 'Evaluation.seminar'
         db.delete_column('teleforma_evaluation', 'seminar_id')
 
-        # Adding field 'Evaluation.form'
-        db.add_column('teleforma_evaluation', 'form',
-                      self.gf('django.db.models.fields.related.ForeignKey')(default=1, related_name='evaluation', to=orm['forms.Form']),
-                      keep_default=False)
-
     def backwards(self, orm):
-        # Deleting field 'Seminar.form'
-        db.delete_column('teleforma_seminar', 'form_id')
-
         # Adding field 'Evaluation.seminar'
         db.add_column('teleforma_evaluation', 'seminar',
                       self.gf('django.db.models.fields.related.ForeignKey')(default=1, related_name='evaluation', to=orm['teleforma.Seminar']),
                       keep_default=False)
-
-        # Deleting field 'Evaluation.form'
-        db.delete_column('teleforma_evaluation', 'form_id')
 
     models = {
         'auth.group': {
@@ -69,25 +53,6 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'forms.form': {
-            'Meta': {'object_name': 'Form'},
-            'button_text': ('django.db.models.fields.CharField', [], {'default': "u'Submit'", 'max_length': '50'}),
-            'email_copies': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-            'email_from': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'email_message': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'email_subject': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-            'expiry_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'intro': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'login_required': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'publish_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'response': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'send_email': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'sites': ('django.db.models.fields.related.ManyToManyField', [], {'default': '[1]', 'to': "orm['sites.Site']", 'symmetrical': 'False'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'}),
-            'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
         'generic.assignedkeyword': {
             'Meta': {'ordering': "('_order',)", 'object_name': 'AssignedKeyword'},
@@ -245,7 +210,6 @@ class Migration(SchemaMigration):
         },
         'teleforma.evaluation': {
             'Meta': {'object_name': 'Evaluation'},
-            'form': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'evaluation'", 'to': "orm['forms.Form']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'evaluation'", 'to': "orm['auth.User']"})
         },
@@ -364,7 +328,6 @@ class Migration(SchemaMigration):
             'docs_correct': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'seminar_docs_correct'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.Document']"}),
             'duration': ('telemeta.models.core.DurationField', [], {'default': "'0'", 'blank': 'True'}),
             'expiry_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'form': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'seminar'", 'null': 'True', 'to': "orm['forms.Form']"}),
             'gen_description': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'index': ('tinymce.models.HTMLField', [], {'blank': 'True'}),
