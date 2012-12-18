@@ -222,7 +222,7 @@ class Testimonial(models.Model):
 class Evaluation(models.Model):
 
     user        = models.ForeignKey(User, related_name="evaluation", verbose_name=_('user'))
-    
+    form        = models.ForeignKey(Form, related_name='evaluation', verbose_name=_('form'))
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'evaluation'
