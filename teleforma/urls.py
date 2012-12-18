@@ -99,6 +99,8 @@ urlpatterns = patterns('',
     url(r'^desk/answers/$', AnswersView.as_view(), name="teleforma-answers"),
     url(r'^desk/answers/(?P<pk>.*)/$', AnswerDetailView.as_view(), name="teleforma-answer-detail"),
 
+    # Evaluations
+    url(r'^forms/', include('forms_builder.forms.urls')),
 
     # Postman
     url(r'^messages/', include('postman.urls')),

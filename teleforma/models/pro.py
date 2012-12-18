@@ -40,6 +40,7 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 import tinymce.models
 from mezzanine.core.models import Displayable
+from forms_builder.forms.models import Form
 
 class MediaPackage(MediaBase):
     "Media resource package handling multiple (audio and video) media types"
@@ -115,6 +116,8 @@ class Seminar(Displayable):
     docs_correct    = models.ManyToManyField(Document, related_name="seminar_docs_correct",
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
+    form            = models.ForeignKey(Form, related_name='seminar', verbose_name=_('form'),
+                                        blank=True, null=True)
 
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
@@ -184,6 +187,7 @@ class Answer(models.Model):
         verbose_name = _('Answer')
         ordering = ['-date_submitted']
 
+
 class TestimonialTemplate(models.Model):
 
     organization = models.ForeignKey(Organization, related_name='testimonial_template',
@@ -216,17 +220,15 @@ class Testimonial(models.Model):
         verbose_name = _('Testimonial')
 
 
+
 class Evaluation(models.Model):
 
-    seminar     = models.ForeignKey(Seminar, related_name="evaluation", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="evaluation", verbose_name=_('user'))
+    form        = models.ForeignKey(Form, related_name='evaluation', verbose_name=_('form'))
     
-
-
     class Meta(MetaCore):
         db_table = app_label + '_' + 'evaluation'
         verbose_name = _('Evaluation')
-
 
 
 class Auditor(models.Model):
@@ -258,23 +260,6 @@ class Auditor(models.Model):
         db_table = app_label + '_' + 'auditor'
         verbose_name = _('Auditor')
         ordering = ['user__last_name']
-
-
-
-class SeminarRevision(models.Model):
-
-    seminar     = models.ForeignKey(Seminar, related_name="seminar_revision", verbose_name=_('seminar'))
-    user        = models.ForeignKey(User, related_name="seminar_revision", verbose_name=_('user'))
-    date        = models.DateTimeField(_('date modified'), auto_now=True)
-    progress    = models.IntegerField(_('progress'), blank=True)
-
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'seminar_revisions'
-        verbose_name = _('Revision')
-        verbose_name_plural = _('Revisions')
-
-    def __unicode__(self):
-        return ' '.join([seminar.title, user.last_name, str(date)])
 
 
     
