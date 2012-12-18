@@ -116,7 +116,9 @@ class Seminar(Displayable):
     docs_correct    = models.ManyToManyField(Document, related_name="seminar_docs_correct",
                                         verbose_name=_('corrected document'),
                                         blank=True, null=True)
-    
+    form            = models.ForeignKey(Form, related_name='seminar', verbose_name=_('form'),
+                                        blank=True, null=True)
+
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
 
@@ -216,17 +218,6 @@ class Testimonial(models.Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'
         verbose_name = _('Testimonial')
-
-
-
-class Evaluation(models.Model):
-
-    user        = models.ForeignKey(User, related_name="evaluation", verbose_name=_('user'))
-    form        = models.ForeignKey(Form, related_name='evaluation', verbose_name=_('form'))
-
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'evaluation'
-        verbose_name = _('Evaluation')
 
 
 class Auditor(models.Model):
