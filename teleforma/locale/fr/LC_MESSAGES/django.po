@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-17 17:57+0100\n"
+"POT-Creation-Date: 2012-12-18 14:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -17,8 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: models/ae.py:46 models/core.py:177 models/crfpa.py:108 models/crfpa.py:146
-#: models/pro.py:166 models/pro.py:207 models/pro.py:222 models/pro.py:234
-#: models/pro.py:267
+#: models/pro.py:169 models/pro.py:211 models/pro.py:225
 msgid "user"
 msgstr "utilisateur"
 
@@ -27,7 +26,7 @@ msgstr "utilisateur"
 msgid "period"
 msgstr "période"
 
-#: models/ae.py:49 models/crfpa.py:114 models/pro.py:239
+#: models/ae.py:49 models/crfpa.py:114 models/pro.py:230
 msgid "platform only"
 msgstr "plateforme seulement"
 
@@ -57,19 +56,19 @@ msgstr "Publié"
 
 #: models/core.py:88 models/core.py:100 models/core.py:120 models/core.py:132
 #: models/core.py:196 models/core.py:392 models/crfpa.py:47 models/crfpa.py:63
-#: models/pro.py:74
+#: models/pro.py:75
 msgid "name"
 msgstr "nom"
 
 #: models/core.py:89 models/core.py:101 models/core.py:121 models/core.py:133
 #: models/core.py:148 models/core.py:197 models/core.py:307 models/core.py:373
-#: models/core.py:393 models/crfpa.py:48 models/pro.py:148 models/pro.py:191
-#: templates/teleforma/seminar_detail.html:60
-#: templates/teleforma/seminars.html:97
+#: models/core.py:393 models/crfpa.py:48 models/pro.py:151 models/pro.py:195
+#: templates/teleforma/seminar_detail.html:61
+#: templates/teleforma/seminars.html:103
 msgid "description"
 msgstr "description"
 
-#: models/core.py:96 models/core.py:103 models/core.py:195 models/pro.py:190
+#: models/core.py:96 models/core.py:103 models/core.py:195 models/pro.py:194
 msgid "organization"
 msgstr "organisation"
 
@@ -85,7 +84,7 @@ msgstr "département"
 msgid "course type"
 msgstr "type de matière"
 
-#: models/core.py:147 models/core.py:372 models/pro.py:147
+#: models/core.py:147 models/core.py:372 models/pro.py:150
 msgid "title"
 msgstr "titre"
 
@@ -93,12 +92,12 @@ msgstr "titre"
 msgid "code"
 msgstr "cote"
 
-#: models/core.py:150 models/core.py:376 models/pro.py:120 models/pro.py:268
+#: models/core.py:150 models/core.py:376 models/pro.py:123
 msgid "date modified"
 msgstr "date de modification"
 
-#: models/core.py:151 models/core.py:420 models/core.py:478 models/pro.py:58
-#: models/pro.py:95 models/pro.py:150 models/pro.py:212
+#: models/core.py:151 models/core.py:420 models/core.py:478 models/pro.py:59
+#: models/pro.py:96 models/pro.py:153 models/pro.py:216
 msgid "rank"
 msgstr "rang"
 
@@ -110,7 +109,7 @@ msgstr "note de synthèse"
 msgid "obligations"
 msgstr "obligations"
 
-#: models/core.py:154 models/crfpa.py:91 models/pro.py:96
+#: models/core.py:154 models/crfpa.py:91 models/pro.py:97
 msgid "magistral"
 msgstr "magistral"
 
@@ -119,11 +118,11 @@ msgid "types"
 msgstr "types"
 
 #: models/core.py:170 models/core.py:214 models/core.py:409 models/core.py:469
-#: models/pro.py:90
+#: models/pro.py:91 templates/teleforma/seminar_detail.html:55
 msgid "course"
 msgstr "matière"
 
-#: models/core.py:190 models/core.py:216 models/pro.py:101
+#: models/core.py:190 models/core.py:216 models/pro.py:102
 msgid "professor"
 msgstr "professeur"
 
@@ -152,7 +151,7 @@ msgstr "date de début"
 msgid "end date"
 msgstr "date de fin"
 
-#: models/core.py:225 models/core.py:423 models/core.py:479 models/pro.py:50
+#: models/core.py:225 models/core.py:423 models/core.py:479 models/pro.py:51
 msgid "readers"
 msgstr ""
 
@@ -168,7 +167,7 @@ msgstr "hôte"
 msgid "port"
 msgstr "port"
 
-#: models/core.py:306 models/core.py:417 models/core.py:477 models/pro.py:88
+#: models/core.py:306 models/core.py:417 models/core.py:477 models/pro.py:89
 msgid "type"
 msgstr "type"
 
@@ -200,7 +199,7 @@ msgstr "stream en direct"
 msgid "credits"
 msgstr "crédits"
 
-#: models/core.py:375 models/pro.py:119 models/pro.py:172
+#: models/core.py:375 models/pro.py:122 models/pro.py:175
 msgid "date added"
 msgstr "date d'ajout"
 
@@ -212,7 +211,7 @@ msgstr "publié"
 msgid "mime type"
 msgstr "Type mime"
 
-#: models/core.py:380 models/pro.py:151
+#: models/core.py:380 models/pro.py:154
 msgid "weight"
 msgstr "poids"
 
@@ -279,38 +278,38 @@ msgstr "iej"
 msgid "student"
 msgstr "étudiant"
 
-#: models/crfpa.py:147 models/pro.py:241
+#: models/crfpa.py:147 models/pro.py:232
 #: templates/telemeta/profile_detail.html:82
 msgid "Address"
 msgstr "Adresse"
 
-#: models/crfpa.py:148 models/pro.py:242
+#: models/crfpa.py:148 models/pro.py:233
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models/crfpa.py:149 models/pro.py:243
+#: models/crfpa.py:149 models/pro.py:234
 msgid "City"
 msgstr "Ville"
 
-#: models/crfpa.py:150 models/pro.py:244
+#: models/crfpa.py:150 models/pro.py:235
 msgid "Country"
 msgstr "Pays"
 
-#: models/crfpa.py:151 models/pro.py:245
+#: models/crfpa.py:151 models/pro.py:236
 #: templates/telemeta/profile_detail.html:91
 msgid "Language"
 msgstr "Langue"
 
-#: models/crfpa.py:152 models/pro.py:246
+#: models/crfpa.py:152 models/pro.py:237
 #: templates/telemeta/profile_detail.html:83
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models/crfpa.py:153 models/pro.py:248
+#: models/crfpa.py:153 models/pro.py:239
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models/crfpa.py:154 models/pro.py:249
+#: models/crfpa.py:154 models/pro.py:240
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
@@ -318,156 +317,145 @@ msgstr "Mot de passe initialisé"
 msgid "profile"
 msgstr "profil"
 
-#: models/pro.py:53
+#: models/pro.py:54
 msgid "audio items"
 msgstr ""
 
-#: models/pro.py:56
+#: models/pro.py:57
 msgid "video items"
 msgstr ""
 
-#: models/pro.py:81
+#: models/pro.py:82
 msgid "Seminar type"
 msgstr "Type de séminaire"
 
-#: models/pro.py:91
+#: models/pro.py:92
 msgid "sub title"
 msgstr "sous-titre"
 
-#: models/pro.py:92 templates/teleforma/seminar_detail.html:57
-#: templates/teleforma/seminars.html:94
+#: models/pro.py:93 templates/teleforma/seminar_detail.html:58
+#: templates/teleforma/seminars.html:100
 msgid "public concerned"
 msgstr "public concerné"
 
-#: models/pro.py:93 templates/teleforma/seminar_detail.html:56
-#: templates/teleforma/seminars.html:93
+#: models/pro.py:94 templates/teleforma/seminar_detail.html:57
+#: templates/teleforma/seminars.html:99
 msgid "level"
 msgstr "niveau"
 
-#: models/pro.py:94
+#: models/pro.py:95
 msgid "price"
 msgstr "prix"
 
-#: models/pro.py:97
+#: models/pro.py:98
 msgid "index"
 msgstr "index"
 
-#: models/pro.py:98
+#: models/pro.py:99
 msgid "approximative duration"
 msgstr "durée approximative"
 
-#: models/pro.py:104
+#: models/pro.py:105
 msgid "document 1"
 msgstr "document 1"
 
-#: models/pro.py:107
+#: models/pro.py:108
 msgid "media"
 msgstr "médias"
 
-#: models/pro.py:110
+#: models/pro.py:111
 msgid "media_preview"
 msgstr ""
 
-#: models/pro.py:113
+#: models/pro.py:114
 msgid "document 2"
 msgstr "document 2"
 
-#: models/pro.py:116
+#: models/pro.py:117
 msgid "corrected document"
 msgstr "document corrigé"
 
-#: models/pro.py:138 templates/teleforma/answer_form.html:77
-#: templates/teleforma/seminar_detail.html:154
+#: models/pro.py:119
+msgid "form"
+msgstr "formulaire"
+
+#: models/pro.py:141 templates/teleforma/answer_form.html:77
+#: templates/teleforma/seminar_detail.html:155
 #: templates/teleforma/seminar_media_audio.html:56
 #: templates/teleforma/seminar_media_video.html:104
 #: templates/teleforma/inc/answer_list.html:21
 msgid "Seminar"
 msgstr "Sémimaire"
 
-#: models/pro.py:146 models/pro.py:206 models/pro.py:221 models/pro.py:266
+#: models/pro.py:149 models/pro.py:210
 msgid "seminar"
 msgstr "séminaire"
 
-#: models/pro.py:149 models/pro.py:167
+#: models/pro.py:152 models/pro.py:170
 msgid "question"
 msgstr "question"
 
-#: models/pro.py:152
+#: models/pro.py:155
 msgid "minimum numbers of characters"
 msgstr "nombre de caractère minimum"
 
-#: models/pro.py:153 models/pro.py:169
+#: models/pro.py:156 models/pro.py:172
 msgid "status"
 msgstr "status"
 
-#: models/pro.py:160
+#: models/pro.py:163
 msgid "Question"
 msgstr "Question"
 
-#: models/pro.py:168
+#: models/pro.py:171
 msgid "answer"
 msgstr "réponse"
 
-#: models/pro.py:170 templates/teleforma/seminar_detail.html:40
+#: models/pro.py:173 templates/teleforma/seminar_detail.html:40
+#: templates/teleforma/seminars.html:87
 msgid "validated"
 msgstr "validé"
 
-#: models/pro.py:171
+#: models/pro.py:174
 msgid "date submitted"
 msgstr "date de soumission"
 
-#: models/pro.py:184 templates/teleforma/answer_detail.html:28
+#: models/pro.py:187 templates/teleforma/answer_detail.html:28
 #: templates/teleforma/answer_form.html:80
 msgid "Answer"
 msgstr "Réponse"
 
-#: models/pro.py:192
+#: models/pro.py:196
 msgid "comments"
 msgstr "commentaires"
 
-#: models/pro.py:194 models/pro.py:209
+#: models/pro.py:198 models/pro.py:213
 msgid "template"
 msgstr "modèle"
 
-#: models/pro.py:201
+#: models/pro.py:205
 msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
-#: models/pro.py:216
+#: models/pro.py:220
 msgid "Testimonial"
 msgstr "Attestation"
 
-#: models/pro.py:228
-msgid "Evaluation"
-msgstr "Évaluation"
-
-#: models/pro.py:236
+#: models/pro.py:227
 msgid "seminars"
 msgstr "séminaires"
 
-#: models/pro.py:240
+#: models/pro.py:231
 msgid "Company"
 msgstr ""
 
-#: models/pro.py:247
+#: models/pro.py:238
 msgid "Fax"
 msgstr ""
 
-#: models/pro.py:259
+#: models/pro.py:250
 msgid "Auditor"
 msgstr "Auditeur"
-
-#: models/pro.py:269
-msgid "progress"
-msgstr ""
-
-#: models/pro.py:273
-msgid "Revision"
-msgstr "Révision"
-
-#: models/pro.py:274
-msgid "Revisions"
-msgstr "Révisions"
 
 #: templates/404.html:10
 msgid "Page not found"
@@ -771,14 +759,14 @@ msgid "Submit it"
 msgstr "Soumettre"
 
 #: templates/teleforma/answer_form.html:70
-#: templates/teleforma/seminar_detail.html:148
-#: templates/teleforma/seminars.html:112
+#: templates/teleforma/seminar_detail.html:149
+#: templates/teleforma/seminars.html:118
 msgid "Progressions"
 msgstr "Progressions"
 
 #: templates/teleforma/answer_form.html:74
-#: templates/teleforma/seminar_detail.html:151
-#: templates/teleforma/seminars.html:115
+#: templates/teleforma/seminar_detail.html:152
+#: templates/teleforma/seminars.html:121
 msgid "General"
 msgstr "Général"
 
@@ -910,7 +898,7 @@ msgid "Live"
 msgstr "Direct"
 
 #: templates/teleforma/course_conference.html:78
-#: templatetags/teleforma_tags.py:132
+#: templatetags/teleforma_tags.py:133
 msgid "Yes"
 msgstr "Oui"
 
@@ -999,7 +987,7 @@ msgstr "Mes notes"
 msgid "New note"
 msgstr "Nouvelle note"
 
-#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:127
+#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:133
 msgid "Status"
 msgstr "Status"
 
@@ -1012,53 +1000,53 @@ msgstr "Aide"
 msgid "Informations"
 msgstr "Informations"
 
-#: templates/teleforma/seminar_detail.html:55
-#: templates/teleforma/seminars.html:92
+#: templates/teleforma/seminar_detail.html:56
+#: templates/teleforma/seminars.html:98
 msgid "keywords"
 msgstr "mots clés"
 
-#: templates/teleforma/seminar_detail.html:58
-#: templates/teleforma/seminars.html:95
+#: templates/teleforma/seminar_detail.html:59
+#: templates/teleforma/seminars.html:101
 msgid "duration"
 msgstr "durée"
 
-#: templates/teleforma/seminar_detail.html:76
+#: templates/teleforma/seminar_detail.html:77
 msgid "Step 1 : read these documents"
 msgstr "Étape 1 : lire ces documents"
 
-#: templates/teleforma/seminar_detail.html:80
+#: templates/teleforma/seminar_detail.html:81
 msgid "Step 1 : read this document"
 msgstr "Étape 1 : lire ce document"
 
-#: templates/teleforma/seminar_detail.html:88
+#: templates/teleforma/seminar_detail.html:89
 msgid "Step 2 : attend these conferences"
 msgstr "Étape 2 : assister à ces conférences"
 
-#: templates/teleforma/seminar_detail.html:92
+#: templates/teleforma/seminar_detail.html:93
 msgid "Step 2 : attend this conference"
 msgstr "Étape 2 : assister à cette conférence"
 
-#: templates/teleforma/seminar_detail.html:100
+#: templates/teleforma/seminar_detail.html:101
 msgid "Step 3 : read these documents"
 msgstr "Étape 3 : lire ces documents"
 
-#: templates/teleforma/seminar_detail.html:104
+#: templates/teleforma/seminar_detail.html:105
 msgid "Step 3 : read this document"
 msgstr "Étape 3 : lire ce document"
 
-#: templates/teleforma/seminar_detail.html:112
+#: templates/teleforma/seminar_detail.html:113
 msgid "Step 4 : answer to these questions"
 msgstr "Étape 4 : réaliser ces consultations fictives"
 
-#: templates/teleforma/seminar_detail.html:118
+#: templates/teleforma/seminar_detail.html:119
 msgid "Step 4 : answer to this question"
 msgstr "Étape 4 : réaliser cette consultation fictive"
 
-#: templates/teleforma/seminar_detail.html:127
+#: templates/teleforma/seminar_detail.html:128
 msgid "Step 5 : read these corrected documents"
 msgstr "Étape 5 : lire ces documents corrigés"
 
-#: templates/teleforma/seminar_detail.html:131
+#: templates/teleforma/seminar_detail.html:132
 msgid "Step 5 : read this corrected document"
 msgstr "Étape 5 : lire ce document corrigé"
 
@@ -1140,8 +1128,13 @@ msgid "saved on"
 msgstr "enregistrée le"
 
 #: templates/teleforma/inc/question_list.html:16
-msgid "Submitted"
-msgstr "Soumise"
+msgid "Waiting for validation"
+msgstr ""
+
+#: templates/teleforma/inc/question_list.html:16
+#, fuzzy
+msgid "Validated"
+msgstr "validé"
 
 #: templates/telemeta/base.html:95
 msgid "Desk"
@@ -1380,19 +1373,19 @@ msgstr "Administrateur"
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: templatetags/teleforma_tags.py:61
+#: templatetags/teleforma_tags.py:62
 msgid "General tweeter"
 msgstr "Tweeter général"
 
-#: templatetags/teleforma_tags.py:62
+#: templatetags/teleforma_tags.py:63
 msgid "Local tweeter"
 msgstr "Tweeter local"
 
-#: templatetags/teleforma_tags.py:127
+#: templatetags/teleforma_tags.py:128
 msgid "me"
 msgstr "moi"
 
-#: templatetags/teleforma_tags.py:134
+#: templatetags/teleforma_tags.py:135
 msgid "No"
 msgstr "Non"
 
@@ -1414,6 +1407,18 @@ msgstr "Vous avez enregistré votre reponse avec succès"
 #: views/pro.py:214
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre reponse avec succès"
+
+#~ msgid "Evaluation"
+#~ msgstr "Évaluation"
+
+#~ msgid "Revision"
+#~ msgstr "Révision"
+
+#~ msgid "Revisions"
+#~ msgstr "Révisions"
+
+#~ msgid "Submitted"
+#~ msgstr "Soumise"
 
 #~ msgid "Respond to the following question"
 #~ msgstr "Réalisez la consultation fictive suivante"
