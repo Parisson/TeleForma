@@ -101,7 +101,7 @@ urlpatterns = patterns('',
 
     # Evaluations
     url(r'^forms/', include('forms_builder.forms.urls')),
-    url(r'^desk/seminars/(?P<pk>.*)/form/$', EvaluationView.as_view(), name="teleforma-seminar-form"),
+    url(r'^desk/seminars/(?P<pk>.*)/form/$', evaluation_form_detail, name="teleforma-seminar-form"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),

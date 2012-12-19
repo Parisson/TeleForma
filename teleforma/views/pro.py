@@ -36,6 +36,11 @@
 from teleforma.views.core import *
 from django.utils.translation import ugettext_lazy as _
 
+from forms_builder.forms.forms import FormForForm
+from forms_builder.forms.models import Form
+from forms_builder.forms.signals import form_invalid, form_valid
+
+
 def get_seminars(user):
     seminars = []
 
@@ -341,20 +346,52 @@ class AjaxableResponseMixin(object):
             return super(AjaxableResponseMixin, self).form_valid(form)
 
 
+# class EvaluationView(DetailView):
 
-class EvaluationView(DetailView):
+#     model = Seminar
+#     template_name='teleforma/evaluation_form.html'
 
-    model = Seminar
-    template_name='teleforma/evaluation_form.html'
+#     def get_context_data(self, **kwargs):
+#         context = super(EvaluationView, self).get_context_data(**kwargs)
+#         context['all_seminars'] = get_seminars(self.request.user)
+#         context['total_progress'] = total_progress(self.request.user)
+#         context['form'] = self.get_object().form
+#         context['seminar_progress'] = seminar_progress(self.request.user, self.get_object())
+#         return context
 
-    def get_context_data(self, **kwargs):
-        context = super(EvaluationView, self).get_context_data(**kwargs)
-        context['all_seminars'] = get_seminars(self.request.user)
-        context['total_progress'] = total_progress(self.request.user)
-        context['form'] = self.get_object().form
-        context['seminar_progress'] = seminar_progress(self.request.user, self.get_object())
-        return context
 
+def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html'):
+    """
+    Display a built form and handle submission.
+    """
+    context = {}
+    seminar = Seminar.objects.get(pk=pk)
+    published = Form.objects.published(for_user=request.user)
+    form = seminar.form
+    if form.login_required and not request.user.is_authenticated():
+        return redirect("%s?%s=%s" % (settings.LOGIN_URL, REDIRECT_FIELD_NAME,
+                        urlquote(request.get_full_path())))
+    request_context = RequestContext(request)
+    args = (form, request_context, request.POST or None, request.FILES or None)
+    form_for_form = FormForForm(*args)
+    if request.method == "POST":
+        if not form_for_form.is_valid():
+            form_invalid.send(sender=request, form=form_for_form)
+        else:
+            entry = form_for_form.save()
+            form_valid.send(sender=request, form=form_for_form, entry=entry)
+        return redirect('teleforma-seminar-detail', seminar.id)
+
+    context['seminar'] = seminar
+    context['all_seminars'] = get_seminars(request.user)
+    context['total_progress'] = total_progress(request.user)
+    context['form'] = form
+    context['seminar_progress'] = seminar_progress(request.user, seminar)
+    
+    return render_to_response(template, context, request_context)
+
+
+# Testimonials
 
 def fetch_resources(uri, rel):
     """

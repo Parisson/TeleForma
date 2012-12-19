@@ -30,5 +30,4 @@ class AnswerForm(ModelForm):
         hidden_fields = ['status']
 
 
-# AnswerFormset = inlineformset_factory(QuestionForm, Answer, extra=1)
 

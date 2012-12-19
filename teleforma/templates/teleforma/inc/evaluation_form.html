@@ -1,0 +1,19 @@
+{% load teleforma_tags %}
+{% load forms_builder_tags %}
+{% load i18n %}
+
+
+<div class="course_content">
+<div class="course_subtitle">
+    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {{ title }}</h3>
+</div>
+
+<table class="listing" width="100%">
+    <tbody>
+        <tr>
+        <td class="border-top"><a href="{% url teleforma-seminar-form seminar.id %}" title="{% trans "Form" %}"><img src="{{ STATIC_URL }}/telemeta/images/playlist.png" style="vertical-align:middle" alt="" /> {{ form.title }}</a></td>
+        </tr>
+    </tbody>
+</table>
+
+</div>
