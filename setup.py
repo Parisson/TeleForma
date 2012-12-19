@@ -23,6 +23,7 @@ setup(
         'django-timezones',
         'django-tinymce',
         'django-forms-builder',
+        'xhtml2pdf',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',

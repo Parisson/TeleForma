@@ -250,5 +250,3 @@ class Auditor(models.Model):
         verbose_name = _('Auditor')
         ordering = ['user__last_name']
 
-
-    

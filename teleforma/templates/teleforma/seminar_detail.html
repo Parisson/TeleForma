@@ -123,6 +123,7 @@ $(function() {
           {% endwith %}
 
          {% if validated %}
+          
           {% with seminar.docs_correct as docs %}
            {% if docs.all.count > 1 %}
             {% with _("Step 5 : read these corrected documents") as title %}
@@ -134,6 +135,13 @@ $(function() {
             {% endwith %}
            {% endif %}
           {% endwith %}
+
+          {% with seminar.form as form %}
+           {% with _("Step 6 : evaluate the seminar") as title %}
+            {% include "teleforma/inc/evaluation_form.html" %}
+           {% endwith %}
+          {% endwith %}
+
          {% endif %}
 
       {% endblock course_content %}

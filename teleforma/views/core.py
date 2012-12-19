@@ -38,6 +38,8 @@ import random
 import urllib
 import urllib2
 import json
+import os
+import StringIO
 
 from jsonrpc import jsonrpc_method
 
@@ -47,7 +49,7 @@ from django.template import RequestContext, loader
 from django import template
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render_to_response, redirect, get_object_or_404, render
 from django.views.generic import *
 from django.views.generic.base import *
 from django.conf import settings
@@ -67,6 +69,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.template.loader import get_template
+from django.template.context import Context
+from django.utils.html import escape
+
 from jsonrpc.proxy import ServiceProxy
 
 from teleforma.models import *
@@ -75,6 +81,7 @@ from teleforma.views.pro import *
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
+from xhtml2pdf import pisa
 
 try:
     from telecaster.models import *

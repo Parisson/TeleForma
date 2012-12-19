@@ -1772,3 +1772,44 @@ form .exceed{
     line-height: 1.3em;
     color: #333;   
 }
+
+
+.form p {
+    margin: 0em;
+    padding-top: 0.3em;
+    padding-left: 1em;
+    /*border-top: 1px solid #dfdfdf;*/
+}
+
+.form ul, .form ul ul, .form ol {
+    list-style: square;
+    padding: 0em;
+    margin-top: 0em;
+    margin-left: 2em;
+    padding-left: 2em;
+    font-size: 0.8em;
+    clear: both;
+}
+
+.form ul ul {
+    font-size: 1.1em;
+    padding-left: 0;
+}
+
+.form li {
+    font-size: 1.2em;
+    padding: .2em;
+    padding-left: 1em;
+    padding-top: 0.3em;
+    list-style:none; 
+}
+
+.form-button {
+    padding: 1em 0em 1em 1em;
+}
+
+.form h5 {
+    font-size: 1em;
+    padding-left: 0;
+    font-weight: none;
+}

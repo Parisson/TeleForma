@@ -64,7 +64,7 @@ urlpatterns = patterns('',
     # Desk
     url(r'^desk/$', SeminarsView.as_view(), name="teleforma-desk"),
     url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
-    url(r'^desk/seminars/(?P<pk>.*)/$', SeminarView.as_view(), name="teleforma-seminar-detail"),
+    url(r'^desk/seminars/(?P<pk>.*)/detail/$', SeminarView.as_view(), name="teleforma-seminar-detail"),
 
     url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
@@ -101,6 +101,7 @@ urlpatterns = patterns('',
 
     # Evaluations
     url(r'^forms/', include('forms_builder.forms.urls')),
+    url(r'^desk/seminars/(?P<pk>.*)/form/$', EvaluationView.as_view(), name="teleforma-seminar-form"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),

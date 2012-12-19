@@ -132,6 +132,7 @@ class SeminarView(DetailView):
         context['seminar_progress'] = seminar_progress(self.request.user, seminar)
         context['total_progress'] = total_progress(self.request.user)
         context['validated'] = seminar_validated(self.request.user, seminar)
+        context['evaluation'] = seminar.form
         return context
 
 
@@ -153,34 +154,6 @@ class SeminarsView(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SeminarsView, self).dispatch(*args, **kwargs)
-
-
-
-
-class AjaxableResponseMixin(object):
-    """
-    Mixin to add AJAX support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def render_to_json_response(self, context, **response_kwargs):
-        data = json.dumps(context)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
-
-    def form_invalid(self, form):
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return super(AjaxableResponseMixin, self).form_invalid(form)
-
-    def form_valid(self, form):
-        if self.request.is_ajax():
-            data = {
-                'pk': form.instance.pk,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return super(AjaxableResponseMixin, self).form_valid(form)
 
 
 class AnswerView(FormView):
@@ -341,3 +314,98 @@ class AnswerDetailView(DetailView):
         context['all_seminars'] = get_seminars(self.request.user)
         return context
 
+
+class AjaxableResponseMixin(object):
+    """
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return super(AjaxableResponseMixin, self).form_invalid(form)
+
+    def form_valid(self, form):
+        if self.request.is_ajax():
+            data = {
+                'pk': form.instance.pk,
+            }
+            return self.render_to_json_response(data)
+        else:
+            return super(AjaxableResponseMixin, self).form_valid(form)
+
+
+
+class EvaluationView(DetailView):
+
+    model = Seminar
+    template_name='teleforma/evaluation_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(EvaluationView, self).get_context_data(**kwargs)
+        context['all_seminars'] = get_seminars(self.request.user)
+        context['total_progress'] = total_progress(self.request.user)
+        context['form'] = self.get_object().form
+        context['seminar_progress'] = seminar_progress(self.request.user, self.get_object())
+        return context
+
+
+def fetch_resources(uri, rel):
+    """
+    Callback to allow xhtml2pdf/reportlab to retrieve Images,Stylesheets, etc.
+    `uri` is the href attribute from the html link element.
+    `rel` gives a relative path, but it's not used here.
+
+    """
+    if uri.startswith(settings.MEDIA_URL):
+        path = os.path.join(settings.MEDIA_ROOT,
+                            uri.replace(settings.MEDIA_URL, ""))
+    elif uri.startswith(settings.STATIC_URL):
+        path = os.path.join(settings.STATIC_ROOT,
+                            uri.replace(settings.STATIC_URL, ""))
+    else:
+        path = os.path.join(settings.STATIC_ROOT,
+                            uri.replace(settings.STATIC_URL, ""))
+
+        if not os.path.isfile(path):
+            path = os.path.join(settings.MEDIA_ROOT,
+                                uri.replace(settings.MEDIA_URL, ""))
+
+            if not os.path.isfile(path):
+                raise UnsupportedMediaPathException(
+                                    'media urls must start with %s or %s' % (
+                                    settings.MEDIA_ROOT, settings.STATIC_ROOT))
+
+    return path
+
+
+def render_to_pdf(template_src, context_dict):
+    """Function to render html template into a pdf file"""
+    template = get_template(template_src)
+    context = Context(context_dict)
+    html = template.render(context)
+    result = StringIO.StringIO()
+
+    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")),
+                                            dest=result,
+                                            encoding='UTF-8',
+                                            link_callback=fetch_resources)
+    if not pdf.err:
+        response = HttpResponse(result.getvalue(),
+                                                    mimetype='application/pdf')
+
+        return response
+
+    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
+
+
+def download_pdf(request):
+    """Build briefing packages format and export as HTML and PDF."""
+    response = HttpResponse(content_type='application/pdf')
+    return generate_pdf('app/test.html', file_object=response)
