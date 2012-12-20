@@ -106,7 +106,7 @@ def get_seminars(user):
         seminars = professor.seminars.all()
 
     elif auditor:
-        auditor = user.pro_auditor.get()
+        auditor = user.auditor.get()
         s_seminars = auditor.seminars.all()
 
     elif user.is_staff or user.is_superuser:

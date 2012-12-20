@@ -1,16 +1,42 @@
-body {margin: 0; padding: 0;}
-a {text-decoration: none; color: #969696;}
-a img {border: none;}
-html, input, select, textarea, h1, h2, h3, h4, h5, h6 {
-    font-size: 100%;
+
+#header{   
+    font-size: 4em;
+    color: white;
+    padding-top: 2em;
+    padding-left: 1em;
+    background-color: #3a69b1;
 }
-body {
-    font: 0.8125em/1em Verdana, sans-serif;
-    line-height: 1.3em;
-    color: #333;
-    background: #FFF;
-    margin: 0em;
-    background:no-repeat url(/static/telemeta/images/bg_yt.png) 0 0;
-    background-color:#ebebeb;
-    background-repeat:repeat
+
+#content {
+    margin-top: 4em;
+}
+
+.table {
+    font-size: 1.5em;
+    margin: 1em 1em 1em 4em;
+    width: 100%;
+}
+
+
+#address{
+
+}
+
+#signature{    
+    width: 10%;            
+}
+
+
+
+#footer{   
+    font-size: 1em;
+    color: white;
+    padding: 1em;
+    padding-left: 1em;
+    background-color: #3a69b1;
+    text-align: center;
+}
+
+.bold {
+    font-weight: bold;
 }
