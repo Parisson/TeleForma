@@ -153,7 +153,7 @@ class Question(models.Model):
     rank        = models.IntegerField(_('rank'), blank=True, null=True)
     weight      = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
     min_nchar   = models.IntegerField(_('minimum numbers of characters'))
-    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=3)
 
     def __unicode__(self):
         return ' - '.join([unicode(self.seminar), self.title, str(self.rank)])
