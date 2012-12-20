@@ -105,7 +105,7 @@ def get_seminars(user):
         professor = user.professor.get()
         seminars = professor.seminars.all()
 
-    elif auditor:
+    elif auditor and not (user.is_staff or user.is_superuser):
         auditor = user.auditor.get()
         s_seminars = auditor.seminars.all()
 
@@ -149,7 +149,7 @@ def total_progress(user):
 
     progress = 0
     auditor = user.auditor.all()
-    if auditor:
+    if auditor and not (user.is_staff or user.is_superuser):
         seminars = auditor[0].seminars.all()        
     elif user.is_superuser or user.is_staff:
         seminars = Seminar.objects.all()
