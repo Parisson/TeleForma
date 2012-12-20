@@ -380,6 +380,7 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
         else:
             entry = form_for_form.save()
             form_valid.send(sender=request, form=form_for_form, entry=entry)
+        messages.info(request, _("You have successfully sumitted your evaluation"))
         return redirect('teleforma-seminar-detail', seminar.id)
 
     context['seminar'] = seminar
@@ -393,56 +394,86 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
 
 # Testimonials
 
-def fetch_resources(uri, rel):
-    """
-    Callback to allow xhtml2pdf/reportlab to retrieve Images,Stylesheets, etc.
-    `uri` is the href attribute from the html link element.
-    `rel` gives a relative path, but it's not used here.
+import StringIO
 
-    """
-    if uri.startswith(settings.MEDIA_URL):
-        path = os.path.join(settings.MEDIA_ROOT,
-                            uri.replace(settings.MEDIA_URL, ""))
-    elif uri.startswith(settings.STATIC_URL):
-        path = os.path.join(settings.STATIC_ROOT,
-                            uri.replace(settings.STATIC_URL, ""))
-    else:
-        path = os.path.join(settings.STATIC_ROOT,
-                            uri.replace(settings.STATIC_URL, ""))
+from xhtml2pdf import pisa
 
-        if not os.path.isfile(path):
+from django.conf import settings
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.template.loader import get_template
+from django.template.context import Context
+from django.utils.html import escape
+from django.views.generic.detail import SingleObjectMixin
+
+
+class TestimonialView(DetailView):
+
+    model = Seminar
+    template_name = 'teleforma/seminar_detail.html'
+    mimetype = 'application/pdf'
+    extension = 'pdf'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TestimonialView, self).dispatch(*args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialView, self).get_context_data(**kwargs)        
+        context['seminar'] = self.get_object()
+        return context
+
+    def download(self, request, pk):
+        """Function to render html template into a pdf file"""
+        
+        seminar = Seminar.objects.get(id=pk)
+        template = get_template(self.template_name)
+        
+        context = Context({'seminar': seminar, 'STATIC_URL': settings.STATIC_ROOT })
+        html = template.render(context)
+        result = StringIO.StringIO()
+
+        pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")),
+                                                dest=result,
+                                                encoding='UTF-8',
+                                                link_callback=self.fetch_resources)
+        if not pdf.err:
+            response = HttpResponse(result.getvalue(), mimetype=self.mimetype)
+            return response
+
+        return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
+
+    
+
+
+
+    def fetch_resources(self, uri, rel):
+        """
+        Callback to allow xhtml2pdf/reportlab to retrieve Images,Stylesheets, etc.
+        `uri` is the href attribute from the html link element.
+        `rel` gives a relative path, but it's not used here.
+
+        """
+        if uri.startswith(settings.MEDIA_URL):
             path = os.path.join(settings.MEDIA_ROOT,
                                 uri.replace(settings.MEDIA_URL, ""))
+        elif uri.startswith(settings.STATIC_URL):
+            path = os.path.join(settings.STATIC_ROOT,
+                                uri.replace(settings.STATIC_URL, ""))
+        else:
+            path = os.path.join(settings.STATIC_ROOT,
+                                uri.replace(settings.STATIC_URL, ""))
 
             if not os.path.isfile(path):
-                raise UnsupportedMediaPathException(
-                                    'media urls must start with %s or %s' % (
-                                    settings.MEDIA_ROOT, settings.STATIC_ROOT))
+                path = os.path.join(settings.MEDIA_ROOT,
+                                    uri.replace(settings.MEDIA_URL, ""))
 
-    return path
-
-
-def render_to_pdf(template_src, context_dict):
-    """Function to render html template into a pdf file"""
-    template = get_template(template_src)
-    context = Context(context_dict)
-    html = template.render(context)
-    result = StringIO.StringIO()
-
-    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")),
-                                            dest=result,
-                                            encoding='UTF-8',
-                                            link_callback=fetch_resources)
-    if not pdf.err:
-        response = HttpResponse(result.getvalue(),
-                                                    mimetype='application/pdf')
-
-        return response
-
-    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
+                if not os.path.isfile(path):
+                    raise UnsupportedMediaPathException(
+                                        'media urls must start with %s or %s' % (
+                                        settings.MEDIA_ROOT, settings.STATIC_ROOT))
+        
+        return path
 
 
-def download_pdf(request):
-    """Build briefing packages format and export as HTML and PDF."""
-    response = HttpResponse(content_type='application/pdf')
-    return generate_pdf('app/test.html', file_object=response)
+
