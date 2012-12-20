@@ -142,6 +142,10 @@ $(function() {
            {% endwith %}
           {% endwith %}
 
+           {% with _("Step 7 : download your testimonial") as title %}
+            {% include "teleforma/inc/testimonial_list.html" %}
+           {% endwith %}
+
          {% endif %}
 
       {% endblock course_content %}

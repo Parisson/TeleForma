@@ -547,9 +547,24 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TestimonialView, self).dispatch(*args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         context = super(TestimonialView, self).get_context_data(**kwargs)        
         context['seminar'] = self.get_object()
         return context
+
+
+class TestimonialDownloadView(TestimonialView):
+
+    pdf_filename = 'testimonial.pdf'
+
+    def get_pdf_filename(self):
+        super(TestimonialView, self).get_pdf_filename()
+        seminar = self.get_object()
+        prefix = unicode(_('Testimonial'))
+        filename = '_'.join([prefix, seminar.title, 
+                            self.request.user.first_name, self.request.user.last_name,])
+        filename += '.pdf'
+        return filename.encode('utf-8')
+
 

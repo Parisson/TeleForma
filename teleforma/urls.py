@@ -47,7 +47,6 @@ user_export = UsersXLSExport()
 profile_view = ProfileView()
 document = DocumentView()
 media = MediaView()
-testimonial = TestimonialView()
 
 urlpatterns = patterns('',
 #    url(r'^$', HomeView.as_view(), name='teleforma-home'),
@@ -107,6 +106,8 @@ urlpatterns = patterns('',
     # Testimonial
     url(r'^desk/seminars/(?P<pk>.*)/testimonial/$', TestimonialView.as_view(), 
                                                     name="teleforma-seminar-testimonial"),
+    url(r'^desk/seminars/(?P<pk>.*)/testimonial/download/$', TestimonialDownloadView.as_view(), 
+                                                    name="teleforma-seminar-testimonial-download"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),
