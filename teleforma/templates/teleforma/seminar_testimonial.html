@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="Viewport" content="width=device-width" />
+<meta name="Viewport" content="initial-scale=1.0" />
+<meta name="Viewport" content="maximum-scale=1.5" />
+<meta name="Viewport" content="user-scalable=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<title>{%block head_title %}{% description %} - TeleForma{% endblock %}</title>
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/teleforma_pdf.css" />
+
+{% endblock %}
+
+{% block extra_stylesheets %}{% endblock %}
+
+
+{% block extra_javascript %}{% endblock %}
+{% block infra_javascript %}{% endblock %}
+
+</head>
+
+<body>
+{% block layout %}
+<div id="layout">
+
+<div id="content">
+
+        <table id="content_header"><tr>
+                <td class="leftcol"><h1>{% block title %}{% endblock %}</h1></td>
+                <td class="rightcol">{% block title_buttons %}{% endblock %}</td>
+        </tr></table>
+
+    {% block content %}
+    {{ seminar.title }}
+    {% endblock %}
+
+</div>
+
+{% block footer %}
+<div id="footer">
+ <hr />
+ <table width="100%">
+  <tr>
+   <td>
+    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{{ STATIC_URL }}telemeta/images/logo_mini_2.png" alt="Telemeta Powered"/></a>
+    <p class="left">
+    {% trans "Powered by" %} <a href="http://parisson.com" target="_blank"><br /><strong>TeleForma {% teleforma_version %}</strong></a><br />
+    </p>
+   </td>
+   <td>
+    <p class="center">
+    </p>
+   </td>
+   <td>
+    <p class="right">
+    Copyright &copy; {% current_year %} {% organization %} |
+    <a href="{% url telemeta-flatpage "legal_notices" %}">{% trans "Legal notices" %}</a>
+    </p>
+   </td>
+  </tr>
+ </table>
+</div>
+{% endblock %}
+
+</div>
+{% endblock layout %}
+
+
+</body>
+</html>

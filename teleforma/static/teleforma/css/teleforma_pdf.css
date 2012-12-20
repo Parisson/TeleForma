@@ -1,0 +1,16 @@
+body {margin: 0; padding: 0;}
+a {text-decoration: none; color: #969696;}
+a img {border: none;}
+html, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+}
+body {
+    font: 0.8125em/1em Verdana, sans-serif;
+    line-height: 1.3em;
+    color: #333;
+    background: #FFF;
+    margin: 0em;
+    background:no-repeat url(/static/telemeta/images/bg_yt.png) 0 0;
+    background-color:#ebebeb;
+    background-repeat:repeat
+}
