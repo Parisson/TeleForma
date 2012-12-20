@@ -11,7 +11,7 @@
     <tbody>
         
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="95%"><a href="{% url teleforma-seminar-testimonial seminar.id %}?format=pdf" target="_blank" title="{% trans "Testimonial" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Testimonial" %} : {{ seminar.title }}{% if seminar.rank %} n°{{seminar.rank}}{% endif %}</a></td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="95%"><a href="{% url teleforma-seminar-testimonial seminar.id %}?format=pdf" target="_blank" title="{% trans "Testimonial" %}"><img src="{{ STATIC_URL }}teleforma/images/icon_doc_16.png" style="vertical-align:middle" alt="" /> {% trans "Testimonial" %} : {{ seminar.title }}{% if seminar.rank %} n°{{seminar.rank}}{% endif %}</a></td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center"><a href="{% url teleforma-seminar-testimonial-download seminar.id %}?format=pdf"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
             </tr>
         

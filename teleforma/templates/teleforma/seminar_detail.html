@@ -57,9 +57,10 @@ $(function() {
               <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
               <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
               <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration }}</dd>
-              {% if seminar.description %}
+              <!-- {% if seminar.description %}
               <dt>{% trans "description" %}</dt><dd><div class="description">{{ seminar.description|safe }}</div></dd>
               {% endif %}
+              -->
             </dl>
             </div>
         {% if messages %}
@@ -172,3 +173,14 @@ $(function() {
 </div>
 {% endblock progress %}
 
+
+{% block index %}
+{% if seminar.index %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Index" %}</h3>
+ <div id="index">
+  {{ seminar.index|safe }}
+ </div>
+</div>
+{% endif %}
+{% endblock index %}

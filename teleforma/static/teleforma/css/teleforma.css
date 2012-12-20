@@ -1813,3 +1813,17 @@ form .exceed{
     padding-left: 0;
     font-weight: none;
 }
+
+#index {
+    background-color: white;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    color: black;
+    padding: 0.5em;
+}
+
+
+#index p, ul {
+    margin: 0.5em;
+}
