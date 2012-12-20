@@ -1425,7 +1425,7 @@ input,textarea{
     float: left;
     width: 50%;
     padding: 0em 3em 0em 2em;
-    max-height: 550px;
+    max-height: 575px;
     overflow-y: auto;
     }
 
@@ -1826,4 +1826,20 @@ form .exceed{
 
 #index p, ul {
     margin: 0.5em;
+}
+
+* {
+margin: 0;
+}
+html, body {
+height: 100%;
+}
+#layout {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+margin: 0 auto -58px;
+}
+#footer {
+height: 30px;
 }
