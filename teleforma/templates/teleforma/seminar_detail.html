@@ -123,8 +123,8 @@ $(function() {
            {% endif %}
           {% endwith %}
 
-         {% if validated %}
-          
+        
+         {% if seminar_progress == 100 %}
           {% with seminar.docs_correct as docs %}
            {% if docs.all.count > 1 %}
             {% with _("Step 5 : read these corrected documents") as title %}
@@ -142,11 +142,12 @@ $(function() {
             {% include "teleforma/inc/evaluation_form.html" %}
            {% endwith %}
           {% endwith %}
+         {% endif %}
 
+         {% if validated %}
            {% with _("Step 7 : download your testimonial") as title %}
             {% include "teleforma/inc/testimonial_list.html" %}
            {% endwith %}
-
          {% endif %}
 
       {% endblock course_content %}
