@@ -32,6 +32,6 @@ rainbow.setSpectrum('#bb0000', '#e65911', '#f3ad17', 'green');
 
 $(window).ready(function() {
 	var pageHeight = $(window).height();
-	var navHeight = pageHeight - 140;
+	var navHeight = pageHeight - 125;
 	$('#desk_center').css({"max-height": navHeight + 'px'});
 });

@@ -1,32 +1,45 @@
 #!/usr/bin/python
 
 import os, sys, string
+import logging
 
+class Logger:
+    """A logging object"""
+
+    def __init__(self, file):
+        self.logger = logging.getLogger('myapp')
+        self.hdlr = logging.FileHandler(file)
+        self.formatter = logging.Formatter('%(message)s')
+        self.hdlr.setFormatter(self.formatter)
+        self.logger.addHandler(self.hdlr)
+        self.logger.setLevel(logging.INFO)
+
+log_file = 'transmeta.log'
+logger = Logger(log_file)
 root_dir = sys.argv[-1]
 source_format = 'webm'
-ffmpeg_args = {'mp3' : ' -vn -acodec libmp3lame -aq 6',
-               'ogg' : ' -vn -acodec copy '
-               'mp4' : ' -vcodec libx264 -vb 512k -acodec libfaac -ab 96k ' 
+done = []
+ffmpeg_args = {'mp3' : ' -vn -acodec libmp3lame -aq 6 ',
+               'ogg' : ' -vn -acodec copy ',
+               'mp4' : ' -vcodec libx264 -r 24 -s 640x360 -b 512k -threads 4 -acodec libfaac -ar 48000 -ab 96k -ac 1 ',
               }
 
-done = []
-log_file = 'transmeta.log'
-f = open(log_file, 'r')
-for line in f.readlines():
-    done.append(line)
-
+if os.path.exists(log_file):
+    f = open(log_file, 'r')
+    for line in f.readlines():
+        done.append(line[:-1])
+    f.close()
 
 for root, dirs, files in os.walk(root_dir):
     for file in files:
-        path = root + os.sep + file
+        path = os.path.abspath(root + os.sep + file)
         name, ext = os.path.splitext(file)
-        if ext == source_format:
+        if ext[1:] == source_format:
             for format in ffmpeg_args.keys():
-                dest = root + os.sep + name + format
+                dest = os.path.abspath(root + os.sep + name + '.' + format)
                 if not dest in done:
                     command = 'ffmpeg -i ' + path + ffmpeg_args[format] + ' -y ' + dest
                     os.system(command)
-                    logger.info(dest)
+                    logger.logger.info(dest)
 
-                
-
+print "DONE!"
