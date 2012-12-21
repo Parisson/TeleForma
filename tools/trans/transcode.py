@@ -17,6 +17,7 @@ class Logger:
 log_file = 'transmeta.log'
 logger = Logger(log_file)
 root_dir = sys.argv[-1]
+args = sys.argv[1:-1]
 source_format = 'webm'
 done = []
 ffmpeg_args = {'mp3' : ' -vn -acodec libmp3lame -aq 6 ',
@@ -37,7 +38,7 @@ for root, dirs, files in os.walk(root_dir):
         if ext[1:] == source_format:
             for format in ffmpeg_args.keys():
                 dest = os.path.abspath(root + os.sep + name + '.' + format)
-                if not dest in done:
+                if not dest in done or '--force' in args:
                     command = 'ffmpeg -i ' + path + ffmpeg_args[format] + ' -y ' + dest
                     os.system(command)
                     logger.logger.info(dest)
