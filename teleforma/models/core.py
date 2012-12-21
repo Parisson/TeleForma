@@ -178,6 +178,8 @@ class Professor(Model):
     courses         = ManyToManyField('Course', related_name="professor",
                                         verbose_name=_('courses'),
                                         blank=True, null=True)
+    title           = CharField(_('title'), max_length=255)
+    
 
     def __unicode__(self):
         if self.user.first_name or self.user.last_name:

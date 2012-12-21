@@ -14,7 +14,7 @@ class Logger:
         self.logger.addHandler(self.hdlr)
         self.logger.setLevel(logging.INFO)
 
-log_file = 'transmeta.log'
+log_file = 'transcoding.log'
 logger = Logger(log_file)
 root_dir = sys.argv[-1]
 args = sys.argv[1:-1]

@@ -1828,12 +1828,21 @@ form .exceed{
     margin: 0.5em;
 }
 
+#_Form p {
+    font-weight: bold;
+}
+
+
+/* LAYOUT  (sticking footer) */
+
 * {
 margin: 0;
 }
+
 html, body {
 height: 100%;
 }
+
 #layout {
 min-height: 100%;
 height: auto !important;
@@ -1843,3 +1852,4 @@ margin: 0 auto -58px;
 #footer {
 height: 30px;
 }
+
