@@ -38,7 +38,6 @@ import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
-import tinymce.models
 from mezzanine.core.models import Displayable
 from forms_builder.forms.models import Form
 
@@ -225,6 +224,9 @@ class Auditor(models.Model):
     user            = models.ForeignKey(User, related_name='auditor', verbose_name=_('user'), unique=True)
     seminars        = models.ManyToManyField('Seminar', related_name="auditor",
                                         verbose_name=_('seminars'),
+                                        blank=True, null=True)
+    conferences     = models.ManyToManyField(Conference, related_name="auditor",
+                                        verbose_name=_('conferences'),
                                         blank=True, null=True)
 
     platform_only   = models.BooleanField(_('platform only'))

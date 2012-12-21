@@ -540,6 +540,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         if self.is_pdf():
             from django.conf import settings
             context['STATIC_ROOT'] = settings.STATIC_ROOT
+            context['MEDIA_ROOT'] = settings.MEDIA_ROOT
             return self.get_pdf_response(context, **response_kwargs)
         context[self.pdf_url_varname] = self.get_pdf_url()
         return super(PDFTemplateResponseMixin, self).render_to_response(

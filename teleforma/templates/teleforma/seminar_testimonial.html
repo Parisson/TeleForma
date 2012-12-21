@@ -31,14 +31,12 @@
 <div id="layout">
 
 <div id="header">
-    {% trans "Testimonial" %}
+    {% trans "Training testimonial" %}
  </div>
 
-</div>
 
 <div id="content">
   
-  </div>
    <table class="table">
       <tr><td class="bold">{% trans "Last name" %} : </td><td>{{ user.last_name|upper }}</td></tr>
       <tr><td class="bold">{% trans "First name" %} : </td><td>{{ user.first_name|upper }}</td></tr>
@@ -53,7 +51,16 @@
       <tr><td class="bold">{% trans "description" %} : </td><td><div class="description">{{ seminar.description|safe }}</div></td></tr>
       {% endif %}
     </table>
+  
+<div class="organization">
+  <div id="address">
+    {{ seminar.course.department.address|safe }}
   </div>
+
+  <div id="signature">
+    <img src="{{ MEDIA_ROOT }}{{ seminar.course.department.signature.url }}" title="Pro-Barreau signature" alt="Pro-Barreau signature" />
+  </div>
+</div>
 
 </div>
 

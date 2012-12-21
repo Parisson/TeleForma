@@ -13,24 +13,28 @@
 
 .table {
     font-size: 1.5em;
-    margin: 1em 1em 1em 4em;
+    margin: 1em 1em 1em 10em;
     width: 100%;
 }
 
+.organization {
+    margin-left: 15em;
+}
 
 #address{
-
+    float: left;  
 }
 
 #signature{    
-    width: 10%;            
+    float: left;
+    margin-left: 10em;
 }
-
 
 
 #footer{   
     font-size: 1em;
     color: white;
+    margin-top: 20em;
     padding: 1em;
     padding-left: 1em;
     background-color: #3a69b1;

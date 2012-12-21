@@ -55,6 +55,7 @@ from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
+import tinymce.models
 
 app_label = 'teleforma'
 
@@ -102,6 +103,9 @@ class Department(Model):
     organization    = ForeignKey('Organization', related_name='department',
                                  verbose_name=_('organization'))
     domain          = CharField(_('Master domain'), max_length=255, blank=True)
+    address         = tinymce.models.HTMLField(_('address'), blank=True)
+    signature       = models.ImageField(_('Signature image'), upload_to='images/%Y/%m/%d', 
+                                        blank=True, null=True, max_length=1024)
 
     def __unicode__(self):
         return self.name
@@ -179,7 +183,7 @@ class Professor(Model):
                                         verbose_name=_('courses'),
                                         blank=True, null=True)
     title           = CharField(_('title'), max_length=255)
-    
+
 
     def __unicode__(self):
         if self.user.first_name or self.user.last_name:
@@ -208,6 +212,8 @@ class Room(Model):
 
 class Conference(Model):
 
+    title           = CharField(_('title'), max_length=1024, blank=True)
+    sub_title       = CharField(_('sub title'), max_length=1024, blank=True)
     public_id       = CharField(_('public_id'), max_length=255, blank=True)
     department      = ForeignKey('Department', related_name='conference', verbose_name=_('department'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
@@ -224,6 +230,7 @@ class Conference(Model):
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
+    price           = models.FloatField(_('price'), blank=True, null=True)
     readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
 
