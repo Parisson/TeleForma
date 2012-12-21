@@ -38,7 +38,6 @@ import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
-from mezzanine.core.models import Displayable
 from forms_builder.forms.models import Form
 
 class MediaPackage(MediaBase):

@@ -56,6 +56,7 @@ import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import tinymce.models
+from mezzanine.core.models import Displayable
 
 app_label = 'teleforma'
 
@@ -210,34 +211,39 @@ class Room(Model):
         verbose_name = _('room')
 
 
-class Conference(Model):
+class Conference(Displayable):
 
-    title           = CharField(_('title'), max_length=1024, blank=True)
-    sub_title       = CharField(_('sub title'), max_length=1024, blank=True)
-    public_id       = CharField(_('public_id'), max_length=255, blank=True)
-    department      = ForeignKey('Department', related_name='conference', verbose_name=_('department'),
+    sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
+    public_id       = models.CharField(_('public_id'), max_length=255, blank=True)
+    department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    period          = ForeignKey('Period', related_name='conference', verbose_name=_('period'),
+    period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    course          = ForeignKey('Course', related_name='conference', verbose_name=_('course'))
-    course_type     = ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
-    professor       = ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
+    course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'))
+    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
+    professor       = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    session         = CharField(_('session'), choices=session_choices,
+    session         = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
-    room            = ForeignKey('Room', related_name='conference', verbose_name=_('room'),
+    room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
-    date_begin      = DateTimeField(_('begin date'), null=True, blank=True)
-    date_end        = DateTimeField(_('end date'), null=True, blank=True)
+    date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
+    date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
     price           = models.FloatField(_('price'), blank=True, null=True)
-    readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
+    readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
 
     notes = generic.GenericRelation(Note)
 
     @property
-    def description(self):
+    def slug_streaming(self):
+        slug = '-'.join([self.course.department.slug,
+                         self.course.slug,
+                         self.course_type.name.lower()])
+        return slug
+
+    def __unicode__(self):
         if self.professor:
             list = [self.course.department.name, self.course.title,
                            self.course_type.name, self.session,
@@ -249,16 +255,6 @@ class Conference(Model):
                            self.course_type.name, self.session,
                            str(self.date_begin)]
         return ' - '.join(list)
-
-    @property
-    def slug(self):
-        slug = '-'.join([self.course.department.slug,
-                         self.course.slug,
-                         self.course_type.name.lower()])
-        return slug
-
-    def __unicode__(self):
-        return self.description
 
     def save(self, **kwargs):
         self.course.save()
