@@ -443,8 +443,8 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
         else:
             entry = form_for_form.save()
             form_valid.send(sender=request, form=form_for_form, entry=entry)
-        messages.info(request, _("You have successfully sumitted your evaluation"))
-        return redirect('teleforma-seminar-detail', seminar.id)
+            messages.info(request, _("You have successfully sumitted your evaluation"))
+            return redirect('teleforma-seminar-detail', seminar.id)
 
     context['seminar'] = seminar
     context['all_seminars'] = get_seminars(request.user)
