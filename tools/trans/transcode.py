@@ -20,9 +20,9 @@ root_dir = sys.argv[-1]
 args = sys.argv[1:-1]
 source_format = 'webm'
 done = []
-ffmpeg_args = {'mp3' : ' -vn -acodec libmp3lame -aq 6 ',
+ffmpeg_args = {'mp3' : ' -vn -acodec libmp3lame -aq 6 -ac 1 ',
                'ogg' : ' -vn -acodec copy ',
-               'mp4' : ' -vcodec libx264 -r 24 -s 640x360 -b 512k -threads 4 -acodec libfaac -ar 48000 -ab 96k -ac 1 ',
+               'mp4' : ' -vcodec libx264 -r 24 -b 512k -threads 6 -acodec libfaac -ar 48000 -ab 96k -ac 1 ',
               }
 
 if os.path.exists(log_file):
