@@ -5,7 +5,7 @@
 
 {% block module-action %}
 {% for media in media_package.audio.all %}
-    {% if media.item.file and media.is_published %}
+    {% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
      <div class="module_action"> 
      <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
      </div>

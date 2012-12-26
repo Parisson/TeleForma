@@ -59,10 +59,8 @@ class MediaPackage(MediaBase):
     def __str__(self):
         if self.title:
             return self.title.encode('utf8')
-        elif self.audio_items:
-            return self.audio_items.all()[0].title.encode('utf8')
-        elif self.video_items:
-            return self.video_items.all()[0].title.encode('utf8')
+        else:
+            return 'Unknown'
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media_package'

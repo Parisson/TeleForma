@@ -249,3 +249,9 @@ def summary(text, N):
 def progress(seminar, user):
     return seminar_progress(user, seminar)
     
+@register.filter
+def in_download_formats(file):
+    ext = os.path.splitext(file)[1][1:]
+    print ext
+    return ext in settings.TELEMETA_DOWNLOAD_FORMATS
+    

@@ -36,6 +36,7 @@ $(function() {
 <div style="background: white;">
 <ul>
 {% block courses %}
+
 {% for seminar in all_seminars %}
    <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
  {% endfor %}

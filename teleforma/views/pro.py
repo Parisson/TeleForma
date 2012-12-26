@@ -34,6 +34,8 @@
 
 
 from teleforma.views.core import *
+from teleforma.context_processors import *
+
 from django.utils.translation import ugettext_lazy as _
 from django.template import loader, Context, RequestContext
 from django.views.generic.base import TemplateResponseMixin
@@ -92,33 +94,6 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-def get_seminars(user):
-    seminars = []
-
-    if not user.is_authenticated():
-        return None
-
-    professor = user.professor.all()
-    auditor = user.auditor.all()
-
-    if professor:
-        seminars = []
-        professor = user.professor.get()
-        courses = professor.courses.all()
-        for course in courses:
-            for seminar in course.seminar.all():
-                seminars.append(seminar)
-
-    elif auditor and not (user.is_staff or user.is_superuser):
-        auditor = user.auditor.get()
-        s_seminars = auditor.seminars.all()
-
-    elif user.is_staff or user.is_superuser:
-        seminars = Seminar.objects.all()
-    else:
-        seminars = None
-
-    return seminars
 
 
 def seminar_progress(user, seminar):    
@@ -144,29 +119,6 @@ def seminar_progress(user, seminar):
 
     if total != 0:
         return int(progress*100/total)
-    else:
-        return 0
-
-
-def total_progress(user):
-    """return the user progress of all seminars in percent"""
-
-    progress = 0
-    auditor = user.auditor.all()
-    professor = user.professor.all()
-
-    if auditor and not (user.is_staff or user.is_superuser):
-        seminars = auditor[0].seminars.all()        
-    elif user.is_superuser or user.is_staff:
-        seminars = Seminar.objects.all()
-    elif professor:
-        seminars = get_seminars(user)
-        
-    for seminar in seminars:
-        progress += seminar_progress(user, seminar)
-
-    if seminars:
-        return int(progress/len(seminars))
     else:
         return 0
 
@@ -196,11 +148,8 @@ class SeminarView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = self.get_object()
-        context['all_seminars'] = get_seminars(self.request.user)
         context['seminar_progress'] = seminar_progress(self.request.user, seminar)
-        context['total_progress'] = total_progress(self.request.user)
         context['validated'] = seminar_validated(self.request.user, seminar)
-        context['evaluation'] = seminar.form
         return context
 
 
@@ -209,15 +158,6 @@ class SeminarsView(ListView):
     model = Seminar
     template_name='teleforma/seminars.html'
 
-    def get_queryset(self):
-        self.seminars = get_seminars(self.request.user)
-        return self.seminars
-
-    def get_context_data(self, **kwargs):
-        context = super(SeminarsView, self).get_context_data(**kwargs)
-        context['all_seminars'] = self.seminars
-        context['total_progress'] = total_progress(self.request.user)
-        return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -264,12 +204,10 @@ class AnswerView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(AnswerView, self).get_context_data(**kwargs)
-        context['all_seminars'] = get_seminars(self.request.user)
         context['question'] = self.question
         context['status'] = self.status
         context['seminar'] = self.question.seminar
         context['seminar_progress'] = seminar_progress(self.request.user, self.question.seminar)
-        context['total_progress'] = total_progress(self.request.user)
         return context
 
     def get_success_url(self):
@@ -286,12 +224,9 @@ class MediaPackageView(DetailView):
         media_package = self.get_object()
         media_package.readers.add(self.request.user)
         seminar = media_package.seminar.get()
-        all_seminars = get_seminars(self.request.user)
-        context['all_seminars'] = all_seminars
         context['seminar'] = seminar
         context['media_package'] = media_package
         context['seminar_progress'] = seminar_progress(self.request.user, seminar)
-        context['total_progress'] = total_progress(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -447,8 +382,6 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
             return redirect('teleforma-seminar-detail', seminar.id)
 
     context['seminar'] = seminar
-    context['all_seminars'] = get_seminars(request.user)
-    context['total_progress'] = total_progress(request.user)
     context['form'] = form
     context['seminar_progress'] = seminar_progress(request.user, seminar)
     
