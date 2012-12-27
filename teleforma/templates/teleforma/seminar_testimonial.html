@@ -43,7 +43,7 @@
       {% if seminar.description %}
       <tr><td class="bold">{% trans "Description" %} : </td><td><div class="description">{{ seminar.description|safe }}</div></td></tr>
       {% endif %}
-      <tr><td class="bold">{% trans "Training begin date" %} : </td><td>{{ user.auditor.date_begin }}</td></tr>
+      <tr><td class="bold">{% trans "Training begin date" %} : </td><td>{{ user.date_joined }}</td></tr>
       <tr><td class="bold">{% trans "Training end date" %} : </td><td>{{ user.last_login }}</td></tr>
     </table>
 

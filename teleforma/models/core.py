@@ -214,7 +214,7 @@ class Room(Model):
 class Conference(Displayable):
 
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
-    public_id       = models.CharField(_('public_id'), max_length=255, blank=True)
+    public_id       = models.CharField(_('public id'), max_length=255, blank=True)
     department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
     period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
