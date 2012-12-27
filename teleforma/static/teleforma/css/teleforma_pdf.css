@@ -1,3 +1,14 @@
+@page {
+  margin: 1cm;
+  margin-bottom: 2.5cm;
+  @frame footer {
+    -pdf-frame-content: footer;
+    bottom: 1cm;
+    margin-left: 1cm;
+    margin-right: 1cm;
+    height: 1cm;
+  }
+}
 
 #header{   
     font-size: 4em;
@@ -8,39 +19,26 @@
 }
 
 #content {
-    margin-top: 4em;
+    margin: 50px;
+    
 }
 
-.table {
+.table1 {
     font-size: 1.5em;
-    margin: 1em 1em 1em 10em;
-    width: 100%;
+    padding-top: 2px;
 }
 
-.table  {
-    width: 10%;
-}
 
-.organization {
-    margin-left: 15em;
+.table2 {
+    margin: 0px;
+    font-size: 1em;
+    padding: 0px;
 }
-
-#address{
-    float: left;  
-}
-
-#signature{    
-    float: left;
-    margin-left: 10em;
-}
-
 
 #footer{   
     font-size: 1em;
     color: white;
-    margin-top: 20em;
     padding: 1em;
-    padding-left: 1em;
     background-color: #3a69b1;
     text-align: center;
 }
