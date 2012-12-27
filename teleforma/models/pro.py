@@ -237,6 +237,7 @@ class Auditor(models.Model):
     fax             = models.CharField(_('Fax'), max_length=255, blank=True)
     expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = models.BooleanField(_('Password initialized'))
+    date_begin      = models.DateTimeField(_('Begin date'), auto_now_add=True)
 
     def __unicode__(self):
         try:

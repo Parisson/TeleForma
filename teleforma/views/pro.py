@@ -94,48 +94,6 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-
-
-def seminar_progress(user, seminar):    
-    """return the user progress of a seminar in percent
-    """
-
-    progress = 0
-    total = 0
-    
-    objects = [seminar.docs_1, seminar.docs_2, seminar.media, seminar.docs_correct]
-    for obj in objects:
-        for item in obj.all():
-            total += item.weight
-            if user in item.readers.all():
-                progress += item.weight
-    
-    questions = Question.objects.filter(seminar=seminar, status=3)
-    for question in questions:
-        total += question.weight
-        answer = Answer.objects.filter(question=question, status=3, user=user)
-        if answer:
-            progress += question.weight
-
-    if total != 0:
-        return int(progress*100/total)
-    else:
-        return 0
-
-def seminar_validated(user, seminar):
-    validated = []
-    questions = seminar.question.all()
-    if questions:
-        for question in questions:
-            answers = Answer.objects.filter(question= question, user=user, validated=True)
-            if answers:
-                validated.append(True)
-            else:
-                validated.append(False)
-        return not False in validated
-    return False
-
-
 class SeminarView(DetailView):
 
     model = Seminar
@@ -473,7 +431,6 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         if self.is_pdf():
             from django.conf import settings
             context['STATIC_ROOT'] = settings.STATIC_ROOT
-            context['MEDIA_ROOT'] = settings.MEDIA_ROOT
             return self.get_pdf_response(context, **response_kwargs)
         context[self.pdf_url_varname] = self.get_pdf_url()
         return super(PDFTemplateResponseMixin, self).render_to_response(

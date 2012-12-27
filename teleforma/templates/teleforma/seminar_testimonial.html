@@ -9,12 +9,6 @@
 
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-<meta name="Viewport" content="width=device-width" />
-<meta name="Viewport" content="initial-scale=1.0" />
-<meta name="Viewport" content="maximum-scale=1.5" />
-<meta name="Viewport" content="user-scalable=1" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 <title>{%block head_title %}{% description %} - TeleForma{% endblock %}</title>
 
@@ -37,32 +31,35 @@
 
 <div id="content">
   
-   <table class="table">
+   <table class="table1">
       <tr><td class="bold">{% trans "Last name" %} : </td><td>{{ user.last_name|upper }}</td></tr>
       <tr><td class="bold">{% trans "First name" %} : </td><td>{{ user.first_name|upper }}</td></tr>
       <tr><td class="bold">{% trans "Address" %} : </td><td>{{ user.auditor.all.0.address }} {{ user.auditor.all.0.postal_code }} {{ user.auditor.all.0.city }}</td></tr>
-      <tr><td class="bold">{% trans "Seminar" %} : </td><td>{{ seminar.title }} {% if seminar.rank %} n°{{seminar.rank}}{% endif %}</td></tr>
-      <tr><td class="bold">{% trans "course" %} : </td><td>{{ seminar.course }}</td></tr>
+      <tr><td class="bold">{% trans "Duration" %} : </td><td>{{ seminar.duration }}</td></tr>
+      <tr><td class="bold">{% trans "Sujet" %} : </td><td>{{ seminar.sub_title }} {% if seminar.rank %} n°{{seminar.rank}}{% endif %}</td></tr>
+      <tr><td class="bold">{% trans "Course" %} : </td><td>{{ seminar.course }}</td></tr>
+      <tr><td class="bold">{% trans "Training type" %} : </td><td>E-learning</td></tr>
       {% if seminar.keywords.all %}<tr><td class="bold">{% trans "keywords" %}</td><td>{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</td></tr>{% endif %}
-      <tr><td class="bold">{% trans "level" %} : </td><td>{{ seminar.level }}</td></tr>
-      <tr><td class="bold">{% trans "public concerned" %} : </td><td>{{ seminar.concerned }}</td></tr>
-      <tr><td class="bold">{% trans "duration" %} : </td><td>{{ seminar.duration }}</td></tr>
       {% if seminar.description %}
-      <tr><td class="bold">{% trans "description" %} : </td><td><div class="description">{{ seminar.description|safe }}</div></td></tr>
+      <tr><td class="bold">{% trans "Description" %} : </td><td><div class="description">{{ seminar.description|safe }}</div></td></tr>
       {% endif %}
+      <tr><td class="bold">{% trans "Training begin date" %} : </td><td>{{ user.auditor.date_begin }}</td></tr>
+      <tr><td class="bold">{% trans "Training end date" %} : </td><td>{{ user.last_login }}</td></tr>
     </table>
-  
-<div class="organization">
-  <div id="address">
-    {{ seminar.course.department.address|safe }}
-  </div>
 
-  <div id="signature">
-    <img src="{{ MEDIA_ROOT }}{{ seminar.course.department.signature.url }}" title="Pro-Barreau signature" alt="Pro-Barreau signature" />
-  </div>
+    <table class="table2">
+      <tr><td>
+        {{ seminar.course.department.address|safe }}
+      </td>
+      <td>
+        <img src="{{ seminar.course.department.signature.url }}" title="Pro-Barreau signature" alt="Pro-Barreau signature" />
+      </td></tr>
+    </table>
+    
+
 </div>
 
-</div>
+
 
 {% block footer %}
 <div id="footer">

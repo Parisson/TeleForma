@@ -17,6 +17,10 @@
     width: 100%;
 }
 
+.table  {
+    width: 10%;
+}
+
 .organization {
     margin-left: 15em;
 }
