@@ -67,7 +67,7 @@ def seminar_validated(user, seminar):
     questions = seminar.question.all()
     if questions:
         for question in questions:
-            answers = Answer.objects.filter(question= question, user=user, validated=True)
+            answers = Answer.objects.filter(question=question, user=user, validated=True)
             if answers:
                 validated.append(True)
             else:
@@ -76,7 +76,7 @@ def seminar_validated(user, seminar):
     return False
 
 
-def all_seminars(request):
+def all_seminars(request, progress_order=False):
     seminars = []
     user = request.user
     
@@ -123,8 +123,10 @@ def total_progress(request):
     elif user.is_superuser or user.is_staff:
         seminars = Seminar.objects.all()
     elif professor:
-        seminars = all_seminars(request)
-        
+        seminars = all_seminars(request)['all_seminars']
+    else:
+        seminars = None
+
     for seminar in seminars:
         progress += seminar_progress(user, seminar)
 

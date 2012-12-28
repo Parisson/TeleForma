@@ -46,7 +46,7 @@ from django.template.loader import get_template
 from django.template.context import Context
 from django.utils.html import escape
 from django.views.generic.detail import SingleObjectMixin
-
+from django.core.mail import EmailMessage
 import os
 from cgi import escape
 from cStringIO import StringIO
@@ -116,6 +116,8 @@ class SeminarsView(ListView):
     model = Seminar
     template_name='teleforma/seminars.html'
 
+    # def get_queryset(self):
+    #      return all_seminars(self.request, progress_order=True)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -226,8 +228,8 @@ class AnswersView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AnswersView, self).get_context_data(**kwargs)
-        all_seminars = get_seminars(self.request.user)
-        context['all_seminars'] = all_seminars
+        seminars = all_seminars(self.request)
+        context['all_seminars'] = seminars
         
         paginator = Paginator(self.object_list, per_page=12)
         try:
@@ -250,8 +252,19 @@ class AnswersView(ListView):
     @jsonrpc_method('teleforma.validate_answer')
     def validate(request, id):
         answer = Answer.objects.get(id=id)
-        answer.validated = True
-        answer.save()
+        answer.validate()
+        user = answer.user
+        seminar = answer.question.get().seminar
+        if seminar_validated(user, seminar):
+            email = EmailMessage()
+            email.subject = seminar.course.department.name + ' : ' + \
+                    _('Your training testimonial for the seminar : ') + seminar.title
+            email.from_email = settings.ADMINS[0][1]
+            email.to = user.email
+            email.body = _('You have validated your training!')
+            email.attach()
+            
+
 
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
@@ -272,7 +285,7 @@ class AnswerDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(AnswerDetailView, self).get_context_data(**kwargs)
-        context['all_seminars'] = get_seminars(self.request.user)
+        context['all_seminars'] = all_seminars(self.request)
         return context
 
 
@@ -309,7 +322,7 @@ class AjaxableResponseMixin(object):
 
 #     def get_context_data(self, **kwargs):
 #         context = super(EvaluationView, self).get_context_data(**kwargs)
-#         context['all_seminars'] = get_seminars(self.request.user)
+#         context['all_seminars'] = all_seminars(self.request)
 #         context['total_progress'] = total_progress(self.request.user)
 #         context['form'] = self.get_object().form
 #         context['seminar_progress'] = seminar_progress(self.request.user, self.get_object())
