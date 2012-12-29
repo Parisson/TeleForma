@@ -207,9 +207,9 @@ class Testimonial(models.Model):
     user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
     template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial", 
                                     verbose_name=_('template'), blank=True, null=True)
-    document    = models.ForeignKey(Document, related_name="testimonial", 
-                                        blank=True, null=True)
-    rank            = models.IntegerField(_('rank'), blank=True, null=True)
+    file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m/%d',
+                                 blank=True, max_length=1024)
+    rank        = models.IntegerField(_('rank'), blank=True, null=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'

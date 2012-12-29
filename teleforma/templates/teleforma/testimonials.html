@@ -1,0 +1,97 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load pagination_tags %}
+
+{% block head_title %}{% trans "Testimonials" %} - {{ block.super }}{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+
+{% block infra_javascript %}
+{% endblock infra_javascript %}
+
+{% block content %}
+
+<div id="module-set-left" style="width: 18%">
+
+{% block modules %}
+<div class="module">
+
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
+<div style="background: white;">
+<ul>
+{% block courses %}
+{% for seminar in all_seminars %}
+   <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
+ {% endfor %}
+{% endblock courses %}
+</ul>
+</div>
+</div>
+
+</div>
+{% endblock modules %}
+
+<div class="desk_messages">
+
+{% if user.is_staff %}
+<div style="float:right;">
+</div>
+{% endif %}
+
+<div class="course_title">{% trans "Testimonials" %}</div>
+<br />
+ {% if object_list %}
+
+<div class="pagination">
+    {% for p in page.paginator.pages %}
+      {% if p == page %}
+       <span class="selected">{{ page }}</span>
+      {% else %}
+       <a href="?page={{ p.number }}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+</div>
+
+<div id="users">
+  <table class="listing" width="100%">
+   <thead>
+   <tr><th>{% trans "Last Name"%}</th>
+    <th>{% trans "First Name"%}</th>
+    <th>{% trans "Seminar"%}</th>
+    <th>{% trans "Date submitted"%}</th>
+    <th>{% trans "Download"%}</th>
+    </tr>
+    </thead>
+    <tbody id="spacing">
+    {% for testimonial in page.testimonials %}
+    <tr>
+     <td><a href="{% url teleforma-profile-detail answer.user.username %}">{{ answer.user.last_name }}</a></td>
+     <td><a href="{% url teleforma-profile-detail answer.user.username %}">{{ answer.user.first_name }}</a></td>
+
+     <td>{{ answer.question.seminar }}</td>
+     <td>{{ answer.date_submitted }}</td>
+     <td><a href="{% url teleforma-answer-detail answer.id %}">{{ answer.answer|summary:120 }}</a></td>
+     <td>{% if user.is_staff %}
+        <a id="validate" href="#" class="{% if answer.validated %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}" 
+        onclick="var f = answerUtils;
+            if ($(this).hasClass('icon_ok')) {f.reject('{{answer.id}}', $(this)); return false;}
+            if ($(this).hasClass('icon_delete')) {f.validate('{{answer.id}}', $(this)); return false;}">
+            {% if answer.validated %}{% trans " validated" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+        {% endif %}
+     </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+ {% else %}
+    <p class="help">{% trans "No testimonial" %}</p>
+ {% endif %}
+</div>
+{% endblock %}
+
+

@@ -256,6 +256,8 @@ class AnswersView(ListView):
         user = answer.user
         seminar = answer.question.seminar
         if seminar_validated(user, seminar):
+            testimonial = Testimonial(user=user, seminar=seminar)
+            testimonial.save()
             email = EmailMessage()
             text = 'Your training testimonial for the seminar : '
             email.subject = seminar.course.department.name + ' : ' + text + seminar.title
@@ -263,6 +265,7 @@ class AnswersView(ListView):
             email.to = [user.email]
             email.body = 'You have validated your training!'
             email.send()
+
 
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
