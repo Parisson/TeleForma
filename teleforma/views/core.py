@@ -79,6 +79,7 @@ from teleforma.models import *
 from teleforma.forms import *
 from teleforma.views.pro import *
 from telemeta.views import *
+from teleforma.context_processors import *
 import jqchat.models
 from xlwt import Workbook
 from xhtml2pdf import pisa
@@ -112,10 +113,6 @@ def get_courses(user, date_order=False, num_order=False):
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
         return get_ae_courses(user, date_order, num_order)
-
-def get_seminars(user):
-    from teleforma.views.pro import get_seminars
-    return get_seminars(user)
     
 def stream_from_file(__file):
     chunk_size = 0x10000
@@ -323,7 +320,7 @@ class DocumentView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
         all_courses = get_courses(self.request.user)
-        seminars = get_seminars(self.request.user)
+        seminars = all_seminars(self.request)['all_seminars']
         context['all_courses'] = all_courses
         document = self.get_object()
         context['course'] = document.course
@@ -348,7 +345,7 @@ class DocumentView(DetailView):
     def download(self, request, pk):
         document = Document.objects.get(id=pk)
         courses = get_courses(request.user)
-        seminars = get_seminars(request.user)
+        seminars = all_seminars(request)['all_seminars']
         if get_course_access(document, courses) or get_seminar_access(document, seminars):
             document.readers.add(request.user)
             fsock = open(document.file.path, 'r')
@@ -363,7 +360,7 @@ class DocumentView(DetailView):
 
     def view(self, request, pk):
         courses = get_courses(request.user)
-        seminars = get_seminars(request.user)
+        seminars = all_seminars(request)['all_seminars']
         document = Document.objects.get(id=pk)
         if get_course_access(document, courses) or get_seminar_access(document, seminars):
             document.readers.add(request.user)
