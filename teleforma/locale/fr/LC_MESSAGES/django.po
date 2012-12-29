@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-27 14:26+0100\n"
+"POT-Creation-Date: 2012-12-29 22:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -64,7 +64,7 @@ msgstr "nom"
 #: models/core.py:153 models/core.py:204 models/core.py:312 models/core.py:378
 #: models/core.py:398 models/crfpa.py:48 models/pro.py:147 models/pro.py:191
 #: templates/teleforma/seminar_detail.html:61
-#: templates/teleforma/seminars.html:104
+#: templates/teleforma/seminars.html:105
 msgid "description"
 msgstr "description"
 
@@ -242,7 +242,7 @@ msgstr "type de document"
 msgid "annal"
 msgstr "annale"
 
-#: models/core.py:426
+#: models/core.py:426 models/pro.py:210
 msgid "file"
 msgstr "fichier"
 
@@ -346,12 +346,12 @@ msgid "Seminar type"
 msgstr "Type de séminaire"
 
 #: models/pro.py:89 templates/teleforma/seminar_detail.html:58
-#: templates/teleforma/seminars.html:101
+#: templates/teleforma/seminars.html:102
 msgid "public concerned"
 msgstr "public concerné"
 
 #: models/pro.py:90 templates/teleforma/seminar_detail.html:57
-#: templates/teleforma/seminars.html:100
+#: templates/teleforma/seminars.html:101
 msgid "level"
 msgstr "niveau"
 
@@ -391,6 +391,7 @@ msgstr "formulaire"
 #: templates/teleforma/seminar_detail.html:170
 #: templates/teleforma/seminar_media_audio.html:56
 #: templates/teleforma/seminar_media_video.html:104
+#: templates/teleforma/testimonials.html:64
 #: templates/teleforma/inc/answer_list.html:21
 msgid "Seminar"
 msgstr "Sémimaire"
@@ -446,7 +447,7 @@ msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
 #: models/pro.py:216 templates/teleforma/inc/testimonial_list.html:14
-#: views/pro.py:467
+#: views/pro.py:482
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -466,12 +467,7 @@ msgstr ""
 msgid "Fax"
 msgstr ""
 
-#: models/pro.py:240 templates/teleforma/course_conference.html:76
-#: templates/teleforma/course_media.html:137
-msgid "Begin date"
-msgstr "Date de début"
-
-#: models/pro.py:250
+#: models/pro.py:249
 msgid "Auditor"
 msgstr "Auditeur"
 
@@ -778,13 +774,13 @@ msgstr "Soumettre"
 
 #: templates/teleforma/answer_form.html:70
 #: templates/teleforma/seminar_detail.html:164
-#: templates/teleforma/seminars.html:119
+#: templates/teleforma/seminars.html:120
 msgid "Progressions"
 msgstr "Progressions"
 
 #: templates/teleforma/answer_form.html:74
 #: templates/teleforma/seminar_detail.html:167
-#: templates/teleforma/seminars.html:122
+#: templates/teleforma/seminars.html:123
 msgid "General"
 msgstr "Général"
 
@@ -794,6 +790,7 @@ msgid "Answers"
 msgstr "Consultations"
 
 #: templates/teleforma/answers.html:19
+#: templates/teleforma/testimonials.html:83
 #: templates/teleforma/inc/answer_list.html:41
 msgid " validated"
 msgstr "validé"
@@ -804,6 +801,7 @@ msgstr "validé"
 #: templates/teleforma/seminar_media_audio.html:25
 #: templates/teleforma/seminar_media_video.html:28
 #: templates/teleforma/seminar_media_video.html:73
+#: templates/teleforma/testimonials.html:83
 #: templates/teleforma/inc/answer_list.html:41
 #: templates/teleforma/inc/media_list.html:52
 #: templates/teleforma/inc/media_package_list.html:50
@@ -811,6 +809,8 @@ msgid " rejected"
 msgstr " rejeté"
 
 #: templates/teleforma/answers.html:40 templates/teleforma/seminars.html:35
+#: templates/teleforma/testimonials.html:23
+#: templates/telemeta/profile_detail.html:16
 msgid "My seminars"
 msgstr "Mes séminaires"
 
@@ -902,6 +902,11 @@ msgstr "Matière"
 msgid "Comment"
 msgstr "Commentaire"
 
+#: templates/teleforma/course_conference.html:76
+#: templates/teleforma/course_media.html:137
+msgid "Begin date"
+msgstr "Date de début"
+
 #: templates/teleforma/course_conference.html:77
 #: templates/teleforma/course_media.html:138
 msgid "End date"
@@ -966,6 +971,7 @@ msgstr " publié"
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/seminar_media_audio.html:10
 #: templates/teleforma/seminar_media_video.html:58
+#: templates/teleforma/testimonials.html:66
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/document_simple_list.html:15
 #: templates/teleforma/inc/media_list.html:56
@@ -991,7 +997,6 @@ msgid "Media ID"
 msgstr "ID Média"
 
 #: templates/teleforma/courses.html:23
-#: templates/telemeta/profile_detail.html:16
 msgid "My courses"
 msgstr "Mes matières"
 
@@ -1003,7 +1008,7 @@ msgstr "Mes notes"
 msgid "New note"
 msgstr "Nouvelle note"
 
-#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:134
+#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:135
 msgid "Status"
 msgstr "Status"
 
@@ -1023,12 +1028,12 @@ msgstr "Informations"
 
 #: templates/teleforma/seminar_detail.html:56
 #: templates/teleforma/seminar_testimonial.html:42
-#: templates/teleforma/seminars.html:99
+#: templates/teleforma/seminars.html:100
 msgid "keywords"
 msgstr "mots clés"
 
 #: templates/teleforma/seminar_detail.html:59
-#: templates/teleforma/seminars.html:102
+#: templates/teleforma/seminars.html:103
 msgid "duration"
 msgstr "durée"
 
@@ -1041,12 +1046,12 @@ msgid "Step 1 : read this document"
 msgstr "Étape 1 : lire ce document"
 
 #: templates/teleforma/seminar_detail.html:90
-msgid "Step 2 : attend these conferences"
-msgstr "Étape 2 : assister à ces conférences"
+msgid "Step 2 : view these conferences"
+msgstr "Étape 2 : voir ces conférences"
 
 #: templates/teleforma/seminar_detail.html:94
-msgid "Step 2 : attend this conference"
-msgstr "Étape 2 : assister à cette conférence"
+msgid "Step 2 : view this conference"
+msgstr "Étape 2 : voir cette conférence"
 
 #: templates/teleforma/seminar_detail.html:102
 msgid "Step 3 : read these documents"
@@ -1123,21 +1128,33 @@ msgstr "Date de début de formation"
 msgid "Training end date"
 msgstr "Date de fin de formation"
 
+#: templates/teleforma/testimonials.html:7
+#: templates/teleforma/testimonials.html:45
+msgid "Testimonials"
+msgstr "Attestations"
+
+#: templates/teleforma/testimonials.html:62
 #: templates/teleforma/inc/answer_list.html:19
 #: templates/telemeta/profile_detail.html:60
 #: templates/telemeta/inc/user_list.html:19
 msgid "Last Name"
 msgstr ""
 
+#: templates/teleforma/testimonials.html:63
 #: templates/teleforma/inc/answer_list.html:20
 #: templates/telemeta/profile_detail.html:59
 #: templates/telemeta/inc/user_list.html:20
 msgid "First Name"
 msgstr ""
 
+#: templates/teleforma/testimonials.html:65
 #: templates/teleforma/inc/answer_list.html:22
 msgid "Date submitted"
 msgstr "date de soumission"
+
+#: templates/teleforma/testimonials.html:92
+msgid "No testimonial"
+msgstr "Aucune attestation"
 
 #: templates/teleforma/inc/answer_list.html:23
 msgid "Summary"
@@ -1300,8 +1317,8 @@ msgid "User Profile"
 msgstr "profil"
 
 #: templates/telemeta/profile_detail.html:16
-msgid "His courses"
-msgstr "Ses matières"
+msgid "His seminars"
+msgstr "Ses séminaires"
 
 #: templates/telemeta/profile_detail.html:36
 msgid "Send a message"
@@ -1380,7 +1397,7 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:109
+#: templates/telemeta/profile_detail.html:110
 msgid "Password reset"
 msgstr "Réinitialisation du mot de passe"
 
@@ -1450,28 +1467,31 @@ msgstr "moi"
 msgid "No"
 msgstr "Non"
 
-#: views/core.py:93
+#: views/core.py:94
 msgid "Access not allowed."
 msgstr "Accès non autorisé."
 
-#: views/core.py:94
+#: views/core.py:95
 msgid ""
 "Please login or contact the website administator to get a private access."
 msgstr ""
 "Merci de vous connecter ou bien contactez l'administateur du site pour "
 "obtenir un accès privé."
 
-#: views/pro.py:151
+#: views/pro.py:153
 msgid "You have successfully saved your answer"
 msgstr "Vous avez enregistré votre reponse avec succès"
 
-#: views/pro.py:153
+#: views/pro.py:155
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre reponse avec succès"
 
-#: views/pro.py:339
+#: views/pro.py:354
 msgid "You have successfully sumitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid "His courses"
+#~ msgstr "Ses matières"
 
 #~ msgid "Trainings"
 #~ msgstr "Formations"
