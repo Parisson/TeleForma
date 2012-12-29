@@ -69,10 +69,10 @@ urlpatterns = patterns('',
     url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
 
-    url(r'^desk/media-packages/(?P<pk>.*)/video/$', 
+    url(r'^desk/seminars/(?P<id>.*)/media-packages/(?P<pk>.*)/video/$', 
             MediaPackageView.as_view(template_name='teleforma/seminar_media_video.html'), 
             name="teleforma-media-video"),
-    url(r'^desk/media-packages/(?P<pk>.*)/audio/$', 
+    url(r'^desk/seminars/(?P<id>.*)/media-packages/(?P<pk>.*)/audio/$', 
             MediaPackageView.as_view(template_name='teleforma/seminar_media_audio.html'),
             name="teleforma-media-audio"),
 

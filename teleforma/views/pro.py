@@ -183,7 +183,8 @@ class MediaPackageView(DetailView):
         context = super(MediaPackageView, self).get_context_data(**kwargs)
         media_package = self.get_object()
         media_package.readers.add(self.request.user)
-        seminar = media_package.seminar.get()
+        print self.kwargs
+        seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
         context['media_package'] = media_package
         context['seminar_progress'] = seminar_progress(self.request.user, seminar)

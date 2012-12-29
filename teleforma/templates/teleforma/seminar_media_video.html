@@ -67,7 +67,7 @@ $(window).ready(function(){
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
         
-        <a href="{% url teleforma-media-audio media_package.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url teleforma-media-audio seminar.id media_package.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
         
         {% if user.is_staff %}
         <a id="publish" href="#" class="{% if media_package.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media_package.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>

@@ -13,7 +13,7 @@
         {% if media.is_published or user.is_staff %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-            <a href="{% url teleforma-media-video media_package.id %}" title="{% trans "Play" %}">
+            <a href="{% url teleforma-media-video seminar.id media_package.id %}" title="{% trans "Play" %}">
             {% if media.item.related.all %}
              {% with media.item.related.all.0 as related %}
               {% if related.title == "preview" %}

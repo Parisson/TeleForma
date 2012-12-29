@@ -87,11 +87,11 @@ $(function() {
 
           {% with seminar.media as media_packages %}
            {% if media_packages.all.count > 1 %}
-            {% with _("Step 2 : attend these conferences") as title %}
+            {% with _("Step 2 : view these conferences") as title %}
              {% include "teleforma/inc/media_package_list.html" %}
             {% endwith %}
            {% else %}
-            {% with _("Step 2 : attend this conference") as title %}
+            {% with _("Step 2 : view this conference") as title %}
              {% include "teleforma/inc/media_package_list.html" %}
             {% endwith %}
            {% endif %}
