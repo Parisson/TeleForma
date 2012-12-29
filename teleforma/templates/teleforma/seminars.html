@@ -77,7 +77,7 @@ $(function() {
 {% block course %}
 
 <div class="desk_center">
-    {% for seminar in all_seminars %}
+    {% for seminar in object_list %}
       
       <div class="course">
 
@@ -86,9 +86,10 @@ $(function() {
          <div style="float: right; font-size: 0.9em;">
           {% if seminar|progress:user == 100 %}
           <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
+          {% else %}
+          {{ seminar|progress:user }}%
           {% endif %}
           </div>
-
         </div>
 
         <div class="course_content">

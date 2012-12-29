@@ -103,6 +103,21 @@ def all_seminars(request, progress_order=False):
     else:
         seminars = {}
 
+    if seminars and progress_order == True:
+        s_list = []
+        for seminar in seminars:
+            d = {}
+            d['seminar'] = seminar
+            d['progress'] = seminar_progress(user, seminar)
+            s_list.append(d)
+
+        seminars = sorted(s_list, key=lambda k: k['progress'], reverse=False)
+        sem = []
+        for s in seminars:
+            sem.append(s['seminar'])
+        seminars = sem
+        print seminars
+
     return {'all_seminars': seminars}
 
 

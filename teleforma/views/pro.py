@@ -116,8 +116,8 @@ class SeminarsView(ListView):
     model = Seminar
     template_name='teleforma/seminars.html'
 
-    # def get_queryset(self):
-    #      return all_seminars(self.request, progress_order=True)
+    def get_queryset(self):
+        return all_seminars(self.request, progress_order=True)['all_seminars']
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
