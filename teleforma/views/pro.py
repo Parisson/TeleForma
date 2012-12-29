@@ -254,17 +254,15 @@ class AnswersView(ListView):
         answer = Answer.objects.get(id=id)
         answer.validate()
         user = answer.user
-        seminar = answer.question.get().seminar
+        seminar = answer.question.seminar
         if seminar_validated(user, seminar):
             email = EmailMessage()
-            email.subject = seminar.course.department.name + ' : ' + \
-                    _('Your training testimonial for the seminar : ') + seminar.title
-            email.from_email = settings.ADMINS[0][1]
-            email.to = user.email
-            email.body = _('You have validated your training!')
-            email.attach()
-            
-
+            text = 'Your training testimonial for the seminar : '
+            email.subject = seminar.course.department.name + ' : ' + text + seminar.title
+            name, email.from_email = settings.ADMINS[0]
+            email.to = [user.email]
+            email.body = 'You have validated your training!'
+            email.send()
 
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):

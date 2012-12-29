@@ -78,7 +78,11 @@ def seminar_validated(user, seminar):
 
 def all_seminars(request, progress_order=False):
     seminars = []
-    user = request.user
+
+    if isinstance(request, User):
+        user = request
+    else:
+        user = request.user
     
     if not user.is_authenticated():
         return {}

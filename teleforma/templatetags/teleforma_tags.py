@@ -53,7 +53,7 @@ import django.utils.timezone as timezone
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
 from teleforma.views import get_courses
-from teleforma.views.pro import seminar_progress
+from teleforma.context_processors import *
 from urlparse import urlparse
 
 register = template.Library()
@@ -252,6 +252,8 @@ def progress(seminar, user):
 @register.filter
 def in_download_formats(file):
     ext = os.path.splitext(file)[1][1:]
-    print ext
     return ext in settings.TELEMETA_DOWNLOAD_FORMATS
     
+@register.filter
+def user_seminars(user):
+    return all_seminars(user)['all_seminars']
