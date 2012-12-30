@@ -212,6 +212,7 @@ class Testimonial(models.Model):
     file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m/%d',
                                  blank=True, max_length=1024)
     rank        = models.IntegerField(_('rank'), blank=True, null=True)
+    date_added  = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'
