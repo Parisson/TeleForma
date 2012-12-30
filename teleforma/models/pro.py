@@ -168,6 +168,7 @@ class Answer(models.Model):
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
     validated   = models.BooleanField(_('validated'))
     date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
+    date_validated = models.DateTimeField(_('date validated'), null=True)
     date_added     = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
 
     def __unicode__(self):
@@ -176,6 +177,7 @@ class Answer(models.Model):
     def validate(self):
         if len(self.answer) >= self.question.min_nchar:
             self.validated = True
+            self.date_validated = datetime.datetime.now()
             self.save()
 
     class Meta(MetaCore):

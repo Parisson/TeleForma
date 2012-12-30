@@ -223,7 +223,7 @@ def submitted(question, user):
     if answers:
         return answers[0].date_submitted
     else:
-        return False
+        return ''
 
 @register.filter
 def saved(question, user):
@@ -235,11 +235,11 @@ def saved(question, user):
 
 @register.filter
 def validated(question, user):
-    answers = Answer.objects.filter(question=question, user=user, status=3)
+    answers = Answer.objects.filter(question=question, user=user, status=3, validated=True)
     if answers:
-        return answers[0].validated
+        return answers[0].date_validated
     else:
-        return False
+        return ''
 
 @register.filter
 def summary(text, N):

@@ -26,7 +26,7 @@ class AnswerForm(ModelForm):
 
     class Meta:
         model = Answer
-        exclude = ['user', 'question', 'validated', 'date_submitted']
+        exclude = ['user', 'question', 'validated', 'date_submitted', 'date_validated']
         hidden_fields = ['status']
 
 

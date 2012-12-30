@@ -47,6 +47,7 @@ from django.template.context import Context
 from django.utils.html import escape
 from django.views.generic.detail import SingleObjectMixin
 from django.core.mail import EmailMessage
+
 import os
 from cgi import escape
 from cStringIO import StringIO
@@ -183,7 +184,6 @@ class MediaPackageView(DetailView):
         context = super(MediaPackageView, self).get_context_data(**kwargs)
         media_package = self.get_object()
         media_package.readers.add(self.request.user)
-        print self.kwargs
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
         context['media_package'] = media_package
