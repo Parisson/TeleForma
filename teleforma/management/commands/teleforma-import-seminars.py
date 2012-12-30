@@ -31,7 +31,7 @@ class Command(BaseCommand):
     audio_formats = ['ogg', 'mp3']
     video_formats = ['webm', 'mp4']
     image_formats = ['png', 'jpg']
-    media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4}
+    media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4}
 
     def cleanup(self):
         medias = MediaPackage.objects.all()
@@ -41,6 +41,9 @@ class Command(BaseCommand):
             for m in media.audio.all():
                 m.delete()
             media.delete()
+        related = MediaItemRelated.objects.all()
+        for r in related:
+            r.delete()
 
     def handle(self, *args, **options):
         organization_name = args[0]
@@ -49,31 +52,34 @@ class Command(BaseCommand):
 
         organization = Organization.objects.get(name=organization_name)
         self.media_dir = settings.MEDIA_ROOT + organization.name
+        print self.media_dir
         file_list = []
         i = 1
 
         self.cleanup()
 
-        for root, dirs, files in os.walk(self.media_dir):
+        for root, dirs, files in os.walk(self.media_dir, followlinks=True):
             for filename in files:
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
+                print filename
+                root_list = root.split(os.sep)
 
-                if ext in self.video_formats or ext in self.audio_formats:
-                    root_list = root.split(os.sep)
-
-                    # seminar_rank <= 9
+                if (ext in self.video_formats or ext in self.audio_formats) \
+                        and not 'preview' in root_list and not 'preview' in filename:
+                                        # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
                     if len(root_list[-1]) != 1:
-                        media_rank = media_rank_dict(root_list[-1][1:])
+                        media_rank = self.media_rank_dict[root_list[-1][1:]]
                     else:
                         media_rank = 1
 
                     course_code = root_list[-2]
-                    department_name = root_list[-3]
-                    organization_name = root_list[-4]
+                    master_dir = root_list[-3]
+                    department_name = root_list[-4]
+                    organization_name = root_list[-5]
 
-                    dir = os.sep.join(root_list[-4:])
+                    dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
 
                     seminar_title = '_'.join([course_code, str(seminar_rank)])
@@ -82,7 +88,7 @@ class Command(BaseCommand):
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
                     seminar, c = Seminar.objects.get_or_create(course=course, rank=seminar_rank)
-
+                    print str(seminar.id)
                     exist = False
 
                     media_packages = seminar.media.all()
@@ -119,7 +125,7 @@ class Command(BaseCommand):
                         print path
                         decoder = timeside.decoder.FileDecoder(root+os.sep+filename)
                         decoder.setup()
-                        time.sleep(0.1)
+                        time.sleep(0.5)
                         value = str(datetime.timedelta(0,decoder.input_duration))
                         t = value.split(':')
                         t[2] = t[2].split('.')[0]
@@ -136,10 +142,12 @@ class Command(BaseCommand):
                                 related.title = 'preview'
                                 related.set_mime_type()
                                 related.save()
+                                print 'thumb added'
                                 break
 
                         media = Media(item=item, course=course, type=ext)
                         media.set_mime_type()
+                        media.is_published = True
                         media.save()
                         
                         media_package_exist = False
@@ -159,6 +167,8 @@ class Command(BaseCommand):
                         if ext in self.audio_formats:
                             media_package.audio.add(media)
 
+                        media_package.is_published = True
+                        media_package.save()
 
                         logger.logger.info(path)
                         i += 1

@@ -39,7 +39,7 @@
 
 <div class="audio">
 <audio controls preload="auto">
-    {% for media in media_package.audio.all %}
+    {% for media in media_package.audio.all|free_first %}
         <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
     {% endfor %}
 </audio>
@@ -60,7 +60,7 @@
 {% endif %}
 
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Mime type" %}</dt><dd>{% for media in media_package.video.all %}{{ media.mime_type }}, {% endfor %}</dd>
+<dt>{% trans "Mime type" %}</dt><dd>{% for media in media_package.audio.all %}{{ media.mime_type }}, {% endfor %}</dd>
 <dt>{% trans "Date added" %}</dt><dd>{{ media_package.date_added }}</dd>
 <dt>{% trans "Date modified" %}</dt><dd>{{ media_package.date_modified }}</dd>
 <dt>{% trans "Media package ID" %}</dt><dd>{{ media_package.id }}</dd>

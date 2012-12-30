@@ -257,3 +257,14 @@ def in_download_formats(file):
 @register.filter
 def user_seminars(user):
     return all_seminars(user)['all_seminars']
+
+@register.filter
+def free_first(qs):
+    free_formats = ['webm', 'ogg']
+    medias = []
+    for media in qs:
+        if 'webm' in media.mime_type or 'ogg' in media.mime_type:
+            medias.insert(0, media)
+        else:
+            medias.append(media)
+    return medias
