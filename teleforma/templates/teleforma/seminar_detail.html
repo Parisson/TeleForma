@@ -22,6 +22,16 @@ $(function() {
         var color = '#' + rainbow.colourAt({{seminar_progress}});
         $('#progressbar-seminar div').css({"background": color});
     });
+
+
+$(function () {
+    $('div.keywords').expander({
+        slicePoint: 45,
+        expandText: 'Lire plus',
+        userCollapseText: 'Cacher le texte',
+    });
+});
+
 </script>
 {% endblock infra_javascript %}
 
@@ -53,10 +63,10 @@ $(function() {
             <div class="course_description">
               <dl class="listing" style="font-size: 1.1em;">
               <dt>{% trans "course" %}</dt><dd>{{ seminar.course }}</dd>
-              {% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd>{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</dd>{% endif %}
               <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
               <dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
               <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration }}</dd>
+              {% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd><div class="keywords">{% for kw in seminar.keywords.all %}{{ kw }}, {% endfor %}</div></dd>{% endif %}
               <!-- {% if seminar.description %}
               <dt>{% trans "description" %}</dt><dd><div class="description">{{ seminar.description|safe }}</div></dd>
               {% endif %}
