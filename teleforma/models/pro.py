@@ -34,11 +34,14 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
+import os
+from django.conf import settings
 import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
 from forms_builder.forms.models import Form
+from django.core.urlresolvers import reverse
 
 class MediaPackage(MediaBase):
     "Media resource package handling multiple (audio and video) media types"
@@ -131,6 +134,16 @@ class Seminar(Displayable):
         self.steps.append(self.docs_correct)
         self.steps.append(self.testimonial)
         return self.steps
+
+    def public_url(self):
+        """
+        Get a public fully qualified URL for the object
+        """
+        url = reverse('teleforma-seminar-detail', kwargs={'pk':self.id})
+        return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
+
+    def get_absolute_url(self):
+        return reverse('seminar-view', kwargs={"pk": self.id})
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar'
