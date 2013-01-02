@@ -132,7 +132,6 @@ def all_seminars(request, progress_order=False):
         for s in seminars:
             sem.append(s['seminar'])
         seminars = sem
-        print seminars
 
     return {'all_seminars': seminars}
 
