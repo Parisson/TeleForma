@@ -1,12 +1,6 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-<div class="course_content">
-
-<div class="course_subtitle">
-<h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {{ title }}</h3>
-</div>
-
 <table class="listing" width="100%">
     <tbody>
         {% for doc in docs.all %}
@@ -17,6 +11,4 @@
         {% endfor %}
     </tbody>
 </table>
-
-</div>
 

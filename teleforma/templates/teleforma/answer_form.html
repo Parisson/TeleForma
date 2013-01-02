@@ -92,6 +92,7 @@ $(document).ready(function(){
 {% block index %}
 <div class="module">
   <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Steps" %}</h3>
+ 
  <div id="index">
   
           {% with seminar.docs_1 as docs %}
@@ -143,7 +144,6 @@ $(document).ready(function(){
             {% endwith %}
            {% endif %}
           {% endwith %}
-
         
          {% if seminar_progress == 100 %}
           {% with seminar.docs_correct as docs %}
@@ -158,7 +158,6 @@ $(document).ready(function(){
            {% endif %}
           {% endwith %}
          {% endif %}
-
 
  </div>
 </div>

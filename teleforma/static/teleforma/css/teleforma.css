@@ -1836,9 +1836,12 @@ form .exceed{
     overflow-y: auto;
 }
 
-
 #index p, ul {
     margin: 0.5em;
+}
+
+.course_subtitle #index h3 {
+    color: black;    
 }
 
 #_Form p {

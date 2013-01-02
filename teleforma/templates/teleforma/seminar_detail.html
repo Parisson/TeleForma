@@ -72,85 +72,74 @@ $(function () {
          {% endif %}
        </div>
         
+      {% with seminar.docs_1 as docs %}
+       <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 1 : {% if docs.all.count > 1 %}{% trans "read these documents" %}{% else %}{% trans "read this document" %}{% endif %}</h3>
+        </div>
+        {% include "teleforma/inc/document_simple_list.html" %}
+       </div>
+      {% endwith %}
 
-          {% with seminar.docs_1 as docs %}
-           {% if docs.all.count > 1 %}
-            {% with _("Step 1 : read these documents") as title %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-           {% endwith %}
-           {% else %}
-            {% with _("Step 1 : read this document") as title %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-            {% endwith %}
-           {% endif %}
-          {% endwith %}
+      {% with seminar.media as media_packages %}
+       <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 : {% if media_packages.all.count > 1 %}{% trans "view these conferences" %}{% else %}{% trans "view this conference" %}{% endif %}</h3>
+        </div>
+        {% include "teleforma/inc/media_package_list.html" %}
+       </div>
+      {% endwith %}
+  
 
-          {% with seminar.media as media_packages %}
-           {% if media_packages.all.count > 1 %}
-            {% with _("Step 2 : view these conferences") as title %}
-             {% include "teleforma/inc/media_package_list.html" %}
-            {% endwith %}
-           {% else %}
-            {% with _("Step 2 : view this conference") as title %}
-             {% include "teleforma/inc/media_package_list.html" %}
-            {% endwith %}
-           {% endif %}
-          {% endwith %}
+     {% with seminar.docs_2 as docs %}
+       <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 3 : {% if docs.all.count > 1 %}{% trans "read these documents" %}{% else %}{% trans "read this document" %}{% endif %}</h3>
+        </div>
+        {% include "teleforma/inc/document_simple_list.html" %}
+       </div>
+      {% endwith %}
 
-          {% with seminar.docs_2 as docs %}
-           {% if docs.all.count > 1 %}
-            {% with _("Step 3 : read these documents") as title %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-           {% endwith %}
-           {% else %}
-            {% with _("Step 3 : read this document") as title %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-            {% endwith %}
-           {% endif %}
-          {% endwith %}
-            
-          {% with seminar.question as questions %}
-           {% if questions.all.count > 1 %}
-            {% with _("Step 4 : answer to these questions") as title %}
-             {% include "teleforma/inc/question_list.html" %}
-            {% endwith %}
-           {% else %}
+     {% with seminar.question as questions %}
+       <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 4 : {% if questions.all.count > 1 %}{% trans "answer to these questions" %}{% else %}{% trans "answer to this question" %}{% endif %}</h3>
+        </div>
+        {% include "teleforma/inc/question_list.html" %}
+       </div>
+      {% endwith %}
 
+    
+     {% if seminar_progress == 100 %}
+      {% with seminar.docs_correct as docs %}
+       <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 5 : {% if docs.all.count > 1 %}{% trans "read these documents" %}{% else %}{% trans "read this document" %}{% endif %}</h3>
+        </div>
+        {% include "teleforma/inc/document_simple_list.html" %}
+       </div>
+      {% endwith %}
 
-            {% with _("Step 4 : answer to this question") as title %}
-             {% include "teleforma/inc/question_list.html" %}
-            {% endwith %}
-           {% endif %}
-          {% endwith %}
+      {% with seminar.form as form %}
+       <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 : {% trans "evaluate the seminar" %}</h3>
+        </div>
+        {% include "teleforma/inc/evaluation_form.html" %}
+       </div>
+      {% endwith %}
+     {% endif %}
+      
+     {% if validated %}
+       <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 : {% trans "download your testimonial" %}</h3>
+        </div>
+        {% include "teleforma/inc/testimonial_list.html" %}
+       </div>
+     {% endif %}
 
-        
-         {% if seminar_progress == 100 %}
-          {% with seminar.docs_correct as docs %}
-           {% if docs.all.count > 1 %}
-            {% with _("Step 5 : read these corrected documents") as title %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-            {% endwith %}
-           {% else %}
-            {% with _("Step 5 : read this corrected document") as title %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-            {% endwith %}
-           {% endif %}
-          {% endwith %}
-
-          {% with seminar.form as form %}
-           {% with _("Step 6 : evaluate the seminar") as title %}
-            {% include "teleforma/inc/evaluation_form.html" %}
-           {% endwith %}
-          {% endwith %}
-         {% endif %}
-
-         {% if validated %}
-           {% with _("Step 7 : download your testimonial") as title %}
-            {% include "teleforma/inc/testimonial_list.html" %}
-           {% endwith %}
-         {% endif %}
-
-      {% endblock course_content %}
+    {% endblock course_content %}
 
       </div>
 
