@@ -63,7 +63,10 @@
 {% endwith %}
 
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Mime type" %}</dt><dd>{% for media in media_package.audio.all %}{{ media.mime_type }}, {% endfor %}</dd>
+<dt>{% trans "Mime type" %}</dt>
+{% with media_package.audio.all as mimetypes %}
+<dd>{% for media in mimetypes %}{{ media.mime_type }}{% if not forloop.last %},{% endif %} {% endfor %}</dd>
+{% endwith %}
 <dt>{% trans "Date added" %}</dt><dd>{{ media_package.date_added }}</dd>
 <dt>{% trans "Date modified" %}</dt><dd>{{ media_package.date_modified }}</dd>
 <dt>{% trans "Media package ID" %}</dt><dd>{{ media_package.id }}</dd>
