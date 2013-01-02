@@ -37,6 +37,20 @@
 {% else %}
 <div class="media">
 
+<div style="margin-top:1em;">
+{% with media_package.audio.all.0 as media %}
+{% if media.item.related.all %}
+ {% for related in media.item.related.all %}
+  {% if related.title == "preview" %}
+   <img src="{{ MEDIA_URL }}{{ related.file }}" width="300px" alt="" />
+  {% endif %}
+ {% endfor %}
+{% else %}
+ snapshot
+{% endif %}
+{% endwith %}
+</div>
+
 <div class="audio">
 <audio controls preload="auto">
     {% for media in media_package.audio.all|free_first %}
