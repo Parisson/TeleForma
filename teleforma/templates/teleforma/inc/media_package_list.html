@@ -32,7 +32,7 @@
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
-                    <dt>{% trans "Title" %}</dt><dd>{{ seminar.course.title }}</dd>
+                    <dt>{% trans "Title" %}</dt><dd>{{ seminar.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</dd>
                     {% if seminar.professor.all %}
                     <dt>{% trans "Professor" %}</dt><dd>{% for professor in seminar.professor.all %}<a href="{% url telemeta-profile-detail professor.user.username %}" target="_blank">{{ professor }}</a> {% endfor %}</dd>
                     {% endif %}
