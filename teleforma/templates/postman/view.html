@@ -45,6 +45,9 @@
 {% endblock %}
 
 {% if reply_to_pk %}<a class="component_icon button icon_next" href="{% url postman_reply reply_to_pk %}?next={{ next_url|urlencode }}">{% trans "Reply" %}</a>{% endif %}
+
+<br /><br />
+
 </form>
 {% if reply_to_pk %}<hr />
 <h2>{% trans 'Reply' %}</h2>

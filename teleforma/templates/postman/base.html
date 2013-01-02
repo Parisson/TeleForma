@@ -6,8 +6,19 @@
 
 <div id="module-set-left" style="width: 20%;">
 
+
 <div class="module">
-<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Folders" %}</h3>
+<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Telephone" %}</h3>
+
+<div style="background: white;">
+<ul>
+<li><b>+33 [0]1 44 35 71 20</b></li>
+</ul>
+</div>
+</div>
+
+<div class="module">
+<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Messaging" %}</h3>
 
 <div style="background: white;">
 {% postman_unread as unread_count %}
@@ -22,6 +33,7 @@
 <div class="module_action">
 <a href="{% url postman_write %}" class="component_icon button" id="action_orange">{% trans "New message" %}</a>
 </div>
+
 </div>
 
 {% endblock postman_menu %}

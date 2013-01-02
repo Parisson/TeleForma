@@ -268,3 +268,7 @@ def free_first(qs):
         else:
             medias.append(media)
     return medias
+
+@register.simple_tag
+def admin_username():
+    return settings.ADMIN_USERNAME

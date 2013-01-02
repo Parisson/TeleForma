@@ -6,28 +6,6 @@
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
 
-{% if user.student.all or user.is_staff %}
-<div style="padding-top: 0.5em;">
-
-<select id="_adminSelect" name="admins" onchange="update_recipients();">
-<option value="">{% trans "to an administrator" %}</option>
-{% get_all_admins as admins %}
-{% for a in admins %}
-<option value="{{ a.username }}">{{a.first_name}} {{a.last_name}}</option>
-{% endfor %}
-</select>
-
-<select id="_professorSelect" name="professors" onchange="update_recipients();">
-<option value="">{% trans "to a professor" %}</option>
-{% get_all_professors as professors %}
-{% for p in professors %}
-<option value="{{ p.user.username }}">{{p.user.first_name}} {{p.user.last_name}}</option>
-{% endfor %}
-</select>
-
-</div>
-{% endif %}
-
 <div class="write_content">
 <form id="_messageForm" action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" method="post">{% csrf_token %}
 <table>
@@ -40,16 +18,11 @@
 </div>
 <script type="text/javascript">document.getElementById("id_subject").focus();</script>
 <script type="text/javascript">
-function update_recipients() {
-$("#_professorSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
+
+$(window).ready(function(){
+      var recipient = '{% admin_username %}';
+      $("#id_recipients").val(recipient);
     });
-$("#_adminSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
-}
 
 $('#send_button').click(function() {
   $('#_messageForm').submit();
