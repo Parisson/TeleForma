@@ -43,7 +43,7 @@ $(document).ready(function(){
 
 <div class="course_content">
   <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer to the following question" %} ({{question.min_nchar}} {% trans "characters" %} {% trans "minimum" %})</h3>
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 4 : {% trans "answer to this question" %} ({{question.min_nchar}} {% trans "characters" %} {% trans "minimum" %})</h3>
   </div>
   <div style="text-align: justify;">
     {{ question.question|safe }}

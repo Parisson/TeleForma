@@ -7,7 +7,7 @@
 
 <div class="course_content">
   <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step 6 : evaluate the seminar" %}</h3>
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 : {% trans "evaluate the seminar" %}</h3>
   </div>
   <div class="form">
     {% render_built_form form %}
@@ -17,3 +17,11 @@
 
 {% endblock course_content %}
 
+{% block index %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Steps" %}</h3>
+ <div id="index">
+  {% include "teleforma/inc/steps.html" %}
+ </div>
+</div>
+{% endblock index %}
