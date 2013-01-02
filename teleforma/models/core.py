@@ -43,6 +43,7 @@ import string
 import datetime
 import mimetypes
 
+from django.conf import settings
 from django.db.models import *
 from telemeta.models import *
 from teleforma.fields import *
@@ -57,6 +58,7 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import tinymce.models
 from mezzanine.core.models import Displayable
+from django.core.urlresolvers import reverse
 
 app_label = 'teleforma'
 
@@ -243,6 +245,9 @@ class Conference(Displayable):
                          self.course_type.name.lower()])
         return slug
 
+    def get_absolute_url(self):
+        return reverse('conference-view', kwargs={"pk": self.id})
+
     def __unicode__(self):
         if self.professor:
             list = [self.course.department.name, self.course.title,
@@ -295,6 +300,13 @@ class Conference(Displayable):
                                         'server_type': stream.server.type,
                                         'stream_type': stream.stream_type  })
         return data
+
+    def public_url(self):
+        """
+        Get a public fully qualified URL for the object
+        """
+        url = reverse('teleforma-conference-detail', kwargs={'pk':self.id})
+        return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
