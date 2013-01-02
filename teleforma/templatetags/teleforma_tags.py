@@ -272,3 +272,8 @@ def free_first(qs):
 @register.simple_tag
 def admin_username():
     return settings.ADMIN_USERNAME
+
+@register.filter
+def hours(time):
+    return str(int(str(time).split(':')[0]))
+

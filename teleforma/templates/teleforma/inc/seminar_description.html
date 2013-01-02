@@ -1,0 +1,14 @@
+{% load teleforma_tags %}
+{% load i18n %}
+
+<dl class="listing" style="font-size: 1.1em;">
+<dt>{% trans "course" %}</dt><dd>{{ seminar.course }}</dd>
+<dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
+<dt>{% trans "public concerned" %}</dt><dd>{{ seminar.concerned }}</dd>
+<dt>{% trans "duration" %}</dt><dd>{{ seminar.duration|hours }} {% trans "hours" %}</dd>
+{% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd><div class="keywords">{% for kw in seminar.keywords.all %}{{ kw }}{% if not forloop.last %},{% endif %} {% endfor %}</div></dd>{% endif %}
+<!-- {% if seminar.description %}
+<dt>{% trans "description" %}</dt><dd><div class="description">{{ seminar.description|safe }}</div></dd>
+{% endif %}
+-->
+</dl>

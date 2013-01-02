@@ -88,3 +88,78 @@ $(document).ready(function(){
 </div>
 {% endblock progress %}
 
+
+{% block index %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Steps" %}</h3>
+ <div id="index">
+  
+          {% with seminar.docs_1 as docs %}
+           {% if docs.all.count > 1 %}
+            {% with _("Step 1 : read these documents") as title %}
+             {% include "teleforma/inc/document_simple_list.html" %}
+           {% endwith %}
+           {% else %}
+            {% with _("Step 1 : read this document") as title %}
+             {% include "teleforma/inc/document_simple_list.html" %}
+            {% endwith %}
+           {% endif %}
+          {% endwith %}
+
+          {% with seminar.media as media_packages %}
+           {% if media_packages.all.count > 1 %}
+            {% with _("Step 2 : view these conferences") as title %}
+             {% include "teleforma/inc/media_package_list.html" %}
+            {% endwith %}
+           {% else %}
+            {% with _("Step 2 : view this conference") as title %}
+             {% include "teleforma/inc/media_package_list.html" %}
+            {% endwith %}
+           {% endif %}
+          {% endwith %}
+
+          {% with seminar.docs_2 as docs %}
+           {% if docs.all.count > 1 %}
+            {% with _("Step 3 : read these documents") as title %}
+             {% include "teleforma/inc/document_simple_list.html" %}
+           {% endwith %}
+           {% else %}
+            {% with _("Step 3 : read this document") as title %}
+             {% include "teleforma/inc/document_simple_list.html" %}
+            {% endwith %}
+           {% endif %}
+          {% endwith %}
+            
+          {% with seminar.question as questions %}
+           {% if questions.all.count > 1 %}
+            {% with _("Step 4 : answer to these questions") as title %}
+             {% include "teleforma/inc/question_list.html" %}
+            {% endwith %}
+           {% else %}
+
+
+            {% with _("Step 4 : answer to this question") as title %}
+             {% include "teleforma/inc/question_list.html" %}
+            {% endwith %}
+           {% endif %}
+          {% endwith %}
+
+        
+         {% if seminar_progress == 100 %}
+          {% with seminar.docs_correct as docs %}
+           {% if docs.all.count > 1 %}
+            {% with _("Step 5 : read these corrected documents") as title %}
+             {% include "teleforma/inc/document_simple_list.html" %}
+            {% endwith %}
+           {% else %}
+            {% with _("Step 5 : read this corrected document") as title %}
+             {% include "teleforma/inc/document_simple_list.html" %}
+            {% endwith %}
+           {% endif %}
+          {% endwith %}
+         {% endif %}
+
+
+ </div>
+</div>
+{% endblock index %}

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-02 15:50+0100\n"
+"POT-Creation-Date: 2013-01-02 16:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -63,8 +63,7 @@ msgstr "nom"
 #: models/core.py:91 models/core.py:103 models/core.py:126 models/core.py:138
 #: models/core.py:153 models/core.py:204 models/core.py:312 models/core.py:378
 #: models/core.py:398 models/crfpa.py:48 models/pro.py:147 models/pro.py:193
-#: templates/teleforma/seminar_detail.html:71
-#: templates/teleforma/seminars.html:113
+#: templates/teleforma/inc/seminar_description.html:11
 msgid "description"
 msgstr "description"
 
@@ -126,7 +125,7 @@ msgid "types"
 msgstr "types"
 
 #: models/core.py:175 models/core.py:222 models/core.py:414 models/core.py:474
-#: models/pro.py:87 templates/teleforma/seminar_detail.html:65
+#: models/pro.py:87 templates/teleforma/inc/seminar_description.html:5
 msgid "course"
 msgstr "matière"
 
@@ -345,13 +344,11 @@ msgstr ""
 msgid "Seminar type"
 msgstr "Type de séminaire"
 
-#: models/pro.py:89 templates/teleforma/seminar_detail.html:67
-#: templates/teleforma/seminars.html:109
+#: models/pro.py:89 templates/teleforma/inc/seminar_description.html:7
 msgid "public concerned"
 msgstr "public concerné"
 
-#: models/pro.py:90 templates/teleforma/seminar_detail.html:66
-#: templates/teleforma/seminars.html:108
+#: models/pro.py:90 templates/teleforma/inc/seminar_description.html:6
 msgid "level"
 msgstr "niveau"
 
@@ -388,7 +385,7 @@ msgid "form"
 msgstr "formulaire"
 
 #: models/pro.py:137 templates/teleforma/answer_form.html:77
-#: templates/teleforma/seminar_detail.html:180
+#: templates/teleforma/seminar_detail.html:170
 #: templates/teleforma/seminar_media_audio.html:56
 #: templates/teleforma/seminar_media_video.html:104
 #: templates/teleforma/testimonials.html:64
@@ -452,7 +449,7 @@ msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
 #: models/pro.py:219 templates/teleforma/inc/testimonial_list.html:14
-#: views/pro.py:482
+#: views/pro.py:484
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -770,16 +767,70 @@ msgid "Submit it"
 msgstr "Soumettre"
 
 #: templates/teleforma/answer_form.html:70
-#: templates/teleforma/seminar_detail.html:174
-#: templates/teleforma/seminars.html:128
+#: templates/teleforma/seminar_detail.html:164
+#: templates/teleforma/seminars.html:120
 msgid "Progressions"
 msgstr "Progressions"
 
 #: templates/teleforma/answer_form.html:74
-#: templates/teleforma/seminar_detail.html:177
-#: templates/teleforma/seminars.html:131
+#: templates/teleforma/seminar_detail.html:167
+#: templates/teleforma/seminars.html:123
 msgid "General"
 msgstr "Général"
+
+#: templates/teleforma/answer_form.html:94
+msgid "Steps"
+msgstr ""
+
+#: templates/teleforma/answer_form.html:99
+#: templates/teleforma/seminar_detail.html:78
+msgid "Step 1 : read these documents"
+msgstr "Étape 1 : lire ces documents"
+
+#: templates/teleforma/answer_form.html:103
+#: templates/teleforma/seminar_detail.html:82
+msgid "Step 1 : read this document"
+msgstr "Étape 1 : lire ce document"
+
+#: templates/teleforma/answer_form.html:111
+#: templates/teleforma/seminar_detail.html:90
+msgid "Step 2 : view these conferences"
+msgstr "Étape 2 : visionner ces conférences"
+
+#: templates/teleforma/answer_form.html:115
+#: templates/teleforma/seminar_detail.html:94
+msgid "Step 2 : view this conference"
+msgstr "Étape 2 : visionner cette conférence"
+
+#: templates/teleforma/answer_form.html:123
+#: templates/teleforma/seminar_detail.html:102
+msgid "Step 3 : read these documents"
+msgstr "Étape 3 : lire ces documents"
+
+#: templates/teleforma/answer_form.html:127
+#: templates/teleforma/seminar_detail.html:106
+msgid "Step 3 : read this document"
+msgstr "Étape 3 : lire ce document"
+
+#: templates/teleforma/answer_form.html:135
+#: templates/teleforma/seminar_detail.html:114
+msgid "Step 4 : answer to these questions"
+msgstr "Étape 4 : réaliser ces consultations fictives"
+
+#: templates/teleforma/answer_form.html:141
+#: templates/teleforma/seminar_detail.html:120
+msgid "Step 4 : answer to this question"
+msgstr "Étape 4 : réaliser cette consultation fictive"
+
+#: templates/teleforma/answer_form.html:151
+#: templates/teleforma/seminar_detail.html:130
+msgid "Step 5 : read these corrected documents"
+msgstr "Étape 5 : lire ces documents corrigés"
+
+#: templates/teleforma/answer_form.html:155
+#: templates/teleforma/seminar_detail.html:134
+msgid "Step 5 : read this corrected document"
+msgstr "Étape 5 : lire ce document corrigé"
 
 #: templates/teleforma/answers.html:6 templates/teleforma/answers.html:62
 #: templates/telemeta/base.html:112
@@ -1005,12 +1056,12 @@ msgstr "Mes notes"
 msgid "New note"
 msgstr "Nouvelle note"
 
-#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:143
+#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:135
 msgid "Status"
 msgstr "Status"
 
 #: templates/teleforma/evaluation_form.html:10
-#: templates/teleforma/seminar_detail.html:151
+#: templates/teleforma/seminar_detail.html:141
 msgid "Step 6 : evaluate the seminar"
 msgstr "Étape 6 : évaluer ce séminaire"
 
@@ -1023,62 +1074,11 @@ msgstr "Aide"
 msgid "Informations"
 msgstr "Informations"
 
-#: templates/teleforma/seminar_detail.html:68
-#: templates/teleforma/seminars.html:110
-msgid "duration"
-msgstr "durée"
-
-#: templates/teleforma/seminar_detail.html:69
-#: templates/teleforma/seminar_testimonial.html:42
-#: templates/teleforma/seminars.html:111
-msgid "keywords"
-msgstr "mots clés"
-
-#: templates/teleforma/seminar_detail.html:88
-msgid "Step 1 : read these documents"
-msgstr "Étape 1 : lire ces documents"
-
-#: templates/teleforma/seminar_detail.html:92
-msgid "Step 1 : read this document"
-msgstr "Étape 1 : lire ce document"
-
-#: templates/teleforma/seminar_detail.html:100
-msgid "Step 2 : view these conferences"
-msgstr "Étape 2 : voir ces conférences"
-
-#: templates/teleforma/seminar_detail.html:104
-msgid "Step 2 : view this conference"
-msgstr "Étape 2 : voir cette conférence"
-
-#: templates/teleforma/seminar_detail.html:112
-msgid "Step 3 : read these documents"
-msgstr "Étape 3 : lire ces documents"
-
-#: templates/teleforma/seminar_detail.html:116
-msgid "Step 3 : read this document"
-msgstr "Étape 3 : lire ce document"
-
-#: templates/teleforma/seminar_detail.html:124
-msgid "Step 4 : answer to these questions"
-msgstr "Étape 4 : réaliser ces consultations fictives"
-
-#: templates/teleforma/seminar_detail.html:130
-msgid "Step 4 : answer to this question"
-msgstr "Étape 4 : réaliser cette consultation fictive"
-
-#: templates/teleforma/seminar_detail.html:140
-msgid "Step 5 : read these corrected documents"
-msgstr "Étape 5 : lire ces documents corrigés"
-
-#: templates/teleforma/seminar_detail.html:144
-msgid "Step 5 : read this corrected document"
-msgstr "Étape 5 : lire ce document corrigé"
-
-#: templates/teleforma/seminar_detail.html:158
+#: templates/teleforma/seminar_detail.html:148
 msgid "Step 7 : download your testimonial"
 msgstr ""
 
-#: templates/teleforma/seminar_detail.html:192
+#: templates/teleforma/seminar_detail.html:182
 msgid "Index"
 msgstr "Index"
 
@@ -1116,6 +1116,11 @@ msgstr ""
 #: templates/teleforma/seminar_testimonial.html:41
 msgid "Training type"
 msgstr "Type de formation"
+
+#: templates/teleforma/seminar_testimonial.html:42
+#: templates/teleforma/inc/seminar_description.html:9
+msgid "keywords"
+msgstr "mots clés"
 
 #: templates/teleforma/seminar_testimonial.html:46
 msgid "Training begin date"
@@ -1219,6 +1224,14 @@ msgstr "enregistrée le"
 #: templates/teleforma/inc/question_list.html:31
 msgid "Validated"
 msgstr "validé"
+
+#: templates/teleforma/inc/seminar_description.html:8
+msgid "duration"
+msgstr "durée"
+
+#: templates/teleforma/inc/seminar_description.html:8
+msgid "hours"
+msgstr "heures"
 
 #: templates/telemeta/base.html:96
 msgid "Desk"
@@ -1476,14 +1489,24 @@ msgstr ""
 "obtenir un accès privé."
 
 #: views/pro.py:154
+msgid ""
+"You have successfully terminated your e-learning seminar. A training "
+"testimonial will be available as soon as the pedagogical team validate all "
+"your answers (48h maximum)."
+msgstr ""
+"Vous avez achevé avec succès votre séminaire e-learning. Une attestation de "
+"formation vous sera délivrée dès que vos réponses aux consultations fictives "
+"auront été validées par notre équipe pédagogique (48h maximum)."
+
+#: views/pro.py:156
 msgid "You have successfully saved your answer"
 msgstr "Vous avez enregistré votre reponse avec succès"
 
-#: views/pro.py:156
+#: views/pro.py:158
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre reponse avec succès"
 
-#: views/pro.py:354
+#: views/pro.py:356
 msgid "You have successfully sumitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
 

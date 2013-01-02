@@ -75,6 +75,18 @@ def seminar_validated(user, seminar):
         return not False in validated
     return False
 
+def seminar_terminated(user, seminar):
+    validated = []
+    questions = seminar.question.all()
+    if questions:
+        for question in questions:
+            answers = Answer.objects.filter(question=question, user=user)
+            if answers:
+                validated.append(True)
+            else:
+                validated.append(False)
+        return not False in validated
+    return False
 
 def all_seminars(request, progress_order=False):
     seminars = []

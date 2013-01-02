@@ -150,7 +150,9 @@ class AnswerView(FormView):
         answer.user = self.request.user
         answer.question = self.question
         answer.save()
-        if answer.status <= 2:
+        if seminar_terminated(self.request.user, answer.question.seminar):
+            messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
+        elif answer.status <= 2:
             messages.info(self.request, _("You have successfully saved your answer"))
         elif answer.status == 3:
             messages.info(self.request, _("You have successfully submitted your answer"))
