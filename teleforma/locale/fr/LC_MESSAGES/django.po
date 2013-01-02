@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-02 16:36+0100\n"
+"POT-Creation-Date: 2013-01-02 17:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -768,13 +768,13 @@ msgstr "Soumettre"
 
 #: templates/teleforma/answer_form.html:70
 #: templates/teleforma/seminar_detail.html:164
-#: templates/teleforma/seminars.html:120
+#: templates/teleforma/seminars.html:128
 msgid "Progressions"
 msgstr "Progressions"
 
 #: templates/teleforma/answer_form.html:74
 #: templates/teleforma/seminar_detail.html:167
-#: templates/teleforma/seminars.html:123
+#: templates/teleforma/seminars.html:131
 msgid "General"
 msgstr "Général"
 
@@ -1056,7 +1056,7 @@ msgstr "Mes notes"
 msgid "New note"
 msgstr "Nouvelle note"
 
-#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:135
+#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:143
 msgid "Status"
 msgstr "Status"
 
@@ -1129,6 +1129,10 @@ msgstr "Date de début de formation"
 #: templates/teleforma/seminar_testimonial.html:47
 msgid "Training end date"
 msgstr "Date de fin de formation"
+
+#: templates/teleforma/seminars.html:111
+msgid "Access to the seminar"
+msgstr "Accéder au séminaire"
 
 #: templates/teleforma/testimonials.html:7
 #: templates/teleforma/testimonials.html:45
