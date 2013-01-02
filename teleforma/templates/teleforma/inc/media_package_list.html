@@ -33,9 +33,12 @@
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
                     <dt>{% trans "Title" %}</dt><dd>{{ seminar.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</dd>
-                    {% if seminar.professor.all %}
-                    <dt>{% trans "Professor" %}</dt><dd>{% for professor in seminar.professor.all %}<a href="{% url telemeta-profile-detail professor.user.username %}" target="_blank">{{ professor }}</a> {% endfor %}</dd>
-                    {% endif %}
+                    {% with seminar.professor.all as professors %}
+                        {% if professors %}
+                            <dt>{% if professors.count > 1 %}{% trans "Professors" %}{% else %}{% trans "Professor" %}{% endif %}</dt>
+                            <dd>{% for professor in professors %}{{ professor }}{% if not forloop.last %},{% endif %} {% endfor %}</a></dd>
+                        {% endif %}
+                    {% endwith %}
                     {% if media.description %}
                     <dt>{% trans "Description" %}</dt><dd>{{ media.description }}</dd>
                     {% endif %}

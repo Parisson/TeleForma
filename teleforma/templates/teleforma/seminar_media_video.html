@@ -101,12 +101,15 @@ $(window).ready(function(){
 <dl class="listing">
 
 
-<dt>{% trans "Seminar" %}</dt><dd><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }} - {{ seminar.rank }}</a></dd>
-{% if seminar.professor.all %}
-<dt>{% trans "Professors" %}</dt>
-    <dd>{% for professor in seminar.professor.all %}<a href="{% url telemeta-profile-detail professor.user.username %}" target="_blank">{{ professor }}, {% endfor %}</a></dd>
-{% endif %}
+<dt>{% trans "Seminar" %}</dt><dd><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</a></dd>
 
+{% with seminar.professor.all as professors %}
+  {% if professors %}
+    <dt>{% if professors.count > 1 %}{% trans "Professors" %}{% else %}{% trans "Professor" %}{% endif %}</dt>
+    <dd>{% for professor in professors %}{{ professor }}{% if not forloop.last %},{% endif %} {% endfor %}</a></dd>
+  {% endif %}
+{% endwith %}
+                    
 {% if user.is_staff or user.is_superuser %}
 <dt>{% trans "Mime type" %}</dt><dd>{% for media in media_package.video.all %}{{ media.mime_type }}, {% endfor %}</dd>
 <dt>{% trans "Date added" %}</dt><dd>{{ media_package.date_added }}</dd>
