@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-02 15:05+0100\n"
+"POT-Creation-Date: 2013-01-02 15:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -247,8 +247,8 @@ msgid "file"
 msgstr "fichier"
 
 #: models/crfpa.py:55 models/crfpa.py:56
-#: templates/telemeta/profile_detail.html:65
-#: templates/telemeta/profile_detail.html:68
+#: templates/telemeta/profile_detail.html:63
+#: templates/telemeta/profile_detail.html:66
 #: templates/telemeta/inc/user_list.html:21
 msgid "IEJ"
 msgstr "IEJ"
@@ -295,7 +295,7 @@ msgstr "étudiant"
 
 #: models/crfpa.py:147 models/pro.py:234
 #: templates/teleforma/seminar_testimonial.html:37
-#: templates/telemeta/profile_detail.html:82
+#: templates/telemeta/profile_detail.html:80
 msgid "Address"
 msgstr "Adresse"
 
@@ -312,12 +312,12 @@ msgid "Country"
 msgstr "Pays"
 
 #: models/crfpa.py:151 models/pro.py:238
-#: templates/telemeta/profile_detail.html:91
+#: templates/telemeta/profile_detail.html:89
 msgid "Language"
 msgstr "Langue"
 
 #: models/crfpa.py:152 models/pro.py:239 templates/postman/base.html:11
-#: templates/telemeta/profile_detail.html:83
+#: templates/telemeta/profile_detail.html:81
 msgid "Telephone"
 msgstr "Téléphone"
 
@@ -537,47 +537,47 @@ msgstr "Messages"
 msgid "Sorry, this page number is invalid."
 msgstr ""
 
-#: templates/postman/base_folder.html:31
+#: templates/postman/base_folder.html:39
 #: templates/teleforma/course_conference_record.html:51
 #: templates/telemeta/lists.html:75
 msgid "Action"
 msgstr ""
 
-#: templates/postman/base_folder.html:32
+#: templates/postman/base_folder.html:40
 msgid "Sender"
 msgstr ""
 
-#: templates/postman/base_folder.html:33 templates/postman/reply.html:4
+#: templates/postman/base_folder.html:41 templates/postman/reply.html:4
 msgid "Recipient"
 msgstr ""
 
-#: templates/postman/base_folder.html:34
+#: templates/postman/base_folder.html:42
 msgid "Subject"
 msgstr ""
 
-#: templates/postman/base_folder.html:35
+#: templates/postman/base_folder.html:43
 #: templates/telemeta/inc/module_revisions.html:16
 msgid "Date"
 msgstr "Date"
 
-#: templates/postman/base_folder.html:53
+#: templates/postman/base_folder.html:61
 msgid "g:i A,M j,n/j/y"
 msgstr ""
 
-#: templates/postman/base_folder.html:61 templates/postman/view.html:39
+#: templates/postman/base_folder.html:69 templates/postman/view.html:39
 #: templates/telemeta/lists.html:58
 msgid "Delete"
 msgstr ""
 
-#: templates/postman/base_folder.html:64 templates/postman/view.html:43
+#: templates/postman/base_folder.html:72 templates/postman/view.html:43
 msgid "Archive"
 msgstr ""
 
-#: templates/postman/base_folder.html:67
+#: templates/postman/base_folder.html:75
 msgid "Undelete"
 msgstr ""
 
-#: templates/postman/base_folder.html:73
+#: templates/postman/base_folder.html:81
 #, fuzzy
 msgid "No messages."
 msgstr "Messages"
@@ -754,12 +754,12 @@ msgid "Answer to the following question"
 msgstr "Réalisez la consultation fictive suivante"
 
 #: templates/teleforma/answer_form.html:46
-msgid "with"
-msgstr "en"
+msgid "characters"
+msgstr "caractères"
 
 #: templates/teleforma/answer_form.html:46
-msgid "words"
-msgstr "mots"
+msgid "minimum"
+msgstr "minimum"
 
 #: templates/teleforma/answer_form.html:61
 msgid "Save"
@@ -842,7 +842,7 @@ msgstr "Description"
 #: templates/teleforma/course_media.html:142
 #: templates/teleforma/seminar_media_audio.html:64
 #: templates/teleforma/seminar_media_video.html:112
-#: templates/telemeta/profile_detail.html:86
+#: templates/telemeta/profile_detail.html:84
 msgid "Date added"
 msgstr "Date d'ajout"
 
@@ -1132,14 +1132,14 @@ msgstr "Attestations"
 
 #: templates/teleforma/testimonials.html:62
 #: templates/teleforma/inc/answer_list.html:19
-#: templates/telemeta/profile_detail.html:60
+#: templates/telemeta/profile_detail.html:58
 #: templates/telemeta/inc/user_list.html:19
 msgid "Last Name"
 msgstr ""
 
 #: templates/teleforma/testimonials.html:63
 #: templates/teleforma/inc/answer_list.html:20
-#: templates/telemeta/profile_detail.html:59
+#: templates/telemeta/profile_detail.html:57
 #: templates/telemeta/inc/user_list.html:20
 msgid "First Name"
 msgstr ""
@@ -1317,84 +1317,84 @@ msgstr "profil"
 msgid "His seminars"
 msgstr "Ses séminaires"
 
-#: templates/telemeta/profile_detail.html:36
+#: templates/telemeta/profile_detail.html:34
 msgid "Send a message"
 msgstr "Envoyer un message"
 
-#: templates/telemeta/profile_detail.html:44
+#: templates/telemeta/profile_detail.html:42
 #, fuzzy
 msgid "User profile"
 msgstr "profil"
 
-#: templates/telemeta/profile_detail.html:49
+#: templates/telemeta/profile_detail.html:47
 msgid "Change password"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:51
+#: templates/telemeta/profile_detail.html:49
 msgid "Login as"
 msgstr "Se connecter en tant que"
 
-#: templates/telemeta/profile_detail.html:61
+#: templates/telemeta/profile_detail.html:59
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: templates/telemeta/profile_detail.html:66
-#: templates/telemeta/profile_detail.html:69
+#: templates/telemeta/profile_detail.html:64
+#: templates/telemeta/profile_detail.html:67
 #: templates/telemeta/inc/user_list.html:22
 msgid "Training"
 msgstr "Formation"
 
-#: templates/telemeta/profile_detail.html:71
+#: templates/telemeta/profile_detail.html:69
 msgid "Platform only"
 msgstr "Plateforme seulement"
 
-#: templates/telemeta/profile_detail.html:72
+#: templates/telemeta/profile_detail.html:70
 #: templates/telemeta/inc/user_list.html:23
 msgid "Procedure"
 msgstr "Procédure"
 
-#: templates/telemeta/profile_detail.html:73
+#: templates/telemeta/profile_detail.html:71
 #: templates/telemeta/inc/user_list.html:24
 msgid "Oral spe"
 msgstr "Oral Spé"
 
-#: templates/telemeta/profile_detail.html:74
+#: templates/telemeta/profile_detail.html:72
 #: templates/telemeta/inc/user_list.html:25
 msgid "Written spe"
 msgstr "Ecrit Spé"
 
-#: templates/telemeta/profile_detail.html:75
+#: templates/telemeta/profile_detail.html:73
 #: templates/telemeta/inc/user_list.html:26
 msgid "Oral 1"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:76
+#: templates/telemeta/profile_detail.html:74
 #: templates/telemeta/inc/user_list.html:27
 msgid "Oral 2"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:77
+#: templates/telemeta/profile_detail.html:75
 msgid "Options"
 msgstr "Options"
 
-#: templates/telemeta/profile_detail.html:81
+#: templates/telemeta/profile_detail.html:79
 msgid "Email"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:87
+#: templates/telemeta/profile_detail.html:85
 #, fuzzy
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
-#: templates/telemeta/profile_detail.html:88
+#: templates/telemeta/profile_detail.html:86
 msgid "Last login"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:99
+#: templates/telemeta/profile_detail.html:97
 msgid "Apply"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:110
+#: templates/telemeta/profile_detail.html:108
 msgid "Password reset"
 msgstr "Réinitialisation du mot de passe"
 
@@ -1486,6 +1486,12 @@ msgstr "Vous avez soumis votre reponse avec succès"
 #: views/pro.py:354
 msgid "You have successfully sumitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid "with"
+#~ msgstr "en"
+
+#~ msgid "words"
+#~ msgstr "mots"
 
 #~ msgid "Folders"
 #~ msgstr "Dossiers"
