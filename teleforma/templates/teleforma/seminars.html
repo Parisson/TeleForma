@@ -15,7 +15,7 @@ $(function () {
 
 $(function () {
     $('div.keywords').expander({
-        slicePoint: 45,
+        slicePoint: 40,
         expandText: 'Lire plus',
         userCollapseText: 'Cacher le texte',
     });
@@ -88,7 +88,6 @@ $(function() {
     {% for seminar in object_list %}
       
       <div class="course">
-
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
          <div style="float: right; font-size: 0.9em;">
@@ -100,21 +99,26 @@ $(function() {
           </div>
         </div>
 
+        
+            
         <div class="course_content">
             <div class="course_subtitle">
             </div>
             <div class="course_description">
-              {% include "teleforma/inc/seminar_description.html" %}
-              <table><tr><td width="80%"></td>
-              <td width="20%">
-              <div style="margin-bottom: 0.5em;">
-              <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_next">{% trans "Access to the seminar" %}</a>
-              </div>
+              <a href="{% url teleforma-seminar-detail seminar.id %}">
+             <table>
+              <tr><td width="97%">   
+               {% include "teleforma/inc/seminar_description.html" %} 
+              </td>
+              <td>
+               <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_next"></a>
               </td>
               </tr>
-            </table>
+             </table>
             </div>
+          </a>
         </div>
+
       </div>
    {% endfor %}
 </div>
