@@ -1,0 +1,33 @@
+{% load teleforma_tags %}
+{% load thumbnail %}
+{% load i18n %}
+
+<table class="listing" width="100%">
+    <tbody>
+      {% for media_package in media_packages.all %}
+       {% with media_package.video.all.0 as media %}
+        {% if media.is_published or user.is_staff %}
+            <tr>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
+            <a href="{% url teleforma-media-video seminar.id media_package.id %}" title="{% trans "Play" %}">
+            {% if media.item.related.all %}
+             {% with media.item.related.all.0 as related %}
+              {% if related.title == "preview" %}
+               {% thumbnail related.file "168x96" as im %}
+                <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
+                 <img src="{{ STATIC_URL }}teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
+                </div>
+               {% endthumbnail %}
+              {% endif %}
+             {% endwith %}
+            {% else %}
+              {% trans 'Click here' %}
+            {% endif %}
+            </a>
+          </td>
+          </tr>
+        {% endif %}
+       {% endwith %}
+      {% endfor %}
+   </tbody>
+</table>

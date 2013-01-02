@@ -92,31 +92,8 @@ $(document).ready(function(){
 {% block index %}
 <div class="module">
   <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Steps" %}</h3>
- 
  <div id="index">
-  
-          {% with seminar.docs_1 as docs %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-          {% endwith %}
-
-          {% with seminar.media as media_packages %}
-             {% include "teleforma/inc/media_package_list.html" %}
-          {% endwith %}
-
-          {% with seminar.docs_2 as docs %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-          {% endwith %}
-            
-          {% with seminar.question as questions %}
-             {% include "teleforma/inc/question_list.html" %}
-          {% endwith %}
-        
-          {% if seminar_progress == 100 %}
-          {% with seminar.docs_correct as docs %}
-             {% include "teleforma/inc/document_simple_list.html" %}
-          {% endwith %}
-          {% endif %}
-
+  {% include "teleforma/inc/steps.html" %}
  </div>
 </div>
 {% endblock index %}

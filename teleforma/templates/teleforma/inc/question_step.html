@@ -1,0 +1,22 @@
+{% load teleforma_tags %}
+{% load i18n %}
+
+<table class="listing" width="100%">
+    <tbody>
+        {% for question in questions.all %}
+            <tr>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="95%">
+            	<a href="{% url teleforma-question-answer question.id %}">{{ question.title }}{% if question.rank %} n°{{ question.rank }}{% endif %}</a></td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">
+            	{% if question|submitted:user and not question|validated:user %}
+            		<img src="{{ STATIC_URL }}teleforma/images/chronometer.png" style="vertical-align:middle" alt="" title="{% trans "Waiting for validation" %}" />
+            	{% elif question|saved:user and not question|submitted:user %}
+            		<img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" alt="" title="{% trans "Saved" %}" />
+            	{% elif question|submitted:user and question|validated:user %}
+            		<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
+            	{% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

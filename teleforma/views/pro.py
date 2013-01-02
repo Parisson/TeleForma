@@ -108,7 +108,7 @@ class SeminarView(DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = self.get_object()
         context['seminar_progress'] = seminar_progress(self.request.user, seminar)
-        context['validated'] = seminar_validated(self.request.user, seminar)
+        context['seminar_validated'] = seminar_validated(self.request.user, seminar)
         return context
 
 
