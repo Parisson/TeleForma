@@ -15,17 +15,15 @@
     <div class="module">
     <h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His seminars" %}{% else %}{% trans "My seminars" %}{% endif %}</a></h3>
     <div style="background: white;">
-    <ul>
     {% block courses %}
     {% with usr|user_seminars as seminars %}
      <ul>
-      {% for seminar in seminars %}
+      {% for seminar in seminars %} 
       <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
       {% endfor %}
     </ul>
     {% endwith %}
     {% endblock courses %}
-    </ul>
     </div>
     </div>
 
