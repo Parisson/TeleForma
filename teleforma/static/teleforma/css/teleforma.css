@@ -1694,6 +1694,16 @@ input,textarea{
     border-radius: 8px 0px 8px 8px;
 }
 
+.success {
+    margin-top: 1em;
+    color: white;
+    padding: 0.3em;
+    background-color: green; 
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
 .error {
     color: white;
     padding: 0.3em;

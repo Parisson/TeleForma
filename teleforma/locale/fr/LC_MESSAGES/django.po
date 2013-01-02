@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-30 23:15+0100\n"
+"POT-Creation-Date: 2013-01-02 15:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: models/ae.py:46 models/core.py:182 models/crfpa.py:108 models/crfpa.py:146
-#: models/pro.py:165 models/pro.py:209 models/pro.py:223
+#: models/pro.py:165 models/pro.py:209 models/pro.py:224
 msgid "user"
 msgstr "utilisateur"
 
@@ -26,7 +26,7 @@ msgstr "utilisateur"
 msgid "period"
 msgstr "période"
 
-#: models/ae.py:49 models/crfpa.py:114 models/pro.py:231
+#: models/ae.py:49 models/crfpa.py:114 models/pro.py:232
 msgid "platform only"
 msgstr "plateforme seulement"
 
@@ -214,7 +214,7 @@ msgstr "stream en direct"
 msgid "credits"
 msgstr "crédits"
 
-#: models/core.py:380 models/pro.py:118 models/pro.py:172
+#: models/core.py:380 models/pro.py:118 models/pro.py:172 models/pro.py:215
 msgid "date added"
 msgstr "date d'ajout"
 
@@ -293,39 +293,39 @@ msgstr "iej"
 msgid "student"
 msgstr "étudiant"
 
-#: models/crfpa.py:147 models/pro.py:233
+#: models/crfpa.py:147 models/pro.py:234
 #: templates/teleforma/seminar_testimonial.html:37
 #: templates/telemeta/profile_detail.html:82
 msgid "Address"
 msgstr "Adresse"
 
-#: models/crfpa.py:148 models/pro.py:234
+#: models/crfpa.py:148 models/pro.py:235
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models/crfpa.py:149 models/pro.py:235
+#: models/crfpa.py:149 models/pro.py:236
 msgid "City"
 msgstr "Ville"
 
-#: models/crfpa.py:150 models/pro.py:236
+#: models/crfpa.py:150 models/pro.py:237
 msgid "Country"
 msgstr "Pays"
 
-#: models/crfpa.py:151 models/pro.py:237
+#: models/crfpa.py:151 models/pro.py:238
 #: templates/telemeta/profile_detail.html:91
 msgid "Language"
 msgstr "Langue"
 
-#: models/crfpa.py:152 models/pro.py:238
+#: models/crfpa.py:152 models/pro.py:239 templates/postman/base.html:11
 #: templates/telemeta/profile_detail.html:83
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models/crfpa.py:153 models/pro.py:240
+#: models/crfpa.py:153 models/pro.py:241
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models/crfpa.py:154 models/pro.py:241
+#: models/crfpa.py:154 models/pro.py:242
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
@@ -451,28 +451,28 @@ msgstr "modèle"
 msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
-#: models/pro.py:218 templates/teleforma/inc/testimonial_list.html:14
+#: models/pro.py:219 templates/teleforma/inc/testimonial_list.html:14
 #: views/pro.py:482
 msgid "Testimonial"
 msgstr "Attestation"
 
-#: models/pro.py:225
+#: models/pro.py:226
 msgid "seminars"
 msgstr "séminaires"
 
-#: models/pro.py:228
+#: models/pro.py:229
 msgid "conferences"
 msgstr "conférences"
 
-#: models/pro.py:232
+#: models/pro.py:233
 msgid "Company"
 msgstr ""
 
-#: models/pro.py:239
+#: models/pro.py:240
 msgid "Fax"
 msgstr ""
 
-#: models/pro.py:251
+#: models/pro.py:252
 msgid "Auditor"
 msgstr "Auditeur"
 
@@ -484,7 +484,7 @@ msgstr "Page non trouvée"
 msgid "Server error"
 msgstr "Erreur du serveur"
 
-#: templates/admin/base.html:21 templates/telemeta/base.html:98
+#: templates/admin/base.html:21 templates/telemeta/base.html:99
 msgid "Home"
 msgstr "Accueil"
 
@@ -499,28 +499,28 @@ msgid ""
 "long term storage."
 msgstr ""
 
-#: templates/postman/base.html:10
-msgid "Folders"
-msgstr "Dossiers"
+#: templates/postman/base.html:21
+msgid "Messaging"
+msgstr "Messagerie"
 
-#: templates/postman/base.html:15
+#: templates/postman/base.html:26
 msgid "Inbox"
 msgstr ""
 
-#: templates/postman/base.html:16 templates/postman/sent.html:3
+#: templates/postman/base.html:27 templates/postman/sent.html:3
 #, fuzzy
 msgid "Sent Messages"
 msgstr "Messages"
 
-#: templates/postman/base.html:17
+#: templates/postman/base.html:28
 msgid "Archives"
 msgstr ""
 
-#: templates/postman/base.html:18
+#: templates/postman/base.html:29
 msgid "Trash"
 msgstr ""
 
-#: templates/postman/base.html:23
+#: templates/postman/base.html:34
 msgid "New message"
 msgstr "Nouveau message"
 
@@ -582,15 +582,7 @@ msgstr ""
 msgid "No messages."
 msgstr "Messages"
 
-#: templates/postman/base_write.html:13
-msgid "to an administrator"
-msgstr "à un administrateur"
-
-#: templates/postman/base_write.html:21
-msgid "to a professor"
-msgstr "à un professeur"
-
-#: templates/postman/base_write.html:38
+#: templates/postman/base_write.html:16
 #: templates/teleforma/inc/chat_room.html:13
 msgid "Send"
 msgstr ""
@@ -706,7 +698,7 @@ msgid "Received"
 msgstr ""
 
 #: templates/postman/reply.html:3 templates/postman/view.html:47
-#: templates/postman/view.html.py:50 templates/postman/view.html:53
+#: templates/postman/view.html.py:53 templates/postman/view.html:56
 msgid "Reply"
 msgstr ""
 
@@ -790,7 +782,7 @@ msgid "General"
 msgstr "Général"
 
 #: templates/teleforma/answers.html:6 templates/teleforma/answers.html:62
-#: templates/telemeta/base.html:111
+#: templates/telemeta/base.html:112
 msgid "Answers"
 msgstr "Consultations"
 
@@ -1022,7 +1014,7 @@ msgstr "Status"
 msgid "Step 6 : evaluate the seminar"
 msgstr "Étape 6 : évaluer ce séminaire"
 
-#: templates/teleforma/help.html:11 templates/telemeta/base.html:114
+#: templates/teleforma/help.html:11 templates/telemeta/base.html:115
 #: templates/telemeta/base.html.py:127
 msgid "Help"
 msgstr "Aide"
@@ -1228,30 +1220,26 @@ msgstr "enregistrée le"
 msgid "Validated"
 msgstr "validé"
 
-#: templates/telemeta/base.html:95
+#: templates/telemeta/base.html:96
 msgid "Desk"
 msgstr "Bureau"
 
-#: templates/telemeta/base.html:103
-msgid "Messaging"
-msgstr "Messagerie"
+#: templates/telemeta/base.html:104
+msgid "Contact us"
+msgstr "Contactez-nous"
 
-#: templates/telemeta/base.html:106 templates/telemeta/users.html:6
+#: templates/telemeta/base.html:107 templates/telemeta/users.html:6
 #: templates/telemeta/users.html.py:43
 msgid "Users"
 msgstr ""
 
-#: templates/telemeta/base.html:112
+#: templates/telemeta/base.html:113
 msgid "Admin"
 msgstr ""
 
-#: templates/telemeta/base.html:124
+#: templates/telemeta/base.html:125
 msgid "Profile"
 msgstr "Profil"
-
-#: templates/telemeta/base.html:126
-msgid "Lists"
-msgstr ""
 
 #: templates/telemeta/base.html:129
 msgid "Sign out"
@@ -1498,6 +1486,15 @@ msgstr "Vous avez soumis votre reponse avec succès"
 #: views/pro.py:354
 msgid "You have successfully sumitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid "Folders"
+#~ msgstr "Dossiers"
+
+#~ msgid "to an administrator"
+#~ msgstr "à un administrateur"
+
+#~ msgid "to a professor"
+#~ msgstr "à un professeur"
 
 #~ msgid "His courses"
 #~ msgstr "Ses matières"
