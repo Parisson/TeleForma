@@ -113,7 +113,7 @@ $(function () {
       {% with seminar.docs_correct as docs %}
        <div class="course_content">
         <div class="course_subtitle">
-          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 5 : {% if docs.all.count > 1 %}{% trans "read these documents" %}{% else %}{% trans "read this document" %}{% endif %}</h3>
+          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 5 : {% if docs.all.count > 1 %}{% trans "read these corrected documents" %}{% else %}{% trans "read this corrected document" %}{% endif %}</h3>
         </div>
         {% include "teleforma/inc/document_simple_list.html" %}
        </div>

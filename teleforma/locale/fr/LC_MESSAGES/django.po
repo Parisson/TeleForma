@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-03 01:50+0100\n"
+"POT-Creation-Date: 2013-01-03 02:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -1048,13 +1048,11 @@ msgstr "Informations"
 
 #: templates/teleforma/seminar_detail.html:77
 #: templates/teleforma/seminar_detail.html:96
-#: templates/teleforma/seminar_detail.html:116
 msgid "read these documents"
 msgstr "lire ces documents"
 
 #: templates/teleforma/seminar_detail.html:77
 #: templates/teleforma/seminar_detail.html:96
-#: templates/teleforma/seminar_detail.html:116
 msgid "read this document"
 msgstr "lire ce document"
 
@@ -1069,6 +1067,14 @@ msgstr "visionner cette conférence"
 #: templates/teleforma/seminar_detail.html:105
 msgid "answer to these questions"
 msgstr "réaliser ces consultations fictives"
+
+#: templates/teleforma/seminar_detail.html:116
+msgid "read these corrected documents"
+msgstr "Étape 5 : lire ces corrigés"
+
+#: templates/teleforma/seminar_detail.html:116
+msgid "read this corrected document"
+msgstr "Étape 5 : lire ce corrigé"
 
 #: templates/teleforma/seminar_detail.html:135
 msgid "download your testimonial"
@@ -1507,16 +1513,16 @@ msgid ""
 "All your answers have been validated! You can now download the training "
 "testimonial below."
 msgstr ""
-"Toutes vos consulations fictives ont été validées ! Vous pouvez désormais "
+"Toutes vos consultations fictives ont été validées ! Vous pouvez désormais "
 "télécharger l'attestion de formation ci-dessous."
 
 #: views/pro.py:159
 msgid "You have successfully saved your answer"
-msgstr "Vous avez enregistré votre reponse avec succès"
+msgstr "Vous avez enregistré votre consultation avec succès"
 
 #: views/pro.py:161
 msgid "You have successfully submitted your answer"
-msgstr "Vous avez soumis votre reponse avec succès"
+msgstr "Vous avez soumis votre consultation avec succès"
 
 #: views/pro.py:359
 msgid "You have successfully sumitted your evaluation"
@@ -1551,12 +1557,6 @@ msgstr "Vous avez soumis votre évaluation avec succès"
 
 #~ msgid "Step 4 : answer to these questions"
 #~ msgstr "Étape 4 : réaliser ces consultations fictives"
-
-#~ msgid "Step 5 : read these corrected documents"
-#~ msgstr "Étape 5 : lire ces documents corrigés"
-
-#~ msgid "Step 5 : read this corrected document"
-#~ msgstr "Étape 5 : lire ce document corrigé"
 
 #~ msgid "Access to the seminar"
 #~ msgstr "Accéder au séminaire"
