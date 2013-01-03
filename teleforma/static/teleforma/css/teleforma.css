@@ -1515,6 +1515,10 @@ input,textarea{
     overflow: auto;
     }
 
+.media {
+    margin-top: 0.5em;
+}
+
 .course_media {
     float: left;
     background-color: transparent;
