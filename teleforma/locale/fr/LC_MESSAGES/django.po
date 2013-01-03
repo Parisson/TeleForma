@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-03 02:11+0100\n"
+"POT-Creation-Date: 2013-01-03 02:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -1070,11 +1070,11 @@ msgstr "réaliser ces consultations fictives"
 
 #: templates/teleforma/seminar_detail.html:116
 msgid "read these corrected documents"
-msgstr "Étape 5 : lire ces corrigés"
+msgstr "lire ces corrigés"
 
 #: templates/teleforma/seminar_detail.html:116
 msgid "read this corrected document"
-msgstr "Étape 5 : lire ce corrigé"
+msgstr "lire ce corrigé"
 
 #: templates/teleforma/seminar_detail.html:135
 msgid "download your testimonial"
