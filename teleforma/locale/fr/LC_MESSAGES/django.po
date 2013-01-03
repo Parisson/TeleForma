@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-03 02:18+0100\n"
+"POT-Creation-Date: 2013-01-03 09:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -1249,7 +1249,7 @@ msgstr "Bureau"
 
 #: templates/telemeta/base.html:104
 msgid "Contact us"
-msgstr "Contactez-nous"
+msgstr "Nous contacter"
 
 #: templates/telemeta/base.html:107 templates/telemeta/users.html:6
 #: templates/telemeta/users.html.py:43
