@@ -107,10 +107,15 @@ class SeminarView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = self.get_object()
-        context['seminar_progress'] = seminar_progress(self.request.user, seminar)
-        context['seminar_validated'] = seminar_validated(self.request.user, seminar)
+        progress = seminar_progress(self.request.user, seminar)
+        validated = seminar_validated(self.request.user, seminar)
+        context['seminar_progress'] = progress
+        context['seminar_validated'] = validated
+        if progress == 100 and not validated:
+            messages.warning(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
+        elif validated:
+            messages.info(self.request, _("All your answers have been validated! You can now download the training testimonial below."))
         return context
-
 
 class SeminarsView(ListView):
 
@@ -150,9 +155,7 @@ class AnswerView(FormView):
         answer.user = self.request.user
         answer.question = self.question
         answer.save()
-        if seminar_terminated(self.request.user, answer.question.seminar):
-            messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
-        elif answer.status <= 2:
+        if answer.status <= 2:
             messages.info(self.request, _("You have successfully saved your answer"))
         elif answer.status == 3:
             messages.info(self.request, _("You have successfully submitted your answer"))
