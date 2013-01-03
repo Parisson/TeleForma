@@ -213,106 +213,6 @@ class Room(Model):
         verbose_name = _('room')
 
 
-class Conference(Displayable):
-
-    sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
-    public_id       = models.CharField(_('public id'), max_length=255, blank=True)
-    department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
-    period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
-    course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'))
-    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
-    professor       = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
-    session         = models.CharField(_('session'), choices=session_choices,
-                                      max_length=16, default="1")
-    room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
-                                 null=True, blank=True)
-    comment         = ShortTextField(_('comment'), max_length=255, blank=True)
-    date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
-    date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
-    price           = models.FloatField(_('price'), blank=True, null=True)
-    readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
-                                        blank=True, null=True)
-
-    notes = generic.GenericRelation(Note)
-
-    @property
-    def slug_streaming(self):
-        slug = '-'.join([self.course.department.slug,
-                         self.course.slug,
-                         self.course_type.name.lower()])
-        return slug
-
-    def get_absolute_url(self):
-        return reverse('conference-view', kwargs={"pk": self.id})
-
-    def __unicode__(self):
-        if self.professor:
-            list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
-                           self.professor.user.first_name,
-                           self.professor.user.last_name,
-                           str(self.date_begin)]
-        else:
-            list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
-                           str(self.date_begin)]
-        return ' - '.join(list)
-
-    def save(self, **kwargs):
-        self.course.save()
-        super(Conference, self).save(**kwargs)
-
-
-    def to_dict(self):
-        dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
-                {'id':'organization','value': self.course.department.organization, 'class':'', 'label': 'Organization'},
-                {'id': 'department', 'value': self.course.department , 'class':'', 'label': 'Department'},
-                {'id': 'period', 'value': self.period, 'class':'', 'label': 'Period'},
-                {'id': 'professor', 'value': self.professor, 'class':'' , 'label': 'Professor'},
-                {'id': 'session', 'value': self.session, 'class':'' , 'label': 'Session'},
-                {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
-                ]
-        return dict
-
-    def to_json_dict(self):
-        data = {'id': self.public_id, 
-                'course_code': self.course.code,
-                'course_type': self.course_type.name, 
-                'professor_id': self.professor.user.username,
-                'period': self.period.name, 
-                'department': self.department.name,
-                'session': self.session,
-                'comment': self.comment,
-                'streams': [] }
-
-        if self.room:
-            data['room'] = self.room.name
-            data['organization'] = self.room.organization.name
-
-        streams = self.livestream.all()
-        if streams:
-            for stream in streams:
-                data['streams'].append({'host': stream.server.host,
-                                        'port': stream.server.port,
-                                        'server_type': stream.server.type,
-                                        'stream_type': stream.stream_type  })
-        return data
-
-    def public_url(self):
-        """
-        Get a public fully qualified URL for the object
-        """
-        url = reverse('teleforma-conference-detail', kwargs={'pk':self.id})
-        return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
-
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'conference'
-        verbose_name = _('conference')
-        ordering = ['-date_begin']
-
 
 class StreamingServer(Model):
 
@@ -529,6 +429,111 @@ class Media(MediaBase):
         ordering = ['-date_modified']
 
 
+class Conference(Displayable):
+
+    sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
+    public_id       = models.CharField(_('public id'), max_length=255, blank=True)
+    department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
+    period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
+    course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'))
+    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
+    professor       = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
+    session         = models.CharField(_('session'), choices=session_choices,
+                                      max_length=16, default="1")
+    room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
+                                 null=True, blank=True)
+    comment         = ShortTextField(_('comment'), max_length=255, blank=True)
+    date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
+    date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
+    price           = models.FloatField(_('price'), blank=True, null=True)
+    readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
+                                        blank=True, null=True)
+    docs_description = models.ManyToManyField(Document, related_name="conference_docs_description", 
+                                        verbose_name=_('description documents'),
+                                        blank=True, null=True)
+    notes = generic.GenericRelation(Note)
+
+    @property
+    def slug_streaming(self):
+        slug = '-'.join([self.course.department.slug,
+                         self.course.slug,
+                         self.course_type.name.lower()])
+        return slug
+
+    def get_absolute_url(self):
+        return reverse('conference-view', kwargs={"pk": self.id})
+
+    def __unicode__(self):
+        if self.professor:
+            list = [self.course.department.name, self.course.title,
+                           self.course_type.name, self.session,
+                           self.professor.user.first_name,
+                           self.professor.user.last_name,
+                           str(self.date_begin)]
+        else:
+            list = [self.course.department.name, self.course.title,
+                           self.course_type.name, self.session,
+                           str(self.date_begin)]
+        return ' - '.join(list)
+
+    def save(self, **kwargs):
+        self.course.save()
+        super(Conference, self).save(**kwargs)
+
+
+    def to_dict(self):
+        dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
+                {'id':'organization','value': self.course.department.organization, 'class':'', 'label': 'Organization'},
+                {'id': 'department', 'value': self.course.department , 'class':'', 'label': 'Department'},
+                {'id': 'period', 'value': self.period, 'class':'', 'label': 'Period'},
+                {'id': 'professor', 'value': self.professor, 'class':'' , 'label': 'Professor'},
+                {'id': 'session', 'value': self.session, 'class':'' , 'label': 'Session'},
+                {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
+                ]
+        return dict
+
+    def to_json_dict(self):
+        data = {'id': self.public_id, 
+                'course_code': self.course.code,
+                'course_type': self.course_type.name, 
+                'professor_id': self.professor.user.username,
+                'period': self.period.name, 
+                'department': self.department.name,
+                'session': self.session,
+                'comment': self.comment,
+                'streams': [] }
+
+        if self.room:
+            data['room'] = self.room.name
+            data['organization'] = self.room.organization.name
+
+        streams = self.livestream.all()
+        if streams:
+            for stream in streams:
+                data['streams'].append({'host': stream.server.host,
+                                        'port': stream.server.port,
+                                        'server_type': stream.server.type,
+                                        'stream_type': stream.stream_type  })
+        return data
+
+    def public_url(self):
+        """
+        Get a public fully qualified URL for the object
+        """
+        url = reverse('teleforma-conference-detail', kwargs={'pk':self.id})
+        return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'conference'
+        verbose_name = _('conference')
+        ordering = ['-date_begin']
+
+
+
+
 class NamePaginator(object):
     """Pagination for string-based objects"""
 
@@ -636,4 +641,5 @@ class NamePage(object):
             return self.start_letter
         else:
             return '%c-%c' % (self.start_letter, self.end_letter)
+
 

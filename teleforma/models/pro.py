@@ -96,12 +96,13 @@ class Seminar(Displayable):
     magistral       = models.BooleanField(_('magistral'))
     index           = tinymce.models.HTMLField(_('index'), blank=True)
     duration        = DurationField(_('approximative duration'))
-    
     professor       = models.ManyToManyField('Professor', related_name='seminar', 
                                             verbose_name=_('professor'), blank=True, null=True)
-
+    docs_description = models.ManyToManyField(Document, related_name="seminar_docs_description", 
+                                        verbose_name=_('description documents'),
+                                        blank=True, null=True)
     docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1", 
-                                        verbose_name=_('document 1'),
+                                        verbose_name=_('documents 1'),
                                         blank=True, null=True)
     media           = models.ManyToManyField(MediaPackage, related_name="seminar",
                                         verbose_name=_('media'),
@@ -110,14 +111,13 @@ class Seminar(Displayable):
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
     docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",
-                                        verbose_name=_('document 2'),
+                                        verbose_name=_('documents 2'),
                                         blank=True, null=True)
     docs_correct    = models.ManyToManyField(Document, related_name="seminar_docs_correct",
-                                        verbose_name=_('corrected document'),
+                                        verbose_name=_('corrected documents'),
                                         blank=True, null=True)
     form            = models.ForeignKey(Form, related_name='seminar', verbose_name=_('form'),
                                         blank=True, null=True)
-
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
 

@@ -490,4 +490,3 @@ class TestimonialDownloadView(TestimonialView):
         filename += '.pdf'
         return filename.encode('utf-8')
 
-
