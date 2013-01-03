@@ -80,7 +80,7 @@ def seminar_terminated(user, seminar):
     questions = seminar.question.all()
     if questions:
         for question in questions:
-            answers = Answer.objects.filter(question=question, user=user)
+            answers = Answer.objects.filter(question=question, user=user, status=3)
             if answers:
                 validated.append(True)
             else:

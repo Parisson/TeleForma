@@ -1692,7 +1692,7 @@ input,textarea{
 
 .info {
     color: white;
-    padding: 0.3em;
+    padding: 0.3em 0.3em 0.5em 0.5em;
     background-color: green; 
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
@@ -1702,7 +1702,7 @@ input,textarea{
 .success {
     margin-top: 1em;
     color: white;
-    padding: 0.3em;
+    padding: 0.3em 0.3em 0.5em 0.5em;
     background-color: green; 
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
