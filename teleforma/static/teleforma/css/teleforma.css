@@ -15,6 +15,29 @@ body {
     background-repeat:repeat
 }
 
+/* LAYOUT  (sticking footer) */
+
+* {
+margin: 0;
+}
+
+html, body {
+height: 100%;
+}
+
+#layout {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+margin: 0 auto -58px;
+}
+
+#footer {
+height: 30px;
+}
+
+
+
 /*a:link, a:visited {
     color: #BB0000;
     text-decoration:none;
@@ -66,28 +89,34 @@ a img { border: none; }
 
 #content ul, #content ul ul, #content ol {
     list-style: square;
-    padding: .7em;
+    padding: .5em;
     padding-left: 2em;
     font-size: 0.8em;
     clear: both;
 }
+
 #content ul ul {
-    font-size: 1.1em;
-    padding-left: 0;
+    font-size: 0.9em;
+    padding-left: 0em;
+    list-style: circle;
 }
+
 #content li {
     padding: .2em;
-    padding-left: 0;
+    padding-left: 0em;
 }
+
 #content li a {
-    padding: .1em 0;
+    padding: .1em 0em;
 }
+
 #content h1 {
     color: #000000;
     font-weight: bold;
     display:  inline;
     font-size: 1.2em;
 }
+
 #content h3 {
     color: #000000;
     font-weight: bold;
@@ -1797,6 +1826,7 @@ form .exceed{
     font: 1em Verdana, sans-serif;
     line-height: 1.3em;
     color: #333;   
+    width: 100%;
 }
 
 
@@ -1856,28 +1886,32 @@ form .exceed{
 }
 
 
+#index ul, #index ul ul, #index ol {
+    list-style: square;
+    padding: .3em;
+    padding-left: 2em;
+    font-size: 1em;
+    clear: both;
+}
+
+#index ul ul {
+    font-size: 0.9em;
+    padding-left: 0em;
+    list-style: circle;
+}
+
+#index li {
+    padding: .2em;
+    padding-left: 0em;
+}
+
+#index li a {
+    padding: .1em 0em;
+}
+
+
 #_Form p {
     font-weight: bold;
 }
 
-
-/* LAYOUT  (sticking footer) */
-
-* {
-margin: 0;
-}
-
-html, body {
-height: 100%;
-}
-
-#layout {
-min-height: 100%;
-height: auto !important;
-height: 100%;
-margin: 0 auto -58px;
-}
-#footer {
-height: 30px;
-}
 
