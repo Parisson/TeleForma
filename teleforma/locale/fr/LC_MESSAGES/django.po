@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-07 11:19+0100\n"
+"POT-Creation-Date: 2013-01-07 11:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -1142,7 +1142,7 @@ msgstr "Date de fin de formation"
 
 #: templates/teleforma/seminars.html:112
 msgid "Access"
-msgstr "Accès"
+msgstr "Accéder"
 
 #: templates/teleforma/testimonials.html:7
 #: templates/teleforma/testimonials.html:45
