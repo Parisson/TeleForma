@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-03 09:55+0100\n"
+"POT-Creation-Date: 2013-01-07 11:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -21,8 +21,8 @@ msgstr ""
 msgid "user"
 msgstr "utilisateur"
 
-#: models/ae.py:47 models/core.py:135 models/core.py:222 models/core.py:432
-#: models/core.py:490 models/crfpa.py:64 models/crfpa.py:109
+#: models/ae.py:47 models/core.py:135 models/core.py:332 models/core.py:390
+#: models/core.py:438 models/crfpa.py:64 models/crfpa.py:109
 msgid "period"
 msgstr "période"
 
@@ -55,15 +55,14 @@ msgid "Public"
 msgstr "Publié"
 
 #: models/core.py:92 models/core.py:104 models/core.py:127 models/core.py:139
-#: models/core.py:205 models/core.py:409 models/crfpa.py:47 models/crfpa.py:63
+#: models/core.py:205 models/core.py:309 models/crfpa.py:47 models/crfpa.py:63
 #: models/pro.py:74
 msgid "name"
 msgstr "nom"
 
 #: models/core.py:93 models/core.py:105 models/core.py:128 models/core.py:140
-#: models/core.py:155 models/core.py:206 models/core.py:324 models/core.py:390
-#: models/core.py:410 models/crfpa.py:48 models/pro.py:160 models/pro.py:206
-#: templates/teleforma/inc/seminar_description.html:11
+#: models/core.py:155 models/core.py:206 models/core.py:224 models/core.py:290
+#: models/core.py:310 models/crfpa.py:48 models/pro.py:160 models/pro.py:206
 msgid "description"
 msgstr "description"
 
@@ -83,27 +82,27 @@ msgstr "adresse"
 msgid "Signature image"
 msgstr ""
 
-#: models/core.py:122 models/core.py:153 models/core.py:220
+#: models/core.py:122 models/core.py:153 models/core.py:436
 msgid "department"
 msgstr "département"
 
-#: models/core.py:147 models/core.py:225 models/core.py:429 models/core.py:488
+#: models/core.py:147 models/core.py:329 models/core.py:388 models/core.py:441
 msgid "course type"
 msgstr "type de matière"
 
-#: models/core.py:154 models/core.py:188 models/core.py:389 models/pro.py:159
+#: models/core.py:154 models/core.py:188 models/core.py:289 models/pro.py:159
 msgid "title"
 msgstr "titre"
 
-#: models/core.py:156 models/core.py:394 models/crfpa.py:62
+#: models/core.py:156 models/core.py:294 models/crfpa.py:62
 msgid "code"
 msgstr "cote"
 
-#: models/core.py:157 models/core.py:393 models/pro.py:122
+#: models/core.py:157 models/core.py:293 models/pro.py:122
 msgid "date modified"
 msgstr "date de modification"
 
-#: models/core.py:158 models/core.py:437 models/core.py:495 models/pro.py:60
+#: models/core.py:158 models/core.py:337 models/core.py:395 models/pro.py:60
 #: models/pro.py:95 models/pro.py:162 models/pro.py:227
 msgid "rank"
 msgstr "rang"
@@ -124,126 +123,132 @@ msgstr "magistral"
 msgid "types"
 msgstr "types"
 
-#: models/core.py:177 models/core.py:224 models/core.py:426 models/core.py:486
-#: models/pro.py:90 templates/teleforma/inc/seminar_description.html:5
+#: models/core.py:177 models/core.py:326 models/core.py:386 models/core.py:440
+#: models/pro.py:90 templates/teleforma/inc/seminar_description.html:9
 msgid "course"
 msgstr "matière"
 
-#: models/core.py:199 models/core.py:226 models/pro.py:101
+#: models/core.py:199 models/core.py:442 models/pro.py:100
 msgid "professor"
 msgstr "professeur"
 
-#: models/core.py:213 models/core.py:230
+#: models/core.py:213 models/core.py:446
 msgid "room"
 msgstr "salle"
 
-#: models/core.py:218 models/pro.py:91
-msgid "sub title"
-msgstr "sous-titre"
-
-#: models/core.py:219
-msgid "public id"
-msgstr "id public"
-
-#: models/core.py:228
-msgid "session"
-msgstr "session"
-
-#: models/core.py:232
-msgid "comment"
-msgstr "commentaire"
-
-#: models/core.py:233
-msgid "begin date"
-msgstr "date de début"
-
-#: models/core.py:234
-msgid "end date"
-msgstr "date de fin"
-
-#: models/core.py:235 models/pro.py:94
-msgid "price"
-msgstr "prix"
-
-#: models/core.py:236 models/core.py:440 models/core.py:496 models/pro.py:52
-msgid "readers"
-msgstr ""
-
-#: models/core.py:313 models/core.py:341 models/core.py:430 models/core.py:484
-msgid "conference"
-msgstr "conférence"
-
-#: models/core.py:321
+#: models/core.py:221
 msgid "host"
 msgstr "hôte"
 
-#: models/core.py:322
+#: models/core.py:222
 msgid "port"
 msgstr "port"
 
-#: models/core.py:323 models/core.py:434 models/core.py:494 models/pro.py:88
+#: models/core.py:223 models/core.py:334 models/core.py:394 models/pro.py:88
 msgid "type"
 msgstr "type"
 
-#: models/core.py:325
+#: models/core.py:225
 msgid "source password"
 msgstr ""
 
-#: models/core.py:326
+#: models/core.py:226
 msgid "admin password"
 msgstr ""
 
-#: models/core.py:333 models/core.py:344
+#: models/core.py:233 models/core.py:244
 msgid "streaming server"
 msgstr "serveur de diffusion"
 
-#: models/core.py:345
+#: models/core.py:241 models/core.py:330 models/core.py:384 models/core.py:531
+msgid "conference"
+msgstr "conférence"
+
+#: models/core.py:245
 msgid "Streaming type"
 msgstr "Type de flux"
 
-#: models/core.py:347
+#: models/core.py:247
 msgid "streaming"
 msgstr "diffusion"
 
-#: models/core.py:383
+#: models/core.py:283
 msgid "live stream"
 msgstr "stream en direct"
 
-#: models/core.py:391
+#: models/core.py:291
 msgid "credits"
 msgstr "crédits"
 
-#: models/core.py:392 models/pro.py:121 models/pro.py:185 models/pro.py:228
+#: models/core.py:292 models/pro.py:121 models/pro.py:185 models/pro.py:228
 msgid "date added"
 msgstr "date d'ajout"
 
-#: models/core.py:395
+#: models/core.py:295
 msgid "published"
 msgstr "publié"
 
-#: models/core.py:396
+#: models/core.py:296
 msgid "mime type"
 msgstr "Type mime"
 
-#: models/core.py:397 models/pro.py:163
+#: models/core.py:297 models/pro.py:163
 msgid "weight"
 msgstr "poids"
 
-#: models/core.py:411
+#: models/core.py:311
 msgid "number"
 msgstr "nombre"
 
-#: models/core.py:418
+#: models/core.py:318
 msgid "document type"
 msgstr "type de document"
 
-#: models/core.py:436
+#: models/core.py:336
 msgid "annal"
 msgstr "annale"
 
-#: models/core.py:438 models/pro.py:225
+#: models/core.py:338 models/pro.py:225
 msgid "file"
 msgstr "fichier"
+
+#: models/core.py:340 models/core.py:396 models/core.py:452 models/pro.py:52
+msgid "readers"
+msgstr ""
+
+#: models/core.py:434 models/pro.py:91
+#: templates/teleforma/inc/seminar_description.html:7
+msgid "sub title"
+msgstr "sous-titre"
+
+#: models/core.py:435
+msgid "public id"
+msgstr "id public"
+
+#: models/core.py:444
+msgid "session"
+msgstr "session"
+
+#: models/core.py:448
+msgid "comment"
+msgstr "commentaire"
+
+#: models/core.py:449
+msgid "begin date"
+msgstr "date de début"
+
+#: models/core.py:450
+msgid "end date"
+msgstr "date de fin"
+
+#: models/core.py:451 models/pro.py:94
+msgid "price"
+msgstr "prix"
+
+#: models/core.py:455 models/pro.py:102
+#, fuzzy
+msgid "description documents"
+msgstr "description"
 
 #: models/crfpa.py:55 models/crfpa.py:56
 #: templates/telemeta/profile_detail.html:63
@@ -344,11 +349,11 @@ msgstr ""
 msgid "Seminar type"
 msgstr "Type de séminaire"
 
-#: models/pro.py:92 templates/teleforma/inc/seminar_description.html:7
+#: models/pro.py:92
 msgid "public concerned"
 msgstr "public concerné"
 
-#: models/pro.py:93 templates/teleforma/inc/seminar_description.html:6
+#: models/pro.py:93 templates/teleforma/inc/seminar_description.html:11
 msgid "level"
 msgstr "niveau"
 
@@ -360,27 +365,30 @@ msgstr "index"
 msgid "approximative duration"
 msgstr "durée approximative"
 
-#: models/pro.py:104
-msgid "document 1"
+#: models/pro.py:105
+#, fuzzy
+msgid "documents 1"
 msgstr "document 1"
 
-#: models/pro.py:107
+#: models/pro.py:108
 msgid "media"
 msgstr "médias"
 
-#: models/pro.py:110
+#: models/pro.py:111
 msgid "media_preview"
 msgstr ""
 
-#: models/pro.py:113
-msgid "document 2"
+#: models/pro.py:114
+#, fuzzy
+msgid "documents 2"
 msgstr "document 2"
 
-#: models/pro.py:116
-msgid "corrected document"
+#: models/pro.py:117
+#, fuzzy
+msgid "corrected documents"
 msgstr "document corrigé"
 
-#: models/pro.py:118
+#: models/pro.py:119
 msgid "form"
 msgstr "formulaire"
 
@@ -1121,7 +1129,6 @@ msgid "Training type"
 msgstr "Type de formation"
 
 #: templates/teleforma/seminar_testimonial.html:42
-#: templates/teleforma/inc/seminar_description.html:9
 msgid "keywords"
 msgstr "mots clés"
 
@@ -1132,6 +1139,10 @@ msgstr "Date de début de formation"
 #: templates/teleforma/seminar_testimonial.html:47
 msgid "Training end date"
 msgstr "Date de fin de formation"
+
+#: templates/teleforma/seminars.html:112
+msgid "Access"
+msgstr "Accès"
 
 #: templates/teleforma/testimonials.html:7
 #: templates/teleforma/testimonials.html:45
@@ -1235,11 +1246,11 @@ msgstr "enregistrée le"
 msgid "Validated"
 msgstr "validé"
 
-#: templates/teleforma/inc/seminar_description.html:8
+#: templates/teleforma/inc/seminar_description.html:12
 msgid "duration"
 msgstr "durée"
 
-#: templates/teleforma/inc/seminar_description.html:8
+#: templates/teleforma/inc/seminar_description.html:12
 msgid "hours"
 msgstr "heures"
 
