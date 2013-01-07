@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-07 11:25+0100\n"
+"POT-Creation-Date: 2013-01-07 11:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -807,8 +807,8 @@ msgstr "Général"
 #: templates/teleforma/evaluation_form.html:22
 #: templates/teleforma/seminar_media_audio.html:102
 #: templates/teleforma/seminar_media_video.html:136
-msgid "Steps"
-msgstr "Étapes"
+msgid "My steps"
+msgstr "Mes étapes"
 
 #: templates/teleforma/answers.html:6 templates/teleforma/answers.html:62
 #: templates/telemeta/base.html:112
@@ -1538,6 +1538,9 @@ msgstr "Vous avez soumis votre consultation avec succès"
 #: views/pro.py:359
 msgid "You have successfully sumitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid "Steps"
+#~ msgstr "Étapes"
 
 #~ msgid "Answer to the following question"
 #~ msgstr "Réalisez la consultation fictive suivante"
