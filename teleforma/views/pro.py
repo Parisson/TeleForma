@@ -363,8 +363,7 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
     context['form'] = form
     context['seminar_progress'] = seminar_progress(request.user, seminar)
     
-    return render_to_response(template, context, request_context)
-
+    return render_to_response(template, context, request_context)    
 
 
 class PDFTemplateResponseMixin(TemplateResponseMixin):

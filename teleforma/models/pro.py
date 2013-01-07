@@ -43,6 +43,7 @@ from teleforma.models.core import *
 from forms_builder.forms.models import Form
 from django.core.urlresolvers import reverse
 
+
 class MediaPackage(MediaBase):
     "Media resource package handling multiple (audio and video) media types"
 
@@ -67,6 +68,7 @@ class MediaPackage(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media_package'
+        ordering = ['rank']
 
 
 class SeminarType(models.Model):
