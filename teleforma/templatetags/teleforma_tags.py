@@ -281,3 +281,7 @@ def hours(time):
 def point(time):
     return str(time)
 
+@register.filter
+def preview(related):
+    return related.filter(title='preview')[0]
+
