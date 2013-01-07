@@ -10,6 +10,5 @@
 {% endif %}
 <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
 <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration|hours }} {% trans "hours" %}</dd>
-{% if seminar.keywords.all %}<dt>{% trans "keywords" %}</dt><dd><div class="keywords">{% for kw in seminar.keywords.all %}{{ kw }}{% if not forloop.last %},{% endif %} {% endfor %}</div></dd>{% endif %}
 
 </dl>
