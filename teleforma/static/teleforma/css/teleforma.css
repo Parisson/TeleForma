@@ -91,7 +91,7 @@ a img { border: none; }
     list-style: square;
     padding: .5em;
     padding-left: 2em;
-    font-size: 0.8em;
+    font-size: 1em;
     clear: both;
 }
 
@@ -1804,12 +1804,7 @@ form .exceed{
         color: #000 ;
         font-weight: normal;
         max-height: 450px;
-        overflow-y: auto;
-    
-}
-
-.progress li {
-    font-size: 1.2em;
+        overflow-y: auto;   
 }
 
 .ui-progressbar  {
