@@ -67,7 +67,7 @@
 <dl class="listing">
 
 
-<dt>{% trans "Seminar" %}</dt><dd><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</a></dd>
+<dt>{% trans "Title" %}</dt><dd>{{ media_package.video.all.0.item.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</dd>
 
 {% with seminar.professor.all as professors %}
   {% if professors %}

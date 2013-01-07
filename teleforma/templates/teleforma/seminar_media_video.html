@@ -97,11 +97,11 @@ $(window).ready(function(){
 {% endif %}
 
 {% block general_info %}
+
 <div class="course_content" id="media_infos">
 <dl class="listing">
 
-
-<dt>{% trans "Seminar" %}</dt><dd><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</a></dd>
+<dt>{% trans "Title" %}</dt><dd>{{ media_package.video.all.0.item.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</dd>
 
 {% with seminar.professor.all as professors %}
   {% if professors %}
@@ -109,7 +109,6 @@ $(window).ready(function(){
     <dd>{% for professor in professors %}{{ professor }}{% if not forloop.last %},{% endif %} {% endfor %}</a></dd>
   {% endif %}
 {% endwith %}
-                    
 {% if user.is_staff or user.is_superuser %}
 <dt>{% trans "Mime type" %}</dt>
 {% with media_package.video.all as mimetypes %}
@@ -120,9 +119,9 @@ $(window).ready(function(){
 <dt>{% trans "Media package ID" %}</dt><dd>{{ media_package.id }}</dd>
 {% endif %}
 
-
 </dl>
 </div>
+
 {% endblock general_info %}
 
 </div>
