@@ -101,7 +101,15 @@
 <div class="module">
   <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "My steps" %}</h3>
  <div id="index">
-  {% include "teleforma/inc/steps.html" %}
+
+  <ul>
+  {% for marker in media_package.video.all.0.item.markers.all %}
+  {% if not forloop.first %}
+  <li>{{ marker.title }}</li>
+  {% endif %}
+  {% endfor %}
+  </ul>
+
  </div>
 </div>
 {% endblock index %}
