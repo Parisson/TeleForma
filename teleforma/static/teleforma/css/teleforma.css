@@ -1539,8 +1539,8 @@ input,textarea{
 }
 
 .course_content p {
-    padding: 0.5em 0.8em 0.8em 0.8em;
-    margin-top: 0.8em;
+    padding: 0em 0.8em 0em 0.8em;
+    margin-top: 0em;
     overflow: auto;
     }
 
@@ -1877,7 +1877,7 @@ form .exceed{
 }
 
 #index p, ul {
-    margin: 0.5em;
+    margin: 0em 0.5em 0em 0.5em;
 }
 
 
@@ -1890,8 +1890,8 @@ form .exceed{
 }
 
 #index ul ul {
-    font-size: 0.9em;
-    padding-left: 0em;
+    font-size: 1em;
+    padding-left: 1em;
     list-style: circle;
 }
 
