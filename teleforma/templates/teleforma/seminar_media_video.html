@@ -88,7 +88,7 @@ $(window).ready(function(){
 <div class="video">
 <video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
 {% for media in media_package.video.all|free_first %}
-    <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+    <source src="{{ MEDIA_URL }}{{ media.item.file }}#t=0" type="{{ media.mime_type }}" />
 {% endfor %}
 </video>
 </div>
@@ -132,9 +132,32 @@ $(window).ready(function(){
 
 {% block index %}
 <div class="module">
-  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "My steps" %}</h3>
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Shortcuts" %}</h3>
  <div id="index">
-  {% include "teleforma/inc/steps.html" %}
+  <ul>
+  {% for marker in media_package.video.all.0.item.markers.all %}
+  {% if not forloop.first %}
+  <li><a href="#" onclick="jumpToTimeoffset({{ marker.time|point }});">{{ marker.title }}</a></li>
+  {% endif %}
+  {% endfor %}
+  </ul>
  </div>
 </div>
+
+<script type="text/javascript">
+
+var video = $('#my_video_1');
+var Player = _V_("my_video_1");
+
+// jump to time offset action
+function jumpToTimeoffset(time) {
+    // Player.currentTime(time);
+    var url = video.attr("src")
+    var abs_url = url.split("#")[0];
+    video.attr("src", abs_url + '#t=' + String(time));
+    Player.play();    
+}
+
+</script>
+
 {% endblock index %}

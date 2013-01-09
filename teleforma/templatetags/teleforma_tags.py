@@ -277,3 +277,11 @@ def admin_username():
 def hours(time):
     return str(int(str(time).split(':')[0]))
 
+@register.filter
+def point(time):
+    return str(time)
+
+@register.filter
+def preview(related):
+    return related.filter(title='preview')[0]
+
