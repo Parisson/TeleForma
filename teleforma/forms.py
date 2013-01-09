@@ -21,7 +21,7 @@ class AnswerForm(ModelForm):
     def __init__(self, *args, **kwargs): 
         super(AnswerForm, self).__init__(*args, **kwargs)
         self.fields['answer'].widget.attrs['cols'] = 81
-        self.fields['answer'].widget.attrs['rows'] = 40
+        self.fields['answer'].widget.attrs['rows'] = 32
         self.fields['status'].widget = HiddenInput()
 
     class Meta:
