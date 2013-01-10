@@ -47,6 +47,9 @@ class CourseAdmin(admin.ModelAdmin):
     ordering = ['number']
     filter_horizontal = ['types']
 
+class CourseDomainAdmin(admin.ModelAdmin):
+    filter_horizontal = ['courses']
+
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
@@ -88,6 +91,7 @@ admin.site.register(Period)
 
 admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseType)
+admin.site.register(CourseDomain, CourseDomainAdmin)
 admin.site.register(Conference, ConferenceAdmin)
 # admin.site.register(IEJ)
 

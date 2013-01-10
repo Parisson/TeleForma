@@ -51,6 +51,15 @@ $(window).ready(function(){
 
 {% endblock extra_javascript %}
 
+{% block submodules %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "My steps" %}</h3>
+ <div id="index">
+  {% include "teleforma/inc/steps.html" %}
+ </div>
+</div>
+{% endblock submodules %}
+
 {% block module-action %}
 {% for media in media_package.video.all %}
     {% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}

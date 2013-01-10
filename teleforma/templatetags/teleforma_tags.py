@@ -285,3 +285,14 @@ def point(time):
 def preview(related):
     return related.filter(title='preview')[0]
 
+@register.filter
+def fancy_duration(duration):
+    time = ''
+    d = unicode(duration).split(':')
+    hours = int(d[0])
+    minutes = int(d[1])
+    if hours:
+        time += str(hours) + 'h'
+    time += str(minutes) + 'mn'
+    return time
+    

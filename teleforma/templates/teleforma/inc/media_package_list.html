@@ -36,7 +36,7 @@
                     {% if media.description %}
                     <dt>{% trans "Description" %}</dt><dd>{{ media.description }}</dd>
                     {% endif %}
-                    <dt>{% trans "Duration" %}</dt><dd>{{ media.item.approx_duration }}</dd>
+                    <dt>{% trans "Duration" %}</dt><dd>{{ media.item.approx_duration|fancy_duration }}</dd>
                     </dl>
                  </div>
             </td>

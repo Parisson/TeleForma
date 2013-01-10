@@ -39,6 +39,17 @@ $(document).ready(function(){
 {% endblock extra_javascript %}
 
 
+{% block extra_stylesheets %}{% endblock %}
+
+{% block submodules %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "My steps" %}</h3>
+ <div id="index">
+  {% include "teleforma/inc/steps.html" %}
+ </div>
+</div>
+{% endblock submodules %}
+
 {% block course_content %}
 
 <div class="course_content">
@@ -90,10 +101,4 @@ $(document).ready(function(){
 
 
 {% block index %}
-<div class="module">
-  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "My steps" %}</h3>
- <div id="index">
-  {% include "teleforma/inc/steps.html" %}
- </div>
-</div>
 {% endblock index %}

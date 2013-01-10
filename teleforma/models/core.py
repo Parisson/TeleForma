@@ -178,6 +178,22 @@ class Course(Model):
         ordering = ['number']
 
 
+class CourseDomain(Model):
+    """A bunch of courses"""
+
+    name            = CharField(_('name'), max_length=255)
+    courses         = ManyToManyField('Course', related_name="domain",
+                                        verbose_name=_('courses'),
+                                        blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'domain'
+        verbose_name = _('domain')
+
+
 class Professor(Model):
 
     user            = ForeignKey(User, related_name='professor',
@@ -359,6 +375,8 @@ class Document(MediaBase):
         if self.course_type.all():
             types = ' - '.join([unicode(t) for t in self.course_type.all()])
             strings.append(unicode(types))
+        if self.type:
+            strings.append(type.name)
         strings.append(self.title)
         return ' - '.join(strings) 
 
