@@ -72,7 +72,7 @@ class Command(BaseCommand):
                 root_list = root.split(os.sep)
 
                 if ext in self.original_format and not 'preview' in root_list \
-                            and not 'preview' in filename:
+                            and not 'preview' in filename and filename[0] != '.':
                                         # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
                     if len(root_list[-1]) != 1:
