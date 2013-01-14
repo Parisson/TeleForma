@@ -82,7 +82,7 @@ class Seminar(Displayable):
     medias          = models.ManyToManyField(Media, related_name="seminar",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    media_previews  = models.ManyToManyField(Media, related_name="seminar_media_preview",
+    media_previews  = models.ManyToManyField(Media, related_name="seminar_media_previews",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
     docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",

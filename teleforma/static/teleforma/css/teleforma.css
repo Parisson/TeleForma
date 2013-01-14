@@ -1913,6 +1913,10 @@ form .exceed{
 }
 
 
+#index .listing a {
+    font-size: .9em;
+}
+
 
 #_Form p {
     font-weight: bold;
