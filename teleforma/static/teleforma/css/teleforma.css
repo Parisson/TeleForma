@@ -89,8 +89,7 @@ a img { border: none; }
 
 #content ul, #content ul ul, #content ol {
     list-style: square;
-    padding: .5em;
-    padding-left: 2em;
+    padding: 0.5em 0.5em 0.5em 2em;
     font-size: 1em;
     clear: both;
 }
@@ -1442,11 +1441,20 @@ input,textarea{
         font-weight: normal;
         max-height: 450px;
         overflow-y: auto;
-        }
+        list-style: none;
+        padding: 0.5em 0.5em 0.5em 1em;
+ }
+
+#module-set-left .module li {
+    background: no-repeat url('/static/teleforma/images/bullet.png') 0%;
+    vertical-align: middle;
+    padding: 0.2em 0.5em 0.2em 1.1em;
+    margin: 0em 0em 0em 0em;
+    font-weight: bold;
+    }
 
 #module-set-left .module a {
     display:inline-block;
-    font-weight: bold;
     }
 
 
