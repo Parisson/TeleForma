@@ -44,33 +44,6 @@ from forms_builder.forms.models import Form
 from django.core.urlresolvers import reverse
 
 
-class MediaPackage(MediaBase):
-    "Media resource package handling multiple (audio and video) media types"
-
-    element_type    = 'media_package'
-
-    readers         = models.ManyToManyField(User, related_name="media_package", 
-                                        verbose_name=_('readers'),
-                                        blank=True, null=True)
-    audio           = models.ManyToManyField(Media, related_name="media_package_audio",
-                                        verbose_name=_('audio items'),
-                                        blank=True, null=True)
-    video           = models.ManyToManyField(Media, related_name="media_package_video", 
-                                        verbose_name=_('video items'),
-                                        blank=True, null=True)
-    rank            = models.IntegerField(_('rank'), blank=True, null=True)
-    
-    def __str__(self):
-        if self.title:
-            return self.title.encode('utf8')
-        else:
-            return 'Unknown'
-
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'media_package'
-        ordering = ['rank']
-
-
 class SeminarType(models.Model):
 
     name            = models.CharField(_('name'), max_length=255, blank=True)
