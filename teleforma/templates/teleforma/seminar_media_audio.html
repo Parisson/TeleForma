@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block module-action %}
-{% for media in media_package.audio.all %}
+{% for media in media.all %}
     {% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
      <div class="module_action"> 
      <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
@@ -19,10 +19,10 @@
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
         
-        <a href="{% url teleforma-media-video seminar.id media_package.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url teleforma-media-video seminar.id media.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Video" %}</a>
         
         {% if user.is_staff %}
-        <a id="publish" href="#" class="{% if media_package.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media_package.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
 
@@ -38,7 +38,6 @@
 <div class="media">
 
 <div style="margin-top:1em;">
-{% with media_package.audio.all.0 as media %}
 {% if media.item.related.all %}
  {% for related in media.item.related.all %}
   {% if related.title == "preview" %}
@@ -48,13 +47,14 @@
 {% else %}
  snapshot
 {% endif %}
-{% endwith %}
 </div>
 
 <div class="audio">
-<audio controls preload="auto">
-    {% for media in media_package.audio.all|free_first %}
-        <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+<audio id="audio_1" controls preload="auto">
+    {% for transcoded in media.item.transcoded.all %}
+     {% if "audio" in transcoded.mime_type %}
+        <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
+     {% endif %}
     {% endfor %}
 </audio>
 </div>
@@ -67,7 +67,7 @@
 <dl class="listing">
 
 
-<dt>{% trans "Title" %}</dt><dd>{{ media_package.video.all.0.item.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</dd>
+<dt>{% trans "Title" %}</dt><dd>{{ media.item.title }} - {{ seminar.sub_title }} - {{ media.rank }}</dd>
 
 {% with seminar.professor.all as professors %}
   {% if professors %}
@@ -77,13 +77,9 @@
 {% endwith %}
 
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Mime type" %}</dt>
-{% with media_package.audio.all as mimetypes %}
-<dd>{% for media in mimetypes %}{{ media.mime_type }}{% if not forloop.last %},{% endif %} {% endfor %}</dd>
-{% endwith %}
-<dt>{% trans "Date added" %}</dt><dd>{{ media_package.date_added }}</dd>
-<dt>{% trans "Date modified" %}</dt><dd>{{ media_package.date_modified }}</dd>
-<dt>{% trans "Media package ID" %}</dt><dd>{{ media_package.id }}</dd>
+<dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
+<dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
+<dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
 {% endif %}
 
 
@@ -99,17 +95,30 @@
 
 {% block index %}
 <div class="module">
-  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "My steps" %}</h3>
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Shortcuts" %}</h3>
  <div id="index">
-
   <ul>
-  {% for marker in media_package.video.all.0.item.markers.all %}
+  {% for marker in media.item.markers.all %}
   {% if not forloop.first %}
-  <li>{{ marker.title }}</li>
+  <li><a href="#" onclick="jumpToTimeoffset({{ marker.time|point }});">{{ marker.title }}</a></li>
   {% endif %}
   {% endfor %}
   </ul>
-
  </div>
 </div>
+
+<script type="text/javascript">
+
+var media = document.getElementById("audio_1");
+
+// jump to time offset action using HTML5
+function jumpToTimeoffset(time) {
+    var url = media.currentSrc;
+    var abs_url = url.split("#")[0];
+    media.currentTime =  time;
+    media.play();
+}
+
+</script>
+
 {% endblock index %}

@@ -106,10 +106,10 @@ class Seminar(Displayable):
     docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1", 
                                         verbose_name=_('documents 1'),
                                         blank=True, null=True)
-    media           = models.ManyToManyField(MediaPackage, related_name="seminar",
+    medias          = models.ManyToManyField(Media, related_name="seminar",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    media_preview   = models.ManyToManyField(MediaPackage, related_name="seminar_media_preview",
+    media_previews  = models.ManyToManyField(Media, related_name="seminar_media_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True)
     docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",
@@ -125,17 +125,6 @@ class Seminar(Displayable):
 
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.rank), self.title])
-
-    @property
-    def scenario(self):
-        self.steps = []
-        self.steps.append(self.docs_1)
-        self.steps.append(self.media)
-        self.steps.append(self.docs_2)
-        self.steps.append(self.question)
-        self.steps.append(self.docs_correct)
-        self.steps.append(self.testimonial)
-        return self.steps
 
     def public_url(self):
         """

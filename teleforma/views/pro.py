@@ -181,47 +181,23 @@ class AnswerView(FormView):
 
 
 
-class MediaPackageView(DetailView):
+class SeminarMediaView(MediaView):
 
-    model = MediaPackage
+    template_name = 'teleforma/seminar_media_video.html'
 
     def get_context_data(self, **kwargs):
-        context = super(MediaPackageView, self).get_context_data(**kwargs)
-        media_package = self.get_object()
-        media_package.readers.add(self.request.user)
+        context = super(SeminarMediaView, self).get_context_data(**kwargs)
+        media = self.get_object()
+        media.readers.add(self.request.user)
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
-        context['media_package'] = media_package
+        context['media'] = media
         context['seminar_progress'] = seminar_progress(self.request.user, seminar)
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(MediaPackageView, self).dispatch(*args, **kwargs)
-
-    @jsonrpc_method('teleforma.publish_media_package')
-    def publish(request, id):
-        media_package = MediaPackage.objects.get(id=id)
-        media_package.is_published = True
-        media_package.save()
-        for media in media_package.video.all():
-            media.is_published = True
-            media.save()
-        for media in media_package.audio.all():
-            media.is_published = True
-            media.save()
-
-    @jsonrpc_method('teleforma.unpublish_media_package')
-    def unpublish(request, id):
-        media_package = MediaPackage.objects.get(id=id)
-        media_package.is_published = False
-        media_package.save()
-        for media in media_package.video.all():
-            media.is_published = False
-            media.save()
-        for media in media_package.audio.all():
-            media.is_published = False
-            media.save()
+        return super(SeminarMediaView, self).dispatch(*args, **kwargs)
 
                 
 class AnswersView(ListView):

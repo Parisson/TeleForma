@@ -43,7 +43,7 @@ def seminar_progress(user, seminar):
     progress = 0
     total = 0
     
-    objects = [seminar.docs_1, seminar.docs_2, seminar.media, seminar.docs_correct]
+    objects = [seminar.docs_1, seminar.docs_2, seminar.medias, seminar.docs_correct]
     for obj in objects:
         for item in obj.all():
             total += item.weight

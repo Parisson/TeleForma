@@ -72,7 +72,7 @@ class SeminarQuestionInline(admin.StackedInline):
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    filter_horizontal = ['professor', 'media', 'media_preview', 
+    filter_horizontal = ['professor', 'medias', 'media_previews', 
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
@@ -105,7 +105,6 @@ admin.site.register(Answer)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
 admin.site.register(Media, MediaAdmin)
-admin.site.register(MediaPackage, MediaPackageAdmin)
 admin.site.register(Room)
 
 admin.site.register(StreamingServer)

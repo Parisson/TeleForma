@@ -16,14 +16,14 @@
 var mediaUtils = {
         publish : function(id){
             var p = $('#publish');
-            json([id],'teleforma.publish_media_package',function(){
+            json([id],'teleforma.publish_media',function(){
                 p.removeClass('icon_delete').addClass('icon_ok')
                 p.html('{% trans " published" %}')
                 });
          },
         unpublish : function(id){
             var p = $('#publish');
-            json([id],'teleforma.unpublish_media_package',function(){
+            json([id],'teleforma.unpublish_media',function(){
                 p.removeClass('icon_ok').addClass('icon_delete')
                 p.html('{% trans " rejected" %}')
                 });
@@ -35,11 +35,11 @@ $(window).ready(function(){
     var f = mediaUtils;
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
-            f.unpublish('{{media_package.id}}');
+            f.unpublish('{{media.id}}');
             return false;
             }
         if (p.hasClass('icon_delete')) {
-            f.publish('{{media_package.id}}');
+            f.publish('{{media.id}}');
             return false;
             }
         }
@@ -61,7 +61,7 @@ $(window).ready(function(){
 {% endblock submodules %}
 
 {% block module-action %}
-{% for media in media_package.video.all %}
+{% for media in medias.all %}
     {% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
      <div class="module_action"> 
      <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
@@ -76,10 +76,10 @@ $(window).ready(function(){
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
         
-        <a href="{% url teleforma-media-audio seminar.id media_package.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url teleforma-media-audio seminar.id media.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
         
         {% if user.is_staff %}
-        <a id="publish" href="#" class="{% if media_package.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media_package.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
 
@@ -96,9 +96,12 @@ $(window).ready(function(){
 
 <div class="video">
 <video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
-{% for media in media_package.video.all|free_first %}
     <source src="{{ MEDIA_URL }}{{ media.item.file }}#t=0" type="{{ media.mime_type }}" />
-{% endfor %}
+  {% for transcoded in media.item.transcoded.all %}
+   {% if "video" in transcoded.mime_type %}
+    <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
+   {% endif %} 
+  {% endfor %}
 </video>
 </div>
 
@@ -110,7 +113,7 @@ $(window).ready(function(){
 <div class="course_content" id="media_infos">
 <dl class="listing">
 
-<dt>{% trans "Title" %}</dt><dd>{{ media_package.video.all.0.item.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</dd>
+<dt>{% trans "Title" %}</dt><dd>{{ media.item.title }} - {{ seminar.sub_title }} - {{ media.rank }}</dd>
 
 {% with seminar.professor.all as professors %}
   {% if professors %}
@@ -119,13 +122,9 @@ $(window).ready(function(){
   {% endif %}
 {% endwith %}
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Mime type" %}</dt>
-{% with media_package.video.all as mimetypes %}
-<dd>{% for media in mimetypes %}{{ media.mime_type }}{% if not forloop.last %},{% endif %} {% endfor %}</dd>
-{% endwith %}
-<dt>{% trans "Date added" %}</dt><dd>{{ media_package.date_added }}</dd>
-<dt>{% trans "Date modified" %}</dt><dd>{{ media_package.date_modified }}</dd>
-<dt>{% trans "Media package ID" %}</dt><dd>{{ media_package.id }}</dd>
+<dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
+<dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
+<dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
 {% endif %}
 
 </dl>
@@ -144,7 +143,7 @@ $(window).ready(function(){
   <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Shortcuts" %}</h3>
  <div id="index">
   <ul>
-  {% for marker in media_package.video.all.0.item.markers.all %}
+  {% for marker in media.item.markers.all %}
   {% if not forloop.first %}
   <li><a href="#" onclick="jumpToTimeoffset({{ marker.time|point }});">{{ marker.title }}</a></li>
   {% endif %}
@@ -158,10 +157,10 @@ $(window).ready(function(){
 var video = $('#my_video_1');
 var Player = _V_("my_video_1");
 
-// jump to time offset action
+// jump to time offset action using Media Fragments
 function jumpToTimeoffset(time) {
     // Player.currentTime(time);
-    var url = video.attr("src")
+    var url = video.attr("src");
     var abs_url = url.split("#")[0];
     video.attr("src", abs_url + '#t=' + String(time));
     Player.play();    

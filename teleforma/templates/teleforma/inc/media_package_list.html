@@ -4,12 +4,11 @@
 
     <table class="listing" width="100%">
     <tbody>
-      {% for media_package in media_packages.all %}
-       {% with media_package.video.all.0 as media %}
+      {% for media in medias.all %}
         {% if media.is_published or user.is_staff %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-            <a href="{% url teleforma-media-video seminar.id media_package.id %}" title="{% trans "Play" %}">
+            <a href="{% url teleforma-media-video seminar.id media.id %}" title="{% trans "Play" %}">
             {% with media.item.related.all|preview as related %}
              {% if related %}             
                {% thumbnail related.file "168x96" as im %}
@@ -55,7 +54,6 @@
             </tr>
         
         {% endif %}
-       {% endwith %}
       {% endfor %}
     </tbody>
     </table>
