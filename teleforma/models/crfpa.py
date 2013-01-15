@@ -105,7 +105,7 @@ class Training(Model):
 
 class Student(Model):
 
-    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
+    user            = ForeignKey(User, related_name='crfpa_student', verbose_name=_('user'), unique=True )
     period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
                                   blank=True, null=True)
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
