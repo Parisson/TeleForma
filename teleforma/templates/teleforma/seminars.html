@@ -39,11 +39,11 @@ $(function() {
 <div id="module-set-left" style="width: 18%">
 
 {% block modules %}
-<div class="module" id="seminars">
+<div class="module">
 
 <h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
 <div style="background: white;">
-<ul>
+<ul id="seminars">
 {% block courses %}
 {% for seminar in all_seminars %}
    <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
