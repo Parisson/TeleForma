@@ -31,7 +31,7 @@ var mediaUtils = {
         }
 
 $(window).ready(function(){
-    var p = jQuery('#publish');
+    var p = $('#publish');
     var f = mediaUtils;
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
@@ -44,6 +44,10 @@ $(window).ready(function(){
             }
         }
         );
+
+    var module = $('seminars');
+    module.css({'max-height': '200px'});
+    
     });
 
 </script>
