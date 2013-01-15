@@ -2,6 +2,7 @@
 
 import os, sys, psutil
 import datetime
+from ebml.utils.ebml_data import *
 
 class FixCheckMedia(object):
 
@@ -45,12 +46,12 @@ class FixCheckMedia(object):
                         os.system('touch ' + root + os.sep + fixed_log)
                         #pass
 
-                #if ext == 'webm' and tofix_log in dir_files:
-                #    print path
-                #    os.system('touch ' + root + os.sep + fixed_log)
-                #    os.system('rm ' + root + os.sep + tofix_log)
-                #    if os.path.getsize(path):
-                #        self.hard_fix_webm(path)
+                if ext == 'webm' and tofix_log in dir_files and not fixed_log in dir_files:
+                    print path
+                    if os.path.getsize(path):
+                        self.fix_webm(path)
+                        os.system('touch ' + root + os.sep + fixed_log)
+                        os.system('rm ' + root + os.sep + tofix_log)
                         #pass
 
 
@@ -68,11 +69,14 @@ class FixCheckMedia(object):
 
     def fix_webm(self, path):
         try:
-            tmp_file = self.tmp_dir + 'out.webm '
-            command = 'ffmpeg -loglevel 0 -i '+ path + ' -vcodec copy -acodec copy -f webm -y ' + tmp_file + ' > /dev/null'
+            tmp_file = self.tmp_dir + 'out.webm'
+            command = 'ffmpeg -loglevel 0 -i ' + path + ' -vcodec copy -acodec copy -f webm -y ' + tmp_file + ' > /dev/null'
             print command
             os.system(command)
-            command = 'mv '  + tmp_file + path
+            ebml_obj = EBMLData(tmp_file)
+            offset = ebml_obj.get_first_cluster_timecode()
+            command = 'ffmpeg -loglevel 0 -ss ' + str(offset) + ' -i ' + tmp_file + ' -vcodec copy -acodec copy -f webm -y ' + path + ' > /dev/null'
+            print command
             os.system(command)
         except:
             pass

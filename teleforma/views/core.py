@@ -425,7 +425,7 @@ class ConferenceView(DetailView):
 
 
 class ConferenceRecordView(FormView):
-    "Conference record form : TeleCaster module required"
+    "Conference record form : telecaster module required"
 
     model = Conference
     form_class = ConferenceForm
@@ -438,7 +438,15 @@ class ConferenceRecordView(FormView):
         context['mime_type'] = 'video/webm'
         status = Status()
         status.update()
-        context['host'] = status.ip
+        
+        request_host = get_host(self.request)
+        local_host = status.ip
+        if request_host.split('.')[0] == local_host.split('.')[0]:
+            ip = local_host
+        else:
+            ip = settings.ROUTER_IP
+
+        context['host'] = ip
         context['hidden_fields'] = self.hidden_fields
         return context
 

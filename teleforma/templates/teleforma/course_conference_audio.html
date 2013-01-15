@@ -51,7 +51,7 @@
 <div class="audio" style="margin-top:1em;">
 <audio controls autoplay preload="auto">
 <!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ livestream.url|get_host:host }}" type="audio/mpeg" />
+<source src="{{ livestream.url|set_host:HOST }}" type="audio/mpeg" />
 </audio>
 </div>
 {% endif %}

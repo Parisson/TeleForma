@@ -53,7 +53,7 @@
 <div class="video">
 <video width="640" height="360" controls autoplay preload="auto">
 <!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ livestream.url|get_host:host }}" type="video/webm" />
+<source src="{{ livestream.url|set_host:HOST }}" type="video/webm" />
 </video>
 </div>
 {% endif %}

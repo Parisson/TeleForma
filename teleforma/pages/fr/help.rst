@@ -13,18 +13,6 @@ Pour la lecture des fichiers MP3 sur des réseaux à faible débit, en mobilité
 |
 
 
-Démonstrations
-==============
-
-|
-
-.. raw:: html
-
- <iframe width="420" height="315" src="http://www.youtube.com/embed/WEuRXPpT3XQ" frameborder="0" allowfullscreen></iframe>
-
-
-|
-
 FAQ
 ====
 
@@ -43,6 +31,6 @@ Vous pouvez à tout moment réinitialiser votre mot de passe personnel depuis l'
 Support
 ========
 
-Pour les questions relatives à votre formation CRFPA, veuillez `contacter un administrateur depuis la messagerie <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-CRFPA>`_ ou bien par mail à l'adresse suivante : `admin-crfpa@pre-bareau.com <mailto:admin-crfpa@pre-bareau.com>`_
+Pour les questions relatives à votre formation CRFPA, veuillez `contacter un administrateur depuis la messagerie <http://e-learning.ae.pre-barreau.com/messages/write/Admin-AE>`_ ou bien par mail à l'adresse suivante : `avocat.etranger@pre-barreau.com <mailto:avocat.etranger@pre-barreau.com>`_
 
-Pour obtenir une aide technique, veuillez `contacter un technicien depuis la messagerie <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_.
+Pour obtenir une aide technique, veuillez `contacter un technicien depuis la messagerie <http://e-learning.ae.pre-barreau.com/messages/write/admin-tech>`_.
