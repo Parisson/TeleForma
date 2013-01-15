@@ -172,7 +172,7 @@ def get_periods(user):
             periods = student.period.all()
 
     elif user.is_superuser or user.if_staff:
-        periods = student.period.all()
+        periods = Period.objects.all()
 
     return periods
     
