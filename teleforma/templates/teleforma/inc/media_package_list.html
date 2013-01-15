@@ -25,7 +25,7 @@
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
-                    <dt>{% trans "Title" %}</dt><dd>{{ seminar.title }} - {{ seminar.sub_title }} - {{ media_package.rank }}</dd>
+                    <dt>{% trans "Title" %}</dt><dd>{{ media.item.title }} - {{ seminar.sub_title }} - {{ media.rank }}</dd>
                     {% with seminar.professor.all as professors %}
                         {% if professors %}
                             <dt>{% if professors.count > 1 %}{% trans "Professors" %}{% else %}{% trans "Professor" %}{% endif %}</dt>
