@@ -154,12 +154,7 @@ def get_random_hash():
     return "%032x" % hash
 
 def get_periods(user):
-    professor = user.professor.all()
-    if professor:
-        professor = user.professor.get()
-        periods = Period.objects.all()
-
-    elif settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
+    if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         student = user.crfpa_student.all()
         if student:
             student = user.crfpa_student.get()
@@ -171,7 +166,12 @@ def get_periods(user):
             student = user.ae_student.get()
             periods = student.period.all()
 
-    elif user.is_superuser or user.if_staff:
+    if user.is_superuser or user.if_staff:
+        periods = Period.objects.all()
+
+    professor = user.professor.all()
+    if professor:
+        professor = user.professor.get()
         periods = Period.objects.all()
 
     return periods
