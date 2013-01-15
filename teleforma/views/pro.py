@@ -187,12 +187,14 @@ class SeminarMediaView(MediaView):
 
     def get_context_data(self, **kwargs):
         context = super(SeminarMediaView, self).get_context_data(**kwargs)
+        user = self.request.user
         media = self.get_object()
-        media.readers.add(self.request.user)
+        if not user in media.readers.all():
+            media.readers.add(user)
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
         context['media'] = media
-        context['seminar_progress'] = seminar_progress(self.request.user, seminar)
+        context['seminar_progress'] = seminar_progress(user, seminar)
         return context
 
     @method_decorator(login_required)
