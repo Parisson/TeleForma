@@ -145,12 +145,13 @@ class Command(BaseCommand):
                                 print 'thumb added'
                             elif extension[1:] in self.transcoded_formats:
                                 t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
-                                print "related added"
+                                print "transcoded added"
                             elif extension[1:] == 'kdenlive':
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
                                 markers = related.parse_markers()
-                                item.title = markers[0]['comment']
-                                item.save()
+                                if markers:
+                                    item.title = markers[0]['comment']
+                                    item.save()
                                 print "related parsed"
 
                         media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
