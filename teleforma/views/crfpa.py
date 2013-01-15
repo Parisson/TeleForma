@@ -43,7 +43,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
         return courses
 
     professor = user.professor.all()
-    student = user.student.all()
+    student = user.crfpa_student.all()
 
     if professor:
         professor = user.professor.get()
@@ -51,7 +51,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
                                   types=CourseType.objects.all())
 
     elif student:
-        student = user.student.get()
+        student = user.crfpa_student.get()
         s_courses = {student.procedure:student.training.procedure,
                            student.written_speciality:student.training.written_speciality,
                            student.oral_speciality:student.training.oral_speciality,
