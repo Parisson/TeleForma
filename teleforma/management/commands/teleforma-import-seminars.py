@@ -68,12 +68,13 @@ class Command(BaseCommand):
             for filename in files:
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
-                print filename
                 root_list = root.split(os.sep)
 
                 if ext in self.original_format and not 'preview' in root_list \
                             and not 'preview' in filename and filename[0] != '.':
-                                        # seminar_rank <= 9
+
+                    print filename
+                    # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
                     if len(root_list[-1]) != 1:
                         media_rank = self.media_rank_dict[root_list[-1][1:]]
@@ -147,8 +148,9 @@ class Command(BaseCommand):
                                 print "related added"
                             elif extension[1:] == 'kdenlive':
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
-                                related.save()
-                                related.parse()
+                                markers = related.parse_markers()
+                                item.title = markers[0]['comment']
+                                item.save()
                                 print "related parsed"
 
                         media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
