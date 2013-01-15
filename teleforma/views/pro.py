@@ -47,6 +47,7 @@ from django.template.context import Context
 from django.utils.html import escape
 from django.views.generic.detail import SingleObjectMixin
 from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 import os
 from cgi import escape
@@ -238,22 +239,31 @@ class AnswersView(ListView):
         answer = Answer.objects.get(id=id)
         answer.validate()
         user = answer.user
+        sender = request.user
         seminar = answer.question.seminar
         if seminar_validated(user, seminar):
             testimonial = Testimonial(user=user, seminar=seminar)
             testimonial.save()
-            email = EmailMessage()
-            text = 'Your training testimonial for the seminar : '
-            email.subject = seminar.course.department.name + ' : ' + text + seminar.title
-            name, email.from_email = settings.ADMINS[0]
-            email.to = [user.email]
-            email.body = 'You have validated your training!'
-            email.send()
-
+            site = Site.objects.get_current()
+            seminar_url = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+            ctx_dict = {'site': site, 'seminar_url': seminar_url,}
+            text = render_to_string('postman/seminar_validated.txt', ctx_dict)
+            mess = Message(sender=sender, recipient=user, 
+                           subject=_('Your answer has been validated'),
+                           body=text)
+            mess.moderation_status = 'a'
+            mess.save()
+            notify_user(mess, 'acceptance')
 
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
         answer = Answer.objects.get(id=id)
+        seminar = answer.question.seminar
+        user = answer.user
+        testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
+        if testimonials:
+            for testimonial in testimonials:
+                testimonial.delete()
         answer.validated = False
         answer.status = 2
         answer.save()

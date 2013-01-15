@@ -89,6 +89,8 @@ try:
 except:
     pass
 
+from postman.models import *
+from postman.utils import email_visitor, notify_user
 
 access_error = _('Access not allowed.')
 contact_message = _('Please login or contact the website administator to get a private access.')
