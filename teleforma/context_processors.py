@@ -93,6 +93,7 @@ def all_seminars(request, progress_order=False):
         seminars = []
         professor = user.professor.get()
         courses = professor.courses.all()
+        
         for course in courses:
             for seminar in course.seminar.all():
                 seminars.append(seminar)
@@ -107,18 +108,9 @@ def all_seminars(request, progress_order=False):
         seminars = {}
 
     if seminars and progress_order == True:
-        s_list = []
-        for seminar in seminars:
-            d = {}
-            d['seminar'] = seminar
-            d['progress'] = seminar_progress(user, seminar)
-            s_list.append(d)
-
+        s_list = [{'seminar': seminar, 'progress': seminar_progress(user, seminar)} for seminar in seminars]
         seminars = sorted(s_list, key=lambda k: k['progress'], reverse=False)
-        sem = []
-        for s in seminars:
-            sem.append(s['seminar'])
-        seminars = sem
+        seminars = [s['seminar'] for s in seminars]
 
     return {'all_seminars': seminars}
 

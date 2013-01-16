@@ -47,6 +47,7 @@ from django.template.context import Context
 from django.utils.html import escape
 from django.views.generic.detail import SingleObjectMixin
 from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 import os
 from cgi import escape
@@ -197,8 +198,14 @@ class SeminarMediaView(MediaView):
         context['seminar_progress'] = seminar_progress(user, seminar)
         return context
 
+    def get_object(self, queryset=None):
+        return Media.objects.get(id=self.pk)
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        self.pk = kwargs.get('pk')
+        media = self.get_object()
+        if not get_seminar_media_access()
         return super(SeminarMediaView, self).dispatch(*args, **kwargs)
 
                 
@@ -238,22 +245,31 @@ class AnswersView(ListView):
         answer = Answer.objects.get(id=id)
         answer.validate()
         user = answer.user
+        sender = request.user
         seminar = answer.question.seminar
         if seminar_validated(user, seminar):
             testimonial = Testimonial(user=user, seminar=seminar)
             testimonial.save()
-            email = EmailMessage()
-            text = 'Your training testimonial for the seminar : '
-            email.subject = seminar.course.department.name + ' : ' + text + seminar.title
-            name, email.from_email = settings.ADMINS[0]
-            email.to = [user.email]
-            email.body = 'You have validated your training!'
-            email.send()
-
+            site = Site.objects.get_current()
+            seminar_url = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+            ctx_dict = {'site': site, 'seminar_url': seminar_url,}
+            text = render_to_string('teleforma/messages/seminar_validated.txt', ctx_dict)
+            mess = Message(sender=sender, recipient=user, 
+                           subject=_('Your answer has been validated'),
+                           body=text)
+            mess.moderation_status = 'a'
+            mess.save()
+            notify_user(mess, 'acceptance')
 
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
         answer = Answer.objects.get(id=id)
+        seminar = answer.question.seminar
+        user = answer.user
+        testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
+        if testimonials:
+            for testimonial in testimonials:
+                testimonial.delete()
         answer.validated = False
         answer.status = 2
         answer.save()
@@ -334,7 +350,7 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
         else:
             entry = form_for_form.save()
             form_valid.send(sender=request, form=form_for_form, entry=entry)
-            messages.info(request, _("You have successfully sumitted your evaluation"))
+            messages.info(request, _("You have successfully submitted your evaluation"))
             return redirect('teleforma-seminar-detail', seminar.id)
 
     context['seminar'] = seminar
