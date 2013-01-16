@@ -205,7 +205,6 @@ class SeminarMediaView(MediaView):
     def dispatch(self, *args, **kwargs):
         self.pk = kwargs.get('pk')
         media = self.get_object()
-        if not get_seminar_media_access()
         return super(SeminarMediaView, self).dispatch(*args, **kwargs)
 
                 
