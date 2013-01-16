@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-16 16:54+0100\n"
+"POT-Creation-Date: 2013-01-16 16:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -56,11 +56,11 @@ msgstr "Publié"
 
 #: models/core.py:85
 msgid "Mr."
-msgstr ""
+msgstr "Mr"
 
 #: models/core.py:85
 msgid "Mrs."
-msgstr ""
+msgstr "Mme"
 
 #: models/core.py:94 models/core.py:106 models/core.py:129 models/core.py:141
 #: models/core.py:186 models/core.py:223 models/core.py:327 models/crfpa.py:47
@@ -469,15 +469,15 @@ msgstr "conférences"
 
 #: models/pro.py:209
 msgid "gender"
-msgstr ""
+msgstr "civilité"
 
 #: models/pro.py:212
 msgid "Company"
-msgstr ""
+msgstr "Entreprise / Organisme"
 
 #: models/pro.py:219
 msgid "Fax"
-msgstr ""
+msgstr "Fax"
 
 #: models/pro.py:231
 msgid "Auditor"

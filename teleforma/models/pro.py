@@ -206,9 +206,9 @@ class Auditor(models.Model):
                                         verbose_name=_('conferences'),
                                         blank=True, null=True)
 
-    gender          = models.CharField(_('gender'), choices=GENDER_CHOICES, max_length=8, blank=True)
     platform_only   = models.BooleanField(_('platform only'))
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    gender          = models.CharField(_('gender'), choices=GENDER_CHOICES, max_length=8, blank=True)
     company         = models.CharField(_('Company'), max_length=255, blank=True)
     address         = models.TextField(_('Address'), blank=True)
     postal_code     = models.CharField(_('Postal code'), max_length=255, blank=True)
