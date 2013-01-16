@@ -145,13 +145,21 @@ def get_course_access(obj, courses):
             access = True
     return access
 
-def get_seminar_access(doc, user_seminars):
+def get_seminar_doc_access(doc, user_seminars):
     access = False
     doc_seminars = [doc.seminar_docs_1.all(), doc.seminar_docs_2.all(), doc.seminar_docs_correct.all()]
     for seminars in doc_seminars:
         for seminar in seminars:
             if seminar in user_seminars:
                 access = True
+    return access
+
+def get_seminar_media_access(media, user_seminars):
+    access = False
+    seminars = media.seminar.all()
+    for seminar in seminars:
+        if seminar in user_seminars:
+            access = True
     return access
 
 def get_host(request):
@@ -332,7 +340,7 @@ class DocumentView(DetailView):
         else:
             context['room'] = get_room(name=document.title, content_type=content_type,
                                    id=document.id)
-        access = get_course_access(document, all_courses) or get_seminar_access(document, seminars)
+        access = get_course_access(document, all_courses) or get_seminar_doc_access(document, seminars)
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -347,7 +355,7 @@ class DocumentView(DetailView):
         document = Document.objects.get(id=pk)
         courses = get_courses(request.user)
         seminars = all_seminars(request)['all_seminars']
-        if get_course_access(document, courses) or get_seminar_access(document, seminars):
+        if get_course_access(document, courses) or get_seminar_doc_access(document, seminars):
             document.readers.add(request.user)
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
@@ -363,7 +371,7 @@ class DocumentView(DetailView):
         courses = get_courses(request.user)
         seminars = all_seminars(request)['all_seminars']
         document = Document.objects.get(id=pk)
-        if get_course_access(document, courses) or get_seminar_access(document, seminars):
+        if get_course_access(document, courses) or get_seminar_doc_access(document, seminars):
             document.readers.add(request.user)
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]

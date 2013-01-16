@@ -198,8 +198,14 @@ class SeminarMediaView(MediaView):
         context['seminar_progress'] = seminar_progress(user, seminar)
         return context
 
+    def get_object(self, queryset=None):
+        return Media.objects.get(id=self.pk)
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        self.pk = kwargs.get('pk')
+        media = self.get_object()
+        if not get_seminar_media_access()
         return super(SeminarMediaView, self).dispatch(*args, **kwargs)
 
                 
@@ -247,7 +253,7 @@ class AnswersView(ListView):
             site = Site.objects.get_current()
             seminar_url = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
             ctx_dict = {'site': site, 'seminar_url': seminar_url,}
-            text = render_to_string('postman/seminar_validated.txt', ctx_dict)
+            text = render_to_string('teleforma/messages/seminar_validated.txt', ctx_dict)
             mess = Message(sender=sender, recipient=user, 
                            subject=_('Your answer has been validated'),
                            body=text)
@@ -344,7 +350,7 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
         else:
             entry = form_for_form.save()
             form_valid.send(sender=request, form=form_for_form, entry=entry)
-            messages.info(request, _("You have successfully sumitted your evaluation"))
+            messages.info(request, _("You have successfully submitted your evaluation"))
             return redirect('teleforma-seminar-detail', seminar.id)
 
     context['seminar'] = seminar

@@ -1,6 +1,0 @@
-{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}
-{% trans 'Congratulations!' %}
-
-{% trans 'You can continue to the next step of your seminar following this link' %}: 
-                           
-http://{{ site.name }}{{ seminar_url }}
