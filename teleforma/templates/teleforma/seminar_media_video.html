@@ -64,13 +64,6 @@ $(window).ready(function(){
 {% endblock submodules %}
 
 {% block module-action %}
-{% for media in medias.all %}
-    {% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
-     <div class="module_action"> 
-     <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
-     </div>
-    {% endif %}
-{% endfor %}
 {% endblock module-action %}
 
 {% block course %}
@@ -78,6 +71,7 @@ $(window).ready(function(){
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
+        <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
         
         <a href="{% url teleforma-media-audio seminar.id media.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
         
@@ -170,3 +164,11 @@ function jumpToTimeoffset(time) {
 </script>
 
 {% endblock index %}
+
+{% block module-action-right %}
+{% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
+ <div class="module_action"> 
+   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+ </div>
+{% endif %}
+{% endblock module-action-right %}
