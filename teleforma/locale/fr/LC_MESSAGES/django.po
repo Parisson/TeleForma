@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 15:41+0100\n"
+"POT-Creation-Date: 2013-01-17 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -310,7 +310,7 @@ msgid "student"
 msgstr "étudiant"
 
 #: models/crfpa.py:147 models/pro.py:213
-#: templates/teleforma/seminar_testimonial.html:37
+#: templates/teleforma/seminar_testimonial.html:36
 #: templates/telemeta/profile_detail.html:80
 msgid "Address"
 msgstr "Adresse"
@@ -393,7 +393,7 @@ msgstr "documents corrigés"
 msgid "form"
 msgstr "formulaire"
 
-#: models/pro.py:114 templates/teleforma/answer_form.html:104
+#: models/pro.py:114 templates/teleforma/answer_form.html:102
 #: templates/teleforma/seminar_detail.html:158
 #: templates/teleforma/testimonials.html:64
 #: templates/teleforma/inc/answer_list.html:21
@@ -438,7 +438,7 @@ msgid "date validated"
 msgstr "date de validation"
 
 #: models/pro.py:162 templates/teleforma/answer_detail.html:28
-#: templates/teleforma/answer_form.html:107
+#: templates/teleforma/answer_form.html:105
 msgid "Answer"
 msgstr "Réponse"
 
@@ -454,7 +454,8 @@ msgstr "modèle"
 msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
-#: models/pro.py:196 templates/teleforma/inc/testimonial_list.html:7
+#: models/pro.py:196 templates/teleforma/seminar_testimonial.html:13
+#: templates/teleforma/inc/testimonial_list.html:7
 #: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:502
 msgid "Testimonial"
 msgstr "Attestation"
@@ -740,6 +741,8 @@ msgid ":"
 msgstr ""
 
 #: templates/postman/view.html:36
+#: templates/teleforma/seminar_media_audio.html:21
+#: templates/teleforma/seminar_media_video.html:74
 msgid "Back"
 msgstr ""
 
@@ -759,13 +762,13 @@ msgstr " rejeter"
 msgid "You have NOT save your work!"
 msgstr "Vous n'avez PAS enregistré votre consultation"
 
-#: templates/teleforma/answer_form.html:63
+#: templates/teleforma/answer_form.html:61
 #: templates/teleforma/evaluation_form.html:27
 #: templates/teleforma/seminar_media_video.html:59
 msgid "My steps"
 msgstr "Mes étapes"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:72
 #: templates/teleforma/evaluation_form.html:10
 #: templates/teleforma/seminar_detail.html:77
 #: templates/teleforma/seminar_detail.html:86
@@ -781,34 +784,34 @@ msgstr "Mes étapes"
 msgid "Step"
 msgstr "Étape"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:72
 #: templates/teleforma/seminar_detail.html:105
 msgid "answer to this question"
 msgstr "réaliser cette consultation fictive"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:72
 msgid "characters"
 msgstr "caractères"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:72
 msgid "minimum"
 msgstr "minimum"
 
-#: templates/teleforma/answer_form.html:88
+#: templates/teleforma/answer_form.html:86
 msgid "Save"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:89
+#: templates/teleforma/answer_form.html:87
 msgid "Submit it"
 msgstr "Soumettre"
 
-#: templates/teleforma/answer_form.html:97
+#: templates/teleforma/answer_form.html:95
 #: templates/teleforma/seminar_detail.html:152
 #: templates/teleforma/seminars.html:133
 msgid "Progressions"
 msgstr "Progressions"
 
-#: templates/teleforma/answer_form.html:101
+#: templates/teleforma/answer_form.html:99
 #: templates/teleforma/seminar_detail.html:155
 #: templates/teleforma/seminars.html:136
 msgid "General"
@@ -828,9 +831,9 @@ msgstr "validé"
 #: templates/teleforma/answers.html:25
 #: templates/teleforma/course_media.html:34
 #: templates/teleforma/course_media.html:79
-#: templates/teleforma/seminar_media_audio.html:25
+#: templates/teleforma/seminar_media_audio.html:26
 #: templates/teleforma/seminar_media_video.html:28
-#: templates/teleforma/seminar_media_video.html:85
+#: templates/teleforma/seminar_media_video.html:79
 #: templates/teleforma/testimonials.html:83
 #: templates/teleforma/inc/answer_list.html:41
 #: templates/teleforma/inc/media_list.html:52
@@ -856,8 +859,8 @@ msgstr "Supports écrits"
 #: templates/teleforma/course.html:17 templates/teleforma/course.html.py:33
 #: templates/teleforma/course_conference_audio.html:66
 #: templates/teleforma/course_document.html:73
-#: templates/teleforma/seminar_media_audio.html:70
-#: templates/teleforma/seminar_media_video.html:119
+#: templates/teleforma/seminar_media_audio.html:71
+#: templates/teleforma/seminar_media_video.html:113
 #: templates/teleforma/inc/conference_list.html:25
 #: templates/teleforma/inc/media_list.html:36
 #: templates/teleforma/inc/media_package_list.html:28
@@ -867,7 +870,7 @@ msgid "Title"
 msgstr "Titre"
 
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
-#: templates/teleforma/seminar_testimonial.html:44
+#: templates/teleforma/seminar_testimonial.html:41
 #: templates/teleforma/inc/media_package_list.html:36
 msgid "Description"
 msgstr "Description"
@@ -875,8 +878,8 @@ msgstr "Description"
 #: templates/teleforma/course.html:19 templates/teleforma/course.html.py:35
 #: templates/teleforma/course.html:52
 #: templates/teleforma/course_media.html:142
-#: templates/teleforma/seminar_media_audio.html:80
-#: templates/teleforma/seminar_media_video.html:128
+#: templates/teleforma/seminar_media_audio.html:81
+#: templates/teleforma/seminar_media_video.html:122
 #: templates/telemeta/profile_detail.html:84
 msgid "Date added"
 msgstr "Date d'ajout"
@@ -904,8 +907,8 @@ msgstr "Session"
 #: templates/teleforma/course_conference.html:72
 #: templates/teleforma/course_conference_audio.html:67
 #: templates/teleforma/course_media.html:133
-#: templates/teleforma/seminar_media_audio.html:74
-#: templates/teleforma/seminar_media_video.html:123
+#: templates/teleforma/seminar_media_audio.html:75
+#: templates/teleforma/seminar_media_video.html:117
 #: templates/teleforma/inc/conference_list.html:27
 #: templates/teleforma/inc/media_list.html:39
 #: templates/teleforma/inc/media_package_list.html:31
@@ -920,13 +923,13 @@ msgstr "S T O P"
 
 #: templates/teleforma/course_conference.html:37
 #: templates/teleforma/course_media.html:73
-#: templates/teleforma/seminar_media_video.html:82
+#: templates/teleforma/seminar_media_video.html:76
 msgid "Audio"
 msgstr "Audio"
 
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
-#: templates/teleforma/seminar_testimonial.html:40
+#: templates/teleforma/seminar_testimonial.html:38
 msgid "Course"
 msgstr "Matière"
 
@@ -969,7 +972,7 @@ msgstr "ID Conférence"
 
 #: templates/teleforma/course_conference_audio.html:36
 #: templates/teleforma/course_media.html:76
-#: templates/teleforma/seminar_media_audio.html:22
+#: templates/teleforma/seminar_media_audio.html:23
 msgid "Video"
 msgstr "Vidéo"
 
@@ -994,9 +997,9 @@ msgstr "Enregistrer et diffuser"
 
 #: templates/teleforma/course_media.html:27
 #: templates/teleforma/course_media.html:79
-#: templates/teleforma/seminar_media_audio.html:25
+#: templates/teleforma/seminar_media_audio.html:26
 #: templates/teleforma/seminar_media_video.html:21
-#: templates/teleforma/seminar_media_video.html:85
+#: templates/teleforma/seminar_media_video.html:79
 #: templates/teleforma/inc/media_list.html:50
 #: templates/teleforma/inc/media_package_list.html:44
 msgid " published"
@@ -1004,7 +1007,8 @@ msgstr " publié"
 
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/seminar_media_audio.html:10
-#: templates/teleforma/seminar_media_video.html:70
+#: templates/teleforma/seminar_media_audio.html:130
+#: templates/teleforma/seminar_media_video.html:171
 #: templates/teleforma/testimonials.html:66
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/document_simple_list.html:9
@@ -1019,14 +1023,14 @@ msgid "Mime type"
 msgstr "Type mime"
 
 #: templates/teleforma/course_media.html:143
-#: templates/teleforma/seminar_media_audio.html:81
-#: templates/teleforma/seminar_media_video.html:129
+#: templates/teleforma/seminar_media_audio.html:82
+#: templates/teleforma/seminar_media_video.html:123
 msgid "Date modified"
 msgstr "Date de modification"
 
 #: templates/teleforma/course_media.html:144
-#: templates/teleforma/seminar_media_audio.html:82
-#: templates/teleforma/seminar_media_video.html:130
+#: templates/teleforma/seminar_media_audio.html:83
+#: templates/teleforma/seminar_media_video.html:124
 msgid "Media ID"
 msgstr "ID Média"
 
@@ -1098,17 +1102,17 @@ msgstr "obtenez votre attestation"
 msgid "Plan"
 msgstr "Plan"
 
-#: templates/teleforma/seminar_media_audio.html:74
-#: templates/teleforma/seminar_media_video.html:123
+#: templates/teleforma/seminar_media_audio.html:75
+#: templates/teleforma/seminar_media_video.html:117
 #: templates/teleforma/inc/media_package_list.html:31
 msgid "Professors"
 msgstr "Professeurs"
 
-#: templates/teleforma/seminar_media_audio.html:98
+#: templates/teleforma/seminar_media_audio.html:99
 msgid "Audio index"
 msgstr "Index audio"
 
-#: templates/teleforma/seminar_media_video.html:146
+#: templates/teleforma/seminar_media_video.html:140
 msgid "Video index"
 msgstr "Index vidéo"
 
@@ -1116,36 +1120,37 @@ msgstr "Index vidéo"
 msgid "Training testimonial"
 msgstr "Attestation de formation"
 
-#: templates/teleforma/seminar_testimonial.html:35
+#: templates/teleforma/seminar_testimonial.html:34
 msgid "Last name"
 msgstr "Nom"
 
-#: templates/teleforma/seminar_testimonial.html:36
+#: templates/teleforma/seminar_testimonial.html:35
 msgid "First name"
 msgstr "Prénom"
 
-#: templates/teleforma/seminar_testimonial.html:38
+#: templates/teleforma/seminar_testimonial.html:37
+msgid "Sujet"
+msgstr ""
+
+#: templates/teleforma/seminar_testimonial.html:39
+msgid "Training type"
+msgstr "Type de formation"
+
+#: templates/teleforma/seminar_testimonial.html:43
 #: templates/teleforma/inc/media_package_list.html:38
 msgid "Duration"
 msgstr "Durée"
 
-#: templates/teleforma/seminar_testimonial.html:39
-msgid "Sujet"
-msgstr ""
+#: templates/teleforma/seminar_testimonial.html:43
+#: templates/teleforma/inc/seminar_description.html:12
+msgid "hours"
+msgstr "heures"
 
-#: templates/teleforma/seminar_testimonial.html:41
-msgid "Training type"
-msgstr "Type de formation"
-
-#: templates/teleforma/seminar_testimonial.html:42
-msgid "keywords"
-msgstr "mots clés"
-
-#: templates/teleforma/seminar_testimonial.html:46
+#: templates/teleforma/seminar_testimonial.html:44
 msgid "Training begin date"
 msgstr "Date de début de formation"
 
-#: templates/teleforma/seminar_testimonial.html:47
+#: templates/teleforma/seminar_testimonial.html:45
 msgid "Training end date"
 msgstr "Date de fin de formation"
 
@@ -1259,10 +1264,6 @@ msgstr "validé"
 msgid "duration"
 msgstr "durée"
 
-#: templates/teleforma/inc/seminar_description.html:12
-msgid "hours"
-msgstr "heures"
-
 #: templates/teleforma/messages/answer_rejected.txt:2
 msgid ""
 "Sorry!\n"
@@ -1273,8 +1274,7 @@ msgstr ""
 "Nous sommes désolés!\n"
 "\n"
 "Votre consultation n'a pas été validée.\n"
-"Vous pouvez la re-travailler et la soumettre en suivant ce "
-"lien :\n"
+"Vous pouvez la re-travailler et la soumettre en suivant ce lien :\n"
 
 #: templates/teleforma/messages/answer_validated.txt:2
 msgid ""
@@ -1299,8 +1299,7 @@ msgstr ""
 "Félicitations!\n"
 "\n"
 "Votre séminaire a été validé.\n"
-"Vous pouvez télecharger votre attestation en cliquant sur ce "
-"lien :\n"
+"Vous pouvez télecharger votre attestation en cliquant sur ce lien :\n"
 
 #: templates/telemeta/base.html:96
 msgid "Desk"
@@ -1598,6 +1597,9 @@ msgstr "Consultation rejetée"
 #: views/pro.py:377
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid "keywords"
+#~ msgstr "mots clés"
 
 #, fuzzy
 #~ msgid ""
