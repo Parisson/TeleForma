@@ -6,8 +6,8 @@
 <link href="{{STATIC_URL}}teleforma/video-js/video-js.css" rel="stylesheet">
 
 <video id="my_video_1" class="video-js vjs-default-skin" width="415" height="235" controls preload="auto" data-setup='{}'>
-  <source src="{{ MEDIA_URL }}{{ object.media_preview.item.file }}#t=0" type="{{ object.media_preview.mime_type }}" />
-  {% for transcoded in object.media_preview.item.transcoded.all %}
+  <source src="{{ MEDIA_URL }}{{ seminar.media_preview.item.file }}#t=0" type="{{ seminar.media_preview.mime_type }}" />
+  {% for transcoded in seminar.media_preview.item.transcoded.all %}
    {% if "video" in transcoded.mime_type %}
     <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
    {% endif %} 

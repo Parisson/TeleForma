@@ -213,6 +213,11 @@ class SeminarMediaPreviewView(DetailView):
     model = Seminar
     template_name = 'teleforma/inc/seminar_media_preview_video.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(SeminarMediaPreviewView, self).get_context_data(**kwargs)
+        context['seminar'] = self.get_object()
+        return context
+
     def dispatch(self, *args, **kwargs):
         return super(SeminarMediaPreviewView, self).dispatch(*args, **kwargs)
                 
