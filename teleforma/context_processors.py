@@ -75,7 +75,7 @@ def seminar_validated(user, seminar):
         return not False in validated
     return False
 
-def all_seminars(request, progress_order=False):
+def all_seminars(request, progress_order=False, date_order=False):
     seminars = []
 
     if isinstance(request, User):
@@ -110,6 +110,17 @@ def all_seminars(request, progress_order=False):
     if seminars and progress_order == True:
         s_list = [{'seminar': seminar, 'progress': seminar_progress(user, seminar)} for seminar in seminars]
         seminars = sorted(s_list, key=lambda k: k['progress'], reverse=False)
+        seminars = [s['seminar'] for s in seminars]
+
+    if seminars and date_order == True:
+        s_list = []
+        for seminar in seminars:
+            revisions = SeminarRevision.objects.filter(user=user, seminar=seminar)
+            if revisions:
+                s_list.append({'seminar': seminar, 'date': revisions[0].date})
+            else:
+                s_list.append({'seminar': seminar, 'date': datetime.datetime.min})
+        seminars = sorted(s_list, key=lambda k: k['date'], reverse=True)
         seminars = [s['seminar'] for s in seminars]
 
     return {'all_seminars': seminars}

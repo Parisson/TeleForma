@@ -231,3 +231,18 @@ class Auditor(models.Model):
         verbose_name = _('Auditor')
         ordering = ['user__last_name']
 
+
+class SeminarRevision(models.Model):
+
+    seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'))
+    user        = models.ForeignKey(User, related_name="revision", verbose_name=_('user'))
+    date        = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+
+    def __unicode__(self):
+        pass
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'seminar_revisions'
+        verbose_name = _('Seminar revision')
+        verbose_name_plural = _('Seminar revisions')
+    

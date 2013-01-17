@@ -108,14 +108,17 @@ class SeminarView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = self.get_object()
-        progress = seminar_progress(self.request.user, seminar)
-        validated = seminar_validated(self.request.user, seminar)
+        user = self.request.user
+        progress = seminar_progress(user, seminar)
+        validated = seminar_validated(user, seminar)
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
         if progress == 100 and not validated:
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif validated:
             messages.info(self.request, _("All your answers have been validated! You can now download the training testimonial below."))
+        revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
+        revision.save()
         return context
 
 class SeminarsView(ListView):
@@ -124,7 +127,7 @@ class SeminarsView(ListView):
     template_name='teleforma/seminars.html'
 
     def get_queryset(self):
-        return all_seminars(self.request, progress_order=True)['all_seminars']
+        return all_seminars(self.request, date_order=True)['all_seminars']
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -168,10 +171,13 @@ class AnswerView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(AnswerView, self).get_context_data(**kwargs)
+        user = self.request.user
         context['question'] = self.question
         context['status'] = self.status
         context['seminar'] = self.question.seminar
-        context['seminar_progress'] = seminar_progress(self.request.user, self.question.seminar)
+        context['seminar_progress'] = seminar_progress(user, self.question.seminar)
+        revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
+        revision.save()
         return context
 
     def get_success_url(self):
@@ -186,12 +192,14 @@ class SeminarMediaView(MediaView):
         context = super(SeminarMediaView, self).get_context_data(**kwargs)
         user = self.request.user
         media = self.get_object()
+        seminar = Seminar.objects.get(pk=self.kwargs['id'])
         if not user in media.readers.all():
             media.readers.add(user)
-        seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
         context['media'] = media
         context['seminar_progress'] = seminar_progress(user, seminar)
+        revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
+        revision.save()
         return context
 
     def get_object(self, queryset=None):
@@ -359,10 +367,11 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
     Display a built form and handle submission.
     """
     context = {}
+    user = request.user
     seminar = Seminar.objects.get(pk=pk)
-    published = Form.objects.published(for_user=request.user)
+    published = Form.objects.published(for_user=user)
     form = seminar.form
-    if form.login_required and not request.user.is_authenticated():
+    if form.login_required and not user.is_authenticated():
         return redirect("%s?%s=%s" % (settings.LOGIN_URL, REDIRECT_FIELD_NAME,
                         urlquote(request.get_full_path())))
     request_context = RequestContext(request)
@@ -379,7 +388,9 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
 
     context['seminar'] = seminar
     context['form'] = form
-    context['seminar_progress'] = seminar_progress(request.user, seminar)
+    context['seminar_progress'] = seminar_progress(user, seminar)
+    revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
+    revision.save()
     
     return render_to_response(template, context, request_context)    
 
