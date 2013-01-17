@@ -43,14 +43,12 @@ $(document).ready(function(){
 
     {% if status != 3 %}
     $(window).bind('beforeunload', function(){
-      return '{% trans "You have NOT save your work!" %}';
+      return "{% trans "You have NOT save your work!" %}";
     });
     {% endif  %}
 
     $('#seminars').css({'max-height': '200px'});
 });
-
-
 
 </script>
 {% endblock extra_javascript %}
