@@ -1,0 +1,9 @@
+{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}
+{% blocktrans %}Sorry!
+
+Your answer has been rejected. 
+You can work and try again following this link:
+{% endblocktrans %}                           
+http://{{ site.name }}{{ url }}
+
+{% organization %}

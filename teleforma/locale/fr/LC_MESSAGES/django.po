@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 14:19+0100\n"
+"POT-Creation-Date: 2013-01-17 15:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -393,7 +393,7 @@ msgstr "documents corrigés"
 msgid "form"
 msgstr "formulaire"
 
-#: models/pro.py:114 templates/teleforma/answer_form.html:88
+#: models/pro.py:114 templates/teleforma/answer_form.html:104
 #: templates/teleforma/seminar_detail.html:158
 #: templates/teleforma/testimonials.html:64
 #: templates/teleforma/inc/answer_list.html:21
@@ -438,7 +438,7 @@ msgid "date validated"
 msgstr "date de validation"
 
 #: models/pro.py:162 templates/teleforma/answer_detail.html:28
-#: templates/teleforma/answer_form.html:91
+#: templates/teleforma/answer_form.html:107
 msgid "Answer"
 msgstr "Réponse"
 
@@ -455,7 +455,7 @@ msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
 #: models/pro.py:196 templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:492
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:502
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -708,20 +708,6 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: templates/postman/seminar_validated.txt:2
-#, fuzzy
-msgid ""
-"Congratulations!\n"
-"\n"
-"Your seminar has been validated.\n"
-"You can go to the next step of your seminar following this link:\n"
-msgstr ""
-"Félicitations!\n"
-"\n"
-"Votre dernière consultation a été validée.\n"
-"Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
-"lien :\n"
-
 #: templates/postman/sent.html:6
 msgid "Sent"
 msgstr ""
@@ -770,12 +756,16 @@ msgid " reject"
 msgstr " rejeter"
 
 #: templates/teleforma/answer_form.html:46
-#: templates/teleforma/evaluation_form.html:22
-#: templates/teleforma/seminar_media_video.html:60
+msgid "You have NOT save your work!"
+msgstr "Vous n'avez PAS enregistré votre consultation"
+
+#: templates/teleforma/answer_form.html:63
+#: templates/teleforma/evaluation_form.html:27
+#: templates/teleforma/seminar_media_video.html:59
 msgid "My steps"
 msgstr "Mes étapes"
 
-#: templates/teleforma/answer_form.html:57
+#: templates/teleforma/answer_form.html:74
 #: templates/teleforma/evaluation_form.html:10
 #: templates/teleforma/seminar_detail.html:77
 #: templates/teleforma/seminar_detail.html:86
@@ -791,34 +781,34 @@ msgstr "Mes étapes"
 msgid "Step"
 msgstr "Étape"
 
-#: templates/teleforma/answer_form.html:57
+#: templates/teleforma/answer_form.html:74
 #: templates/teleforma/seminar_detail.html:105
 msgid "answer to this question"
 msgstr "réaliser cette consultation fictive"
 
-#: templates/teleforma/answer_form.html:57
+#: templates/teleforma/answer_form.html:74
 msgid "characters"
 msgstr "caractères"
 
-#: templates/teleforma/answer_form.html:57
+#: templates/teleforma/answer_form.html:74
 msgid "minimum"
 msgstr "minimum"
 
-#: templates/teleforma/answer_form.html:72
+#: templates/teleforma/answer_form.html:88
 msgid "Save"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:73
+#: templates/teleforma/answer_form.html:89
 msgid "Submit it"
 msgstr "Soumettre"
 
-#: templates/teleforma/answer_form.html:81
+#: templates/teleforma/answer_form.html:97
 #: templates/teleforma/seminar_detail.html:152
 #: templates/teleforma/seminars.html:133
 msgid "Progressions"
 msgstr "Progressions"
 
-#: templates/teleforma/answer_form.html:85
+#: templates/teleforma/answer_form.html:101
 #: templates/teleforma/seminar_detail.html:155
 #: templates/teleforma/seminars.html:136
 msgid "General"
@@ -840,7 +830,7 @@ msgstr "validé"
 #: templates/teleforma/course_media.html:79
 #: templates/teleforma/seminar_media_audio.html:25
 #: templates/teleforma/seminar_media_video.html:28
-#: templates/teleforma/seminar_media_video.html:86
+#: templates/teleforma/seminar_media_video.html:85
 #: templates/teleforma/testimonials.html:83
 #: templates/teleforma/inc/answer_list.html:41
 #: templates/teleforma/inc/media_list.html:52
@@ -867,7 +857,7 @@ msgstr "Supports écrits"
 #: templates/teleforma/course_conference_audio.html:66
 #: templates/teleforma/course_document.html:73
 #: templates/teleforma/seminar_media_audio.html:70
-#: templates/teleforma/seminar_media_video.html:120
+#: templates/teleforma/seminar_media_video.html:119
 #: templates/teleforma/inc/conference_list.html:25
 #: templates/teleforma/inc/media_list.html:36
 #: templates/teleforma/inc/media_package_list.html:28
@@ -886,7 +876,7 @@ msgstr "Description"
 #: templates/teleforma/course.html:52
 #: templates/teleforma/course_media.html:142
 #: templates/teleforma/seminar_media_audio.html:80
-#: templates/teleforma/seminar_media_video.html:129
+#: templates/teleforma/seminar_media_video.html:128
 #: templates/telemeta/profile_detail.html:84
 msgid "Date added"
 msgstr "Date d'ajout"
@@ -915,7 +905,7 @@ msgstr "Session"
 #: templates/teleforma/course_conference_audio.html:67
 #: templates/teleforma/course_media.html:133
 #: templates/teleforma/seminar_media_audio.html:74
-#: templates/teleforma/seminar_media_video.html:124
+#: templates/teleforma/seminar_media_video.html:123
 #: templates/teleforma/inc/conference_list.html:27
 #: templates/teleforma/inc/media_list.html:39
 #: templates/teleforma/inc/media_package_list.html:31
@@ -930,7 +920,7 @@ msgstr "S T O P"
 
 #: templates/teleforma/course_conference.html:37
 #: templates/teleforma/course_media.html:73
-#: templates/teleforma/seminar_media_video.html:83
+#: templates/teleforma/seminar_media_video.html:82
 msgid "Audio"
 msgstr "Audio"
 
@@ -1006,7 +996,7 @@ msgstr "Enregistrer et diffuser"
 #: templates/teleforma/course_media.html:79
 #: templates/teleforma/seminar_media_audio.html:25
 #: templates/teleforma/seminar_media_video.html:21
-#: templates/teleforma/seminar_media_video.html:86
+#: templates/teleforma/seminar_media_video.html:85
 #: templates/teleforma/inc/media_list.html:50
 #: templates/teleforma/inc/media_package_list.html:44
 msgid " published"
@@ -1014,7 +1004,7 @@ msgstr " publié"
 
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/seminar_media_audio.html:10
-#: templates/teleforma/seminar_media_video.html:71
+#: templates/teleforma/seminar_media_video.html:70
 #: templates/teleforma/testimonials.html:66
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/document_simple_list.html:9
@@ -1030,13 +1020,13 @@ msgstr "Type mime"
 
 #: templates/teleforma/course_media.html:143
 #: templates/teleforma/seminar_media_audio.html:81
-#: templates/teleforma/seminar_media_video.html:130
+#: templates/teleforma/seminar_media_video.html:129
 msgid "Date modified"
 msgstr "Date de modification"
 
 #: templates/teleforma/course_media.html:144
 #: templates/teleforma/seminar_media_audio.html:82
-#: templates/teleforma/seminar_media_video.html:131
+#: templates/teleforma/seminar_media_video.html:130
 msgid "Media ID"
 msgstr "ID Média"
 
@@ -1109,7 +1099,7 @@ msgid "Plan"
 msgstr "Plan"
 
 #: templates/teleforma/seminar_media_audio.html:74
-#: templates/teleforma/seminar_media_video.html:124
+#: templates/teleforma/seminar_media_video.html:123
 #: templates/teleforma/inc/media_package_list.html:31
 msgid "Professors"
 msgstr "Professeurs"
@@ -1118,7 +1108,7 @@ msgstr "Professeurs"
 msgid "Audio index"
 msgstr "Index audio"
 
-#: templates/teleforma/seminar_media_video.html:147
+#: templates/teleforma/seminar_media_video.html:146
 msgid "Video index"
 msgstr "Index vidéo"
 
@@ -1273,13 +1263,24 @@ msgstr "durée"
 msgid "hours"
 msgstr "heures"
 
+#: templates/teleforma/messages/answer_rejected.txt:2
+msgid ""
+"Sorry!\n"
+"\n"
+"Your answer has been rejected. \n"
+"You can work and try again following this link:\n"
+msgstr ""
+"Nous sommes désolés!\n"
+"\n"
+"Votre consultation n'a pas été validée.\n"
+"Vous pouvez la re-travailler et la soumettre en suivant ce lien :\n"
+
 #: templates/teleforma/messages/answer_validated.txt:2
-#, fuzzy
 msgid ""
 "Congratulations!\n"
 "\n"
-"Your seminar has been completed and validated. \n"
-"You can now download the training testimonial following this link:\n"
+"Your answer has been validated. \n"
+"You can go to the next step of your seminar following this link:\n"
 msgstr ""
 "Félicitations!\n"
 "\n"
@@ -1288,21 +1289,16 @@ msgstr ""
 "lien :\n"
 
 #: templates/teleforma/messages/seminar_validated.txt:2
-#, fuzzy, python-format
 msgid ""
 "Congratulations!\n"
 "\n"
-"Your answer has been validated.\n"
-"You can continue to the next step of your seminar following this link:\n"
-"                           \n"
-"http://%(site.name)s%(seminar_url)s\n"
-"\n"
+"Your seminar has been validated.                \n"
+"You can now download the training testimonial following this link:\n"
 msgstr ""
 "Félicitations!\n"
 "\n"
-"Votre dernière consultation a été validée.\n"
-"Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
-"lien :\n"
+"Votre séminaire a été validé.\n"
+"Vous pouvez télecharger votre attestation en cliquant sur ce lien :\n"
 
 #: templates/telemeta/base.html:96
 msgid "Desk"
@@ -1585,15 +1581,37 @@ msgstr "Vous avez enregistré votre consultation avec succès"
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre consultation avec succès"
 
-#: views/pro.py:270
-#, fuzzy
-msgid "Answer validated"
-msgstr "validé"
+#: views/pro.py:265
+msgid "Seminar validated"
+msgstr "Séminaire validé"
 
-#: views/pro.py:365
-#, fuzzy
+#: views/pro.py:271
+msgid "Answer validated"
+msgstr "Consultation validée"
+
+#: views/pro.py:295
+msgid "Answer rejected"
+msgstr "Consultation rejetée"
+
+#: views/pro.py:377
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#, fuzzy
+#~ msgid ""
+#~ "Congratulations!\n"
+#~ "\n"
+#~ "Your answer has been validated.\n"
+#~ "You can continue to the next step of your seminar following this link:\n"
+#~ "                           \n"
+#~ "http://%(site.name)s%(seminar_url)s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Félicitations!\n"
+#~ "\n"
+#~ "Votre dernière consultation a été validée.\n"
+#~ "Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
+#~ "lien :\n"
 
 #~ msgid "Your answer has been validated"
 #~ msgstr "Votre consultation a été validée"

@@ -1880,7 +1880,7 @@ form .exceed{
     border-radius: 8px 0px 8px 8px;
     color: black;
     padding: 0.5em;
-    max-height: 300px;
+    max-height: 250px;
     overflow-y: auto;
 }
 

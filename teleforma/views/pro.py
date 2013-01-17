@@ -163,10 +163,7 @@ class AnswerView(FormView):
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(
-            self.request,
-            "Your submission has not been saved. Try again."
-        )
+        messages.error(self.request,"Your submission has not been saved. Try again.")
         return super(AnswerView, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -179,7 +176,6 @@ class AnswerView(FormView):
 
     def get_success_url(self):
         return reverse('teleforma-seminar-detail', kwargs={'pk':self.question.seminar.id})
-
 
 
 class SeminarMediaView(MediaView):
@@ -284,6 +280,7 @@ class AnswersView(ListView):
         answer = Answer.objects.get(id=id)
         seminar = answer.question.seminar
         user = answer.user
+        sender = request.user
         testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
         if testimonials:
             for testimonial in testimonials:
@@ -291,6 +288,15 @@ class AnswersView(ListView):
         answer.validated = False
         answer.status = 2
         answer.save()
+        site = Site.objects.get_current()
+        url = reverse('teleforma-question-answer', kwargs={'pk':answer.question.id})
+        ctx_dict = {'site': site, 'url': url,}
+        text = render_to_string('teleforma/messages/answer_rejected.txt', ctx_dict)
+        subject = _('Answer rejected') + ' : ' + seminar.title
+        mess = Message(sender=sender, recipient=user, subject=subject, body=text)
+        mess.moderation_status = 'a'
+        mess.save()
+        notify_user(mess, 'acceptance')
 
 
 class AnswerDetailView(DetailView):
