@@ -1,10 +1,9 @@
 {% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}
-{% blocktrans %}
-Congratulations!
+{% blocktrans %}Congratulations!
 
-Your answer has been validated.
-You can continue to the next step of your seminar following this link:
-                           
-http://{{ site.name }}{{ seminar_url }}
+Your seminar has been validated.                
+You can now download the training testimonial following this link:
+{% endblocktrans %}
+http://{{ site.name }}{{ url }}
 
-{% endblocktrans }
+{% organization %}

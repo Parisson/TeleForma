@@ -259,20 +259,26 @@ class AnswersView(ListView):
         user = answer.user
         sender = request.user
         seminar = answer.question.seminar
+        site = Site.objects.get_current()
+
         if seminar_validated(user, seminar):
             testimonial = Testimonial(user=user, seminar=seminar)
             testimonial.save()
-            site = Site.objects.get_current()
-            seminar_url = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
-            ctx_dict = {'site': site, 'seminar_url': seminar_url,}
+            url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':seminar.id}) + '?format=pdf'
+            ctx_dict = {'site': site, 'url': url,}
+            subject = _('Seminar validated') + ' : ' + seminar.title
             text = render_to_string('teleforma/messages/seminar_validated.txt', ctx_dict)
-            mess = Message(sender=sender, recipient=user, 
-                           subject=_('Answer validated') + ' : ' + seminar.title,
-                           body=text)
-            mess.moderation_status = 'a'
-            mess.save()
-            notify_user(mess, 'acceptance')
+        else:
+            url = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+            ctx_dict = {'site': site, 'url': url,}
+            text = render_to_string('teleforma/messages/answer_validated.txt', ctx_dict)
+            subject = _('Answer validated') + ' : ' + seminar.title
 
+        mess = Message(sender=sender, recipient=user, subject=subject, body=text)
+        mess.moderation_status = 'a'
+        mess.save()
+        notify_user(mess, 'acceptance')
+    
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
         answer = Answer.objects.get(id=id)
@@ -460,8 +466,6 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         context[self.pdf_url_varname] = self.get_pdf_url()
         return super(PDFTemplateResponseMixin, self).render_to_response(
             context, **response_kwargs)
-
-
 
 
 class TestimonialView(PDFTemplateResponseMixin, SeminarView):

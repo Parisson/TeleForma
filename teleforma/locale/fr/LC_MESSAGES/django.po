@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 10:04+0100\n"
+"POT-Creation-Date: 2013-01-17 14:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -22,7 +22,7 @@ msgid "user"
 msgstr "utilisateur"
 
 #: models/ae.py:47 models/core.py:137 models/core.py:350 models/core.py:410
-#: models/core.py:458 models/crfpa.py:64 models/crfpa.py:109
+#: models/core.py:460 models/crfpa.py:64 models/crfpa.py:109
 msgid "period"
 msgstr "période"
 
@@ -90,11 +90,11 @@ msgstr "adresse"
 msgid "Signature image"
 msgstr ""
 
-#: models/core.py:124 models/core.py:155 models/core.py:456
+#: models/core.py:124 models/core.py:155 models/core.py:458
 msgid "department"
 msgstr "département"
 
-#: models/core.py:149 models/core.py:347 models/core.py:408 models/core.py:461
+#: models/core.py:149 models/core.py:347 models/core.py:408 models/core.py:463
 msgid "course type"
 msgstr "type de matière"
 
@@ -131,7 +131,7 @@ msgstr "magistral"
 msgid "types"
 msgstr "types"
 
-#: models/core.py:179 models/core.py:344 models/core.py:406 models/core.py:460
+#: models/core.py:179 models/core.py:344 models/core.py:406 models/core.py:462
 #: models/pro.py:65 templates/teleforma/inc/seminar_description.html:9
 msgid "course"
 msgstr "matière"
@@ -140,11 +140,11 @@ msgstr "matière"
 msgid "domain"
 msgstr "domaine"
 
-#: models/core.py:217 models/core.py:462 models/pro.py:75
+#: models/core.py:217 models/core.py:464 models/pro.py:75
 msgid "professor"
 msgstr "intervenant"
 
-#: models/core.py:231 models/core.py:466
+#: models/core.py:231 models/core.py:468
 msgid "room"
 msgstr "salle"
 
@@ -172,7 +172,7 @@ msgstr ""
 msgid "streaming server"
 msgstr "serveur de diffusion"
 
-#: models/core.py:259 models/core.py:348 models/core.py:404 models/core.py:551
+#: models/core.py:259 models/core.py:348 models/core.py:404 models/core.py:553
 msgid "conference"
 msgstr "conférence"
 
@@ -224,40 +224,40 @@ msgstr "annale"
 msgid "file"
 msgstr "fichier"
 
-#: models/core.py:358 models/core.py:416 models/core.py:472
+#: models/core.py:358 models/core.py:416 models/core.py:474
 msgid "readers"
 msgstr ""
 
-#: models/core.py:454 models/pro.py:66
+#: models/core.py:456 models/pro.py:66
 #: templates/teleforma/inc/seminar_description.html:7
 msgid "sub title"
 msgstr "sous-titre"
 
-#: models/core.py:455
+#: models/core.py:457
 msgid "public id"
 msgstr "id public"
 
-#: models/core.py:464
+#: models/core.py:466
 msgid "session"
 msgstr "session"
 
-#: models/core.py:468
+#: models/core.py:470
 msgid "comment"
 msgstr "commentaire"
 
-#: models/core.py:469
+#: models/core.py:471
 msgid "begin date"
 msgstr "date de début"
 
-#: models/core.py:470
+#: models/core.py:472
 msgid "end date"
 msgstr "date de fin"
 
-#: models/core.py:471 models/pro.py:69
+#: models/core.py:473 models/pro.py:69
 msgid "price"
 msgstr "prix"
 
-#: models/core.py:475 models/pro.py:77
+#: models/core.py:477 models/pro.py:77
 #, fuzzy
 msgid "description documents"
 msgstr "description"
@@ -455,7 +455,7 @@ msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
 #: models/pro.py:196 templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:484
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:492
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -708,7 +708,7 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: templates/postman/seminar_validated.txt:3
+#: templates/postman/seminar_validated.txt:2
 #, fuzzy
 msgid ""
 "Congratulations!\n"
@@ -1273,6 +1273,37 @@ msgstr "durée"
 msgid "hours"
 msgstr "heures"
 
+#: templates/teleforma/messages/answer_validated.txt:2
+#, fuzzy
+msgid ""
+"Congratulations!\n"
+"\n"
+"Your seminar has been completed and validated. \n"
+"You can now download the training testimonial following this link:\n"
+msgstr ""
+"Félicitations!\n"
+"\n"
+"Votre dernière consultation a été validée.\n"
+"Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
+"lien :\n"
+
+#: templates/teleforma/messages/seminar_validated.txt:2
+#, fuzzy, python-format
+msgid ""
+"Congratulations!\n"
+"\n"
+"Your answer has been validated.\n"
+"You can continue to the next step of your seminar following this link:\n"
+"                           \n"
+"http://%(site.name)s%(seminar_url)s\n"
+"\n"
+msgstr ""
+"Félicitations!\n"
+"\n"
+"Votre dernière consultation a été validée.\n"
+"Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
+"lien :\n"
+
 #: templates/telemeta/base.html:96
 msgid "Desk"
 msgstr "Bureau"
@@ -1554,14 +1585,18 @@ msgstr "Vous avez enregistré votre consultation avec succès"
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre consultation avec succès"
 
-#: views/pro.py:262
-msgid "Your answer has been validated"
-msgstr "Votre consultation a été validée"
+#: views/pro.py:270
+#, fuzzy
+msgid "Answer validated"
+msgstr "validé"
 
-#: views/pro.py:357
+#: views/pro.py:365
 #, fuzzy
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid "Your answer has been validated"
+#~ msgstr "Votre consultation a été validée"
 
 #~ msgid "Index"
 #~ msgstr "Index"

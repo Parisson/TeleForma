@@ -129,7 +129,7 @@ $(function () {
       {% endwith %}
      {% endif %}
       
-     {% if seminar_validated %}
+     {% if seminar_validated and seminar_progress == 100 %}
        <div class="course_content">
         <div class="course_subtitle">
           <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7 : {% trans "download your testimonial" %}</h3>
