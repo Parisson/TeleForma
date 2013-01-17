@@ -207,6 +207,14 @@ class SeminarMediaView(MediaView):
         media = self.get_object()
         return super(SeminarMediaView, self).dispatch(*args, **kwargs)
 
+
+class SeminarMediaPreviewView(DetailView):
+
+    model = Seminar
+    template_name = 'teleforma/inc/seminar_media_preview_video.html'
+
+    def dispatch(self, *args, **kwargs):
+        return super(SeminarMediaPreviewView, self).dispatch(*args, **kwargs)
                 
 class AnswersView(ListView):
 
@@ -254,7 +262,7 @@ class AnswersView(ListView):
             ctx_dict = {'site': site, 'seminar_url': seminar_url,}
             text = render_to_string('teleforma/messages/seminar_validated.txt', ctx_dict)
             mess = Message(sender=sender, recipient=user, 
-                           subject=_('Your answer has been validated'),
+                           subject=_('Answer validated') + ' : ' + seminar.title,
                            body=text)
             mess.moderation_status = 'a'
             mess.save()

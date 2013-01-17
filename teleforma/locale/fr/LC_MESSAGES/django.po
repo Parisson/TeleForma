@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-16 17:56+0100\n"
+"POT-Creation-Date: 2013-01-17 10:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -455,7 +455,7 @@ msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
 #: models/pro.py:196 templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:479
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:484
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -708,6 +708,20 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
+#: templates/postman/seminar_validated.txt:3
+#, fuzzy
+msgid ""
+"Congratulations!\n"
+"\n"
+"Your seminar has been validated.\n"
+"You can go to the next step of your seminar following this link:\n"
+msgstr ""
+"Félicitations!\n"
+"\n"
+"Votre dernière consultation a été validée.\n"
+"Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
+"lien :\n"
+
 #: templates/postman/sent.html:6
 msgid "Sent"
 msgstr ""
@@ -918,7 +932,7 @@ msgstr "S T O P"
 #: templates/teleforma/course_media.html:73
 #: templates/teleforma/seminar_media_video.html:83
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
@@ -967,7 +981,7 @@ msgstr "ID Conférence"
 #: templates/teleforma/course_media.html:76
 #: templates/teleforma/seminar_media_audio.html:22
 msgid "Video"
-msgstr ""
+msgstr "Vidéo"
 
 #: templates/teleforma/course_conference_audio.html:70
 #: templates/teleforma/inc/conference_list.html:28
@@ -1540,11 +1554,11 @@ msgstr "Vous avez enregistré votre consultation avec succès"
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre consultation avec succès"
 
-#: views/pro.py:257
+#: views/pro.py:262
 msgid "Your answer has been validated"
 msgstr "Votre consultation a été validée"
 
-#: views/pro.py:352
+#: views/pro.py:357
 #, fuzzy
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"

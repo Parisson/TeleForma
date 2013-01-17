@@ -56,12 +56,7 @@ class DocumentAdmin(admin.ModelAdmin):
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['id']
-
-class MediaPackageAdmin(admin.ModelAdmin):
-    exclude = ['mime_type']
-    search_fields = ['id']
-    filter_horizontal = ['video', 'audio']
+    search_fields = ['id', 'title']
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
@@ -72,7 +67,7 @@ class SeminarQuestionInline(admin.StackedInline):
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    filter_horizontal = ['professor', 'medias', 'media_previews', 
+    filter_horizontal = ['professor', 'medias', 
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']

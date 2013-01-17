@@ -430,8 +430,10 @@ class Media(MediaBase):
             strings.append(self.course.code + ' ' + self.course_type.name)
         elif self.course:
             strings.append(self.course.code)
+        elif self.item.title:
+            strings.append(self.item.title)
         else:
-            strings.append(self.item.file)
+            strings.append(os.path.basename(self.item.file.path))
         strings.append(self.mime_type)
         return ' - '.join(strings)
 

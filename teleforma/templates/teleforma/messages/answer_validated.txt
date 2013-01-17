@@ -1,0 +1,10 @@
+{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}
+{% blocktrans %}
+Congratulations!
+
+Your answer have been validated. 
+You can now download the training testimonial following this link:
+                           
+http://{{ site.name }}{{ testimonial_url }}
+
+{% endblocktrans }
