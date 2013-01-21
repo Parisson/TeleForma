@@ -274,7 +274,7 @@ class AnswersView(ListView):
         
         auditor = user.auditor.all()
         if auditor:
-            context['gender'] = auditor[0].gender
+            context['gender'] = unicode(_(auditor[0].gender))
         else:
             context['gender'] = user.first_name
         context['lastname'] = user.last_name
