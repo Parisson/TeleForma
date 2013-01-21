@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-21 17:08+0100\n"
+"POT-Creation-Date: 2013-01-21 17:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -421,12 +421,12 @@ msgstr "status"
 msgid "Question"
 msgstr "Question"
 
-#: models/pro.py:144 views/pro.py:291
+#: models/pro.py:144 views/pro.py:297
 msgid "answer"
 msgstr "réponse"
 
 #: models/pro.py:146 templates/teleforma/seminar_detail.html:50
-#: templates/teleforma/seminars.html:98 views/pro.py:292
+#: templates/teleforma/seminars.html:98 views/pro.py:298
 msgid "validated"
 msgstr "validé"
 
@@ -457,7 +457,7 @@ msgstr "Modèle d'attestation"
 
 #: models/pro.py:196 templates/teleforma/seminar_testimonial.html:13
 #: templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:582
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:590
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -938,8 +938,8 @@ msgstr "Audio"
 
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
-#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:320
-#: views/pro.py:362
+#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:272
+#: views/pro.py:326 views/pro.py:370
 msgid "Course"
 msgstr "Matière"
 
@@ -1670,20 +1670,25 @@ msgstr "Vous avez enregistré votre consultation avec succès"
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre consultation avec succès"
 
-#: views/pro.py:286
-#, fuzzy
-msgid "all your answers has been validated"
-msgstr "Votre consultation a été validée"
+#: views/pro.py:169
+msgid "Your submission has not been saved correctly. Please try again."
+msgstr ""
+"Votre consultation n'a pas été enregistrée correctement, veuillez réessayer "
+"SVP."
 
-#: views/pro.py:318 views/pro.py:360
+#: views/pro.py:270 views/pro.py:324 views/pro.py:368
 msgid "Subtitle"
 msgstr "Sous-titre"
 
-#: views/pro.py:340
+#: views/pro.py:293
+msgid "all your answers has been validated"
+msgstr "Toutes vos consultations ont été validées"
+
+#: views/pro.py:346
 msgid "validation conditions for an answer"
 msgstr "conditions de validation d'une consultation"
 
-#: views/pro.py:455
+#: views/pro.py:463
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
 

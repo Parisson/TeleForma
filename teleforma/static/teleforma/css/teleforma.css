@@ -1544,7 +1544,7 @@ input,textarea{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
-    padding: 0em 0em 0em 0em;
+    padding: 0em 0em 0.5em 0em;
     margin-top: 0.8em;
     border: 1px solid #dfdfdf;
 }
@@ -1844,7 +1844,11 @@ form .exceed{
     font: 1em Verdana, sans-serif;
     line-height: 1.3em;
     color: #333;   
-    width: 100%;
+    padding: .5em;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    width: 97%;
 }
 
 

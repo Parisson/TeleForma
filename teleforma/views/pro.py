@@ -166,7 +166,7 @@ class AnswerView(FormView):
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request,"Your submission has not been saved. Try again.")
+        messages.error(self.request,_("Your submission has not been saved correctly. Please try again."))
         return super(AnswerView, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -349,7 +349,9 @@ class AnswersView(ListView):
         mess.save()
         notify_user(mess, 'acceptance')
 
+
 class AnswerDetailViewTest(DetailView):
+    """For test only"""
 
     model = Answer
     template_name='teleforma/messages/answer_rejected.txt'
