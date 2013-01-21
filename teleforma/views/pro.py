@@ -176,7 +176,7 @@ class AnswerView(FormView):
         context['status'] = self.status
         context['seminar'] = self.question.seminar
         context['seminar_progress'] = seminar_progress(user, self.question.seminar)
-        revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
+        revision, c = SeminarRevision.objects.get_or_create(seminar=self.question.seminar, user=user)
         revision.save()
         return context
 
