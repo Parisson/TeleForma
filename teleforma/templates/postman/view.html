@@ -54,7 +54,6 @@
 <form id="_messageReply" action="{% url postman_reply reply_to_pk %}?next={{ next_url|urlencode }}" method="post">{% csrf_token %}
 <div id="pm_reply">{{ form.body }}</div><br />
 <a href="#" class="component_icon button icon_next" onclick="f=document.getElementById('_messageReply'); f.submit(); return false;">{% trans "Reply" %}</a>
-
 {% endif %}
 </div>
 </form>

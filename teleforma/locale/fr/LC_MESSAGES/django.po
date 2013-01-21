@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-17 17:49+0100\n"
+"POT-Creation-Date: 2013-01-21 17:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: models/ae.py:46 models/core.py:202 models/crfpa.py:108 models/crfpa.py:146
-#: models/pro.py:142 models/pro.py:186 models/pro.py:201
+#: models/pro.py:142 models/pro.py:186 models/pro.py:201 models/pro.py:238
 msgid "user"
 msgstr "utilisateur"
 
@@ -56,11 +56,11 @@ msgstr "Publié"
 
 #: models/core.py:85
 msgid "Mr."
-msgstr "Mr"
+msgstr "Monsieur"
 
 #: models/core.py:85
 msgid "Mrs."
-msgstr "Mme"
+msgstr "Madame"
 
 #: models/core.py:94 models/core.py:106 models/core.py:129 models/core.py:141
 #: models/core.py:186 models/core.py:223 models/core.py:327 models/crfpa.py:47
@@ -193,6 +193,7 @@ msgid "credits"
 msgstr "crédits"
 
 #: models/core.py:310 models/pro.py:96 models/pro.py:149 models/pro.py:192
+#: models/pro.py:239
 msgid "date added"
 msgstr "date d'ajout"
 
@@ -400,7 +401,7 @@ msgstr "formulaire"
 msgid "Seminar"
 msgstr "Sémimaire"
 
-#: models/pro.py:122 models/pro.py:185
+#: models/pro.py:122 models/pro.py:185 models/pro.py:237
 msgid "seminar"
 msgstr "séminaire"
 
@@ -420,12 +421,12 @@ msgstr "status"
 msgid "Question"
 msgstr "Question"
 
-#: models/pro.py:144
+#: models/pro.py:144 views/pro.py:291
 msgid "answer"
 msgstr "réponse"
 
 #: models/pro.py:146 templates/teleforma/seminar_detail.html:50
-#: templates/teleforma/seminars.html:98
+#: templates/teleforma/seminars.html:98 views/pro.py:292
 msgid "validated"
 msgstr "validé"
 
@@ -437,7 +438,7 @@ msgstr "date de soumission"
 msgid "date validated"
 msgstr "date de validation"
 
-#: models/pro.py:162 templates/teleforma/answer_detail.html:28
+#: models/pro.py:162 templates/teleforma/answer_detail.html:43
 #: templates/teleforma/answer_form.html:105
 msgid "Answer"
 msgstr "Réponse"
@@ -456,7 +457,7 @@ msgstr "Modèle d'attestation"
 
 #: models/pro.py:196 templates/teleforma/seminar_testimonial.html:13
 #: templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:502
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:582
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -483,6 +484,14 @@ msgstr "Fax"
 #: models/pro.py:231
 msgid "Auditor"
 msgstr "Auditeur"
+
+#: models/pro.py:246
+msgid "Seminar revision"
+msgstr "Révision des sémimaires"
+
+#: models/pro.py:247
+msgid "Seminar revisions"
+msgstr "Révisions des sémimaires"
 
 #: templates/404.html:10
 msgid "Page not found"
@@ -750,11 +759,11 @@ msgstr ""
 msgid "Write"
 msgstr ""
 
-#: templates/teleforma/answer_detail.html:38
+#: templates/teleforma/answer_detail.html:53
 msgid " validate"
 msgstr "valider"
 
-#: templates/teleforma/answer_detail.html:39
+#: templates/teleforma/answer_detail.html:54
 msgid " reject"
 msgstr " rejeter"
 
@@ -929,7 +938,8 @@ msgstr "Audio"
 
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
-#: templates/teleforma/seminar_testimonial.html:38
+#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:320
+#: views/pro.py:362
 msgid "Course"
 msgstr "Matière"
 
@@ -1264,42 +1274,120 @@ msgstr "validé"
 msgid "duration"
 msgstr "durée"
 
-#: templates/teleforma/messages/answer_rejected.txt:2
+#: templates/teleforma/messages/answer_rejected.txt:1
+#, python-format
 msgid ""
-"Sorry!\n"
+"%(gender)s %(lastname)s,\n"
 "\n"
-"Your answer has been rejected. \n"
-"You can work and try again following this link:\n"
+"We are sorry we cannot validate your answer n°%(rank)s of the e-learning "
+"seminar \"%(title)s\".\n"
+"\n"
+"This validation is a requisite to allow us to deliver you a testimonial for "
+"this training. However, your submitted answer can not be taken into account. "
+"We encourage you to complete your answer following this link:\n"
+"\n"
+"http://%(domain)s%(path)s\n"
+"\n"
+"We remind you that you absolutely need to terminate your training before "
+"%(date)s.\n"
+"\n"
+"The team of the %(organization)s thank you for your confidence and we remain "
+"at your disposal for further information.\n"
 msgstr ""
-"Nous sommes désolés!\n"
+"%(gender)s %(lastname)s,\n"
 "\n"
-"Votre consultation n'a pas été validée.\n"
-"Vous pouvez la re-travailler et la soumettre en suivant ce lien :\n"
+"Nous sommes au regret de ne pouvoir valider votre réponse à la consultation n"
+"°%(rank)s du séminaire e-learning \"%(title)s\".\n"
+"\n"
+"En effet, la validation des acquis de la formation e-learning que vous avez "
+"suivie est une étape nécessaire pour permettre à Pro-Barreau de vous "
+"délivrer une attestation de formation. Pour valider cette étape, vous devez "
+"répondre aux consultations fictives. Or, la réponse soumise ne peut être "
+"prise en compte. Aussi, nous prions-vous de bien vouloir compléter votre "
+"réponse en suivant ce lien :\n"
+"\n"
+"http://%(domain)s%(path)s\n"
+"\n"
+"Nous vous rappelons que vous devez impérativement achever toutes les étapes "
+"de votre formation avant le %(date)s.\n"
+"\n"
+"L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
+"reste à votre disposition pour renseignement complémentaire.\n"
 
-#: templates/teleforma/messages/answer_validated.txt:2
+#: templates/teleforma/messages/answer_validated.txt:1
+#, python-format
 msgid ""
-"Congratulations!\n"
+"%(gender)s %(lastname)s,\n"
 "\n"
-"Your answer has been validated. \n"
-"You can go to the next step of your seminar following this link:\n"
+"Your answer to the question n°%(rank)s of the e-learning seminar \"%(title)s"
+"\" has been validated.\n"
+"\n"
+"You can now continue to next step following this link:\n"
+"\n"
+"http://%(domain)s%(path)s\n"
+"\n"
+"We remind you that you absolutely need to terminate all steps of your "
+"training before %(date)s.\n"
+"\n"
+"The team of the %(organization)s thank you for your confidence and we remain "
+"at your disposal for further information.\n"
 msgstr ""
-"Félicitations!\n"
+"%(gender)s %(lastname)s,\n"
 "\n"
-"Votre dernière consultation a été validée.\n"
-"Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
-"lien :\n"
+"Votre réponse à la consultation n°%(rank)s du séminaire e-learning "
+"\"%(title)s\" a été validée.\n"
+"\n"
+"Vous pouvez dès à présent poursuivre votre formation en passant à l’étape "
+"suivante, en suivant ce lien :\n"
+"\n"
+"http://%(domain)s%(path)s\n"
+"\n"
+"Nous vous rappelons que vous devez impérativement achever toutes les étapes "
+"de votre formation avant le %(date)s.\n"
+"\n"
+"L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
+"reste à votre disposition pour renseignement complémentaire.\n"
 
-#: templates/teleforma/messages/seminar_validated.txt:2
+#: templates/teleforma/messages/seminar_validated.txt:1
+#, python-format
 msgid ""
-"Congratulations!\n"
+"%(gender)s %(lastname)s,\n"
 "\n"
-"Your seminar has been validated.                \n"
-"You can now download the training testimonial following this link:\n"
+"Your answer to the question n°%(rank)s of the e-learning seminar \"%(title)s"
+"\" has been validated.\n"
+"\n"
+"You have then achieved the step 4 of your training.\n"
+"\n"
+"Now read the corrected document of all questions (step 5) and evaluate the "
+"training (step 6) in order to obtain your testimonial (step 7) following "
+"this link:\n"
+"\n"
+"http://%(domain)s%(path)s\n"
+"\n"
+"We remind you that you absolutely need to terminate all steps of your "
+"training before %(date)s.\n"
+"\n"
+"The team of the %(organization)s thank you for your confidence and we remain "
+"at your disposal for further information.\n"
 msgstr ""
-"Félicitations!\n"
+"%(gender)s %(lastname)s,\n"
 "\n"
-"Votre séminaire a été validé.\n"
-"Vous pouvez télecharger votre attestation en cliquant sur ce lien :\n"
+"Votre réponse à la consultation n°%(rank)s du séminaire e-learning "
+"\"%(title)s\" a été validée.\n"
+"\n"
+"Vous avez achevé l’étape 4 de votre formation.\n"
+"\n"
+"Consultez dès à présent le corrigé-type des consultations fictives (étape 5) "
+"et évaluez la formation suivie (étape 6) afin d’obtenir votre attestation "
+"(étape 7) en suivant ce lien :\n"
+"\n"
+"http://%(domain)s%(path)s\n"
+"\n"
+"Nous vous rappelons que vous devez impérativement achever toutes les étapes "
+"de votre formation avant le %(date)s.\n"
+"\n"
+"L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
+"reste à votre disposition pour renseignement complémentaire.\n"
 
 #: templates/telemeta/base.html:96
 msgid "Desk"
@@ -1556,7 +1644,7 @@ msgstr ""
 "Merci de vous connecter ou bien contactez l'administateur du site pour "
 "obtenir un accès privé."
 
-#: views/pro.py:116
+#: views/pro.py:117
 msgid ""
 "You have successfully terminated your e-learning seminar. A training "
 "testimonial will be available as soon as the pedagogical team validate all "
@@ -1566,7 +1654,7 @@ msgstr ""
 "formation vous sera délivrée dès que vos réponses aux consultations fictives "
 "auront été validées par notre équipe pédagogique (48h maximum)."
 
-#: views/pro.py:118
+#: views/pro.py:119
 msgid ""
 "All your answers have been validated! You can now download the training "
 "testimonial below."
@@ -1574,29 +1662,73 @@ msgstr ""
 "Toutes vos consultations fictives ont été validées ! Vous pouvez désormais "
 "télécharger l'attestation de formation ci-dessous."
 
-#: views/pro.py:160
+#: views/pro.py:163
 msgid "You have successfully saved your answer"
 msgstr "Vous avez enregistré votre consultation avec succès"
 
-#: views/pro.py:162
+#: views/pro.py:165
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre consultation avec succès"
 
-#: views/pro.py:265
-msgid "Seminar validated"
-msgstr "Séminaire validé"
+#: views/pro.py:286
+#, fuzzy
+msgid "all your answers has been validated"
+msgstr "Votre consultation a été validée"
 
-#: views/pro.py:271
-msgid "Answer validated"
-msgstr "Consultation validée"
+#: views/pro.py:318 views/pro.py:360
+msgid "Subtitle"
+msgstr "Sous-titre"
 
-#: views/pro.py:295
-msgid "Answer rejected"
-msgstr "Consultation rejetée"
+#: views/pro.py:340
+msgid "validation conditions for an answer"
+msgstr "conditions de validation d'une consultation"
 
-#: views/pro.py:377
+#: views/pro.py:455
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid ""
+#~ "Congratulations!\n"
+#~ "\n"
+#~ "Your answer has been validated. \n"
+#~ "You can go to the next step of your seminar following this link:\n"
+#~ msgstr ""
+#~ "Félicitations!\n"
+#~ "\n"
+#~ "Votre dernière consultation a été validée.\n"
+#~ "Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
+#~ "lien :\n"
+
+#~ msgid ""
+#~ "Congratulations!\n"
+#~ "\n"
+#~ "Your seminar has been validated.                \n"
+#~ "You can now download the training testimonial following this link:\n"
+#~ msgstr ""
+#~ "Félicitations!\n"
+#~ "\n"
+#~ "Votre séminaire a été validé.\n"
+#~ "Vous pouvez télecharger votre attestation en cliquant sur ce lien :\n"
+
+#~ msgid "Seminar validated"
+#~ msgstr "Séminaire validé"
+
+#~ msgid "Answer validated"
+#~ msgstr "Consultation validée"
+
+#~ msgid ""
+#~ "Sorry!\n"
+#~ "\n"
+#~ "Your answer has been rejected. \n"
+#~ "You can work and try again following this link:\n"
+#~ msgstr ""
+#~ "Nous sommes désolés!\n"
+#~ "\n"
+#~ "Votre consultation n'a pas été validée.\n"
+#~ "Vous pouvez la re-travailler et la soumettre en suivant ce lien :\n"
+
+#~ msgid "Answer rejected"
+#~ msgstr "Consultation rejetée"
 
 #~ msgid "keywords"
 #~ msgstr "mots clés"
@@ -1616,9 +1748,6 @@ msgstr "Vous avez soumis votre évaluation avec succès"
 #~ "Votre dernière consultation a été validée.\n"
 #~ "Vous pouvez accéder à la prochaine étape de votre séminaire en suivant ce "
 #~ "lien :\n"
-
-#~ msgid "Your answer has been validated"
-#~ msgstr "Votre consultation a été validée"
 
 #~ msgid "Index"
 #~ msgstr "Index"

@@ -258,25 +258,44 @@ class AnswersView(ListView):
 
     @jsonrpc_method('teleforma.validate_answer')
     def validate(request, id):
+        context = {}
         answer = Answer.objects.get(id=id)
         answer.validate()
         user = answer.user
         sender = request.user
         seminar = answer.question.seminar
         site = Site.objects.get_current()
+        path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+        if answer.question.seminar.sub_title:
+            title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
+        else:
+            title = unicode(_('Course')) + ' : ' + seminar.course.title
+        organization = seminar.course.department.name
+        
+        auditor = user.auditor.all()
+        if auditor:
+            context['gender'] = auditor[0].gender
+        else:
+            context['gender'] = user.first_name
+        context['lastname'] = user.last_name
+        context['rank'] = answer.question.rank
+        context['domain'] = site.name
+        context['path'] = path
+        context['title'] = title
+        context['organization'] = organization
+        context['date'] =  answer.question.seminar.expiry_date
 
         if seminar_validated(user, seminar):
             testimonial = Testimonial(user=user, seminar=seminar)
             testimonial.save()
             url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':seminar.id}) + '?format=pdf'
-            ctx_dict = {'site': site, 'url': url,}
-            subject = _('Seminar validated') + ' : ' + seminar.title
-            text = render_to_string('teleforma/messages/seminar_validated.txt', ctx_dict)
+            text = render_to_string('teleforma/messages/seminar_validated.txt', context)
+            subject = seminar.title + ' : ' + unicode(_('all your answers has been validated'))
+
         else:
-            url = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
-            ctx_dict = {'site': site, 'url': url,}
-            text = render_to_string('teleforma/messages/answer_validated.txt', ctx_dict)
-            subject = _('Answer validated') + ' : ' + seminar.title
+            text = render_to_string('teleforma/messages/answer_validated.txt', context)
+            subject = seminar.title + ' : ' + unicode(_('answer')) + 'n°' + \
+                        context['rank'] + ' ' + unicode(_('validated')).decode('utf8')
 
         mess = Message(sender=sender, recipient=user, subject=subject, body=text)
         mess.moderation_status = 'a'
@@ -285,10 +304,13 @@ class AnswersView(ListView):
     
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
+        context = {}
         answer = Answer.objects.get(id=id)
         seminar = answer.question.seminar
         user = answer.user
         sender = request.user
+        site = Site.objects.get_current()
+
         testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
         if testimonials:
             for testimonial in testimonials:
@@ -296,15 +318,68 @@ class AnswersView(ListView):
         answer.validated = False
         answer.status = 2
         answer.save()
-        site = Site.objects.get_current()
-        url = reverse('teleforma-question-answer', kwargs={'pk':answer.question.id})
-        ctx_dict = {'site': site, 'url': url,}
-        text = render_to_string('teleforma/messages/answer_rejected.txt', ctx_dict)
-        subject = _('Answer rejected') + ' : ' + seminar.title
+        
+        path = reverse('teleforma-question-answer', kwargs={'pk':answer.question.id})
+        if answer.question.seminar.sub_title:
+            title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
+        else:
+            title = unicode(_('Course')) + ' : ' + seminar.course.title
+        organization = seminar.course.department.name
+        auditor = user.auditor.all()
+        if auditor:
+            context['gender'] = auditor[0].gender
+        else:
+            context['gender'] = user.first_name
+        context['lastname'] = user.last_name
+        context['rank'] = answer.question.rank
+        context['domain'] = site.name
+        context['path'] = path
+        context['title'] = title
+        context['organization'] = organization
+        context['date'] =  answer.question.seminar.expiry_date
+
+        seminar = answer.question.seminar
+        user = answer.user
+        sender = request.user
+        
+        text = render_to_string('teleforma/messages/answer_rejected.txt', context)
+        subject = seminar.title + ' : ' + unicode(_('validation conditions for an answer'))
         mess = Message(sender=sender, recipient=user, subject=subject, body=text)
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')
+
+class AnswerDetailViewTest(DetailView):
+
+    model = Answer
+    template_name='teleforma/messages/answer_rejected.txt'
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerDetailViewTest, self).get_context_data(**kwargs)
+        answer = self.get_object()
+        seminar = answer.question.seminar
+        user = answer.user
+        sender = self.request.user
+        site = Site.objects.get_current()
+        path= reverse('teleforma-question-answer', kwargs={'pk':answer.question.id})
+        if answer.question.seminar.sub_title:
+            title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
+        else:
+            title = unicode(_('Course')) + ' : ' + seminar.course.title
+        organization = seminar.course.department.name
+        auditor = user.auditor.all()
+        if auditor:
+            context['gender'] = auditor[0].gender
+        else:
+            context['gender'] = user.first_name
+        context['lastname'] = user.last_name
+        context['rank'] = answer.question.rank
+        context['domain'] = site.name
+        context['path'] = path
+        context['title'] = title
+        context['organization'] = organization
+        context['date'] =  answer.question.seminar.expiry_date
+        return context
 
 
 class AnswerDetailView(DetailView):

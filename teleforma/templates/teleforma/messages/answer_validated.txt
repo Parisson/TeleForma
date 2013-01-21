@@ -1,9 +1,12 @@
-{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}
-{% blocktrans %}Congratulations!
+{% load i18n %}{% blocktrans %}{{ gender }} {{ lastname }},
 
-Your answer has been validated. 
-You can go to the next step of your seminar following this link:
-{% endblocktrans %}                           
-http://{{ site.name }}{{ url }}
+Your answer to the question n°{{ rank }} of the e-learning seminar "{{ title }}" has been validated.
 
-{% organization %}
+You can now continue to next step following this link:
+
+http://{{ domain }}{{ path }}
+
+We remind you that you absolutely need to terminate all steps of your training before {{ date }}.
+
+The team of the {{ organization }} thank you for your confidence and we remain at your disposal for further information.
+{% endblocktrans %}

@@ -59,6 +59,13 @@ a:hover {
 
 a img { border: none; }
 
+textarea {
+    padding: 1em;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    }
+
 .rst-content h1 {
     font-size: 1.2em;
     font-weight: bold;
@@ -1620,7 +1627,15 @@ input,textarea{
 #pm_messages td {
     font-weight: normal;
     font-size: 1em;
+    }
 
+
+#pm_reply textarea {
+    padding: 1em;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    width: 97%;
     }
 
 #id_body {

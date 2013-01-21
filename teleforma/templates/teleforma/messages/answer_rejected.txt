@@ -1,9 +1,12 @@
-{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}
-{% blocktrans %}Sorry!
+{% load i18n %}{% blocktrans %}{{ gender }} {{ lastname }},
 
-Your answer has been rejected. 
-You can work and try again following this link:
-{% endblocktrans %}                           
-http://{{ site.name }}{{ url }}
+We are sorry we cannot validate your answer n°{{ rank }} of the e-learning seminar "{{ title }}".
 
-{% organization %}
+This validation is a requisite to allow us to deliver you a testimonial for this training. However, your submitted answer can not be taken into account. We encourage you to complete your answer following this link:
+
+http://{{ domain }}{{ path }}
+
+We remind you that you absolutely need to terminate your training before {{ date }}.
+
+The team of the {{ organization }} thank you for your confidence and we remain at your disposal for further information.
+{% endblocktrans %}

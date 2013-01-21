@@ -155,4 +155,6 @@ urlpatterns = patterns('',
 
     url(r'^tinymce/', include('tinymce.urls')),
 
+    url(r'^desk/test/(?P<pk>.*)/$', AnswerDetailViewTest.as_view(), name="test"),
+
 )

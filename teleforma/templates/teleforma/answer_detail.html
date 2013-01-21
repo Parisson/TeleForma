@@ -18,8 +18,7 @@ $('#validate').unbind('click').click(function() {
 $('#reject').unbind('click').click(function() {
  json(['{{answer.id}}'],'teleforma.reject_answer');
  setTimeout(function() {window.location.href = "{% url teleforma-answers %}";}, 1000);
-});
-
+ });
 
 });
 </script>
@@ -43,7 +42,7 @@ $('#reject').unbind('click').click(function() {
 <div class="course_subtitle">
    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer" %}</h3>
   </div>
-  <div style="text-align: justify; padding: 1em;">
+  <div style="text-align: justify; padding: .5em;">
     {{ answer.answer|safe }}
   </div>
 </div>
