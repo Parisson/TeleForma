@@ -404,6 +404,8 @@ class Document(MediaBase):
                                  null=True, blank=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
+    iej             = ForeignKey('IEJ', related_name='document', verbose_name=_('iej'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     is_annal        = BooleanField(_('annal'))
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
