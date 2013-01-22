@@ -294,8 +294,9 @@ class AnswersView(ListView):
 
         else:
             text = render_to_string('teleforma/messages/answer_validated.txt', context)
-            subject = seminar.title + ' : ' + unicode(_('answer')) + 'n°' + \
-                        context['rank'] + ' ' + unicode(_('validated')).decode('utf8')
+            a = _('answer').decode('utf8')
+            v = _('validated').decode('utf8')
+            subject = '%s : %s n° %s %s' % (seminar.title, a, str(context['rank']), v)
 
         mess = Message(sender=sender, recipient=user, subject=subject, body=text)
         mess.moderation_status = 'a'

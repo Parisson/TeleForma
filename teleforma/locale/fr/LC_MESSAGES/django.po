@@ -428,7 +428,7 @@ msgstr "réponse"
 #: models/pro.py:146 templates/teleforma/seminar_detail.html:50
 #: templates/teleforma/seminars.html:98 views/pro.py:298
 msgid "validated"
-msgstr "validé"
+msgstr "validée"
 
 #: models/pro.py:147
 msgid "date submitted"
@@ -835,7 +835,7 @@ msgstr "Consultations"
 #: templates/teleforma/testimonials.html:83
 #: templates/teleforma/inc/answer_list.html:41
 msgid " validated"
-msgstr "validé"
+msgstr " validé"
 
 #: templates/teleforma/answers.html:25
 #: templates/teleforma/course_media.html:34
@@ -1268,7 +1268,7 @@ msgstr "enregistrée le"
 #: templates/teleforma/inc/question_list.html:25
 #: templates/teleforma/inc/question_step.html:16
 msgid "Validated"
-msgstr "validé"
+msgstr "Validé"
 
 #: templates/teleforma/inc/seminar_description.html:12
 msgid "duration"
