@@ -15,44 +15,37 @@ class FixCheckMedia(object):
     def process(self):
         for root, dirs, files in os.walk(self.dir):
             for filename in files:
-                path = root + os.sep + filename
+                source = root + os.sep + filename
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
                 dir_files = os.listdir(root)
 
-                fixed_log = 'webm.fixed'
-                tofix_log = 'webm.tofix'
+                webm_fixed_log = 'webm.fixed'
+                webm_tofix_log = 'webm.tofix'
+                mp3_fixed_log = 'mp3.fixed'
+                mp3_tofix_log = 'mp3.tofix'
 
-                if ext == 'webm' and not fixed_log in dir_files:
-                    print path
-                    if os.path.getsize(path):
-                        self.fix_webm(path)
-                        os.system('touch ' + root + os.sep + fixed_log)
-                        #pass
-
-                if ext == 'webm' and tofix_log in dir_files and not fixed_log in dir_files:
-                    print path
-                    if os.path.getsize(path):
-                        self.fix_webm(path)
-                        os.system('touch ' + root + os.sep + fixed_log)
-                        os.system('rm ' + root + os.sep + tofix_log)
-                        #pass
-
-                fixed_log = 'mp3.fixed'
-                tofix_log = 'mp3.tofix'
-
-                if ext == 'mp3' and tofix_log in dir_files and not fixed_log in dir_files:
-                    print path
-                    for file in dir_files:
-                        source_ext = os.path.splitext(file)[1][1:]
-                        if source_ext == 'webm':
-                            source = root + os.sep + file
-                            if os.path.getsize(source):
+                if ext == 'webm' and os.path.getsize(source) and not webm_fixed_log in dir_files:
+                    print source    
+                    self.fix_webm(source)
+                    log = root + os.sep + webm_fixed_log
+                    os.system('touch ' + log)
+                    log = root + os.sep + webm_tofix_log
+                    if os.path.exists(log):
+                        os.system('rm ' + log)    
+            
+                    if mp3_tofix_log in dir_files and not mp3_fixed_log in dir_files:
+                        for file in dir_files:
+                            dest_ext = os.path.splitext(file)[1][1:]
+                            if dest_ext == 'mp3':
+                                dest = root + os.sep + file
                                 self.fix_mp3(source, path)
-                                os.system('touch ' + root + os.sep + fixed_log)
-                                os.system('rm ' + root + os.sep + tofix_log)
-                            break
-                            #pass
+                                log = root + os.sep + mp3_fixed_log
+                                os.system('touch ' + log)
+                                log = root + os.sep + mp3_tofix_log
+                                if os.path.exists(log):
+                                    os.system('rm ' + log)
+                                break
 
 
     def hard_fix_webm(self, path):
