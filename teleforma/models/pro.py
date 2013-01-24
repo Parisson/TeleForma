@@ -160,7 +160,7 @@ class Answer(models.Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'answer'
         verbose_name = _('Answer')
-        ordering = ['-date_submitted']
+        ordering = ['-date_submitted', '-date_validated']
 
 
 class TestimonialTemplate(models.Model):

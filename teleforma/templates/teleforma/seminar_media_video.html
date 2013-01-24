@@ -73,6 +73,7 @@ $(window).ready(function(){
     <div style="float: left; font-size: 0.9em;">
         <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
     </div>
+
     <div style="float: right; font-size: 0.9em;">
         <a href="{% url teleforma-media-audio seminar.id media.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
 
@@ -80,9 +81,11 @@ $(window).ready(function(){
         <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
-    <div style="text-align: center;">
+
+    <div style="text-align: center; padding: 0em .5em 0em .5em;">
       <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
     </div>
+
 </div>
 
 {% if access_error %}

@@ -36,20 +36,20 @@
 from teleforma.views.core import *
 
 
-def seminar_progress(user, seminar):    
+def seminar_progress(user, seminar):
     """return the user progress of a seminar in percent
     """
 
     progress = 0
     total = 0
-    
+
     objects = [seminar.docs_1, seminar.docs_2, seminar.medias, seminar.docs_correct]
     for obj in objects:
         for item in obj.all():
             total += item.weight
             if user in item.readers.all():
                 progress += item.weight
-    
+
     questions = Question.objects.filter(seminar=seminar, status=3)
     for question in questions:
         total += question.weight
@@ -67,11 +67,12 @@ def seminar_validated(user, seminar):
     questions = seminar.question.filter(status=3)
     if questions:
         for question in questions:
-            answers = Answer.objects.filter(question=question, user=user, validated=True)
+            answers = Answer.objects.filter(question=question, user=user)
             if answers:
-                validated.append(True)
-            else:
-                validated.append(False)
+                if answers[0].validated:
+                    validated.append(True)
+                else:
+                    validated.append(False)
         return not False in validated
     return False
 
@@ -82,7 +83,7 @@ def all_seminars(request, progress_order=False, date_order=False):
         user = request
     else:
         user = request.user
-    
+
     if not user.is_authenticated():
         return {}
 
@@ -93,7 +94,7 @@ def all_seminars(request, progress_order=False, date_order=False):
         seminars = []
         professor = user.professor.get()
         courses = professor.courses.all()
-        
+
         for course in courses:
             for seminar in course.seminar.all():
                 seminars.append(seminar)
@@ -139,7 +140,7 @@ def total_progress(request):
     professor = user.professor.all()
 
     if auditor and not (user.is_staff or user.is_superuser):
-        seminars = auditor[0].seminars.all()        
+        seminars = auditor[0].seminars.all()
     elif user.is_superuser or user.is_staff:
         seminars = Seminar.objects.all()
     elif professor:
