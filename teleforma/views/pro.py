@@ -79,7 +79,7 @@ def content_to_response(content, filename=None):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
-def render_to_pdf(request, template, context, filename=None, encoding='utf-8', 
+def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     **kwargs):
     """
     Render a pdf response using given *request*, *template* and *context*.
@@ -143,7 +143,7 @@ class AnswerView(FormView):
     def get_initial(self):
         initial = {}
         self.question = Question.objects.get(pk=self.kwargs['pk'])
-        answers = Answer.objects.filter(user=self.request.user, 
+        answers = Answer.objects.filter(user=self.request.user,
                                         question=self.question).order_by('-date_submitted')
         if answers:
             answer = answers[0]
@@ -224,7 +224,7 @@ class SeminarMediaPreviewView(DetailView):
 
     def dispatch(self, *args, **kwargs):
         return super(SeminarMediaPreviewView, self).dispatch(*args, **kwargs)
-                
+
 class AnswersView(ListView):
 
     model = Answer
@@ -237,7 +237,7 @@ class AnswersView(ListView):
         context = super(AnswersView, self).get_context_data(**kwargs)
         seminars = all_seminars(self.request)
         context['all_seminars'] = seminars
-        
+
         paginator = Paginator(self.object_list, per_page=12)
         try:
             page = int(self.request.GET.get('page', '1'))
@@ -271,7 +271,7 @@ class AnswersView(ListView):
         else:
             title = unicode(_('Course')) + ' : ' + seminar.course.title
         organization = seminar.course.department.name
-        
+
         auditor = user.auditor.all()
         if auditor:
             context['gender'] = unicode(_(auditor[0].gender))
@@ -302,7 +302,7 @@ class AnswersView(ListView):
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')
-    
+
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
         context = {}
@@ -319,7 +319,7 @@ class AnswersView(ListView):
         answer.validated = False
         answer.status = 2
         answer.save()
-        
+
         path = reverse('teleforma-question-answer', kwargs={'pk':answer.question.id})
         if answer.question.seminar.sub_title:
             title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
@@ -342,7 +342,7 @@ class AnswersView(ListView):
         seminar = answer.question.seminar
         user = answer.user
         sender = request.user
-        
+
         text = render_to_string('teleforma/messages/answer_rejected.txt', context)
         subject = seminar.title + ' : ' + unicode(_('validation conditions for an answer'))
         mess = Message(sender=sender, recipient=user, subject=subject, body=text)
@@ -469,8 +469,8 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
     context['seminar_progress'] = seminar_progress(user, seminar)
     revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
     revision.save()
-    
-    return render_to_response(template, context, request_context)    
+
+    return render_to_response(template, context, request_context)
 
 
 class PDFTemplateResponseMixin(TemplateResponseMixin):
@@ -486,7 +486,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
     That pdf url will be present in the context as *pdf_url*.
 
     For example it is possible to define a view like this::
-        
+
         from django.views.generic import View
 
         class MyView(PDFTemplateResponseMixin, View):
@@ -545,11 +545,11 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
 
     def get_pdf_response(self, context, **response_kwargs):
         return render_to_pdf(
-            request=self.request, 
+            request=self.request,
             template=self.get_pdf_template_names(),
-            context=context, 
-            encoding=self.pdf_encoding, 
-            filename=self.get_pdf_filename(), 
+            context=context,
+            encoding=self.pdf_encoding,
+            filename=self.get_pdf_filename(),
             **self.pdf_kwargs
         )
 
@@ -570,13 +570,13 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     pdf_template_name = 'teleforma/seminar_testimonial.html'
     # pdf_filename = 'report.pdf'
 
-    
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TestimonialView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(TestimonialView, self).get_context_data(**kwargs)        
+        context = super(TestimonialView, self).get_context_data(**kwargs)
         context['seminar'] = self.get_object()
         return context
 
@@ -586,11 +586,24 @@ class TestimonialDownloadView(TestimonialView):
     pdf_filename = 'testimonial.pdf'
 
     def get_pdf_filename(self):
-        super(TestimonialView, self).get_pdf_filename()
+        super(TestimonialDownloadView, self).get_pdf_filename()
         seminar = self.get_object()
         prefix = unicode(_('Testimonial'))
-        filename = '_'.join([prefix, seminar.title, 
+        filename = '_'.join([prefix, seminar.title,
                             self.request.user.first_name, self.request.user.last_name,])
         filename += '.pdf'
         return filename.encode('utf-8')
+
+
+class TestimonialListView(ListView):
+
+    model = Testimonial
+    template_name='teleforma/testimonials.html'
+
+    def get_queryset(self):
+        return Testimonial.objects.filter(user=self.request.user)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TestimonialListView, self).dispatch(*args, **kwargs)
 
