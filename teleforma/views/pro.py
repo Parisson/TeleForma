@@ -201,6 +201,8 @@ class SeminarMediaView(MediaView):
         context['media'] = media
         context['seminar_progress'] = seminar_progress(user, seminar)
         revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
+        if not c:
+            revision.save()
         return context
 
     def get_object(self, queryset=None):
@@ -322,6 +324,7 @@ class AnswersView(ListView):
             title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
         else:
             title = unicode(_('Course')) + ' : ' + seminar.course.title
+
         organization = seminar.course.department.name
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
