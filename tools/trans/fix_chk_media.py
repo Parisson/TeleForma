@@ -25,21 +25,22 @@ class FixCheckMedia(object):
                 mp3_fixed_log = 'mp3.fixed'
                 mp3_tofix_log = 'mp3.tofix'
 
-                if ext == 'webm' and os.path.getsize(source) and not webm_fixed_log in dir_files:
+                if ext == 'webm' and os.path.getsize(source):
                     print source    
-                    self.fix_webm(source)
-                    log = root + os.sep + webm_fixed_log
-                    os.system('touch ' + log)
-                    log = root + os.sep + webm_tofix_log
-                    if os.path.exists(log):
-                        os.system('rm ' + log)    
+                    if not webm_fixed_log in dir_files:
+                        self.fix_webm(source)
+                        log = root + os.sep + webm_fixed_log
+                        os.system('touch ' + log)
+                        log = root + os.sep + webm_tofix_log
+                        if os.path.exists(log):
+                            os.system('rm ' + log)    
             
                     if mp3_tofix_log in dir_files and not mp3_fixed_log in dir_files:
                         for file in dir_files:
                             dest_ext = os.path.splitext(file)[1][1:]
                             if dest_ext == 'mp3':
                                 dest = root + os.sep + file
-                                self.fix_mp3(source, path)
+                                self.fix_mp3(source, dest)
                                 log = root + os.sep + mp3_fixed_log
                                 os.system('touch ' + log)
                                 log = root + os.sep + mp3_tofix_log
