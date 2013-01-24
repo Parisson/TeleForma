@@ -328,7 +328,6 @@ class DocumentView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
         seminars = all_seminars(self.request)['all_seminars']
-        context['all_courses'] = all_courses
         document = self.get_object()
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)
