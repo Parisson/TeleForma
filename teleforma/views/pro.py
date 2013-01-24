@@ -118,7 +118,8 @@ class SeminarView(DetailView):
         elif validated:
             messages.info(self.request, _("All your answers have been validated! You can now download the training testimonial below."))
         revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
-        revision.save()
+        if not c:
+            revision.save()
         return context
 
 class SeminarsView(ListView):
@@ -177,7 +178,8 @@ class AnswerView(FormView):
         context['seminar'] = self.question.seminar
         context['seminar_progress'] = seminar_progress(user, self.question.seminar)
         revision, c = SeminarRevision.objects.get_or_create(seminar=self.question.seminar, user=user)
-        revision.save()
+        if not c:
+            revision.save()
         return context
 
     def get_success_url(self):
@@ -199,7 +201,6 @@ class SeminarMediaView(MediaView):
         context['media'] = media
         context['seminar_progress'] = seminar_progress(user, seminar)
         revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
-        revision.save()
         return context
 
     def get_object(self, queryset=None):
@@ -468,8 +469,8 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
     context['form'] = form
     context['seminar_progress'] = seminar_progress(user, seminar)
     revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
-    revision.save()
-
+    if not c:
+        revision.save()
     return render_to_response(template, context, request_context)
 
 
