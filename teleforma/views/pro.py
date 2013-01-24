@@ -273,12 +273,8 @@ class AnswersView(ListView):
             title = unicode(_('Course')) + ' : ' + seminar.course.title
         organization = seminar.course.department.name
 
-        auditor = user.auditor.all()
-        if auditor:
-            context['gender'] = unicode(_(auditor[0].gender))
-        else:
-            context['gender'] = user.first_name
-        context['lastname'] = user.last_name
+        context['first_name'] = user.first_name
+        context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
         context['domain'] = site.name
         context['path'] = path
@@ -289,15 +285,15 @@ class AnswersView(ListView):
         if seminar_validated(user, seminar):
             testimonial = Testimonial(user=user, seminar=seminar)
             testimonial.save()
-            url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':seminar.id}) + '?format=pdf'
+            # url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':seminar.id}) + '?format=pdf'
             text = render_to_string('teleforma/messages/seminar_validated.txt', context)
             subject = seminar.title + ' : ' + unicode(_('all your answers has been validated'))
 
         else:
             text = render_to_string('teleforma/messages/answer_validated.txt', context)
-            a = _('answer').decode('utf8')
-            v = _('validated').decode('utf8')
-            subject = '%s : %s n° %s %s' % (seminar.title, a, str(context['rank']), v)
+            a = _('answer')
+            v = _('validated')
+            subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
 
         mess = Message(sender=sender, recipient=user, subject=subject, body=text)
         mess.moderation_status = 'a'
@@ -327,12 +323,8 @@ class AnswersView(ListView):
         else:
             title = unicode(_('Course')) + ' : ' + seminar.course.title
         organization = seminar.course.department.name
-        auditor = user.auditor.all()
-        if auditor:
-            context['gender'] = auditor[0].gender
-        else:
-            context['gender'] = user.first_name
-        context['lastname'] = user.last_name
+        context['first_name'] = user.first_name
+        context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
         context['domain'] = site.name
         context['path'] = path
