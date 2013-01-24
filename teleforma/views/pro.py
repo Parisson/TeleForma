@@ -198,7 +198,7 @@ class SeminarMediaView(MediaView):
         context['seminar'] = seminar
         context['media'] = media
         context['seminar_progress'] = seminar_progress(user, seminar)
-        revision, c = SeminarRevision.objects.create(seminar=seminar, user=user)
+        revision, c = SeminarRevision.objects.get_or_create(seminar=seminar, user=user)
         revision.save()
         return context
 
