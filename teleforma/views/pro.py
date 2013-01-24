@@ -99,7 +99,7 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 def set_revision(user, seminar):
     revisions = SeminarRevision.objects.filter(seminar=seminar, user=user)
     if revisions:
-        revision[0].save()
+        revisions[0].save()
     else:
         SeminarRevision.objects.create(seminar=seminar, user=user)
 
