@@ -63,16 +63,16 @@ def seminar_progress(user, seminar):
         return 0
 
 def seminar_validated(user, seminar):
-    validated = [False]
+    validated = []
     questions = seminar.question.filter(status=3)
     if questions:
         for question in questions:
-            answers = Answer.objects.filter(question=question, user=user)
+            answers = Answer.objects.filter(question=question, user=user,
+                                            validated=True, treated=True)
             if answers:
-                if answers[0].validated:
-                    validated.append(True)
-                else:
-                    validated.append(False)
+                validated.append(True)
+            else:
+                validated.append(False)
         return not False in validated
     return False
 

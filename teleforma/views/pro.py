@@ -103,14 +103,30 @@ def set_revision(user, seminar):
     else:
         SeminarRevision.objects.create(seminar=seminar, user=user)
 
-class SeminarView(DetailView):
+
+class SeminarAccessMixin(object):
+
+    def render_to_response(self, context):
+        seminar = context['seminar']
+        if not seminar in all_seminars(self.request)['all_seminars']:
+            messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
+            return redirect('teleforma-desk')
+        return super(SeminarAccessMixin, self).render_to_response(context)
+
+
+class SeminarView(SeminarAccessMixin, DetailView):
 
     model = Seminar
     template_name='teleforma/seminar_detail.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        # self.pk = kwargs.get('pk')
+        # seminar = self.get_object()
         return super(SeminarView, self).dispatch(*args, **kwargs)
+
+    # def get_object(self, queryset=None):
+    #     return Media.objects.get(id=self.pk)
 
     def get_context_data(self, **kwargs):
         context = super(SeminarView, self).get_context_data(**kwargs)
@@ -118,6 +134,7 @@ class SeminarView(DetailView):
         user = self.request.user
         progress = seminar_progress(user, seminar)
         validated = seminar_validated(user, seminar)
+        context['seminar'] = seminar
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
         if progress == 100 and not validated:
@@ -133,15 +150,14 @@ class SeminarsView(ListView):
     model = Seminar
     template_name='teleforma/seminars.html'
 
-    def get_queryset(self):
-        return all_seminars(self.request, date_order=True)['all_seminars']
-
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SeminarsView, self).dispatch(*args, **kwargs)
 
+    def get_queryset(self):
+        return all_seminars(self.request, date_order=True)['all_seminars']
 
-class AnswerView(FormView):
+class AnswerView(SeminarAccessMixin, FormView):
 
     model = Answer
     form_class = AnswerForm
@@ -190,7 +206,7 @@ class AnswerView(FormView):
         return reverse('teleforma-seminar-detail', kwargs={'pk':self.question.seminar.id})
 
 
-class SeminarMediaView(MediaView):
+class SeminarMediaView(SeminarAccessMixin, MediaView):
 
     template_name = 'teleforma/seminar_media_video.html'
 
