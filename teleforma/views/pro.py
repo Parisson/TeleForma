@@ -116,25 +116,20 @@ class SeminarAccessMixin(object):
 
 class SeminarView(SeminarAccessMixin, DetailView):
 
+    context_object_name = "seminar"
     model = Seminar
     template_name='teleforma/seminar_detail.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        # self.pk = kwargs.get('pk')
-        # seminar = self.get_object()
         return super(SeminarView, self).dispatch(*args, **kwargs)
-
-    # def get_object(self, queryset=None):
-    #     return Media.objects.get(id=self.pk)
 
     def get_context_data(self, **kwargs):
         context = super(SeminarView, self).get_context_data(**kwargs)
-        seminar = self.get_object()
+        seminar = context['seminar']
         user = self.request.user
         progress = seminar_progress(user, seminar)
         validated = seminar_validated(user, seminar)
-        context['seminar'] = seminar
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
         if progress == 100 and not validated:
@@ -213,7 +208,6 @@ class SeminarMediaView(SeminarAccessMixin, MediaView):
     def get_context_data(self, **kwargs):
         context = super(SeminarMediaView, self).get_context_data(**kwargs)
         user = self.request.user
-        media = self.get_object()
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
         context['seminar_progress'] = seminar_progress(user, seminar)
@@ -257,13 +251,9 @@ class SeminarDocumentDownloadView(SeminarAccessMixin, DocumentDownloadView):
 
 class SeminarMediaPreviewView(DetailView):
 
+    context_object_name = "seminar"
     model = Seminar
     template_name = 'teleforma/inc/seminar_media_preview_video.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(SeminarMediaPreviewView, self).get_context_data(**kwargs)
-        context['seminar'] = self.get_object()
-        return context
 
     def dispatch(self, *args, **kwargs):
         return super(SeminarMediaPreviewView, self).dispatch(*args, **kwargs)
@@ -279,9 +269,6 @@ class AnswersView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AnswersView, self).get_context_data(**kwargs)
-        seminars = all_seminars(self.request)
-        context['all_seminars'] = seminars
-
         paginator = Paginator(self.object_list, per_page=12)
         try:
             page = int(self.request.GET.get('page', '1'))
@@ -313,13 +300,14 @@ class AnswersView(ListView):
         user = answer.user
         sender = request.user
         seminar = answer.question.seminar
+        organization = seminar.course.department.name
         site = Site.objects.get_current()
+
         path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
         if answer.question.seminar.sub_title:
             title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
         else:
             title = unicode(_('Course')) + ' : ' + seminar.course.title
-        organization = seminar.course.department.name
 
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
@@ -355,8 +343,7 @@ class AnswersView(ListView):
         answer = Answer.objects.get(id=id)
         answer.reject()
         seminar = answer.question.seminar
-        user = answer.user
-        sender = request.user
+        organization = seminar.course.department.name
         site = Site.objects.get_current()
 
         testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
@@ -370,7 +357,6 @@ class AnswersView(ListView):
         else:
             title = unicode(_('Course')) + ' : ' + seminar.course.title
 
-        organization = seminar.course.department.name
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
@@ -380,10 +366,8 @@ class AnswersView(ListView):
         context['organization'] = organization
         context['date'] =  answer.question.seminar.expiry_date
 
-        seminar = answer.question.seminar
         user = answer.user
         sender = request.user
-
         text = render_to_string('teleforma/messages/answer_rejected.txt', context)
         subject = seminar.title + ' : ' + unicode(_('validation conditions for an answer'))
         mess = Message(sender=sender, recipient=user, subject=subject, body=text)
@@ -395,12 +379,13 @@ class AnswersView(ListView):
 class AnswerDetailViewTest(DetailView):
     """For test only"""
 
+    context_object_name = "answer"
     model = Answer
     template_name='teleforma/messages/answer_rejected.txt'
 
     def get_context_data(self, **kwargs):
         context = super(AnswerDetailViewTest, self).get_context_data(**kwargs)
-        answer = self.get_object()
+        answer = context['answer']
         seminar = answer.question.seminar
         user = answer.user
         sender = self.request.user
@@ -434,11 +419,6 @@ class AnswerDetailView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AnswerDetailView, self).dispatch(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(AnswerDetailView, self).get_context_data(**kwargs)
-        context['all_seminars'] = all_seminars(self.request)
-        return context
 
 
 class AjaxableResponseMixin(object):
@@ -604,6 +584,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
 
 class TestimonialView(PDFTemplateResponseMixin, SeminarView):
 
+    context_object_name = "seminar"
     model = Seminar
     template_name = 'teleforma/seminar_testimonial.html'
     pdf_template_name = 'teleforma/seminar_testimonial.html'
@@ -613,11 +594,6 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TestimonialView, self).dispatch(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(TestimonialView, self).get_context_data(**kwargs)
-        context['seminar'] = self.get_object()
-        return context
 
 
 class TestimonialDownloadView(TestimonialView):
