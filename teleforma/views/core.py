@@ -199,6 +199,16 @@ def get_periods(user):
     return periods
 
 
+class CourseAccessMixin(object):
+
+    def render_to_response(self, context):
+        course = context['course']
+        if not course in all_courses(self.request.user):
+            messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
+            return redirect('teleforma-desk')
+        return super(CourseAccessMixin, self).render_to_response(context)
+
+
 class CourseView(DetailView):
 
     model = Course
@@ -227,6 +237,7 @@ class CourseView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
+
 
 
 class CoursesView(ListView):
@@ -348,35 +359,32 @@ class DocumentView(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(DocumentView, self).dispatch(*args, **kwargs)
 
-    def download(self, request, pk):
-        document = Document.objects.get(id=pk)
-        courses = get_courses(request.user)
-        seminars = all_seminars(request)['all_seminars']
-        if get_seminar_doc_access(document, seminars):
-            document.readers.add(request.user)
-            fsock = open(document.file.path, 'r')
-            mimetype = mimetypes.guess_type(document.file.path)[0]
-            extension = mimetypes.guess_extension(mimetype)
-            response = HttpResponse(fsock, mimetype=mimetype)
-            response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                             (document.title.encode('utf8'), extension)
-            return response
-        else:
-            return redirect('teleforma-document-detail', document.id)
 
-    def view(self, request, pk):
-        courses = get_courses(request.user)
-        seminars = all_seminars(request)['all_seminars']
-        document = Document.objects.get(id=pk)
-        if get_seminar_doc_access(document, seminars):
-            document.readers.add(request.user)
-            fsock = open(document.file.path, 'r')
-            mimetype = mimetypes.guess_type(document.file.path)[0]
-            extension = mimetypes.guess_extension(mimetype)
-            response = HttpResponse(fsock, mimetype=mimetype)
-            return response
-        else:
-            return redirect('teleforma-document-detail', document.id)
+class DocumentDownloadView(DocumentView):
+
+    def render_to_response(self, context):
+        document = self.get_object()
+        document.readers.add(self.request.user)
+        fsock = open(document.file.path, 'r')
+        mimetype = mimetypes.guess_type(document.file.path)[0]
+        extension = mimetypes.guess_extension(mimetype)
+        response = HttpResponse(fsock, mimetype=mimetype)
+        response['Content-Disposition'] = "attachment; filename=%s%s" % \
+                                             (document.title.encode('utf8'), extension)
+        return super(DocumentDownloadView, self).render_to_response(context)
+
+
+class DocumentReadView(DocumentView):
+
+    def render_to_response(self, context):
+        courses = get_courses(self.request.user)
+        document = self.get_object()
+        document.readers.add(self.request.user)
+        fsock = open(document.file.path, 'r')
+        mimetype = mimetypes.guess_type(document.file.path)[0]
+        extension = mimetypes.guess_extension(mimetype)
+        response = HttpResponse(fsock, mimetype=mimetype)
+        return super(DocumentReadView, self).render_to_response(context)
 
 
 class ConferenceView(DetailView):

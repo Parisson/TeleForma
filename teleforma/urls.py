@@ -45,7 +45,7 @@ from jsonrpc import jsonrpc_site
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
 profile_view = ProfileView()
-document = DocumentView()
+document = SeminarDocumentView()
 media = MediaView()
 
 urlpatterns = patterns('',
@@ -67,7 +67,7 @@ urlpatterns = patterns('',
     url(r'^desk/seminars/(?P<pk>.*)/detail/$', SeminarView.as_view(), name="teleforma-seminar-detail"),
 
     url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
-    url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+    # url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
 
     url(r'^desk/seminars/(?P<id>.*)/media/(?P<pk>.*)/video/$',
             SeminarMediaView.as_view(template_name='teleforma/seminar_media_video.html'),
@@ -79,11 +79,9 @@ urlpatterns = patterns('',
             SeminarMediaPreviewView.as_view(),
             name="teleforma-media-preview-video"),
 
-    url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
-        name="teleforma-document-detail"),
-    url(r'^desk/documents/(?P<pk>.*)/download/$', document.download,
+    url(r'^desk/seminars/(?P<id>.*)/documents/(?P<pk>.*)/download/$', SeminarDocumentDownloadView.as_view(),
         name="teleforma-document-download"),
-    url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
+    url(r'^desk/seminars/(?P<id>.*)/documents/(?P<pk>.*)/view/$', SeminarDocumentView.as_view(),
         name="teleforma-document-view"),
 #    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-view"),
 

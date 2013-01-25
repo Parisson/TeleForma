@@ -223,14 +223,39 @@ class SeminarMediaView(SeminarAccessMixin, MediaView):
         set_revision(user, seminar)
         return context
 
-    def get_object(self, queryset=None):
-        return Media.objects.get(id=self.pk)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SeminarMediaView, self).dispatch(*args, **kwargs)
+
+
+class SeminarDocumentView(SeminarAccessMixin, DocumentReadView):
+
+    def get_context_data(self, **kwargs):
+        context = super(SeminarDocumentView, self).get_context_data(**kwargs)
+        user = self.request.user
+        seminar = Seminar.objects.get(pk=self.kwargs['id'])
+        context['seminar'] = seminar
+        set_revision(user, seminar)
+        return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        self.pk = kwargs.get('pk')
-        media = self.get_object()
-        return super(SeminarMediaView, self).dispatch(*args, **kwargs)
+        return super(SeminarDocumentView, self).dispatch(*args, **kwargs)
+
+
+class SeminarDocumentDownloadView(SeminarAccessMixin, DocumentDownloadView):
+
+    def get_context_data(self, **kwargs):
+        context = super(SeminarDocumentDownloadView, self).get_context_data(**kwargs)
+        user = self.request.user
+        seminar = Seminar.objects.get(pk=self.kwargs['id'])
+        context['seminar'] = seminar
+        set_revision(user, seminar)
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SeminarDocumentDownloadView, self).dispatch(*args, **kwargs)
 
 
 class SeminarMediaPreviewView(DetailView):
@@ -245,6 +270,7 @@ class SeminarMediaPreviewView(DetailView):
 
     def dispatch(self, *args, **kwargs):
         return super(SeminarMediaPreviewView, self).dispatch(*args, **kwargs)
+
 
 class AnswersView(ListView):
 
