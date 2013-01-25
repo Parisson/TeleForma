@@ -465,6 +465,7 @@ class Conference(Displayable):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     session         = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
+    location        = WeakForeignKey(Location, verbose_name=_('location'))
     room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
