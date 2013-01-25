@@ -183,7 +183,7 @@ class AnswerView(FormView):
         context['status'] = self.status
         context['seminar'] = self.question.seminar
         context['seminar_progress'] = seminar_progress(user, self.question.seminar)
-        set_revision(user, seminar)
+        set_revision(user, self.question.seminar)
         return context
 
     def get_success_url(self):

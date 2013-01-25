@@ -63,7 +63,7 @@ def seminar_progress(user, seminar):
         return 0
 
 def seminar_validated(user, seminar):
-    validated = []
+    validated = [False]
     questions = seminar.question.filter(status=3)
     if questions:
         for question in questions:
