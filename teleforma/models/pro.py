@@ -143,6 +143,7 @@ class Answer(models.Model):
     question    = models.ForeignKey(Question, related_name="answer", verbose_name=_('question'))
     answer      = models.TextField(_('answer'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    treated     = models.BooleanField(_('treated'))
     validated   = models.BooleanField(_('validated'))
     date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
     date_validated = models.DateTimeField(_('date validated'), null=True)
@@ -152,10 +153,16 @@ class Answer(models.Model):
         return ' - '.join([unicode(self.question), self.user.username, unicode(self.date_submitted)])
 
     def validate(self):
-        if len(self.answer) >= self.question.min_nchar:
-            self.validated = True
-            self.date_validated = datetime.datetime.now()
-            self.save()
+        self.validated = True
+        self.treated = False
+        self.date_validated = datetime.datetime.now()
+        self.save()
+
+    def reject(self):
+        self.validated = False
+        self.treated = True
+        self.status = 2
+        self.save()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'answer'

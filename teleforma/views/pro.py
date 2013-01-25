@@ -265,6 +265,11 @@ class AnswersView(ListView):
     def validate(request, id):
         context = {}
         answer = Answer.objects.get(id=id)
+
+        if len(answer.answer) < answer.question.min_nchar:
+            messages.error(request, "Error : too few characters in the answer")
+            return
+
         answer.validate()
         user = answer.user
         sender = request.user
@@ -303,11 +308,13 @@ class AnswersView(ListView):
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')
+        return
 
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
         context = {}
         answer = Answer.objects.get(id=id)
+        answer.reject()
         seminar = answer.question.seminar
         user = answer.user
         sender = request.user
@@ -317,9 +324,6 @@ class AnswersView(ListView):
         if testimonials:
             for testimonial in testimonials:
                 testimonial.delete()
-        answer.validated = False
-        answer.status = 2
-        answer.save()
 
         path = reverse('teleforma-question-answer', kwargs={'pk':answer.question.id})
         if answer.question.seminar.sub_title:
