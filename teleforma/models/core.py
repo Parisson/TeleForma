@@ -109,7 +109,7 @@ class Department(Model):
                                  verbose_name=_('organization'))
     domain          = CharField(_('Master domain'), max_length=255, blank=True)
     address         = tinymce.models.HTMLField(_('address'), blank=True)
-    signature       = models.ImageField(_('Signature image'), upload_to='images/%Y/%m/%d', 
+    signature       = models.ImageField(_('Signature image'), upload_to='images/%Y/%m/%d',
                                         blank=True, null=True, max_length=1024)
 
     def __unicode__(self):
@@ -353,7 +353,7 @@ class Document(MediaBase):
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", 
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
                                  blank=True, max_length=1024)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
                                         blank=True, null=True)
@@ -380,7 +380,7 @@ class Document(MediaBase):
         if self.type:
             strings.append(type.name)
         strings.append(self.title)
-        return ' - '.join(strings) 
+        return ' - '.join(strings)
 
     def save(self, **kwargs):
         if self.course:
@@ -470,10 +470,11 @@ class Conference(Displayable):
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
+    duration        = DurationField(_('approximative duration'))
     price           = models.FloatField(_('price'), blank=True, null=True)
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
-    docs_description = models.ManyToManyField(Document, related_name="conference_docs_description", 
+    docs_description = models.ManyToManyField(Document, related_name="conference_docs_description",
                                         verbose_name=_('description documents'),
                                         blank=True, null=True)
     notes = generic.GenericRelation(Note)
@@ -518,11 +519,11 @@ class Conference(Displayable):
         return dict
 
     def to_json_dict(self):
-        data = {'id': self.public_id, 
+        data = {'id': self.public_id,
                 'course_code': self.course.code,
-                'course_type': self.course_type.name, 
+                'course_type': self.course_type.name,
                 'professor_id': self.professor.user.username,
-                'period': self.period.name, 
+                'period': self.period.name,
                 'department': self.department.name,
                 'session': self.session,
                 'comment': self.comment,
