@@ -274,6 +274,9 @@ class MediaView(DetailView):
         media = self.get_object()
         if not media.mime_type:
             media.set_mime_type()
+        if not self.request.user in media.readers.all():
+            media.readers.add(user)
+        context['media'] = media
         context['mime_type'] = media.mime_type
         context['course'] = media.course
         context['item'] = media.item
@@ -285,10 +288,6 @@ class MediaView(DetailView):
         else:
             context['room'] = get_room(name=media.item.title, content_type=content_type,
                                    id=media.id)
-        access = get_seminar_media_access(media, seminars)
-        if not access:
-            context['access_error'] = access_error
-            context['message'] = contact_message
         context['periods'] = get_periods(self.request.user)
         return context
 

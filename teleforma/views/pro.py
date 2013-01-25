@@ -215,10 +215,7 @@ class SeminarMediaView(SeminarAccessMixin, MediaView):
         user = self.request.user
         media = self.get_object()
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
-        if not user in media.readers.all():
-            media.readers.add(user)
         context['seminar'] = seminar
-        context['media'] = media
         context['seminar_progress'] = seminar_progress(user, seminar)
         set_revision(user, seminar)
         return context
