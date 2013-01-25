@@ -104,7 +104,7 @@ alt="logo" />
 
  {% if user.is_staff %}
    <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
-   <li><a href="{% url teleforma-answers %}" class="green">{% trans "Answers" %}</a></li>
+   <li><a href="{% url teleforma-answers %}" class="green">{% trans "Answers" %}{% untreated_answer_count %}</a></li>
    {% else %}
    <li><a href="{% url teleforma-help %}" class="yellow">{% trans "Help" %}</a></li>
    <li><a href="{% url teleforma-testimonials %}" class="green">{% trans "Testimonials" %}</a></li>

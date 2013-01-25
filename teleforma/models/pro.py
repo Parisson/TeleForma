@@ -154,7 +154,7 @@ class Answer(models.Model):
 
     def validate(self):
         self.validated = True
-        self.treated = False
+        self.treated = True
         self.date_validated = datetime.datetime.now()
         self.save()
 
