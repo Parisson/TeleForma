@@ -152,6 +152,7 @@ class SeminarsView(ListView):
     def get_queryset(self):
         return all_seminars(self.request, date_order=True)['all_seminars']
 
+
 class AnswerView(SeminarAccessMixin, FormView):
 
     model = Answer
@@ -282,11 +283,12 @@ class AnswersView(ListView):
         context['page'] = page
         return context
 
+    @method_decorator(permission_required('is_superuser'))
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AnswersView, self).dispatch(*args, **kwargs)
 
-
+    @method_decorator(permission_required('is_superuser'))
     @jsonrpc_method('teleforma.validate_answer')
     def validate(request, id):
         context = {}
@@ -337,6 +339,7 @@ class AnswersView(ListView):
         notify_user(mess, 'acceptance')
         return
 
+    @method_decorator(permission_required('is_superuser'))
     @jsonrpc_method('teleforma.reject_answer')
     def reject(request, id):
         context = {}
@@ -416,6 +419,7 @@ class AnswerDetailView(DetailView):
     model = Answer
     template_name='teleforma/answer_detail.html'
 
+    @method_decorator(permission_required('is_superuser'))
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AnswerDetailView, self).dispatch(*args, **kwargs)
