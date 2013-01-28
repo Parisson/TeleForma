@@ -449,7 +449,7 @@ class Media(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
-        ordering = ['-date_modified']
+        ordering = ['rank']
 
 
 class Conference(Displayable):
@@ -482,7 +482,7 @@ class Conference(Displayable):
     notes = generic.GenericRelation(Note)
 
     objects = DisplayableManager()
-    
+
     @property
     def slug_streaming(self):
         slug = '-'.join([self.course.department.slug,
