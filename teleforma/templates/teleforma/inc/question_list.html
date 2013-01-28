@@ -6,7 +6,7 @@
         {% for question in questions.all %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="35%">
-            	<a href="{% url teleforma-question-answer question.id %}">{{ question.title }}{% if question.rank %} n°{{ question.rank }}{% endif %}</a></td>
+            	<a href="{% url teleforma-question-answer seminar.id question.id %}">{{ question.title }}{% if question.rank %} n°{{ question.rank }}{% endif %}</a></td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%">
             	{% if question|submitted:user and not question|validated:user %}
             		{% trans "submitted on" %} {{ question|submitted:user }}

@@ -1,10 +1,14 @@
-{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}
-{% blocktrans %}
-Congratulations!
+{% load i18n %}{% blocktrans %}{{ first_name }} {{ last_name }},
 
-Your answer has been validated.
-You can continue to the next step of your seminar following this link:
-                           
-http://{{ site.name }}{{ seminar_url }}
+Your answer to the question n°{{ rank }} of the e-learning seminar "{{ title }}" has been validated.
 
-{% endblocktrans }
+You have then achieved the step 4 of your training.
+
+Now read the corrected document of all questions (step 5) and evaluate the training (step 6) in order to obtain your testimonial (step 7) following this link:
+
+http://{{ domain }}{{ path }}
+
+We remind you that you absolutely need to terminate all steps of your training before {{ date }}.
+
+The team of the {{ organization }} thank you for your confidence and we remain at your disposal for further information.
+{% endblocktrans %}

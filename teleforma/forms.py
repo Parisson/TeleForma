@@ -18,11 +18,12 @@ class QuestionForm(ModelForm):
 
 class AnswerForm(ModelForm):
 
-    def __init__(self, *args, **kwargs): 
+    def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
         self.fields['answer'].widget.attrs['cols'] = 81
         self.fields['answer'].widget.attrs['rows'] = 32
         self.fields['status'].widget = HiddenInput()
+        self.fields['treated'].widget = HiddenInput()
 
     class Meta:
         model = Answer

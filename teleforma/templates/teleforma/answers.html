@@ -15,14 +15,14 @@
 var answerUtils = {
         validate : function(id, a){
             json([id],'teleforma.validate_answer',function(){
-                a.removeClass('icon_delete').addClass('icon_ok')
-                a.html('{% trans " validated" %}')
+                a.removeClass('icon_delete').addClass('icon_ok');
+                a.html('{% trans " validated" %}');
                 });
          },
         reject : function(id, a){
             json([id],'teleforma.reject_answer',function(){
-                a.removeClass('icon_ok').addClass('icon_delete')
-                a.html('{% trans " rejected" %}')
+                a.removeClass('icon_ok').addClass('icon_delete');
+                a.html('{% trans " rejected" %}');
                 });
          }
         }

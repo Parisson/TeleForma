@@ -100,21 +100,21 @@ def format_courses(courses, course=None, queryset=None, types=None):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import format_crfpa_courses
         return format_crfpa_courses(courses, course, queryset, types)
-    
+
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import format_ae_courses
         return format_ae_courses(courses, course, queryset, types)
-    
+
 
 def get_courses(user, date_order=False, num_order=False):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
         return get_crfpa_courses(user, date_order, num_order)
-    
+
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
         return get_ae_courses(user, date_order, num_order)
-    
+
 def stream_from_file(__file):
     chunk_size = 0x10000
     f = open(__file, 'r')
@@ -185,7 +185,7 @@ def get_periods(user):
         student = user.crfpa_student.all()
         if student:
             student = user.crfpa_student.get()
-            periods = student.period.all() 
+            periods = student.period.all()
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         student = user.ae_student.all()
@@ -195,9 +195,19 @@ def get_periods(user):
 
     if user.is_staff or user.is_superuser:
         periods = Period.objects.all()
-    
+
     return periods
-    
+
+
+class CourseAccessMixin(object):
+
+    def render_to_response(self, context):
+        course = context['course']
+        if not course in all_courses(self.request.user):
+            messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
+            return redirect('teleforma-desk')
+        return super(CourseAccessMixin, self).render_to_response(context)
+
 
 class CourseView(DetailView):
 
@@ -227,6 +237,7 @@ class CourseView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
+
 
 
 class CoursesView(ListView):
@@ -259,11 +270,13 @@ class MediaView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
-        all_courses = get_courses(self.request.user)
-        context['all_courses'] = all_courses
+        seminars = all_seminars(self.request)['all_seminars']
         media = self.get_object()
         if not media.mime_type:
             media.set_mime_type()
+        if not self.request.user in media.readers.all():
+            media.readers.add(user)
+        context['media'] = media
         context['mime_type'] = media.mime_type
         context['course'] = media.course
         context['item'] = media.item
@@ -275,10 +288,6 @@ class MediaView(DetailView):
         else:
             context['room'] = get_room(name=media.item.title, content_type=content_type,
                                    id=media.id)
-        access = get_course_access(media, all_courses)
-        if not access:
-            context['access_error'] = access_error
-            context['message'] = contact_message
         context['periods'] = get_periods(self.request.user)
         return context
 
@@ -328,9 +337,7 @@ class DocumentView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
-        all_courses = get_courses(self.request.user)
         seminars = all_seminars(self.request)['all_seminars']
-        context['all_courses'] = all_courses
         document = self.get_object()
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)
@@ -340,7 +347,7 @@ class DocumentView(DetailView):
         else:
             context['room'] = get_room(name=document.title, content_type=content_type,
                                    id=document.id)
-        access = get_course_access(document, all_courses) or get_seminar_doc_access(document, seminars)
+        access = get_seminar_doc_access(document, seminars)
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -351,35 +358,32 @@ class DocumentView(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(DocumentView, self).dispatch(*args, **kwargs)
 
-    def download(self, request, pk):
-        document = Document.objects.get(id=pk)
-        courses = get_courses(request.user)
-        seminars = all_seminars(request)['all_seminars']
-        if get_course_access(document, courses) or get_seminar_doc_access(document, seminars):
-            document.readers.add(request.user)
-            fsock = open(document.file.path, 'r')
-            mimetype = mimetypes.guess_type(document.file.path)[0]
-            extension = mimetypes.guess_extension(mimetype)
-            response = HttpResponse(fsock, mimetype=mimetype)
-            response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                             (document.title.encode('utf8'), extension)
-            return response
-        else:
-            return redirect('teleforma-document-detail', document.id)
 
-    def view(self, request, pk):
-        courses = get_courses(request.user)
-        seminars = all_seminars(request)['all_seminars']
-        document = Document.objects.get(id=pk)
-        if get_course_access(document, courses) or get_seminar_doc_access(document, seminars):
-            document.readers.add(request.user)
-            fsock = open(document.file.path, 'r')
-            mimetype = mimetypes.guess_type(document.file.path)[0]
-            extension = mimetypes.guess_extension(mimetype)
-            response = HttpResponse(fsock, mimetype=mimetype)
-            return response
-        else:
-            return redirect('teleforma-document-detail', document.id)
+class DocumentDownloadView(DocumentView):
+
+    def render_to_response(self, context):
+        document = self.get_object()
+        document.readers.add(self.request.user)
+        fsock = open(document.file.path, 'r')
+        mimetype = mimetypes.guess_type(document.file.path)[0]
+        extension = mimetypes.guess_extension(mimetype)
+        response = HttpResponse(fsock, mimetype=mimetype)
+        response['Content-Disposition'] = "attachment; filename=%s%s" % \
+                                             (document.title.encode('utf8'), extension)
+        return super(DocumentDownloadView, self).render_to_response(context)
+
+
+class DocumentReadView(DocumentView):
+
+    def render_to_response(self, context):
+        courses = get_courses(self.request.user)
+        document = self.get_object()
+        document.readers.add(self.request.user)
+        fsock = open(document.file.path, 'r')
+        mimetype = mimetypes.guess_type(document.file.path)[0]
+        extension = mimetypes.guess_extension(mimetype)
+        response = HttpResponse(fsock, mimetype=mimetype)
+        return super(DocumentReadView, self).render_to_response(context)
 
 
 class ConferenceView(DetailView):

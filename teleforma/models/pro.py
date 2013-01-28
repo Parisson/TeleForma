@@ -59,7 +59,7 @@ class SeminarType(models.Model):
 class Seminar(Displayable):
 
     # title, description, keywords and dates are given by Displayable
-    
+
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
@@ -71,12 +71,12 @@ class Seminar(Displayable):
     magistral       = models.BooleanField(_('magistral'))
     index           = tinymce.models.HTMLField(_('index'), blank=True)
     duration        = DurationField(_('approximative duration'))
-    professor       = models.ManyToManyField('Professor', related_name='seminar', 
+    professor       = models.ManyToManyField('Professor', related_name='seminar',
                                             verbose_name=_('professor'), blank=True, null=True)
-    docs_description = models.ManyToManyField(Document, related_name="seminar_docs_description", 
+    docs_description = models.ManyToManyField(Document, related_name="seminar_docs_description",
                                         verbose_name=_('description documents'),
                                         blank=True, null=True)
-    docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1", 
+    docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1",
                                         verbose_name=_('documents 1'),
                                         blank=True, null=True)
     medias          = models.ManyToManyField(Media, related_name="seminar",
@@ -155,6 +155,7 @@ class Answer(models.Model):
     question    = models.ForeignKey(Question, related_name="answer", verbose_name=_('question'))
     answer      = models.TextField(_('answer'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    treated     = models.BooleanField(_('treated'))
     validated   = models.BooleanField(_('validated'))
     date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
     date_validated = models.DateTimeField(_('date validated'), null=True)
@@ -164,15 +165,21 @@ class Answer(models.Model):
         return ' - '.join([unicode(self.question), self.user.username, unicode(self.date_submitted)])
 
     def validate(self):
-        if len(self.answer) >= self.question.min_nchar:
-            self.validated = True
-            self.date_validated = datetime.datetime.now()
-            self.save()
+        self.validated = True
+        self.treated = True
+        self.date_validated = datetime.datetime.now()
+        self.save()
+
+    def reject(self):
+        self.validated = False
+        self.treated = True
+        self.status = 2
+        self.save()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'answer'
         verbose_name = _('Answer')
-        ordering = ['-date_submitted']
+        ordering = ['-date_submitted', '-date_validated']
 
 
 class TestimonialTemplate(models.Model):
@@ -194,18 +201,33 @@ class TestimonialTemplate(models.Model):
 
 class Testimonial(models.Model):
 
-    seminar     = models.ForeignKey(Seminar, related_name="testimonial", verbose_name=_('seminar'))
-    user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
-    template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial", 
+    seminar     = models.ForeignKey(Seminar, related_name="testimonial", verbose_name=_('seminar'),
+                                    blank=True, null=True, on_delete=models.SET_NULL)
+    user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'),
+                                    blank=True, null=True, on_delete=models.SET_NULL)
+    template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial",
                                     verbose_name=_('template'), blank=True, null=True)
-    file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m/%d',
+    file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m',
                                  blank=True, max_length=1024)
-    rank        = models.IntegerField(_('rank'), blank=True, null=True)
     date_added  = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+    title       = models.CharField(_('title'), max_length=255, blank=True)
+
+    def save(self, **kwargs):
+        if self.seminar:
+            self.title = ' - '.join([self.seminar.title,
+                                    self.user.first_name + ' ' + self.user.last_name,
+                                    str(self.date_added)])
+        else:
+            self.title = ' - '.join([self.user.first_name + ' ' + self.user.last_name, str(self.date_added)])
+        super(Testimonial, self).save(**kwargs)
+
+    def __unicode__(self):
+        return self.title
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'
         verbose_name = _('Testimonial')
+        ordering = ['date_added']
 
 
 class Auditor(models.Model):
@@ -243,3 +265,17 @@ class Auditor(models.Model):
         verbose_name = _('Auditor')
         ordering = ['user__last_name']
 
+
+class SeminarRevision(models.Model):
+
+    seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'))
+    user        = models.ForeignKey(User, related_name="revision", verbose_name=_('user'))
+    date        = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+
+    def __unicode__(self):
+        pass
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'seminar_revisions'
+        verbose_name = _('Seminar revision')
+        verbose_name_plural = _('Seminar revisions')

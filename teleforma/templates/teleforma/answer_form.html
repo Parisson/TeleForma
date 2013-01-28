@@ -22,9 +22,10 @@ $(document).ready(function(){
     });
 
 $(document).ready(function(){
-    var b = $('#submit_button');
+    var b1 = $('#submit_button');
     var c = $('#counter')
-    b.unbind('click').click(function() {
+    b1.unbind('click').click(function() {
+        $(window).unbind('beforeunload');
         if (c.hasClass('deceed')){
           new Messi(gettext('You must reach the required number of characters.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
         }
@@ -33,7 +34,21 @@ $(document).ready(function(){
             $('#_AnswerForm').submit(); 
         }
       });
+    
+    var b2 = $('#save_button');
+    b2.unbind('click').click(function() {
+      $(window).unbind('beforeunload');
+      $('#_AnswerForm').submit();
     });
+
+    {% if status != 3 %}
+    $(window).bind('beforeunload', function(){
+      return "{% trans "You have NOT save your work!" %}";
+    });
+    {% endif  %}
+
+    $('#seminars').css({'max-height': '200px'});
+});
 
 </script>
 {% endblock extra_javascript %}
@@ -68,8 +83,7 @@ $(document).ready(function(){
 
 {% if status != 3 %}
 <br />
-<a href="#" class="component_icon button icon_save"
-   onclick="document.getElementById('_AnswerForm').submit();">{% trans "Save" %}</a>
+<a href="#" id="save_button" class="component_icon button icon_save">{% trans "Save" %}</a>
 <a href="#" id="submit_button" class="component_icon button icon_ok">{% trans "Submit it" %}</a>
 {% endif %}
 

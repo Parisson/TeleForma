@@ -45,8 +45,7 @@ $(window).ready(function(){
         }
         );
 
-    var module = $('#seminars');
-    module.css({'max-height': '200px'});
+    $('#seminars').css({'max-height': '200px'});
 
     });
 
@@ -65,29 +64,28 @@ $(window).ready(function(){
 {% endblock submodules %}
 
 {% block module-action %}
-{% for media in medias.all %}
-    {% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
-     <div class="module_action"> 
-     <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
-     </div>
-    {% endif %}
-{% endfor %}
 {% endblock module-action %}
 
 {% block course %}
 <div class="course_media">
 
 <div class="course_title">
+
+    <div style="float: left; font-size: 0.9em;">
+        <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+    </div>
+
     <div style="float: right; font-size: 0.9em;">
-        
         <a href="{% url teleforma-media-audio seminar.id media.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
-        
+
         {% if user.is_staff %}
         <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
 
-    <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
+    <div style="text-align: center; padding: 0em .5em 0em .5em;">
+      <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
+    </div>
 
 </div>
 
@@ -104,7 +102,7 @@ $(window).ready(function(){
   {% for transcoded in media.item.transcoded.all %}
    {% if "video" in transcoded.mime_type %}
     <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
-   {% endif %} 
+   {% endif %}
   {% endfor %}
 </video>
 </div>
@@ -165,9 +163,17 @@ function jumpToTimeoffset(time) {
     var url = video.attr("src");
     var abs_url = url.split("#")[0];
     video.attr("src", abs_url + '#t=' + String(time));
-    Player.play();    
+    Player.play();
 }
 
 </script>
 
 {% endblock index %}
+
+{% block module-action-right %}
+{% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
+ <div class="module_action">
+   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+ </div>
+{% endif %}
+{% endblock module-action-right %}
