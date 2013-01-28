@@ -42,7 +42,7 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 from forms_builder.forms.models import Form
 from django.core.urlresolvers import reverse
-
+from mezzanine.core.managers import DisplayableManager
 
 class SeminarType(models.Model):
 
@@ -96,8 +96,20 @@ class Seminar(Displayable):
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
 
+    objects = DisplayableManager()
+
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.rank), self.title])
+
+    @property
+    def pretty_title(self):
+        """
+        Get a displayable title
+        """
+        if self.sub_title:
+            return "E-learning - %s : %s" % (self.sub_title, self.title)
+        else:
+            return "E-learning - %s" % (self.title)
 
     def public_url(self):
         """
