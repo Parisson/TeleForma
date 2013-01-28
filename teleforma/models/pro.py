@@ -84,7 +84,7 @@ class Seminar(Displayable):
                                         blank=True, null=True)
     media_preview  = models.ForeignKey(Media, related_name="seminar_preview",
                                         verbose_name=_('media_preview'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",
                                         verbose_name=_('documents 2'),
                                         blank=True, null=True)

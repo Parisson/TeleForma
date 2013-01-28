@@ -275,7 +275,7 @@ class MediaView(DetailView):
         if not media.mime_type:
             media.set_mime_type()
         if not self.request.user in media.readers.all():
-            media.readers.add(user)
+            media.readers.add(self.request.user)
         context['media'] = media
         context['mime_type'] = media.mime_type
         context['course'] = media.course
