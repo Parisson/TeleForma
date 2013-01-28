@@ -58,6 +58,7 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import tinymce.models
 from mezzanine.core.models import Displayable
+from mezzanine.core.managers import DisplayableManager
 from django.core.urlresolvers import reverse
 
 app_label = 'teleforma'
@@ -478,6 +479,8 @@ class Conference(Displayable):
                                         blank=True, null=True)
     notes = generic.GenericRelation(Note)
 
+    objects = DisplayableManager()
+    
     @property
     def slug_streaming(self):
         slug = '-'.join([self.course.department.slug,
@@ -540,6 +543,14 @@ class Conference(Displayable):
                                         'server_type': stream.server.type,
                                         'stream_type': stream.stream_type  })
         return data
+
+    @property
+    def pretty_title(self):
+        """
+        Get a displayable title
+        """
+        return "%s : %s" % (self.title, self.date_begin)
+
 
     def public_url(self):
         """
