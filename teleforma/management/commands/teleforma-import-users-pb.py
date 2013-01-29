@@ -13,7 +13,7 @@ import datetime
 
 class Command(BaseCommand):
     help = "Import users from a XLS file (see an example in example/data/"
-    args = "path"
+    args = "path period_name"
     first_row = 2
     admin_email = 'webmaster@parisson.com'
 
@@ -25,13 +25,14 @@ class Command(BaseCommand):
             return None
 
     def get_training(self, code):
+        period, c = Period.objects.get_or_create(name=self.period_name)
         platform_only = False
         if 'I' in code[0:2]:
             platform_only = True
             code = code[4:]
-            training, c = Training.objects.get_or_create(code=code)
+            training, c = Training.objects.get_or_create(code=code, period=period)
         else:
-            training, c = Training.objects.get_or_create(code=code)
+            training, c = Training.objects.get_or_create(code=code, period=period)
         return platform_only, training
 
     def get_iej(self, name):
@@ -44,7 +45,8 @@ class Command(BaseCommand):
             iej, c = IEJ.objects.get_or_create(name=name)
         return iej
 
-    def import_user(self, row):
+    def import_user(self, row, period_name):
+        self.period_name = period_name
         last_name   = row[0].value
         first_name  = row[1].value
         email       = row[9].value
@@ -76,7 +78,7 @@ class Command(BaseCommand):
             student.iej = self.get_iej(row[2].value)
             student.save()
 
-            student.period = Period.objects.filter(name='Estivale')
+            student.period = Period.objects.filter(name=self.period_name)
             student.procedure = self.get_courses(row[4].value)
             student.written_speciality = self.get_courses(row[5].value)
             student.oral_speciality = self.get_courses(row[6].value)
@@ -85,7 +87,7 @@ class Command(BaseCommand):
 
             profile, created = Profile.objects.get_or_create(user=user)
             profile.address = row[10].value
-            profile.postal_code = int(row[11].value)
+            profile.postal_code = row[11].value
             profile.city = row[12].value
             profile.telephone = row[13].value
             profile.save()
@@ -94,9 +96,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file = args[0]
+        period_name = args[1]
         self.book = xlrd.open_workbook(file)
         sheet = self.book.sheet_by_index(0)
         col = sheet.col(0)
         for i in range(self.first_row, len(col)):
-            self.import_user(sheet.row(i))
+            self.import_user(sheet.row(i), period_name)
 

@@ -103,11 +103,11 @@ def get_courses(user, date_order=False, num_order=False):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
         return get_crfpa_courses(user, date_order=False, num_order=False)
-    
+
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
         return get_ae_courses(user, date_order=False, num_order=False)
-    
+
 
 def stream_from_file(__file):
     chunk_size = 0x10000
@@ -121,15 +121,19 @@ def stream_from_file(__file):
 
 
 def get_room(content_type=None, id=None, name=None):
-    rooms = jqchat.models.Room.objects.filter(content_type=content_type,
-                                                object_id=id)
-    if not rooms:
-        room = jqchat.models.Room.objects.create(content_type=content_type,
-                                          object_id=id,
-                                          name=name[:20])
+    if settings.TELEFORMA_GLOBAL_TWEETER:
+        return jqchat.models.Room.objects.create(name='site')
+
     else:
-        room = rooms[0]
-    return room
+        rooms = jqchat.models.Room.objects.filter(content_type=content_type,
+                                                    object_id=id)
+        if not rooms:
+            room = jqchat.models.Room.objects.create(content_type=content_type,
+                                              object_id=id,
+                                              name=name[:20])
+        else:
+            room = rooms[0]
+        return room
 
 
 def get_access(obj, courses):
@@ -147,11 +151,6 @@ def get_host(request):
     if ':' in host:
         host = host.split(':')[0]
     return host
-
-
-def get_random_hash():
-    hash = random.getrandbits(128)
-    return "%032x" % hash
 
 def get_periods(user):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
@@ -175,7 +174,7 @@ def get_periods(user):
         periods = Period.objects.all()
 
     return periods
-    
+
 
 class CourseView(DetailView):
 
@@ -193,10 +192,7 @@ class CourseView(DetailView):
         context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=course.title, content_type=content_type,
+        context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
         context['periods'] = get_periods(self.request.user)
@@ -247,12 +243,10 @@ class MediaView(DetailView):
         context['item'] = media.item
         context['type'] = media.course_type
         context['notes'] = media.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="media")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=media.item.title, content_type=content_type,
-                                   id=media.id)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(name=media.course.title, content_type=content_type,
+                                   id=media.course.id)
+
         access = get_access(media, all_courses)
         if not access:
             context['access_error'] = access_error
@@ -311,12 +305,9 @@ class DocumentView(DetailView):
         document = self.get_object()
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="document")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=document.title, content_type=content_type,
-                                   id=document.id)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(name=document.course, content_type=content_type,
+                                   id=document.course.id)
         access = get_access(document, all_courses)
         if not access:
             context['access_error'] = access_error
@@ -368,12 +359,9 @@ class ConferenceView(DetailView):
         context['course'] = conference.course
         context['type'] = conference.course_type
         context['notes'] = conference.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="conference")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=conference.course.title, content_type=content_type,
-                                   id=conference.id)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(name=conference.course.title, content_type=content_type,
+                                   id=conference.course.id)
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
         access = get_access(conference, all_courses)
@@ -405,6 +393,22 @@ class ConferenceView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
+
+
+class ConferenceListView(ListView):
+
+    model = Conference
+
+    @jsonrpc_method('teleforma.get_conference_list')
+    def get_conference_list(request):
+        return [c.to_json_dict() for c in self.get_queryset()]
+
+    def pull(self, conference):
+        url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+        list = s.teleforma.get_conference_list()
+        for conf_dict in list:
+            conference.from_json_dict(conf_dict)
 
 
 class ConferenceRecordView(FormView):
@@ -512,7 +516,7 @@ class ConferenceRecordView(FormView):
                                         stream_type=stream_type, streaming=True)
                     stream.save()
         else:
-            raise 'Error : Bad Conference dictionnary'
+            raise 'Error : input must be a conference dictionnary'
 
     def push(self, conference):
         url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
