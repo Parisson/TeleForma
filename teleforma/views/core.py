@@ -165,7 +165,7 @@ def get_periods(user):
             student = user.ae_student.get()
             periods = student.period.all()
 
-    if user.is_superuser or user.if_staff:
+    if user.is_superuser or user.is_staff:
         periods = Period.objects.all()
 
     professor = user.professor.all()
