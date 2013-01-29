@@ -67,13 +67,16 @@ class SeminarQuestionInline(admin.StackedInline):
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    filter_horizontal = ['professor', 'medias', 
+    filter_horizontal = ['professor', 'medias',
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
-    
+
     class Media:
         css = { 'all': ('admin/extra.css',) }
+
+class MediaItemMarkerAdmin(admin.ModelAdmin):
+    search_fields = ['title', 'description']
 
 
 admin.site.unregister(User)
@@ -106,5 +109,5 @@ admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 
 # TELEMETA
-admin.site.register(MediaItemMarker)
+admin.site.register(MediaItemMarker, MediaItemMarkerAdmin)
 
