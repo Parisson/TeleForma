@@ -121,20 +121,19 @@ def stream_from_file(__file):
 
 
 def get_room(content_type=None, id=None, name=None):
-    if settings.TELEFORMA_GLOBAL_TWEETER:
-        return jqchat.models.Room.objects.create(name='site')
+    if settings.TELEFORMA_GLOBAL_TWEETER or name == 'site':
+        rooms = jqchat.models.Room.objects.filter(name='site')
 
     else:
         rooms = jqchat.models.Room.objects.filter(content_type=content_type,
                                                     object_id=id)
-        if not rooms:
-            room = jqchat.models.Room.objects.create(content_type=content_type,
-                                              object_id=id,
-                                              name=name[:20])
-        else:
-            room = rooms[0]
-        return room
-
+    if not rooms:
+        room = jqchat.models.Room.objects.create(content_type=content_type,
+                                          object_id=id,
+                                          name=name[:20])
+    else:
+        room = rooms[0]
+    return room
 
 def get_access(obj, courses):
     access = False
