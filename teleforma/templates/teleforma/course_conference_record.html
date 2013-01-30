@@ -12,9 +12,6 @@ jQuery(window).ready(function(){
     var f = jQuery('#_StationForm');
     a.unbind('click').click(function(){f.submit();return false;});
 
-    var i = 0;
-    var courses = new Array()
-
     var update_courses = function(data){
         var courses = data.result;
         var options = '<option value="">----------</option>';
