@@ -397,17 +397,26 @@ class ConferenceView(DetailView):
 class ConferenceListView(ListView):
 
     model = Conference
+    template_name='teleforma/conferences.html'
+
+    def get_queryset(self):
+        conferences = Conference.objects.all()
+        return conferences
 
     @jsonrpc_method('teleforma.get_conference_list')
     def get_conference_list(request):
-        return [c.to_json_dict() for c in self.get_queryset()]
+        conferences = Conference.objects.all()
+        return [c.to_json_dict() for c in conferences]
 
-    def pull(self, conference):
+    def pull(request):
         url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
         s = ServiceProxy(url)
-        list = s.teleforma.get_conference_list()
-        for conf_dict in list:
-            conference.from_json_dict(conf_dict)
+        result = s.teleforma.get_conference_list()
+        for conf_dict in result['result']:
+            conference = Conference.objects.filter(public_id=conf_dict['id'])
+            if not conference:
+                conference = Conference()
+                conference.from_json_dict(conf_dict)
 
 
 class ConferenceRecordView(FormView):
