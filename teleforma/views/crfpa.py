@@ -147,7 +147,7 @@ class UsersTrainingView(UsersView):
 
     def get_queryset(self):
         self.training = Training.objects.filter(id=self.args[0])
-        return User.objects.filter(student__training__in=self.training).order_by('last_name')
+        return User.objects.filter(crfpa_student__training__in=self.training).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)
@@ -162,7 +162,7 @@ class UsersIejView(UsersView):
 
     def get_queryset(self):
         self.iej = IEJ.objects.filter(id=self.args[0])
-        return User.objects.filter(student__iej__in=self.iej).order_by('last_name')
+        return User.objects.filter(crfpa_student__iej__in=self.iej).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersIejView, self).get_context_data(**kwargs)
@@ -176,8 +176,16 @@ class UsersIejView(UsersView):
 class UsersCourseView(UsersView):
 
     def get_queryset(self):
-        self.course = Course.objects.filter(id=self.args[0])
-        return User.objects.filter(student__written_speciality__in=self.course)
+        #TODO: optimize
+        u = []
+        self.course = Course.objects.get(id=self.args[0])
+        users = User.objects.all()
+        for user in users:
+            user_courses = get_crfpa_courses(user)
+            for course in user_courses:
+                if course['course'] == self.course:
+                    u.append(user)
+        return u
 
     def get_context_data(self, **kwargs):
         context = super(UsersCourseView, self).get_context_data(**kwargs)

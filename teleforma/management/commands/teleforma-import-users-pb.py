@@ -16,6 +16,7 @@ class Command(BaseCommand):
     args = "path period_name"
     first_row = 2
     admin_email = 'webmaster@parisson.com'
+    DEBUG = True
 
     def get_courses(self, code):
         courses = Course.objects.filter(code=code)
@@ -50,10 +51,19 @@ class Command(BaseCommand):
         last_name   = row[0].value
         first_name  = row[1].value
         email       = row[9].value
+
+        if self.DEBUG:
+            email       = self.admin_email
+
         username = slugify(first_name)[0] + '.' + slugify(last_name)
         username = username[:30]
 
         users = User.objects.filter(username=username)
+
+        if users and self.DEBUG:
+            for user in users:
+                user.delete()
+
         i = 1
         while users:
             username = slugify(first_name)[:i] + '.' + slugify(last_name)
