@@ -25,8 +25,8 @@ class Command(BaseCommand):
         sheet = self.book.sheet_by_index(0)
         col = sheet.col(0)
 
-        for course in Course.objects.all():
-            course.delete()
+        #for course in Course.objects.all():
+        #    course.delete()
 
         department = os.path.splitext(os.path.basename(path))[0]
         organization, created = Organization.objects.get_or_create(name=organization)

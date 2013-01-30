@@ -119,6 +119,9 @@ class Period(Model):
 
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
+    department      = ForeignKey('Department', related_name='period',
+                                 verbose_name=_('department'),
+                                 blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -268,11 +271,11 @@ class Conference(Model):
         return dict
 
     def to_json_dict(self):
-        data = {'id': self.public_id, 
+        data = {'id': self.public_id,
                 'course_code': self.course.code,
-                'course_type': self.course_type.name, 
+                'course_type': self.course_type.name,
                 'professor_id': self.professor.user.username,
-                'period': self.period.name, 
+                'period': self.period.name,
                 'department': self.department.name,
                 'session': self.session,
                 'comment': self.comment,
@@ -474,7 +477,7 @@ class DocumentSimple(MediaBase):
     def save(self, **kwargs):
         super(DocumentSimple, self).save(**kwargs)
         self.set_mime_type()
-        
+
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_simple'

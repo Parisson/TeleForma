@@ -86,21 +86,21 @@ def format_courses(courses, course=None, queryset=None, types=None):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import format_crfpa_courses
         return format_crfpa_courses(courses, course, queryset, types)
-    
+
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import format_ae_courses
         return format_ae_courses(courses, course, queryset, types)
-    
+
 
 def get_courses(user, date_order=False, num_order=False):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
         return get_crfpa_courses(user, date_order, num_order)
-    
+
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
         return get_ae_courses(user, date_order, num_order)
-    
+
 
 def stream_from_file(__file):
     chunk_size = 0x10000
@@ -158,7 +158,7 @@ def get_periods(user):
         student = user.student.all()
         if student:
             student = user.student.get()
-            periods = student.period.all() 
+            periods = student.period.all()
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         student = user.ae_student.all()
@@ -168,9 +168,9 @@ def get_periods(user):
 
     if user.is_staff or user.is_superuser:
         periods = Period.objects.all()
-    
+
     return periods
-    
+
 
 class CourseView(DetailView):
 
@@ -223,6 +223,16 @@ class CoursesView(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CoursesView, self).dispatch(*args, **kwargs)
+
+    @jsonrpc_method('teleforma.get_dep_courses')
+    def get_dep_courses(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+
+    @jsonrpc_method('teleforma.get_dep_periods')
+    def get_dep_periods(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
 
 
 class MediaView(DetailView):
@@ -413,10 +423,11 @@ class ConferenceRecordView(FormView):
     def get_context_data(self, **kwargs):
         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
         context['all_courses'] = get_courses(self.request.user)
+        context['departments'] = Department.objects.all()
         context['mime_type'] = 'video/webm'
         status = Status()
         status.update()
-        
+
         request_host = get_host(self.request)
         local_host = status.ip
         if request_host.split('.')[0] == local_host.split('.')[0]:
