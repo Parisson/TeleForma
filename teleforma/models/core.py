@@ -269,9 +269,9 @@ class Conference(Model):
         data = {'id': self.public_id,
                 'course_code': self.course.code,
                 'course_type': self.course_type.name,
-                'professor_id': self.professor.user.username,
-                'period': self.period.name,
-                'session': self.session,
+                'professor_id': self.professor.user.username if self.professor else 'None',
+                'period': self.period.name if self.period else 'None',
+                'session': self.session if self.session else 'None',
                 'streams': [],
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S'),
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S'),
@@ -294,10 +294,15 @@ class Conference(Model):
         self.public_id = data['id']
         self.course, c = Course.objects.get_or_create(code=data['course_code'])
         self.course_type, c = CourseType.objects.get_or_create(name=data['course_type'])
-        user, c = User.objects.get_or_create(username=data['professor_id'])
-        self.professor, c = Professor.objects.get_or_create(user=user)
-        self.period, c = Period.objects.get_or_create(name=data['period'])
-        self.session = data['session']
+        if data['professor_id'] != 'None':
+            user, c = User.objects.get_or_create(username=data['professor_id'])
+            self.professor, c = Professor.objects.get_or_create(user=user)
+            if c:
+                self.professor.courses.add(self.course)
+        if data['period'] != 'None':
+            self.period, c = Period.objects.get_or_create(name=data['period'])
+        if data['session'] != 'None':
+            self.session = data['session']
         dl = data['date_begin'].split(' ')
         self.date_begin = datetime.datetime(int(dl[0]), int(dl[1]), int(dl[2]),
                                             int(dl[3]), int(dl[4]), int(dl[5]))
