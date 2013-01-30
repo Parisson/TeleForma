@@ -269,6 +269,7 @@ class Conference(Model):
         data = {'id': self.public_id,
                 'course_code': self.course.code,
                 'course_type': self.course_type.name,
+                'department': self.department.name,
                 'professor_id': self.professor.user.username if self.professor else 'None',
                 'period': self.period.name if self.period else 'None',
                 'session': self.session if self.session else 'None',
@@ -294,6 +295,7 @@ class Conference(Model):
         self.public_id = data['id']
         self.course, c = Course.objects.get_or_create(code=data['course_code'])
         self.course_type, c = CourseType.objects.get_or_create(name=data['course_type'])
+        self.department = Department.objects.get(name=data['department'])
 
         if data['professor_id'] != 'None':
             user, c = User.objects.get_or_create(username=data['professor_id'])
@@ -312,12 +314,12 @@ class Conference(Model):
             self.date_begin = datetime.datetime(int(dl[0]), int(dl[1]), int(dl[2]),
                                                 int(dl[3]), int(dl[4]), int(dl[5]))
 
-        if data['end'] != 'None':
+        if data['date_end'] != 'None':
             dl = data['date_end'].split(' ')
             self.date_end = datetime.datetime(int(dl[0]), int(dl[1]), int(dl[2]),
                                                 int(dl[3]), int(dl[4]), int(dl[5]))
         if 'room' in data.keys():
-            organization = Organization.objects.get(name=data['organization'])
+            organization, c = Organization.objects.get_or_create(name=data['organization'])
             self.room, c = Room.objects.get_or_create(name=data['room'],
                                                    organization=organization)
         self.save()
