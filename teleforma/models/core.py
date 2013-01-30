@@ -269,7 +269,7 @@ class Conference(Model):
         data = {'id': self.public_id,
                 'course_code': self.course.code,
                 'course_type': self.course_type.name,
-                'department': self.department.name,
+                'department': self.department.name if self.department else 'None',
                 'professor_id': self.professor.user.username if self.professor else 'None',
                 'period': self.period.name if self.period else 'None',
                 'session': self.session if self.session else 'None',
