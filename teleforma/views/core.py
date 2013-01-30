@@ -155,9 +155,9 @@ def get_periods(user):
         periods = Period.objects.all()
 
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
-        student = user.crfpa_student.all()
+        student = user.student.all()
         if student:
-            student = user.crfpa_student.get()
+            student = user.student.get()
             periods = student.period.all() 
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
