@@ -427,6 +427,7 @@ class Media(MediaBase):
 
     def __unicode__(self):
         strings = []
+
         if self.course and self.course_type:
             strings.append(self.course.code + ' ' + self.course_type.name)
         elif self.course:
@@ -435,6 +436,9 @@ class Media(MediaBase):
             strings.append(self.item.title)
         else:
             strings.append(os.path.basename(self.item.file.path))
+        if self.rank:
+            strings.append(str(self.rank))
+
         strings.append(self.mime_type)
         return ' - '.join(strings)
 
