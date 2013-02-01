@@ -8,6 +8,7 @@ from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import os
+import timeside
 
 
 class Logger:
@@ -27,9 +28,9 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     args = 'organization log_file'
     spacer = '_-_'
-    media_formats = ['mp3', 'webm']
+    original_format = 'webm'
+    transcoded_formats = ['mp4', 'ogg', 'mp3']
     image_formats = ['png', 'jpg']
-
 
     def cleanup(self):
         medias = Media.objects.all()
@@ -38,6 +39,16 @@ class Command(BaseCommand):
         items = MediaItem.objects.all()
         for item in items:
             item.delete()
+
+    def get_duration(self, file):
+        decoder = timeside.decoder.FileDecoder(file)
+        decoder.setup()
+        # time.sleep(0.5)
+        value = str(datetime.timedelta(0,decoder.input_duration))
+        t = value.split(':')
+        t[2] = t[2].split('.')[0]
+        return ':'.join(t)
+
 
     def handle(self, *args, **options):
         organization_name = args[0]
@@ -57,7 +68,7 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
 
-                if ext in self.media_formats:
+                if ext in self.original_format:
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
                     course = root_list[-2]
@@ -109,6 +120,7 @@ class Command(BaseCommand):
 
                             item.title = name
                             item.file = path
+                            item.approx_duration = self.get_duration(root+os.sep+filename)
                             item.save()
 
                             files = os.listdir(root)
