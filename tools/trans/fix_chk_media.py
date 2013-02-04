@@ -68,7 +68,7 @@ class FixCheckMedia(object):
             print command
             os.system(command)
             ebml_obj = EBMLData(tmp_file)
-            offset = ebml_obj.get_first_cluster_timecode()
+            offset = ebml_obj.get_first_cluster_seconds()
             command = '/usr/local/bin/ffmpeg -loglevel 0 -ss ' + str(offset) + ' -i ' + tmp_file + ' -vcodec copy -acodec copy -f webm -y ' + path + ' > /dev/null'
             print command
             os.system(command)
