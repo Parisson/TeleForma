@@ -68,7 +68,7 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
 
-                if ext in self.original_format:
+                if ext and (ext in self.original_format or ext in self.transcoded_formats) and name[0] != '.':
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
                     course = root_list[-2]
@@ -120,7 +120,7 @@ class Command(BaseCommand):
 
                             item.title = name
                             item.file = path
-                            item.approx_duration = self.get_duration(root+os.sep+filename)
+                            #item.approx_duration = self.get_duration(root+os.sep+filename)
                             item.save()
 
                             files = os.listdir(root)
@@ -137,6 +137,7 @@ class Command(BaseCommand):
                             media = Media(conference=conference)
                             media.item = item
                             media.course = conference.course
+                            media.period = conference.period
                             media.course_type = conference.course_type
                             media.type = ext
                             media.set_mime_type()
