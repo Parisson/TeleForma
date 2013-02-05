@@ -379,7 +379,7 @@ class Document(MediaBase):
             types = ' - '.join([unicode(t) for t in self.course_type.all()])
             strings.append(unicode(types))
         if self.type:
-            strings.append(type.name)
+            strings.append(self.type.name)
         strings.append(self.title)
         return ' - '.join(strings)
 
