@@ -71,7 +71,7 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
 
-                if ext in self.original_format:
+                if ext and ext in self.original_format and name[0] != '.':
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
                     course = root_list[-2]
