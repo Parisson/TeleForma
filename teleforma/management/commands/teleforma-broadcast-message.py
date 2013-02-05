@@ -10,8 +10,8 @@ class Command(BaseCommand):
     args = "text username"
 
     def handle(self, *args, **options):
-        text = args[0]
-        username = args[1]
+        text = args[1]
+        username = args[0]
         user = User.objects.get(username=username)
         room = Room.objects.get(name='site')
         message = Message.objects.create_message(user, room, text)
