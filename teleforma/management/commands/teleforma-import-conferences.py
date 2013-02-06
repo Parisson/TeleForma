@@ -81,11 +81,13 @@ class Command(BaseCommand):
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
 
-                    department, c = Department.objects.get_or_create(name=department_name,
-                                                                     organization=organization)
-                    if Conference.objects.filter(public_id=public_id):
-                        conference = Conference.objects.get(public_id=public_id)
+                    department = Department.objects.filter(name=department_name,
+                                                           organization=organization)
 
+                    if Conference.objects.filter(public_id=public_id) and department:
+                        conference = Conference.objects.get(public_id=public_id)
+                        department = Department.objects.get(name=department_name,
+                                                            organization=organization)
                         exist = False
                         medias = conference.media.all()
                         for media in medias:
