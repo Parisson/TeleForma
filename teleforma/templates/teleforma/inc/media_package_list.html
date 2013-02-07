@@ -10,7 +10,7 @@
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
             <a href="{% url teleforma-media-video seminar.id media.id %}" title="{% trans "Play" %}">
             {% with media.item.related.all|preview as related %}
-             {% if related %}             
+             {% if related %}
                {% thumbnail related.file "168x96" as im %}
                 <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
                  <img src="{{ STATIC_URL }}teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
@@ -25,7 +25,7 @@
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
-                    <dt>{% trans "Title" %}</dt><dd>{{ media.item.title }} - {{ seminar.sub_title }} - {{ media.rank }}</dd>
+                    <dt>{% trans "Title" %}</dt><dd>{{ media.item.title }}</dd>
                     {% with seminar.professor.all as professors %}
                         {% if professors %}
                             <dt>{% if professors.count > 1 %}{% trans "Professors" %}{% else %}{% trans "Professor" %}{% endif %}</dt>
@@ -52,7 +52,7 @@
             {% endif %}
             </td>
             </tr>
-        
+
         {% endif %}
       {% endfor %}
     </tbody>
