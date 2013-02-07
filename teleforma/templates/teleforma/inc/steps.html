@@ -1,6 +1,6 @@
 {% load teleforma_tags %}
 {% load i18n %}
-        
+
 {% with seminar.docs_1 as docs %}
   <div class="course_subtitle">
     <h4><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 1</h4>
@@ -8,11 +8,11 @@
   {% include "teleforma/inc/document_step.html" %}
 {% endwith %}
 
-{% with seminar.media as media_packages %}
+{% with seminar.medias as medias %}
   <div class="course_subtitle">
     <h4><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2</h4>
   </div>
-  {% include "teleforma/inc/media_step.html" %}  
+  {% include "teleforma/inc/media_step.html" %}
 {% endwith %}
 
 
