@@ -102,11 +102,11 @@ def format_courses(courses, course=None, queryset=None, types=None):
 def get_courses(user, date_order=False, num_order=False):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
-        return get_crfpa_courses(user, date_order=False, num_order=False)
+        return get_crfpa_courses(user, date_order, num_order)
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
-        return get_ae_courses(user, date_order=False, num_order=False)
+        return get_ae_courses(user, date_order, num_order)
 
 
 def stream_from_file(__file):
