@@ -64,16 +64,13 @@ $(window).ready(function(){
 {% endblock submodules %}
 
 {% block module-action %}
+<a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
 {% endblock module-action %}
 
 {% block course %}
 <div class="course_media">
 
 <div class="course_title">
-
-    <div style="float: left; font-size: 0.9em;">
-        <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
-    </div>
 
     <div style="float: right; font-size: 0.9em;">
         <a href="{% url teleforma-media-audio seminar.id media.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
