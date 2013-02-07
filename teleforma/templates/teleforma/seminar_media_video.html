@@ -64,7 +64,9 @@ $(window).ready(function(){
 {% endblock submodules %}
 
 {% block module-action %}
-<a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+<div class="module_action">
+ <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+</div>
 {% endblock module-action %}
 
 {% block course %}
