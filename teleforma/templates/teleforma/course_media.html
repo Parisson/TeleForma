@@ -57,7 +57,7 @@ $(document).ready(function(){
 {% endblock extra_javascript %}
 
 {% block module-action %}
-{% if media.item.file and media.is_published %}
+{% if media.item.file and media.is_published and not "video" in media.mime_type %}
 <div class="module_action">
 <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
 </div>
