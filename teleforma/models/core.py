@@ -149,6 +149,7 @@ class Course(Model):
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     code            = CharField(_('code'), max_length=255)
+    title_tweeter   = CharField(_('tweeter title'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True, null=True)
     number          = IntegerField(_('number'), blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
