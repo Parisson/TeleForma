@@ -92,6 +92,7 @@ admin.site.register(CourseType)
 admin.site.register(CourseDomain, CourseDomainAdmin)
 admin.site.register(Conference, ConferenceAdmin)
 # admin.site.register(IEJ)
+admin.site.register(Professor, ProfessorAdmin)
 
 admin.site.register(Seminar, SeminarAdmin)
 admin.site.register(Question)
