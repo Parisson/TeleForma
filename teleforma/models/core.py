@@ -473,7 +473,8 @@ class Conference(Displayable):
                                       max_length=16, default="1")
     concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
     level           = models.CharField(_('level'), max_length=255, blank=True)
-    location        = WeakForeignKey(Location, verbose_name=_('location'))
+    location        = WeakForeignKey(Location, related_name='location', verbose_name=_('location'))
+    city            = WeakForeignKey(Location, related_name='city', verbose_name=_('city'))
     room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
@@ -481,7 +482,6 @@ class Conference(Displayable):
     date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
     duration        = DurationField(_('approximative duration'))
     price           = models.FloatField(_('price'), blank=True, null=True)
-
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
     docs_description = models.ManyToManyField(Document, related_name="conference_docs_description",
