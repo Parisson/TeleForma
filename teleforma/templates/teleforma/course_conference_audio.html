@@ -76,11 +76,3 @@
 
 </div>
 {% endblock course %}
-
-{% block chat %}
-{% if room %}
-{% with "Local tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% endif %}
-{% endblock chat %}

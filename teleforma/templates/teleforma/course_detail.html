@@ -48,9 +48,11 @@ $(document).ready(function(){
 {% endblock course %}
 
 {% block chat %}
+{% if course.tweeter_title %}
 {% if room %}
-{% with "Local tweeter" as title %}
+{% with "Tweeter"|add:" "|add:course.tweeter_title as title %}
 {% include "teleforma/inc/chat_room.html" %}
 {% endwith %}
+{% endif %}
 {% endif %}
 {% endblock chat %}
