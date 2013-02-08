@@ -495,7 +495,7 @@ class Conference(Displayable):
     def slug_streaming(self):
         slug = '-'.join([self.course.department.slug,
                          self.course.slug,
-                         self.course_type.name.lower()])
+                         ])
         return slug
 
     def get_absolute_url(self):
@@ -504,13 +504,13 @@ class Conference(Displayable):
     def __unicode__(self):
         if self.professor:
             list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
+                           self.session,
                            self.professor.user.first_name,
                            self.professor.user.last_name,
                            str(self.date_begin)]
         else:
             list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
+                           self.session,
                            str(self.date_begin)]
         return ' - '.join(list)
 
@@ -533,7 +533,6 @@ class Conference(Displayable):
     def to_json_dict(self):
         data = {'id': self.public_id,
                 'course_code': self.course.code,
-                'course_type': self.course_type.name,
                 'professor_id': self.professor.user.username,
                 'period': self.period.name,
                 'department': self.department.name,
