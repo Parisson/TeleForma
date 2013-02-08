@@ -31,10 +31,6 @@ class Command(BaseCommand):
     original_format = 'webm'
     transcoded_formats = ['mp4', 'ogg', 'mp3']
     image_formats = ['png', 'jpg']
-    ffmpeg_args = {'mp3' : ' -vn -acodec libmp3lame -aq 6 -ac 2 ',
-                    'ogg' : ' -vn -acodec copy ',
-                    'mp4' : ' -vcodec libx264 -r 24 -b 512k -threads 4 -acodec libfaac -ar 48000 -ab 96k -ac 2 ',
-              }
 
     def cleanup(self):
         medias = Media.objects.all()
@@ -63,6 +59,7 @@ class Command(BaseCommand):
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
         all_conferences = Conference.objects.all()
+        i = 1
 
 #        self.cleanup()
 
@@ -71,7 +68,7 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
 
-                if ext and ext in self.original_format and name[0] != '.':
+                if ext and (ext in self.original_format or ext in self.transcoded_formats) and name[0] != '.':
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
                     course = root_list[-2]
@@ -84,11 +81,13 @@ class Command(BaseCommand):
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
 
-                    department, c = Department.objects.get_or_create(name=department_name,
-                                                                     organization=organization)
-                    if Conference.objects.filter(public_id=public_id):
-                        conference = Conference.objects.get(public_id=public_id)
+                    department = Department.objects.filter(name=department_name,
+                                                           organization=organization)
 
+                    if Conference.objects.filter(public_id=public_id) and department:
+                        conference = Conference.objects.get(public_id=public_id)
+                        department = Department.objects.get(name=department_name,
+                                                            organization=organization)
                         exist = False
                         medias = conference.media.all()
                         for media in medias:
@@ -112,7 +111,7 @@ class Command(BaseCommand):
                             else:
                                 collection = collections[0]
 
-                            id = '_'.join([collection_id, public_id, ext])
+                            id = '_'.join([collection_id, public_id, ext, str(i)])
 
                             items = MediaItem.objects.filter(collection=collection, code=id)
                             if not items:
@@ -123,7 +122,7 @@ class Command(BaseCommand):
 
                             item.title = name
                             item.file = path
-                            item.approx_duration = self.get_duration(root+os.sep+filename)
+                            #item.approx_duration = self.get_duration(root+os.sep+filename)
                             item.save()
 
                             files = os.listdir(root)
@@ -137,22 +136,15 @@ class Command(BaseCommand):
                                     related.save()
                                     break
 
-                            for format in ffmpeg_args.keys():
-                                filename = name + '.' + format
-                                dest = os.path.abspath(root + os.sep + filename)
-                                r_path = dir + os.sep + filename
-                                if not os.path.exists(dest):
-                                    command = 'ffmpeg -i ' + path + ffmpeg_args[format] + ' -y ' + dest
-                                    os.system(command)
-                                    t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
-
                             media = Media(conference=conference)
                             media.item = item
                             media.course = conference.course
-                            media.course_type = conference.course_type
                             media.period = conference.period
+                            media.course_type = conference.course_type
                             media.type = ext
                             media.set_mime_type()
                             media.save()
                             conference.save()
                             logger.logger.info(path)
+                            i += 1
+
