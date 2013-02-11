@@ -124,6 +124,11 @@ def all_seminars(request, progress_order=False, date_order=False):
         seminars = sorted(s_list, key=lambda k: k['date'], reverse=True)
         seminars = [s['seminar'] for s in seminars]
 
+    # get the demo if no seminars
+    if not seminars:
+        course = Course.objects.get(title='demo')
+        seminars = Seminar.objects.filter(course=course)
+
     return {'all_seminars': seminars}
 
 
