@@ -487,7 +487,8 @@ class Conference(Displayable):
     docs_description = models.ManyToManyField(Document, related_name="conference_docs_description",
                                         verbose_name=_('description documents'),
                                         blank=True, null=True)
-    notes = generic.GenericRelation(Note)
+
+    notes           = generic.GenericRelation(Note)
 
     objects = DisplayableManager()
 
