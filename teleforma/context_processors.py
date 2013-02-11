@@ -126,7 +126,7 @@ def all_seminars(request, progress_order=False, date_order=False):
 
     # get the demo if no seminars
     if not seminars:
-        course = Course.objects.get(title='demo')
+        course = Course.objects.get(code='demo')
         seminars = Seminar.objects.filter(course=course)
 
     return {'all_seminars': seminars}
