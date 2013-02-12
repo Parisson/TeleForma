@@ -348,6 +348,7 @@ class AnswersView(ListView):
         seminar = answer.question.seminar
         organization = seminar.course.department.name
         site = Site.objects.get_current()
+        user = answer.user
 
         testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
         if testimonials:
@@ -369,7 +370,6 @@ class AnswersView(ListView):
         context['organization'] = organization
         context['date'] =  answer.question.seminar.expiry_date
 
-        user = answer.user
         sender = request.user
         text = render_to_string('teleforma/messages/answer_rejected.txt', context)
         subject = seminar.title + ' : ' + unicode(_('validation conditions for an answer'))
