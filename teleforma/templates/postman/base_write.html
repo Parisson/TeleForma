@@ -6,7 +6,7 @@
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
 
-{% if user.student.all or user.is_staff %}
+{% if user.ae_student.all or user.is_staff %}
 <div style="padding-top: 0.5em;">
 
 <select id="_adminSelect" name="admins" onchange="update_recipients();">
