@@ -620,7 +620,14 @@ class TestimonialListView(ListView):
     template_name='teleforma/testimonials.html'
 
     def get_queryset(self):
-        return Testimonial.objects.filter(user=self.request.user)
+        t = []
+        user = self.request.user
+        testimonials = Testimonial.objects.filter(user=user)
+        for testimonial in testimonials:
+            seminar = testimonial.seminar
+            if seminar_progress(user, seminar) == 100 and seminar_validated(user, seminar):
+                t.append(testimonial)
+        return t
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
