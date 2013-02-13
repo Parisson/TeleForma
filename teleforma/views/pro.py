@@ -348,6 +348,7 @@ class AnswersView(ListView):
         seminar = answer.question.seminar
         organization = seminar.course.department.name
         site = Site.objects.get_current()
+        user = answer.user
 
         testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
         if testimonials:
@@ -369,7 +370,6 @@ class AnswersView(ListView):
         context['organization'] = organization
         context['date'] =  answer.question.seminar.expiry_date
 
-        user = answer.user
         sender = request.user
         text = render_to_string('teleforma/messages/answer_rejected.txt', context)
         subject = seminar.title + ' : ' + unicode(_('validation conditions for an answer'))
@@ -620,7 +620,14 @@ class TestimonialListView(ListView):
     template_name='teleforma/testimonials.html'
 
     def get_queryset(self):
-        return Testimonial.objects.filter(user=self.request.user)
+        t = []
+        user = self.request.user
+        testimonials = Testimonial.objects.filter(user=user)
+        for testimonial in testimonials:
+            seminar = testimonial.seminar
+            if seminar_progress(user, seminar) == 100 and seminar_validated(user, seminar):
+                t.append(testimonial)
+        return t
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

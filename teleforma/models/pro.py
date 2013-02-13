@@ -93,6 +93,10 @@ class Seminar(Displayable):
                                         blank=True, null=True)
     form            = models.ForeignKey(Form, related_name='seminar', verbose_name=_('form'),
                                         blank=True, null=True)
+    conference      = models.ForeignKey('Conference', related_name='conference',
+                                        verbose_name=_('conference'),
+                                        blank=True, null=True, on_delete=models.SET_NULL)
+
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
 
@@ -279,3 +283,4 @@ class SeminarRevision(models.Model):
         db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
+

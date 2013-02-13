@@ -63,8 +63,8 @@
     <tbody id="spacing">
     {% for testimonial in object_list %}
     <tr>
-     <td><a href="{% url teleforma-profile-detail testimonial.user.username %}">{{ testimonial.user.last_name }}</a></td>
-     <td><a href="{% url teleforma-profile-detail testimonial.user.username %}">{{ testimonial.user.first_name }}</a></td>
+     <td>{{ testimonial.user.last_name }}</td>
+     <td>{{ testimonial.user.first_name }}</td>
      <td>{% if testimonial.seminar %}{{ testimonial.seminar.title }}{% else %}{{ testimonial.title }}{% endif %}</td>
      <td>{{ testimonial.date_added }}</td>
      <td><a href="{% url teleforma-seminar-testimonial-download testimonial.seminar.id %}?format=pdf"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>

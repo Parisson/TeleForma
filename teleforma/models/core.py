@@ -381,7 +381,7 @@ class Document(MediaBase):
             types = ' - '.join([unicode(t) for t in self.course_type.all()])
             strings.append(unicode(types))
         if self.type:
-            strings.append(type.name)
+            strings.append(self.type.name)
         strings.append(self.title)
         return ' - '.join(strings)
 
@@ -429,6 +429,7 @@ class Media(MediaBase):
 
     def __unicode__(self):
         strings = []
+
         if self.course and self.course_type:
             strings.append(self.course.code + ' ' + self.course_type.name)
         elif self.course:
@@ -437,6 +438,9 @@ class Media(MediaBase):
             strings.append(self.item.title)
         else:
             strings.append(os.path.basename(self.item.file.path))
+        if self.rank:
+            strings.append(str(self.rank))
+
         strings.append(self.mime_type)
         return ' - '.join(strings)
 
@@ -463,12 +467,16 @@ class Conference(Displayable):
     period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
     course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'))
-    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
+    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'),
+                                 null=True, blank=True)
     professor       = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     session         = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
-    location        = WeakForeignKey(Location, verbose_name=_('location'))
+    concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
+    level           = models.CharField(_('level'), max_length=255, blank=True)
+    location        = WeakForeignKey(Location, related_name='location', verbose_name=_('location'))
+    city            = WeakForeignKey(Location, related_name='city', verbose_name=_('city'))
     room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
@@ -481,7 +489,8 @@ class Conference(Displayable):
     docs_description = models.ManyToManyField(Document, related_name="conference_docs_description",
                                         verbose_name=_('description documents'),
                                         blank=True, null=True)
-    notes = generic.GenericRelation(Note)
+
+    notes           = generic.GenericRelation(Note)
 
     objects = DisplayableManager()
 
@@ -489,7 +498,7 @@ class Conference(Displayable):
     def slug_streaming(self):
         slug = '-'.join([self.course.department.slug,
                          self.course.slug,
-                         self.course_type.name.lower()])
+                         ])
         return slug
 
     def get_absolute_url(self):
@@ -498,13 +507,13 @@ class Conference(Displayable):
     def __unicode__(self):
         if self.professor:
             list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
+                           self.session,
                            self.professor.user.first_name,
                            self.professor.user.last_name,
                            str(self.date_begin)]
         else:
             list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
+                           self.session,
                            str(self.date_begin)]
         return ' - '.join(list)
 
@@ -527,7 +536,6 @@ class Conference(Displayable):
     def to_json_dict(self):
         data = {'id': self.public_id,
                 'course_code': self.course.code,
-                'course_type': self.course_type.name,
                 'professor_id': self.professor.user.username,
                 'period': self.period.name,
                 'department': self.department.name,

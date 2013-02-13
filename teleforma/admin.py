@@ -61,19 +61,23 @@ class MediaAdmin(admin.ModelAdmin):
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['public_id', 'id']
+    filter_horizontal = ['docs_description']
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    filter_horizontal = ['professor', 'medias', 
+    filter_horizontal = ['professor', 'medias', 'docs_description',
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
-    
+
     class Media:
         css = { 'all': ('admin/extra.css',) }
+
+class MediaItemMarkerAdmin(admin.ModelAdmin):
+    search_fields = ['title', 'description']
 
 
 admin.site.unregister(User)
@@ -89,6 +93,7 @@ admin.site.register(CourseType)
 admin.site.register(CourseDomain, CourseDomainAdmin)
 admin.site.register(Conference, ConferenceAdmin)
 # admin.site.register(IEJ)
+admin.site.register(Professor, ProfessorAdmin)
 
 admin.site.register(Seminar, SeminarAdmin)
 admin.site.register(Question)
@@ -106,5 +111,5 @@ admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 
 # TELEMETA
-admin.site.register(MediaItemMarker)
+admin.site.register(MediaItemMarker, MediaItemMarkerAdmin)
 

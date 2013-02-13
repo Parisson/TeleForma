@@ -64,16 +64,15 @@ $(window).ready(function(){
 {% endblock submodules %}
 
 {% block module-action %}
+<div class="module_action">
+ <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+</div>
 {% endblock module-action %}
 
 {% block course %}
 <div class="course_media">
 
 <div class="course_title">
-
-    <div style="float: left; font-size: 0.9em;">
-        <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
-    </div>
 
     <div style="float: right; font-size: 0.9em;">
         <a href="{% url teleforma-media-audio seminar.id media.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
@@ -83,7 +82,7 @@ $(window).ready(function(){
         {% endif %}
     </div>
 
-    <div style="text-align: center; padding: 0em .5em 0em .5em;">
+    <div style="text-align: left;">
       <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
     </div>
 
@@ -115,7 +114,7 @@ $(window).ready(function(){
 <div class="course_content" id="media_infos">
 <dl class="listing">
 
-<dt>{% trans "Title" %}</dt><dd>{{ media.item.title }} - {{ seminar.sub_title }} - {{ media.rank }}</dd>
+<dt>{% trans "Title" %}</dt><dd>{{ media.item.title }}</dd>
 
 {% with seminar.professor.all as professors %}
   {% if professors %}

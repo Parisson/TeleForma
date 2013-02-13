@@ -124,6 +124,11 @@ def all_seminars(request, progress_order=False, date_order=False):
         seminars = sorted(s_list, key=lambda k: k['date'], reverse=True)
         seminars = [s['seminar'] for s in seminars]
 
+    # get the demo if no seminars
+    if not seminars:
+        course = Course.objects.get(code='demo')
+        seminars = Seminar.objects.filter(course=course)
+
     return {'all_seminars': seminars}
 
 
@@ -136,17 +141,7 @@ def total_progress(request):
     if not user.is_authenticated():
         return {'total_progress': 0}
 
-    auditor = user.auditor.all()
-    professor = user.professor.all()
-
-    if auditor and not (user.is_staff or user.is_superuser):
-        seminars = auditor[0].seminars.all()
-    elif user.is_superuser or user.is_staff:
-        seminars = Seminar.objects.all()
-    elif professor:
-        seminars = all_seminars(request)['all_seminars']
-    else:
-        seminars = None
+    seminars = all_seminars(request)['all_seminars']
 
     for seminar in seminars:
         progress += seminar_progress(user, seminar)

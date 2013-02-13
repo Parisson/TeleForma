@@ -293,7 +293,11 @@ def fancy_duration(duration):
     minutes = int(d[1])
     if hours:
         time += str(hours) + 'h'
-    time += str(minutes) + 'mn'
+    if minutes<10:
+        minutes = '0' + str(minutes)
+    else:
+        minutes = str(minutes)
+    time +=  minutes + 'mn'
     return time
 
 @register.simple_tag

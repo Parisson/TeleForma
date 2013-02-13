@@ -158,7 +158,7 @@ class Command(BaseCommand):
                                 print "transcoded added"
                             elif extension[1:] == 'kdenlive':
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
-                                markers = related.parse_markers()
+                                markers = related.parse_markers(from_first_marker=True)
                                 if markers:
                                     item.title = markers[0]['comment']
                                     item.save()
