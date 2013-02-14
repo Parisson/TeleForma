@@ -165,6 +165,10 @@ function jumpToTimeoffset(time) {
     Player.play();
 }
 
+$(document).ready(function(){
+    $('#my_video_1').bind('contextmenu',function() { return false; });
+});
+
 </script>
 
 {% endblock index %}
