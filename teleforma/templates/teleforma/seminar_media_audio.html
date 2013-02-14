@@ -123,6 +123,10 @@ function jumpToTimeoffset(time) {
     media.play();
 }
 
+$(document).ready(function(){
+    $('#audio_1').bind('contextmenu',function() { return false; });
+});
+
 </script>
 
 {% endblock index %}
