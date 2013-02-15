@@ -139,8 +139,10 @@ class Command(BaseCommand):
 
                         item.title = name
                         item.file = path
+                        
+                        if os.path.getsize(root+os.sep+filename):
+                            item.approx_duration = self.get_duration(root+os.sep+filename)
 
-                        item.approx_duration = self.get_duration(root+os.sep+filename)
                         item.save()
 
                         files = os.listdir(root)
@@ -189,8 +191,8 @@ class Command(BaseCommand):
                                     filename, extension = os.path.splitext(file)
                                     if extension[1:] in self.original_format:
                                         item.file = r_path
-                                        item.approx_duration = self.get_duration(dir+os.sep+file)
-                                        item.save()
+                                        if os.path.getsize(dir+os.sep+file): 
+                                            item.approx_duration = self.get_duration(dir+os.sep+file)
                                         item.save()
                                         print "preview added"
                                     elif extension[1:] in self.transcoded_formats:

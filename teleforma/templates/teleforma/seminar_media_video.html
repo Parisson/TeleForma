@@ -126,6 +126,7 @@ $(window).ready(function(){
 <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
 <dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
 <dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
+<dt>{% trans "Seminar ID" %}</dt><dd>{{ seminar.course.code }}_{{ seminar.rank }}</dd>
 {% endif %}
 
 </dl>
@@ -145,7 +146,9 @@ $(window).ready(function(){
  <div id="index">
   <ul>
   {% for marker in media.item.markers.all %}
-  <li><a href="#" onclick="jumpToTimeoffset({{ marker.time|point }});">{{ marker.title }}</a></li>
+  {% if not forloop.first %}
+   <li><a href="#" onclick="jumpToTimeoffset({{ marker.time|point }});">{{ marker.title }}</a></li>
+  {% endif %}
   {% endfor %}
   </ul>
  </div>
@@ -164,6 +167,10 @@ function jumpToTimeoffset(time) {
     video.attr("src", abs_url + '#t=' + String(time));
     Player.play();
 }
+
+$(document).ready(function(){
+    $('#my_video_1').bind('contextmenu',function() { return false; });
+});
 
 </script>
 

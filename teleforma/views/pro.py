@@ -134,8 +134,11 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_validated'] = validated
         if progress == 100 and not validated:
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
-        elif validated:
-            messages.info(self.request, _("All your answers have been validated! You can now download the training testimonial below."))
+        elif progress < 100 and validated:
+            messages.info(self.request, _("You have terminated all the steps of your training. You can now download the training testimonial below."))
+        elif progress == 100 and validated:
+            messages.info(self.request, _("All your answers have been validated. Auto-evaluate yourself with the corrected documents."))
+
         set_revision(user, seminar)
         return context
 
