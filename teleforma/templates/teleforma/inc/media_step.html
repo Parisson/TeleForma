@@ -8,7 +8,7 @@
         {% if media.is_published or user.is_staff %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-              <a href="{% url teleforma-media-video seminar.id media.id %}" title="{% trans "Play" %}">
+              <a href="{% url teleforma-media-video seminar.id media.id %}" target="_blank" title="{% trans "Play" %}">
               <img src="{{ STATIC_URL }}/teleforma/images/tool-animator.png" style="vertical-align:middle" alt="" /> {{ media.item.title }}
             </a>
           </td>
