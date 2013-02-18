@@ -313,12 +313,12 @@ class AnswersView(ListView):
         else:
             title = unicode(seminar.course.title)
 
-        auditor = user.auditor.all()
-        if auditor:
-            gender = unicode(_(auditor[0].gender))
-        else:
-            gender = ''
-        context['gender'] = gender
+        # auditor = user.auditor.all()
+        # if auditor:
+        #     gender = unicode(_(auditor[0].gender))
+        # else:
+        #     gender = ''
+        # context['gender'] = gender
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
@@ -370,12 +370,12 @@ class AnswersView(ListView):
         else:
             title = unicode(seminar.course.title)
 
-        auditor = user.auditor.all()
-        if auditor:
-            gender = unicode(_(auditor[0].gender))
-        else:
-            gender = ''
-        context['gender'] = gender
+        # auditor = user.auditor.all()
+        # if auditor:
+        #     gender = unicode(_(auditor[0].gender))
+        # else:
+        #     gender = ''
+        # context['gender'] = gender
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
