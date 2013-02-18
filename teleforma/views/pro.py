@@ -358,8 +358,7 @@ class AnswersView(ListView):
             for testimonial in testimonials:
                 testimonial.delete()
 
-        path = reverse('teleforma-question-answer', kwargs={'id': seminar.id,
-                                                    'pk': answer.question.id})
+        path = reverse('teleforma-question-answer', kwargs={'id': seminar.id, 'pk': answer.question.pk})
         if answer.question.seminar.sub_title:
             title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
         else:
