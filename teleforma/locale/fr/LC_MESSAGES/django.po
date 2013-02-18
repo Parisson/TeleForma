@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 17:39+0100\n"
+"POT-Creation-Date: 2013-02-18 18:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -254,13 +254,12 @@ msgid "level"
 msgstr "niveau"
 
 #: models/core.py:478
-#, fuzzy
 msgid "location"
-msgstr "Évaluation"
+msgstr "lieu"
 
 #: models/core.py:479
 msgid "city"
-msgstr ""
+msgstr "ville"
 
 #: models/core.py:482
 msgid "comment"
@@ -283,9 +282,8 @@ msgid "price"
 msgstr "prix"
 
 #: models/core.py:490 models/pro.py:77
-#, fuzzy
 msgid "description documents"
-msgstr "description"
+msgstr "documents de description"
 
 #: models/crfpa.py:55 models/crfpa.py:56
 #: templates/telemeta/profile_detail.html:63
@@ -1708,22 +1706,19 @@ msgstr ""
 
 #: views/pro.py:138
 msgid ""
-"All your answers have been validated but you did not viewed all the "
-"contents. Please do so to get access to the next steps."
+"All your answers have been validated. You can now read the corrected "
+"documents (step 5)."
 msgstr ""
-"Toutes vos consultations fictives ont été validées mais vous n'avez pas lu "
-"tous les documents du séminaire. Veuillez le faire s'il vous plaît pour "
-"accéder aux prochaines étapes."
+"Toutes vos consultations fictives ont été validées. Auto évaluez-vous à "
+"l’aide du corrigé type des consultations fictives (étape 5)"
 
 #: views/pro.py:140
 msgid ""
-"You have successfully terminated your e-learning seminar and all your "
-"answers have been validated. You can now download your training testimonial "
-"below."
+"You have successfully terminated all steps of your e-learning seminar. You "
+"can now download your training testimonial below."
 msgstr ""
-"Vous avez achevé toutes les étapes de votre formation et toutes vos "
-"consultations fictives ont été validées. Vous pouvez désormais télécharger "
-"votre attestation de formation ci-dessous."
+"Vous avez achevé toutes les étapes de votre formation. Vous pouvez désormais "
+"télécharger votre attestation de formation ci-dessous."
 
 #: views/pro.py:184
 msgid "You have successfully saved your answer"
