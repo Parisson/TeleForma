@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-15 15:30+0100\n"
+"POT-Creation-Date: 2013-02-15 16:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -406,7 +406,7 @@ msgstr "documents corrigés"
 msgid "form"
 msgstr "formulaire"
 
-#: models/pro.py:130 templates/teleforma/answer_form.html:102
+#: models/pro.py:130 templates/teleforma/answer_form.html:104
 #: templates/teleforma/seminar_detail.html:158
 #: templates/teleforma/testimonials.html:58
 #: templates/teleforma/inc/answer_list.html:21
@@ -455,7 +455,7 @@ msgid "date validated"
 msgstr "date de validation"
 
 #: models/pro.py:185 templates/teleforma/answer_detail.html:43
-#: templates/teleforma/answer_form.html:105
+#: templates/teleforma/answer_form.html:107
 msgid "Answer"
 msgstr "Réponse à la consultation"
 
@@ -623,9 +623,11 @@ msgstr ""
 msgid "Hello"
 msgstr "Bonjour"
 
-#: templates/postman/email_user.txt:3 templates/postman/email_visitor.txt:3
+#: templates/postman/email_user.txt:3
 #, python-format
-msgid "On %(date)s, you asked to send a message to the user '%(recipient)s'."
+msgid ""
+"On %(date)s, you asked to send a message to the user "
+"'%(recipient.first_name)s %(recipient.last_name)s'."
 msgstr ""
 
 #: templates/postman/email_user.txt:5 templates/postman/email_visitor.txt:5
@@ -636,9 +638,11 @@ msgstr ""
 msgid ", for the following reason:"
 msgstr ""
 
-#: templates/postman/email_user.txt:9 templates/postman/email_visitor.txt:10
+#: templates/postman/email_user.txt:9
 #, python-format
-msgid "On %(date)s, you sent a message to the user '%(sender)s'."
+msgid ""
+"On %(date)s, you sent a message to the user '%(sender.first_name)s "
+"%(sender.last_name)s'."
 msgstr ""
 
 #: templates/postman/email_user.txt:10
@@ -647,12 +651,16 @@ msgstr ""
 
 #: templates/postman/email_user.txt:11
 #, python-format
-msgid "You have received a copy of a response from the user '%(sender)s'."
+msgid ""
+"You have received a copy of a response from the user '%(sender.first_name)s "
+"%(sender.last_name)s'."
 msgstr ""
 
 #: templates/postman/email_user.txt:13
 #, python-format
-msgid "You have received a message from the user '%(sender)s'."
+msgid ""
+"You have received a message from the user '%(sender.first_name)s "
+"%(sender.last_name)s'."
 msgstr ""
 
 #: templates/postman/email_user.txt:14
@@ -666,6 +674,8 @@ msgstr ""
 #: templates/postman/email_user.txt:19 templates/postman/email_visitor.txt:14
 msgid "Thank you again for your interest in our services."
 msgstr ""
+"L’équipe e-learning de Pro-Barreau vous remercie de votre confiance et reste "
+"à votre disposition pour renseignement complémentaire"
 
 #: templates/postman/email_user.txt:20
 #: templates/postman/email_user_init.txt:21
@@ -708,8 +718,18 @@ msgstr "%(organization)s : initialisation de votre compte e-learning"
 msgid "Dear visitor,"
 msgstr ""
 
+#: templates/postman/email_visitor.txt:3
+#, python-format
+msgid "On %(date)s, you asked to send a message to the user '%(recipient)s'."
+msgstr ""
+
 #: templates/postman/email_visitor.txt:8
 msgid "As a reminder, please find below the content of your message."
+msgstr ""
+
+#: templates/postman/email_visitor.txt:10
+#, python-format
+msgid "On %(date)s, you sent a message to the user '%(sender)s'."
 msgstr ""
 
 #: templates/postman/email_visitor.txt:11
@@ -783,17 +803,17 @@ msgstr "valider"
 msgid " reject"
 msgstr " rejeter"
 
-#: templates/teleforma/answer_form.html:46
+#: templates/teleforma/answer_form.html:48
 msgid "You have NOT save your work!"
 msgstr "Vous n'avez PAS enregistré votre consultation"
 
-#: templates/teleforma/answer_form.html:61
+#: templates/teleforma/answer_form.html:63
 #: templates/teleforma/evaluation_form.html:27
 #: templates/teleforma/seminar_media_video.html:59
 msgid "My steps"
 msgstr "Mes étapes"
 
-#: templates/teleforma/answer_form.html:72
+#: templates/teleforma/answer_form.html:74
 #: templates/teleforma/evaluation_form.html:10
 #: templates/teleforma/seminar_detail.html:77
 #: templates/teleforma/seminar_detail.html:86
@@ -809,35 +829,35 @@ msgstr "Mes étapes"
 msgid "Step"
 msgstr "Étape"
 
-#: templates/teleforma/answer_form.html:72
+#: templates/teleforma/answer_form.html:74
 #: templates/teleforma/seminar_detail.html:105
 msgid "answer to this question"
 msgstr "réaliser cette consultation fictive"
 
-#: templates/teleforma/answer_form.html:72
+#: templates/teleforma/answer_form.html:74
 msgid "characters"
 msgstr "caractères"
 
-#: templates/teleforma/answer_form.html:72
+#: templates/teleforma/answer_form.html:74
 msgid "minimum"
 msgstr "minimum"
 
-#: templates/teleforma/answer_form.html:86
+#: templates/teleforma/answer_form.html:88
 msgid "Save"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:87
+#: templates/teleforma/answer_form.html:89
 msgid "Submit it"
 msgstr "Soumettre"
 
 # #: templates/teleforma/seminar_detail.html:152
-#: templates/teleforma/answer_form.html:95
+#: templates/teleforma/answer_form.html:97
 #: templates/teleforma/seminar_detail.html:152
 #: templates/teleforma/seminars.html:141
 msgid "Progressions"
 msgstr "Progressions"
 
-#: templates/teleforma/answer_form.html:99
+#: templates/teleforma/answer_form.html:101
 #: templates/teleforma/seminar_detail.html:155
 #: templates/teleforma/seminars.html:144
 msgid "General"
@@ -861,7 +881,6 @@ msgstr " validé"
 #: templates/teleforma/seminar_media_video.html:81
 #: templates/teleforma/inc/answer_list.html:41
 #: templates/teleforma/inc/media_list.html:52
-#: templates/teleforma/inc/media_package_list.html:46
 msgid " rejected"
 msgstr " rejeté"
 
@@ -1026,20 +1045,19 @@ msgstr "Enregistrer et diffuser"
 #: templates/teleforma/seminar_media_video.html:21
 #: templates/teleforma/seminar_media_video.html:81
 #: templates/teleforma/inc/media_list.html:50
-#: templates/teleforma/inc/media_package_list.html:44
 msgid " published"
 msgstr " publié"
 
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/seminar_media_audio.html:10
 #: templates/teleforma/seminar_media_audio.html:139
-#: templates/teleforma/seminar_media_video.html:181
+#: templates/teleforma/seminar_media_video.html:182
 #: templates/teleforma/testimonials.html:60
 #: templates/teleforma/testimonials.html:70
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/document_simple_list.html:9
 #: templates/teleforma/inc/media_list.html:56
-#: templates/teleforma/inc/media_package_list.html:50
+#: templates/teleforma/inc/media_package_list.html:48
 #: templates/teleforma/inc/testimonial_list.html:8
 msgid "Download"
 msgstr "Télécharger"
@@ -1138,7 +1156,12 @@ msgstr "Intervenants"
 msgid "Audio index"
 msgstr "Index audio"
 
-#: templates/teleforma/seminar_media_video.html:144
+#: templates/teleforma/seminar_media_video.html:129
+#, fuzzy
+msgid "Seminar ID"
+msgstr "Séminaire"
+
+#: templates/teleforma/seminar_media_video.html:145
 msgid "Video index"
 msgstr "Index vidéo"
 
@@ -1242,6 +1265,13 @@ msgstr "Cliquez ici"
 #: templates/teleforma/inc/document_list.html:36
 msgid "No document"
 msgstr "Aucun document"
+
+#: templates/teleforma/inc/document_simple_list.html:9
+#: templates/teleforma/inc/document_step.html:8
+#: templates/teleforma/inc/media_package_list.html:44
+#: templates/teleforma/inc/media_step.html:12
+msgid " viewed"
+msgstr ""
 
 #: templates/teleforma/inc/evaluation_form.html:9
 msgid "Form"
