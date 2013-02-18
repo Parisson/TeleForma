@@ -60,6 +60,8 @@ import tinymce.models
 from mezzanine.core.models import Displayable
 from mezzanine.core.managers import DisplayableManager
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import date
+
 
 app_label = 'teleforma'
 
@@ -559,7 +561,7 @@ class Conference(Displayable):
         """
         Get a displayable title
         """
-        return "%s : %s" % (self.title, self.date_begin)
+        return "%s : %s" % (self.title, date(self.date_begin, "DATE_FORMAT"))
 
 
     def public_url(self):
