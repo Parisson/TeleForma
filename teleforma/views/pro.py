@@ -272,7 +272,7 @@ class AnswersView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AnswersView, self).get_context_data(**kwargs)
-        paginator = Paginator(self.object_list, per_page=12)
+        paginator = Paginator(self.object_list, per_page=10)
         try:
             page = int(self.request.GET.get('page', '1'))
         except ValueError:
