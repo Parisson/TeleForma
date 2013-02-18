@@ -6,11 +6,11 @@
     {{ object.moderation_reason }}{% else %}.{% endif %}
 
 {% else %}{# 'acceptance' #}
-{% if object.parent_id %}{% if object.parent.sender_id == object.recipient_id %}{% blocktrans with object.parent.sent_at|date:"DATETIME_FORMAT" as date and object.sender.first_name as first_name and object.recipient.last_name as last_name %}On {{ date }}, you sent a message to {{ first_name }} {{ last_name }}.{% endblocktrans %}
+{% if object.parent_id %}{% if object.parent.sender_id == object.recipient_id %}{% blocktrans with object.parent.sent_at|date:"DATETIME_FORMAT" as date and object.sender.first_name as first_name and object.sender.last_name as last_name %}On {{ date }}, you sent a message to {{ first_name }} {{ last_name }}.{% endblocktrans %}
 {% trans "Your correspondent has given you an answer." %}
-{% else %}{% blocktrans with object.sender.first_name as first_name and object.recipient.last_name as last_name %}You have received a copy of a response from {{ first_name }} {{ last_name }}.{% endblocktrans %}
+{% else %}{% blocktrans with object.sender.first_name as first_name and object.sender.last_name as last_name %}You have received a copy of a response from {{ first_name }} {{ last_name }}.{% endblocktrans %}
 {% endif %}
-{% else %}{% blocktrans with object.sender.first_name as first_name and object.recipient.last_name as last_name %}You have received a message from {{ first_name }} {{ last_name }}.{% endblocktrans %}
+{% else %}{% blocktrans with object.sender.first_name as first_name and object.sender.last_name as last_name %}You have received a message from {{ first_name }} {{ last_name }}.{% endblocktrans %}
 {% endif %}{% endif %}{% trans "You can read and respond to this message from your e-learning desk following this link:" %}
 
 http://{{ site.name }}/messages/inbox/
