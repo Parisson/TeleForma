@@ -270,21 +270,6 @@ class AnswersView(ListView):
     def get_queryset(self):
         return Answer.objects.filter(status=3)
 
-    def get_context_data(self, **kwargs):
-        context = super(AnswersView, self).get_context_data(**kwargs)
-        paginator = Paginator(self.object_list, per_page=10)
-        try:
-            page = int(self.request.GET.get('page', '1'))
-        except ValueError:
-            page = 1
-
-        try:
-            page = paginator.page(page)
-        except (InvalidPage):
-            page = paginator.page(paginator.num_pages)
-        context['page'] = page
-        return context
-
     @method_decorator(permission_required('is_superuser'))
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
