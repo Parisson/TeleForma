@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 14:22+0100\n"
+"POT-Creation-Date: 2013-02-18 16:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -433,7 +433,7 @@ msgstr "status"
 msgid "Question"
 msgstr "Question"
 
-#: models/pro.py:160 views/pro.py:335
+#: models/pro.py:160 views/pro.py:340
 msgid "answer"
 msgstr "consultation"
 
@@ -442,7 +442,7 @@ msgid "treated"
 msgstr ""
 
 #: models/pro.py:163 templates/teleforma/seminar_detail.html:50
-#: templates/teleforma/seminars.html:106 views/pro.py:336
+#: templates/teleforma/seminars.html:106 views/pro.py:341
 msgid "validated"
 msgstr "validée"
 
@@ -473,7 +473,7 @@ msgstr "Modèle d'attestation"
 
 #: models/pro.py:233 templates/teleforma/seminar_testimonial.html:13
 #: templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:620
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:625
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -972,8 +972,7 @@ msgstr "Audio"
 
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
-#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:315
-#: views/pro.py:410
+#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:415
 msgid "Course"
 msgstr "Matière"
 
@@ -1357,9 +1356,9 @@ msgstr ""
 "reste à votre disposition pour renseignement complémentaire.\n"
 
 #: templates/teleforma/messages/answer_validated.txt:1
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"%(first_name)s %(last_name)s,\n"
+"%(gender)s %(first_name)s %(last_name)s,\n"
 "\n"
 "Your answer to the question n°%(rank)s of the e-learning seminar \"%(title)s"
 "\" has been validated.\n"
@@ -1391,9 +1390,9 @@ msgstr ""
 "reste à votre disposition pour renseignement complémentaire.\n"
 
 #: templates/teleforma/messages/seminar_validated.txt:1
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"%(first_name)s %(last_name)s,\n"
+"%(gender)s %(first_name)s %(last_name)s,\n"
 "\n"
 "Your answer to the question n°%(rank)s of the e-learning seminar \"%(title)s"
 "\" has been validated.\n"
@@ -1706,47 +1705,50 @@ msgstr ""
 
 #: views/pro.py:138
 msgid ""
-"You have terminated all the steps of your training. You can now download the "
-"training testimonial below."
+"All your answers have been validated but you did not viewed all the "
+"contents. Please do so to get access to the next steps."
 msgstr ""
-"Vous avez achevé toutes les étapes de votre formation. Vous pouvez désormais "
-"télécharger votre attestation de formation ci-dessous"
+"Toutes vos consultations fictives ont été validées mais vous n'avez pas lu "
+"tous les documents du séminaire. Veuillez le faire s'il vous plaît pour "
+"accéder aux prochaines étapes."
 
 #: views/pro.py:140
 msgid ""
-"All your answers have been validated. Auto-evaluate yourself with the "
-"corrected documents."
+"You have successfully terminated your e-learning seminar and all your "
+"answers have been validated. You can now download your training testimonial "
+"below."
 msgstr ""
-"Toutes vos consultations fictives ont été validées. Auto évaluez-vous à "
-"l’aide du corrigé type des consultations fictives (étape 5)"
+"Vous avez achevé toutes les étapes de votre formation et toutes vos "
+"consultations fictives ont été validées. Vous pouvez désormais télécharger "
+"votre attestation de formation ci-dessous."
 
-#: views/pro.py:185
+#: views/pro.py:184
 msgid "You have successfully saved your answer"
 msgstr "Vous avez enregistré votre consultation avec succès"
 
-#: views/pro.py:187
+#: views/pro.py:186
 msgid "You have successfully submitted your answer"
 msgstr "Vous avez soumis votre consultation avec succès"
 
-#: views/pro.py:191
+#: views/pro.py:190
 msgid "Your submission has not been saved correctly. Please try again."
 msgstr ""
 "Votre consultation n'a pas été enregistrée correctement, veuillez réessayer "
 "SVP."
 
-#: views/pro.py:313 views/pro.py:408
-msgid "Subtitle"
-msgstr "Sous-titre"
-
-#: views/pro.py:331
+#: views/pro.py:336
 msgid "all your answers has been validated"
 msgstr "toutes vos consultations ont été validées"
 
-#: views/pro.py:385
+#: views/pro.py:390
 msgid "validation conditions for an answer"
 msgstr "conditions de validation d'une consultation"
 
-#: views/pro.py:499
+#: views/pro.py:413
+msgid "Subtitle"
+msgstr "Sous-titre"
+
+#: views/pro.py:504
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
 
