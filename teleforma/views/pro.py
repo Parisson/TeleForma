@@ -365,7 +365,12 @@ class AnswersView(ListView):
         else:
             title = seminar.course.title
 
-        context['gender'] = _(user.auditor.all()[0].gender)
+        auditor = user.auditor.all()
+        if auditor:
+            gender = _(auditor[0].gender)
+        else:
+            gender = ''
+        context['gender'] = gender
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
