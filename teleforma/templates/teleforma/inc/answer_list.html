@@ -3,7 +3,7 @@
 {% load teleforma_tags %}
 {% load pagination_tags %}
 
-{% autopaginate object_list %}
+{% autopaginate object_list 10 %}
 {% paginate %}
 
 <div id="users">
@@ -18,7 +18,7 @@
     </tr>
     </thead>
     <tbody id="spacing">
-    {% for answer in page.object_list %}
+    {% for answer in object_list %}
     <tr>
      <td><a href="{% url teleforma-profile-detail answer.user.username %}">{{ answer.user.last_name }}</a></td>
      <td><a href="{% url teleforma-profile-detail answer.user.username %}">{{ answer.user.first_name }}</a></td>

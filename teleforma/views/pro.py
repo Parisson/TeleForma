@@ -270,6 +270,10 @@ class AnswersView(ListView):
     def get_queryset(self):
         return Answer.objects.filter(status=3)
 
+    def get_context_data(self, **kwargs):
+        context = super(AnswersView, self).get_context_data(**kwargs)
+        return context
+
     @method_decorator(permission_required('is_superuser'))
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
