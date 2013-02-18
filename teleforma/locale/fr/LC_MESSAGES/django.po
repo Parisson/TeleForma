@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 18:39+0100\n"
+"POT-Creation-Date: 2013-02-18 22:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -407,7 +407,7 @@ msgstr "formulaire"
 #: models/pro.py:130 templates/teleforma/answer_form.html:104
 #: templates/teleforma/seminar_detail.html:158
 #: templates/teleforma/testimonials.html:58
-#: templates/teleforma/inc/answer_list.html:21
+#: templates/teleforma/inc/answer_list.html:14
 msgid "Seminar"
 msgstr "Séminaire"
 
@@ -431,7 +431,7 @@ msgstr "status"
 msgid "Question"
 msgstr "Question"
 
-#: models/pro.py:160 views/pro.py:340
+#: models/pro.py:160 views/pro.py:329
 msgid "answer"
 msgstr "consultation"
 
@@ -440,7 +440,7 @@ msgid "treated"
 msgstr ""
 
 #: models/pro.py:163 templates/teleforma/seminar_detail.html:50
-#: templates/teleforma/seminars.html:106 views/pro.py:341
+#: templates/teleforma/seminars.html:106 views/pro.py:330
 msgid "validated"
 msgstr "validée"
 
@@ -471,7 +471,7 @@ msgstr "Modèle d'attestation"
 
 #: models/pro.py:233 templates/teleforma/seminar_testimonial.html:13
 #: templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:625
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:614
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -515,7 +515,7 @@ msgstr "Page non trouvée"
 msgid "Server error"
 msgstr "Erreur du serveur"
 
-#: templates/admin/base.html:21 templates/telemeta/base.html:98
+#: templates/admin/base.html:21 templates/telemeta/base.html:99
 msgid "Home"
 msgstr "Accueil"
 
@@ -622,11 +622,13 @@ msgid "Hello"
 msgstr "Bonjour"
 
 #: templates/postman/email_user.txt:3
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"On %(date)s, you asked to send a message to %(recipient.first_name)s "
-"%(recipient.last_name)s."
+"On %(date)s, you asked to send a message to the user '%(first_name)s "
+"%(last_name)s'."
 msgstr ""
+"Le %(date)s, vous avez envoyé un message à %(sender.first_name)s "
+"%(sender.last_name)s."
 
 #: templates/postman/email_user.txt:5 templates/postman/email_visitor.txt:5
 msgid "Your message has been rejected by the moderator"
@@ -637,10 +639,9 @@ msgid ", for the following reason:"
 msgstr ""
 
 #: templates/postman/email_user.txt:9
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"On %(date)s, you sent a message to %(sender.first_name)s "
-"%(sender.last_name)s."
+"On %(date)s, you sent a message to the user '%(first_name)s %(last_name)s'."
 msgstr ""
 "Le %(date)s, vous avez envoyé un message à %(sender.first_name)s "
 "%(sender.last_name)s."
@@ -650,18 +651,18 @@ msgid "Your correspondent has given you an answer."
 msgstr "Votre correspondant vous a donné une réponse."
 
 #: templates/postman/email_user.txt:11
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"You have received a copy of a response from %(sender.first_name)s "
-"%(sender.last_name)s."
+"You have received a copy of a response from the user '%(first_name)s "
+"%(last_name)s'."
 msgstr ""
 "Vous avez reçu une copie de la réponse de %(sender.first_name)s "
 "%(sender.last_name)s."
 
 #: templates/postman/email_user.txt:13
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"You have received a message from %(sender.first_name)s %(sender.last_name)s."
+"You have received a message from the user '%(first_name)s %(last_name)s'."
 msgstr ""
 "Vous avez reçu un message de %(sender.first_name)s %(sender.last_name)s."
 
@@ -677,7 +678,7 @@ msgstr ""
 msgid "Thank you again for your interest in our services."
 msgstr ""
 "L’équipe e-learning de Pro-Barreau vous remercie de votre confiance et reste "
-"à votre disposition pour renseignement complémentaire"
+"à votre disposition pour renseignement complémentaire."
 
 #: templates/postman/email_user.txt:20
 #: templates/postman/email_user_init.txt:21
@@ -866,12 +867,12 @@ msgid "General"
 msgstr "Général"
 
 #: templates/teleforma/answers.html:6 templates/teleforma/answers.html:62
-#: templates/telemeta/base.html:107
+#: templates/telemeta/base.html:108
 msgid "Answers"
 msgstr "Consultations"
 
 #: templates/teleforma/answers.html:19
-#: templates/teleforma/inc/answer_list.html:41
+#: templates/teleforma/inc/answer_list.html:34
 msgid " validated"
 msgstr " validé"
 
@@ -881,7 +882,7 @@ msgstr " validé"
 #: templates/teleforma/seminar_media_audio.html:21
 #: templates/teleforma/seminar_media_video.html:28
 #: templates/teleforma/seminar_media_video.html:81
-#: templates/teleforma/inc/answer_list.html:41
+#: templates/teleforma/inc/answer_list.html:34
 #: templates/teleforma/inc/media_list.html:52
 msgid " rejected"
 msgstr " rejeté"
@@ -973,7 +974,7 @@ msgstr "Audio"
 
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
-#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:415
+#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:404
 msgid "Course"
 msgstr "Matière"
 
@@ -1090,6 +1091,7 @@ msgid "New note"
 msgstr "Nouvelle note"
 
 #: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:156
+#: templates/teleforma/inc/answer_list.html:17
 msgid "Status"
 msgstr "Status"
 
@@ -1098,8 +1100,8 @@ msgstr "Status"
 msgid "evaluate the seminar"
 msgstr "évaluer la formation suivie"
 
-#: templates/teleforma/help.html:11 templates/telemeta/base.html:109
-#: templates/telemeta/base.html.py:127
+#: templates/teleforma/help.html:11 templates/telemeta/base.html:110
+#: templates/telemeta/base.html.py:128
 msgid "Help"
 msgstr "Aide"
 
@@ -1206,26 +1208,26 @@ msgid "Access"
 msgstr "Accéder"
 
 #: templates/teleforma/testimonials.html:7
-#: templates/teleforma/testimonials.html:45 templates/telemeta/base.html:110
+#: templates/teleforma/testimonials.html:45 templates/telemeta/base.html:111
 msgid "Testimonials"
 msgstr "Attestations"
 
 #: templates/teleforma/testimonials.html:56
-#: templates/teleforma/inc/answer_list.html:19
+#: templates/teleforma/inc/answer_list.html:12
 #: templates/telemeta/profile_detail.html:58
 #: templates/telemeta/inc/user_list.html:19
 msgid "Last Name"
 msgstr ""
 
 #: templates/teleforma/testimonials.html:57
-#: templates/teleforma/inc/answer_list.html:20
+#: templates/teleforma/inc/answer_list.html:13
 #: templates/telemeta/profile_detail.html:57
 #: templates/telemeta/inc/user_list.html:20
 msgid "First Name"
 msgstr ""
 
 #: templates/teleforma/testimonials.html:59
-#: templates/teleforma/inc/answer_list.html:22
+#: templates/teleforma/inc/answer_list.html:15
 msgid "Date submitted"
 msgstr "date de soumission"
 
@@ -1233,12 +1235,8 @@ msgstr "date de soumission"
 msgid "No testimonial"
 msgstr "Aucune attestation"
 
-#: templates/teleforma/inc/answer_list.html:23
+#: templates/teleforma/inc/answer_list.html:16
 msgid "Summary"
-msgstr ""
-
-#: templates/teleforma/inc/answer_list.html:24
-msgid "Action / status"
 msgstr ""
 
 #: templates/teleforma/inc/conference_list.html:8
@@ -1431,36 +1429,36 @@ msgstr ""
 "L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
 "reste à votre disposition pour renseignement complémentaire.\n"
 
-#: templates/telemeta/base.html:96
+#: templates/telemeta/base.html:97
 msgid "Desk"
 msgstr "Bureau"
 
-#: templates/telemeta/base.html:103
+#: templates/telemeta/base.html:104
 msgid "Contact us"
 msgstr "Nous contacter"
 
-#: templates/telemeta/base.html:106 templates/telemeta/users.html:6
+#: templates/telemeta/base.html:107 templates/telemeta/users.html:6
 #: templates/telemeta/users.html.py:43
 msgid "Users"
 msgstr ""
 
-#: templates/telemeta/base.html:115
+#: templates/telemeta/base.html:116
 msgid "Admin"
 msgstr ""
 
-#: templates/telemeta/base.html:125
+#: templates/telemeta/base.html:126
 msgid "Profile"
 msgstr "Profil"
 
-#: templates/telemeta/base.html:129
+#: templates/telemeta/base.html:130
 msgid "Sign out"
 msgstr ""
 
-#: templates/telemeta/base.html:177
+#: templates/telemeta/base.html:178
 msgid "Powered by"
 msgstr ""
 
-#: templates/telemeta/base.html:187
+#: templates/telemeta/base.html:188
 msgid "Legal notices"
 msgstr ""
 
@@ -1734,19 +1732,19 @@ msgstr ""
 "Votre consultation n'a pas été enregistrée correctement, veuillez réessayer "
 "SVP."
 
-#: views/pro.py:336
+#: views/pro.py:325
 msgid "all your answers has been validated"
 msgstr "toutes vos consultations ont été validées"
 
-#: views/pro.py:390
+#: views/pro.py:379
 msgid "validation conditions for an answer"
 msgstr "conditions de validation d'une consultation"
 
-#: views/pro.py:413
+#: views/pro.py:402
 msgid "Subtitle"
 msgstr "Sous-titre"
 
-#: views/pro.py:504
+#: views/pro.py:493
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
 
