@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 16:44+0100\n"
+"POT-Creation-Date: 2013-02-18 17:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -913,7 +913,6 @@ msgid "Title"
 msgstr "Titre"
 
 #: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
-#: templates/teleforma/seminar_testimonial.html:41
 #: templates/teleforma/inc/media_package_list.html:36
 msgid "Description"
 msgstr "Description"
@@ -1182,21 +1181,21 @@ msgstr ""
 msgid "Training type"
 msgstr "Type de formation"
 
-#: templates/teleforma/seminar_testimonial.html:43
+#: templates/teleforma/seminar_testimonial.html:40
 #: templates/teleforma/inc/media_package_list.html:38
 msgid "Duration"
 msgstr "Durée"
 
-#: templates/teleforma/seminar_testimonial.html:43
+#: templates/teleforma/seminar_testimonial.html:40
 #: templates/teleforma/inc/seminar_description.html:12
 msgid "hours"
 msgstr "heures"
 
-#: templates/teleforma/seminar_testimonial.html:44
+#: templates/teleforma/seminar_testimonial.html:41
 msgid "Training begin date"
 msgstr "Date de début de formation"
 
-#: templates/teleforma/seminar_testimonial.html:45
+#: templates/teleforma/seminar_testimonial.html:42
 msgid "Training end date"
 msgstr "Date de fin de formation"
 
@@ -1356,7 +1355,7 @@ msgstr ""
 "reste à votre disposition pour renseignement complémentaire.\n"
 
 #: templates/teleforma/messages/answer_validated.txt:1
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(gender)s %(first_name)s %(last_name)s,\n"
 "\n"
@@ -1373,7 +1372,7 @@ msgid ""
 "The team of the %(organization)s thank you for your confidence and we remain "
 "at your disposal for further information.\n"
 msgstr ""
-"%(first_name)s %(last_name)s,\n"
+"%(gender)s %(first_name)s %(last_name)s,\n"
 "\n"
 "Votre réponse à la consultation n°%(rank)s du séminaire e-learning "
 "\"%(title)s\" a été validée.\n"
@@ -1390,7 +1389,7 @@ msgstr ""
 "reste à votre disposition pour renseignement complémentaire.\n"
 
 #: templates/teleforma/messages/seminar_validated.txt:1
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "%(gender)s %(first_name)s %(last_name)s,\n"
 "\n"
@@ -1411,7 +1410,7 @@ msgid ""
 "The team of the %(organization)s thank you for your confidence and we remain "
 "at your disposal for further information.\n"
 msgstr ""
-"%(first_name)s %(last_name)s,\n"
+"%(gender)s %(first_name)s %(last_name)s,\n"
 "\n"
 "Votre réponse à la consultation n°%(rank)s du séminaire e-learning "
 "\"%(title)s\" a été validée.\n"
