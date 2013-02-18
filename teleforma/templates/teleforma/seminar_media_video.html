@@ -96,7 +96,7 @@ $(window).ready(function(){
 <div class="media">
 
 <div class="video">
-<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}'>
+<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}poster="{{ MEDIA_URL }}{{ related.file }}"{% endif %}{% endfor %}{% endif %} data-setup='{}'>
     <source src="{{ MEDIA_URL }}{{ media.item.file }}#t=0" type="{{ media.mime_type }}" />
   {% for transcoded in media.item.transcoded.all %}
    {% if "video" in transcoded.mime_type %}
