@@ -1,16 +1,16 @@
 {% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}{% trans "Hello" %} {{ usr.first_name }} {{ usr.last_name }},
 {% if action == 'rejection' %}
-{% blocktrans with object.sent_at|date:"DATETIME_FORMAT" as date and object.obfuscated_recipient as recipient %}On {{ date }}, you asked to send a message to {{ recipient.first_name }} {{ recipient.last_name }}.{% endblocktrans %}
+{% blocktrans with object.sent_at|date:"DATETIME_FORMAT" as date and object.recipient as recipient %}On {{ date }}, you asked to send a message to {{ recipient.first_name }} {{ recipient.last_name }}.{% endblocktrans %}
 
 {% trans "Your message has been rejected by the moderator" %}{% if object.moderation_reason %}{% trans ", for the following reason:" %}
     {{ object.moderation_reason }}{% else %}.{% endif %}
 
 {% else %}{# 'acceptance' #}
-{% if object.parent_id %}{% if object.parent.sender_id == object.recipient_id %}{% blocktrans with object.parent.sent_at|date:"DATETIME_FORMAT" as date and object.obfuscated_sender as sender %}On {{ date }}, you sent a message to {{ sender.first_name }} {{ sender.last_name }}.{% endblocktrans %}
+{% if object.parent_id %}{% if object.parent.sender_id == object.recipient_id %}{% blocktrans with object.parent.sent_at|date:"DATETIME_FORMAT" as date and object.sender as sender %}On {{ date }}, you sent a message to {{ sender.first_name }} {{ sender.last_name }}.{% endblocktrans %}
 {% trans "Your correspondent has given you an answer." %}
-{% else %}{% blocktrans with object.obfuscated_sender as sender %}You have received a copy of a response from {{ sender.first_name }} {{ sender.last_name }}.{% endblocktrans %}
+{% else %}{% blocktrans with object.sender as sender %}You have received a copy of a response from {{ sender.first_name }} {{ sender.last_name }}.{% endblocktrans %}
 {% endif %}
-{% else %}{% blocktrans with object.obfuscated_sender as sender %}You have received a message from {{ sender.first_name }} {{ sender.last_name }}.{% endblocktrans %}
+{% else %}{% blocktrans with object.sender as sender %}You have received a message from {{ sender.first_name }} {{ sender.last_name }}.{% endblocktrans %}
 {% endif %}{% endif %}{% trans "You can read and respond to this message from your e-learning desk following this link:" %}
 
 http://{{ site.name }}/messages/inbox/
