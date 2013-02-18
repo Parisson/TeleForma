@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 22:29+0100\n"
+"POT-Creation-Date: 2013-02-18 22:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -622,13 +622,11 @@ msgid "Hello"
 msgstr "Bonjour"
 
 #: templates/postman/email_user.txt:3
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"On %(date)s, you asked to send a message to the user '%(first_name)s "
-"%(last_name)s'."
+"On %(date)s, you asked to send a message to %(first_name)s %(last_name)s."
 msgstr ""
-"Le %(date)s, vous avez envoyé un message à %(sender.first_name)s "
-"%(sender.last_name)s."
+"Le %(date)s, vous avez envoyé un message à %(first_name)s %(last_name)s."
 
 #: templates/postman/email_user.txt:5 templates/postman/email_visitor.txt:5
 msgid "Your message has been rejected by the moderator"
@@ -639,32 +637,26 @@ msgid ", for the following reason:"
 msgstr ""
 
 #: templates/postman/email_user.txt:9
-#, fuzzy, python-format
-msgid ""
-"On %(date)s, you sent a message to the user '%(first_name)s %(last_name)s'."
+#, python-format
+msgid "On %(date)s, you sent a message to %(first_name)s %(last_name)s."
 msgstr ""
-"Le %(date)s, vous avez envoyé un message à %(sender.first_name)s "
-"%(sender.last_name)s."
+"Le %(date)s, vous avez envoyé un message à %(first_name)s %(last_name)s."
 
 #: templates/postman/email_user.txt:10
 msgid "Your correspondent has given you an answer."
 msgstr "Votre correspondant vous a donné une réponse."
 
 #: templates/postman/email_user.txt:11
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"You have received a copy of a response from the user '%(first_name)s "
-"%(last_name)s'."
+"You have received a copy of a response from %(first_name)s %(last_name)s."
 msgstr ""
-"Vous avez reçu une copie de la réponse de %(sender.first_name)s "
-"%(sender.last_name)s."
+"Vous avez reçu une copie de la réponse de %(first_name)s %(last_name)s."
 
 #: templates/postman/email_user.txt:13
-#, fuzzy, python-format
-msgid ""
-"You have received a message from the user '%(first_name)s %(last_name)s'."
-msgstr ""
-"Vous avez reçu un message de %(sender.first_name)s %(sender.last_name)s."
+#, python-format
+msgid "You have received a message from %(first_name)s %(last_name)s."
+msgstr "Vous avez reçu un message de %(first_name)s %(last_name)s."
 
 #: templates/postman/email_user.txt:14
 msgid ""
