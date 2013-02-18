@@ -310,10 +310,16 @@ class AnswersView(ListView):
 
         path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
         if answer.question.seminar.sub_title:
-            title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
+            title = seminar.sub_title
         else:
-            title = unicode(_('Course')) + ' : ' + seminar.course.title
+            title = seminar.course.title
 
+        auditor = user.auditor.all()
+        if auditor:
+            gender = _(auditor[0].gender)
+        else:
+            gender = ''
+        context['gender'] = gender
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
