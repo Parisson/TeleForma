@@ -297,8 +297,9 @@ class AnswersView(ListView):
         site = Site.objects.get_current()
 
         path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+
         if answer.question.seminar.sub_title:
-            title = unicode(_('Subtitle')) + ' : ' + unicode(seminar.sub_title)
+            title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
         else:
             title = unicode(seminar.title)
 
@@ -354,10 +355,11 @@ class AnswersView(ListView):
 
         path = reverse('teleforma-question-answer', kwargs={'id': seminar.id,
                        'pk': answer.question.pk})
+
         if answer.question.seminar.sub_title:
-            title = unicode(_('Subtitle')) + ' : ' + unicode(seminar.sub_title)
+            title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
         else:
-            title = unicode(seminar.title)
+            title = seminar.title
 
         auditor = user.auditor.all()
         if auditor:
@@ -404,7 +406,7 @@ class AnswerDetailViewTest(DetailView):
         if answer.question.seminar.sub_title:
             title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
         else:
-            title = unicode(_('Course')) + ' : ' + seminar.course.title
+            title = seminar.title
 
         auditor = user.auditor.all()
         if auditor:
