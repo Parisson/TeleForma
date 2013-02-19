@@ -26,7 +26,7 @@ Mentions Légales
 
 |
 
-** Numéro d'établissement de formation professionnelle :**
+**Numéro d'établissement de formation professionnelle :**
 
  | 1 17 53 26 93 75
 
