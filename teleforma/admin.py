@@ -53,7 +53,7 @@ class CourseDomainAdmin(admin.ModelAdmin):
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
-    search_fields = ['title']
+    search_fields = ['title', 'course__title', 'course__code']
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
