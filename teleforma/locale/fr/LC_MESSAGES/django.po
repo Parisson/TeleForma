@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 22:37+0100\n"
+"POT-Creation-Date: 2013-02-19 10:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -440,7 +440,7 @@ msgid "treated"
 msgstr ""
 
 #: models/pro.py:163 templates/teleforma/seminar_detail.html:50
-#: templates/teleforma/seminars.html:106 views/pro.py:330
+#: templates/teleforma/seminars.html:99 views/pro.py:330
 msgid "validated"
 msgstr "validée"
 
@@ -644,7 +644,7 @@ msgstr ""
 
 #: templates/postman/email_user.txt:10
 msgid "Your correspondent has given you an answer."
-msgstr "Votre correspondant vous a donné une réponse."
+msgstr "Votre correspondant vous a répondu."
 
 #: templates/postman/email_user.txt:11
 #, python-format
@@ -848,13 +848,13 @@ msgstr "Soumettre"
 # #: templates/teleforma/seminar_detail.html:152
 #: templates/teleforma/answer_form.html:97
 #: templates/teleforma/seminar_detail.html:152
-#: templates/teleforma/seminars.html:141
+#: templates/teleforma/seminars.html:134
 msgid "Progressions"
 msgstr "Progressions"
 
 #: templates/teleforma/answer_form.html:101
 #: templates/teleforma/seminar_detail.html:155
-#: templates/teleforma/seminars.html:144
+#: templates/teleforma/seminars.html:137
 msgid "General"
 msgstr "Général"
 
@@ -1082,7 +1082,7 @@ msgstr "Mes notes"
 msgid "New note"
 msgstr "Nouvelle note"
 
-#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:156
+#: templates/teleforma/courses.html:104 templates/teleforma/seminars.html:149
 #: templates/teleforma/inc/answer_list.html:17
 msgid "Status"
 msgstr "Status"
@@ -1195,7 +1195,7 @@ msgstr "Date de début de formation"
 msgid "Training end date"
 msgstr "Date de fin de formation"
 
-#: templates/teleforma/seminars.html:123
+#: templates/teleforma/seminars.html:116
 msgid "Access"
 msgstr "Accéder"
 
@@ -1724,6 +1724,10 @@ msgstr ""
 "Votre consultation n'a pas été enregistrée correctement, veuillez réessayer "
 "SVP."
 
+#: views/pro.py:301 views/pro.py:358 views/pro.py:402
+msgid "Subtitle"
+msgstr "Sous-titre"
+
 #: views/pro.py:325
 msgid "all your answers has been validated"
 msgstr "toutes vos consultations ont été validées"
@@ -1731,10 +1735,6 @@ msgstr "toutes vos consultations ont été validées"
 #: views/pro.py:379
 msgid "validation conditions for an answer"
 msgstr "conditions de validation d'une consultation"
-
-#: views/pro.py:402
-msgid "Subtitle"
-msgstr "Sous-titre"
 
 #: views/pro.py:493
 msgid "You have successfully submitted your evaluation"
