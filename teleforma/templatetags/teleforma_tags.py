@@ -302,7 +302,7 @@ def fancy_duration(duration):
 
 @register.simple_tag
 def untreated_answer_count():
-    answers = Answer.objects.filter(treated=False)
+    answers = Answer.objects.filter(treated=False, status=3)
     if answers:
         return ' (' + str(len(answers)) + ')'
     else:

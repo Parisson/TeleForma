@@ -15,10 +15,10 @@ $(document).ready(function(){
 });
 {% endif %}
 
-$(document).ready(function(){   
+$(document).ready(function(){
     //default usage
     $("#id_answer").charCount({
-        necessary: {{question.min_nchar}},            
+        necessary: {{question.min_nchar}},
         counterText: gettext('Characters')+' : ',
         });
     });
@@ -32,11 +32,11 @@ $(document).ready(function(){
           new Messi(gettext('You must reach the required number of characters.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
         }
         if (c.hasClass('exceed')){
-            $('#id_status').val("3"); 
-            $('#_AnswerForm').submit(); 
+            $('#id_status').val("3");
+            $('#_AnswerForm').submit();
         }
       });
-    
+
     var b2 = $('#save_button');
     b2.unbind('click').click(function() {
       $(window).unbind('beforeunload');
@@ -67,6 +67,12 @@ $(document).ready(function(){
 </div>
 {% endblock submodules %}
 
+{% block module-action %}
+<div class="module_action">
+ <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+</div>
+{% endblock module-action %}
+
 {% block course_content %}
 
 <div class="course_content">
@@ -77,7 +83,7 @@ $(document).ready(function(){
     {{ question.question|safe }}
   </div>
 </div>
-  
+
 <br />
 <form method="post" id="_AnswerForm" action="">{% csrf_token %}
 {{ form }}

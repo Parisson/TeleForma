@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-19 10:22+0100\n"
+"POT-Creation-Date: 2013-02-19 16:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -404,7 +404,7 @@ msgstr "documents corrigés"
 msgid "form"
 msgstr "formulaire"
 
-#: models/pro.py:130 templates/teleforma/answer_form.html:104
+#: models/pro.py:130 templates/teleforma/answer_form.html:110
 #: templates/teleforma/seminar_detail.html:158
 #: templates/teleforma/testimonials.html:58
 #: templates/teleforma/inc/answer_list.html:14
@@ -453,7 +453,7 @@ msgid "date validated"
 msgstr "date de validation"
 
 #: models/pro.py:185 templates/teleforma/answer_detail.html:43
-#: templates/teleforma/answer_form.html:107
+#: templates/teleforma/answer_form.html:113
 msgid "Answer"
 msgstr "Réponse à la consultation"
 
@@ -780,7 +780,7 @@ msgstr "Rejeté"
 msgid ":"
 msgstr ""
 
-#: templates/postman/view.html:36
+#: templates/postman/view.html:36 templates/teleforma/answer_form.html:72
 #: templates/teleforma/seminar_media_audio.html:8
 #: templates/teleforma/seminar_media_video.html:68
 msgid "Back"
@@ -808,7 +808,7 @@ msgstr "Vous n'avez PAS enregistré votre consultation"
 msgid "My steps"
 msgstr "Mes étapes"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:80
 #: templates/teleforma/evaluation_form.html:10
 #: templates/teleforma/seminar_detail.html:77
 #: templates/teleforma/seminar_detail.html:86
@@ -824,35 +824,35 @@ msgstr "Mes étapes"
 msgid "Step"
 msgstr "Étape"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:80
 #: templates/teleforma/seminar_detail.html:105
 msgid "answer to this question"
 msgstr "réaliser cette consultation fictive"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:80
 msgid "characters"
 msgstr "caractères"
 
-#: templates/teleforma/answer_form.html:74
+#: templates/teleforma/answer_form.html:80
 msgid "minimum"
 msgstr "minimum"
 
-#: templates/teleforma/answer_form.html:88
+#: templates/teleforma/answer_form.html:94
 msgid "Save"
 msgstr ""
 
-#: templates/teleforma/answer_form.html:89
+#: templates/teleforma/answer_form.html:95
 msgid "Submit it"
 msgstr "Soumettre"
 
 # #: templates/teleforma/seminar_detail.html:152
-#: templates/teleforma/answer_form.html:97
+#: templates/teleforma/answer_form.html:103
 #: templates/teleforma/seminar_detail.html:152
 #: templates/teleforma/seminars.html:134
 msgid "Progressions"
 msgstr "Progressions"
 
-#: templates/teleforma/answer_form.html:101
+#: templates/teleforma/answer_form.html:107
 #: templates/teleforma/seminar_detail.html:155
 #: templates/teleforma/seminars.html:137
 msgid "General"
@@ -1390,9 +1390,8 @@ msgid ""
 "\n"
 "You have then achieved the step 4 of your training.\n"
 "\n"
-"Now read the corrected document of all questions (step 5) and evaluate the "
-"training (step 6) in order to obtain your testimonial (step 7) following "
-"this link:\n"
+"Now read the corrected document of each questions (step 5) following this "
+"link:\n"
 "\n"
 "http://%(domain)s%(path)s\n"
 "\n"
@@ -1410,8 +1409,7 @@ msgstr ""
 "Vous avez achevé l’étape 4 de votre formation.\n"
 "\n"
 "Consultez dès à présent le corrigé-type des consultations fictives (étape 5) "
-"et évaluez la formation suivie (étape 6) afin d’obtenir votre attestation "
-"(étape 7) en suivant ce lien :\n"
+"en suivant ce lien :\n"
 "\n"
 "http://%(domain)s%(path)s\n"
 "\n"
@@ -1711,18 +1709,21 @@ msgstr ""
 "télécharger votre attestation de formation ci-dessous."
 
 #: views/pro.py:184
-msgid "You have successfully saved your answer"
-msgstr "Vous avez enregistré votre consultation avec succès"
+msgid "You have successfully saved your answer."
+msgstr "Vous avez enregistré votre consultation avec succès."
 
 #: views/pro.py:186
-msgid "You have successfully submitted your answer"
-msgstr "Vous avez soumis votre consultation avec succès"
+msgid "You have successfully submitted your answer."
+msgstr ""
+"Vous avez soumis votre consultation avec succès. Vous recevrez un message "
+"dès que celle-ci aura été validée par notre équipe pédagogique (48 heures "
+"ouvrées maximum)."
 
 #: views/pro.py:190
 msgid "Your submission has not been saved correctly. Please try again."
 msgstr ""
 "Votre consultation n'a pas été enregistrée correctement, veuillez réessayer "
-"SVP."
+"s'il vous plaît."
 
 #: views/pro.py:301 views/pro.py:358 views/pro.py:402
 msgid "Subtitle"

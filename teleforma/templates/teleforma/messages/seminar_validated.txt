@@ -1,10 +1,10 @@
-{% load i18n %}{% blocktrans %}{{ gender }} {{ first_name }} {{ last_name }},
+{% load i18n %}{% blocktrans %}{{ gender }} {{ last_name }},
 
 Your answer to the question n°{{ rank }} of the e-learning seminar "{{ title }}" has been validated.
 
 You have then achieved the step 4 of your training.
 
-Now read the corrected document of all questions (step 5) and evaluate the training (step 6) in order to obtain your testimonial (step 7) following this link:
+Now read the corrected document of each questions (step 5) following this link:
 
 http://{{ domain }}{{ path }}
 

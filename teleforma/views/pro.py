@@ -181,9 +181,9 @@ class AnswerView(SeminarAccessMixin, FormView):
         answer.question = self.question
         answer.save()
         if answer.status <= 2:
-            messages.info(self.request, _("You have successfully saved your answer"))
+            messages.info(self.request, _("You have successfully saved your answer."))
         elif answer.status == 3:
-            messages.info(self.request, _("You have successfully submitted your answer"))
+            messages.info(self.request, _("You have successfully submitted your answer."))
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):
@@ -304,7 +304,7 @@ class AnswersView(ListView):
 
         auditor = user.auditor.all()
         if auditor:
-            gender = unicode(_(auditor[0].gender))
+            gender = auditor[0].get_gender_display()
         else:
             gender = ''
         context['gender'] = gender
@@ -361,9 +361,10 @@ class AnswersView(ListView):
 
         auditor = user.auditor.all()
         if auditor:
-            gender = unicode(_(auditor[0].gender))
+            gender = auditor[0].get_gender_display()
         else:
             gender = ''
+
         context['gender'] = gender
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
@@ -398,17 +399,20 @@ class AnswerDetailViewTest(DetailView):
         sender = self.request.user
         site = Site.objects.get_current()
         path= reverse('teleforma-question-answer', kwargs={'id': seminar.id, 'pk': answer.question.id})
+        organization = seminar.course.department.name
+
         if answer.question.seminar.sub_title:
             title = unicode(_('Subtitle')) + ' : ' + seminar.sub_title
         else:
             title = unicode(_('Course')) + ' : ' + seminar.course.title
-        organization = seminar.course.department.name
+
         auditor = user.auditor.all()
         if auditor:
-            context['gender'] = auditor[0].gender
+            context['gender'] = auditor[0].get_gender_display()
         else:
-            context['gender'] = user.first_name
-        context['lastname'] = user.last_name
+            context['gender'] = ''
+
+        context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
         context['domain'] = site.name
         context['path'] = path
