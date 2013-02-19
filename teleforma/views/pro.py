@@ -298,7 +298,7 @@ class AnswersView(ListView):
 
         path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
         if answer.question.seminar.sub_title:
-            title = unicode(seminar.sub_title)
+            title = unicode(_('Subtitle')) + ' : ' + unicode(seminar.sub_title)
         else:
             title = unicode(seminar.title)
 
@@ -355,7 +355,7 @@ class AnswersView(ListView):
         path = reverse('teleforma-question-answer', kwargs={'id': seminar.id,
                        'pk': answer.question.pk})
         if answer.question.seminar.sub_title:
-            title = unicode(seminar.sub_title)
+            title = unicode(_('Subtitle')) + ' : ' + unicode(seminar.sub_title)
         else:
             title = unicode(seminar.title)
 
