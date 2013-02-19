@@ -2,6 +2,8 @@
 FAQ
 ====
 
+|
+
 Pourquoi les flux vidéos ne s'affichent pas correctement dans mon navigateur ?
 -------------------------------------------------------------------------------
 
@@ -37,6 +39,8 @@ Vous pouvez à tout moment réinitialiser votre mot de passe personnel depuis l'
 
 Support
 ========
+
+|
 
 Pour toute question relative à votre formation, veuillez `contacter un administrateur depuis la messagerie </messages/write/admin>`_ ou bien par mail à l'adresse suivante : `e-learning@pro-bareau.com <mailto:e-learning@pro-bareau.com>`_
 
