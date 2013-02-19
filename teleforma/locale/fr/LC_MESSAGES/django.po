@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-19 16:45+0100\n"
+"POT-Creation-Date: 2013-02-19 17:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -431,7 +431,7 @@ msgstr "status"
 msgid "Question"
 msgstr "Question"
 
-#: models/pro.py:160 views/pro.py:329
+#: models/pro.py:160 views/pro.py:330
 msgid "answer"
 msgstr "consultation"
 
@@ -440,7 +440,7 @@ msgid "treated"
 msgstr ""
 
 #: models/pro.py:163 templates/teleforma/seminar_detail.html:50
-#: templates/teleforma/seminars.html:99 views/pro.py:330
+#: templates/teleforma/seminars.html:99 views/pro.py:331
 msgid "validated"
 msgstr "validée"
 
@@ -471,7 +471,7 @@ msgstr "Modèle d'attestation"
 
 #: models/pro.py:233 templates/teleforma/seminar_testimonial.html:13
 #: templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:614
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:620
 msgid "Testimonial"
 msgstr "Attestation"
 
@@ -966,7 +966,7 @@ msgstr "Audio"
 
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
-#: templates/teleforma/seminar_testimonial.html:38 views/pro.py:404
+#: templates/teleforma/seminar_testimonial.html:38
 msgid "Course"
 msgstr "Matière"
 
@@ -1309,7 +1309,7 @@ msgstr "durée"
 #: templates/teleforma/messages/answer_rejected.txt:1
 #, python-format
 msgid ""
-"%(gender)s %(first_name)s %(last_name)s,\n"
+"%(gender)s %(last_name)s,\n"
 "\n"
 "We are sorry we cannot validate your answer n°%(rank)s of the e-learning "
 "seminar \"%(title)s\".\n"
@@ -1326,7 +1326,7 @@ msgid ""
 "The team of the %(organization)s thank you for your confidence and we remain "
 "at your disposal for further information.\n"
 msgstr ""
-"%(gender)s %(first_name)s %(last_name)s,\n"
+"%(gender)s %(last_name)s,\n"
 "\n"
 "Nous sommes au regret de ne pouvoir valider votre réponse à la consultation n"
 "°%(rank)s du séminaire e-learning \"%(title)s\".\n"
@@ -1349,7 +1349,7 @@ msgstr ""
 #: templates/teleforma/messages/answer_validated.txt:1
 #, python-format
 msgid ""
-"%(gender)s %(first_name)s %(last_name)s,\n"
+"%(gender)s %(last_name)s,\n"
 "\n"
 "Your answer to the question n°%(rank)s of the e-learning seminar \"%(title)s"
 "\" has been validated.\n"
@@ -1364,7 +1364,7 @@ msgid ""
 "The team of the %(organization)s thank you for your confidence and we remain "
 "at your disposal for further information.\n"
 msgstr ""
-"%(gender)s %(first_name)s %(last_name)s,\n"
+"%(gender)s %(last_name)s,\n"
 "\n"
 "Votre réponse à la consultation n°%(rank)s du séminaire e-learning "
 "\"%(title)s\" a été validée.\n"
@@ -1383,7 +1383,7 @@ msgstr ""
 #: templates/teleforma/messages/seminar_validated.txt:1
 #, python-format
 msgid ""
-"%(gender)s %(first_name)s %(last_name)s,\n"
+"%(gender)s %(last_name)s,\n"
 "\n"
 "Your answer to the question n°%(rank)s of the e-learning seminar \"%(title)s"
 "\" has been validated.\n"
@@ -1401,7 +1401,7 @@ msgid ""
 "The team of the %(organization)s thank you for your confidence and we remain "
 "at your disposal for further information.\n"
 msgstr ""
-"%(gender)s %(first_name)s %(last_name)s,\n"
+"%(gender)s %(last_name)s,\n"
 "\n"
 "Votre réponse à la consultation n°%(rank)s du séminaire e-learning "
 "\"%(title)s\" a été validée.\n"
@@ -1725,19 +1725,19 @@ msgstr ""
 "Votre consultation n'a pas été enregistrée correctement, veuillez réessayer "
 "s'il vous plaît."
 
-#: views/pro.py:301 views/pro.py:358 views/pro.py:402
+#: views/pro.py:302 views/pro.py:360 views/pro.py:407
 msgid "Subtitle"
 msgstr "Sous-titre"
 
-#: views/pro.py:325
+#: views/pro.py:326
 msgid "all your answers has been validated"
 msgstr "toutes vos consultations ont été validées"
 
-#: views/pro.py:379
+#: views/pro.py:382
 msgid "validation conditions for an answer"
 msgstr "conditions de validation d'une consultation"
 
-#: views/pro.py:493
+#: views/pro.py:499
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
 
