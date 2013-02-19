@@ -9,7 +9,6 @@ Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc ac
  * Safari (OSX et iOS)
  * Opera
 
-
 |
 
 FAQ
@@ -19,6 +18,18 @@ Pourquoi les flux vidéos ne s'affichent pas correctement dans mon navigateur ?
 -------------------------------------------------------------------------------
 
 Pour profiter au mieux des nos technologies, nous vous conseillons vivement d'installer et d'utiliser des navigateurs libres et gratuits comme `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ ou `Chrome <https://www.google.com/chrome?hl=fr>`_ pour lesquels sont garantis tous les accès aux documents texte et audiovisuels. Si vous rencontrez un problème de lecture, merci de contacter un technicient (voir paragraphe "Support" ci-dessous).
+
+|
+
+Je n'arrive pas à télécharger un fichier audio ou vidéo.
+-------------------------------------------------------------------
+
+ * Sur Windows : cliquer sur l'icône "Télécharger" avec le bouton DROIT de la souris puis cliquer avec le bouton GAUCHE sur "Enregistrer la cible du lien sous" pour l'enregistrer dans un dossier.
+ * Sur Mac : appuyer sur CTRL avant de cliquer à l'aide du bouton de la souris sur le bouton "Télécharger"
+ * Sur Linux : procéder comme sur windows
+ * Sur smartphones : un clic long ou court sur le bouton "Télécharger" devrait fonctionner.
+
+Pour lire les videos une fois le téléchargement éffectué, choisissez `VLC <http://www.videolan.org/vlc/>`_.
 
 |
 
