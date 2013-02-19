@@ -1,6 +1,6 @@
 {% load i18n %}{% blocktrans %}{{ gender }} {{ last_name }},
 
-Your answer to the question n°{{ rank }} of the e-learning seminar "{{ title }}" has been validated.
+Your answer to the question n°{{ rank }} of the e-learning seminar " {{ title }} " has been validated.
 
 You can now continue to next step following this link:
 
