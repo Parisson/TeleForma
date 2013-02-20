@@ -357,7 +357,7 @@ class AnswersView(ListView):
                        'pk': answer.question.pk})
 
         if seminar.sub_title:
-            title = unicode(seminar.sub_title) + ' : ' + seminar.title
+            title = seminar.sub_title + ' : ' + seminar.title
         else:
             title = seminar.title
 
@@ -404,7 +404,7 @@ class AnswerDetailViewTest(DetailView):
         organization = seminar.course.department.name
 
         if answer.question.seminar.sub_title:
-            title = unicode(seminar.sub_title) + ' : ' + seminar.title
+            title = seminar.sub_title + ' : ' + seminar.title
         else:
             title = seminar.title
 

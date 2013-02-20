@@ -1,4 +1,4 @@
-{% load i18n %}{% blocktrans %}{{ gender }} {{ last_name }},
+{% load i18n %}{% autoescape off %}{% blocktrans %}{{ gender }} {{ last_name }},
 
 We are sorry we cannot validate your answer n°{{ rank }} of the e-learning seminar " {{ title }} ".
 
@@ -9,4 +9,4 @@ http://{{ domain }}{{ path }}
 We remind you that you absolutely need to terminate your training before {{ date }}.
 
 The team of the {{ organization }} thank you for your confidence and we remain at your disposal for further information.
-{% endblocktrans %}
+{% endblocktrans %}{% endautoescape %}
