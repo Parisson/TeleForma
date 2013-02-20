@@ -301,7 +301,7 @@ class AnswersView(ListView):
         if seminar.sub_title:
             title = seminar.sub_title + ' : ' + seminar.title
         else:
-            title = seminar.title + ''
+            title = str(seminar.title)
 
         auditor = user.auditor.all()
         if auditor:
