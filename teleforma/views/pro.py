@@ -299,9 +299,9 @@ class AnswersView(ListView):
         path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
 
         if seminar.sub_title:
-            title = unicode(seminar.sub_title) + ' : ' + seminar.title
+            title = seminar.sub_title + ' : ' + seminar.title
         else:
-            title = unicode('') + seminar.title
+            title = seminar.title + ''
 
         auditor = user.auditor.all()
         if auditor:
