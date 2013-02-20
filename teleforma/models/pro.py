@@ -217,13 +217,13 @@ class Testimonial(models.Model):
     title       = models.CharField(_('title'), max_length=255, blank=True)
 
     def save(self):
+        super(Testimonial, self).save()
         if self.seminar:
             self.title = ' - '.join([self.seminar.title,
                                     self.user.first_name + ' ' + self.user.last_name,
                                     str(self.date_added)])
         else:
             self.title = ' - '.join([self.user.first_name + ' ' + self.user.last_name, str(self.date_added)])
-        super(Testimonial, self).save()
 
     def __unicode__(self):
         return self.title
