@@ -216,8 +216,8 @@ class Testimonial(models.Model):
     date_added  = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
     title       = models.CharField(_('title'), max_length=255, blank=True)
 
-    def save(self):
-        super(Testimonial, self).save()
+    def save(self, **kwargs):
+        super(Testimonial, self).save(**kwargs)
         if self.seminar:
             self.title = ' - '.join([self.seminar.title,
                                     self.user.first_name + ' ' + self.user.last_name,
