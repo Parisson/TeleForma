@@ -223,7 +223,7 @@ class Testimonial(models.Model):
                                     str(self.date_added)])
         else:
             self.title = ' - '.join([self.user.first_name + ' ' + self.user.last_name, str(self.date_added)])
-        super(Testimonial, self).save(**kwargs)
+        self.save()
 
     def __unicode__(self):
         return self.title
