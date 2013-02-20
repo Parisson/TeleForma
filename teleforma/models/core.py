@@ -249,11 +249,10 @@ class Conference(Model):
         return self.description
 
     def save(self, **kwargs):
+        super(Conference, self).save(**kwargs)
         if not self.public_id:
             self.public_id = get_random_hash()
         self.course.save()
-        super(Conference, self).save(**kwargs)
-
 
     def to_dict(self):
         dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
@@ -517,7 +516,6 @@ class DocumentSimple(MediaBase):
         super(DocumentSimple, self).save(**kwargs)
         self.set_mime_type()
 
-
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_simple'
         ordering = ['-date_added']
@@ -561,12 +559,11 @@ class Media(MediaBase):
             return self.item.file
 
     def save(self, **kwargs):
+        super(Media, self).save(**kwargs)
         if self.course:
             self.course.save()
         elif self.conference:
             self.conference.course.save()
-        super(Media, self).save(**kwargs)
-
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
