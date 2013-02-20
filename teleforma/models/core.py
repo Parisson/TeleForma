@@ -252,9 +252,8 @@ class Conference(Model):
         return self.description
 
     def save(self, **kwargs):
-        self.course.save()
         super(Conference, self).save(**kwargs)
-
+        self.course.save()
 
     def to_dict(self):
         dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
@@ -268,11 +267,11 @@ class Conference(Model):
         return dict
 
     def to_json_dict(self):
-        data = {'id': self.public_id, 
+        data = {'id': self.public_id,
                 'course_code': self.course.code,
-                'course_type': self.course_type.name, 
+                'course_type': self.course_type.name,
                 'professor_id': self.professor.user.username,
-                'period': self.period.name, 
+                'period': self.period.name,
                 'department': self.department.name,
                 'session': self.session,
                 'comment': self.comment,
@@ -474,7 +473,7 @@ class DocumentSimple(MediaBase):
     def save(self, **kwargs):
         super(DocumentSimple, self).save(**kwargs)
         self.set_mime_type()
-        
+
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_simple'
@@ -519,12 +518,11 @@ class Media(MediaBase):
             return self.item.file
 
     def save(self, **kwargs):
+        super(Media, self).save(**kwargs)
         if self.course:
             self.course.save()
         elif self.conference:
             self.conference.course.save()
-        super(Media, self).save(**kwargs)
-
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
