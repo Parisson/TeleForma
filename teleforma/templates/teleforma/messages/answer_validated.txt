@@ -1,6 +1,6 @@
-{% load i18n %}{% blocktrans %}{{ gender }} {{ last_name }},
+{% load i18n %}{% autoescape off %}{% blocktrans %}{{ gender }} {{ last_name }},
 
-Your answer to the question n°{{ rank }} of the e-learning seminar " {{ title|safe }} " has been validated.
+Your answer to the question n°{{ rank }} of the e-learning seminar " {{ title }} " has been validated.
 
 You can now continue to next step following this link:
 
@@ -9,4 +9,4 @@ http://{{ domain }}{{ path }}
 We remind you that you absolutely need to terminate all steps of your training before {{ date }}.
 
 The team of the {{ organization }} thank you for your confidence and we remain at your disposal for further information.
-{% endblocktrans %}
+{% endblocktrans %}{% endautoescape %}
