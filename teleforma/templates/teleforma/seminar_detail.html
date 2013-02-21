@@ -99,6 +99,8 @@ $(function () {
        </div>
       {% endwith %}
 
+   {% if not seminar.conference in user.auditor.get.conferences.all %}
+
      {% with seminar.question as questions %}
        <div class="course_content">
         <div class="course_subtitle">
@@ -137,6 +139,8 @@ $(function () {
         {% include "teleforma/inc/testimonial_list.html" %}
        </div>
      {% endif %}
+
+   {% endif %}
 
   {% endblock course_content %}
 

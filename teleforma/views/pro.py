@@ -128,6 +128,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = context['seminar']
         user = self.request.user
+
         progress = seminar_progress(user, seminar)
         validated = seminar_validated(user, seminar)
         context['seminar_progress'] = progress
