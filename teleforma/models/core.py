@@ -315,7 +315,7 @@ class MediaBase(Model):
     code            = CharField(_('code'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     mime_type       = CharField(_('mime type'), max_length=255, blank=True)
-    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
+    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
     notes = generic.GenericRelation(Note)
 
     def get_fields(self):
