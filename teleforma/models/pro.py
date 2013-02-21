@@ -93,7 +93,7 @@ class Seminar(Displayable):
                                         blank=True, null=True)
     form            = models.ForeignKey(Form, related_name='seminar', verbose_name=_('form'),
                                         blank=True, null=True)
-    conference      = models.ForeignKey('Conference', related_name='conference',
+    conference      = models.ForeignKey('Conference', related_name='seminar',
                                         verbose_name=_('conference'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -263,6 +263,16 @@ class Auditor(models.Model):
             return self.user.last_name + ' ' + self.user.first_name
         except:
             return ''
+
+    def save(self, **kwargs):
+        super(Auditor, self).save(**kwargs)
+        for conference in self.conferences:
+            try:
+                seminar = conference.seminar.get()
+                if not seminar in self.seminars:
+                    self.seminars.add(seminar)
+            except:
+                continue
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'auditor'
