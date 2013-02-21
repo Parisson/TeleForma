@@ -527,7 +527,6 @@ class ConferenceRecordView(FormView):
                 conf.period, c = Period.objects.get_or_create(name=conference['period'])
                 conf.department, c = Department.objects.get_or_create(name=conference['department'])
                 conf.save()
-                course.save()
                 for stream in conference['streams']:
                     host = stream['host']
                     port = stream['port']
@@ -546,7 +545,11 @@ class ConferenceRecordView(FormView):
     def push(self, conference):
         url = 'http://' + conference.department.domain + '/json/'
         s = ServiceProxy(url)
-        s.teleforma.create_conference(conference.to_json_dict())
+        try:
+            streaming = settings.TELECASTER_MASTER_STREAMING
+        except:
+            streaming = True
+        s.teleforma.create_conference(conference.to_json_dict(streaming=streaming))
 
 
 class HelpView(TemplateView):

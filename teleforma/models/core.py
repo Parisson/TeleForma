@@ -255,9 +255,8 @@ class Conference(Model):
         return self.description
 
     def save(self, **kwargs):
-        self.course.save()
         super(Conference, self).save(**kwargs)
-
+        self.course.save()
 
     def to_dict(self):
         dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
@@ -270,7 +269,7 @@ class Conference(Model):
                 ]
         return dict
 
-    def to_json_dict(self):
+    def to_json_dict(self, streaming=True):
         data = {'id': self.public_id,
                 'course_code': self.course.code,
                 'course_type': self.course_type.name,
@@ -286,7 +285,7 @@ class Conference(Model):
             data['organization'] = self.room.organization.name
 
         streams = self.livestream.all()
-        if streams:
+        if streams and streaming:
             for stream in streams:
                 data['streams'].append({'host': stream.server.host,
                                         'port': stream.server.port,
@@ -522,11 +521,12 @@ class Media(MediaBase):
             return self.item.file
 
     def save(self, **kwargs):
+        super(Media, self).save(**kwargs)
         if self.course:
             self.course.save()
         elif self.conference:
             self.conference.course.save()
-        super(Media, self).save(**kwargs)
+
 
 
     class Meta(MetaCore):
