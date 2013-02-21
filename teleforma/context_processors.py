@@ -101,7 +101,7 @@ def all_seminars(request, progress_order=False, date_order=False):
 
     elif auditor and not (user.is_staff or user.is_superuser):
         auditor = user.auditor.get()
-        seminars = auditor.seminars.all()
+        seminars = auditor.seminars.filter(status=2)
 
     elif user.is_staff or user.is_superuser:
         seminars = Seminar.objects.all()
