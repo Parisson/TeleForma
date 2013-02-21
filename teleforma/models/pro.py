@@ -264,16 +264,6 @@ class Auditor(models.Model):
         except:
             return ''
 
-    def save(self, **kwargs):
-        super(Auditor, self).save(**kwargs)
-        for conference in self.conferences:
-            try:
-                seminar = conference.seminar.get()
-                if not seminar in self.seminars:
-                    self.seminars.add(seminar)
-            except:
-                continue
-
     class Meta(MetaCore):
         db_table = app_label + '_' + 'auditor'
         verbose_name = _('Auditor')
