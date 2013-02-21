@@ -81,7 +81,7 @@ $(document).ready(function(){
         {% endif %}
     </div>
 
-    <a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a> - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}
+    <a href="{% url teleforma-course-detail course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
 
 </div>
 
