@@ -264,15 +264,15 @@ class Auditor(models.Model):
         except:
             return ''
 
-    def clean(self):
-        seminars = self.seminars.all()
-        for conference in self.conferences.all():
-            try:
-                seminar = conference.seminar.get()
-                if not seminar in seminars:
-                    self.seminars.add(seminar)
-            except:
-                continue
+#    def clean(self):
+#        seminars = self.seminars.all()
+#        for conference in self.conferences.all():
+#            try:
+#                seminar = conference.seminar.get()
+#                if not seminar in seminars:
+#                    self.seminars.add(seminar)
+#            except:
+#                continue
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'auditor'
