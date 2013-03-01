@@ -97,7 +97,9 @@ alt="logo" />
  <li><a href="{% url postman_inbox %}m/" class="orange">{% trans "Messaging" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
 
  {% if user.is_staff %}
- <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
+  <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
+ {% else %}
+  <li><a href="{% url teleforma-annals %}" class="yellow">{% trans "Annals" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
@@ -107,6 +109,7 @@ alt="logo" />
  <li><a href="{% url telemeta-search-criteria %}">{% trans "Search" %}</a></li>
  <li><a href="{% url telemeta-collections %}">{% trans "Collections" %}</a></li>
  <li><a href="{% url telemeta-items %}">{% trans "Items" %}</a></li>
+ <li><a href="{% url teleforma-annals %}">{% trans "Annals" %}</a></li>
  </ul>
  </li>
  <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>

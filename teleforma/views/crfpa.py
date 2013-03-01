@@ -297,3 +297,33 @@ class UsersXLSExport(object):
         self.users = User.objects.filter(student__training__courses__in=course)
         return self.export(request)
 
+
+
+class AnnalsView(ListView):
+
+    model = Document
+    template_name='teleforma/annals.html'
+
+    def get_queryset(self):
+        self.iej = None
+        user = self.request.user
+        if user.is_staff or user.is_superuser or user.professor.all():
+            return Document.objects.filter(is_annal=True)
+        else:
+            auditors = user.auditor.all()
+            if auditors:
+                auditor = auditors[0]
+                self.iej = auditor.iej
+                return Document.objects.filter(is_annal=True, iej=self.iej)
+            else:
+                return None
+
+    def get_context_data(self, **kwargs):
+        context = super(AnnalsView, self).get_context_data(**kwargs)
+        context['iej'] = self.iej
+        return context
+
+    @method_decorator(permission_required('is_staff'))
+    def dispatch(self, *args, **kwargs):
+        return super(AnnalsView, self).dispatch(*args, **kwargs)
+
