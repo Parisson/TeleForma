@@ -72,7 +72,7 @@ class Command(BaseCommand):
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
 
-        self.cleanup()
+        # self.cleanup()
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -139,7 +139,7 @@ class Command(BaseCommand):
 
                         item.title = name
                         item.file = path
-                        
+
                         if os.path.getsize(root+os.sep+filename):
                             item.approx_duration = self.get_duration(root+os.sep+filename)
 
@@ -191,7 +191,7 @@ class Command(BaseCommand):
                                     filename, extension = os.path.splitext(file)
                                     if extension[1:] in self.original_format:
                                         item.file = r_path
-                                        if os.path.getsize(dir+os.sep+file): 
+                                        if os.path.getsize(dir+os.sep+file):
                                             item.approx_duration = self.get_duration(dir+os.sep+file)
                                         item.save()
                                         print "preview added"
