@@ -189,8 +189,9 @@ class Command(BaseCommand):
                                 for file in files:
                                     r_path = r_dir + os.sep + file
                                     filename, extension = os.path.splitext(file)
-                                    if extension[1:] in self.original_format:
+                                    if extension[1:] in self.original_format and not '.' == filename[0]:
                                         item.file = r_path
+                                        #print dir+os.sep+file
                                         if os.path.getsize(dir+os.sep+file):
                                             item.approx_duration = self.get_duration(dir+os.sep+file)
                                         item.save()
