@@ -313,7 +313,7 @@ class AnswersView(ListView):
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
-        context['domain'] = site.name
+        context['domain'] = site.domain
         context['path'] = path
         context['title'] = title
         context['organization'] = organization
@@ -372,7 +372,7 @@ class AnswersView(ListView):
         context['first_name'] = user.first_name
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
-        context['domain'] = site.name
+        context['domain'] = site.domain
         context['path'] = path
         context['title'] = title
         context['organization'] = organization
@@ -417,7 +417,7 @@ class AnswerDetailViewTest(DetailView):
 
         context['last_name'] = user.last_name
         context['rank'] = answer.question.rank
-        context['domain'] = site.name
+        context['domain'] = site.domain
         context['path'] = path
         context['title'] = title
         context['organization'] = organization
