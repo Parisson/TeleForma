@@ -298,6 +298,18 @@ class UsersXLSExport(object):
         return self.export(request)
 
 
+def format_annals(docs):
+    annals = {}
+    for doc in docs:
+        if not doc.course in annals.keys():
+            annals[doc.course] = {}
+        if not doc.iej in annals[doc.course].keys():
+            annals[doc.course][doc.iej] = {}
+        if not doc.annal_year in annals[doc.course][doc.iej].keys():
+            annals[doc.course][doc.iej][doc.annal_year] = []
+        annals[doc.course][doc.iej][doc.annal_year].append(doc)
+    return annals
+
 
 class AnnalsView(ListView):
 
@@ -307,23 +319,41 @@ class AnnalsView(ListView):
     def get_queryset(self):
         self.iej = None
         user = self.request.user
+
         if user.is_staff or user.is_superuser or user.professor.all():
-            return Document.objects.filter(is_annal=True)
+            docs = Document.objects.filter(is_annal=True)
         else:
             auditors = user.auditor.all()
             if auditors:
                 auditor = auditors[0]
                 self.iej = auditor.iej
-                return Document.objects.filter(is_annal=True, iej=self.iej)
-            else:
-                return None
+                docs = Document.objects.filter(is_annal=True, iej=self.iej)
+
+        return format_annals(docs)
 
     def get_context_data(self, **kwargs):
         context = super(AnnalsView, self).get_context_data(**kwargs)
-        context['iej'] = self.iej
+        context['iejs'] = IEJ.objects.all()
+        all_courses = get_courses(self.request.user)
+        context['all_courses'] = all_courses
         return context
 
     @method_decorator(permission_required('is_staff'))
     def dispatch(self, *args, **kwargs):
         return super(AnnalsView, self).dispatch(*args, **kwargs)
+
+
+class AnnalsIEJView(AnnalsView):
+
+    def get_queryset(self):
+        self.iej = IEJ.objects.filter(id=self.args[0])
+        docs = Document.objects.filter(is_annal=True, iej=self.iej)
+        return format_annals(docs)
+
+class AnnalsCourseView(AnnalsView):
+
+    def get_queryset(self):
+        self.course = Course.objects.filter(id=self.args[0])
+        docs = Document.objects.filter(is_annal=True, course=self.course)
+        return format_annals(docs)
 
