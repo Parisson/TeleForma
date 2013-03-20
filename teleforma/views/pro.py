@@ -185,6 +185,8 @@ class AnswerView(SeminarAccessMixin, FormView):
             messages.info(self.request, _("You have successfully saved your answer."))
         elif answer.status == 3:
             messages.info(self.request, _("You have successfully submitted your answer."))
+            if answer.question.seminar.code == 'demo':
+                answer.validate()
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):
