@@ -140,9 +140,10 @@ def get_room(content_type=None, id=None, name=None):
 
 def get_course_access(obj, courses):
     access = False
-    for course in courses:
-        if obj.course == course['course']:
-            access = True
+    if courses:
+        for course in courses:
+            if obj.course == course['course']:
+                access = True
     return access
 
 def get_seminar_doc_access(doc, user_seminars):
