@@ -53,8 +53,7 @@ class MediaAdmin(admin.ModelAdmin):
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['public_id', 'id']
-
+    search_fields = ['public_id', 'id', 'course__code', 'course__title']
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
