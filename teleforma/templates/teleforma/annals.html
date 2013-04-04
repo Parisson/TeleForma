@@ -51,7 +51,7 @@
 
 	{% for course, iejs in object_list.items %}
 
-			<div class="course_title">{{ course.title }}</div>
+			<div class="course_title">{{ course.title }}{% if auditor %} - {{ auditor.iej }}{% endif %}</div>
 			<div class="course_content">
 
 			{% for iej, years in iejs.items %}
@@ -61,12 +61,15 @@
 				</div>
 
 				{% for year, docs in years.items %}
-					<span class="doc_type_title">{{ year }}</span>
 					<table class="listing" width="100%">
 					    <tbody>
 					        {% for doc in docs %}
 					        <tr>
-					        <td {% if forloop.first %}class="border-top"{% endif %} width="90%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+					        <td {% if forloop.first %}class="border-top"{% endif %} width="50%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+
+							<td {% if forloop.first %}class="border-top"{% endif %} width="40%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}">{% endif %}{{ year }}{% if doc.file %}</a>{% endif %}</td>
+
+
 					        <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">{% if doc.file %}<a href="{% url teleforma-document-download doc.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
 					        </tr>
 					    	{% endfor %}

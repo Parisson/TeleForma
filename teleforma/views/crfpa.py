@@ -317,28 +317,28 @@ class AnnalsView(ListView):
     template_name='teleforma/annals.html'
 
     def get_queryset(self):
-        self.iej = None
         user = self.request.user
-
         if user.is_staff or user.is_superuser or user.professor.all():
             docs = Document.objects.filter(is_annal=True)
         else:
             auditors = user.auditor.all()
             if auditors:
                 auditor = auditors[0]
-                self.iej = auditor.iej
-                docs = Document.objects.filter(is_annal=True, iej=self.iej)
+                docs = Document.objects.filter(is_annal=True, iej=auditor.iej)
 
         return format_annals(docs)
 
     def get_context_data(self, **kwargs):
+        user = self.request.user
+        auditors = user.auditor.all()
         context = super(AnnalsView, self).get_context_data(**kwargs)
         context['iejs'] = IEJ.objects.all()
+        context['iej'] =  auditor.iej
         all_courses = get_courses(self.request.user)
         context['all_courses'] = all_courses
         return context
 
-    @method_decorator(permission_required('is_staff'))
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AnnalsView, self).dispatch(*args, **kwargs)
 
@@ -356,4 +356,5 @@ class AnnalsCourseView(AnnalsView):
         self.course = Course.objects.filter(id=self.args[0])
         docs = Document.objects.filter(is_annal=True, course=self.course)
         return format_annals(docs)
+
 
