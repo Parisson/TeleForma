@@ -98,7 +98,8 @@ alt="logo" />
 
  {% if user.is_staff %}
   <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
-
+ {% else %}
+  <li><a href="{% url teleforma-annals %}" class="yellow">{% trans "Annals" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}

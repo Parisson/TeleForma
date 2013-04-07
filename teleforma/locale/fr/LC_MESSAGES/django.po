@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-19 14:58+0100\n"
+"POT-Creation-Date: 2013-04-07 22:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -268,9 +268,8 @@ msgid "training"
 msgstr "formation"
 
 #: models/crfpa.py:139
-#, fuzzy
 msgid "CRFPA student"
-msgstr "étudiant"
+msgstr "Etudiant CRFPA"
 
 #: models/crfpa.py:147 templates/telemeta/profile_detail.html:82
 msgid "Address"
@@ -683,8 +682,8 @@ msgstr ""
 msgid "Write"
 msgstr ""
 
-#: templates/teleforma/annals.html:6 templates/telemeta/base.html:102
-#: templates/telemeta/base.html.py:112
+#: templates/teleforma/annals.html:6 templates/teleforma/annals.html.py:54
+#: templates/telemeta/base.html:102 templates/telemeta/base.html.py:112
 msgid "Annals"
 msgstr "Annales"
 
@@ -694,13 +693,18 @@ msgstr "Annales"
 msgid "My courses"
 msgstr "Mes matières"
 
-#: templates/teleforma/annals.html:67
+#: templates/teleforma/annals.html:49
+#: templates/teleforma/inc/document_list.html:36
+msgid "No document"
+msgstr "Aucun document"
+
+#: templates/teleforma/annals.html:70 templates/teleforma/annals.html.py:72
 #: templates/teleforma/inc/conference_list.html:18
 #: templates/teleforma/inc/document_list.html:20
 msgid "View"
 msgstr "Voir"
 
-#: templates/teleforma/annals.html:68 templates/teleforma/course_media.html:63
+#: templates/teleforma/annals.html:75 templates/teleforma/course_media.html:63
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/media_list.html:56
 msgid "Download"
@@ -890,10 +894,6 @@ msgstr "Conférences en direct"
 msgid "Click here"
 msgstr "Cliquez ici"
 
-#: templates/teleforma/inc/document_list.html:36
-msgid "No document"
-msgstr "Aucun document"
-
 #: templates/teleforma/inc/media_list.html:8
 msgid "Passed conferences"
 msgstr "Conférences en différé"
@@ -1007,9 +1007,8 @@ msgid "Sign in"
 msgstr ""
 
 #: templates/telemeta/profile_detail.html:6
-#, fuzzy
 msgid "User Profile"
-msgstr "profil"
+msgstr "Profil utilisateur"
 
 #: templates/telemeta/profile_detail.html:16
 msgid "His courses"
@@ -1020,9 +1019,8 @@ msgid "Send a message"
 msgstr "Envoyer un message"
 
 #: templates/telemeta/profile_detail.html:44
-#, fuzzy
 msgid "User profile"
-msgstr "profil"
+msgstr "Profil utilisateur"
 
 #: templates/telemeta/profile_detail.html:49
 msgid "Change password"

@@ -298,44 +298,51 @@ class UsersXLSExport(object):
         return self.export(request)
 
 
-def format_annals(docs):
-    annals = {}
-    for doc in docs:
-        if not doc.course in annals.keys():
-            annals[doc.course] = {}
-        if not doc.iej in annals[doc.course].keys():
-            annals[doc.course][doc.iej] = {}
-        if not doc.annal_year in annals[doc.course][doc.iej].keys():
-            annals[doc.course][doc.iej][doc.annal_year] = []
-        annals[doc.course][doc.iej][doc.annal_year].append(doc)
-    return annals
-
-
 class AnnalsView(ListView):
 
     model = Document
     template_name='teleforma/annals.html'
+    student = None
+
+    def get_docs(self, iej=None, course=None):
+        students = self.user.crfpa_student.all()
+        annals = {}
+        courses = [c['course'] for c in self.all_courses]
+
+        if self.user.is_staff or self.user.is_superuser or self.user.professor.all():
+            docs = Document.objects.filter(is_annal=True)
+        elif students:
+            self.student = students[0]
+            docs = Document.objects.filter(is_annal=True, iej=self.student.iej)
+        if iej:
+            docs = docs.filter(iej=iej)
+        if course:
+            print course
+            docs = docs.filter(course=course)
+
+        for doc in docs:
+            if doc.course in courses:
+                if not doc.course in annals.keys():
+                    annals[doc.course] = {}
+                if not doc.iej in annals[doc.course].keys():
+                    annals[doc.course][doc.iej] = {}
+                if not doc.annal_year in annals[doc.course][doc.iej].keys():
+                    annals[doc.course][doc.iej][doc.annal_year] = []
+                annals[doc.course][doc.iej][doc.annal_year].append(doc)
+        return annals
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_staff or user.is_superuser or user.professor.all():
-            docs = Document.objects.filter(is_annal=True)
-        else:
-            auditors = user.auditor.all()
-            if auditors:
-                auditor = auditors[0]
-                docs = Document.objects.filter(is_annal=True, iej=auditor.iej)
-
-        return format_annals(docs)
+        self.user = self.request.user
+        self.all_courses = get_courses(self.request.user)
+        return self.get_docs()
 
     def get_context_data(self, **kwargs):
         user = self.request.user
-        auditors = user.auditor.all()
         context = super(AnnalsView, self).get_context_data(**kwargs)
         context['iejs'] = IEJ.objects.all()
-        context['iej'] =  auditor.iej
-        all_courses = get_courses(self.request.user)
-        context['all_courses'] = all_courses
+        if self.student:
+            context['student'] =  self.student
+        context['all_courses'] = self.all_courses
         return context
 
     @method_decorator(login_required)
@@ -346,15 +353,17 @@ class AnnalsView(ListView):
 class AnnalsIEJView(AnnalsView):
 
     def get_queryset(self):
+        self.user = self.request.user
+        self.all_courses = get_courses(self.user)
         self.iej = IEJ.objects.filter(id=self.args[0])
-        docs = Document.objects.filter(is_annal=True, iej=self.iej)
-        return format_annals(docs)
+        return self.get_docs(iej=self.iej)
 
 class AnnalsCourseView(AnnalsView):
 
     def get_queryset(self):
+        self.user = self.request.user
+        self.all_courses = get_courses(self.user)
         self.course = Course.objects.filter(id=self.args[0])
-        docs = Document.objects.filter(is_annal=True, course=self.course)
-        return format_annals(docs)
+        return self.get_docs(course=self.course)
 
 

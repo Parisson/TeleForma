@@ -46,18 +46,20 @@
 <div class="desk_messages">
 
 	{% if not object_list.items %}
-		{% trans "No document" %}
+	<div class="course_title">{% trans "No document" %}</div>
 	{% else %}
 
 	{% for course, iejs in object_list.items %}
 
-			<div class="course_title">{{ course.title }}{% if auditor %} - {{ auditor.iej }}{% endif %}</div>
+			<div class="course_title">{{ course.title }} - {% trans "Annals" %}</div>
 			<div class="course_content">
 
 			{% for iej, years in iejs.items %}
 
 				<div class="course_subtitle">
-				<h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {{ iej }}</h3>
+					{% if not student %}
+					<h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {{ iej }}</h3>
+					{% endif %}
 				</div>
 
 				{% for year, docs in years.items %}

@@ -72,9 +72,9 @@ urlpatterns = patterns('',
     url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
         name="teleforma-document-view"),
 
-    url(r'^desk/annals/$', AnnalsView.as_view(), name="teleforma-annals"),
-    url(r'^desk/annals/by-iej/(\w+)/$', AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
-    url(r'^desk/annals/by-course/(\w+)/$', AnnalsCourseView.as_view(), name="teleforma-annals-course"),
+    url(r'^archives/annals/$', AnnalsView.as_view(), name="teleforma-annals"),
+    url(r'^archives/annals/by-iej/(\w+)/$', AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
+    url(r'^archives/annals/by-course/(\w+)/$', AnnalsCourseView.as_view(), name="teleforma-annals-course"),
 
     url(r'^desk/conferences/(?P<pk>.*)/video/$',
         ConferenceView.as_view(),
