@@ -310,10 +310,10 @@ class AnnalsView(ListView):
         courses = [c['course'] for c in self.all_courses]
 
         if self.user.is_staff or self.user.is_superuser or self.user.professor.all():
-            docs = Document.objects.filter(is_annal=True).order_by('annal_year')
+            docs = Document.objects.filter(is_annal=True).order_by('-annal_year')
         elif students:
             self.student = students[0]
-            docs = Document.objects.filter(is_annal=True, iej=self.student.iej).order_by('annal_year')
+            docs = Document.objects.filter(is_annal=True, iej=self.student.iej).order_by('-annal_year')
         if iej:
             docs = docs.filter(iej=iej)
         if course:
