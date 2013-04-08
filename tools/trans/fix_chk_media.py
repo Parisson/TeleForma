@@ -13,40 +13,39 @@ class FixCheckMedia(object):
             os.makedirs(self.tmp_dir)
 
     def process(self):
+        webm_fixed_log = 'webm.fixed'
+        webm_tofix_log = 'webm.tofix'
+        mp3_fixed_log = 'mp3.fixed'
+        mp3_tofix_log = 'mp3.tofix'
+
         for root, dirs, files in os.walk(self.dir):
             for filename in files:
                 source = root + os.sep + filename
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
-                dir_files = os.listdir(root)
-
-                webm_fixed_log = 'webm.fixed'
-                webm_tofix_log = 'webm.tofix'
-                mp3_fixed_log = 'mp3.fixed'
-                mp3_tofix_log = 'mp3.tofix'
 
                 if ext == 'webm' and os.path.getsize(source):
-                    print source    
+                    dir_files = os.listdir(root)
+
                     if not webm_fixed_log in dir_files:
+                        print source    
                         self.fix_webm(source)
-                        log = root + os.sep + webm_fixed_log
-                        os.system('touch ' + log)
-                        log = root + os.sep + webm_tofix_log
-                        if os.path.exists(log):
-                            os.system('rm ' + log)    
+                        f = open(root + os.sep + webm_fixed_log, 'w')
+                        f.close()
+                        if os.path.exists(root + os.sep + webm_tofix_log):
+                            os.remove(root + os.sep + webm_tofix_log)
             
                     if mp3_tofix_log in dir_files and not mp3_fixed_log in dir_files:
                         for file in dir_files:
                             dest_ext = os.path.splitext(file)[1][1:]
                             if dest_ext == 'mp3':
                                 dest = root + os.sep + file
+                                print dest
                                 self.fix_mp3(source, dest)
-                                log = root + os.sep + mp3_fixed_log
-                                os.system('touch ' + log)
-                                log = root + os.sep + mp3_tofix_log
-                                if os.path.exists(log):
-                                    os.system('rm ' + log)
-                                break
+                                f = open(root + os.sep + mp3_fixed_log, 'w')
+                                f.close()
+                                os.remove(root + os.sep + mp3_tofix_log)
+                                #break
 
 
     def hard_fix_webm(self, path):
@@ -77,7 +76,7 @@ class FixCheckMedia(object):
 
     def fix_mp3(self, source, path):
         try:
-            command = 'ffmpeg -loglevel 0 -i '+ source + ' -aq 6 -y ' + path + ' > /dev/null'
+            command = '/usr/local/bin/ffmpeg -loglevel 0 -i '+ source + ' -vn -aq 6 -y ' + path + ' > /dev/null'
             print command
             os.system(command)
         except:
