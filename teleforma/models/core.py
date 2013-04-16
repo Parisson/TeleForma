@@ -508,13 +508,13 @@ class Conference(Displayable):
 
     def __unicode__(self):
         if self.professor:
-            list = [self.course.department.name, self.course.title,
+            list = [self.title, self.course.title,
                            self.session,
                            self.professor.user.first_name,
                            self.professor.user.last_name,
                            str(self.date_begin)]
         else:
-            list = [self.course.department.name, self.course.title,
+            list = [self.title, self.course.title,
                            self.session,
                            str(self.date_begin)]
         return ' - '.join(list)
