@@ -3,6 +3,7 @@ from teleforma.models import *
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+from longerusername.forms import UserCreationForm, UserChangeForm
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -34,7 +35,8 @@ class ProfessorAdmin(admin.ModelAdmin):
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfessorProfileInline, AuditorProfileInline]
-
+    add_form = UserCreationForm
+    form = UserChangeForm
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
