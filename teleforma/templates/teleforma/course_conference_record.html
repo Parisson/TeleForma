@@ -10,7 +10,7 @@ jQuery(window).ready(function(){
 
     var a = jQuery('#action_red');
     var f = jQuery('#_StationForm');
-    a.unbind('click').click(function(){f.submit();return false;});
+    a.unbind('click').click(function(){a.unbind('click'); f.submit(); return false;});
 
     var update_courses = function(data){
         var courses = data.result;
