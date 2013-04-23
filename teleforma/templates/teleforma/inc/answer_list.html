@@ -29,8 +29,8 @@
      <td>{% if user.is_staff %}
         <a id="validate" href="#" class="{% if answer.validated %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}"
         onclick="var f = answerUtils;
-            if ($(this).hasClass('icon_ok')) {f.reject('{{answer.id}}', $(this)); $(this).unbind('click'); return false;}
-            if ($(this).hasClass('icon_delete')) {f.validate('{{answer.id}}', $(this)); $(this).unbind('click'); return false;}">
+            if ($(this).hasClass('icon_ok')) {$(this).unbind('click'); f.reject('{{answer.id}}', $(this)); return false;}
+            if ($(this).hasClass('icon_delete')) {$(this).unbind('click'); f.validate('{{answer.id}}', $(this)); return false;}">
             {% if answer.validated %}{% trans " validated" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
      </td>
