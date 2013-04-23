@@ -12,11 +12,13 @@ $(document).ready(function(){
 
 $('#validate').unbind('click').click(function() {
  json(['{{answer.id}}'],'teleforma.validate_answer');
+ $('#validate').unbind('click');
  setTimeout(function() {window.location.href = "{% url teleforma-answers %}";}, 1000);
  });
 
 $('#reject').unbind('click').click(function() {
  json(['{{answer.id}}'],'teleforma.reject_answer');
+ $('#reject').unbind('click');
  setTimeout(function() {window.location.href = "{% url teleforma-answers %}";}, 1000);
  });
 
