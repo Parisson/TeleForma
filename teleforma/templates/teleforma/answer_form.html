@@ -6,34 +6,53 @@
 <script src="{{ STATIC_URL }}teleforma/js/charCount.js" type="text/javascript"></script>
 <script type="text/javascript">
 
+{% if not user.is_staff %}
 $(document).ready(function(){
   $('#id_answer').live("paste",function(e) {
       e.preventDefault();
       new Messi(gettext('Sorry, it is not allowed to paste text here.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
   });
 });
+{% endif %}
 
-$(document).ready(function(){   
+$(document).ready(function(){
     //default usage
     $("#id_answer").charCount({
-        necessary: {{question.min_nchar}},            
+        necessary: {{question.min_nchar}},
         counterText: gettext('Characters')+' : ',
         });
     });
 
 $(document).ready(function(){
-    var b = $('#submit_button');
+    var b1 = $('#submit_button');
     var c = $('#counter')
-    b.unbind('click').click(function() {
+    b1.unbind('click').click(function() {
+        $(window).unbind('beforeunload');
         if (c.hasClass('deceed')){
           new Messi(gettext('You must reach the required number of characters.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
         }
         if (c.hasClass('exceed')){
-            $('#id_status').val("3"); 
-            $('#_AnswerForm').submit(); 
+            b1.unbind('click');
+            $('#id_status').val("3");
+            $('#_AnswerForm').submit();
         }
       });
+
+    var b2 = $('#save_button');
+    b2.unbind('click').click(function() {
+      $(window).unbind('beforeunload');
+      b1.unbind('click');
+      $('#_AnswerForm').submit();
     });
+
+    {% if status != 3 %}
+    $(window).bind('beforeunload', function(){
+      return "{% trans "You have NOT save your work!" %}";
+    });
+    {% endif  %}
+
+    $('#seminars').css({'max-height': '200px'});
+});
 
 </script>
 {% endblock extra_javascript %}
@@ -50,17 +69,23 @@ $(document).ready(function(){
 </div>
 {% endblock submodules %}
 
+{% block module-action %}
+<div class="module_action">
+ <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+</div>
+{% endblock module-action %}
+
 {% block course_content %}
 
 <div class="course_content">
   <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 4 : {% trans "answer to this question" %} ({{question.min_nchar}} {% trans "characters" %} {% trans "minimum" %})</h3>
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 4 : {% trans "answer to this question" %}{% if question.rank %} n°{{ question.rank }}{% endif %} ({{question.min_nchar}} {% trans "characters" %} {% trans "minimum" %})</h3>
   </div>
   <div style="text-align: justify; width: 100%;">
     {{ question.question|safe }}
   </div>
 </div>
-  
+
 <br />
 <form method="post" id="_AnswerForm" action="">{% csrf_token %}
 {{ form }}
@@ -68,8 +93,7 @@ $(document).ready(function(){
 
 {% if status != 3 %}
 <br />
-<a href="#" class="component_icon button icon_save"
-   onclick="document.getElementById('_AnswerForm').submit();">{% trans "Save" %}</a>
+<a href="#" id="save_button" class="component_icon button icon_save">{% trans "Save" %}</a>
 <a href="#" id="submit_button" class="component_icon button icon_ok">{% trans "Submit it" %}</a>
 {% endif %}
 

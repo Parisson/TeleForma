@@ -3,12 +3,29 @@
 {% load i18n %}
 
 {% block extra_javascript %}
-<script src="{{ STATIC_URL }}teleforma/js/charCount.js" type="text/javascript"></script>
-<script type="text/javascript">
-
-</script>
 {% endblock extra_javascript %}
 
+{% block infra_javascript %}
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+$('#validate').unbind('click').click(function() {
+ json(['{{answer.id}}'],'teleforma.validate_answer');
+ $('#validate').unbind('click');
+ setTimeout(function() {window.location.href = "{% url teleforma-answers %}";}, 1000);
+ });
+
+$('#reject').unbind('click').click(function() {
+ json(['{{answer.id}}'],'teleforma.reject_answer');
+ $('#reject').unbind('click');
+ setTimeout(function() {window.location.href = "{% url teleforma-answers %}";}, 1000);
+ });
+
+});
+</script>
+
+{% endblock infra_javascript %}
 
 {% block course_content %}
 
@@ -25,9 +42,9 @@
 
 <div class="course_content">
 <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer" %}</h3>
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer" %}{% if answer.question.rank %} n° {{ answer.question.rank }}{% endif %}</h3>
   </div>
-  <div style="text-align: justify;">
+  <div style="text-align: justify; padding: .5em;">
     {{ answer.answer|safe }}
   </div>
 </div>
@@ -35,8 +52,8 @@
 <br />
 
 {% if user.is_staff %}
-<a id="validate" href="#" class="component_icon button icon_ok" onclick="var f = answerUtils; f.validate('{{answer.id}}')">{% trans " validate" %}</a> 
-<a id="reject" href="#" class="component_icon button icon_delete" onclick="var f = answerUtils; f.reject('{{answer.id}}')">{% trans " reject" %}</a>
+<a id="validate" href="#" class="component_icon button icon_ok">{% trans " validate" %}</a>
+<a id="reject" href="#" class="component_icon button icon_delete">{% trans " reject" %}</a>
 {% endif %}
 
 {% endblock course_content %}

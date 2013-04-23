@@ -36,20 +36,20 @@
 from teleforma.views.core import *
 
 
-def seminar_progress(user, seminar):    
+def seminar_progress(user, seminar):
     """return the user progress of a seminar in percent
     """
 
     progress = 0
     total = 0
-    
+
     objects = [seminar.docs_1, seminar.docs_2, seminar.medias, seminar.docs_correct]
     for obj in objects:
         for item in obj.all():
             total += item.weight
             if user in item.readers.all():
                 progress += item.weight
-    
+
     questions = Question.objects.filter(seminar=seminar, status=3)
     for question in questions:
         total += question.weight
@@ -67,7 +67,8 @@ def seminar_validated(user, seminar):
     questions = seminar.question.filter(status=3)
     if questions:
         for question in questions:
-            answers = Answer.objects.filter(question=question, user=user, validated=True)
+            answers = Answer.objects.filter(question=question, user=user,
+                                            validated=True, treated=True)
             if answers:
                 validated.append(True)
             else:
@@ -75,14 +76,14 @@ def seminar_validated(user, seminar):
         return not False in validated
     return False
 
-def all_seminars(request, progress_order=False):
+def all_seminars(request, progress_order=False, date_order=False):
     seminars = []
 
     if isinstance(request, User):
         user = request
     else:
         user = request.user
-    
+
     if not user.is_authenticated():
         return {}
 
@@ -93,14 +94,14 @@ def all_seminars(request, progress_order=False):
         seminars = []
         professor = user.professor.get()
         courses = professor.courses.all()
-        
+
         for course in courses:
             for seminar in course.seminar.all():
                 seminars.append(seminar)
 
     elif auditor and not (user.is_staff or user.is_superuser):
         auditor = user.auditor.get()
-        seminars = auditor.seminars.all()
+        seminars = auditor.seminars.filter(status=2)
 
     elif user.is_staff or user.is_superuser:
         seminars = Seminar.objects.all()
@@ -111,6 +112,24 @@ def all_seminars(request, progress_order=False):
         s_list = [{'seminar': seminar, 'progress': seminar_progress(user, seminar)} for seminar in seminars]
         seminars = sorted(s_list, key=lambda k: k['progress'], reverse=False)
         seminars = [s['seminar'] for s in seminars]
+
+    if seminars and date_order == True:
+        s_list = []
+        for seminar in seminars:
+            revisions = SeminarRevision.objects.filter(user=user, seminar=seminar)
+            if revisions:
+                s_list.append({'seminar': seminar, 'date': revisions[0].date})
+            else:
+                s_list.append({'seminar': seminar, 'date': datetime.datetime.min})
+        seminars = sorted(s_list, key=lambda k: k['date'], reverse=True)
+        seminars = [s['seminar'] for s in seminars]
+
+    # get the demo if no seminars
+    if not seminars:
+        course = Course.objects.filter(code='demo')
+        if course:
+            course = course[0]
+            seminars = Seminar.objects.filter(course=course)
 
     return {'all_seminars': seminars}
 
@@ -124,17 +143,7 @@ def total_progress(request):
     if not user.is_authenticated():
         return {'total_progress': 0}
 
-    auditor = user.auditor.all()
-    professor = user.professor.all()
-
-    if auditor and not (user.is_staff or user.is_superuser):
-        seminars = auditor[0].seminars.all()        
-    elif user.is_superuser or user.is_staff:
-        seminars = Seminar.objects.all()
-    elif professor:
-        seminars = all_seminars(request)['all_seminars']
-    else:
-        seminars = None
+    seminars = all_seminars(request)['all_seminars']
 
     for seminar in seminars:
         progress += seminar_progress(user, seminar)

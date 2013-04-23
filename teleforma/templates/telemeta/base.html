@@ -13,6 +13,7 @@
 
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="Viewport" content="width=device-width" />
 <meta name="Viewport" content="initial-scale=1.0" />
 <meta name="Viewport" content="maximum-scale=1.5" />
@@ -93,29 +94,29 @@ alt="logo" />
 <ul id="nav">
 
  {% if user.is_authenticated %}
- <li><a href="{% url teleforma-desk %}" class="red">{% trans "Desk" %}</a>
- </li>
+    <li><a href="{% url teleforma-desk %}" class="red">{% trans "Desk" %}</a></li>
  {% else %}
-  <li><a href="{% url teleforma-login %}" class="red">{% trans "Home" %}</a></li>
+    <li><a href="{% url teleforma-login %}" class="red">{% trans "Home" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
 
- <li><a href="{% url postman_inbox %}m/" class="orange">{% trans "Contact us" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
+    <li><a href="{% url postman_inbox %}m/" class="orange">{% trans "Contact us" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
 
  {% if user.is_staff %}
- <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
- {% endif %}
+   <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
+   <li><a href="{% url teleforma-answers %}" class="green">{% trans "Answers" %}{% untreated_answer_count %}</a></li>
+   {% else %}
+   <li><a href="{% url teleforma-help %}" class="yellow">{% trans "Help" %}</a></li>
+   <li><a href="{% url teleforma-testimonials %}" class="green">{% trans "Testimonials" %}</a></li>
+   {% endif %}
 
  {% if user.is_authenticated %}
   {% if user.is_staff %}
-   <li><a href="{% url teleforma-answers %}" class="green">{% trans "Answers" %}</a></li>
- <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
-  {% else %}
-   <li><a href="{% url teleforma-help %}" class="green">{% trans "Help" %}</a></li>
- {% endif %}
+   <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
+  {% endif %}
 
- <li style="a.active{background-image:{{ STATIC_URL }}telemeta/images/user_tr_bk.png; background-repeat: no-repeat;
+  <li style="a.active{background-image:{{ STATIC_URL }}telemeta/images/user_tr_bk.png; background-repeat: no-repeat;
     background-position: 1ex .5ex;}"><a href="#accounts#" class="blue">{% if user.first_name and user.last_name %}
  {{ user.first_name }} {{ user.last_name }}
  {% else %}

@@ -45,7 +45,7 @@ from jsonrpc import jsonrpc_site
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
 profile_view = ProfileView()
-document = DocumentView()
+document = SeminarDocumentView()
 media = MediaView()
 
 urlpatterns = patterns('',
@@ -67,20 +67,21 @@ urlpatterns = patterns('',
     url(r'^desk/seminars/(?P<pk>.*)/detail/$', SeminarView.as_view(), name="teleforma-seminar-detail"),
 
     url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
-    url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+    # url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
 
-    url(r'^desk/seminars/(?P<id>.*)/media/(?P<pk>.*)/video/$', 
-            SeminarMediaView.as_view(template_name='teleforma/seminar_media_video.html'), 
+    url(r'^desk/seminars/(?P<id>.*)/media/(?P<pk>.*)/video/$',
+            SeminarMediaView.as_view(template_name='teleforma/seminar_media_video.html'),
             name="teleforma-media-video"),
-    url(r'^desk/seminars/(?P<id>.*)/media/(?P<pk>.*)/audio/$', 
+    url(r'^desk/seminars/(?P<id>.*)/media/(?P<pk>.*)/audio/$',
             SeminarMediaView.as_view(template_name='teleforma/seminar_media_audio.html'),
             name="teleforma-media-audio"),
+    url(r'^desk/seminars/(?P<pk>.*)/preview/$',
+            SeminarMediaPreviewView.as_view(),
+            name="teleforma-media-preview-video"),
 
-    url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
-        name="teleforma-document-detail"),
-    url(r'^desk/documents/(?P<pk>.*)/download/$', document.download,
+    url(r'^desk/seminars/(?P<id>.*)/documents/(?P<pk>.*)/download/$', SeminarDocumentDownloadView.as_view(),
         name="teleforma-document-download"),
-    url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
+    url(r'^desk/seminars/(?P<id>.*)/documents/(?P<pk>.*)/view/$', SeminarDocumentView.as_view(),
         name="teleforma-document-view"),
 #    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-view"),
 
@@ -94,7 +95,7 @@ urlpatterns = patterns('',
         name="teleforma-conference-record"),
 
     # Questions
-    url(r'^desk/questions/(?P<pk>.*)/$', AnswerView.as_view(),
+    url(r'^desk/seminars/(?P<id>.*)/questions/(?P<pk>.*)/$', AnswerView.as_view(),
         name="teleforma-question-answer"),
     url(r'^desk/answers/$', AnswersView.as_view(), name="teleforma-answers"),
     url(r'^desk/answers/(?P<pk>.*)/$', AnswerDetailView.as_view(), name="teleforma-answer-detail"),
@@ -104,10 +105,12 @@ urlpatterns = patterns('',
     url(r'^desk/seminars/(?P<pk>.*)/form/$', evaluation_form_detail, name="teleforma-seminar-form"),
 
     # Testimonial
-    url(r'^desk/seminars/(?P<pk>.*)/testimonial/$', TestimonialView.as_view(), 
+    url(r'^desk/seminars/(?P<pk>.*)/testimonial/$', TestimonialView.as_view(),
                                                     name="teleforma-seminar-testimonial"),
-    url(r'^desk/seminars/(?P<pk>.*)/testimonial/download/$', TestimonialDownloadView.as_view(), 
+    url(r'^desk/seminars/(?P<pk>.*)/testimonial/download/$', TestimonialDownloadView.as_view(),
                                                     name="teleforma-seminar-testimonial-download"),
+    url(r'^desk/testimonials/$', TestimonialListView.as_view(),
+                                                    name="teleforma-testimonials"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),
@@ -151,5 +154,7 @@ urlpatterns = patterns('',
     url(r'^', include('jqchat.urls')),
 
     url(r'^tinymce/', include('tinymce.urls')),
+
+    url(r'^desk/test/(?P<pk>.*)/$', AnswerDetailViewTest.as_view(), name="test"),
 
 )

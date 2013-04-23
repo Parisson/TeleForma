@@ -41,7 +41,7 @@ $(function () {
 <div class="desk_center" id="desk_center">
 
     <div class="course">
-        
+
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
 
@@ -54,13 +54,13 @@ $(function () {
         </div>
 
         {% block course_content %}
-      
+
         <div class="course_content">
           <div class="course_subtitle">
              <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Informations" %}</h3>
             </div>
             <div class="course_description">
-              {% include "teleforma/inc/seminar_description.html" %} 
+              {% include "teleforma/inc/seminar_description.html" %}
             </div>
         {% if messages %}
          <div class="messages">
@@ -70,7 +70,7 @@ $(function () {
          </div>
          {% endif %}
        </div>
-        
+
       {% with seminar.docs_1 as docs %}
        <div class="course_content">
         <div class="course_subtitle">
@@ -88,7 +88,7 @@ $(function () {
         {% include "teleforma/inc/media_package_list.html" %}
        </div>
       {% endwith %}
-  
+
 
      {% with seminar.docs_2 as docs %}
        <div class="course_content">
@@ -98,6 +98,8 @@ $(function () {
         {% include "teleforma/inc/document_simple_list.html" %}
        </div>
       {% endwith %}
+
+   {% if not seminar.conference in user.auditor.get.conferences.all %}
 
      {% with seminar.question as questions %}
        <div class="course_content">
@@ -128,8 +130,8 @@ $(function () {
        </div>
       {% endwith %}
      {% endif %}
-      
-     {% if seminar_validated %}
+
+     {% if seminar_validated and seminar_progress == 100 %}
        <div class="course_content">
         <div class="course_subtitle">
           <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7 : {% trans "download your testimonial" %}</h3>
@@ -138,7 +140,9 @@ $(function () {
        </div>
      {% endif %}
 
-    {% endblock course_content %}
+   {% endif %}
+
+  {% endblock course_content %}
 
       </div>
 

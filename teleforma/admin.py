@@ -3,6 +3,7 @@ from teleforma.models import *
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+from longerusername.forms import UserCreationForm, UserChangeForm
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -18,7 +19,7 @@ class AEStudentProfileInline(admin.StackedInline):
 
 class AuditorProfileInline(admin.StackedInline):
     model = Auditor
-    filter_horizontal = ['seminars']
+    filter_horizontal = ['seminars', 'conferences']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
@@ -34,7 +35,8 @@ class ProfessorAdmin(admin.ModelAdmin):
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfessorProfileInline, AuditorProfileInline]
-
+    add_form = UserCreationForm
+    form = UserChangeForm
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
@@ -53,32 +55,32 @@ class CourseDomainAdmin(admin.ModelAdmin):
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
+    search_fields = ['title', 'course__title', 'course__code']
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['id']
-
-class MediaPackageAdmin(admin.ModelAdmin):
-    exclude = ['mime_type']
-    search_fields = ['id']
-    filter_horizontal = ['video', 'audio']
+    search_fields = ['id', 'title', 'course__title', 'course__code']
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['public_id', 'id']
+    filter_horizontal = ['docs_description']
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    filter_horizontal = ['professor', 'medias', 'media_previews', 
+    filter_horizontal = ['professor', 'medias', 'docs_description',
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
-    
+
     class Media:
         css = { 'all': ('admin/extra.css',) }
+
+class MediaItemMarkerAdmin(admin.ModelAdmin):
+    search_fields = ['title', 'description']
 
 
 admin.site.unregister(User)
@@ -94,6 +96,7 @@ admin.site.register(CourseType)
 admin.site.register(CourseDomain, CourseDomainAdmin)
 admin.site.register(Conference, ConferenceAdmin)
 # admin.site.register(IEJ)
+admin.site.register(Professor, ProfessorAdmin)
 
 admin.site.register(Seminar, SeminarAdmin)
 admin.site.register(Question)
@@ -111,5 +114,5 @@ admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 
 # TELEMETA
-admin.site.register(MediaItemMarker)
+admin.site.register(MediaItemMarker, MediaItemMarkerAdmin)
 

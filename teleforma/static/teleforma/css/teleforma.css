@@ -59,6 +59,13 @@ a:hover {
 
 a img { border: none; }
 
+textarea {
+    padding: 1em;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    }
+
 .rst-content h1 {
     font-size: 1.2em;
     font-weight: bold;
@@ -87,8 +94,15 @@ a img { border: none; }
     margin-bottom: 0em;
 }
 
-#content ul, #content ul ul, #content ol {
+#content ul, #content ul ul {
     list-style: square;
+    padding: 0.5em 0.5em 0.5em 2em;
+    font-size: 1em;
+    clear: both;
+}
+
+#content ol {
+    list-style: decimal;
     padding: 0.5em 0.5em 0.5em 2em;
     font-size: 1em;
     clear: both;
@@ -1620,7 +1634,15 @@ input,textarea{
 #pm_messages td {
     font-weight: normal;
     font-size: 1em;
+    }
 
+
+#pm_reply textarea {
+    padding: 1em;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    width: 97%;
     }
 
 #id_body {
@@ -1633,7 +1655,7 @@ input,textarea{
 
 .module_action {
     text-align: center;
-    margin: 0em 0em 3em 0em;
+    margin: 2em 0em 3em 0em;
     padding: 1em;
 }
 
@@ -1731,7 +1753,7 @@ input,textarea{
     margin-top: 0.3em;
     color: white;
     padding: 0.3em 0.3em 0.5em 0.8em;
-    background-color: #008000; 
+    background-color: #008000;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1741,7 +1763,7 @@ input,textarea{
     margin-top: 1em;
     color: white;
     padding: 0.3em 0.3em 0.5em 0.8em;
-    background-color: #008000; 
+    background-color: #008000;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1751,7 +1773,7 @@ input,textarea{
     margin-top: 0.3em;
     color: white;
     padding: 0.3em 0.3em 0.5em 0.8em;
-    background-color: #e65911; 
+    background-color: #e65911;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1760,7 +1782,7 @@ input,textarea{
 .error {
     color: white;
     padding: 0.3em;
-    background-color: #db4b39; 
+    background-color: #db4b39;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
@@ -1775,7 +1797,7 @@ input,textarea{
 }
 
 form .deceed{
-        background-color: white; 
+        background-color: white;
         font-weight:bold;
         padding: 0.3em;
         margin-top: 0.8em;
@@ -1785,7 +1807,7 @@ form .deceed{
     }
 
 form .exceed{
-        background-color: white; 
+        background-color: white;
         font-weight:bold;
         padding: 0.3em;
         margin-top: 0.8em;
@@ -1799,7 +1821,7 @@ form .exceed{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
- 
+
 }
 
 .progress ul {
@@ -1812,11 +1834,11 @@ form .exceed{
         color: #000 ;
         font-weight: normal;
         max-height: 450px;
-        overflow-y: auto;   
+        overflow-y: auto;
 }
 
 .ui-progressbar  {
-    margin-top: 0.5em; 
+    margin-top: 0.5em;
     height: 10px;
     background-color: white;
     -moz-border-radius: 8px 0px 8px 8px;
@@ -1828,8 +1850,12 @@ form .exceed{
 #id_answer {
     font: 1em Verdana, sans-serif;
     line-height: 1.3em;
-    color: #333;   
-    width: 100%;
+    color: #333;
+    padding: .5em;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+    width: 97%;
 }
 
 
@@ -1860,7 +1886,7 @@ form .exceed{
     padding: .2em;
     padding-left: 1em;
     padding-top: 0.3em;
-    list-style:none; 
+    list-style:none;
 }
 
 .form-button {
@@ -1880,7 +1906,7 @@ form .exceed{
     border-radius: 8px 0px 8px 8px;
     color: black;
     padding: 0.5em;
-    max-height: 300px;
+    max-height: 250px;
     overflow-y: auto;
 }
 
@@ -1889,8 +1915,16 @@ form .exceed{
 }
 
 
-#index ul, #index ul ul, #index ol {
+#index ul, #index ul ul {
     list-style: square;
+    padding: .3em;
+    padding-left: 2em;
+    font-size: 0.8125em;
+    clear: both;
+}
+
+#index ol {
+    list-style: decimal;
     padding: .3em;
     padding-left: 2em;
     font-size: 0.8125em;

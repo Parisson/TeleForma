@@ -5,7 +5,7 @@
     <tbody>
         {% for doc in docs.all %}
             <tr>
-            <td {% if forloop.first %}class="border-top"{% endif %} width="95%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+            <td {% if forloop.first %}class="border-top"{% endif %} width="95%">{% if doc.file %}<a href="{% url teleforma-document-view seminar.id doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}{% if user in doc.readers.all %} <img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' viewed' %}" />{% endif %}</td>
             </tr>
         {% endfor %}
     </tbody>

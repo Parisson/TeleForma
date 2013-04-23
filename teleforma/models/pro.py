@@ -42,7 +42,7 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 from forms_builder.forms.models import Form
 from django.core.urlresolvers import reverse
-
+from mezzanine.core.managers import DisplayableManager
 
 class SeminarType(models.Model):
 
@@ -59,7 +59,7 @@ class SeminarType(models.Model):
 class Seminar(Displayable):
 
     # title, description, keywords and dates are given by Displayable
-    
+
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
@@ -71,20 +71,20 @@ class Seminar(Displayable):
     magistral       = models.BooleanField(_('magistral'))
     index           = tinymce.models.HTMLField(_('index'), blank=True)
     duration        = DurationField(_('approximative duration'))
-    professor       = models.ManyToManyField('Professor', related_name='seminar', 
+    professor       = models.ManyToManyField('Professor', related_name='seminar',
                                             verbose_name=_('professor'), blank=True, null=True)
-    docs_description = models.ManyToManyField(Document, related_name="seminar_docs_description", 
+    docs_description = models.ManyToManyField(Document, related_name="seminar_docs_description",
                                         verbose_name=_('description documents'),
                                         blank=True, null=True)
-    docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1", 
+    docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1",
                                         verbose_name=_('documents 1'),
                                         blank=True, null=True)
     medias          = models.ManyToManyField(Media, related_name="seminar",
                                         verbose_name=_('media'),
                                         blank=True, null=True)
-    media_previews  = models.ManyToManyField(Media, related_name="seminar_media_previews",
+    media_preview  = models.ForeignKey(Media, related_name="seminar_preview",
                                         verbose_name=_('media_preview'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",
                                         verbose_name=_('documents 2'),
                                         blank=True, null=True)
@@ -93,11 +93,27 @@ class Seminar(Displayable):
                                         blank=True, null=True)
     form            = models.ForeignKey(Form, related_name='seminar', verbose_name=_('form'),
                                         blank=True, null=True)
+    conference      = models.ForeignKey('Conference', related_name='seminar',
+                                        verbose_name=_('conference'),
+                                        blank=True, null=True, on_delete=models.SET_NULL)
+
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
 
+    objects = DisplayableManager()
+
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.rank), self.title])
+
+    @property
+    def pretty_title(self):
+        """
+        Get a displayable title
+        """
+        if self.sub_title:
+            return "E-learning - %s : %s" % (self.sub_title, self.title)
+        else:
+            return "E-learning - %s" % (self.title)
 
     def public_url(self):
         """
@@ -143,6 +159,7 @@ class Answer(models.Model):
     question    = models.ForeignKey(Question, related_name="answer", verbose_name=_('question'))
     answer      = models.TextField(_('answer'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    treated     = models.BooleanField(_('treated'))
     validated   = models.BooleanField(_('validated'))
     date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
     date_validated = models.DateTimeField(_('date validated'), null=True)
@@ -152,15 +169,21 @@ class Answer(models.Model):
         return ' - '.join([unicode(self.question), self.user.username, unicode(self.date_submitted)])
 
     def validate(self):
-        if len(self.answer) >= self.question.min_nchar:
-            self.validated = True
-            self.date_validated = datetime.datetime.now()
-            self.save()
+        self.validated = True
+        self.treated = True
+        self.date_validated = datetime.datetime.now()
+        self.save()
+
+    def reject(self):
+        self.validated = False
+        self.treated = True
+        self.status = 2
+        self.save()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'answer'
         verbose_name = _('Answer')
-        ordering = ['-date_submitted']
+        ordering = ['-date_submitted', '-date_validated']
 
 
 class TestimonialTemplate(models.Model):
@@ -182,18 +205,33 @@ class TestimonialTemplate(models.Model):
 
 class Testimonial(models.Model):
 
-    seminar     = models.ForeignKey(Seminar, related_name="testimonial", verbose_name=_('seminar'))
-    user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'))
-    template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial", 
+    seminar     = models.ForeignKey(Seminar, related_name="testimonial", verbose_name=_('seminar'),
+                                    blank=True, null=True, on_delete=models.SET_NULL)
+    user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'),
+                                    blank=True, null=True, on_delete=models.SET_NULL)
+    template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial",
                                     verbose_name=_('template'), blank=True, null=True)
-    file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m/%d',
+    file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m',
                                  blank=True, max_length=1024)
-    rank        = models.IntegerField(_('rank'), blank=True, null=True)
     date_added  = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+    title       = models.CharField(_('title'), max_length=255, blank=True)
+
+    def save(self, **kwargs):
+        super(Testimonial, self).save(**kwargs)
+        if self.seminar:
+            self.title = ' - '.join([self.seminar.title,
+                                    self.user.first_name + ' ' + self.user.last_name,
+                                    str(self.date_added)])
+        else:
+            self.title = ' - '.join([self.user.first_name + ' ' + self.user.last_name, str(self.date_added)])
+
+    def __unicode__(self):
+        return self.title
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'
         verbose_name = _('Testimonial')
+        ordering = ['date_added']
 
 
 class Auditor(models.Model):
@@ -206,9 +244,9 @@ class Auditor(models.Model):
                                         verbose_name=_('conferences'),
                                         blank=True, null=True)
 
-    gender          = models.CharField(_('gender'), choices=GENDER_CHOICES, max_length=8, blank=True)
     platform_only   = models.BooleanField(_('platform only'))
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    gender          = models.CharField(_('gender'), choices=GENDER_CHOICES, max_length=8, blank=True)
     company         = models.CharField(_('Company'), max_length=255, blank=True)
     address         = models.TextField(_('Address'), blank=True)
     postal_code     = models.CharField(_('Postal code'), max_length=255, blank=True)
@@ -226,8 +264,33 @@ class Auditor(models.Model):
         except:
             return ''
 
+#    def clean(self):
+#        seminars = self.seminars.all()
+#        for conference in self.conferences.all():
+#            try:
+#                seminar = conference.seminar.get()
+#                if not seminar in seminars:
+#                    self.seminars.add(seminar)
+#            except:
+#                continue
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'auditor'
         verbose_name = _('Auditor')
         ordering = ['user__last_name']
+
+
+class SeminarRevision(models.Model):
+
+    seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'))
+    user        = models.ForeignKey(User, related_name="revision", verbose_name=_('user'))
+    date        = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+
+    def __unicode__(self):
+        return ' - '.join([self.seminar.title, self.user.username, str(self.date)])
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'seminar_revisions'
+        verbose_name = _('Seminar revision')
+        verbose_name_plural = _('Seminar revisions')
 

@@ -58,7 +58,10 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import tinymce.models
 from mezzanine.core.models import Displayable
+from mezzanine.core.managers import DisplayableManager
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import date
+
 
 app_label = 'teleforma'
 
@@ -109,7 +112,7 @@ class Department(Model):
                                  verbose_name=_('organization'))
     domain          = CharField(_('Master domain'), max_length=255, blank=True)
     address         = tinymce.models.HTMLField(_('address'), blank=True)
-    signature       = models.ImageField(_('Signature image'), upload_to='images/%Y/%m/%d', 
+    signature       = models.ImageField(_('Signature image'), upload_to='images/%Y/%m/%d',
                                         blank=True, null=True, max_length=1024)
 
     def __unicode__(self):
@@ -312,7 +315,7 @@ class MediaBase(Model):
     code            = CharField(_('code'), max_length=255, blank=True)
     is_published    = BooleanField(_('published'))
     mime_type       = CharField(_('mime type'), max_length=255, blank=True)
-    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
+    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, null=True, blank=True)
     notes = generic.GenericRelation(Note)
 
     def get_fields(self):
@@ -353,7 +356,7 @@ class Document(MediaBase):
                                  blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", 
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
                                  blank=True, max_length=1024)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
                                         blank=True, null=True)
@@ -378,17 +381,18 @@ class Document(MediaBase):
             types = ' - '.join([unicode(t) for t in self.course_type.all()])
             strings.append(unicode(types))
         if self.type:
-            strings.append(type.name)
+            strings.append(self.type.name)
         strings.append(self.title)
-        return ' - '.join(strings) 
+        return ' - '.join(strings)
 
     def save(self, **kwargs):
+        super(Document, self).save(**kwargs)
         if self.course:
             self.course.save()
         self.set_mime_type()
         if not self.title:
             self.title = os.path.splitext(os.path.split(self.file.path)[1])[0].replace('-', ' ')
-        super(Document, self).save(**kwargs)
+
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document'
@@ -426,27 +430,34 @@ class Media(MediaBase):
 
     def __unicode__(self):
         strings = []
+
         if self.course and self.course_type:
             strings.append(self.course.code + ' ' + self.course_type.name)
         elif self.course:
             strings.append(self.course.code)
+        elif self.item.title:
+            strings.append(self.item.title)
         else:
-            strings.append(self.item.file)
+            strings.append(os.path.basename(self.item.file.path))
+        if self.rank:
+            strings.append(str(self.rank))
+
         strings.append(self.mime_type)
         return ' - '.join(strings)
 
     def save(self, **kwargs):
+        super(Media, self).save(**kwargs)
         if self.course:
             self.course.save()
         elif self.conference:
             self.conference.course.save()
         self.set_mime_type()
-        super(Media, self).save(**kwargs)
+
 
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
-        ordering = ['-date_modified']
+        ordering = ['rank']
 
 
 class Conference(Displayable):
@@ -458,29 +469,38 @@ class Conference(Displayable):
     period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
     course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'))
-    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
+    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'),
+                                 null=True, blank=True)
     professor       = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     session         = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
+    concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
+    level           = models.CharField(_('level'), max_length=255, blank=True)
+    location        = WeakForeignKey(Location, related_name='location', verbose_name=_('location'))
+    city            = WeakForeignKey(Location, related_name='city', verbose_name=_('city'))
     room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
+    duration        = DurationField(_('approximative duration'))
     price           = models.FloatField(_('price'), blank=True, null=True)
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
-    docs_description = models.ManyToManyField(Document, related_name="conference_docs_description", 
+    docs_description = models.ManyToManyField(Document, related_name="conference_docs_description",
                                         verbose_name=_('description documents'),
                                         blank=True, null=True)
-    notes = generic.GenericRelation(Note)
+
+    notes           = generic.GenericRelation(Note)
+
+    objects = DisplayableManager()
 
     @property
     def slug_streaming(self):
         slug = '-'.join([self.course.department.slug,
                          self.course.slug,
-                         self.course_type.name.lower()])
+                         ])
         return slug
 
     def get_absolute_url(self):
@@ -488,20 +508,20 @@ class Conference(Displayable):
 
     def __unicode__(self):
         if self.professor:
-            list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
+            list = [self.title, self.course.title,
+                           self.session,
                            self.professor.user.first_name,
                            self.professor.user.last_name,
                            str(self.date_begin)]
         else:
-            list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
+            list = [self.title, self.course.title,
+                           self.session,
                            str(self.date_begin)]
         return ' - '.join(list)
 
     def save(self, **kwargs):
-        self.course.save()
         super(Conference, self).save(**kwargs)
+        self.course.save()
 
 
     def to_dict(self):
@@ -516,11 +536,10 @@ class Conference(Displayable):
         return dict
 
     def to_json_dict(self):
-        data = {'id': self.public_id, 
+        data = {'id': self.public_id,
                 'course_code': self.course.code,
-                'course_type': self.course_type.name, 
                 'professor_id': self.professor.user.username,
-                'period': self.period.name, 
+                'period': self.period.name,
                 'department': self.department.name,
                 'session': self.session,
                 'comment': self.comment,
@@ -538,6 +557,14 @@ class Conference(Displayable):
                                         'server_type': stream.server.type,
                                         'stream_type': stream.stream_type  })
         return data
+
+    @property
+    def pretty_title(self):
+        """
+        Get a displayable title
+        """
+        return "%s : %s" % (self.title, date(self.date_begin, "DATE_FORMAT"))
+
 
     def public_url(self):
         """

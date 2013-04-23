@@ -45,11 +45,24 @@ class Command(BaseCommand):
         items  = MediaItem.objects.all()
         for i in items :
             i.delete()
-        
+
+        items  = MediaCollection.objects.all()
+        for i in items :
+            i.delete()
+
         medias = Media.objects.all()
         for media in medias:
             media.delete()
-        
+
+    def get_duration(self, file):
+        decoder = timeside.decoder.FileDecoder(file)
+        decoder.setup()
+        # time.sleep(0.5)
+        value = str(datetime.timedelta(0,decoder.input_duration))
+        t = value.split(':')
+        t[2] = t[2].split('.')[0]
+        return ':'.join(t)
+
     def handle(self, *args, **options):
         organization_name = args[0]
         log_file = args[1]
@@ -58,9 +71,8 @@ class Command(BaseCommand):
         organization = Organization.objects.get(name=organization_name)
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
-        i = 1
 
-        self.cleanup()
+        # self.cleanup()
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -78,8 +90,10 @@ class Command(BaseCommand):
                     seminar_rank = int(root_list[-1][0])
                     if len(root_list[-1]) != 1:
                         media_rank = self.media_rank_dict[root_list[-1][1:]]
+                        preview_trigger = False
                     else:
                         media_rank = 1
+                        preview_trigger = True
 
                     course_code = root_list[-2]
                     master_dir = root_list[-3]
@@ -95,8 +109,11 @@ class Command(BaseCommand):
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
                     seminar, c = Seminar.objects.get_or_create(course=course, rank=seminar_rank)
-                    exist = False
+                    if c:
+                        seminar.title = course.title
+                        seminar.save()
 
+                    exist = False
                     medias = seminar.medias.all()
                     for media in medias:
                         if media.item.file == path:
@@ -111,7 +128,7 @@ class Command(BaseCommand):
                         else:
                             collection = collections[0]
 
-                        id = '_'.join([collection_id, ext, str(i)])
+                        id = '_'.join([collection_id, ext, str(media_rank)])
 
                         items = MediaItem.objects.filter(collection=collection, code=id)
                         if not items:
@@ -123,16 +140,11 @@ class Command(BaseCommand):
                         item.title = name
                         item.file = path
 
-                        decoder = timeside.decoder.FileDecoder(root+os.sep+filename)
-                        decoder.setup()
-                        time.sleep(0.5)
-                        value = str(datetime.timedelta(0,decoder.input_duration))
-                        t = value.split(':')
-                        t[2] = t[2].split('.')[0]
-                        t = ':'.join(t)
-                        item.approx_duration = t
+                        if os.path.getsize(root+os.sep+filename):
+                            item.approx_duration = self.get_duration(root+os.sep+filename)
+
                         item.save()
-                        
+
                         files = os.listdir(root)
                         for file in files:
                             r_path = dir + os.sep + file
@@ -148,7 +160,7 @@ class Command(BaseCommand):
                                 print "transcoded added"
                             elif extension[1:] == 'kdenlive':
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
-                                markers = related.parse_markers()
+                                markers = related.parse_markers(from_first_marker=True)
                                 if markers:
                                     item.title = markers[0]['comment']
                                     item.save()
@@ -160,9 +172,39 @@ class Command(BaseCommand):
                             media.rank = media_rank
                             media.is_published = True
                             media.save()
-                            
+
                         if not media in seminar.medias.all():
                             seminar.medias.add(media)
-                            
+
+                        # import previews
+                        if preview_trigger:
+                            dir = os.path.abspath(root + '/../preview/' +  str(seminar_rank))
+                            if os.path.exists(dir):
+                                r_dir = os.sep.join(dir.split(os.sep)[-6:])
+                                files = os.listdir(dir)
+                                code = item.code + '_preview'
+                                title = item.title + ' (preview)'
+                                item = MediaItem(collection=collection, code=code, title=title)
+                                item.save()
+                                for file in files:
+                                    r_path = r_dir + os.sep + file
+                                    filename, extension = os.path.splitext(file)
+                                    if extension[1:] in self.original_format and not '.' == filename[0]:
+                                        item.file = r_path
+                                        #print dir+os.sep+file
+                                        if os.path.getsize(dir+os.sep+file):
+                                            item.approx_duration = self.get_duration(dir+os.sep+file)
+                                        item.save()
+                                        print "preview added"
+                                    elif extension[1:] in self.transcoded_formats:
+                                        t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
+                                        print "preview transcoded added"
+
+                                media = Media(item=item, course=course, type=ext)
+                                media.set_mime_type()
+                                media.is_published = True
+                                media.save()
+                                seminar.media_preview = media
+                                seminar.save()
+
                         logger.logger.info(path)
-                        i += 1

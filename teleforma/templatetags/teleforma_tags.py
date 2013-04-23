@@ -138,17 +138,17 @@ def yes_no(bool):
 def from_course_type(contents, type):
     if contents:
         return contents.filter(course_type=type)
-    
+
 @register.filter
 def from_doc_type(contents, type):
     if contents:
         return contents.filter(type=type)
-    
+
 @register.filter
 def from_periods(contents, periods):
     if contents:
         return contents.filter(period__in=periods)
-    
+
 @register.assignment_tag
 def get_all_professors():
     return Professor.objects.all().order_by('user__first_name')
@@ -244,16 +244,16 @@ def validated(question, user):
 @register.filter
 def summary(text, N):
     return text[:N] + '...'
-    
+
 @register.filter
 def progress(seminar, user):
     return seminar_progress(user, seminar)
-    
+
 @register.filter
 def in_download_formats(file):
     ext = os.path.splitext(file)[1][1:]
     return ext in settings.TELEMETA_DOWNLOAD_FORMATS
-    
+
 @register.filter
 def user_seminars(user):
     return all_seminars(user)['all_seminars']
@@ -293,6 +293,17 @@ def fancy_duration(duration):
     minutes = int(d[1])
     if hours:
         time += str(hours) + 'h'
-    time += str(minutes) + 'mn'
+    if minutes<10:
+        minutes = '0' + str(minutes)
+    else:
+        minutes = str(minutes)
+    time +=  minutes + 'mn'
     return time
-    
+
+@register.simple_tag
+def untreated_answer_count():
+    answers = Answer.objects.filter(treated=False, status=3)
+    if answers:
+        return ' (' + str(len(answers)) + ')'
+    else:
+        return ''

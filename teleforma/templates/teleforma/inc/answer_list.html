@@ -3,15 +3,8 @@
 {% load teleforma_tags %}
 {% load pagination_tags %}
 
-<div class="pagination">
-    {% for p in page.paginator.pages %}
-      {% if p == page %}
-       <span class="selected">{{ page }}</span>
-      {% else %}
-       <a href="?page={{ p.number }}">{{ p }}</a>
-      {% endif %}
-    {% endfor %}
-</div>
+{% autopaginate object_list 8 %}
+{% paginate %}
 
 <div id="users">
   <table class="listing" width="100%">
@@ -21,23 +14,23 @@
     <th>{% trans "Seminar"%}</th>
     <th>{% trans "Date submitted"%}</th>
     <th>{% trans "Summary"%}</th>
-    <th>{% trans "Action / status"%}</th>
+    <th>{% trans "Status"%}</th>
     </tr>
     </thead>
     <tbody id="spacing">
-    {% for answer in page.object_list %}
+    {% for answer in object_list %}
     <tr>
      <td><a href="{% url teleforma-profile-detail answer.user.username %}">{{ answer.user.last_name }}</a></td>
      <td><a href="{% url teleforma-profile-detail answer.user.username %}">{{ answer.user.first_name }}</a></td>
 
-     <td>{{ answer.question.seminar }}</td>
+     <td>{{ answer.question.seminar.title }}</td>
      <td>{{ answer.date_submitted }}</td>
      <td><a href="{% url teleforma-answer-detail answer.id %}">{{ answer.answer|summary:120 }}</a></td>
      <td>{% if user.is_staff %}
-        <a id="validate" href="#" class="{% if answer.validated %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}" 
+        <a id="validate" href="#" class="{% if answer.validated %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}"
         onclick="var f = answerUtils;
-            if ($(this).hasClass('icon_ok')) {f.reject('{{answer.id}}', $(this)); return false;}
-            if ($(this).hasClass('icon_delete')) {f.validate('{{answer.id}}', $(this)); return false;}">
+            if ($(this).hasClass('icon_ok')) {f.reject('{{answer.id}}', $(this)); $(this).unbind('click'); return false;}
+            if ($(this).hasClass('icon_delete')) {f.validate('{{answer.id}}', $(this)); $(this).unbind('click'); return false;}">
             {% if answer.validated %}{% trans " validated" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
      </td>

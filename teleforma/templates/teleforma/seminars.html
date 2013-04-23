@@ -88,8 +88,9 @@ $(function() {
 {% block course %}
 
 <div class="desk_center">
+
     {% for seminar in object_list %}
-      
+
       <div class="course">
         <div class="course_title">
          <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
@@ -108,8 +109,8 @@ $(function() {
             <div class="course_description">
               <a href="{% url teleforma-seminar-detail seminar.id %}">
              <table>
-              <tr><td width="97%">   
-               {% include "teleforma/inc/seminar_description.html" %} 
+              <tr><td width="97%">
+               {% include "teleforma/inc/seminar_description.html" %}
               </td>
               <td>
                <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_next"> {% trans "Access" %}</a>
@@ -157,6 +158,9 @@ server_status_callback();
 
 {% block index %}
 {% endblock index %}
+
+{% block module-action-right %}
+{% endblock module-action-right %}
 
 </div>
 
