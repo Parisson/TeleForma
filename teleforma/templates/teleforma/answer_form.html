@@ -32,6 +32,7 @@ $(document).ready(function(){
           new Messi(gettext('You must reach the required number of characters.'), {buttons: [{id: 0, label: gettext('OK'), val: 'X'}], modal: true});
         }
         if (c.hasClass('exceed')){
+            b1.unbind('click');
             $('#id_status').val("3");
             $('#_AnswerForm').submit();
         }
@@ -40,6 +41,7 @@ $(document).ready(function(){
     var b2 = $('#save_button');
     b2.unbind('click').click(function() {
       $(window).unbind('beforeunload');
+      b1.unbind('click');
       $('#_AnswerForm').submit();
     });
 
