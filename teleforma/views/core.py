@@ -209,7 +209,7 @@ class CoursesView(ListView):
 
     def get_queryset(self):
         self.all_courses = get_courses(self.request.user, date_order=True)
-        return self.all_courses[:10]
+        return self.all_courses[:5]
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
