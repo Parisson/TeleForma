@@ -99,7 +99,7 @@ def format_courses(courses, course=None, queryset=None, types=None):
     return courses
 
 
-def get_courses(user, date_order=False, num_order=False):
+def get_courses(user, date_order=False, num_order=False, num_courses=False):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
         return get_crfpa_courses(user, date_order, num_order)
