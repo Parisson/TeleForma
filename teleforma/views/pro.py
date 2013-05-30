@@ -128,7 +128,6 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = context['seminar']
         user = self.request.user
-
         progress = seminar_progress(user, seminar)
         validated = seminar_validated(user, seminar)
         context['seminar_progress'] = progress
@@ -607,6 +606,16 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     pdf_template_name = 'teleforma/seminar_testimonial.html'
     # pdf_filename = 'report.pdf'
 
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialView, self).get_context_data(**kwargs)
+        seminar = context['seminar']
+        revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user)
+        if revisions:
+            context['first_revision'] = revisions[0]
+        testimonials = Testimonial.objects.filter(seminar=seminar, user=self.request.user)
+        if testimonials:
+            context['testimonial'] = testimonials[0]
+        return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

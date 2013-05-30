@@ -69,6 +69,7 @@ class Seminar(Displayable):
     price           = models.FloatField(_('price'), blank=True, null=True)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
     magistral       = models.BooleanField(_('magistral'))
+    approved        = models.BooleanField(_('approved'), default=True)
     index           = tinymce.models.HTMLField(_('index'), blank=True)
     duration        = DurationField(_('approximative duration'))
     professor       = models.ManyToManyField('Professor', related_name='seminar',
@@ -293,4 +294,5 @@ class SeminarRevision(models.Model):
         db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
+        ordering = ['date']
 

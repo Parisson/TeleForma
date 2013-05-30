@@ -486,6 +486,7 @@ class Conference(Displayable):
     date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
     duration        = DurationField(_('approximative duration'))
     price           = models.FloatField(_('price'), blank=True, null=True)
+    approved        = models.BooleanField(_('approved'), default=True)
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
     docs_description = models.ManyToManyField(Document, related_name="conference_docs_description",
