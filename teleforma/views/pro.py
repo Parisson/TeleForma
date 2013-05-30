@@ -333,7 +333,7 @@ class AnswersView(ListView):
             v = _('validated')
             subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
 
-        mess = Message(sender=sender, recipient=user, subject=subject, body=text)
+        mess = Message(sender=sender, recipient=user, subject=subject[:120], body=text)
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')
