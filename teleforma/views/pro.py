@@ -630,7 +630,7 @@ class TestimonialDownloadView(TestimonialView):
         super(TestimonialDownloadView, self).get_pdf_filename()
         seminar = self.get_object()
         prefix = unicode(_('Testimonial'))
-        filename = '_'.join([prefix, seminar.title,
+        filename = '_'.join([prefix, seminar.title.replace(',', ' '),
                             self.request.user.first_name, self.request.user.last_name,])
         filename += '.pdf'
         return filename.encode('utf-8')
