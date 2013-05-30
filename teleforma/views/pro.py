@@ -333,7 +333,7 @@ class AnswersView(ListView):
             v = _('validated')
             subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
 
-        mess = Message(sender=sender, recipient=user, subject=subject[:120], body=text)
+        mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')
@@ -630,7 +630,7 @@ class TestimonialDownloadView(TestimonialView):
         super(TestimonialDownloadView, self).get_pdf_filename()
         seminar = self.get_object()
         prefix = unicode(_('Testimonial'))
-        filename = '_'.join([prefix, seminar.title,
+        filename = '_'.join([prefix, seminar.title.replace(',', ' '),
                             self.request.user.first_name, self.request.user.last_name,])
         filename += '.pdf'
         return filename.encode('utf-8')
