@@ -24,6 +24,8 @@ setup(
         'django-tinymce',
         'django-forms-builder',
         'xhtml2pdf',
+        'xlwt',
+        'django-google-tools',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
