@@ -301,6 +301,7 @@ class SeminarRevision(models.Model):
     seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="revision", verbose_name=_('user'))
     date        = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+    date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
 
     def __unicode__(self):
         return ' - '.join([self.seminar.title, self.user.username, str(self.date)])
@@ -309,5 +310,5 @@ class SeminarRevision(models.Model):
         db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
-        ordering = ['date']
+        ordering = ['date_modified','-date']
 
