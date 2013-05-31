@@ -39,7 +39,7 @@
       <tr><td class="bold">{% trans "Training type" %} : </td><td>E-learning</td></tr>
       <tr><td class="bold">{% trans "Duration" %} : </td><td>{{ seminar.duration|hours }} {% trans "hours" %}</td></tr>
       <tr><td class="bold">{% trans "Training begin date" %} : </td><td>{{ first_revision.date|date:'j F Y' }}</td></tr>
-      <tr><td class="bold">{% trans "Training end date" %} : </td><td>{{ testimonial.date_added|date:'j F Y' }}</td></tr>
+      <tr><td class="bold">{% trans "Training end date" %} : </td><td>{% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}</td></tr>
     </table>
 
     <table class="table2">
