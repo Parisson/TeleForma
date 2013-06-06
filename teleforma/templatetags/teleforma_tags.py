@@ -283,7 +283,11 @@ def point(time):
 
 @register.filter
 def preview(related):
-    return related.filter(title='preview')[0]
+    media = related.filter(title='preview')
+    if media:
+        return media[0]
+    else:
+        return None
 
 @register.filter
 def fancy_duration(duration):
