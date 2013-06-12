@@ -671,3 +671,21 @@ class TestimonialPresenceView(TestimonialView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TestimonialPresenceView, self).dispatch(*args, **kwargs)
+
+
+class TestimonialPaybackView(TestimonialView):
+
+    template_name = 'teleforma/seminar_testimonial_payback.html'
+    pdf_template_name = template_name
+
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialPaybackView, self).get_context_data(**kwargs)
+        seminar = context['seminar']
+        context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
+                                                   user=self.request.user,
+                                                   validated=True).order_by('question__rank')
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TestimonialPaybackView, self).dispatch(*args, **kwargs)
