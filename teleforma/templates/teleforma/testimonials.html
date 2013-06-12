@@ -53,7 +53,7 @@
  {% for testimonial in object_list %}
   <div class="course_content">
     <div class="course_subtitle">
-      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Seminar" %} : {% if testimonial.seminar %}{{ testimonial.seminar.title }}{% else %}{{ testimonial.title }}{% endif %}</h3>
+      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% if testimonial.seminar %}{{ testimonial.seminar.title }}{% else %}{{ testimonial.title }}{% endif %}</h3>
     </div>
 
    <table class="listing" width="100%">
@@ -66,13 +66,13 @@
     </tr>
 
     <tr>
-     <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Knowledge validation testimonial" %}</a></td>
+     <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Knowledge validation testimonial" %} ({% trans "only to have support of the training costs" %})</a></td>
      <td>{% trans "validated on" %} {{ testimonial.date_added }}</td>
      <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
     </tr>
 
     <tr>
-     <td><a href="{% url teleforma-seminar-testimonial-payback testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Payback testimonial" %}</td>
+     <td><a href="{% url teleforma-seminar-testimonial-payback testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Payback testimonial" %} ({% trans "only to have support of the training costs" %})</td>
      <td>{% trans "validated on" %} {{ testimonial.date_added }}</td>
      <td><a href="{% url teleforma-seminar-testimonial-payback testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
     </tr>

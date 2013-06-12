@@ -39,8 +39,12 @@
       <tr><td class="bold">{% trans "Duration" %} : </td><td>{{ seminar.duration|hours }} {% trans "hours" %}</td></tr>
       <tr><td class="bold">{% trans "Validation mode of the training" %} : </td><td>{% trans "Reply to questions" %}</td></tr>
       <tr><td class="bold">{% trans "Training begin date" %} : </td><td>{{ first_revision.date|date:'j F Y' }}</td></tr>
-      <tr><td class="bold">{% trans "Knowledge validation dates" %} : </td><td></td></tr>
-      {% for answer in answers %}<tr><td style="padding-left:10px;">{% trans "Answer" %} n°{{ answer.question.rank }} : </td><td>{{ answer.date_validated|date:'j F Y' }}</td></tr>{% endfor %}
+      <tr><td class="bold">{% trans "Knowledge validation dates and terms" %} : </td><td></td></tr>
+      {% for answer in answers %}
+        <tr style="padding-top: -2px;"><td style="padding-left:10px;">{% trans "Answer" %} n°{{ answer.question.rank }} : </td><td>{{ answer.date_validated|date:'j F Y' }}</td></tr>
+        <tr style="padding-top: -2px;"><td style="padding-left:20px;">{% trans "Required characters" %} : </td><td>{{ answer.question.min_nchar }}</td></tr>
+        <tr style="padding-top: -2px;"><td style="padding-left:20px;">{% trans "Submitted characters" %} : </td><td>{{ answer.answer|length }}</td></tr>
+      {% endfor %}
       <tr><td class="bold">{% trans "Training end date" %} : </td><td>{% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}</td></tr>
     </table>
 
