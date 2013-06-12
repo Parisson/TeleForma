@@ -85,6 +85,7 @@ class MediaItemMarkerAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)
+admin.site.register(SeminarRevision)
 
 admin.site.register(Organization)
 admin.site.register(Department)

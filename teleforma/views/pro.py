@@ -128,16 +128,15 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = context['seminar']
         user = self.request.user
-
         progress = seminar_progress(user, seminar)
         validated = seminar_validated(user, seminar)
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
-        if progress == 100 and not validated:
+        if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
-        elif progress < 100 and validated:
+        elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
-        elif progress == 100 and validated:
+        elif progress == 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
         set_revision(user, seminar)
         return context
@@ -334,7 +333,7 @@ class AnswersView(ListView):
             v = _('validated')
             subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
 
-        mess = Message(sender=sender, recipient=user, subject=subject, body=text)
+        mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')
@@ -604,9 +603,18 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     context_object_name = "seminar"
     model = Seminar
     template_name = 'teleforma/seminar_testimonial.html'
-    pdf_template_name = 'teleforma/seminar_testimonial.html'
-    # pdf_filename = 'report.pdf'
+    pdf_template_name = template_name
 
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialView, self).get_context_data(**kwargs)
+        seminar = context['seminar']
+        revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user)
+        if revisions:
+            context['first_revision'] = revisions[0]
+        testimonials = Testimonial.objects.filter(seminar=seminar, user=self.request.user)
+        if testimonials:
+            context['testimonial'] = testimonials[0]
+        return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -621,7 +629,7 @@ class TestimonialDownloadView(TestimonialView):
         super(TestimonialDownloadView, self).get_pdf_filename()
         seminar = self.get_object()
         prefix = unicode(_('Testimonial'))
-        filename = '_'.join([prefix, seminar.title,
+        filename = '_'.join([prefix, seminar.title.replace(',', ' '),
                             self.request.user.first_name, self.request.user.last_name,])
         filename += '.pdf'
         return filename.encode('utf-8')
@@ -646,3 +654,38 @@ class TestimonialListView(ListView):
     def dispatch(self, *args, **kwargs):
         return super(TestimonialListView, self).dispatch(*args, **kwargs)
 
+
+class TestimonialKnowledgeView(TestimonialView):
+
+    template_name = 'teleforma/seminar_testimonial_knowledge.html'
+    pdf_template_name = template_name
+
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialKnowledgeView, self).get_context_data(**kwargs)
+        seminar = context['seminar']
+        context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
+                                                   user=self.request.user,
+                                                   validated=True).order_by('question__rank')
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TestimonialKnowledgeView, self).dispatch(*args, **kwargs)
+
+
+class TestimonialPaybackView(TestimonialView):
+
+    template_name = 'teleforma/seminar_testimonial_payback.html'
+    pdf_template_name = template_name
+
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialPaybackView, self).get_context_data(**kwargs)
+        seminar = context['seminar']
+        context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
+                                                   user=self.request.user,
+                                                   validated=True).order_by('question__rank')
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TestimonialPaybackView, self).dispatch(*args, **kwargs)

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
+<title>{%block head_title %}{% description %} - {% trans "Testimonial" %}{% endblock %}</title>
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/teleforma_pdf.css" />
+{% endblock %}
+
+<style>
+ @page {
+  background-image: url({{ STATIC_URL }}teleforma/images/attestation_fifpl.png);
+
+  @frame user {
+  -pdf-frame-content: user;
+    top: 394px;
+    left: 260px;
+  }
+
+  @frame seminar {
+  -pdf-frame-content: seminar;
+    top: 460px;
+    left: 75px;
+  }
+
+  @frame dates {
+  -pdf-frame-content: dates;
+    top: 569px;
+    left: 263px;
+  }
+
+  @frame hours {
+  -pdf-frame-content: hours;
+    top: 649px;
+    left: 308px;
+  }
+
+  @frame price-ht {
+  -pdf-frame-content: price-ht;
+    top: 729px;
+    left: 377px;
+  }
+
+  @frame price-ttc {
+  -pdf-frame-content: price-ttc;
+    top: 729px;
+    left: 477px;
+  }
+
+  @frame date-now {
+  -pdf-frame-content: date-now;
+    top: 805px;
+    left: 267px;
+  }
+
+}
+
+</style>
+
+{% block extra_stylesheets %}{% endblock %}
+
+</head>
+
+<body>
+{% block layout %}
+<div id="layout">
+<div id="content" style="font-size=1.3em;">
+
+
+<div id="user">
+  {{ testimonial.user.first_name }} {{ testimonial.user.last_name }}
+</div>
+
+
+<div id="seminar" style="position: absolute; left: 200px; top: 50px; z-index=2;">
+  {{ seminar.title }}
+</div>
+
+
+<div id="dates">
+  {{ first_revision.date|date:'j F Y' }} {% trans "until" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
+</div>
+
+
+<div id="hours">
+  {{ seminar.duration|hours }} {% trans "hours" %}
+</div>
+
+
+<div id="price-ht">
+  {{ seminar.price|integer }}
+</div>
+
+<div id="price-ttc">
+  {{ seminar.price|integer }}
+</div>
+
+
+<div id="date-now">
+  {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
+</div>
+
+
+</div>
+</div>
+{% endblock layout %}
+
+</body>
+</html>

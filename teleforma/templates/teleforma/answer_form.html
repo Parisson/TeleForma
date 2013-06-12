@@ -41,7 +41,7 @@ $(document).ready(function(){
     var b2 = $('#save_button');
     b2.unbind('click').click(function() {
       $(window).unbind('beforeunload');
-      b1.unbind('click');
+      b2.unbind('click');
       $('#_AnswerForm').submit();
     });
 
