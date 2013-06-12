@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-12 11:57+0200\n"
+"POT-Creation-Date: 2013-06-12 12:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -412,7 +412,7 @@ msgstr "formulaire"
 
 #: models/pro.py:131 templates/teleforma/answer_form.html:112
 #: templates/teleforma/seminar_detail.html:162
-#: templates/teleforma/testimonials.html:58
+#: templates/teleforma/testimonials.html:56
 #: templates/teleforma/inc/answer_list.html:14
 msgid "Seminar"
 msgstr "Séminaire"
@@ -1056,8 +1056,9 @@ msgstr " publié"
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/seminar_media_audio.html:131
 #: templates/teleforma/seminar_media_video.html:182
-#: templates/teleforma/testimonials.html:60
-#: templates/teleforma/testimonials.html:70
+#: templates/teleforma/testimonials.html:65
+#: templates/teleforma/testimonials.html:71
+#: templates/teleforma/testimonials.html:77
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/document_simple_list.html:9
 #: templates/teleforma/inc/media_list.html:56
@@ -1170,6 +1171,7 @@ msgid "Video index"
 msgstr "Index vidéo"
 
 #: templates/teleforma/seminar_testimonial.html:28
+#: templates/teleforma/testimonials.html:63
 msgid "Training testimonial"
 msgstr "Attestation de formation"
 
@@ -1217,6 +1219,7 @@ msgid "to"
 msgstr "au"
 
 #: templates/teleforma/seminar_testimonial_presence.html:28
+#: templates/teleforma/testimonials.html:69
 msgid "Remote presence testimonial"
 msgstr "Attestation de suivi à distance"
 
@@ -1241,28 +1244,36 @@ msgstr "Accéder"
 msgid "Testimonials"
 msgstr "Attestations"
 
-#: templates/teleforma/testimonials.html:56
+#: templates/teleforma/testimonials.html:64
+#: templates/teleforma/testimonials.html:70
+#: templates/teleforma/testimonials.html:76
+#: templates/teleforma/inc/question_list.html:16
+msgid "validated on"
+msgstr "validée le"
+
+#: templates/teleforma/testimonials.html:75
+msgid "Payback testimonial"
+msgstr "Attestation de présence et de règlement"
+
+#: templates/teleforma/testimonials.html:86
+msgid "No testimonial"
+msgstr "Aucune attestation"
+
 #: templates/teleforma/inc/answer_list.html:12
 #: templates/telemeta/profile_detail.html:58
 #: templates/telemeta/inc/user_list.html:19
 msgid "Last Name"
 msgstr "Nom"
 
-#: templates/teleforma/testimonials.html:57
 #: templates/teleforma/inc/answer_list.html:13
 #: templates/telemeta/profile_detail.html:57
 #: templates/telemeta/inc/user_list.html:20
 msgid "First Name"
 msgstr "Prénom"
 
-#: templates/teleforma/testimonials.html:59
 #: templates/teleforma/inc/answer_list.html:15
 msgid "Date submitted"
 msgstr "date de soumission"
-
-#: templates/teleforma/testimonials.html:77
-msgid "No testimonial"
-msgstr "Aucune attestation"
 
 #: templates/teleforma/inc/answer_list.html:16
 msgid "Summary"
@@ -1319,10 +1330,6 @@ msgstr "soumise le"
 #: templates/teleforma/inc/question_list.html:14
 msgid "saved on"
 msgstr "enregistrée le"
-
-#: templates/teleforma/inc/question_list.html:16
-msgid "validated on"
-msgstr "validée le"
 
 #: templates/teleforma/inc/question_list.html:21
 #: templates/teleforma/inc/question_step.html:12
