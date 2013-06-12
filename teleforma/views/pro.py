@@ -603,8 +603,7 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     context_object_name = "seminar"
     model = Seminar
     template_name = 'teleforma/seminar_testimonial.html'
-    pdf_template_name = 'teleforma/seminar_testimonial.html'
-    # pdf_filename = 'report.pdf'
+    pdf_template_name = template_name
 
     def get_context_data(self, **kwargs):
         context = super(TestimonialView, self).get_context_data(**kwargs)
@@ -655,3 +654,20 @@ class TestimonialListView(ListView):
     def dispatch(self, *args, **kwargs):
         return super(TestimonialListView, self).dispatch(*args, **kwargs)
 
+
+class TestimonialPresenceView(TestimonialView):
+
+    template_name = 'teleforma/seminar_testimonial_presence.html'
+    pdf_template_name = template_name
+
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialPresenceView, self).get_context_data(**kwargs)
+        seminar = context['seminar']
+        context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
+                                                   user=self.request.user,
+                                                   validated=True).order_by('question__rank')
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TestimonialPresenceView, self).dispatch(*args, **kwargs)

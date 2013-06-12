@@ -111,6 +111,8 @@ urlpatterns = patterns('',
                                                     name="teleforma-seminar-testimonial-download"),
     url(r'^desk/testimonials/$', TestimonialListView.as_view(),
                                                     name="teleforma-testimonials"),
+    url(r'^desk/seminars/(?P<pk>.*)/testimonial-presence/$', TestimonialPresenceView.as_view(),
+                                                    name="teleforma-seminar-testimonial-presence"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),
