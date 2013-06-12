@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-12 13:08+0200\n"
+"POT-Creation-Date: 2013-06-12 17:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -412,7 +412,6 @@ msgstr "formulaire"
 
 #: models/pro.py:131 templates/teleforma/answer_form.html:112
 #: templates/teleforma/seminar_detail.html:162
-#: templates/teleforma/testimonials.html:56
 #: templates/teleforma/inc/answer_list.html:14
 msgid "Seminar"
 msgstr "Séminaire"
@@ -460,7 +459,7 @@ msgstr "date de validation"
 
 #: models/pro.py:186 templates/teleforma/answer_detail.html:45
 #: templates/teleforma/answer_form.html:115
-#: templates/teleforma/seminar_testimonial_knowledge.html:43
+#: templates/teleforma/seminar_testimonial_knowledge.html:44
 msgid "Answer"
 msgstr "Réponse à la consultation"
 
@@ -1208,7 +1207,7 @@ msgid "Training begin date"
 msgstr "Date de début de formation"
 
 #: templates/teleforma/seminar_testimonial.html:42
-#: templates/teleforma/seminar_testimonial_knowledge.html:44
+#: templates/teleforma/seminar_testimonial_knowledge.html:48
 msgid "Training end date"
 msgstr "Date de fin de formation"
 
@@ -1226,8 +1225,16 @@ msgid "Reply to questions"
 msgstr "Réalisation de consultations juridiques fictives"
 
 #: templates/teleforma/seminar_testimonial_knowledge.html:42
-msgid "Knowledge validation dates"
-msgstr "Date de validation des acquis"
+msgid "Knowledge validation dates and terms"
+msgstr "Dates et modalités de validation des acquis"
+
+#: templates/teleforma/seminar_testimonial_knowledge.html:45
+msgid "Required characters"
+msgstr "Caractères requis"
+
+#: templates/teleforma/seminar_testimonial_knowledge.html:46
+msgid "Submitted characters"
+msgstr "Caractères soumis"
 
 #: templates/teleforma/seminar_testimonial_payback.html:90
 msgid "until"
@@ -1248,6 +1255,11 @@ msgstr "Attestations"
 #: templates/teleforma/inc/question_list.html:16
 msgid "validated on"
 msgstr "validée le"
+
+#: templates/teleforma/testimonials.html:69
+#: templates/teleforma/testimonials.html:75
+msgid "only to have support of the training costs"
+msgstr "uniquement pour la prise en charge des frais de formation"
 
 #: templates/teleforma/testimonials.html:75
 msgid "Payback testimonial"
