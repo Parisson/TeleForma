@@ -46,13 +46,13 @@
 
   @frame price-ht {
   -pdf-frame-content: price-ht;
-    top: 730px;
+    top: 729px;
     left: 377px;
   }
 
   @frame price-ttc {
   -pdf-frame-content: price-ttc;
-    top: 730px;
+    top: 729px;
     left: 477px;
   }
 
@@ -87,7 +87,7 @@
 
 
 <div id="dates">
-  {{ first_revision.date|date:'j F Y' }} {% trans "to" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
+  {{ first_revision.date|date:'j F Y' }} {% trans "until" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
 </div>
 
 
@@ -97,11 +97,11 @@
 
 
 <div id="price-ht">
-  {{ seminar.price }}
+  {{ seminar.price|integer }}
 </div>
 
 <div id="price-ttc">
-  {{ seminar.price }}
+  {{ seminar.price|integer }}
 </div>
 
 

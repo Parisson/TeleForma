@@ -66,9 +66,9 @@
     </tr>
 
     <tr>
-     <td><a href="{% url teleforma-seminar-testimonial-presence testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Remote presence testimonial" %}</a></td>
+     <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Knowledge validation testimonial" %}</a></td>
      <td>{% trans "validated on" %} {{ testimonial.date_added }}</td>
-     <td><a href="{% url teleforma-seminar-testimonial-presence testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
+     <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
     </tr>
 
     <tr>
