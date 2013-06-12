@@ -311,3 +311,7 @@ def untreated_answer_count():
         return ' (' + str(len(answers)) + ')'
     else:
         return ''
+
+@register.filter
+def integer(value):
+    return int(value)
