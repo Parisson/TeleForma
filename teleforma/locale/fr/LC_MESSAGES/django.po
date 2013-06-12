@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-12 17:47+0200\n"
+"POT-Creation-Date: 2013-06-12 21:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -591,10 +591,8 @@ msgid "Recipient"
 msgstr ""
 
 #: templates/postman/base_folder.html:42
-#: templates/teleforma/seminar_testimonial.html:37
-#: templates/teleforma/seminar_testimonial_knowledge.html:37
 msgid "Subject"
-msgstr ""
+msgstr "Sujet"
 
 #: templates/postman/base_folder.html:43
 #: templates/telemeta/inc/module_revisions.html:16
@@ -1183,6 +1181,11 @@ msgstr "Nom"
 #: templates/teleforma/seminar_testimonial_knowledge.html:35
 msgid "First name"
 msgstr "Prénom"
+
+#: templates/teleforma/seminar_testimonial.html:37
+#: templates/teleforma/seminar_testimonial_knowledge.html:37
+msgid "Object"
+msgstr "Sujet"
 
 #: templates/teleforma/seminar_testimonial.html:39
 msgid "Training type"
