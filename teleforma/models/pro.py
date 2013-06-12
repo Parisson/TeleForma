@@ -310,5 +310,5 @@ class SeminarRevision(models.Model):
         db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
-        ordering = ['date_modified','-date']
+        ordering = ['-date_modified']
 

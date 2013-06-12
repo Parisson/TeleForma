@@ -41,6 +41,7 @@ from teleforma.views import *
 from telemeta.views import *
 import forms_builder.forms.urls
 from jsonrpc import jsonrpc_site
+from longerusername.forms import AuthenticationForm
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
@@ -50,10 +51,11 @@ media = MediaView()
 
 urlpatterns = patterns('',
 #    url(r'^$', HomeView.as_view(), name='teleforma-home'),
-    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
         name="teleforma-login"),
-    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
         name="home"),
+#    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'authentication_form': AuthenticationForm}),
 
     # Telemeta
     url(r'^', include('telemeta.urls')),
