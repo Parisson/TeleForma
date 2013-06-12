@@ -13,7 +13,7 @@
 {% else %}{% blocktrans with object.sender.first_name as first_name and object.sender.last_name as last_name %}You have received a message from {{ first_name }} {{ last_name }}.{% endblocktrans %}
 {% endif %}{% endif %}{% trans "You can read and respond to this message from your e-learning desk following this link:" %}
 
-http://{{ site.name }}/messages/inbox/
+http://{{ site.domain }}/messages/inbox/
 {# 'acceptance' #}
 
 {% trans "Thank you again for your interest in our services." %}

@@ -215,24 +215,39 @@ class Testimonial(models.Model):
     file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m',
                                  blank=True, max_length=1024)
     date_added  = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+    date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
     title       = models.CharField(_('title'), max_length=255, blank=True)
 
-    def save(self, **kwargs):
-        super(Testimonial, self).save(**kwargs)
-        if self.seminar:
-            self.title = ' - '.join([self.seminar.title,
-                                    self.user.first_name + ' ' + self.user.last_name,
-                                    str(self.date_added)])
+    def get_title(self):
+        if self.date_modified:
+            date = self.date_modified
         else:
-            self.title = ' - '.join([self.user.first_name + ' ' + self.user.last_name, str(self.date_added)])
+            date = self.date_added
+
+        if self.seminar:
+            title = ' - '.join([self.seminar.title,
+                                    self.user.first_name + ' ' + self.user.last_name,
+                                    str(date)])
+        else:
+            title = ' - '.join([self.user.first_name + ' ' + self.user.last_name, str(date)])
+
+        return title
+
+    def save(self, **kwargs):
+        if not self.title:
+            self.title = self.get_title()
+        super(Testimonial, self).save(**kwargs)
 
     def __unicode__(self):
-        return self.title
+        if self.title:
+            return self.title
+        else:
+            return self.get_title()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'
         verbose_name = _('Testimonial')
-        ordering = ['date_added']
+        ordering = ['date_modified', '-date_added']
 
 
 class Auditor(models.Model):
@@ -286,6 +301,7 @@ class SeminarRevision(models.Model):
     seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'))
     user        = models.ForeignKey(User, related_name="revision", verbose_name=_('user'))
     date        = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
+    date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
 
     def __unicode__(self):
         return ' - '.join([self.seminar.title, self.user.username, str(self.date)])
@@ -294,5 +310,5 @@ class SeminarRevision(models.Model):
         db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
-        ordering = ['date']
+        ordering = ['date_modified','-date']
 

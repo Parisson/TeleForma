@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-07 18:40+0200\n"
+"POT-Creation-Date: 2013-06-12 13:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: models/ae.py:46 models/core.py:205 models/crfpa.py:108 models/crfpa.py:146
-#: models/pro.py:159 models/pro.py:211 models/pro.py:240 models/pro.py:287
+#: models/pro.py:159 models/pro.py:211 models/pro.py:255 models/pro.py:302
 msgid "user"
 msgstr "utilisateur"
 
@@ -26,7 +26,7 @@ msgstr "utilisateur"
 msgid "period"
 msgstr "période"
 
-#: models/ae.py:49 models/crfpa.py:114 models/pro.py:248
+#: models/ae.py:49 models/crfpa.py:114 models/pro.py:263
 msgid "platform only"
 msgstr "plateforme seulement"
 
@@ -99,7 +99,7 @@ msgid "course type"
 msgstr "type de matière"
 
 #: models/core.py:159 models/core.py:209 models/core.py:310 models/pro.py:140
-#: models/pro.py:218
+#: models/pro.py:219
 msgid "title"
 msgstr "titre"
 
@@ -107,7 +107,8 @@ msgstr "titre"
 msgid "code"
 msgstr "cote"
 
-#: models/core.py:162 models/core.py:314 models/pro.py:102
+#: models/core.py:162 models/core.py:314 models/pro.py:102 models/pro.py:218
+#: models/pro.py:304
 msgid "date modified"
 msgstr "date de modification"
 
@@ -195,7 +196,7 @@ msgid "credits"
 msgstr "crédits"
 
 #: models/core.py:313 models/pro.py:101 models/pro.py:167 models/pro.py:217
-#: models/pro.py:288
+#: models/pro.py:303
 msgid "date added"
 msgstr "date d'ajout"
 
@@ -336,39 +337,40 @@ msgstr "iej"
 msgid "student"
 msgstr "étudiant"
 
-#: models/crfpa.py:147 models/pro.py:252
+#: models/crfpa.py:147 models/pro.py:267
 #: templates/teleforma/seminar_testimonial.html:36
+#: templates/teleforma/seminar_testimonial_knowledge.html:36
 #: templates/telemeta/profile_detail.html:80
 msgid "Address"
 msgstr "Adresse"
 
-#: models/crfpa.py:148 models/pro.py:253
+#: models/crfpa.py:148 models/pro.py:268
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models/crfpa.py:149 models/pro.py:254
+#: models/crfpa.py:149 models/pro.py:269
 msgid "City"
 msgstr "Ville"
 
-#: models/crfpa.py:150 models/pro.py:255
+#: models/crfpa.py:150 models/pro.py:270
 msgid "Country"
 msgstr "Pays"
 
-#: models/crfpa.py:151 models/pro.py:256
+#: models/crfpa.py:151 models/pro.py:271
 #: templates/telemeta/profile_detail.html:89
 msgid "Language"
 msgstr "Langue"
 
-#: models/crfpa.py:152 models/pro.py:257 templates/postman/base.html:11
+#: models/crfpa.py:152 models/pro.py:272 templates/postman/base.html:11
 #: templates/telemeta/profile_detail.html:81
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models/crfpa.py:153 models/pro.py:259
+#: models/crfpa.py:153 models/pro.py:274
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models/crfpa.py:154 models/pro.py:260
+#: models/crfpa.py:154 models/pro.py:275
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
@@ -410,12 +412,12 @@ msgstr "formulaire"
 
 #: models/pro.py:131 templates/teleforma/answer_form.html:112
 #: templates/teleforma/seminar_detail.html:162
-#: templates/teleforma/testimonials.html:58
+#: templates/teleforma/testimonials.html:56
 #: templates/teleforma/inc/answer_list.html:14
 msgid "Seminar"
 msgstr "Séminaire"
 
-#: models/pro.py:139 models/pro.py:209 models/pro.py:286
+#: models/pro.py:139 models/pro.py:209 models/pro.py:301
 msgid "seminar"
 msgstr "séminaire"
 
@@ -427,7 +429,7 @@ msgstr "question"
 msgid "minimum numbers of characters"
 msgstr "nombre de caractère minimum"
 
-#: models/pro.py:146 models/pro.py:162 models/pro.py:249
+#: models/pro.py:146 models/pro.py:162 models/pro.py:264
 msgid "status"
 msgstr "status"
 
@@ -435,7 +437,7 @@ msgstr "status"
 msgid "Question"
 msgstr "Question"
 
-#: models/pro.py:161 views/pro.py:333
+#: models/pro.py:161 views/pro.py:332
 msgid "answer"
 msgstr "consultation"
 
@@ -444,7 +446,7 @@ msgid "treated"
 msgstr ""
 
 #: models/pro.py:164 templates/teleforma/seminar_detail.html:50
-#: templates/teleforma/seminars.html:99 views/pro.py:334
+#: templates/teleforma/seminars.html:99 views/pro.py:333
 msgid "validated"
 msgstr "validée"
 
@@ -458,6 +460,7 @@ msgstr "date de validation"
 
 #: models/pro.py:186 templates/teleforma/answer_detail.html:45
 #: templates/teleforma/answer_form.html:115
+#: templates/teleforma/seminar_testimonial_knowledge.html:43
 msgid "Answer"
 msgstr "Réponse à la consultation"
 
@@ -473,41 +476,43 @@ msgstr "modèle"
 msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
-#: models/pro.py:234 templates/teleforma/seminar_testimonial.html:13
+#: models/pro.py:249 templates/teleforma/seminar_testimonial.html:13
+#: templates/teleforma/seminar_testimonial_knowledge.html:13
+#: templates/teleforma/seminar_testimonial_payback.html:13
 #: templates/teleforma/inc/testimonial_list.html:7
-#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:623
+#: templates/teleforma/inc/testimonial_step.html:7 views/pro.py:631
 msgid "Testimonial"
 msgstr "Attestation"
 
-#: models/pro.py:242
+#: models/pro.py:257
 msgid "seminars"
 msgstr "séminaires"
 
-#: models/pro.py:245
+#: models/pro.py:260
 msgid "conferences"
 msgstr "conférences"
 
-#: models/pro.py:250
+#: models/pro.py:265
 msgid "gender"
 msgstr "civilité"
 
-#: models/pro.py:251
+#: models/pro.py:266
 msgid "Company"
 msgstr "Entreprise / Organisme"
 
-#: models/pro.py:258
+#: models/pro.py:273
 msgid "Fax"
 msgstr "Fax"
 
-#: models/pro.py:280
+#: models/pro.py:295
 msgid "Auditor"
 msgstr "Auditeur"
 
-#: models/pro.py:295
+#: models/pro.py:311
 msgid "Seminar revision"
 msgstr "Révision des sémimaires"
 
-#: models/pro.py:296
+#: models/pro.py:312
 msgid "Seminar revisions"
 msgstr "Révisions des sémimaires"
 
@@ -587,6 +592,8 @@ msgid "Recipient"
 msgstr ""
 
 #: templates/postman/base_folder.html:42
+#: templates/teleforma/seminar_testimonial.html:37
+#: templates/teleforma/seminar_testimonial_knowledge.html:37
 msgid "Subject"
 msgstr ""
 
@@ -971,6 +978,7 @@ msgstr "Audio"
 #: templates/teleforma/course_conference.html:70
 #: templates/teleforma/course_media.html:130
 #: templates/teleforma/seminar_testimonial.html:38
+#: templates/teleforma/seminar_testimonial_knowledge.html:38
 msgid "Course"
 msgstr "Matière"
 
@@ -1048,8 +1056,9 @@ msgstr " publié"
 #: templates/teleforma/course_media.html:62
 #: templates/teleforma/seminar_media_audio.html:131
 #: templates/teleforma/seminar_media_video.html:182
-#: templates/teleforma/testimonials.html:60
-#: templates/teleforma/testimonials.html:70
+#: templates/teleforma/testimonials.html:65
+#: templates/teleforma/testimonials.html:71
+#: templates/teleforma/testimonials.html:77
 #: templates/teleforma/inc/document_list.html:22
 #: templates/teleforma/inc/document_simple_list.html:9
 #: templates/teleforma/inc/media_list.html:56
@@ -1162,42 +1171,67 @@ msgid "Video index"
 msgstr "Index vidéo"
 
 #: templates/teleforma/seminar_testimonial.html:28
+#: templates/teleforma/testimonials.html:63
 msgid "Training testimonial"
 msgstr "Attestation de formation"
 
 #: templates/teleforma/seminar_testimonial.html:34
+#: templates/teleforma/seminar_testimonial_knowledge.html:34
 msgid "Last name"
 msgstr "Nom"
 
 #: templates/teleforma/seminar_testimonial.html:35
+#: templates/teleforma/seminar_testimonial_knowledge.html:35
 msgid "First name"
 msgstr "Prénom"
-
-#: templates/teleforma/seminar_testimonial.html:37
-msgid "Sujet"
-msgstr ""
 
 #: templates/teleforma/seminar_testimonial.html:39
 msgid "Training type"
 msgstr "Type de formation"
 
 #: templates/teleforma/seminar_testimonial.html:40
+#: templates/teleforma/seminar_testimonial_knowledge.html:39
 #: templates/teleforma/inc/media_package_list.html:38
 msgid "Duration"
 msgstr "Durée"
 
 #: templates/teleforma/seminar_testimonial.html:40
+#: templates/teleforma/seminar_testimonial_knowledge.html:39
+#: templates/teleforma/seminar_testimonial_payback.html:95
 #: templates/teleforma/inc/seminar_description.html:12
 msgid "hours"
 msgstr "heures"
 
 #: templates/teleforma/seminar_testimonial.html:41
+#: templates/teleforma/seminar_testimonial_knowledge.html:41
 msgid "Training begin date"
 msgstr "Date de début de formation"
 
 #: templates/teleforma/seminar_testimonial.html:42
+#: templates/teleforma/seminar_testimonial_knowledge.html:44
 msgid "Training end date"
 msgstr "Date de fin de formation"
+
+#: templates/teleforma/seminar_testimonial_knowledge.html:28
+#: templates/teleforma/testimonials.html:69
+msgid "Knowledge validation testimonial"
+msgstr "Attestation de validation des acquis"
+
+#: templates/teleforma/seminar_testimonial_knowledge.html:40
+msgid "Validation mode of the training"
+msgstr "Mode de validation des acquis de la formation"
+
+#: templates/teleforma/seminar_testimonial_knowledge.html:40
+msgid "Reply to questions"
+msgstr "Réalisation de consultations juridiques fictives"
+
+#: templates/teleforma/seminar_testimonial_knowledge.html:42
+msgid "Knowledge validation dates"
+msgstr "Date de validation des acquis"
+
+#: templates/teleforma/seminar_testimonial_payback.html:90
+msgid "until"
+msgstr "au"
 
 #: templates/teleforma/seminars.html:116
 msgid "Access"
@@ -1208,28 +1242,36 @@ msgstr "Accéder"
 msgid "Testimonials"
 msgstr "Attestations"
 
-#: templates/teleforma/testimonials.html:56
+#: templates/teleforma/testimonials.html:64
+#: templates/teleforma/testimonials.html:70
+#: templates/teleforma/testimonials.html:76
+#: templates/teleforma/inc/question_list.html:16
+msgid "validated on"
+msgstr "validée le"
+
+#: templates/teleforma/testimonials.html:75
+msgid "Payback testimonial"
+msgstr "Attestation de présence et de règlement"
+
+#: templates/teleforma/testimonials.html:86
+msgid "No testimonial"
+msgstr "Aucune attestation"
+
 #: templates/teleforma/inc/answer_list.html:12
 #: templates/telemeta/profile_detail.html:58
 #: templates/telemeta/inc/user_list.html:19
 msgid "Last Name"
-msgstr ""
+msgstr "Nom"
 
-#: templates/teleforma/testimonials.html:57
 #: templates/teleforma/inc/answer_list.html:13
 #: templates/telemeta/profile_detail.html:57
 #: templates/telemeta/inc/user_list.html:20
 msgid "First Name"
-msgstr ""
+msgstr "Prénom"
 
-#: templates/teleforma/testimonials.html:59
 #: templates/teleforma/inc/answer_list.html:15
 msgid "Date submitted"
 msgstr "date de soumission"
-
-#: templates/teleforma/testimonials.html:77
-msgid "No testimonial"
-msgstr "Aucune attestation"
 
 #: templates/teleforma/inc/answer_list.html:16
 msgid "Summary"
@@ -1286,10 +1328,6 @@ msgstr "soumise le"
 #: templates/teleforma/inc/question_list.html:14
 msgid "saved on"
 msgstr "enregistrée le"
-
-#: templates/teleforma/inc/question_list.html:16
-msgid "validated on"
-msgstr "validée le"
 
 #: templates/teleforma/inc/question_list.html:21
 #: templates/teleforma/inc/question_step.html:12
@@ -1686,7 +1724,7 @@ msgstr ""
 "Vous n'avez PAS accès à cette ressource et avez donc été redirigé vers votre "
 "bureau."
 
-#: views/pro.py:137
+#: views/pro.py:136
 msgid ""
 "You have successfully terminated your e-learning seminar. A training "
 "testimonial will be available as soon as the pedagogical team validate all "
@@ -1696,7 +1734,7 @@ msgstr ""
 "formation vous sera délivrée dès que vos réponses aux consultations fictives "
 "auront été validées par notre équipe pédagogique (48h maximum)."
 
-#: views/pro.py:139
+#: views/pro.py:138
 msgid ""
 "All your answers have been validated. You can now read the corrected "
 "documents (step 5)."
@@ -1704,7 +1742,7 @@ msgstr ""
 "Toutes vos consultations fictives ont été validées. Auto évaluez-vous à "
 "l’aide du corrigé type des consultations fictives (étape 5)"
 
-#: views/pro.py:141
+#: views/pro.py:140
 msgid ""
 "You have successfully terminated all steps of your e-learning seminar. You "
 "can now download your training testimonial below."
@@ -1712,34 +1750,37 @@ msgstr ""
 "Vous avez achevé toutes les étapes de votre formation. Vous pouvez désormais "
 "télécharger votre attestation de formation ci-dessous."
 
-#: views/pro.py:185
+#: views/pro.py:184
 msgid "You have successfully saved your answer."
 msgstr "Vous avez enregistré votre consultation avec succès."
 
-#: views/pro.py:187
+#: views/pro.py:186
 msgid "You have successfully submitted your answer."
 msgstr ""
 "Vous avez soumis votre consultation avec succès. Vous recevrez un message "
 "dès que celle-ci aura été validée par notre équipe pédagogique (48 heures "
 "ouvrées maximum)."
 
-#: views/pro.py:193
+#: views/pro.py:192
 msgid "Your submission has not been saved correctly. Please try again."
 msgstr ""
 "Votre consultation n'a pas été enregistrée correctement, veuillez réessayer "
 "s'il vous plaît."
 
-#: views/pro.py:329
+#: views/pro.py:328
 msgid "all your answers has been validated"
 msgstr "toutes vos consultations ont été validées"
 
-#: views/pro.py:385
+#: views/pro.py:384
 msgid "validation conditions for an answer"
 msgstr "conditions de validation d'une consultation"
 
-#: views/pro.py:502
+#: views/pro.py:501
 msgid "You have successfully submitted your evaluation"
 msgstr "Vous avez soumis votre évaluation avec succès"
+
+#~ msgid "Remote presence testimonial"
+#~ msgstr "Attestation de suivi à distance"
 
 #~ msgid "Subtitle"
 #~ msgstr "Sous-titre"

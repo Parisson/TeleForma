@@ -50,29 +50,38 @@
 {% autopaginate object_list %}
 {% paginate %}
 
-<div id="users">
-  <table class="listing" width="100%">
-   <thead>
-   <tr><th>{% trans "Last Name"%}</th>
-    <th>{% trans "First Name"%}</th>
-    <th>{% trans "Seminar"%}</th>
-    <th>{% trans "Date submitted"%}</th>
-    <th>{% trans "Download"%}</th>
-    </tr>
-    </thead>
+ {% for testimonial in object_list %}
+  <div class="course_content">
+    <div class="course_subtitle">
+      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Seminar" %} : {% if testimonial.seminar %}{{ testimonial.seminar.title }}{% else %}{{ testimonial.title }}{% endif %}</h3>
+    </div>
+
+   <table class="listing" width="100%">
     <tbody id="spacing">
-    {% for testimonial in object_list %}
+
     <tr>
-     <td>{{ testimonial.user.last_name }}</td>
-     <td>{{ testimonial.user.first_name }}</td>
-     <td>{% if testimonial.seminar %}{{ testimonial.seminar.title }}{% else %}{{ testimonial.title }}{% endif %}</td>
-     <td>{{ testimonial.date_added }}</td>
+     <td><a href="{% url teleforma-seminar-testimonial testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Training testimonial" %}</a></td>
+     <td>{% trans "validated on" %} {{ testimonial.date_added }}</td>
      <td><a href="{% url teleforma-seminar-testimonial-download testimonial.seminar.id %}?format=pdf"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
     </tr>
-    {% endfor %}
+
+    <tr>
+     <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Knowledge validation testimonial" %}</a></td>
+     <td>{% trans "validated on" %} {{ testimonial.date_added }}</td>
+     <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
+    </tr>
+
+    <tr>
+     <td><a href="{% url teleforma-seminar-testimonial-payback testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Payback testimonial" %}</td>
+     <td>{% trans "validated on" %} {{ testimonial.date_added }}</td>
+     <td><a href="{% url teleforma-seminar-testimonial-payback testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
+    </tr>
+
     </tbody>
-  </table>
-</div>
+   </table>
+  </div>
+ {% endfor %}
+
  {% else %}
     <p class="help">{% trans "No testimonial" %}</p>
  {% endif %}
