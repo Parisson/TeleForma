@@ -243,7 +243,10 @@ def validated(question, user):
 
 @register.filter
 def summary(text, N):
-    return text[:N] + '...'
+    t = text[:N]
+    if not ' ' in t:
+        t = text[:N/2]
+    return t + '...'
 
 @register.filter
 def progress(seminar, user):
