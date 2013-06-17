@@ -314,4 +314,7 @@ def untreated_answer_count():
 
 @register.filter
 def integer(value):
-    return int(value)
+    if isinstance(value, str):
+        return int(value)
+    else:
+        return ''
