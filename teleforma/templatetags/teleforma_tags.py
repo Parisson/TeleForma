@@ -317,4 +317,4 @@ def integer(value):
     if isinstance(value, str):
         return int(value)
     else:
-        return ''
+        return 0
