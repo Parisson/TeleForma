@@ -248,11 +248,11 @@ class Conference(Model):
     def __unicode__(self):
         return self.description
 
-    def save(self, **kwargs):
-        super(Conference, self).save(**kwargs)
+    def save(self, *args, **kwargs):
         if not self.public_id:
             self.public_id = get_random_hash()
         self.course.save()
+        super(Conference, self).save(*args, **kwargs)
 
     def to_dict(self):
         dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},

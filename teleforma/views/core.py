@@ -394,14 +394,7 @@ class ConferenceView(DetailView):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
 
-class ConferenceListView(ListView):
-
-    model = Conference
-    template_name='teleforma/conferences.html'
-
-    def get_queryset(self):
-        conferences = Conference.objects.all()
-        return conferences
+class ConferenceListView(View):
 
     @jsonrpc_method('teleforma.get_conference_list')
     def get_conference_list(request):
@@ -415,12 +408,25 @@ class ConferenceListView(ListView):
             url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
 
         s = ServiceProxy(url)
-        result = s.teleforma.get_conference_list()
-        for conf_dict in result['result']:
+        remote_list = s.teleforma.get_conference_list()
+        for conf_dict in remote_list['result']:
             conference = Conference.objects.filter(public_id=conf_dict['id'])
             if not conference:
                 conference = Conference()
                 conference.from_json_dict(conf_dict)
+
+    def push(request, host=None):
+        if not host:
+            host = settings.TELECASTER_MASTER_SERVER
+        url = 'http://' + host + '/json/'
+
+        s = ServiceProxy(url)
+        remote_list = s.teleforma.get_conference_list()['result']
+        remote_ids = [conf['id'] for conf in remote_list]
+
+        for conference in Conference.objects.all():
+            if not conference.public_id in remote_ids and conference.date_end:
+                s.teleforma.create_conference(conference.to_json_dict())
 
 
 class ConferenceRecordView(FormView):
