@@ -408,8 +408,12 @@ class ConferenceListView(ListView):
         conferences = Conference.objects.all()
         return [c.to_json_dict() for c in conferences]
 
-    def pull(request):
-        url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+
         s = ServiceProxy(url)
         result = s.teleforma.get_conference_list()
         for conf_dict in result['result']:
