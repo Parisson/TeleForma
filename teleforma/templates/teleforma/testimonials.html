@@ -61,19 +61,19 @@
 
     <tr>
      <td><a href="{% url teleforma-seminar-testimonial testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Training testimonial" %}</a></td>
-     <td>{% trans "validated on" %} {{ testimonial.date_added|date:'j F Y'  }}</td>
+     <td>{% trans "validated on" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}</td>
      <td><a href="{% url teleforma-seminar-testimonial-download testimonial.seminar.id %}?format=pdf"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
     </tr>
 
     <tr>
      <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Knowledge validation testimonial" %} ({% trans "only to have support of the training costs" %})</a></td>
-     <td>{% trans "validated on" %} {{ testimonial.date_added|date:'j F Y'  }}</td>
+     <td>{% trans "validated on" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}</td>
      <td><a href="{% url teleforma-seminar-testimonial-knowledge testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
     </tr>
 
     <tr>
      <td><a href="{% url teleforma-seminar-testimonial-payback testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" /> {% trans "Payback testimonial" %} ({% trans "only to have support of the training costs" %})</td>
-     <td>{% trans "validated on" %} {{ testimonial.date_added|date:'j F Y'  }}</td>
+     <td>{% trans "validated on" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}</td>
      <td><a href="{% url teleforma-seminar-testimonial-payback testimonial.seminar.id %}?format=pdf" target="_blank"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a></td>
     </tr>
 
