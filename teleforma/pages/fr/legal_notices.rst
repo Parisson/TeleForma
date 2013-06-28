@@ -54,10 +54,11 @@ Mentions Légales
 
 **Hébergeur**
 
- | La plateforme e-learning.pro-barreau.com est conçu et hébergé par :
+ | Plateforme E-learning basée sur TeleForma conçue et hébergée par :
 
  | Parisson SARL
  | 16, rue Jacques Louvel-Tessier
  | 75010 Paris
  | e-mail : contact@parisson.com
  | site : `parisson.com <http://parisson.com>`_
+
