@@ -87,7 +87,7 @@
 
 
 <div id="dates">
-  {{ first_revision.date|date:'j F Y' }} {% trans "until" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
+  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'j F Y' }}{% else %}{{ first_revision.date|date:'j F Y' }}{% endif %} {% trans "until" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
 </div>
 
 
