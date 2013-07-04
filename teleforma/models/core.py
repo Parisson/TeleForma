@@ -159,7 +159,7 @@ class Course(Model):
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return self.title
+        return self.code
 
     @property
     def slug(self):
@@ -180,11 +180,12 @@ class Professor(Model):
                                         blank=True, null=True)
 
     def __unicode__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+        return self.user.last_name + ' ' + self.user.first_name[0] + '.'
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
         verbose_name = _('professor')
+        ordering = ['user__last_name']
 
 
 class Room(Model):

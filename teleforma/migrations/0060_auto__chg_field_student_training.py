@@ -23,7 +23,7 @@ class Migration(SchemaMigration):
         # Changing field 'Student.training'
         db.alter_column('teleforma_student', 'training_id', self.gf('telemeta.models.core.ForeignKey')(on_delete=models.SET_NULL, to=orm['teleforma.Training'], null=True))
 
-
+        # http://blog.klymyshyn.com/2010/12/django-model-migrations-with-south-how.html
         if not db.dry_run:
             from teleforma.models import Student, Training
             for student in orm.Student.objects.all():
