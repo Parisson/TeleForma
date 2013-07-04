@@ -20,7 +20,7 @@
     {% with usr|user_courses as courses %}
      {% for c in courses %}
        {% with c.course as course %}
-       <li>{{ course.title}} {{ course.type }}</li>
+       <li><a href="#">{{ course.title}} {{ course.type }}</a></li>
        {% endwith %}
      {% endfor %}
     {% endwith %}
@@ -60,14 +60,9 @@
       <dt>{% trans "Last Name" %}</dt><dd>{{ usr.last_name }}</dd>
       <dt>{% trans "Username" %}</dt><dd>{{ usr.username }}</dd>
 
-      {% if usr.crfpa_student.get %}
-        {% if user.is_staff %}
-        <dt>{% trans "IEJ" %}</dt><dd><a href="{% url teleforma-iej-users usr.student.get.iej.id %}">{{ usr.student.get.iej }}</a></dd>
-        <dt>{% trans "Training" %}</dt><dd><a href="{% url teleforma-training-users usr.student.get.training.id %}">{{ usr.student.get.training }}</a></dd>
-        {% else %}
+      {% if usr.student.get %}
         <dt>{% trans "IEJ" %}</dt><dd>{{ usr.student.get.iej }}</dd>
-        <dt>{% trans "Training" %}</dt><dd>{{ usr.student.get.training }}</dd>
-        {% endif %}
+        <dt>{% trans "Trainings" %}</dt><dd>{% for training in usr.student.get.trainings.all %}{{ training }}<br />{% endfor %}</dd>
         <dt>{% trans "Platform only" %}</dt><dd>{{ usr.student.get.platform_only|yes_no }}</dd>
         <dt>{% trans "Procedure"%}</dt><dd>{{ usr.student.get.procedure}}</dd>
         <dt>{% trans "Oral spe"%}</dt><dd>{{ usr.student.get.oral_speciality }}</dd>

@@ -43,7 +43,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
         return courses
 
     professor = user.professor.all()
-    student = user.crfpa_student.all()
+    student = user.student.all()
 
     if professor:
         professor = user.professor.get()
@@ -51,7 +51,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
                                   types=CourseType.objects.all())
 
     elif student:
-        student = user.crfpa_student.get()
+        student = user.student.get()
         for training in student.trainings.all():
             if training.period == period:
                 break
@@ -151,7 +151,7 @@ class UsersTrainingView(UsersView):
 
     def get_queryset(self):
         self.training = Training.objects.filter(id=self.args[0])
-        return User.objects.filter(crfpa_student__trainings__in=self.training).order_by('last_name')
+        return User.objects.filter(student__trainings__in=self.training).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)
@@ -166,7 +166,7 @@ class UsersIejView(UsersView):
 
     def get_queryset(self):
         self.iej = IEJ.objects.filter(id=self.args[0])
-        return User.objects.filter(crfpa_student__iej__in=self.iej).order_by('last_name')
+        return User.objects.filter(student__iej__in=self.iej).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersIejView, self).get_context_data(**kwargs)
@@ -309,7 +309,7 @@ class AnnalsView(ListView):
     student = None
 
     def get_docs(self, iej=None, course=None):
-        students = self.user.crfpa_student.all()
+        students = self.user.student.all()
         annals = {}
         courses = [c['course'] for c in self.all_courses]
 

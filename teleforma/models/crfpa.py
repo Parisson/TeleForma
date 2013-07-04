@@ -105,14 +105,14 @@ class Training(Model):
 
 class Student(Model):
 
-    user            = ForeignKey(User, related_name='crfpa_student', verbose_name=_('user'), unique=True)
+    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
     #period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
     #                             blank=True, null=True)
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     #training        = ForeignKey('Training', related_name='student', verbose_name=_('training'),
     #                             blank=True, null=True, on_delete=models.SET_NULL)
-    trainings       = ManyToManyField('Training', related_name='student_profile', verbose_name=_('trainings'),
+    trainings       = ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
     platform_only   = BooleanField(_('platform only'))
     procedure       = ForeignKey('Course', related_name="procedure",
