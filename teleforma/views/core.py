@@ -99,14 +99,14 @@ def format_courses(courses, course=None, queryset=None, types=None):
     return courses
 
 
-def get_courses(user, date_order=False, num_order=False, num_courses=False):
+def get_courses(user, date_order=False, num_order=False, num_courses=False, period=None):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
-        return get_crfpa_courses(user, date_order, num_order)
+        return get_crfpa_courses(user, date_order, num_order, period)
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
-        return get_ae_courses(user, date_order, num_order)
+        return get_ae_courses(user, date_order, num_order, period)
 
 
 def stream_from_file(__file):
@@ -175,6 +175,19 @@ def get_periods(user):
     return periods
 
 
+class HomeRedirectView(View):
+
+    def get(self, request):
+        if request.user.is_authenticated():
+            periods = get_periods(request.user)
+            if len(periods) > 1:
+                return HttpResponseRedirect(reverse('teleforma-desk-period', kwargs={'period_id': periods[0].id}))
+            else:
+                return HttpResponseRedirect(reverse('teleforma-desk'))
+        else:
+            return HttpResponseRedirect(reverse('teleforma-login'))
+
+
 class CourseView(DetailView):
 
     model = Course
@@ -194,7 +207,6 @@ class CourseView(DetailView):
         context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
-        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -217,12 +229,25 @@ class CoursesView(ListView):
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
         context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
-        context['periods'] = get_periods(self.request.user)
+        context['period'] = get_periods(self.request.user)[0]
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CoursesView, self).dispatch(*args, **kwargs)
+
+
+class PeriodView(CoursesView):
+
+    def get_queryset(self):
+        self.period = Period.objects.get(id=int(self.kwargs['period_id']))
+        self.all_courses = get_courses(self.request.user, date_order=True, period=self.period)
+        return self.all_courses[:5]
+
+    def get_context_data(self, **kwargs):
+        context = super(PeriodView, self).get_context_data(**kwargs)
+        context['period'] = self.period
+        return context
 
 
 class MediaView(DetailView):

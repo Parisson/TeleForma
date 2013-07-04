@@ -9,7 +9,7 @@
 </div>
     <table class="listing" width="100%">
     <tbody>
-        {% for media in course.media.all|from_course_type:type|from_periods:periods %}
+        {% for media in course.media.all|from_course_type:type|from_period:period %}
          {% if media.is_published or user.is_staff %}
           {% if media.type == 'webm' %}
             <tr>

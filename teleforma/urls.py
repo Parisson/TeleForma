@@ -48,18 +48,24 @@ document = DocumentView()
 media = MediaView()
 
 urlpatterns = patterns('',
-#    url(r'^$', HomeView.as_view(), name='teleforma-home'),
-    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
-        name="teleforma-login"),
 
-    # Telemeta
-    url(r'^', include('telemeta.urls')),
+
+    # login
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+        name="teleforma-login"),
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
 
+    # Home
+    url(r'^$', HomeRedirectView.as_view(), name="teleforma-home"),
+
+    # Telemeta
+    url(r'^', include('telemeta.urls')),
+
     # Desk
     url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
+    url(r'^desk/periods/(?P<period_id>.*)/$', PeriodView.as_view(), name="teleforma-desk-period"),
     url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
 
     url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
@@ -107,18 +113,6 @@ urlpatterns = patterns('',
     url(r'^users/by_course/(\w+)/$', UsersCourseView.as_view(), name="teleforma-course-users"),
     url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course,
         name="teleforma-course-users-export"),
-
-
-# CSS+Images (FIXME: for developement only)
-    url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'css'},
-        name="teleforma-css"),
-    url(r'images/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'images'},
-        name="teleforma-images"),
-    url(r'^js/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'js'},
-        name="teleforma-js"),
 
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
