@@ -140,7 +140,7 @@ class UserLoginView(View):
         backend = get_backends()[0]
         user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
         login(self.request, user)
-        return redirect('teleforma-desk')
+        return redirect('teleforma-home')
 
     @method_decorator(permission_required('is_staff'))
     def dispatch(self, *args, **kwargs):
