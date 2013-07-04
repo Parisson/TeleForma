@@ -156,7 +156,7 @@ def get_periods(user):
         student = user.crfpa_student.all()
         if student:
             student = user.crfpa_student.get()
-            periods = student.period.all()
+            periods = [training.period for training in student.trainings.all()]
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         student = user.ae_student.all()

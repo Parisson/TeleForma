@@ -52,31 +52,35 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     elif student:
         student = user.crfpa_student.get()
-        s_courses = {student.procedure:student.training.procedure,
-                           student.written_speciality:student.training.written_speciality,
-                           student.oral_speciality:student.training.oral_speciality,
-                           student.oral_1:student.training.oral_1,
-                           student.oral_2:student.training.oral_2,
-                           student.options:student.training.options,
+        for training in student.trainings.all():
+            if training.period == period:
+                break
+
+        s_courses = {student.procedure:training.procedure,
+                           student.written_speciality:training.written_speciality,
+                           student.oral_speciality:training.oral_speciality,
+                           student.oral_1:training.oral_1,
+                           student.oral_2:training.oral_2,
+                           student.options:training.options,
                         }
 
         for course in s_courses:
             courses = format_courses(courses, course=course,
                                types=s_courses[course])
 
-        synthesis_note = student.training.synthesis_note
+        synthesis_note = training.synthesis_note
         if synthesis_note:
             courses = format_courses(courses,
                             queryset=Course.objects.filter(synthesis_note=True),
                             types=synthesis_note)
 
-        obligation = student.training.obligation
+        obligation = training.obligation
         if obligation:
             courses = format_courses(courses,
                             queryset=Course.objects.filter(obligation=True),
                             types=obligation)
 
-        magistral = student.training.magistral
+        magistral = training.magistral
         if magistral:
             courses = format_courses(courses,
                             queryset=Course.objects.filter(magistral=True),
