@@ -151,7 +151,7 @@ class UsersTrainingView(UsersView):
 
     def get_queryset(self):
         self.training = Training.objects.filter(id=self.args[0])
-        return User.objects.filter(crfpa_student__training__in=self.training).order_by('last_name')
+        return User.objects.filter(crfpa_student__trainings__in=self.training).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersTrainingView, self).get_context_data(**kwargs)

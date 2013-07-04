@@ -17,7 +17,7 @@
 <ul>
 {% block trainings %}
 {% for training in trainings %}
-<li><a href="{% url teleforma-training-users training.id %}">{{ training.code|lower|capfirst }}</a></li>
+<li><a href="{% url teleforma-training-users training.id %}">{{ training.code|lower|capfirst }} - {{ training.period|lower|capfirst }}</a></li>
 {% endfor %}
 {% endblock trainings %}
 </ul>
