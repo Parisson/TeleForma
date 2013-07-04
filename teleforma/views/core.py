@@ -180,10 +180,7 @@ class HomeRedirectView(View):
     def get(self, request):
         if request.user.is_authenticated():
             periods = get_periods(request.user)
-            if len(periods) > 1:
-                return HttpResponseRedirect(reverse('teleforma-desk-period', kwargs={'period_id': periods[0].id}))
-            else:
-                return HttpResponseRedirect(reverse('teleforma-desk'))
+            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 
@@ -207,11 +204,20 @@ class CourseView(DetailView):
         context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
+        context['course_view'] = True
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
+
+
+class PeriodCourseView(CourseView):
+
+    def get_context_data(self, **kwargs):
+        context = super(PeriodCourseView, self).get_context_data(**kwargs)
+        context['period'] = Period.objects.get(id=int(self.kwargs['period_id']))
+        return context
 
 
 class CoursesView(ListView):
@@ -237,7 +243,7 @@ class CoursesView(ListView):
         return super(CoursesView, self).dispatch(*args, **kwargs)
 
 
-class PeriodView(CoursesView):
+class PeriodListView(CoursesView):
 
     def get_queryset(self):
         self.period = Period.objects.get(id=int(self.kwargs['period_id']))
@@ -245,7 +251,7 @@ class PeriodView(CoursesView):
         return self.all_courses[:5]
 
     def get_context_data(self, **kwargs):
-        context = super(PeriodView, self).get_context_data(**kwargs)
+        context = super(PeriodListView, self).get_context_data(**kwargs)
         context['period'] = self.period
         return context
 

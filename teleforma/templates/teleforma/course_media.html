@@ -83,7 +83,7 @@ $(document).ready(function(){
         {% endif %}
     </div>
 
-    <a href="{% url teleforma-course-detail course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
+    <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
 
 </div>
 
@@ -130,7 +130,7 @@ $(document).ready(function(){
 <dl class="listing">
 
 {% if media.conference %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
+<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
 {% if media.conference.professor %}
 <dt>{% trans "Professor" %}</dt>

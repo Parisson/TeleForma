@@ -91,12 +91,12 @@ alt="logo" />
     <li><a href="#desk#" class="red">&nbsp;{% trans "Desk" %}&nbsp;</a>
       <ul>
        {% for period in periods %}
-        <li><a href="{% url teleforma-desk-period period.id %}" class="red">{{ period.name }}</a></li>
+        <li><a href="{% url teleforma-desk-period-list period.id %}" class="red">{{ period.name }}</a></li>
        {% endfor %}
       </ul>
     </li>
   {% else %}
-   <li><a href="{% url teleforma-desk %}" class="red">{% trans "Desk" %}</a></li>
+   <li><a href="{% url teleforma-desk-period-list period.id %}" class="red">{% trans "Desk" %}</a></li>
   {% endif %}
 
  {% else %}

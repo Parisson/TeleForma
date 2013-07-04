@@ -12,7 +12,7 @@ $(document).ready(function(){
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}

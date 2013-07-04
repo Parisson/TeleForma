@@ -63,41 +63,44 @@ urlpatterns = patterns('',
     # Telemeta
     url(r'^', include('telemeta.urls')),
 
-    # Desk
+    # Desk (no periods)
     url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
-    url(r'^desk/periods/(?P<period_id>.*)/$', PeriodView.as_view(), name="teleforma-desk-period"),
-    url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
+    url(r'^desk/course/(?P<pk>.*)/list/$', CourseView.as_view(), name="teleforma-course-detail"),
 
-    url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
-    url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+    # Desk (with periods)
+    url(r'^desk/period/(?P<period_id>.*)/list/$', PeriodListView.as_view(), name="teleforma-desk-period-list"),
+    url(r'^desk/period/(?P<period_id>.*)/course/(?P<pk>.*)/$', PeriodCourseView.as_view(),
+        name="teleforma-desk-period-course"),
 
-    url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
+    url(r'^desk/media/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^desk/media/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+
+    url(r'^desk/document/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),
-    url(r'^desk/documents/(?P<pk>.*)/download/$', document.download,
+    url(r'^desk/document/(?P<pk>.*)/download/$', document.download,
         name="teleforma-document-download"),
-    url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
+    url(r'^desk/document/(?P<pk>.*)/view/$', document.view,
         name="teleforma-document-view"),
 
     url(r'^archives/annals/$', AnnalsView.as_view(), name="teleforma-annals"),
     url(r'^archives/annals/by-iej/(\w+)/$', AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
     url(r'^archives/annals/by-course/(\w+)/$', AnnalsCourseView.as_view(), name="teleforma-annals-course"),
 
-    url(r'^desk/conferences/(?P<pk>.*)/video/$',
-        ConferenceView.as_view(),
-        name="teleforma-conference-detail"),
-    url(r'^desk/conferences/(?P<pk>.*)/audio/$',
+    url(r'^desk/conference/(?P<pk>.*)/video/$',
+        ConferenceView.as_view(), name="teleforma-conference-detail"),
+    url(r'^desk/conference/(?P<pk>.*)/audio/$',
         ConferenceView.as_view(template_name="teleforma/course_conference_audio.html"),
         name="teleforma-conference-audio"),
     url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
         name="teleforma-conference-record"),
-    url(r'^desk/conferences/$', ConferenceListView.as_view(),
+    url(r'^desk/conference/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),
 
     # Users
-    url(r'^users/$', UsersView.as_view(), name="teleforma-users"),
+    url(r'^users/all/$', UsersView.as_view(), name="teleforma-users"),
     url(r'^users/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),

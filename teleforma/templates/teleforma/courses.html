@@ -20,13 +20,13 @@ $(document).ready(function(){
 {% block modules %}
 <div class="module">
 
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+<h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}
@@ -71,7 +71,7 @@ $(document).ready(function(){
       {% for type in c.types %}
       <div class="course">
         <div class="course_title">
-         <a href="{% url teleforma-course-detail course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
+         <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
         </div>
 
         {% block conference %}

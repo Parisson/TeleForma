@@ -13,14 +13,14 @@
   {% block modules %}
 
     <div class="module">
-    <h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
+    <h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
     <div style="background: white;">
     <ul>
     {% block courses %}
     {% with usr|user_courses as courses %}
      {% for c in courses %}
        {% with c.course as course %}
-       <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title}} {{ course.type }}</a></li>
+       <li>{{ course.title}} {{ course.type }}</li>
        {% endwith %}
      {% endfor %}
     {% endwith %}
@@ -60,7 +60,7 @@
       <dt>{% trans "Last Name" %}</dt><dd>{{ usr.last_name }}</dd>
       <dt>{% trans "Username" %}</dt><dd>{{ usr.username }}</dd>
 
-      {% if usr.student.get %}
+      {% if usr.crfpa_student.get %}
         {% if user.is_staff %}
         <dt>{% trans "IEJ" %}</dt><dd><a href="{% url teleforma-iej-users usr.student.get.iej.id %}">{{ usr.student.get.iej }}</a></dd>
         <dt>{% trans "Training" %}</dt><dd><a href="{% url teleforma-training-users usr.student.get.training.id %}">{{ usr.student.get.training }}</a></dd>
