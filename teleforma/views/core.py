@@ -197,7 +197,6 @@ class CourseView(DetailView):
         context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
-        context['course_view'] = True
         return context
 
     @method_decorator(login_required)
@@ -228,7 +227,6 @@ class CoursesView(ListView):
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
         context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
-        context['period'] = get_periods(self.request.user)[0]
         return context
 
     @method_decorator(login_required)
@@ -246,6 +244,7 @@ class PeriodListView(CoursesView):
     def get_context_data(self, **kwargs):
         context = super(PeriodListView, self).get_context_data(**kwargs)
         context['period'] = self.period
+        context['list_view'] = True
         return context
 
 
