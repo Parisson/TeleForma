@@ -11,6 +11,7 @@ import codecs
 import xlrd
 import datetime
 
+
 class Command(BaseCommand):
     help = "Import users from a XLS file (see an example in example/data/"
     args = "path period_name"
@@ -60,9 +61,9 @@ class Command(BaseCommand):
 
         users = User.objects.filter(username=username)
 
-        if users and self.DEBUG:
-            for user in users:
-                user.delete()
+        # if users and self.DEBUG:
+        #     for user in users:
+        #         user.delete()
 
         i = 1
         while users:
@@ -78,31 +79,30 @@ class Command(BaseCommand):
 
         user, created = User.objects.get_or_create(username=username, first_name=first_name,
                                      last_name=last_name, email=email, date_joined = date_joined)
-
         if created:
-            student = Student.objects.filter(user=user)
-            if student:
-                student.delete()
             student = Student(user=user)
-            student.platform_only, student.training = self.get_training(row[3].value)
-            student.iej = self.get_iej(row[2].value)
-            student.save()
+            print 'import: ' + first_name + ' ' + last_name + ' ' + username
 
-            student.period = Period.objects.filter(name=self.period_name)
-            student.procedure = self.get_courses(row[4].value)
-            student.written_speciality = self.get_courses(row[5].value)
-            student.oral_speciality = self.get_courses(row[6].value)
-            student.oral_1 = self.get_courses(row[7].value)
-            student.oral_2 = self.get_courses(row[8].value)
+        else:
+            student = Student.objects.filter(user=user)
+            print 'update: ' + first_name + ' ' + last_name + ' ' + username
 
-            profile, created = Profile.objects.get_or_create(user=user)
-            profile.address = row[10].value
-            profile.postal_code = row[11].value
-            profile.city = row[12].value
-            profile.telephone = row[13].value
-            profile.save()
-            student.save()
-            print 'imported: ' + first_name + ' ' + last_name + ' ' + username
+        student.platform_only, training = self.get_training(row[3].value)
+        student.training.add(training)
+        student.iej = self.get_iej(row[2].value)
+        student.procedure = self.get_courses(row[4].value)
+        student.written_speciality = self.get_courses(row[5].value)
+        student.oral_speciality = self.get_courses(row[6].value)
+        student.oral_1 = self.get_courses(row[7].value)
+        student.oral_2 = self.get_courses(row[8].value)
+        student.save()
+
+        profile, created = Profile.objects.get_or_create(user=user)
+        profile.address = row[10].value
+        profile.postal_code = row[11].value
+        profile.city = row[12].value
+        profile.telephone = row[13].value
+        profile.save()
 
     def handle(self, *args, **options):
         file = args[0]
