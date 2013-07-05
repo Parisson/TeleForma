@@ -204,13 +204,26 @@ class CourseView(DetailView):
         return super(CourseView, self).dispatch(*args, **kwargs)
 
 
-class PeriodCourseView(CourseView):
+class PeriodAccessMixin(object):
+
+    def render_to_response(self, context):
+        period = context['period']
+        if not period in get_periods(self.request.user):
+            messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
+            return redirect('teleforma-home')
+        return super(PeriodAccessMixin, self).render_to_response(context)
+
+
+class PeriodCourseView(PeriodAccessMixin, CourseView):
 
     def get_context_data(self, **kwargs):
         context = super(PeriodCourseView, self).get_context_data(**kwargs)
-        context['period'] = Period.objects.get(id=int(self.kwargs['period_id']))
+        self.period = None
+        period = Period.objects.filter(id=int(self.kwargs['period_id']))
+        if period:
+            self.period = period[0]
+        context['period'] = self.period
         return context
-
 
 class CoursesView(ListView):
 
@@ -234,10 +247,14 @@ class CoursesView(ListView):
         return super(CoursesView, self).dispatch(*args, **kwargs)
 
 
-class PeriodListView(CoursesView):
+class PeriodListView(PeriodAccessMixin, CoursesView):
 
     def get_queryset(self):
-        self.period = Period.objects.get(id=int(self.kwargs['period_id']))
+        self.period = None
+        period = Period.objects.filter(id=int(self.kwargs['period_id']))
+        if period:
+            self.period = period[0]
+
         self.all_courses = get_courses(self.request.user, date_order=True, period=self.period)
         return self.all_courses[:5]
 

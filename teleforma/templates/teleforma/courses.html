@@ -65,7 +65,9 @@ $(document).ready(function(){
 
 
 {% block course %}
+
 <div class="desk_center">
+
     {% for c in object_list %}
      {% with c.course as course %}
       {% for type in c.types %}
