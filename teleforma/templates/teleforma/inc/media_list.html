@@ -2,7 +2,7 @@
 {% load thumbnail %}
 {% load i18n %}
 
-{% if course.media.all|from_course_type:type %}
+{% if course.media.all|from_course_type:type|from_period:period %}
 <div class="course_content">
 <div class="course_subtitle">
     <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Passed conferences"%}</h3>

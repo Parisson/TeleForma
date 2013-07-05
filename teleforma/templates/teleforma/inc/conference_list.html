@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% with course.conference.all|from_course_type:type as conferences %}
-{% if conferences %}
+{% if conferences|from_period:period %}
 <div class="course_content">
 <div class="course_subtitle">
     <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
