@@ -34,7 +34,7 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
-            student = user.crfpa_student.all()
+            student = user.student.all()
             professor = user.professor.all()
             if student or professor:
                 if profile and user.is_active:
