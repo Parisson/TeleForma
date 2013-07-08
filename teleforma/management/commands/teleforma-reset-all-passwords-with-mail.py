@@ -44,7 +44,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         log_file = args[-1]
         logger = Logger(log_file)
-        logger.logger.info('Processing...')
+        logger.logger.info('########### Processing #############')
 
         users = User.objects.all()
         translation.activate(self.language_code)
@@ -59,6 +59,6 @@ class Command(BaseCommand):
                         self.init_password_email(user)
                         profile.init_password = True
                         profile.save()
-                        logger.logger.info(user.username)
+                        logger.logger.info('add : ' + user.username)
 
-        logger.logger.info('Done')
+        logger.logger.info('############## Done #################')
