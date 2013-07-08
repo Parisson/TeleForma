@@ -59,6 +59,6 @@ class Command(BaseCommand):
                         self.init_password_email(user)
                         profile.init_password = True
                         profile.save()
-                        logger.logger.info('add : ' + user.username)
+                        logger.logger.info('init : ' + user.username)
 
         logger.logger.info('############## Done #################')
