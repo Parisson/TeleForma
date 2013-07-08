@@ -44,6 +44,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         log_file = args[-1]
         logger = Logger(log_file)
+        logger.logger.info('Processing...')
 
         users = User.objects.all()
         translation.activate(self.language_code)
@@ -60,3 +61,4 @@ class Command(BaseCommand):
                         profile.save()
                         logger.logger.info(user.username)
 
+        logger.logger.info('Done')
