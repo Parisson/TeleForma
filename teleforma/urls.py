@@ -63,7 +63,8 @@ urlpatterns = patterns('',
     # Telemeta
     url(r'^', include('telemeta.urls')),
 
-    # Desk (with periods)
+    # Desk
+    url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/$', PeriodListView.as_view(), name="teleforma-desk-period-list"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', PeriodCourseView.as_view(),
         name="teleforma-desk-period-course"),
