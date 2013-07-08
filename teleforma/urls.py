@@ -64,8 +64,8 @@ urlpatterns = patterns('',
     url(r'^', include('telemeta.urls')),
 
     # Desk (with periods)
-    url(r'^desk/period/(?P<period_id>.*)/list/$', PeriodListView.as_view(), name="teleforma-desk-period-list"),
-    url(r'^desk/period/(?P<period_id>.*)/course/(?P<pk>.*)/detail/$', PeriodCourseView.as_view(),
+    url(r'^desk/period/(?P<period_id>.*)/courses/$', PeriodListView.as_view(), name="teleforma-desk-period-list"),
+    url(r'^desk/period/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', PeriodCourseView.as_view(),
         name="teleforma-desk-period-course"),
 
     url(r'^desk/media/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
