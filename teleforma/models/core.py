@@ -275,6 +275,7 @@ class Conference(Model):
                 'professor_id': self.professor.user.username if self.professor else 'None',
                 'period': self.period.name if self.period else 'None',
                 'session': self.session if self.session else 'None',
+                'comment': self.comment if self.comment else 'None',
                 'streams': [],
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
@@ -325,6 +326,9 @@ class Conference(Model):
             dl = data['date_end'].split(' ')
             self.date_end = datetime.datetime(int(dl[0]), int(dl[1]), int(dl[2]),
                                                 int(dl[3]), int(dl[4]), int(dl[5]))
+        if data['comment'] != 'None':
+            self.comment = data['comment']
+
         if 'room' in data.keys():
 
             self.room, c = Room.objects.get_or_create(name=data['room'],

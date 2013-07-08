@@ -121,8 +121,8 @@ def stream_from_file(__file):
 
 
 def get_room(content_type=None, id=None, name=None):
-    if settings.TELEFORMA_GLOBAL_TWEETER or name == 'site':
-        rooms = jqchat.models.Room.objects.filter(name='site')
+    if settings.TELEFORMA_GLOBAL_TWEETER or 'site' in name:
+        rooms = jqchat.models.Room.objects.filter(name=name)
 
     else:
         rooms = jqchat.models.Room.objects.filter(content_type=content_type,
@@ -192,7 +192,7 @@ class CourseView(DetailView):
                 courses = format_courses(courses, course=course, types=c['types'])
         context['courses'] = courses
         context['all_courses'] = all_courses
-        context['notes'] = course.notes.all().filter(author=self.request.user)
+        # context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
@@ -281,7 +281,7 @@ class MediaView(DetailView):
         context['course'] = media.course
         context['item'] = media.item
         context['type'] = media.course_type
-        context['notes'] = media.notes.all().filter(author=self.request.user)
+        # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=media.course.title, content_type=content_type,
                                    id=media.course.id)
@@ -343,7 +343,7 @@ class DocumentView(DetailView):
         context['all_courses'] = all_courses
         document = self.get_object()
         context['course'] = document.course
-        context['notes'] = document.notes.all().filter(author=self.request.user)
+        # context['notes'] = document.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=document.course, content_type=content_type,
                                    id=document.course.id)
@@ -397,7 +397,7 @@ class ConferenceView(DetailView):
         conference = self.get_object()
         context['course'] = conference.course
         context['type'] = conference.course_type
-        context['notes'] = conference.notes.all().filter(author=self.request.user)
+        # context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=conference.course.title, content_type=content_type,
                                    id=conference.course.id)
@@ -547,7 +547,6 @@ class ConferenceRecordView(FormView):
             conf, c = Conference.objects.get_or_create(public_id=conference['id'],
                                                        course=course, course_type=course_type)
             if c:
-                conf.session = conference['session']
                 user = User.objects.get(username=conference['professor_id'])
                 conf.professor = Professor.objects.get(user=user)
                 try:
@@ -559,6 +558,8 @@ class ConferenceRecordView(FormView):
 
                 conf.date_begin = datetime.datetime.now()
                 conf.period, c = Period.objects.get_or_create(name=conference['period'])
+                conf.session = conference['session']
+                conf.comment = conference['comment']
                 conf.save()
                 course.save()
                 for stream in conference['streams']:
