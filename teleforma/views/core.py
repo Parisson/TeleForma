@@ -345,7 +345,7 @@ class DocumentView(DetailView):
         context['course'] = document.course
         # context['notes'] = document.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=document.course, content_type=content_type,
+        context['room'] = get_room(name=document.course.title, content_type=content_type,
                                    id=document.course.id)
         access = get_access(document, all_courses)
         if not access:
