@@ -108,7 +108,7 @@ alt="logo" />
  <li><a href="{% url postman_inbox %}" class="orange">{% trans "Messaging" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
 
  {% if user.is_staff %}
-  <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
+  <li><a href="{% url teleforma-users 0 0 0 %}" class="yellow">{% trans "Users" %}</a></li>
  {% else %}
   <li><a href="{% url teleforma-annals %}" class="yellow">{% trans "Annals" %}</a></li>
  {% endif %}

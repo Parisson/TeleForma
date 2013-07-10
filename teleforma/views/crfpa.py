@@ -36,6 +36,12 @@
 from teleforma.views.core import *
 
 
+def get_course_code(obj):
+    if obj:
+        return unicode(obj.code)
+    else:
+        return ''
+
 def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
     courses = []
 
@@ -105,16 +111,55 @@ class UsersView(ListView):
     model = User
     template_name='telemeta/users.html'
     context_object_name = 'users'
+    training = None
+    iej = None
+    course = None
     #paginate_by = 12
 
+
     def get_queryset(self):
-        return User.objects.all().select_related(depth=1).order_by('last_name')
+        self.users = User.objects.all().select_related(depth=1).order_by('last_name')
+
+        if self.kwargs['training_id'] != '0':
+            self.training = Training.objects.filter(id=self.kwargs['training_id'])
+            self.users = self.users.filter(student__trainings__in=self.training)
+            self.training = self.training[0]
+        else:
+            self.training = Training(id=0)
+
+        if self.kwargs['iej_id'] != '0':
+            self.iej = IEJ.objects.filter(id=self.kwargs['iej_id'])
+            self.users = self.users.filter(student__iej__in=self.iej)
+            self.iej = self.iej[0]
+        else:
+            self.iej = IEJ(id=0)
+
+        if self.kwargs['course_id'] != '0':
+            self.course = Course.objects.get(id=self.kwargs['course_id'])
+            u = []
+            for user in self.users:
+                user_courses = get_crfpa_courses(user)
+                for course in user_courses:
+                    if course['course'] == self.course:
+                        u.append(user)
+            self.users = u
+        else:
+            self.course = Course(id=0)
+
+        return self.users
 
     def get_context_data(self, **kwargs):
         context = super(UsersView, self).get_context_data(**kwargs)
+        users = self.object_list
+
+        context['training'] = self.training
+        context['iej'] = self.iej
+        context['course'] = self.course
+
         context['trainings'] = Training.objects.all()
         context['iejs'] = IEJ.objects.all()
         context['courses'] = Course.objects.all()
+
         paginator = NamePaginator(self.object_list, on="last_name", per_page=12)
         try:
             page = int(self.request.GET.get('page', '1'))
@@ -147,66 +192,7 @@ class UserLoginView(View):
         return super(UserLoginView, self).dispatch(*args, **kwargs)
 
 
-class UsersTrainingView(UsersView):
-
-    def get_queryset(self):
-        self.training = Training.objects.filter(id=self.args[0])
-        return User.objects.filter(student__trainings__in=self.training).order_by('last_name')
-
-    def get_context_data(self, **kwargs):
-        context = super(UsersTrainingView, self).get_context_data(**kwargs)
-        context['training'] = Training.objects.get(id=self.args[0])
-        return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UsersTrainingView, self).dispatch(*args, **kwargs)
-
-class UsersIejView(UsersView):
-
-    def get_queryset(self):
-        self.iej = IEJ.objects.filter(id=self.args[0])
-        return User.objects.filter(student__iej__in=self.iej).order_by('last_name')
-
-    def get_context_data(self, **kwargs):
-        context = super(UsersIejView, self).get_context_data(**kwargs)
-        context['iej'] = IEJ.objects.get(id=self.args[0])
-        return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UsersIejView, self).dispatch(*args, **kwargs)
-
-class UsersCourseView(UsersView):
-
-    def get_queryset(self):
-        #TODO: optimize
-        u = []
-        self.course = Course.objects.get(id=self.args[0])
-        users = User.objects.all()
-        for user in users:
-            user_courses = get_crfpa_courses(user)
-            for course in user_courses:
-                if course['course'] == self.course:
-                    u.append(user)
-        return u
-
-    def get_context_data(self, **kwargs):
-        context = super(UsersCourseView, self).get_context_data(**kwargs)
-        context['course'] = Course.objects.get(id=self.args[0])
-        return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UsersCourseView, self).dispatch(*args, **kwargs)
-
-def get_course_code(obj):
-    if obj:
-        return unicode(obj.code)
-    else:
-        return ''
-
-class UsersXLSExport(object):
+class UsersExportView(UsersView):
 
     first_row = 2
 
@@ -219,10 +205,15 @@ class UsersXLSExport(object):
             row.write(1, user.first_name)
             row.write(9, user.email)
             row.write(2, unicode(student.iej))
-            code = student.training.code
-            if student.platform_only:
-                code = 'I - ' + code
-            row.write(3, unicode(code))
+
+            codes = []
+            for training in student.trainings.all():
+                if student.platform_only:
+                    codes.append('I - ' + training.code)
+                else:
+                    codes.append(training.code)
+            row.write(3, unicode(' '.join(codes)))
+
             row.write(4, get_course_code(student.procedure))
             row.write(5, get_course_code(student.written_speciality))
             row.write(6, get_course_code(student.oral_speciality))
@@ -242,8 +233,9 @@ class UsersXLSExport(object):
             return counter
 
     @method_decorator(permission_required('is_staff'))
-    def export(self, request):
-        self.users = self.users.order_by('last_name')
+    def get(self, *args, **kwargs):
+        super(UsersExportView, self).get(*args, **kwargs)
+        self.users = self.users
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')
 
@@ -251,7 +243,7 @@ class UsersXLSExport(object):
         cols = [{'name':'NOM', 'width':5000},
                 {'name':'PRENOM', 'width':5000},
                 {'name':'IEJ', 'width':2500},
-                {'name':'FORMATION', 'width':6000},
+                {'name':'FORMATIONS', 'width':6000},
                 {'name':'PROC', 'width':2500},
                 {'name':'Ecrit Spe', 'width':3000},
                 {'name':'Oral Spe', 'width':3000},
@@ -277,29 +269,6 @@ class UsersXLSExport(object):
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         self.book.save(response)
         return response
-
-    @method_decorator(permission_required('is_staff'))
-    def all(self, request):
-        self.users = User.objects.all()
-        return self.export(request)
-
-    @method_decorator(permission_required('is_staff'))
-    def by_training(self, request, id):
-        training = Training.objects.filter(id=id)
-        self.users = User.objects.filter(student__training__in=training)
-        return self.export(request)
-
-    @method_decorator(permission_required('is_staff'))
-    def by_iej(self, request, id):
-        iej = IEJ.objects.filter(id=id)
-        self.users = User.objects.filter(student__iej__in=iej)
-        return self.export(request)
-
-    @method_decorator(permission_required('is_staff'))
-    def by_course(self, request, id):
-        course = Course.objects.filter(id=id)
-        self.users = User.objects.filter(student__training__courses__in=course)
-        return self.export(request)
 
 
 class AnnalsView(ListView):

@@ -42,7 +42,6 @@ from telemeta.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
-user_export = UsersXLSExport()
 profile_view = ProfileView()
 document = DocumentView()
 media = MediaView()
@@ -97,22 +96,16 @@ urlpatterns = patterns('',
     url(r'^messages/', include('postman.urls')),
 
     # Users
-    url(r'^users/all/$', UsersView.as_view(), name="teleforma-users"),
+    url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/list/$',
+        UsersView.as_view(), name="teleforma-users"),
+
+    url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/export/$',
+        UsersExportView.as_view(), name="teleforma-users-export"),
+
     url(r'^users/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
+
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
-    url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
-
-    url(r'^users/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
-    url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training,
-        name="teleforma-training-users-export"),
-
-    url(r'^users/by_iej/(\w+)/$', UsersIejView.as_view(), name="teleforma-iej-users"),
-    url(r'^users/by_iej/(?P<id>.*)/export/$', user_export.by_iej, name="teleforma-iej-users-export"),
-
-    url(r'^users/by_course/(\w+)/$', UsersCourseView.as_view(), name="teleforma-course-users"),
-    url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course,
-        name="teleforma-course-users-export"),
 
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
