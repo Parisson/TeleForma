@@ -150,11 +150,11 @@ def from_period(contents, period):
 
 @register.assignment_tag
 def get_all_professors():
-    return Professor.objects.all().order_by('user__first_name')
+    return Professor.objects.all()
 
 @register.assignment_tag
 def get_all_admins():
-    return User.objects.filter(is_superuser=True).order_by('first_name')
+    return User.objects.filter(is_superuser=True).order_by('last_name')
 
 @register.assignment_tag
 def get_all_trainings():
