@@ -125,12 +125,14 @@ def get_room(content_type=None, id=None, name=None):
         rooms = jqchat.models.Room.objects.filter(name=name)
 
     else:
-        rooms = jqchat.models.Room.objects.filter(content_type=content_type,
-                                                    object_id=id)
+        rooms = jqchat.models.Room.objects.filter(name=name,
+                                                  content_type=content_type,
+                                                  object_id=id)
     if not rooms:
+        print name
         room = jqchat.models.Room.objects.create(content_type=content_type,
-                                          object_id=id,
-                                          name=name[:20])
+                                                 object_id=id,
+                                                 name=name[:20])
     else:
         room = rooms[0]
     return room
@@ -216,7 +218,7 @@ class CourseListView(CourseAccessMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         context['notes'] = Note.objects.filter(author=self.request.user)
-        context['room'] = get_room(name='site')
+        context['room'] = get_room(name='site'+'-'+context['period'].name)
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
@@ -241,7 +243,8 @@ class CourseView(CourseAccessMixin, DetailView):
         context['courses'] = courses
         # context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=course.title, content_type=content_type,
+        context['room'] = get_room(name=context['period'].name + '-' + course.code,
+                                   content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
         return context
@@ -267,7 +270,8 @@ class MediaView(CourseAccessMixin, DetailView):
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=media.course.title, content_type=content_type,
+        context['room'] = get_room(name=context['period'].name + '-' + media.course.code,
+                                   content_type=content_type,
                                    id=media.course.id)
 
         access = get_access(media, context['all_courses'])
@@ -325,9 +329,6 @@ class DocumentView(CourseAccessMixin, DetailView):
         document = self.get_object()
         context['course'] = document.course
         # context['notes'] = document.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=document.course.title, content_type=content_type,
-                                   id=document.course.id)
         access = get_access(document, context['all_courses'])
         if not access:
             context['access_error'] = access_error
@@ -378,7 +379,8 @@ class ConferenceView(CourseAccessMixin, DetailView):
         context['type'] = conference.course_type
         # context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=conference.course.title, content_type=content_type,
+        context['room'] = get_room(name=context['period'].name + '-' + conference.course.title,
+                                   content_type=content_type,
                                    id=conference.course.id)
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
@@ -462,6 +464,7 @@ class ConferenceRecordView(FormView):
         status.update()
         context['host'] = status.ip
         context['hidden_fields'] = self.hidden_fields
+        context['room'] = get_room(name='monitor')
         return context
 
     def get_success_url(self):
