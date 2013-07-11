@@ -50,9 +50,15 @@ $(document).ready(function(){
 {% block chat %}
 {% if course.title_tweeter %}
 {% if room %}
-{% with "Tweeter"|add:" "|add:course.title_tweeter as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
+ {% if 'site' in room.name %}
+  {% with "General tweeter" as title %}
+   {% include "teleforma/inc/chat_room.html" %}
+  {% endwith %}
+ {% else %}
+  {% with "Tweeter"|add:" "|add:course.title_tweeter as title %}
+   {% include "teleforma/inc/chat_room.html" %}
+  {% endwith %}
+ {% endif %}
 {% endif %}
 {% endif %}
 {% endblock chat %}

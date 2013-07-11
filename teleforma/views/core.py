@@ -120,10 +120,15 @@ def stream_from_file(__file):
         yield __chunk
 
 
-def get_room(content_type=None, id=None, name=None):
-    if settings.TELEFORMA_GLOBAL_TWEETER or 'site' in name or 'monitor' in name:
-        rooms = jqchat.models.Room.objects.filter(name=name)
+def get_room(content_type=None, id=None, name=None, period=None):
+    if settings.TELEFORMA_GLOBAL_TWEETER:
+        name = 'site'
 
+    if settings.TELEFORMA_PERIOD_TWEETER and period:
+            name = period + '-' + name
+
+    if settings.TELEFORMA_GLOBAL_TWEETER:
+        rooms = jqchat.models.Room.objects.filter(name=name)
     else:
         rooms = jqchat.models.Room.objects.filter(name=name,
                                                   content_type=content_type,
@@ -217,7 +222,7 @@ class CourseListView(CourseAccessMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         context['notes'] = Note.objects.filter(author=self.request.user)
-        context['room'] = get_room(name='site'+'-'+context['period'].name)
+        context['room'] = get_room(name='site', period=context['period'].name)
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
@@ -242,7 +247,7 @@ class CourseView(CourseAccessMixin, DetailView):
         context['courses'] = courses
         # context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=context['period'].name + '-' + course.code,
+        context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
@@ -269,7 +274,7 @@ class MediaView(CourseAccessMixin, DetailView):
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=context['period'].name + '-' + media.course.code,
+        context['room'] = get_room(name=media.course.code,period=context['period'].name,
                                    content_type=content_type,
                                    id=media.course.id)
 
@@ -378,7 +383,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
         context['type'] = conference.course_type
         # context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=context['period'].name + '-' + conference.course.title,
+        context['room'] = get_room(name=conference.course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=conference.course.id)
         context['livestreams'] = conference.livestream.all()
