@@ -200,23 +200,18 @@ class PeriodAccessMixin(View):
         return super(PeriodAccessMixin, self).render_to_response(context)
 
 
-class CourseAccessMixin(View):
+class CourseAccessMixin(PeriodAccessMixin):
 
     def get_context_data(self, **kwargs):
         context = super(CourseAccessMixin, self).get_context_data(**kwargs)
-        context['all_courses'] = get_courses(self.request.user, num_order=True)
+        context['all_courses'] = get_courses(self.request.user, num_order=True, period=self.period)
         return context
 
 
-class CourseListView(PeriodAccessMixin, CourseAccessMixin, ListView):
+class CourseListView(CourseAccessMixin, ListView):
 
     model = Course
     template_name='teleforma/courses.html'
-
-    def get_queryset(self):
-        # courses = sorted(self.all_courses, key=lambda k: k['date_order'])
-        courses = get_courses(self.request.user, date_order=True, period=self.period)
-        return courses[:5]
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
@@ -224,6 +219,7 @@ class CourseListView(PeriodAccessMixin, CourseAccessMixin, ListView):
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
         return context
 
     @method_decorator(login_required)
@@ -231,7 +227,7 @@ class CourseListView(PeriodAccessMixin, CourseAccessMixin, ListView):
         return super(CourseListView, self).dispatch(*args, **kwargs)
 
 
-class CourseView(PeriodAccessMixin, CourseAccessMixin, DetailView):
+class CourseView(CourseAccessMixin, DetailView):
 
     model = Course
 
@@ -255,7 +251,7 @@ class CourseView(PeriodAccessMixin, CourseAccessMixin, DetailView):
         return super(CourseView, self).dispatch(*args, **kwargs)
 
 
-class MediaView(PeriodAccessMixin, CourseAccessMixin, DetailView):
+class MediaView(CourseAccessMixin, DetailView):
 
     model = Media
     template_name='teleforma/course_media.html'
@@ -370,7 +366,7 @@ class DocumentView(CourseAccessMixin, DetailView):
             return redirect('teleforma-document-detail', document.id)
 
 
-class ConferenceView(PeriodAccessMixin, CourseAccessMixin, DetailView):
+class ConferenceView(CourseAccessMixin, DetailView):
 
     model = Conference
     template_name='teleforma/course_conference.html'
