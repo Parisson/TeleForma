@@ -53,7 +53,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     if professor:
         professor = user.professor.get()
-        courses = format_crfpa_courses(courses, queryset=professor.courses.all(),
+        courses = format_courses(courses, queryset=professor.courses.all(),
                                   types=CourseType.objects.all())
 
     elif student:
@@ -71,29 +71,29 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
                         }
 
         for course in s_courses:
-            courses = format_crfpa_courses(courses, course=course,
+            courses = format_courses(courses, course=course,
                                types=s_courses[course])
 
         synthesis_note = training.synthesis_note
         if synthesis_note:
-            courses = format_crfpa_courses(courses,
+            courses = format_courses(courses,
                             queryset=Course.objects.filter(synthesis_note=True),
                             types=synthesis_note)
 
         obligation = training.obligation
         if obligation:
-            courses = format_crfpa_courses(courses,
+            courses = format_courses(courses,
                             queryset=Course.objects.filter(obligation=True),
                             types=obligation)
 
         magistral = training.magistral
         if magistral:
-            courses = format_crfpa_courses(courses,
+            courses = format_courses(courses,
                             queryset=Course.objects.filter(magistral=True),
                             types=magistral)
 
     elif user.is_staff or user.is_superuser:
-        courses = format_crfpa_courses(courses, queryset=Course.objects.all(),
+        courses = format_courses(courses, queryset=Course.objects.all(),
                     types=CourseType.objects, admin=True)
     else:
         courses = None
