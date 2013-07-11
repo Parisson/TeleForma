@@ -94,7 +94,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     elif user.is_staff or user.is_superuser:
         courses = format_courses(courses, queryset=Course.objects.all(),
-                    types=CourseType.objects, admin=True)
+                    types=CourseType.objects)
     else:
         courses = None
 
