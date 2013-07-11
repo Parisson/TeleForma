@@ -78,6 +78,9 @@ STATUS_CHOICES = (
 
 WEIGHT_CHOICES = get_nint_choices(5)
 
+def get_random_hash():
+    hash = random.getrandbits(128)
+    return "%032x" % hash
 
 class MetaCore:
     app_label = app_label
@@ -150,6 +153,7 @@ class Course(Model):
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     code            = CharField(_('code'), max_length=255)
+    title_tweeter   = CharField(_('tweeter title'), max_length=255)
     date_modified   = DateTimeField(_('date modified'), auto_now=True, null=True)
     number          = IntegerField(_('number'), blank=True, null=True)
     synthesis_note  = BooleanField(_('synthesis note'))
@@ -162,7 +166,7 @@ class Course(Model):
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return self.title
+        return self.code
 
     @property
     def slug(self):
@@ -183,14 +187,21 @@ class Professor(Model):
                                         blank=True, null=True)
 
     def __unicode__(self):
-        if self.user.first_name or self.user.last_name:
-            return self.user.last_name + ' ' + self.user.first_name
-        else:
-            return self.user.username
+        return self.user.last_name + ' ' + self.user.first_name[0] + '.'
+
+    def to_json_dict(self):
+        data = {'username': self.user.username,
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name,
+                'email' : self.user.email,
+                'courses': [course.code for course in self.courses.all()],
+                 }
+        return data
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
         verbose_name = _('professor')
+        ordering = ['user__last_name']
 
 
 class Room(Model):
@@ -254,9 +265,11 @@ class Conference(Model):
     def __unicode__(self):
         return self.description
 
-    def save(self, **kwargs):
-        super(Conference, self).save(**kwargs)
+    def save(self, *args, **kwargs):
+        if not self.public_id:
+            self.public_id = get_random_hash()
         self.course.save()
+        super(Conference, self).save(*args, **kwargs)
 
     def to_dict(self):
         dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
@@ -269,16 +282,20 @@ class Conference(Model):
                 ]
         return dict
 
-    def to_json_dict(self, streaming=True):
+    def to_json_dict(self):
         data = {'id': self.public_id,
                 'course_code': self.course.code,
                 'course_type': self.course_type.name,
-                'professor_id': self.professor.user.username,
-                'period': self.period.name,
-                'department': self.department.name,
-                'session': self.session,
-                'comment': self.comment,
-                'streams': [] }
+                'department': self.department.name if self.department else 'None',
+                'organization': self.department.organization.name if self.department else 'None',
+                'professor_id': self.professor.user.username if self.professor else 'None',
+                'period': self.period.name if self.period else 'None',
+                'session': self.session if self.session else 'None',
+                'comment': self.comment if self.comment else 'None',
+                'streams': [],
+                'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
+                'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
+                 }
 
         if self.room:
             data['room'] = self.room.name
@@ -292,6 +309,47 @@ class Conference(Model):
                                         'server_type': stream.server.type,
                                         'stream_type': stream.stream_type  })
         return data
+
+    def from_json_dict(self, data):
+        self.public_id = data['id']
+        self.course, c = Course.objects.get_or_create(code=data['course_code'])
+        self.course_type, c = CourseType.objects.get_or_create(name=data['course_type'])
+
+        organization, c = Organization.objects.get_or_create(name=data['organization'])
+
+        if data['department'] != 'None':
+            self.department, c = Department.objects.get_or_create(name=data['department'],
+                                                                  organization=organization)
+
+        if data['professor_id'] != 'None':
+            user, c = User.objects.get_or_create(username=data['professor_id'])
+            self.professor, c = Professor.objects.get_or_create(user=user)
+            if c:
+                self.professor.courses.add(self.course)
+
+        if data['period'] != 'None':
+            self.period, c = Period.objects.get_or_create(name=data['period'])
+
+        if data['session'] != 'None':
+            self.session = data['session']
+
+        if data['date_begin'] != 'None':
+            dl = data['date_begin'].split(' ')
+            self.date_begin = datetime.datetime(int(dl[0]), int(dl[1]), int(dl[2]),
+                                                int(dl[3]), int(dl[4]), int(dl[5]))
+
+        if data['date_end'] != 'None':
+            dl = data['date_end'].split(' ')
+            self.date_end = datetime.datetime(int(dl[0]), int(dl[1]), int(dl[2]),
+                                                int(dl[3]), int(dl[4]), int(dl[5]))
+        if data['comment'] != 'None':
+            self.comment = data['comment']
+
+        if 'room' in data.keys():
+            self.room, c = Room.objects.get_or_create(name=data['room'],
+                                                   organization=organization)
+        self.save()
+        self.course.save()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
@@ -333,10 +391,7 @@ class LiveStream(Model):
 
     @property
     def slug(self):
-        slug = '-'.join([self.conference.course.department.slug,
-                         self.conference.course.slug,
-                         self.conference.course_type.name.lower()])
-        return slug
+        return self.conference.slug
 
     @property
     def mount_point(self):
@@ -417,7 +472,10 @@ class Document(MediaBase):
                                  null=True, blank=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
+    iej             = ForeignKey('IEJ', related_name='document', verbose_name=_('iej'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     is_annal        = BooleanField(_('annal'))
+    annal_year      = IntegerField(_('year'), blank=True, null=True)
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
                                         blank=True, null=True)
@@ -477,7 +535,6 @@ class DocumentSimple(MediaBase):
         super(DocumentSimple, self).save(**kwargs)
         self.set_mime_type()
 
-
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_simple'
         ordering = ['-date_added']
@@ -526,8 +583,6 @@ class Media(MediaBase):
             self.course.save()
         elif self.conference:
             self.conference.course.save()
-
-
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'

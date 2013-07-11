@@ -2,21 +2,21 @@
 {% load i18n %}
 
 {% with course.conference.all|from_course_type:type as conferences %}
-{% if conferences %}
+{% if conferences|from_period:period %}
 <div class="course_content">
 <div class="course_subtitle">
     <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
-       {% for conference in conferences|from_periods:periods %}
+       {% for conference in conferences|from_period:period %}
         {% for stream in conference.livestream.all %}
          {% if stream.stream_type == 'webm' %}
             <tr>
             {% if stream.streaming %}
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
-               <a href="{% url teleforma-conference-detail stream.conference.id %}" title="{% trans "View" %}">
-               <img id="snapshot-{{ stream.course.code }}-{{ stream.course_type }}" src="{{ stream.snapshot_url|set_host:HOST }}" width="100%" alt="{% trans 'Click here' %}" />
+               <a href="{% url teleforma-conference-detail period.id stream.conference.id %}" title="{% trans "View" %}">
+               <img id="snapshot-{{ stream.course.code }}-{{ stream.course_type }}" src="{{ stream.snapshot_url }}" width="100%" alt="{% trans 'Click here' %}" />
                </a>
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">

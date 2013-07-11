@@ -28,7 +28,7 @@ streams.safe=true
 streams.safe.password=source2parisson
 streams.safe.limit=100
 """
-    
+
     def export(self):
         courses = Course.objects.all()
         types = CourseType.objects.all()

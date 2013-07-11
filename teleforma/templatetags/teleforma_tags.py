@@ -137,24 +137,24 @@ def yes_no(bool):
 def from_course_type(contents, type):
     if contents:
         return contents.filter(course_type=type)
-    
+
 @register.filter
 def from_doc_type(contents, type):
     if contents:
         return contents.filter(type=type)
-    
+
 @register.filter
-def from_periods(contents, periods):
+def from_period(contents, period):
     if contents:
-        return contents.filter(period__in=periods)
-    
+        return contents.filter(period=period)
+
 @register.assignment_tag
 def get_all_professors():
-    return Professor.objects.all().order_by('user__first_name')
+    return Professor.objects.all()
 
 @register.assignment_tag
 def get_all_admins():
-    return User.objects.filter(is_superuser=True).order_by('first_name')
+    return User.objects.filter(is_superuser=True).order_by('last_name')
 
 @register.assignment_tag
 def get_all_trainings():

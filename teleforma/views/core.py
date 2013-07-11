@@ -92,14 +92,14 @@ def format_courses(courses, course=None, queryset=None, types=None):
         return format_ae_courses(courses, course, queryset, types)
 
 
-def get_courses(user, date_order=False, num_order=False):
+def get_courses(user, date_order=False, num_order=False, num_courses=False, period=None):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
-        return get_crfpa_courses(user, date_order, num_order)
+        return get_crfpa_courses(user, date_order, num_order, period)
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
-        return get_ae_courses(user, date_order, num_order)
+        return get_ae_courses(user, date_order, num_order, period)
 
 
 def stream_from_file(__file):
@@ -114,8 +114,12 @@ def stream_from_file(__file):
 
 
 def get_room(content_type=None, id=None, name=None):
-    rooms = jqchat.models.Room.objects.filter(content_type=content_type,
-                                                object_id=id)
+    if settings.TELEFORMA_GLOBAL_TWEETER or 'site' in name:
+        rooms = jqchat.models.Room.objects.filter(name=name)
+
+    else:
+        rooms = jqchat.models.Room.objects.filter(content_type=content_type,
+                                                    object_id=id)
     if not rooms:
         room = jqchat.models.Room.objects.create(content_type=content_type,
                                           object_id=id,
@@ -123,7 +127,6 @@ def get_room(content_type=None, id=None, name=None):
     else:
         room = rooms[0]
     return room
-
 
 def get_access(obj, courses):
     access = False
@@ -139,37 +142,35 @@ def get_host(request):
     host = request.META['HTTP_HOST']
     if ':' in host:
         host = host.split(':')[0]
+    if host == 'localhost':
+        host = '127.0.0.1'
     return host
 
-
-def get_random_hash():
-    hash = random.getrandbits(128)
-    return "%032x" % hash
-
 def get_periods(user):
-    periods = None
+    student = user.student.all()
+    if student:
+        student = user.student.get()
+        periods = [training.period for training in student.trainings.all()]
+
+    if user.is_superuser or user.is_staff:
+        periods = Period.objects.all()
 
     professor = user.professor.all()
     if professor:
         professor = user.professor.get()
         periods = Period.objects.all()
 
-    if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
-        student = user.student.all()
-        if student:
-            student = user.student.get()
-            periods = student.period.all()
-
-    elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
-        student = user.ae_student.all()
-        if student:
-            student = user.ae_student.get()
-            periods = student.period.all()
-
-    if user.is_staff or user.is_superuser:
-        periods = Period.objects.all()
-
     return periods
+
+
+class HomeRedirectView(View):
+
+    def get(self, request):
+        if request.user.is_authenticated():
+            periods = get_periods(request.user)
+            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
+        else:
+            return HttpResponseRedirect(reverse('teleforma-login'))
 
 
 class CourseView(DetailView):
@@ -186,20 +187,41 @@ class CourseView(DetailView):
                 courses = format_courses(courses, course=course, types=c['types'])
         context['courses'] = courses
         context['all_courses'] = all_courses
-        context['notes'] = course.notes.all().filter(author=self.request.user)
+        # context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=course.title, content_type=content_type,
+        context['room'] = get_room(name=course.title, content_type=content_type,
                                    id=course.id)
         context['doc_types'] = DocumentType.objects.all()
-        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
+
+
+class PeriodAccessMixin(View):
+
+    period = None
+
+    def get_context_data(self, **kwargs):
+        context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
+        period = Period.objects.filter(id=int(self.kwargs['period_id']))
+        if period:
+            self.period = period[0]
+        context['period'] = self.period
+        return context
+
+    def render_to_response(self, context):
+        period = context['period']
+        if not period in get_periods(self.request.user):
+            messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
+            return redirect('teleforma-home')
+        return super(PeriodAccessMixin, self).render_to_response(context)
+
+
+class PeriodCourseView(PeriodAccessMixin, CourseView):
+
+    pass
 
 
 class CoursesView(ListView):
@@ -209,7 +231,7 @@ class CoursesView(ListView):
 
     def get_queryset(self):
         self.all_courses = get_courses(self.request.user, date_order=True)
-        return self.all_courses[:10]
+        return self.all_courses[:5]
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
@@ -217,7 +239,6 @@ class CoursesView(ListView):
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
         context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
-        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -235,7 +256,25 @@ class CoursesView(ListView):
         return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
 
 
-class MediaView(DetailView):
+class PeriodListView(PeriodAccessMixin, CoursesView):
+
+    def get_queryset(self):
+        self.period = None
+        period = Period.objects.filter(id=int(self.kwargs['period_id']))
+        if period:
+            self.period = period[0]
+
+        self.all_courses = get_courses(self.request.user, date_order=True, period=self.period)
+        return self.all_courses[:5]
+
+    def get_context_data(self, **kwargs):
+        context = super(PeriodListView, self).get_context_data(**kwargs)
+        context['period'] = self.period
+        context['list_view'] = True
+        return context
+
+
+class MediaView(PeriodAccessMixin, DetailView):
 
     model = Media
     template_name='teleforma/course_media.html'
@@ -251,18 +290,15 @@ class MediaView(DetailView):
         context['course'] = media.course
         context['item'] = media.item
         context['type'] = media.course_type
-        context['notes'] = media.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="media")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=media.item.title, content_type=content_type,
-                                   id=media.id)
+        # context['notes'] = media.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(name=media.course.title, content_type=content_type,
+                                   id=media.course.id)
+
         access = get_access(media, all_courses)
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
-        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -288,7 +324,7 @@ class MediaView(DetailView):
                                              (filename.encode('utf8'), extension)
             return response
         else:
-            return redirect('teleforma-media-detail', media.id)
+            return redirect('teleforma-media-detail', self.context['period'].id, media.id)
 
 
     @jsonrpc_method('teleforma.publish_media')
@@ -315,13 +351,10 @@ class DocumentView(DetailView):
         context['all_courses'] = all_courses
         document = self.get_object()
         context['course'] = document.course
-        context['notes'] = document.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="document")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=document.title, content_type=content_type,
-                                   id=document.id)
+        # context['notes'] = document.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(name=document.course.title, content_type=content_type,
+                                   id=document.course.id)
         access = get_access(document, all_courses)
         if not access:
             context['access_error'] = access_error
@@ -360,7 +393,7 @@ class DocumentView(DetailView):
             return redirect('teleforma-document-detail', document.id)
 
 
-class ConferenceView(DetailView):
+class ConferenceView(PeriodAccessMixin, DetailView):
 
     model = Conference
     template_name='teleforma/course_conference.html'
@@ -372,20 +405,16 @@ class ConferenceView(DetailView):
         conference = self.get_object()
         context['course'] = conference.course
         context['type'] = conference.course_type
-        context['notes'] = conference.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="conference")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=conference.course.title, content_type=content_type,
-                                   id=conference.id)
+        # context['notes'] = conference.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        context['room'] = get_room(name=conference.course.title, content_type=content_type,
+                                   id=conference.course.id)
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
         access = get_access(conference, all_courses)
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
-        context['periods'] = get_periods(self.request.user)
         return context
 
     @jsonrpc_method('teleforma.stop_conference')
@@ -410,6 +439,41 @@ class ConferenceView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
+
+
+class ConferenceListView(View):
+
+    @jsonrpc_method('teleforma.get_conference_list')
+    def get_conference_list(request):
+        conferences = Conference.objects.all()
+        return [c.to_json_dict() for c in conferences]
+
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+
+        s = ServiceProxy(url)
+        remote_list = s.teleforma.get_conference_list()
+        for conf_dict in remote_list['result']:
+            conference = Conference.objects.filter(public_id=conf_dict['id'])
+            if not conference:
+                conference = Conference()
+                conference.from_json_dict(conf_dict)
+
+    def push(request, host=None):
+        if not host:
+            host = settings.TELECASTER_MASTER_SERVER
+        url = 'http://' + host + '/json/'
+
+        s = ServiceProxy(url)
+        remote_list = s.teleforma.get_conference_list()['result']
+        remote_ids = [conf['id'] for conf in remote_list]
+
+        for conference in Conference.objects.all():
+            if not conference.public_id in remote_ids and conference.date_end:
+                s.teleforma.create_conference(conference.to_json_dict())
 
 
 class ConferenceRecordView(FormView):
@@ -440,7 +504,8 @@ class ConferenceRecordView(FormView):
         return context
 
     def get_success_url(self):
-        return reverse('teleforma-conference-detail', kwargs={'pk':self.conference.id})
+        return reverse('teleforma-conference-detail', kwargs={'period_id': self.conference.period.id,
+                                                              'pk':self.conference.id})
 
     def form_valid(self, form):
         form.save()
@@ -461,15 +526,19 @@ class ConferenceRecordView(FormView):
             server, c = StreamingServer.objects.get_or_create(host=status.ip, port=port, type=server_type)
             station = Station(conference=self.conference, public_id=uuid)
             station.setup(conf)
-            station.start()
+            try:
+                station.start()
+            except:
+                continue
             station.save()
             stream = LiveStream(conference=self.conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
             if server_type == 'stream-m':
-                #FIXME:
-#                self.snapshot(stream.snapshot_url, station.output_dir)
-                self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+                try:
+                    self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+                except:
+                    pass
 
         try:
             self.push(self.conference)
@@ -486,7 +555,7 @@ class ConferenceRecordView(FormView):
         f = open(path, 'w')
         f.write(img.read())
         f.close()
-        command = '/usr/bin/dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
+        command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
         os.system(command)
 
     @method_decorator(login_required)
@@ -496,37 +565,11 @@ class ConferenceRecordView(FormView):
     @jsonrpc_method('teleforma.create_conference')
     def create(request, conference):
         if isinstance(conference, dict):
-            course = Course.objects.get(code=conference['course_code'])
-            if conference['course_type']:
-                course_type = CourseType.objects.get(name=conference['course_type'])
-            else:
-                course_type, cc = CourseType.objects.get_or_create(name='None')
+            conf = Conference.objects.filter(public_id=conference['id'])
+            if not conf:
+                conf = Conference()
+                conf.from_json_dict(conference)
 
-            conf, c = Conference.objects.get_or_create(public_id=conference['id'],
-                                                       course=course, course_type=course_type)
-            if c:
-                conf.session = conference['session']
-                if conference['professor_id']:
-                    user = User.objects.filter(username=conference['professor_id'])
-                    if user:
-                        conf.professor = Professor.objects.get(user=user[0])
-                    else:
-                        user = User(username=conference['professor_id'])
-                        user.save()
-                        professor = Professor(user=user)
-                        professor.save()
-                        conf.professor = professor
-                try:
-                    organization, c = Organization.objects.get_or_create(name=conference['organization'])
-                    conf.room, c = Room.objects.get_or_create(name=conference['room'],
-                                                       organization=organization)
-                except:
-                    pass
-
-                conf.date_begin = datetime.datetime.now()
-                conf.period, c = Period.objects.get_or_create(name=conference['period'])
-                conf.department, c = Department.objects.get_or_create(name=conference['department'])
-                conf.save()
                 for stream in conference['streams']:
                     host = stream['host']
                     port = stream['port']
@@ -540,7 +583,7 @@ class ConferenceRecordView(FormView):
                                         stream_type=stream_type, streaming=True)
                     stream.save()
         else:
-            raise 'Error : Bad Conference dictionnary'
+            raise 'Error : input must be a conference dictionnary'
 
     def push(self, conference):
         url = 'http://' + conference.department.domain + '/json/'
@@ -550,6 +593,37 @@ class ConferenceRecordView(FormView):
         except:
             streaming = True
         s.teleforma.create_conference(conference.to_json_dict(streaming=streaming))
+
+
+class ProfessorListView(View):
+
+    @jsonrpc_method('teleforma.get_professor_list')
+    def get_professor_list(request):
+        professors = Professor.objects.all()
+        return [p.to_json_dict() for p in professors]
+
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+
+        remote_list = s.teleforma.get_professor_list()
+        for professor_dict in remote_list['result']:
+            user, c = User.objects.get_or_create(username=professor_dict['username'])
+            user.first_name = professor_dict['first_name']
+            user.last_name = professor_dict['last_name']
+            user.email = professor_dict['email']
+            user.save()
+
+            professor, c = Professor.objects.get_or_create(user=user)
+            for course_code in professor_dict['courses']:
+                course = Course.objects.filter(code=course_code)
+                if course:
+                    if not course[0] in professor.courses.all():
+                        professor.courses.add(course[0])
+            professor.save()
 
 
 class HelpView(TemplateView):
@@ -564,5 +638,4 @@ class HelpView(TemplateView):
 
     def dispatch(self, *args, **kwargs):
         return super(HelpView, self).dispatch(*args, **kwargs)
-
 

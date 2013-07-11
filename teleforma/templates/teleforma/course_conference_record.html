@@ -45,8 +45,18 @@ jQuery(window).ready(function(){
 </script>
 {% endblock extra_javascript %}
 
-{% block module-action %}
-{% endblock module-action %}
+
+{% block modules %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
+ <div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+  <div id="server_status_table_wrapper" class="status"></div>
+ </div>
+ <script type="text/javascript">server_status_callback();</script>
+{% endif %}
+</div>
+{% endblock modules %}
 
 {% block course %}
 <div class="course_media">
@@ -90,4 +100,9 @@ jQuery(window).ready(function(){
 
 </div>
 {% endblock course %}
+
+
+
+{% block status %}
+{% endblock status %}
 

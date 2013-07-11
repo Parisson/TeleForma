@@ -21,7 +21,7 @@
 <option value="">{% trans "to a professor" %}</option>
 {% get_all_professors as professors %}
 {% for p in professors %}
-<option value="{{ p.user.username }}">{{p.user.first_name}} {{p.user.last_name}}</option>
+<option value="{{ p.user.username }}">{{p.user.last_name}} {{p.user.first_name}}</option>
 {% endfor %}
 </select>
 

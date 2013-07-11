@@ -13,7 +13,7 @@ import datetime
 
 class Command(BaseCommand):
     help = "Import users from a XLS file (see an example in example/data/"
-    args = "path"
+    args = "path period_name"
     first_row = 2
     admin_email = 'webmaster@parisson.com'
 
@@ -24,7 +24,7 @@ class Command(BaseCommand):
         else:
             raise BaseException('You should first create a course with this code: ' + code)
 
-    def import_user(self, row):
+    def import_user(self, row, period):
         last_name   = row[0].value
         first_name  = row[1].value
         email       = row[9].value
@@ -47,9 +47,10 @@ class Command(BaseCommand):
             student = Student.objects.filter(user=user)
             if not student:
                 student = Student(user=user)
-                student.period, c = Period.objects.get_or_create(name='Estivale')
+                student.period, c = Period.objects.get_or_create(name=period)
                 student.iej, c = IEJ.objects.get_or_create(name=row[2].value)
-                student.training, c = Training.objects.get_or_create(code=row[3].value)
+                student.training, c = Training.objects.get_or_create(code=row[3].value,
+                                                                     period=student.period)
                 student.save()
 
             student.procedure = self.get_first_course(row[4].value)
@@ -69,11 +70,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file = args[0]
+        period = args[1]
         self.book = xlrd.open_workbook(file)
         sheet = self.book.sheet_by_index(0)
         col = sheet.col(0)
         for i in range(self.first_row, len(col)):
-            self.import_user(sheet.row(i))
+            self.import_user(sheet.row(i), period)
 
 
 
