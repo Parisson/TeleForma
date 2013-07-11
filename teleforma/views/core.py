@@ -121,7 +121,7 @@ def stream_from_file(__file):
 
 
 def get_room(content_type=None, id=None, name=None):
-    if settings.TELEFORMA_GLOBAL_TWEETER or 'site' in name:
+    if settings.TELEFORMA_GLOBAL_TWEETER or 'site' in name or 'monitor' in name:
         rooms = jqchat.models.Room.objects.filter(name=name)
 
     else:
@@ -129,7 +129,6 @@ def get_room(content_type=None, id=None, name=None):
                                                   content_type=content_type,
                                                   object_id=id)
     if not rooms:
-        print name
         room = jqchat.models.Room.objects.create(content_type=content_type,
                                                  object_id=id,
                                                  name=name[:20])
