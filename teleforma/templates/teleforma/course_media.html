@@ -109,7 +109,7 @@ $(document).ready(function(){
  {% for related in media.item.related.all %}
   {% if related.title == "preview" %}
    {% thumbnail related.file "300" as im %}
-    <img src="{{ im.url }}" width="300px" alt="preview" />
+    <img src="{{ im.url|set_host:HOST }}" width="300px" alt="preview" />
    {% endthumbnail %}
   {% endif %}
  {% endfor %}
