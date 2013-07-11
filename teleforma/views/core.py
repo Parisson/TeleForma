@@ -598,20 +598,22 @@ class ProfessorListView(View):
             url = 'http://' + host + '/json/'
         else:
             url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
-
         s = ServiceProxy(url)
+
         remote_list = s.teleforma.get_professor_list()
         for professor_dict in remote_list['result']:
-            user, c = User.objects.get_or_create(username=professor_dict['username'],
-                                       first_name=professor_dict['first_name'],
-                                       last_name=professor_dict['last_name'])
-            if c:
-                professor = Professor.objects.get_or_create(user=user)
-                for course_code in professor_dict['courses']:
-                    course = Course.objects.filter(code=course_code)
-                    if course:
-                        professor.courses.add(course)
-                professor.save()
+            user, c = User.objects.get_or_create(username=professor_dict['username'])
+            user.first_name = professor_dict['first_name']
+            user.last_name = professor_dict['last_name']
+            user.email = professor_dict['email']
+            user.save()
+
+            professor, c = Professor.objects.get_or_create(user=user)
+            for course_code in professor_dict['courses']:
+                course = Course.objects.filter(code=course_code)
+                if course and not course in professor.courses.all():
+                    professor.courses.add(course[0])
+            professor.save()
 
 
 class HelpView(TemplateView):

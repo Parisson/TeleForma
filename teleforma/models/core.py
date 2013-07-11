@@ -186,6 +186,7 @@ class Professor(Model):
         data = {'username': self.user.username,
                 'first_name': self.user.first_name,
                 'last_name': self.user.last_name,
+                'email' : self.user.email,
                 'courses': [course.code for course in self.courses.all()],
                  }
         return data
