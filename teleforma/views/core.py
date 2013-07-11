@@ -149,6 +149,8 @@ def get_host(request):
     host = request.META['HTTP_HOST']
     if ':' in host:
         host = host.split(':')[0]
+    if host == 'localhost':
+        host = '127.0.0.1'
     return host
 
 def get_periods(user):
@@ -531,6 +533,8 @@ class ConferenceRecordView(FormView):
         except:
             pass
 
+        return super(ConferenceRecordView, self).form_valid(form)
+
     def snapshot(self, url, dir):
         width = 160
         height = 90
@@ -539,7 +543,7 @@ class ConferenceRecordView(FormView):
         f = open(path, 'w')
         f.write(img.read())
         f.close()
-        command = '/usr/bin/dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
+        command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
         os.system(command)
 
     @method_decorator(login_required)
