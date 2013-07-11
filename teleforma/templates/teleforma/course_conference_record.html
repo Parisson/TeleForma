@@ -16,38 +16,14 @@ jQuery(window).ready(function(){
 
 
 {% block modules %}
-<div class="module">
-
-<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Form" %}</h3>
-<div style="background: white;">
-    <div class="conference_form">
-        <ul>
-        <form enctype="multipart/form-data" id="_StationForm" method="post" action="" name="formulaire">{% csrf_token %}
-            {% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}
-            {% for field in form %}
-                {% if field.errors %}<li class="warning">{{ field.errors }}</li>{% endif %}
-                {% if not field.html_name in hidden_fields %}
-                 <li>{% trans field.label_tag %}</br />{{ field }}</li>
-                {% else %}
-                 {{ field.label_tag.as_hidden }} {{ field.as_hidden }}
-                {% endif %}
-            {% endfor %}
-        </form>
-    </ul>
-    </div>
-</div>
-
-</div>
-
-{% block module-action %}
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
-<div class="module_action">
-<a href="#" class="component_icon button" id="action_red">{% trans "Record and stream" %}</a>
-</div>
+ <div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+  <div id="server_status_table_wrapper" class="status"></div>
+ </div>
+ <script type="text/javascript">server_status_callback();</script>
 {% endif %}
-{% endblock module-action %}
-
 </div>
 {% endblock modules %}
 
@@ -95,4 +71,7 @@ jQuery(window).ready(function(){
 {% endblock course %}
 
 
+
+{% block status %}
+{% endblock status %}
 

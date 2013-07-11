@@ -384,9 +384,12 @@ class LiveStream(Model):
 
     @property
     def slug(self):
-        slug = '-'.join([self.conference.course.department.slug,
-                         self.conference.course.slug,
+        if self.conference:
+            slug = '-'.join([self.conference.course.slug,
                          self.conference.course_type.name.lower()])
+        else:
+            slug = self.element_type
+
         return slug
 
     @property

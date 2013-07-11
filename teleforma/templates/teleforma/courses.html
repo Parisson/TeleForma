@@ -60,8 +60,8 @@ $(document).ready(function(){
 </div>-->
 {% endblock notes %}
 
-</div>
 {% endblock modules %}
+</div>
 
 
 {% block course %}
@@ -104,13 +104,10 @@ $(document).ready(function(){
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module">
- <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
- <div id="server_status_table_wrapper" class="status"></div>
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+  <div id="server_status_table_wrapper" class="status"></div>
 </div>
-
-<script type="text/javascript">
-server_status_callback();
-</script>
+<script type="text/javascript">server_status_callback();</script>
 {% endif %}
 {% endblock status %}
 

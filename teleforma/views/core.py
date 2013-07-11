@@ -471,7 +471,7 @@ class ConferenceListView(View):
                 s.teleforma.create_conference(conference.to_json_dict())
 
 
-class ConferenceRecordView(PeriodAccessMixin, FormView):
+class ConferenceRecordView(FormView):
     "Conference record form : TeleCaster module required"
 
     model = Conference
@@ -512,15 +512,19 @@ class ConferenceRecordView(PeriodAccessMixin, FormView):
             server, c = StreamingServer.objects.get_or_create(host=status.ip, port=port, type=server_type)
             station = Station(conference=self.conference, public_id=uuid)
             station.setup(conf)
-            station.start()
+            try:
+                station.start()
+            except:
+                continue
             station.save()
             stream = LiveStream(conference=self.conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
             if server_type == 'stream-m':
-                #FIXME:
-#                self.snapshot(stream.snapshot_url, station.output_dir)
-                self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+                try:
+                    self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+                except:
+                    pass
 
         try:
             self.push(self.conference)
