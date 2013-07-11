@@ -45,3 +45,4 @@ def periods(request):
         return {'periods': None}
     else:
         return {'periods': get_periods(user)}
+

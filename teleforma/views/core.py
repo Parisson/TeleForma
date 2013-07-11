@@ -180,20 +180,26 @@ class HomeRedirectView(View):
             return HttpResponseRedirect(reverse('teleforma-login'))
 
 
-class CourseView(DetailView):
+class CourseAccessMixin(View):
+
+    def get_context_data(self, **kwargs):
+        context = super(CourseAccessMixin, self).get_context_data(**kwargs)
+        context['all_courses'] = get_courses(self.request.user, num_order=True)
+        return context
+
+
+class CourseView(CourseAccessMixin, DetailView):
 
     model = Course
 
     def get_context_data(self, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         course = self.get_object()
-        all_courses = get_courses(self.request.user, num_order=True)
         courses = []
-        for c in all_courses:
+        for c in context['all_courses']:
             if c['course'] == course:
                 courses = format_courses(courses, course=course, types=c['types'])
         context['courses'] = courses
-        context['all_courses'] = all_courses
         # context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=course.title, content_type=content_type,
@@ -227,25 +233,23 @@ class PeriodAccessMixin(View):
 
 
 class PeriodCourseView(PeriodAccessMixin, CourseView):
-
     pass
 
 
-class CoursesView(ListView):
+class CoursesView(CourseAccessMixin, ListView):
 
     model = Course
     template_name='teleforma/courses.html'
 
     def get_queryset(self):
-        self.all_courses = get_courses(self.request.user, date_order=True)
-        return self.all_courses[:5]
+        courses = sorted(self.all_courses, key=lambda k: k['date_order'])
+        return courses[:5]
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site')
         context['doc_types'] = DocumentType.objects.all()
-        context['all_courses'] = sorted(self.all_courses, key=lambda k: k['number'])
         return context
 
     @method_decorator(login_required)
@@ -271,15 +275,13 @@ class PeriodListView(PeriodAccessMixin, CoursesView):
         return context
 
 
-class MediaView(PeriodAccessMixin, DetailView):
+class MediaView(PeriodAccessMixin, CourseAccessMixin, DetailView):
 
     model = Media
     template_name='teleforma/course_media.html'
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
-        all_courses = get_courses(self.request.user)
-        context['all_courses'] = all_courses
         media = self.get_object()
         if not media.mime_type:
             media.set_mime_type()
@@ -292,7 +294,7 @@ class MediaView(PeriodAccessMixin, DetailView):
         context['room'] = get_room(name=media.course.title, content_type=content_type,
                                    id=media.course.id)
 
-        access = get_access(media, all_courses)
+        access = get_access(media, context['all_courses'])
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -337,22 +339,20 @@ class MediaView(PeriodAccessMixin, DetailView):
         media.save()
 
 
-class DocumentView(DetailView):
+class DocumentView(CourseAccessMixin, DetailView):
 
     model = Document
     template_name='teleforma/course_document.html'
 
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
-        all_courses = get_courses(self.request.user)
-        context['all_courses'] = all_courses
         document = self.get_object()
         context['course'] = document.course
         # context['notes'] = document.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
         context['room'] = get_room(name=document.course.title, content_type=content_type,
                                    id=document.course.id)
-        access = get_access(document, all_courses)
+        access = get_access(document, context['all_courses'])
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -390,15 +390,13 @@ class DocumentView(DetailView):
             return redirect('teleforma-document-detail', document.id)
 
 
-class ConferenceView(PeriodAccessMixin, DetailView):
+class ConferenceView(PeriodAccessMixin, CourseAccessMixin, DetailView):
 
     model = Conference
     template_name='teleforma/course_conference.html'
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
-        all_courses = get_courses(self.request.user)
-        context['all_courses'] = all_courses
         conference = self.get_object()
         context['course'] = conference.course
         context['type'] = conference.course_type
@@ -408,7 +406,7 @@ class ConferenceView(PeriodAccessMixin, DetailView):
                                    id=conference.course.id)
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
-        access = get_access(conference, all_courses)
+        access = get_access(conference, context['all_courses'])
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -483,7 +481,6 @@ class ConferenceRecordView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
-        context['all_courses'] = get_courses(self.request.user)
         context['mime_type'] = 'video/webm'
         status = Status()
         status.update()
