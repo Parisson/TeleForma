@@ -34,7 +34,7 @@
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-audio conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url teleforma-conference-audio period.id conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
     </div>
 
 <a href="{% url teleforma-desk-period-course period.id course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }} - {% trans "Session" %} {{ conference.session }}

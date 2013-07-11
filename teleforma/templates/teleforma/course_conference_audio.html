@@ -33,7 +33,7 @@
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-detail conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url teleforma-conference-detail period.id conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
     </div>
 
 {{ course.title }}{% if course.description %} - {{ course.description }}{% endif %} - {{ conference.session }} - {{ conference.professor }}

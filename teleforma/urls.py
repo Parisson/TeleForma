@@ -68,8 +68,8 @@ urlpatterns = patterns('',
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', PeriodCourseView.as_view(),
         name="teleforma-desk-period-course"),
 
-    url(r'^desk/media/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
-    url(r'^desk/media/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
 
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),
@@ -82,14 +82,14 @@ urlpatterns = patterns('',
     url(r'^archives/annals/by-iej/(\w+)/$', AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
     url(r'^archives/annals/by-course/(\w+)/$', AnnalsCourseView.as_view(), name="teleforma-annals-course"),
 
-    url(r'^desk/conferences/(?P<pk>.*)/video/$',
+    url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/video/$',
         ConferenceView.as_view(), name="teleforma-conference-detail"),
-    url(r'^desk/conferences/(?P<pk>.*)/audio/$',
+    url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/audio/$',
         ConferenceView.as_view(template_name="teleforma/course_conference_audio.html"),
         name="teleforma-conference-audio"),
     url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
         name="teleforma-conference-record"),
-    url(r'^desk/conferences/list/$', ConferenceListView.as_view(),
+    url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
 
     # Postman

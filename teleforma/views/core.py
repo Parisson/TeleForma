@@ -204,7 +204,17 @@ class CourseView(DetailView):
         return super(CourseView, self).dispatch(*args, **kwargs)
 
 
-class PeriodAccessMixin(object):
+class PeriodAccessMixin(View):
+
+    period = None
+
+    def get_context_data(self, **kwargs):
+        context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
+        period = Period.objects.filter(id=int(self.kwargs['period_id']))
+        if period:
+            self.period = period[0]
+        context['period'] = self.period
+        return context
 
     def render_to_response(self, context):
         period = context['period']
@@ -216,14 +226,8 @@ class PeriodAccessMixin(object):
 
 class PeriodCourseView(PeriodAccessMixin, CourseView):
 
-    def get_context_data(self, **kwargs):
-        context = super(PeriodCourseView, self).get_context_data(**kwargs)
-        self.period = None
-        period = Period.objects.filter(id=int(self.kwargs['period_id']))
-        if period:
-            self.period = period[0]
-        context['period'] = self.period
-        return context
+    pass
+
 
 class CoursesView(ListView):
 
@@ -265,7 +269,7 @@ class PeriodListView(PeriodAccessMixin, CoursesView):
         return context
 
 
-class MediaView(DetailView):
+class MediaView(PeriodAccessMixin, DetailView):
 
     model = Media
     template_name='teleforma/course_media.html'
@@ -290,7 +294,6 @@ class MediaView(DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
-        context['periods'] = get_periods(self.request.user)
         return context
 
     @method_decorator(login_required)
@@ -316,7 +319,7 @@ class MediaView(DetailView):
                                              (filename.encode('utf8'), extension)
             return response
         else:
-            return redirect('teleforma-media-detail', media.id)
+            return redirect('teleforma-media-detail', self.context['period'].id, media.id)
 
 
     @jsonrpc_method('teleforma.publish_media')
@@ -385,7 +388,7 @@ class DocumentView(DetailView):
             return redirect('teleforma-document-detail', document.id)
 
 
-class ConferenceView(DetailView):
+class ConferenceView(PeriodAccessMixin, DetailView):
 
     model = Conference
     template_name='teleforma/course_conference.html'
@@ -407,7 +410,6 @@ class ConferenceView(DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
-        context['periods'] = get_periods(self.request.user)
         return context
 
     @jsonrpc_method('teleforma.stop_conference')
@@ -434,7 +436,7 @@ class ConferenceView(DetailView):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
 
-class ConferenceListView(View):
+class ConferenceListView(PeriodAccessMixin, View):
 
     @jsonrpc_method('teleforma.get_conference_list')
     def get_conference_list(request):
@@ -469,7 +471,7 @@ class ConferenceListView(View):
                 s.teleforma.create_conference(conference.to_json_dict())
 
 
-class ConferenceRecordView(FormView):
+class ConferenceRecordView(PeriodAccessMixin, FormView):
     "Conference record form : TeleCaster module required"
 
     model = Conference
@@ -488,7 +490,8 @@ class ConferenceRecordView(FormView):
         return context
 
     def get_success_url(self):
-        return reverse('teleforma-conference-detail', kwargs={'pk':self.conference.id})
+        return reverse('teleforma-conference-detail', kwargs={'period_id': self.context['period'].id,
+                                                              'pk':self.conference.id})
 
     def form_valid(self, form):
         form.save()
@@ -595,5 +598,4 @@ class HelpView(TemplateView):
 
     def dispatch(self, *args, **kwargs):
         return super(HelpView, self).dispatch(*args, **kwargs)
-
 

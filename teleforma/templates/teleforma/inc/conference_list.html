@@ -15,7 +15,7 @@
             <tr>
             {% if stream.streaming %}
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px">
-               <a href="{% url teleforma-conference-detail stream.conference.id %}" title="{% trans "View" %}">
+               <a href="{% url teleforma-conference-detail period.id stream.conference.id %}" title="{% trans "View" %}">
                <img id="snapshot-{{ stream.course.code }}-{{ stream.course_type }}" src="{{ stream.snapshot_url }}" width="100%" alt="{% trans 'Click here' %}" />
                </a>
             </td>

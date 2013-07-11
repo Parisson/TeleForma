@@ -73,10 +73,10 @@ $(document).ready(function(){
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
         {% if "video" in media.mime_type %}
-        <a href="{% url teleforma-media-detail media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url teleforma-media-detail period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
         {% endif %}
         {% if "audio" in media.mime_type %}
-        <a href="{% url teleforma-media-detail media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url teleforma-media-detail period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
         {% endif %}
         {% if user.is_staff %}
         <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
