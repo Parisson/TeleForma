@@ -490,7 +490,7 @@ class ConferenceRecordView(FormView):
         return context
 
     def get_success_url(self):
-        return reverse('teleforma-conference-detail', kwargs={'period_id': self.context['period'].id,
+        return reverse('teleforma-conference-detail', kwargs={'period_id': self.conference.period.id,
                                                               'pk':self.conference.id})
 
     def form_valid(self, form):
