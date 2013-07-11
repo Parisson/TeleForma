@@ -436,7 +436,7 @@ class ConferenceView(PeriodAccessMixin, DetailView):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
 
-class ConferenceListView(PeriodAccessMixin, View):
+class ConferenceListView(View):
 
     @jsonrpc_method('teleforma.get_conference_list')
     def get_conference_list(request):
@@ -584,6 +584,34 @@ class ConferenceRecordView(PeriodAccessMixin, FormView):
         url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
         s = ServiceProxy(url)
         s.teleforma.create_conference(conference.to_json_dict())
+
+
+class ProfessorListView(View):
+
+    @jsonrpc_method('teleforma.get_professor_list')
+    def get_professor_list(request):
+        professors = Professor.objects.all()
+        return [p.to_json_dict() for p in professors]
+
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+
+        s = ServiceProxy(url)
+        remote_list = s.teleforma.get_professor_list()
+        for professor_dict in remote_list['result']:
+            user, c = User.objects.get_or_create(username=professor_dict['username'],
+                                       first_name=professor_dict['first_name'],
+                                       last_name=professor_dict['last_name'])
+            if c:
+                professor = Professor.objects.get_or_create(user=user)
+                for course_code in professor_dict['courses']:
+                    course = Course.objects.filter(code=course_code)
+                    if course:
+                        professor.courses.add(course)
+                professor.save()
 
 
 class HelpView(TemplateView):

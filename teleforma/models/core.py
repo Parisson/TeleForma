@@ -182,6 +182,14 @@ class Professor(Model):
     def __unicode__(self):
         return self.user.last_name + ' ' + self.user.first_name[0] + '.'
 
+    def to_json_dict(self):
+        data = {'username': self.user.username,
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name,
+                'courses': [course.code for course in self.courses.all()],
+                 }
+        return data
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
         verbose_name = _('professor')
