@@ -339,10 +339,10 @@ class Conference(Model):
             self.comment = data['comment']
 
         if 'room' in data.keys():
-
             self.room, c = Room.objects.get_or_create(name=data['room'],
                                                    organization=organization)
         self.save()
+        self.course.save()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'

@@ -545,26 +545,11 @@ class ConferenceRecordView(PeriodAccessMixin, FormView):
     @jsonrpc_method('teleforma.create_conference')
     def create(request, conference):
         if isinstance(conference, dict):
-            course = Course.objects.get(code=conference['course_code'])
-            course_type = CourseType.objects.get(name=conference['course_type'])
-            conf, c = Conference.objects.get_or_create(public_id=conference['id'],
-                                                       course=course, course_type=course_type)
-            if c:
-                user = User.objects.get(username=conference['professor_id'])
-                conf.professor = Professor.objects.get(user=user)
-                try:
-                    organization, c = Organization.objects.get_or_create(name=conference['organization'])
-                    conf.room, c = Room.objects.get_or_create(name=conference['room'],
-                                                       organization=organization)
-                except:
-                    pass
+            conf = Conference.objects.filter(public_id=conference['id'])
+            if not conf:
+                conf = Conference()
+                conf.from_json_dict(conference)
 
-                conf.date_begin = datetime.datetime.now()
-                conf.period, c = Period.objects.get_or_create(name=conference['period'])
-                conf.session = conference['session']
-                conf.comment = conference['comment']
-                conf.save()
-                course.save()
                 for stream in conference['streams']:
                     host = stream['host']
                     port = stream['port']
