@@ -83,13 +83,16 @@ except:
 
 
 def format_courses(courses, course=None, queryset=None, types=None):
-    if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
-        from teleforma.views.crfpa import format_crfpa_courses
-        return format_crfpa_courses(courses, course, queryset, types)
-
-    elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
-        from teleforma.views.ae import format_ae_courses
-        return format_ae_courses(courses, course, queryset, types)
+    if queryset:
+        for c in queryset:
+            if c and c.code != 'X':
+                courses.append({'course': c, 'types': types.all(),
+                'date': c.date_modified, 'number': c.number})
+    elif course:
+        if course.code != 'X':
+            courses.append({'course': course, 'types': types.all(),
+            'date': course.date_modified, 'number': course.number})
+    return courses
 
 
 def get_courses(user, date_order=False, num_order=False, num_courses=False, period=None):
