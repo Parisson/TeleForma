@@ -611,8 +611,9 @@ class ProfessorListView(View):
             professor, c = Professor.objects.get_or_create(user=user)
             for course_code in professor_dict['courses']:
                 course = Course.objects.filter(code=course_code)
-                if course and not course in professor.courses.all():
-                    professor.courses.add(course[0])
+                if course:
+                    if not course[0] in professor.courses.all():
+                        professor.courses.add(course[0])
             professor.save()
 
 
