@@ -511,7 +511,7 @@ class ConferenceRecordView(FormView):
         self.live_message()
 
         try:
-            self.push(self.conference)
+            self.push()
         except:
             pass
 
@@ -569,10 +569,10 @@ class ConferenceRecordView(FormView):
         else:
             raise 'Error : input must be a conference dictionnary'
 
-    def push(self, conference):
+    def push(self):
         url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
         s = ServiceProxy(url)
-        s.teleforma.create_conference(conference.to_json_dict())
+        s.teleforma.create_conference(self.conference.to_json_dict())
 
 
 class ProfessorListView(View):
