@@ -482,6 +482,7 @@ class ConferenceRecordView(FormView):
         conference.date_begin = datetime.datetime.now()
         conference.public_id = uuid
         conference.save()
+        self.conference = conference
         status = Status()
         status.get_hosts()
 
