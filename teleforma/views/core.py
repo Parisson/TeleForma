@@ -478,10 +478,10 @@ class ConferenceRecordView(FormView):
     def form_valid(self, form):
         form.save()
         uuid = get_random_hash()
-       (conference = form.instance
-       (conference.date_begin = datetime.datetime.now()
-       (conference.public_id = uuid
-       (conference.save()
+        conference = form.instance
+        conference.date_begin = datetime.datetime.now()
+        conference.public_id = uuid
+        conference.save()
         status = Status()
         status.get_hosts()
 
@@ -492,14 +492,14 @@ class ConferenceRecordView(FormView):
             port = station['port']
             server_type = station['server_type']
             server, c = StreamingServer.objects.get_or_create(host=status.ip, port=port, type=server_type)
-            station = Station(conference(conference, public_id=uuid)
+            station = Station(conference=conference, public_id=uuid)
             station.setup(conf)
             try:
                 station.start()
             except:
                 continue
             station.save()
-            stream = LiveStream(conference(conference, server=server,
+            stream = LiveStream(conference=conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
             if server_type == 'stream-m':
