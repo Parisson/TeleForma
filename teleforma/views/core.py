@@ -478,10 +478,10 @@ class ConferenceRecordView(FormView):
     def form_valid(self, form):
         form.save()
         uuid = get_random_hash()
-        self.conference = form.instance
-        self.conference.date_begin = datetime.datetime.now()
-        self.conference.public_id = uuid
-        self.conference.save()
+       (conference = form.instance
+       (conference.date_begin = datetime.datetime.now()
+       (conference.public_id = uuid
+       (conference.save()
         status = Status()
         status.get_hosts()
 
@@ -492,14 +492,14 @@ class ConferenceRecordView(FormView):
             port = station['port']
             server_type = station['server_type']
             server, c = StreamingServer.objects.get_or_create(host=status.ip, port=port, type=server_type)
-            station = Station(conference=self.conference, public_id=uuid)
+            station = Station(conference(conference, public_id=uuid)
             station.setup(conf)
             try:
                 station.start()
             except:
                 continue
             station.save()
-            stream = LiveStream(conference=self.conference, server=server,
+            stream = LiveStream(conference(conference, server=server,
                             stream_type=type, streaming=True)
             stream.save()
             if server_type == 'stream-m':
@@ -508,7 +508,7 @@ class ConferenceRecordView(FormView):
                 except:
                     pass
 
-        self.live_message()
+        self.live_message(conference)
 
         try:
             self.push()
@@ -517,16 +517,16 @@ class ConferenceRecordView(FormView):
 
         return super(ConferenceRecordView, self).form_valid(form)
 
-    def live_message(self):
+    def live_message(self, conference):
         from jqchat.models import Message
         user, c = User.objects.get_or_create(username='bot')
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        room = get_room(name=self.conference.course.code, period=self.conference.period.name,
+        room = get_room(name=self.conference.course.code, period=conference.period.name,
                            content_type=content_type,
-                           id=self.conference.course.id)
+                           id=conference.course.id)
         text = _("A new live conference has started : ")
         text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
-                       kwargs={'period_id': self.conference.period.id, 'pk':self.conference.id})
+                       kwargs={'period_id': conference.period.id, 'pk': conference.id})
         message = Message.objects.create_message(user, room, text)
 
     def snapshot(self, url, dir):
@@ -549,8 +549,8 @@ class ConferenceRecordView(FormView):
         if isinstance(conf_dict, dict):
             conferences = Conference.objects.filter(public_id=conf_dict['id'])
             if not conferences:
-                self.conference = Conference()
-                self.conference.from_json_dict(conf_dict)
+                conference = Conference()
+                conference.from_json_dict(conf_dict)
 
                 for stream in conf_dict['streams']:
                     host = stream['host']
@@ -561,11 +561,11 @@ class ConferenceRecordView(FormView):
                     server, c = StreamingServer.objects.get_or_create(host=site,
                                                                       port=port,
                                                                       type=server_type)
-                    stream = LiveStream(conference=self.conference, server=server,
+                    stream = LiveStream(conference=conference, server=server,
                                         stream_type=stream_type, streaming=True)
                     stream.save()
 
-                self.live_message()
+                self.live_message(conference)
         else:
             raise 'Error : input must be a conference dictionnary'
 
