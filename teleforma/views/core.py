@@ -453,6 +453,19 @@ class ConferenceListView(View):
                 s.teleforma.create_conference(conference.to_json_dict())
 
 
+def live_message(conference):
+        from jqchat.models import Message
+        user, c = User.objects.get_or_create(username='bot')
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        room = get_room(name=conference.course.code, period=conference.period.name,
+                           content_type=content_type,
+                           id=conference.course.id)
+        text = _("A new live conference has started : ")
+        text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
+                       kwargs={'period_id': conference.period.id, 'pk': conference.id})
+        message = Message.objects.create_message(user, room, text)
+
+
 class ConferenceRecordView(FormView):
     "Conference record form : TeleCaster module required"
 
@@ -509,7 +522,7 @@ class ConferenceRecordView(FormView):
                 except:
                     pass
 
-        self.live_message(conference)
+        live_message(conference)
 
         try:
             self.push()
@@ -517,18 +530,6 @@ class ConferenceRecordView(FormView):
             pass
 
         return super(ConferenceRecordView, self).form_valid(form)
-
-    def live_message(self, conference):
-        from jqchat.models import Message
-        user, c = User.objects.get_or_create(username='bot')
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        room = get_room(name=conference.course.code, period=conference.period.name,
-                           content_type=content_type,
-                           id=conference.course.id)
-        text = _("A new live conference has started : ")
-        text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
-                       kwargs={'period_id': conference.period.id, 'pk': conference.id})
-        message = Message.objects.create_message(user, room, text)
 
     def snapshot(self, url, dir):
         width = 160
@@ -566,7 +567,7 @@ class ConferenceRecordView(FormView):
                                         stream_type=stream_type, streaming=True)
                     stream.save()
 
-                self.live_message(conference)
+                live_message(conference)
         else:
             raise 'Error : input must be a conference dictionnary'
 
