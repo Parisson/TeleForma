@@ -13,6 +13,7 @@ class Command(BaseCommand):
         text = args[1]
         username = args[0]
         user = User.objects.get(username=username)
-        room = Room.objects.get(name='site')
-        message = Message.objects.create_message(user, room, text)
+        rooms = Room.objects.filter(name__in='site')
+        for room in rooms:
+            message = Message.objects.create_message(user, room, text)
 

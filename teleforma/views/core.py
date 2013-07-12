@@ -508,12 +508,26 @@ class ConferenceRecordView(FormView):
                 except:
                     pass
 
+        self.live_message()
+
         try:
             self.push(self.conference)
         except:
             pass
 
         return super(ConferenceRecordView, self).form_valid(form)
+
+    def live_message(self):
+        from jqchat.models import Message
+        user, c = User.objects.get_or_create(username='bot')
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        room = get_room(name=self.conference.course.code, period=self.conference.period.name,
+                           content_type=content_type,
+                           id=self.conference.course.id)
+        text = _("A new live conference has started : ")
+        text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
+                       kwargs={'period_id': self.conference.period.id, 'pk':self.conference.id})
+        message = Message.objects.create_message(user, room, text)
 
     def snapshot(self, url, dir):
         width = 160
@@ -531,25 +545,27 @@ class ConferenceRecordView(FormView):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 
     @jsonrpc_method('teleforma.create_conference')
-    def create(request, conference):
-        if isinstance(conference, dict):
-            conf = Conference.objects.filter(public_id=conference['id'])
-            if not conf:
-                conf = Conference()
-                conf.from_json_dict(conference)
+    def create(request, conf_dict):
+        if isinstance(conf_dict, dict):
+            conferences = Conference.objects.filter(public_id=conf_dict['id'])
+            if not conferences:
+                self.conference = Conference()
+                self.conference.from_json_dict(conf_dict)
 
-                for stream in conference['streams']:
+                for stream in conf_dict['streams']:
                     host = stream['host']
                     port = stream['port']
                     server_type = stream['server_type']
                     stream_type = stream['stream_type']
-                    site = Site.objects.all()
-                    server, c = StreamingServer.objects.get_or_create(host=site[0],
+                    site = Site.objects.all()[0]
+                    server, c = StreamingServer.objects.get_or_create(host=site,
                                                                       port=port,
                                                                       type=server_type)
-                    stream = LiveStream(conference=conf, server=server,
+                    stream = LiveStream(conference=self.conference, server=server,
                                         stream_type=stream_type, streaming=True)
                     stream.save()
+
+                self.live_message()
         else:
             raise 'Error : input must be a conference dictionnary'
 
