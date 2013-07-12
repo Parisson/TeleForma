@@ -521,7 +521,7 @@ class ConferenceRecordView(FormView):
         from jqchat.models import Message
         user, c = User.objects.get_or_create(username='bot')
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        room = get_room(name=self.conference.course.code, period=conference.period.name,
+        room = get_room(name=conference.course.code, period=conference.period.name,
                            content_type=content_type,
                            id=conference.course.id)
         text = _("A new live conference has started : ")
