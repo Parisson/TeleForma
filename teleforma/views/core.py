@@ -192,10 +192,11 @@ class PeriodAccessMixin(View):
 
     def get_context_data(self, **kwargs):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
-        period = Period.objects.filter(id=int(self.kwargs['period_id']))
-        if period:
-            self.period = period[0]
-        context['period'] = self.period
+        if 'period_id' in self.kwargs.keys():
+            period = Period.objects.filter(id=int(self.kwargs['period_id']))
+            if period:
+                self.period = period[0]
+            context['period'] = self.period
         return context
 
     def render_to_response(self, context):
