@@ -497,9 +497,10 @@ class Document(MediaBase):
         return  ' - '.join([unicode(self.course), unicode(types), self.title ])
 
     def save(self, **kwargs):
-        super(Document, self).save(**kwargs)
-        self.course.save()
+        if not self.is_annal:
+            self.course.save()
         self.set_mime_type()
+        super(Document, self).save(**kwargs)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document'
