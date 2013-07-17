@@ -245,7 +245,9 @@ class CourseListView(CourseAccessMixin, ListView):
             course = Course.objects.filter(code=course_dict['code'])
             if not course:
                 course = Course()
-                course.from_dict(course_dict)
+            else:
+                course = course[0]
+            course.from_dict(course_dict)
 
 
 class CourseView(CourseAccessMixin, DetailView):
