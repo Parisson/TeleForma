@@ -547,7 +547,7 @@ class ConferenceRecordView(FormView):
                 except:
                     pass
 
-        live_message(conference)
+        live_message(self.conference)
 
         try:
             self.push()
