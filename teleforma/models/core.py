@@ -180,7 +180,7 @@ class Course(Model):
                 'code' : self.code,
                 'title_tweeter' : self.title_tweeter,
                 'number' : str(self.number),
-                ]
+                }
         return dict
 
     def from_dict(self, data):
