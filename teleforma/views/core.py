@@ -254,6 +254,16 @@ class CourseView(CourseAccessMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
 
+    @jsonrpc_method('teleforma.get_dep_courses')
+    def get_dep_courses(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+
+    @jsonrpc_method('teleforma.get_dep_periods')
+    def get_dep_periods(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
+
 
 class MediaView(CourseAccessMixin, DetailView):
 

@@ -31,9 +31,9 @@ Install the system dependencies
 
         sudo aptitude install python python-dev python-pip python-xml python-mysqldb mysql-server \
             python-ctypes python-setuptools python-support python-docutils \
-            python-libxml2 python-lxml python-numpy \
+            python-libxml2 python-lxml python-numpy python-yaml \
             python-scipy python-imaging python-mutagen python-gobject python-gst0.10 \
-            gstreamer0.10-plugins-base gobject-introspection python-psutil nginx
+            gstreamer0.10-plugins-base gobject-introspection python-psutil nginx apache2 libapache2-mod-wsgi
 
     To get MP3 reading and writing::
 
@@ -45,7 +45,12 @@ Install the system dependencies
 
         sudo pip install -U django==1.4.5 south django-pagination django-registration django-extensions \
                             django-notes django-timezones django-markup-mixin sorl-thumbnail django-json-rpc \
-                            xlwt pytz googletools
+                            xlwt pytz
+
+
+    Optional::
+
+
 
 * On other linux platforms:
 
