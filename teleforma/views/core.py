@@ -233,6 +233,20 @@ class CourseListView(CourseAccessMixin, ListView):
     def get_dep_courses(request):
         return [course.to_dict() for course in Course.objects.all()]
 
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+
+        remote_list = s.teleforma.get_all_courses()
+        for course_dict in remote_list['result']:
+            course = Course.objects.filter(code=course_dict['code'])
+            if not course:
+                course = Course()
+                course.from_dict(course_dict)
+
 
 class CourseView(CourseAccessMixin, DetailView):
 
