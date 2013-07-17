@@ -324,7 +324,7 @@ class Conference(Model):
             data['organization'] = self.room.organization.name
 
         streams = self.livestream.all()
-        if streams and streaming:
+        if streams:
             for stream in streams:
                 data['streams'].append({'host': stream.server.host,
                                         'port': stream.server.port,
