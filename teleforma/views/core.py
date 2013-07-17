@@ -572,6 +572,7 @@ class ConferenceRecordView(FormView):
             if not conferences:
                 conference = Conference()
                 conference.from_json_dict(conf_dict)
+                conference.save()
 
                 for stream in conf_dict['streams']:
                     host = stream['host']
