@@ -233,6 +233,10 @@ class CourseListView(CourseAccessMixin, ListView):
     def dispatch(self, *args, **kwargs):
         return super(CourseListView, self).dispatch(*args, **kwargs)
 
+    @jsonrpc_method('teleforma.get_all_courses')
+    def get_dep_courses(request):
+        return [course.to_dict() for course in Course.objects.all()]
+
 
 class CourseView(CourseAccessMixin, DetailView):
 
@@ -257,16 +261,6 @@ class CourseView(CourseAccessMixin, DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
-
-    @jsonrpc_method('teleforma.get_dep_courses')
-    def get_dep_courses(request, id):
-        department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
-
-    @jsonrpc_method('teleforma.get_dep_periods')
-    def get_dep_periods(request, id):
-        department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
 
 
 class MediaView(CourseAccessMixin, DetailView):
@@ -587,6 +581,15 @@ class ConferenceRecordView(FormView):
         s = ServiceProxy(url)
         s.teleforma.create_conference(self.conference.to_json_dict())
 
+    @jsonrpc_method('teleforma.get_dep_courses')
+    def get_dep_courses(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+
+    @jsonrpc_method('teleforma.get_dep_periods')
+    def get_dep_periods(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
 
 class ProfessorListView(View):
 
