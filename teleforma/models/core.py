@@ -181,9 +181,10 @@ class Course(Model):
         self.department, c = Department.objects.get_or_create(name=data['department'], organization=organization)
         self.title = data['title']
         self.description = data['description']
-        self.code = date['code']
+        self.code = data['code']
         self.title_tweeter = data['title_tweeter']
-        self.number = int(data['number'])
+        if data['number'] != 'None':
+            self.number = int(data['number'])
         self.save()
 
     class Meta(MetaCore):
