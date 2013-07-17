@@ -592,7 +592,7 @@ class ConferenceRecordView(FormView):
             raise 'Error : input must be a conference dictionnary'
 
     def push(self):
-        url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        url = 'http://' + self.conference.department.domain + '/json/'
         s = ServiceProxy(url)
         s.teleforma.create_conference(self.conference.to_json_dict())
 
