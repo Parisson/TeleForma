@@ -539,7 +539,7 @@ class ConferenceRecordView(FormView):
             stream.save()
             if server_type == 'stream-m':
                 try:
-                    self.snapshot('http://localhost:8080/snapshot/safe', station.output_dir)
+                    self.snapshot('http://localhost:8080/snapshot/monitor', station.output_dir)
                 except:
                     pass
 
