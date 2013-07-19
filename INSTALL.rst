@@ -33,13 +33,17 @@ Install the system dependencies
             python-ctypes python-setuptools python-support python-docutils \
             python-libxml2 python-lxml python-numpy python-yaml \
             python-scipy python-imaging python-mutagen python-gobject python-gst0.10 \
-            gstreamer0.10-plugins-base gobject-introspection python-psutil nginx apache2 libapache2-mod-wsgi
+            gobject-introspection python-psutil nginx apache2 libapache2-mod-wsgi \
+            gstreamer0.10-plugins-base gstreamer0.10-plugins-good \
+            gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
+
+        sudo apt-get remove --purge pulseaudio
 
     To get MP3 reading and writing::
 
         echo 'deb http://www.debian-multimedia.org stable main' | sudo tee -a /etc/apt/sources-list
         sudo apt-get update
-        sudo aptitude install gstreamer0.10-fluendo-mp3 gstreamer0.10-lame
+        sudo aptitude install gstreamer0.10-lame
 
     More packages::
 
