@@ -547,7 +547,11 @@ class ConferenceRecordView(FormView):
                 except:
                     pass
 
-        live_message(self.conference)
+        
+        try:
+            live_message(self.conference)
+        except:
+            pass
 
         try:
             self.push()
@@ -592,8 +596,10 @@ class ConferenceRecordView(FormView):
                     stream = LiveStream(conference=conference, server=server,
                                         stream_type=stream_type, streaming=True)
                     stream.save()
-
-                live_message(conference)
+                try:
+                    live_message(conference)
+                except:
+                    pass
         else:
             raise 'Error : input must be a conference dictionnary'
 
