@@ -234,17 +234,18 @@ class CourseListView(CourseAccessMixin, ListView):
         return super(CourseListView, self).dispatch(*args, **kwargs)
 
     @jsonrpc_method('teleforma.get_all_courses')
-    def get_dep_courses(request):
-        return [course.to_dict() for course in Course.objects.all()]
+    def get_dep_courses(request, organization_name, department_name):
+        organization = organization.objects.get(name=organization_name)
+        department = Department.objects.get(name=department_name, organization=organization)
+        return [course.to_dict() for course in Course.objects.filter(department=department)]
 
-    def pull(request, host=None):
-        if host:
-            url = 'http://' + host + '/json/'
-        else:
-            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+    def pull(request, organization_name, department_name):
+        organization = organization.objects.get(name=organization_name)
+        department = Department.objects.get(name=department_name, organization=organization)
+        url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
 
-        remote_list = s.teleforma.get_all_courses()
+        remote_list = s.teleforma.get_all_courses(organization.name, department.name)
         for course_dict in remote_list['result']:
             course = Course.objects.filter(code=course_dict['code'])
             if not course:
@@ -428,7 +429,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
             station.stop()
         if 'telecaster' in settings.INSTALLED_APPS:
             try:
-                url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+                url = 'http://' + conference.department.domain + '/json/'
                 s = ServiceProxy(url)
                 s.teleforma.stop_conference(conference.public_id)
             except:
