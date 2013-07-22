@@ -35,7 +35,7 @@ Install the system dependencies
             python-scipy python-imaging python-mutagen python-gobject python-gst0.10 \
             gobject-introspection python-psutil nginx apache2 libapache2-mod-wsgi \
             gstreamer0.10-plugins-base gstreamer0.10-plugins-good \
-            gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
+            gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly webp 
 
         sudo apt-get remove --purge pulseaudio
 
