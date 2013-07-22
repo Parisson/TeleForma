@@ -511,7 +511,6 @@ class ConferenceRecordView(FormView):
         context['mime_type'] = 'video/webm'
         status = Status()
         status.update()
-        context['host'] = status.ip
         context['hidden_fields'] = self.hidden_fields
         context['room'] = get_room(name='monitor')
         return context
