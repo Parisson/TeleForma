@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2011-2012 Parisson SARL
+# Copyright (c) 2011-2013 Parisson SARL
 
 # This software is a computer program whose purpose is to backup, analyse,
 # transcode and stream any audio content with its metadata over a web frontend.
@@ -233,8 +233,8 @@ class CourseListView(CourseAccessMixin, ListView):
     def dispatch(self, *args, **kwargs):
         return super(CourseListView, self).dispatch(*args, **kwargs)
 
-    @jsonrpc_method('teleforma.get_all_courses')
-    def get_dep_courses(request, organization_name, department_name):
+    @jsonrpc_method('teleforma.get_course_list')
+    def get_course_list(request, organization_name, department_name):
         organization = organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name, organization=organization)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
@@ -245,7 +245,7 @@ class CourseListView(CourseAccessMixin, ListView):
         url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
 
-        remote_list = s.teleforma.get_all_courses(organization.name, department.name)
+        remote_list = s.teleforma.get_course_list(organization.name, department.name)
         for course_dict in remote_list['result']:
             course = Course.objects.filter(code=course_dict['code'])
             if not course:
@@ -605,15 +605,6 @@ class ConferenceRecordView(FormView):
         s = ServiceProxy(url)
         s.teleforma.create_conference(self.conference.to_json_dict())
 
-    @jsonrpc_method('teleforma.get_dep_courses')
-    def get_dep_courses(request, id):
-        department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
-
-    @jsonrpc_method('teleforma.get_dep_periods')
-    def get_dep_periods(request, id):
-        department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
 
 class ProfessorListView(View):
 
