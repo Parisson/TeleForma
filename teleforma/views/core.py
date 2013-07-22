@@ -196,7 +196,7 @@ class PeriodAccessMixin(View):
             period = Period.objects.filter(id=int(self.kwargs['period_id']))
             if period:
                 self.period = period[0]
-            context['period'] = self.period
+        context['period'] = self.period
         return context
 
     def render_to_response(self, context):
