@@ -407,7 +407,7 @@ class LiveStream(Model):
         if self.conference:
             return self.conference.slug
         else:
-            return server.host + server.port
+            return self.server.host + self.server.port
 
     @property
     def mount_point(self):
