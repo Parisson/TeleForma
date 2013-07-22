@@ -192,7 +192,7 @@ class PeriodAccessMixin(View):
             period = Period.objects.filter(id=int(self.kwargs['period_id']))
             if period:
                 self.period = period[0]
-            context['period'] = self.period
+        context['period'] = self.period
         return context
 
     def render_to_response(self, context):
@@ -201,6 +201,11 @@ class PeriodAccessMixin(View):
             messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-home')
         return super(PeriodAccessMixin, self).render_to_response(context)
+
+    @jsonrpc_method('teleforma.get_period_list')
+    def get_period_list(request, department_id):
+        department = Department.objects.get(id=department_id)
+        return [period.name for period in Period.objects.filter(department=department)]
 
 
 class CourseAccessMixin(PeriodAccessMixin):
@@ -230,9 +235,8 @@ class CourseListView(CourseAccessMixin, ListView):
         return super(CourseListView, self).dispatch(*args, **kwargs)
 
     @jsonrpc_method('teleforma.get_course_list')
-    def get_course_list(request, organization_name, department_name):
-        organization = organization.objects.get(name=organization_name)
-        department = Department.objects.get(name=department_name, organization=organization)
+    def get_course_list(request, department_id):
+        department = Department.objects.get(id=department_id)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
     def pull(request, organization_name, department_name):
@@ -249,6 +253,16 @@ class CourseListView(CourseAccessMixin, ListView):
             else:
                 course = course[0]
             course.from_dict(course_dict)
+            
+    @jsonrpc_method('teleforma.get_dep_courses')
+    def get_dep_courses(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+
+    @jsonrpc_method('teleforma.get_dep_periods')
+    def get_dep_periods(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
 
 
 class CourseView(CourseAccessMixin, DetailView):
@@ -443,29 +457,25 @@ class ConferenceListView(View):
         conferences = Conference.objects.all()
         return [c.to_json_dict() for c in conferences]
 
-    def pull(request, host=None):
-        if host:
-            url = 'http://' + host + '/json/'
-        else:
-            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+    def pull(request):
+        departments = Department.objects.all()
+        for department in departments:
+            url = 'http://' + department.domain + '/json/'
+            s = ServiceProxy(url)
+            remote_list = s.teleforma.get_conference_list()
+            for conf_dict in remote_list['result']:
+                conference = Conference.objects.filter(public_id=conf_dict['id'])
+                if not conference:
+                    conference = Conference()
+                    conference.from_json_dict(conf_dict)
 
-        s = ServiceProxy(url)
-        remote_list = s.teleforma.get_conference_list()
-        for conf_dict in remote_list['result']:
-            conference = Conference.objects.filter(public_id=conf_dict['id'])
-            if not conference:
-                conference = Conference()
-                conference.from_json_dict(conf_dict)
-
-    def push(request, host=None):
-        if not host:
-            host = settings.TELECASTER_MASTER_SERVER
-        url = 'http://' + host + '/json/'
-
+    def push(request, organization_name, department_name):
+        organization = organization.objects.get(name=organization_name)
+        department = Department.objects.get(name=department_name, organization=organization)
+        url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
         remote_list = s.teleforma.get_conference_list()['result']
         remote_ids = [conf['id'] for conf in remote_list]
-
         for conference in Conference.objects.all():
             if not conference.public_id in remote_ids and conference.date_end:
                 s.teleforma.create_conference(conference.to_json_dict())
@@ -548,7 +558,6 @@ class ConferenceRecordView(FormView):
                 except:
                     pass
 
-        
         try:
             live_message(self.conference)
         except:
@@ -618,6 +627,7 @@ class ProfessorListView(View):
         return [p.to_json_dict() for p in professors]
 
     def pull(request, host=None):
+        
         if host:
             url = 'http://' + host + '/json/'
         else:
