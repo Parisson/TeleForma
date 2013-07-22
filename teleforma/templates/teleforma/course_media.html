@@ -98,7 +98,7 @@ $(document).ready(function(){
 <div class="video">
 <video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}' {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}{% thumbnail related.file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}{% endfor %}{% endif %}>
 <!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ MEDIA_URL|set_host:HOST }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+<source src="{{ MEDIA_URL|set_host:host }}{{ media.item.file }}" type="{{ media.mime_type }}" />
 </video>
 </div>
 
@@ -109,7 +109,7 @@ $(document).ready(function(){
  {% for related in media.item.related.all %}
   {% if related.title == "preview" %}
    {% thumbnail related.file "300" as im %}
-    <img src="{{ im.url|set_host:HOST }}" width="300px" alt="preview" />
+    <img src="{{ im.url|set_host:host }}" width="300px" alt="preview" />
    {% endthumbnail %}
   {% endif %}
  {% endfor %}
@@ -119,7 +119,7 @@ $(document).ready(function(){
 </div>
 <div class="audio">
 <audio controls preload="auto">
-<source src="{{ MEDIA_URL|set_host:HOST }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+<source src="{{ MEDIA_URL|set_host:host }}{{ media.item.file }}" type="{{ media.mime_type }}" />
 </audio>
 </div>
 {% endif %}
