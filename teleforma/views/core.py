@@ -507,15 +507,6 @@ class ConferenceRecordView(FormView):
         context['mime_type'] = 'video/webm'
         status = Status()
         status.update()
-
-        request_host = get_host(self.request)
-        local_host = status.ip
-        if request_host.split('.')[0] == local_host.split('.')[0]:
-            ip = local_host
-        else:
-            ip = settings.ROUTER_IP
-
-        context['host'] = ip
         context['hidden_fields'] = self.hidden_fields
         context['room'] = get_room(name='monitor')
         return context
