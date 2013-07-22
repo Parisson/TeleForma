@@ -258,6 +258,16 @@ class CourseListView(CourseAccessMixin, ListView):
                 course = course[0]
             course.from_dict(course_dict)
             
+    @jsonrpc_method('teleforma.get_dep_courses')
+    def get_dep_courses(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+
+    @jsonrpc_method('teleforma.get_dep_periods')
+    def get_dep_periods(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
+
 
 class CourseView(CourseAccessMixin, DetailView):
 
