@@ -290,7 +290,6 @@ class AnnalsView(ListView):
         if iej:
             docs = docs.filter(iej=iej)
         if course:
-            print course
             docs = docs.filter(course=course)
 
         for doc in docs:

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-19 16:00+0200\n"
+"POT-Creation-Date: 2013-07-22 22:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -21,8 +21,8 @@ msgstr ""
 msgid "user"
 msgstr "utilisateur"
 
-#: models/ae.py:47 models/core.py:131 models/core.py:241 models/core.py:484
-#: models/core.py:527 models/core.py:569 models/crfpa.py:64
+#: models/ae.py:47 models/core.py:131 models/core.py:241 models/core.py:487
+#: models/core.py:530 models/core.py:572 models/crfpa.py:64
 msgid "period"
 msgstr "période"
 
@@ -51,13 +51,13 @@ msgid "Public"
 msgstr "Publié"
 
 #: models/core.py:91 models/core.py:103 models/core.py:123 models/core.py:135
-#: models/core.py:225 models/core.py:462 models/crfpa.py:47 models/crfpa.py:63
+#: models/core.py:225 models/core.py:465 models/crfpa.py:47 models/crfpa.py:63
 msgid "name"
 msgstr "nom"
 
 #: models/core.py:92 models/core.py:104 models/core.py:124 models/core.py:136
-#: models/core.py:150 models/core.py:226 models/core.py:380 models/core.py:443
-#: models/core.py:463 models/crfpa.py:48 models/pro.py:124
+#: models/core.py:150 models/core.py:226 models/core.py:380 models/core.py:446
+#: models/core.py:466 models/crfpa.py:48 models/pro.py:124
 msgid "description"
 msgstr "description"
 
@@ -73,15 +73,15 @@ msgstr ""
 msgid "department"
 msgstr "département"
 
-#: models/core.py:143 models/core.py:244 models/core.py:481 models/core.py:567
+#: models/core.py:143 models/core.py:244 models/core.py:484 models/core.py:570
 msgid "course type"
 msgstr "type de matière"
 
-#: models/core.py:149 models/core.py:442 models/pro.py:46 models/pro.py:83
+#: models/core.py:149 models/core.py:445 models/pro.py:46 models/pro.py:83
 msgid "title"
 msgstr "titre"
 
-#: models/core.py:151 models/core.py:447 models/crfpa.py:62
+#: models/core.py:151 models/core.py:450 models/crfpa.py:62
 msgid "code"
 msgstr "cote"
 
@@ -89,11 +89,11 @@ msgstr "cote"
 msgid "tweeter title"
 msgstr ""
 
-#: models/core.py:153 models/core.py:446 models/pro.py:68
+#: models/core.py:153 models/core.py:449 models/pro.py:68
 msgid "date modified"
 msgstr "date de modification"
 
-#: models/core.py:154 models/core.py:464
+#: models/core.py:154 models/core.py:467
 msgid "number"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr "obligations"
 msgid "magistral"
 msgstr "magistral"
 
-#: models/core.py:192 models/core.py:243 models/core.py:479 models/core.py:565
+#: models/core.py:192 models/core.py:243 models/core.py:482 models/core.py:568
 #: models/pro.py:45
 msgid "course"
 msgstr "matière"
@@ -142,11 +142,11 @@ msgstr "date de début"
 msgid "end date"
 msgstr "date de fin"
 
-#: models/core.py:254 models/core.py:493 models/core.py:530 models/core.py:574
+#: models/core.py:254 models/core.py:496 models/core.py:533 models/core.py:577
 msgid "readers"
 msgstr ""
 
-#: models/core.py:369 models/core.py:397 models/core.py:482 models/core.py:563
+#: models/core.py:369 models/core.py:397 models/core.py:485 models/core.py:566
 msgid "conference"
 msgstr "conférence"
 
@@ -158,7 +158,7 @@ msgstr ""
 msgid "port"
 msgstr ""
 
-#: models/core.py:379 models/core.py:486 models/core.py:573
+#: models/core.py:379 models/core.py:489 models/core.py:576
 msgid "type"
 msgstr "type"
 
@@ -182,47 +182,47 @@ msgstr "Type de flux"
 msgid "streaming"
 msgstr "diffusion"
 
-#: models/core.py:436
+#: models/core.py:439
 msgid "live stream"
 msgstr "stream en direct"
 
-#: models/core.py:444
+#: models/core.py:447
 msgid "credits"
 msgstr "crédits"
 
-#: models/core.py:445 models/pro.py:67
+#: models/core.py:448 models/pro.py:67
 msgid "date added"
 msgstr "date d'ajout"
 
-#: models/core.py:448
+#: models/core.py:451
 msgid "published"
 msgstr "publié"
 
-#: models/core.py:449
+#: models/core.py:452
 msgid "mime type"
 msgstr "Type mime"
 
-#: models/core.py:450 models/pro.py:86
+#: models/core.py:453 models/pro.py:86
 msgid "weight"
 msgstr ""
 
-#: models/core.py:471
+#: models/core.py:474
 msgid "document type"
 msgstr "type de document"
 
-#: models/core.py:488 models/crfpa.py:111
+#: models/core.py:491 models/crfpa.py:111
 msgid "iej"
 msgstr "iej"
 
-#: models/core.py:490
+#: models/core.py:493
 msgid "annal"
 msgstr "annale"
 
-#: models/core.py:491
+#: models/core.py:494
 msgid "year"
 msgstr "année"
 
-#: models/core.py:492 models/core.py:529
+#: models/core.py:495 models/core.py:532
 msgid "file"
 msgstr "fichier"
 
@@ -1184,7 +1184,7 @@ msgstr ""
 "Vous n'avez pas accès à cette ressource et avez été redirigé vers votre "
 "bureau."
 
-#: views/core.py:484
+#: views/core.py:495
 msgid "A new live conference has started : "
 msgstr "Une nouvelle conférence en direct a commencé : "
 
