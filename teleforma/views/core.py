@@ -392,7 +392,7 @@ class DocumentView(CourseAccessMixin, DetailView):
                                              (document.title.encode('utf8'), extension)
             return response
         else:
-            return redirect('teleforma-document-detail', document.id)
+            return redirect('teleforma-home')
 
     def view(self, request, pk):
         courses = get_courses(request.user)
@@ -404,7 +404,7 @@ class DocumentView(CourseAccessMixin, DetailView):
             response = HttpResponse(fsock, mimetype=mimetype)
             return response
         else:
-            return redirect('teleforma-document-detail', document.id)
+            return redirect('teleforma-home')
 
 
 class ConferenceView(CourseAccessMixin, DetailView):
