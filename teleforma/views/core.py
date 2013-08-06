@@ -359,6 +359,24 @@ class MediaView(CourseAccessMixin, DetailView):
         media.save()
 
 
+class MediaPendingView(ListView):
+
+    model = Media
+    template_name='teleforma/media_pending.html'
+
+    def get_queryset(self):
+        return Media.objects.filter(is_published=False)
+
+    def get_context_data(self, **kwargs):
+        context = super(MediaPendingView, self).get_context_data(**kwargs)
+        return context
+
+    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MediaPendingView, self).dispatch(*args, **kwargs)
+
+
 class DocumentView(CourseAccessMixin, DetailView):
 
     model = Document
