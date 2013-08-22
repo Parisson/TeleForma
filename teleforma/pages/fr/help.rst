@@ -21,6 +21,21 @@ Pourquoi les flux vidéos ne s'affichent pas correctement dans mon navigateur ?
 
 Comme expliqué plus haut dans les recommandations nous vous conseillons vivement d'installer et d'utiliser les navigateurs libres et gratuits `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ ou `Chrome <https://www.google.com/chrome?hl=fr>`_ pour lesquels sont garantis tous les accès multi-média. Si vous utilisez Internet Explorer, merci d'installer le plugin libre et gratuit `WebM <https://tools.google.com/dlpage/webmmf/>`_ produit par Google.
 
+|
+
+Je n'arrive pas à télécharger un fichier audio ou vidéo !?
+-------------------------------------------------------------------
+
+ * Sur Windows : cliquer sur l'icône "Télécharger" avec le bouton DROIT de la souris puis cliquer avec le bouton GAUCHE sur "Enregistrer la cible du lien sous" pour l'enregistrer dans un dossier.
+ * Sur Mac : appuyer sur CTRL avant de cliquer à l'aide du bouton de la souris sur le bouton "Télécharger"
+ * Sur Linux : procéder comme sur windows
+ * Sur smartphones : un clic long ou court sur le bouton "Télécharger" devrait fonctionner.
+
+Pour lire les videos une fois le téléchargement éffectué, choisissez `VLC <http://www.videolan.org/vlc/>`_.
+
+|
+
+
 J'ai perdu mon mot de passe, que dois-je faire ?
 -------------------------------------------------------------------------------
 

@@ -14,9 +14,6 @@ http://{{ site.name }}
 Cette plateforme vous permet d’accéder tout au long de votre formation aux différents documents - fascicules de cours (selon la formule choisie), fascicules d’actualisation, sujets et corrigés - ainsi qu’à l’ensemble de vos enseignements à la demande ou en direct. La messagerie intégrée vous donne aussi la possibilité de communiquer avec les administrateurs et les professeurs. Une page d'aide sera bientôt disponible pour vous assister lors de la découverte de ces nouveaux services.
 
 
-Nous vous rappelons que votre formation commencera le lundi 5 novembre 2012.
-
-
 {% trans "Best regards" %},
 {% trans "The site administrator" %} {% trans "of the" %} {% organization %}
 
