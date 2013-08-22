@@ -8,7 +8,7 @@
     var conferenceUtils = {
         stop : function(id){
             json([id],'teleforma.conference_stop',function(){
-                location.href = '{% url teleforma-desk %}';});
+                location.href = '{% url teleforma-conference-record %}';});
         }}
 
     jQuery(window).ready(function(){
@@ -33,7 +33,7 @@
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-detail conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url teleforma-conference-detail period.id conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
     </div>
 
 {{ course.title }}{% if course.description %} - {{ course.description }}{% endif %} - {{ conference.session }} - {{ conference.professor }}
@@ -76,11 +76,3 @@
 
 </div>
 {% endblock course %}
-
-{% block chat %}
-{% if room %}
-{% with "General tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% endif %}
-{% endblock chat %}

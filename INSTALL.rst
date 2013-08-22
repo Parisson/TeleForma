@@ -29,17 +29,27 @@ Install the system dependencies
 
     Install all dependencies like this::
 
-        sudo aptitude install python python-dev python-django python-xml python-mysqldb mysql-server \
+        sudo aptitude install python python-dev python-pip python-xml python-mysqldb mysql-server \
             python-ctypes python-setuptools python-support python-docutils \
-            python-libxml2 python-django-registration python-lxml python-numpy \
+            python-libxml2 python-lxml python-numpy \
             python-scipy python-imaging python-mutagen python-gobject python-gst0.10 \
-            gstreamer0.10-plugins-base gobject-introspection python-django-south
+            gobject-introspection python-psutil nginx \
+            gstreamer0.10-plugins-base gstreamer0.10-plugins-good \
+            gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly webp 
+
+        sudo apt-get remove --purge pulseaudio
 
     To get MP3 reading and writing::
 
         echo 'deb http://www.debian-multimedia.org stable main' | sudo tee -a /etc/apt/sources-list
         sudo apt-get update
-        sudo aptitude install gstreamer0.10-fluendo-mp3 gstreamer0.10-lame
+        sudo aptitude install gstreamer0.10-lame
+
+    More packages::
+
+        sudo pip install -U django==1.4.5 south django-pagination django-registration django-extensions \
+                            django-notes django-timezones django-markup-mixin sorl-thumbnail django-json-rpc \
+                            xlwt pytz googletools
 
 * On other linux platforms:
 

@@ -42,28 +42,34 @@ from telemeta.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
-user_export = UsersXLSExport()
 profile_view = ProfileView()
 document = DocumentView()
 media = MediaView()
 
 urlpatterns = patterns('',
-#    url(r'^$', HomeView.as_view(), name='teleforma-home'),
-    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
-        name="teleforma-login"),
 
-    # Telemeta
-    url(r'^', include('telemeta.urls')),
+
+    # login
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+        name="teleforma-login"),
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
 
-    # Desk
-    url(r'^desk/$', CoursesView.as_view(), name="teleforma-desk"),
-    url(r'^desk/courses/(?P<pk>.*)/$', CourseView.as_view(), name="teleforma-course-detail"),
+    # Home
+    url(r'^$', HomeRedirectView.as_view(), name="teleforma-home"),
 
-    url(r'^desk/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
-    url(r'^desk/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+    # Telemeta
+    url(r'^', include('telemeta.urls')),
+
+    # Desk
+    url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
+    url(r'^desk/periods/(?P<period_id>.*)/courses/$', CourseListView.as_view(), name="teleforma-desk-period-list"),
+    url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
+        name="teleforma-desk-period-course"),
+
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
 
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),
@@ -71,49 +77,35 @@ urlpatterns = patterns('',
         name="teleforma-document-download"),
     url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
         name="teleforma-document-view"),
-#    url(r'^desk/documents/(?P<pk>.*)/view/$', document_view, name="teleforma-document-view"),
 
-    url(r'^desk/conferences/(?P<pk>.*)/video/$',
-        ConferenceView.as_view(),
-        name="teleforma-conference-detail"),
-    url(r'^desk/conferences/(?P<pk>.*)/audio/$',
+    url(r'^archives/annals/$', AnnalsView.as_view(), name="teleforma-annals"),
+    url(r'^archives/annals/by-iej/(\w+)/$', AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
+    url(r'^archives/annals/by-course/(\w+)/$', AnnalsCourseView.as_view(), name="teleforma-annals-course"),
+
+    url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/video/$',
+        ConferenceView.as_view(), name="teleforma-conference-detail"),
+    url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/audio/$',
         ConferenceView.as_view(template_name="teleforma/course_conference_audio.html"),
         name="teleforma-conference-audio"),
     url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
         name="teleforma-conference-record"),
+    url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
+        name="teleforma-conferences"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),
 
     # Users
-    url(r'^users/$', UsersView.as_view(), name="teleforma-users"),
+    url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/list/$',
+        UsersView.as_view(), name="teleforma-users"),
+
+    url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/export/$',
+        UsersExportView.as_view(), name="teleforma-users-export"),
+
     url(r'^users/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
+
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
-    url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
-
-    url(r'^users/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
-    url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training,
-        name="teleforma-training-users-export"),
-
-    url(r'^users/by_iej/(\w+)/$', UsersIejView.as_view(), name="teleforma-iej-users"),
-    url(r'^users/by_iej/(?P<id>.*)/export/$', user_export.by_iej, name="teleforma-iej-users-export"),
-
-    url(r'^users/by_course/(\w+)/$', UsersCourseView.as_view(), name="teleforma-course-users"),
-    url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course,
-        name="teleforma-course-users-export"),
-
-
-# CSS+Images (FIXME: for developement only)
-    url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'css'},
-        name="teleforma-css"),
-    url(r'images/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'images'},
-        name="teleforma-images"),
-    url(r'^js/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': htdocs_forma+'js'},
-        name="teleforma-js"),
 
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),

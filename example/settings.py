@@ -156,6 +156,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     'django.core.context_processors.static',
+    "teleforma.context_processors.periods",
 )
 
 TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
@@ -195,4 +196,7 @@ TELECASTER_MASTER_SERVER = 'angus.parisson.com'
 # CRFPA or AE or PRO
 TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
 TELEFORMA_GLOBAL_TWEETER = False
+TELEFORMA_PERIOD_TWEETER = True
 
+JQCHAT_DISPLAY_COUNT = 50
+JQCHAT_DISPLAY_TIME  = 48

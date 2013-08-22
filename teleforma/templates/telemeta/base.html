@@ -86,18 +86,31 @@ alt="logo" />
 <ul id="nav">
 
  {% if user.is_authenticated %}
- <li><a href="{% url teleforma-desk %}" class="red">{% trans "Desk" %}</a>
- </li>
+
+  {% if periods|length > 1 %}
+    <li><a href="#desk#" class="red">&nbsp;{% trans "Desk" %}&nbsp;</a>
+      <ul>
+       {% for period in periods %}
+        <li><a href="{% url teleforma-desk-period-list period.id %}" class="red">{{ period.name }}</a></li>
+       {% endfor %}
+      </ul>
+    </li>
+  {% else %}
+   <li><a href="{% url teleforma-home %}" class="red">{% trans "Desk" %}</a></li>
+  {% endif %}
+
  {% else %}
   <li><a href="{% url teleforma-login %}" class="red">{% trans "Home" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
 
- <li><a href="{% url postman_inbox %}m/" class="orange">{% trans "Messaging" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
+ <li><a href="{% url postman_inbox %}" class="orange">{% trans "Messaging" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
 
  {% if user.is_staff %}
- <li><a href="{% url teleforma-users %}" class="yellow">{% trans "Users" %}</a></li>
+  <li><a href="{% url teleforma-users 0 0 0 %}" class="yellow">{% trans "Users" %}</a></li>
+ {% else %}
+  <li><a href="{% url teleforma-annals %}" class="yellow">{% trans "Annals" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
@@ -107,6 +120,7 @@ alt="logo" />
  <li><a href="{% url telemeta-search-criteria %}">{% trans "Search" %}</a></li>
  <li><a href="{% url telemeta-collections %}">{% trans "Collections" %}</a></li>
  <li><a href="{% url telemeta-items %}">{% trans "Items" %}</a></li>
+ <li><a href="{% url teleforma-annals %}">{% trans "Annals" %}</a></li>
  </ul>
  </li>
  <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>

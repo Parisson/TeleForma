@@ -1,7 +1,7 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-{% if course.document.all|from_course_type:type %}
+{% if course.document.all|from_course_type:type|from_period:period %}
 <div class="course_content">
 <div class="course_subtitle">
 <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Documents"%}</h3>
@@ -9,11 +9,11 @@
 
 {% with course.document.all as docs %}
 {% for doc_type in doc_types %}
-{% if docs|from_course_type:type|from_doc_type:doc_type and not type_counter > 2 %}
+{% if docs|from_course_type:type|from_doc_type:doc_type|from_period:period and not type_counter > 2 %}
 <span class="doc_type_title">{{ doc_type }}</span>
 <table class="listing" width="100%">
     <tbody>
-        {% for doc in docs|from_course_type:type|from_doc_type:doc_type|from_periods:periods %}
+        {% for doc in docs|from_course_type:type|from_doc_type:doc_type|from_period:period %}
         {% if doc.course_type.all|length > 1 and type_counter > 1 %}
         {% else %}
         <tr>

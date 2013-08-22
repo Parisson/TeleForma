@@ -15,6 +15,18 @@ import logging
 from postman import *
 
 
+class Logger:
+    """A logging object"""
+
+    def __init__(self, file):
+        self.logger = logging.getLogger('teleforma')
+        self.hdlr = logging.FileHandler(file)
+        self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        self.hdlr.setFormatter(self.formatter)
+        self.logger.addHandler(self.hdlr)
+        self.logger.setLevel(logging.INFO)
+
+
 class Command(BaseCommand):
     help = "Reset the password for all (active) users "
     message_template = 'postman/email_user_init.txt'
@@ -30,8 +42,13 @@ class Command(BaseCommand):
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
 
     def handle(self, *args, **options):
+        log_file = args[-1]
+        logger = Logger(log_file)
+        logger.logger.info('########### Processing #############')
+
         users = User.objects.all()
         translation.activate(self.language_code)
+
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
             student = user.student.all()
@@ -42,5 +59,6 @@ class Command(BaseCommand):
                         self.init_password_email(user)
                         profile.init_password = True
                         profile.save()
-                        print user.username
+                        logger.logger.info('init : ' + user.username)
 
+        logger.logger.info('############## Done #################')

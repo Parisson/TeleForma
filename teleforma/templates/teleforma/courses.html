@@ -20,18 +20,19 @@ $(document).ready(function(){
 {% block modules %}
 <div class="module">
 
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{{ period }}</h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}
 </ul>
 </div>
+
 </div>
 
 {% block module-action %}
@@ -59,18 +60,20 @@ $(document).ready(function(){
 </div>-->
 {% endblock notes %}
 
-</div>
 {% endblock modules %}
+</div>
 
 
 {% block course %}
+
 <div class="desk_center">
-    {% for c in object_list %}
+
+    {% for c in courses %}
      {% with c.course as course %}
       {% for type in c.types %}
       <div class="course">
         <div class="course_title">
-         <a href="{% url teleforma-course-detail course.id %}" style="color: #000;">{{ course.title }}{% if type.name != "None" %} - {{ type }}{% endif %}{% if course.description %} - {{ course.description }}{% endif %}</a>
+         <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
         </div>
 
         {% block conference %}
@@ -101,13 +104,10 @@ $(document).ready(function(){
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module">
- <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
- <div id="server_status_table_wrapper" class="status"></div>
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+  <div id="server_status_table_wrapper" class="status"></div>
 </div>
-
-<script type="text/javascript">
-server_status_callback();
-</script>
+<script type="text/javascript">server_status_callback();</script>
 {% endif %}
 {% endblock status %}
 

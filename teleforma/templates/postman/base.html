@@ -12,9 +12,9 @@
 <div style="background: white;">
 {% postman_unread as unread_count %}
 <ul>
-<li><a href="{% url postman_inbox %}m/">{% if unread_count %} <strong>{% trans "Inbox" %} ({{ unread_count }})</strong>{% else %}{% trans "Inbox" %}{% endif %}</a></li>
-<li><a href="{% url postman_sent %}m/">{% trans "Sent Messages" %}</a></li>
-<li><a href="{% url postman_archives %}m/">{% trans "Archives" %}</a></li>
+<li><a href="{% url postman_inbox %}">{% if unread_count %} <strong>{% trans "Inbox" %} ({{ unread_count }})</strong>{% else %}{% trans "Inbox" %}{% endif %}</a></li>
+<li><a href="{% url postman_sent %}">{% trans "Sent Messages" %}</a></li>
+<li><a href="{% url postman_archives %}">{% trans "Archives" %}</a></li>
 <li><a href="{% url postman_trash %}">{% trans "Trash" %}</a></li>
 </ul>
 </div>

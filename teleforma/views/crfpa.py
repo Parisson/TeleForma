@@ -36,20 +36,13 @@
 from teleforma.views.core import *
 
 
-def format_crfpa_courses(courses, course=None, queryset=None, types=None, admin=False):
-    if queryset:
-        for c in queryset:
-            if c and (c.code != 'X' or admin == True):
-                courses.append({'course': c, 'types': types.all(),
-                'date': c.date_modified, 'number': c.number})
-    elif course:
-        if course.code != 'X' or admin == True:
-            courses.append({'course': course, 'types': types.all(),
-            'date': course.date_modified, 'number': course.number})
-    return courses
+def get_course_code(obj):
+    if obj:
+        return unicode(obj.code)
+    else:
+        return ''
 
-
-def get_crfpa_courses(user, date_order=False, num_order=False):
+def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
     courses = []
 
     if not user.is_authenticated():
@@ -65,31 +58,35 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
 
     elif student:
         student = user.student.get()
-        s_courses = {student.procedure:student.training.procedure,
-                           student.written_speciality:student.training.written_speciality,
-                           student.oral_speciality:student.training.oral_speciality,
-                           student.oral_1:student.training.oral_1,
-                           student.oral_2:student.training.oral_2,
-                           student.options:student.training.options,
+        for training in student.trainings.all():
+            if training.period == period:
+                break
+
+        s_courses = {student.procedure:training.procedure,
+                           student.written_speciality:training.written_speciality,
+                           student.oral_speciality:training.oral_speciality,
+                           student.oral_1:training.oral_1,
+                           student.oral_2:training.oral_2,
+                           student.options:training.options,
                         }
 
         for course in s_courses:
             courses = format_crfpa_courses(courses, course=course,
                                types=s_courses[course])
 
-        synthesis_note = student.training.synthesis_note
+        synthesis_note = training.synthesis_note
         if synthesis_note:
             courses = format_crfpa_courses(courses,
                             queryset=Course.objects.filter(synthesis_note=True),
                             types=synthesis_note)
 
-        obligation = student.training.obligation
+        obligation = training.obligation
         if obligation:
             courses = format_crfpa_courses(courses,
                             queryset=Course.objects.filter(obligation=True),
                             types=obligation)
 
-        magistral = student.training.magistral
+        magistral = training.magistral
         if magistral:
             courses = format_crfpa_courses(courses,
                             queryset=Course.objects.filter(magistral=True),
@@ -114,16 +111,55 @@ class UsersView(ListView):
     model = User
     template_name='telemeta/users.html'
     context_object_name = 'users'
+    training = None
+    iej = None
+    course = None
     #paginate_by = 12
 
+
     def get_queryset(self):
-        return User.objects.all().select_related(depth=1).order_by('last_name')
+        self.users = User.objects.all().select_related(depth=1).order_by('last_name')
+
+        if self.kwargs['training_id'] != '0':
+            self.training = Training.objects.filter(id=self.kwargs['training_id'])
+            self.users = self.users.filter(student__trainings__in=self.training)
+            self.training = self.training[0]
+        else:
+            self.training = Training(id=0)
+
+        if self.kwargs['iej_id'] != '0':
+            self.iej = IEJ.objects.filter(id=self.kwargs['iej_id'])
+            self.users = self.users.filter(student__iej__in=self.iej)
+            self.iej = self.iej[0]
+        else:
+            self.iej = IEJ(id=0)
+
+        if self.kwargs['course_id'] != '0':
+            self.course = Course.objects.get(id=self.kwargs['course_id'])
+            u = []
+            for user in self.users:
+                user_courses = get_crfpa_courses(user)
+                for course in user_courses:
+                    if course['course'] == self.course:
+                        u.append(user)
+            self.users = u
+        else:
+            self.course = Course(id=0)
+
+        return self.users
 
     def get_context_data(self, **kwargs):
         context = super(UsersView, self).get_context_data(**kwargs)
+        users = self.object_list
+
+        context['training'] = self.training
+        context['iej'] = self.iej
+        context['course'] = self.course
+
         context['trainings'] = Training.objects.all()
         context['iejs'] = IEJ.objects.all()
         context['courses'] = Course.objects.all()
+
         paginator = NamePaginator(self.object_list, on="last_name", per_page=12)
         try:
             page = int(self.request.GET.get('page', '1'))
@@ -149,65 +185,14 @@ class UserLoginView(View):
         backend = get_backends()[0]
         user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
         login(self.request, user)
-        return redirect('teleforma-desk')
+        return redirect('teleforma-home')
 
     @method_decorator(permission_required('is_staff'))
     def dispatch(self, *args, **kwargs):
         return super(UserLoginView, self).dispatch(*args, **kwargs)
 
 
-class UsersTrainingView(UsersView):
-
-    def get_queryset(self):
-        self.training = Training.objects.filter(id=self.args[0])
-        return User.objects.filter(student__training__in=self.training).order_by('last_name')
-
-    def get_context_data(self, **kwargs):
-        context = super(UsersTrainingView, self).get_context_data(**kwargs)
-        context['training'] = Training.objects.get(id=self.args[0])
-        return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UsersTrainingView, self).dispatch(*args, **kwargs)
-
-class UsersIejView(UsersView):
-
-    def get_queryset(self):
-        self.iej = IEJ.objects.filter(id=self.args[0])
-        return User.objects.filter(student__iej__in=self.iej).order_by('last_name')
-
-    def get_context_data(self, **kwargs):
-        context = super(UsersIejView, self).get_context_data(**kwargs)
-        context['iej'] = IEJ.objects.get(id=self.args[0])
-        return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UsersIejView, self).dispatch(*args, **kwargs)
-
-class UsersCourseView(UsersView):
-
-    def get_queryset(self):
-        self.course = Course.objects.filter(id=self.args[0])
-        return User.objects.filter(student__written_speciality__in=self.course)
-
-    def get_context_data(self, **kwargs):
-        context = super(UsersCourseView, self).get_context_data(**kwargs)
-        context['course'] = Course.objects.get(id=self.args[0])
-        return context
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UsersCourseView, self).dispatch(*args, **kwargs)
-
-def get_course_code(obj):
-    if obj:
-        return unicode(obj.code)
-    else:
-        return ''
-
-class UsersXLSExport(object):
+class UsersExportView(UsersView):
 
     first_row = 2
 
@@ -220,10 +205,15 @@ class UsersXLSExport(object):
             row.write(1, user.first_name)
             row.write(9, user.email)
             row.write(2, unicode(student.iej))
-            code = student.training.code
-            if student.platform_only:
-                code = 'I - ' + code
-            row.write(3, unicode(code))
+
+            codes = []
+            for training in student.trainings.all():
+                if student.platform_only:
+                    codes.append('I - ' + training.code)
+                else:
+                    codes.append(training.code)
+            row.write(3, unicode(' '.join(codes)))
+
             row.write(4, get_course_code(student.procedure))
             row.write(5, get_course_code(student.written_speciality))
             row.write(6, get_course_code(student.oral_speciality))
@@ -243,8 +233,9 @@ class UsersXLSExport(object):
             return counter
 
     @method_decorator(permission_required('is_staff'))
-    def export(self, request):
-        self.users = self.users.order_by('last_name')
+    def get(self, *args, **kwargs):
+        super(UsersExportView, self).get(*args, **kwargs)
+        self.users = self.users
         self.book = Workbook()
         self.sheet = self.book.add_sheet('Etudiants')
 
@@ -252,7 +243,7 @@ class UsersXLSExport(object):
         cols = [{'name':'NOM', 'width':5000},
                 {'name':'PRENOM', 'width':5000},
                 {'name':'IEJ', 'width':2500},
-                {'name':'FORMATION', 'width':6000},
+                {'name':'FORMATIONS', 'width':6000},
                 {'name':'PROC', 'width':2500},
                 {'name':'Ecrit Spe', 'width':3000},
                 {'name':'Oral Spe', 'width':3000},
@@ -279,26 +270,72 @@ class UsersXLSExport(object):
         self.book.save(response)
         return response
 
-    @method_decorator(permission_required('is_staff'))
-    def all(self, request):
-        self.users = User.objects.all()
-        return self.export(request)
 
-    @method_decorator(permission_required('is_staff'))
-    def by_training(self, request, id):
-        training = Training.objects.filter(id=id)
-        self.users = User.objects.filter(student__training__in=training)
-        return self.export(request)
+class AnnalsView(ListView):
 
-    @method_decorator(permission_required('is_staff'))
-    def by_iej(self, request, id):
-        iej = IEJ.objects.filter(id=id)
-        self.users = User.objects.filter(student__iej__in=iej)
-        return self.export(request)
+    model = Document
+    template_name='teleforma/annals.html'
+    student = None
 
-    @method_decorator(permission_required('is_staff'))
-    def by_course(self, request, id):
-        course = Course.objects.filter(id=id)
-        self.users = User.objects.filter(student__training__courses__in=course)
-        return self.export(request)
+    def get_docs(self, iej=None, course=None):
+        students = self.user.student.all()
+        annals = {}
+        courses = [c['course'] for c in self.all_courses]
+
+        if self.user.is_staff or self.user.is_superuser or self.user.professor.all():
+            docs = Document.objects.filter(is_annal=True).order_by('-annal_year')
+        elif students:
+            self.student = students[0]
+            docs = Document.objects.filter(is_annal=True, iej=self.student.iej).order_by('-annal_year')
+        if iej:
+            docs = docs.filter(iej=iej)
+        if course:
+            docs = docs.filter(course=course)
+
+        for doc in docs:
+            if doc.course in courses:
+                if not doc.course in annals.keys():
+                    annals[doc.course] = {}
+                if not doc.iej in annals[doc.course].keys():
+                    annals[doc.course][doc.iej] = {}
+                if not doc.annal_year in annals[doc.course][doc.iej].keys():
+                    annals[doc.course][doc.iej][doc.annal_year] = []
+                annals[doc.course][doc.iej][doc.annal_year].append(doc)
+        return annals
+
+    def get_queryset(self):
+        self.user = self.request.user
+        self.all_courses = get_courses(self.request.user)
+        return self.get_docs()
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super(AnnalsView, self).get_context_data(**kwargs)
+        context['iejs'] = IEJ.objects.all()
+        if self.student:
+            context['student'] =  self.student
+        context['all_courses'] = self.all_courses
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AnnalsView, self).dispatch(*args, **kwargs)
+
+
+class AnnalsIEJView(AnnalsView):
+
+    def get_queryset(self):
+        self.user = self.request.user
+        self.all_courses = get_courses(self.user)
+        self.iej = IEJ.objects.filter(id=self.args[0])
+        return self.get_docs(iej=self.iej)
+
+class AnnalsCourseView(AnnalsView):
+
+    def get_queryset(self):
+        self.user = self.request.user
+        self.all_courses = get_courses(self.user)
+        self.course = Course.objects.filter(id=self.args[0])
+        return self.get_docs(course=self.course)
+
 

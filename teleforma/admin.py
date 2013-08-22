@@ -7,12 +7,13 @@ from django.contrib.auth.admin import UserAdmin
 
 class CRFPAStudentProfileInline(admin.StackedInline):
     model = Student
-    filter_horizontal = ['period']
     exclude = ['options']
+    filter_horizontal = ['trainings']
 
 class AEStudentProfileInline(admin.StackedInline):
     model = AEStudent
-    filter_horizontal = ['period', 'courses']
+    filter_horizontal = ['courses']
+    extra = 1
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
@@ -31,7 +32,7 @@ class ProfileInline(admin.StackedInline):
 
 class UserProfileAdmin(UserAdmin):
     inlines = [AEStudentProfileInline,
-                 ProfessorProfileInline, ProfileInline]
+                ProfessorProfileInline, ProfileInline]
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
@@ -47,15 +48,15 @@ class CourseAdmin(admin.ModelAdmin):
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
+    search_fields = ['course__code', 'course__title']
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['id']
+    search_fields = ['id', 'title', 'course__title', 'course__code']
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['public_id', 'id']
-
+    search_fields = ['public_id', 'id', 'course__code', 'course__title']
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question

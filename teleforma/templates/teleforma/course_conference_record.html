@@ -3,6 +3,7 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
+
 {% block extra_javascript %}
 <script type="text/javascript">
 
@@ -12,10 +13,27 @@ jQuery(window).ready(function(){
     a.unbind('click').click(function(){f.submit();return false;});
     });
 </script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    });
+</script>
+
 {% endblock extra_javascript %}
 
-{% block module-action %}
-{% endblock module-action %}
+
+{% block modules %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
+ <div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+  <div id="server_status_table_wrapper" class="status"></div>
+ </div>
+ <script type="text/javascript">server_status_callback();</script>
+{% endif %}
+</div>
+{% endblock modules %}
 
 {% block course %}
 <div class="course_media">
@@ -26,7 +44,7 @@ jQuery(window).ready(function(){
 {% block video %}
 <div class="video">
 <video controls autoplay preload="auto" width="640" height="360">
-<source src="http://{{ host }}:8080/consume/safe" type="video/webm">
+<source src="http://{{ host }}:8080/consume/monitor" type="video/webm">
 </video>
 </div>
 {% endblock video %}
@@ -59,4 +77,16 @@ jQuery(window).ready(function(){
 
 </div>
 {% endblock course %}
+
+
+{% block chat %}
+{% if room %}
+{% with "General tweeter" as title %}
+{% include "teleforma/inc/chat_room.html" %}
+{% endwith %}
+{% endif %}
+{% endblock chat %}
+
+{% block status %}
+{% endblock status %}
 
