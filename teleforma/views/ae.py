@@ -50,7 +50,7 @@ def format_ae_courses(courses, course=None, queryset=None, types=None, admin=Fal
     return courses
 
 
-def get_ae_courses(user, date_order=False, num_order=False):
+def get_ae_courses(user, date_order=False, num_order=False, period=None):
     courses = []
 
     if not user.is_authenticated():
