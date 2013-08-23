@@ -118,7 +118,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
         name = 'site'
 
     if settings.TELEFORMA_PERIOD_TWEETER and period:
-            name = period + '-' + name
+            name = name + '-' + period 
 
     if settings.TELEFORMA_GLOBAL_TWEETER:
         rooms = jqchat.models.Room.objects.filter(name=name)
@@ -129,7 +129,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
     if not rooms:
         room = jqchat.models.Room.objects.create(content_type=content_type,
                                                  object_id=id,
-                                                 name=name)
+                                                 name=name[:20])
     else:
         room = rooms[0]
     return room
