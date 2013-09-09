@@ -41,7 +41,6 @@ from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
 from forms_builder.forms.models import Form
-from django.core.urlresolvers import reverse
 from mezzanine.core.managers import DisplayableManager
 
 class SeminarType(models.Model):
@@ -310,5 +309,5 @@ class SeminarRevision(models.Model):
         db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
-        ordering = ['date_modified','-date']
+        ordering = ['-date_modified']
 

@@ -152,7 +152,7 @@ class SeminarsView(ListView):
         return super(SeminarsView, self).dispatch(*args, **kwargs)
 
     def get_queryset(self):
-        return all_seminars(self.request, date_order=True)['all_seminars']
+        return all_seminars(self.request, date_order=True)['all_seminars'][:10]
 
 
 class AnswerView(SeminarAccessMixin, FormView):

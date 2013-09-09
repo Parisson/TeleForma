@@ -243,7 +243,10 @@ def validated(question, user):
 
 @register.filter
 def summary(text, N):
-    return text[:N] + '...'
+    t = text[:N]
+    if not ' ' in t:
+        t = text[:N/2]
+    return t + '...'
 
 @register.filter
 def progress(seminar, user):
@@ -314,4 +317,7 @@ def untreated_answer_count():
 
 @register.filter
 def integer(value):
-    return int(value)
+    if isinstance(value, str) or isinstance(value, int) or isinstance(value, float):
+        return int(value)
+    else:
+        return 0

@@ -2,12 +2,12 @@
 
 Suite à votre inscription à la formation Avocats Etrangers du Pré-Barreau, nous vous invitons à initialiser votre compte sur notre plateforme e-learning interactive et multi-média. Pour cela, merci de cliquer sur le lien suivant puis d'indiquez votre adresse e-mail :
 
-http://{{ site.name }}/accounts/password_reset/
+http://{{ site.domain }}/accounts/password_reset/
 
 Vous recevrez alors un second e-mail vous invitant à initialiser votre mot de passe personnel.
 Une fois la procédure accomplie, vous pourrez vous connecter à l'adresse suivante :
 
-http://{{ site.name }}
+http://{{ site.domain }}
 
 à l'aide de votre nom d'utilisateur : {{ usr.username }}
 
