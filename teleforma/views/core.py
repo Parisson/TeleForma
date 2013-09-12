@@ -125,12 +125,12 @@ def get_room(content_type=None, id=None, name=None, period=None):
         name = 'site'
 
     if settings.TELEFORMA_PERIOD_TWEETER and period:
-            name = period + '-' + name
+        name = name + '-' + period 
 
     if settings.TELEFORMA_GLOBAL_TWEETER:
-        rooms = jqchat.models.Room.objects.filter(name=name)
+        rooms = jqchat.models.Room.objects.filter(name=name[:20])
     else:
-        rooms = jqchat.models.Room.objects.filter(name=name,
+        rooms = jqchat.models.Room.objects.filter(name=name[:20],
                                                   content_type=content_type,
                                                   object_id=id)
     if not rooms:
@@ -375,6 +375,12 @@ class MediaPendingView(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaPendingView, self).dispatch(*args, **kwargs)
+
+
+class MediaViewEmbed(DetailView):
+
+    model = Media
+    template_name='teleforma/course_media_video_embed.html'
 
 
 class DocumentView(CourseAccessMixin, DetailView):
