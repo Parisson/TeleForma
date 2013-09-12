@@ -377,6 +377,12 @@ class MediaPendingView(ListView):
         return super(MediaPendingView, self).dispatch(*args, **kwargs)
 
 
+class MediaViewEmbed(DetailView):
+
+    model = Media
+    template_name='teleforma/course_media_video_embed.html'
+
+
 class DocumentView(CourseAccessMixin, DetailView):
 
     model = Document

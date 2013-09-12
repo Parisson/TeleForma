@@ -69,6 +69,7 @@ urlpatterns = patterns('',
         name="teleforma-desk-period-course"),
 
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/embed/$', MediaViewEmbed.as_view(), name="teleforma-media-embed"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
 
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
