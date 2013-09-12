@@ -9,10 +9,5 @@ class ConferenceForm(ModelForm):
         model = Conference
 
 
-class AnswerForm(ModelForm):
-
-    class Meta:
-        model = Answer
-
 
 
