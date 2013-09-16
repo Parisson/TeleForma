@@ -298,7 +298,7 @@ class CourseView(CourseAccessMixin, DetailView):
         course = Course.objects.get(code=id)
         media_list = []
         for media in course.media.all():
-            if media.item.file and media.conference:
+            if media.item.file and media.conference and 'video' in media.mime_type:
                 urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
                 for transcoded in media.item.transcoded.all():
                     urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
