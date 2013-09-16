@@ -56,6 +56,7 @@ import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 from sorl.thumbnail.images import ImageFile
+from sorl.thumbnail import default
 
 app_label = 'teleforma'
 
@@ -609,8 +610,9 @@ class Media(MediaBase):
         url = ''
         for related in self.item.related.all():
             if 'preview' in related.title:
-                im = ImageFile(related.file)
-                url = im.url
+                #im = ImageFile(related.file)
+                #url = im.url
+                url = default.backend.get_thumbnail(related.file, 640)
         return url
 
     class Meta(MetaCore):
