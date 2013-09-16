@@ -302,7 +302,7 @@ class CourseView(CourseAccessMixin, DetailView):
                 urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
                 for transcoded in media.item.transcoded.all():
                     urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
-                media_list.append({'session': media.conference.session, 'urls': urls})
+                media_list.append({'session': media.conference.session, 'urls': urls, 'poster': media.poster_url()})
         return media_list
 
 
