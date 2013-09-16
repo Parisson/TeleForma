@@ -55,7 +55,7 @@ from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
-from solr.thumbnail.images import ImageFile
+from sorl.thumbnail.images import ImageFile
 
 app_label = 'teleforma'
 
