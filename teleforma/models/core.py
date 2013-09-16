@@ -609,7 +609,7 @@ class Media(MediaBase):
         url = ''
         for related in self.item.related.all():
             if 'preview' in related.title:
-                url = sorl_default.backend.get_thumbnail(related.file, geometry)
+                url = sorl_default.backend.get_thumbnail(related.file, geometry).url
         return url
 
     class Meta(MetaCore):
