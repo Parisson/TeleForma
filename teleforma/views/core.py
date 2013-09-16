@@ -298,10 +298,11 @@ class CourseView(CourseAccessMixin, DetailView):
         course = Course.objects.get(code=id)
         media_list = []
         for media in course.media.all():
-            urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
-            for transcoded in media.item.transcoded.all():
-                urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
-            media_list.append({'session': media.conference.session, 'urls': urls})
+            if media.item.file and media.conference:
+                urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
+                for transcoded in media.item.transcoded.all():
+                    urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
+                media_list.append({'session': media.conference.session, 'urls': urls})
         return media_list
 
 
