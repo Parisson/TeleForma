@@ -1,0 +1,32 @@
+#!/bin/bash
+# /etc/init.d/uwsgi
+#
+
+DAEMON=/usr/local/bin/uwsgi
+PID=/var/run/uwsgi.pid
+INI=/home/parisson/apps/icpmedia/uwsgi.ini
+LOG=/var/log/uwsgi/icpmedia.log
+USER=www-data
+ARGS="--ini $INI --uid $USER --gid $USER --enable-threads --touch-reload=$INI --daemonize=$LOG"
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+    start)
+        echo "Starting uwsgi"
+        start-stop-daemon -p $PID --start --exec $DAEMON -- $ARGS &
+        ;;
+    stop)
+        echo "Stopping script uwsgi"
+        start-stop-daemon --signal INT -p $PID --stop $DAEMON -- $ARGS
+        ;;
+    reload)
+        echo "Reloading conf"
+        kill -HUP $(cat $pid)
+        ;;
+    *)
+        echo "Usage: /etc/init.d/uwsgi {start|stop|reload}"
+        exit 1
+    ;;
+esac
+
+exit 0
