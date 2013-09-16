@@ -612,7 +612,7 @@ class Media(MediaBase):
             if 'preview' in related.title:
                 #im = ImageFile(related.file)
                 #url = im.url
-                url = default.backend.get_thumbnail(related.file, 640)
+                url = default.backend.get_thumbnail(related.file, '640')
         return url
 
     class Meta(MetaCore):
