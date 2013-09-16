@@ -1,5 +1,3 @@
-from telemeta.models.system import *
-from teleforma.models import *
 
 
 class OnlyOneUser(object):
@@ -18,33 +16,10 @@ class OnlyOneUser(object):
             profile.save()
 
 
-class ItemExportSecurity(object):
 
-    def process_view(self, request, ItemView.item_export, *args, **kwargs):
-        id = args[0]
-        ext = args[1]
-        item = MediaItem.objects.get(public_id=id)
-        student = request.user.student.all()
-        if student:
-            courses = request.user.student.get().training.courses.all()
-            media = item.media.all()
-            if media:
-                media_courses = media.course.all()
-                for course in media_courses:
-                    if not course in courses:
-                        return 404
-                    else:
-                        return None
-            else:
-                return None
-        else:
-            return None
-                
-import re
- 
+import re 
 from django.utils.text import compress_string
 from django.utils.cache import patch_vary_headers
- 
 from django import http
  
 try:
