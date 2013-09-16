@@ -293,6 +293,17 @@ class CourseView(CourseAccessMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
 
+    @jsonrpc_method('teleforma.get_course_media_urls')
+    def get_course_media_urls(request, id):
+        course = Course.objects.get(public_id=id)
+        media_list = []
+        for media in course.media.all():
+            urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
+            for transcoded in media.item.transcoded.all():
+                urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
+            media_list.append({'session': media.conference.session, 'urls': urls})
+        return media_list
+
 
 class MediaView(CourseAccessMixin, DetailView):
 
