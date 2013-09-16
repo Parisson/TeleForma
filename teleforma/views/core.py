@@ -295,7 +295,7 @@ class CourseView(CourseAccessMixin, DetailView):
 
     @jsonrpc_method('teleforma.get_course_media_urls')
     def get_course_media_urls(request, id):
-        course = Course.objects.get(public_id=id)
+        course = Course.objects.get(code=id)
         media_list = []
         for media in course.media.all():
             urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
