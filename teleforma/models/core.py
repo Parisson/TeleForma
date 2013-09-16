@@ -55,6 +55,7 @@ from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
+from solr.thumbnail.images import ImageFile
 
 app_label = 'teleforma'
 
@@ -603,6 +604,14 @@ class Media(MediaBase):
             self.course.save()
         elif self.conference:
             self.conference.course.save()
+
+    def poster_url(self):
+        url = ''
+        for related in self.item.related.all():
+            if 'preview' in related.title:
+                im = ImageFile(related.file)
+                url = im.url
+        return url
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
