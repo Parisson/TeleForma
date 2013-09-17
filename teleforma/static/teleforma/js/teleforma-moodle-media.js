@@ -137,11 +137,9 @@ function get_course_media_urls(host, id){
             for(var i=0; i<res.length; i++){
                 var media_dict = res[i];
                 var session = media_dict['session'];
-                var section = '#Section-' + session
+                var section = '#section-' + session;
                 var video_id = 'video-' + i.toString();
-                // var s = $(section).html();
-                var s = video_id + '</br>';
-                s += '<video id="' + video_id + '" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup="{}" poster="' + media_dict['poster'] + '">';
+                var s = '<video id="' + video_id + '" class="video-js vjs-default-skin" width="640" height="360" controls preload="none" poster="' + media_dict['poster'] + '">';
                 var urls = media_dict['urls'];
                 for (var j=0; j<urls.length; j++){
                     url = urls[j];
@@ -151,10 +149,8 @@ function get_course_media_urls(host, id){
                 };
                 s += '</video><br/>\n';
                 $(section).append(s);
-                //var player = _V_(video_id);
-                //player.autoSetup();
+                _V_(video_id, {}, function(){});
             };
-            _V_.autoSetup();
         },
         function(){
             s = '<span class="warning">NOT connected</span>';
