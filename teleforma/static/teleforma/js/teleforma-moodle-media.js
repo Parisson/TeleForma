@@ -134,23 +134,26 @@ function get_course_media_urls(host, id){
     var data = json([id],'http://' + host, "teleforma.get_course_media_urls",
         function(data){
             var res = data.result;
-            for(var i=0; i<res.length; i++){
+            for(var i=0; i<res.length-20; i++){
                 var media_dict = res[i];
                 var session = media_dict['session'];
                 var section = '#Section-' + session
-                s = $(section).html();
-                s += '</br>Video ' + session + '</br>';
-                s += '<video id="video-' + i.toString() + '" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup="{}" poster="' + media_dict['poster'] + '">';
+                var video_id = 'video-' + i.toString();
+                // var s = $(section).html();
+                var s = video_id + '</br>';
+                s += '<video id="' + video_id + '" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup="{}" poster="' + media_dict['poster'] + '">';
                 var urls = media_dict['urls'];
-                for (var j=0; j < urls.length; j++){
+                for (var j=0; j<urls.length; j++){
                     url = urls[j];
                     if (url['mime_type'].indexOf("video") != -1){
                         s += '<source src="'+url['url']+'" type="'+url['mime_type']+'">\n';
                     };
                 };
                 s += '</video><br/>\n';
-                $(section).html(s);
-            }
+                $(section).append(s);
+                //var player = _V_(video_id);
+                //player.autoSetup();
+            };
             _V_.autoSetup();
         },
         function(){
