@@ -240,7 +240,7 @@ class CourseListView(CourseAccessMixin, ListView):
         department = Department.objects.get(organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
-    def pull(request, organization_name, department_name):
+    def pull(organization_name, department_name):
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name, organization=organization)
         url = 'http://' + department.domain + '/json/'
