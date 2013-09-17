@@ -42,6 +42,7 @@ import urllib
 import string
 import datetime
 import mimetypes
+import random
 
 from django.db.models import *
 from telemeta.models import *
