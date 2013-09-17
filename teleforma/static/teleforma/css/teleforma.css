@@ -560,7 +560,7 @@ color:#FFF;
 /* display block will make the link fill the whole area of LI */
 #nav ul a {
     display:block;
-    height:22px;
+    height: auto;
     padding: 0.8em 0.5em 0.5em 0.5em;
 /*     font-size: 0.9em; */
     text-align:left;

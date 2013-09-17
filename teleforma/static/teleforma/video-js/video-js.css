@@ -141,6 +141,10 @@ so you can upgrade to newer versions easier. You can remove all these styles by 
 .vjs-default-skin.vjs-paused .vjs-play-control div { width: 15px; height: 17px; background: url('video-js.png'); margin: 0.5em auto 0; }
 .vjs-default-skin.vjs-playing .vjs-play-control div { width: 15px; height: 17px; background: url('video-js.png') -25px 0; margin: 0.5em auto 0; }
 
+/* x2 playback */
+.vjs-default-skin.vjs-playing .vjs-playback-speed-x1 div { width: 15px; height: 17px; background: url('video-js.png') -25px 0; margin: 0.5em auto 0; }
+.vjs-default-skin.vjs-playing .vjs-playback-speed-x2 div { width: 15px; height: 17px; background: url('video-js.png') -25px 0; margin: 0.5em auto 0; }
+
 /* Rewind
 -------------------------------------------------------------------------------- */
 .vjs-default-skin .vjs-rewind-control { width: 5em; cursor: pointer !important; }

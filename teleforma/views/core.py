@@ -121,12 +121,12 @@ def get_room(content_type=None, id=None, name=None, period=None):
         name = 'site'
 
     if settings.TELEFORMA_PERIOD_TWEETER and period:
-            name = period + '-' + name
+        name = name + '-' + period 
 
     if settings.TELEFORMA_GLOBAL_TWEETER:
-        rooms = jqchat.models.Room.objects.filter(name=name)
+        rooms = jqchat.models.Room.objects.filter(name=name[:20])
     else:
-        rooms = jqchat.models.Room.objects.filter(name=name,
+        rooms = jqchat.models.Room.objects.filter(name=name[:20],
                                                   content_type=content_type,
                                                   object_id=id)
     if not rooms:
@@ -355,6 +355,24 @@ class MediaView(CourseAccessMixin, DetailView):
         media.save()
 
 
+class MediaPendingView(ListView):
+
+    model = Media
+    template_name='teleforma/media_pending.html'
+
+    def get_queryset(self):
+        return Media.objects.filter(is_published=False)
+
+    def get_context_data(self, **kwargs):
+        context = super(MediaPendingView, self).get_context_data(**kwargs)
+        return context
+
+    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MediaPendingView, self).dispatch(*args, **kwargs)
+
+
 class DocumentView(CourseAccessMixin, DetailView):
 
     model = Document
@@ -388,7 +406,7 @@ class DocumentView(CourseAccessMixin, DetailView):
                                              (document.title.encode('utf8'), extension)
             return response
         else:
-            return redirect('teleforma-document-detail', document.id)
+            return redirect('teleforma-home')
 
     def view(self, request, pk):
         courses = get_courses(request.user)
@@ -400,7 +418,7 @@ class DocumentView(CourseAccessMixin, DetailView):
             response = HttpResponse(fsock, mimetype=mimetype)
             return response
         else:
-            return redirect('teleforma-document-detail', document.id)
+            return redirect('teleforma-home')
 
 
 class ConferenceView(CourseAccessMixin, DetailView):

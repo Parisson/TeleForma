@@ -210,7 +210,10 @@ class Professor(Model):
                                         blank=True, null=True)
 
     def __unicode__(self):
-        return self.user.last_name + ' ' + self.user.first_name[0] + '.'
+        if self.user.first_name and self.user.last_name:
+            return self.user.last_name + ' ' + self.user.first_name[0] + '.'
+        else:
+            return self.user.username
 
     def to_json_dict(self):
         data = {'username': self.user.username,
@@ -415,7 +418,7 @@ class LiveStream(Model):
         if self.conference:
             return self.conference.slug
         else:
-            return server.host + server.port
+            return self.server.host + self.server.port
 
     @property
     def mount_point(self):
