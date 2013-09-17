@@ -134,7 +134,7 @@ function get_course_media_urls(host, id){
     var data = json([id],'http://' + host, "teleforma.get_course_media_urls",
         function(data){
             var res = data.result;
-            for(var i=0; i<res.length-20; i++){
+            for(var i=0; i<res.length; i++){
                 var media_dict = res[i];
                 var session = media_dict['session'];
                 var section = '#Section-' + session
