@@ -235,8 +235,9 @@ class CourseListView(CourseAccessMixin, ListView):
         return super(CourseListView, self).dispatch(*args, **kwargs)
 
     @jsonrpc_method('teleforma.get_course_list')
-    def get_course_list(request, department_id):
-        department = Department.objects.get(id=department_id)
+    def get_course_list(request, organization_name, department_name):
+        organization = Organization.objects.get(name=organization_name)
+        department = Department.objects.get(organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
     def pull(request, organization_name, department_name):
@@ -245,7 +246,7 @@ class CourseListView(CourseAccessMixin, ListView):
         url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
 
-        remote_list = s.teleforma.get_course_list(organization.name, department.name)
+        remote_list = s.teleforma.get_course_list(organization_name, department.name)
         for course_dict in remote_list['result']:
             course = Course.objects.filter(code=course_dict['code'])
             if not course:
@@ -288,6 +289,18 @@ class CourseView(CourseAccessMixin, DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
+
+    @jsonrpc_method('teleforma.get_course_media_urls')
+    def get_course_media_urls(request, id):
+        course = Course.objects.get(code=id)
+        media_list = []
+        for media in course.media.all():
+            if media.is_published and media.item.file and media.conference and 'video' in media.mime_type:
+                urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
+                for transcoded in media.item.transcoded.all():
+                    urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
+                media_list.append({'session': media.conference.session, 'urls': urls, 'poster': media.poster_url()})
+        return media_list
 
 
 class MediaView(CourseAccessMixin, DetailView):
@@ -371,6 +384,12 @@ class MediaPendingView(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaPendingView, self).dispatch(*args, **kwargs)
+
+
+class MediaViewEmbed(DetailView):
+
+    model = Media
+    template_name='teleforma/course_media_video_embed.html'
 
 
 class DocumentView(CourseAccessMixin, DetailView):
