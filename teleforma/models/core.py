@@ -55,6 +55,7 @@ from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
+from sorl.thumbnail import default as sorl_default
 
 app_label = 'teleforma'
 
@@ -610,6 +611,13 @@ class Media(MediaBase):
             self.course.save()
         elif self.conference:
             self.conference.course.save()
+
+    def poster_url(self, geometry='640'):
+        url = ''
+        for related in self.item.related.all():
+            if 'preview' in related.title:
+                url = sorl_default.backend.get_thumbnail(related.file, geometry).url
+        return url
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
