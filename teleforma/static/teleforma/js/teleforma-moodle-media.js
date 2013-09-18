@@ -139,7 +139,7 @@ function get_course_media_urls(host, id){
                 var session = media_dict['session'];
                 var section = '#section-' + session;
                 var video_id = 'video-' + i.toString();
-                var s = '<center><video id="' + video_id + '" class="video-js vjs-default-skin" width="640" height="360" controls preload="none" poster="' + media_dict['poster'] + '">';
+                var s = '<br /><center><video id="' + video_id + '" class="video-js vjs-default-skin" width="640" height="360" controls preload="none" poster="' + media_dict['poster'] + '">';
                 var urls = media_dict['urls'];
                 for (var j=0; j<urls.length; j++){
                     url = urls[j];
@@ -147,7 +147,7 @@ function get_course_media_urls(host, id){
                         s += '<source src="'+url['url']+'" type="'+url['mime_type']+'">\n';
                     };
                 };
-                s += '</video></center><br/>\n';
+                s += '</video></center><br />\n';
                 $(section).append(s);
                 _V_(video_id, {}, function(){});
             };

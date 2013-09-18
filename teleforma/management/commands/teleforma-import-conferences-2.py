@@ -69,7 +69,7 @@ class Command(BaseCommand):
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
 
-        #self.cleanup()
+#        self.cleanup()
 
         for root, dirs, files in os.walk(self.media_dir, followlinks=True):
             for filename in files:
