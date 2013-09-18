@@ -72,7 +72,7 @@ class Command(BaseCommand):
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
 
-        self.cleanup()
+        # self.cleanup()
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -121,6 +121,8 @@ class Command(BaseCommand):
                             break
 
                     if not exist:
+                        logger.logger.info(seminar.public_url())
+                        logger.logger.info(path)
                         collections = MediaCollection.objects.filter(code=collection_id)
                         if not collections:
                             collection = MediaCollection(code=collection_id,title=collection_id)
@@ -140,7 +142,9 @@ class Command(BaseCommand):
                         item.title = name
                         item.file = path
 
-                        item.approx_duration = self.get_duration(root+os.sep+filename)
+                        if os.path.getsize(root+os.sep+filename):
+                            item.approx_duration = self.get_duration(root+os.sep+filename)
+
                         item.save()
 
                         files = os.listdir(root)
@@ -152,17 +156,17 @@ class Command(BaseCommand):
                                 related.title = 'preview'
                                 related.set_mime_type()
                                 related.save()
-                                print 'thumb added'
+                                logger.logger.info(r_path)
                             elif extension[1:] in self.transcoded_formats:
                                 t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
-                                print "transcoded added"
+                                logger.logger.info(r_path)
                             elif extension[1:] == 'kdenlive':
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
-                                markers = related.parse_markers()
+                                markers = related.parse_markers(from_first_marker=True)
                                 if markers:
                                     item.title = markers[0]['comment']
                                     item.save()
-                                print "related parsed"
+                                logger.logger.info(r_path)
 
                         media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
                         if c:
@@ -187,15 +191,15 @@ class Command(BaseCommand):
                                 for file in files:
                                     r_path = r_dir + os.sep + file
                                     filename, extension = os.path.splitext(file)
-                                    if extension[1:] in self.original_format:
+                                    if extension[1:] in self.original_format and not '.' == filename[0]:
                                         item.file = r_path
-                                        item.approx_duration = self.get_duration(dir+os.sep+file)
+                                        if os.path.getsize(dir+os.sep+file):
+                                            item.approx_duration = self.get_duration(dir+os.sep+file)
                                         item.save()
-                                        item.save()
-                                        print "preview added"
+                                        logger.logger.info(r_path)
                                     elif extension[1:] in self.transcoded_formats:
                                         t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
-                                        print "preview transcoded added"
+                                        logger.logger.info(r_path)
 
                                 media = Media(item=item, course=course, type=ext)
                                 media.set_mime_type()
@@ -204,4 +208,3 @@ class Command(BaseCommand):
                                 seminar.media_preview = media
                                 seminar.save()
 
-                        logger.logger.info(path)
