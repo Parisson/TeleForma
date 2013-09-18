@@ -150,6 +150,7 @@ function get_course_media_urls(host, id){
                 s += '</video></center><br />\n';
                 $(section).append(s);
                 _V_(video_id, {}, function(){});
+                $("#"+video_id).bind('contextmenu',function() { return false; });
             };
         },
         function(){
