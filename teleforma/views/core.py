@@ -310,7 +310,7 @@ class CourseView(CourseAccessMixin, DetailView):
 class MediaView(CourseAccessMixin, DetailView):
 
     model = Media
-    template_name='teleforma/course_media.html'
+    template_name='teleforma/course_media_video.html'
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)

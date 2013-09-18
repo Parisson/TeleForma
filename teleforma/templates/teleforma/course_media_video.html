@@ -1,0 +1,59 @@
+{% extends "teleforma/course_media.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block supra_javascript %}
+<script src="{{STATIC_URL}}teleforma/video-js/video.js"></script>
+<link href="{{STATIC_URL}}teleforma/video-js/video-js.css" rel="stylesheet">
+{% endblock supra_javascript %}
+
+{% block module-action %}
+{% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
+ {% if not "video" in media.mime_type or perms.telemeta.can_play_all_items %}
+  <div class="module_action">
+   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+  </div>
+ {% endif %}
+{% endif %}
+{% endblock module-action %}
+
+
+{% block media %}
+<div class="course_media">
+
+<div class="course_title">
+    <div style="float: right; font-size: 0.9em;">
+        <a href="{% url teleforma-media-audio period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        {% if user.is_staff %}
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+        {% endif %}
+    </div>
+
+    <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
+
+</div>
+
+{% if access_error %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+
+{% else %}
+<div class="media">
+
+<div class="video">
+<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}' {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}{% thumbnail related.file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}{% endfor %}{% endif %}>
+    <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+  {% for transcoded in media.item.transcoded.all %}
+   {% if "video" in transcoded.mime_type %}
+    <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
+   {% endif %}
+  {% endfor %}
+</video>
+</div>
+
+</div>
+{% endif %}
+{% endblock media  %}
+

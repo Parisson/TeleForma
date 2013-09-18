@@ -4,13 +4,7 @@
 {% load i18n %}
 {% load thumbnail %}
 
-{% block extra_javascript %}
-
-{% if "video" in media.mime_type %}
-<script src="{{STATIC_URL}}teleforma/video-js/video.js"></script>
-<link href="{{STATIC_URL}}teleforma/video-js/video-js.css" rel="stylesheet">
-{% endif %}
-
+{% block extra_javascript %} 
 <script type="text/javascript">
 $(document).ready(function(){
     InitChatWindow("{% url jqchat_ajax room.id %}", null);
@@ -54,77 +48,15 @@ $(document).ready(function(){
         });
 </script>
 {% endif %}
-
 {% endblock extra_javascript %}
 
-{% block module-action %}
-{% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
- {% if not "video" in media.mime_type or perms.telemeta.can_play_all_items %}
-  <div class="module_action">
-   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
-  </div>
- {% endif %}
-{% endif %}
-{% endblock module-action %}
+{% block supra_javascript %}
+{% endblock supra_javascript %}
 
 {% block course %}
-<div class="course_media">
 
-<div class="course_title">
-    <div style="float: right; font-size: 0.9em;">
-        {% if "video" in media.mime_type %}
-        <a href="{% url teleforma-media-detail period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
-        {% endif %}
-        {% if "audio" in media.mime_type %}
-        <a href="{% url teleforma-media-detail period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
-        {% endif %}
-        {% if user.is_staff %}
-        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
-        {% endif %}
-    </div>
-
-    <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
-
-</div>
-
-{% if access_error %}
-  <p>{{ access_error }}</p>
-  <p>{{ message }}</p>
-
-{% else %}
-<div class="media">
-
-{% if "video" in media.mime_type %}
-<div class="video">
-<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}' {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}{% thumbnail related.file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}{% endfor %}{% endif %}>
-<source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
-</video>
-</div>
-
-{% elif "audio" in media.mime_type %}
-
-<div style="margin-top:1em;">
-{% if media.item.related.all %}
- {% for related in media.item.related.all %}
-  {% if related.title == "preview" %}
-   {% thumbnail related.file "300" as im %}
-    <img src="{{ im.url }}" width="300px" alt="preview" />
-   {% endthumbnail %}
-  {% endif %}
- {% endfor %}
-{% else %}
- snapshot
-{% endif %}
-</div>
-<div class="audio">
-<audio controls preload="auto">
-<source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
-</audio>
-</div>
-{% endif %}
-
-</div>
-{% endif %}
+{% block media %}
+{% endblock media %}
 
 {% block general_info %}
 <div class="course_content" id="media_infos">

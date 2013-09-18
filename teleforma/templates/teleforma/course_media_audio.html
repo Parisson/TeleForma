@@ -1,0 +1,65 @@
+{% extends "teleforma/course_media.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+{% load thumbnail %}
+
+
+{% block module-action %}
+{% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
+ {% if not "video" in media.mime_type or perms.telemeta.can_play_all_items %}
+  <div class="module_action">
+   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+  </div>
+ {% endif %}
+{% endif %}
+{% endblock module-action %}
+
+{% block media %}
+<div class="course_media">
+
+<div class="course_title">
+    <div style="float: right; font-size: 0.9em;">
+        <a href="{% url teleforma-media-detail period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        {% if user.is_staff %}
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+        {% endif %}
+    </div>
+
+    <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
+
+</div>
+
+{% if access_error %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+
+{% else %}
+<div class="media">
+
+<div style="margin-top:1em;">
+{% if media.item.related.all %}
+ {% for related in media.item.related.all %}
+  {% if related.title == "preview" %}
+   {% thumbnail related.file "300" as im %}
+    <img src="{{ im.url }}" width="300px" alt="preview" />
+   {% endthumbnail %}
+  {% endif %}
+ {% endfor %}
+{% else %}
+ snapshot
+{% endif %}
+</div>
+<div class="audio">
+<audio controls preload="auto">
+  {% for transcoded in media.item.transcoded.all %}
+   {% if "audio" in transcoded.mime_type %}
+    <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
+   {% endif %}
+  {% endfor %}
+</audio>
+</div>
+
+</div>
+{% endif %}
+{% endblock media %}
