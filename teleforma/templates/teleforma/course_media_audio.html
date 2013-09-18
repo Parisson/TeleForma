@@ -16,11 +16,12 @@
 {% endblock module-action %}
 
 {% block media %}
+
 <div class="course_media">
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-media-detail period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url teleforma-media-detail period.id media.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
         {% if user.is_staff %}
         <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
@@ -60,6 +61,8 @@
 </audio>
 </div>
 
-</div>
 {% endif %}
+
+</div>
+
 {% endblock media %}
