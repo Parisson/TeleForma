@@ -69,7 +69,7 @@ class Command(BaseCommand):
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
 
-#        self.cleanup()
+        #self.cleanup()
 
         for root, dirs, files in os.walk(self.media_dir, followlinks=True):
             for filename in files:
@@ -113,12 +113,22 @@ class Command(BaseCommand):
                         if not exist and not streaming:
 
                             # ORIGINAL MEDIA
-                            collection = MediaCollection.objects.get_or_create(code=collection_id, title=collection_id)
+                            collections = MediaCollection.objects.filter(code=collection_id)
+                            if not collections:
+                                collection = MediaCollection(code=collection_id,title=collection_id)
+                                collection.save()
+                            else:
+                                collection = collections[0]
                             code = '_'.join([collection_id, public_id, ext])
-                            item = MediaItem.objects.get_or_create(collection=collection, code=code)
+                            items = MediaItem.objects.filter(collection=collection, code=code)
+                            if not items:
+                                item = MediaItem(collection=collection, code=code)
+                                item.save()
+                            else:
+                                item = items[0]
                             item.title = name
                             item.file = path
-                            item.approx_duration = self.get_duration(root+os.sep+filename)
+                            #item.approx_duration = self.get_duration(root+os.sep+filename)
                             item.save()
 
                             # IMAGES
@@ -134,7 +144,7 @@ class Command(BaseCommand):
                                     break
 
                             # TRANSCODED MEDIA
-                            for format in ffmpeg_args.keys():
+                            for format in self.ffmpeg_args.keys():
                                 filename = name + '.' + format
                                 dest = os.path.abspath(root + os.sep + filename)
                                 r_path = dir + os.sep + filename
