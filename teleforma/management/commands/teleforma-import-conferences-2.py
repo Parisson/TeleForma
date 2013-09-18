@@ -7,7 +7,7 @@ from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
-import os
+import os, sys, time, datetime
 import timeside
 
 
@@ -15,7 +15,7 @@ class Logger:
     """A logging object"""
 
     def __init__(self, file):
-        self.logger = logging.getLogger('myapp')
+        self.logger = logging.getLogger('teleforma')
         self.hdlr = logging.FileHandler(file)
         self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         self.hdlr.setFormatter(self.formatter)
@@ -24,7 +24,7 @@ class Logger:
 
 
 class Command(BaseCommand):
-    help = "Import conferences from the MEDIA_ROOT directory "
+    help = "Import original and transcoded conference media from the MEDIA_ROOT directory "
     admin_email = 'webmaster@parisson.com'
     args = 'organization log_file'
     spacer = '_-_'
@@ -37,13 +37,19 @@ class Command(BaseCommand):
               }
 
     def cleanup(self):
-        medias = Media.objects.all()
-        for media in medias:
-            media.delete()
+        items  = MediaItemTranscoded.objects.all()
+        for item in items:
+            item.delete()
+        items = Media.objects.all()
+        for item in items:
+            item.delete()
         items = MediaItem.objects.all()
         for item in items:
             item.delete()
-
+        items  = MediaCollection.objects.all()
+        for i in items :
+            i.delete()
+        
     def get_duration(self, file):
         decoder = timeside.decoder.FileDecoder(file)
         decoder.setup()
@@ -62,11 +68,10 @@ class Command(BaseCommand):
         organization = Organization.objects.get(name=organization_name)
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
-        all_conferences = Conference.objects.all()
 
 #        self.cleanup()
 
-        for root, dirs, files in os.walk(self.media_dir):
+        for root, dirs, files in os.walk(self.media_dir, followlinks=True):
             for filename in files:
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
@@ -86,8 +91,9 @@ class Command(BaseCommand):
 
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
-                    if Conference.objects.filter(public_id=public_id):
-                        conference = Conference.objects.get(public_id=public_id)
+                    conferences = Conference.objects.filter(public_id=public_id)
+                    if conferences:
+                        conference = conferences[0]
 
                         exist = False
                         medias = conference.media.all()
@@ -105,27 +111,17 @@ class Command(BaseCommand):
                             pass
 
                         if not exist and not streaming:
-                            collections = MediaCollection.objects.filter(code=collection_id)
-                            if not collections:
-                                collection = MediaCollection(code=collection_id,title=collection_id)
-                                collection.save()
-                            else:
-                                collection = collections[0]
 
-                            id = '_'.join([collection_id, public_id, ext])
-
-                            items = MediaItem.objects.filter(collection=collection, code=id)
-                            if not items:
-                                item = MediaItem(collection=collection, code=id)
-                                item.save()
-                            else:
-                                item = items[0]
-
+                            # ORIGINAL MEDIA
+                            collection = MediaCollection.objects.get_or_create(code=collection_id, title=collection_id)
+                            code = '_'.join([collection_id, public_id, ext])
+                            item = MediaItem.objects.get_or_create(collection=collection, code=code)
                             item.title = name
                             item.file = path
                             item.approx_duration = self.get_duration(root+os.sep+filename)
                             item.save()
 
+                            # IMAGES
                             files = os.listdir(root)
                             for file in files:
                                 filename, extension = os.path.splitext(file)
@@ -137,14 +133,15 @@ class Command(BaseCommand):
                                     related.save()
                                     break
 
+                            # TRANSCODED MEDIA
                             for format in ffmpeg_args.keys():
                                 filename = name + '.' + format
                                 dest = os.path.abspath(root + os.sep + filename)
                                 r_path = dir + os.sep + filename
-                                if not os.path.exists(dest):
-                                    command = 'ffmpeg -i ' + path + ffmpeg_args[format] + ' -y ' + dest
-                                    os.system(command)
-                                    t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
+                                # if not os.path.exists(dest):
+                                #     command = 'ffmpeg -i ' + path + ffmpeg_args[format] + ' -y ' + dest
+                                #     os.system(command)
+                                t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
 
                             media = Media(conference=conference)
                             media.item = item
