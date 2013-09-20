@@ -53,7 +53,8 @@ def seminar_progress(user, seminar):
     questions = Question.objects.filter(seminar=seminar, status=3)
     for question in questions:
         total += question.weight
-        answer = Answer.objects.filter(question=question, status=3, user=user)
+        answer = Answer.objects.filter(question=question, status=3, user=user, 
+                                        validated=True, treated=True)
         if answer:
             progress += question.weight
 
