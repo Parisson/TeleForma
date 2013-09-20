@@ -7,13 +7,13 @@ PID=/var/run/uwsgi.pid
 INI=/home/parisson/apps/icpmedia/uwsgi.ini
 LOG=/var/log/uwsgi/icpmedia.log
 USER=www-data
-ARGS="--ini $INI --uid $USER --gid $USER --enable-threads --touch-reload=$INI --daemonize=$LOG"
+ARGS="--ini $INI --uid $USER --gid $USER --pidfile=$PID --enable-threads --touch-reload=$INI --daemonize=$LOG"
 
 # Carry out specific functions when asked to by the system
 case "$1" in
     start)
         echo "Starting uwsgi"
-        start-stop-daemon -p $PID --start --exec $DAEMON -- $ARGS &
+        start-stop-daemon --start --exec $DAEMON -- $ARGS &
         ;;
     stop)
         echo "Stopping script uwsgi"
