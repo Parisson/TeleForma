@@ -245,6 +245,7 @@ class CourseListView(CourseAccessMixin, ListView):
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
     def pull(request, organization_name, department_name):
+        from teleforma.models import Organization
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name, organization=organization)
         url = 'http://' + department.domain + '/json/'
