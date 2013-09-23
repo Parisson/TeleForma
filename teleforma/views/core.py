@@ -611,7 +611,7 @@ class ConferenceRecordView(FormView):
         f = open(path, 'w')
         f.write(img.read())
         f.close()
-        command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
+        command = 'dwebp "' + path + '" -o "' + dir + os.sep + 'preview.png" &'
         os.system(command)
 
     @method_decorator(login_required)
