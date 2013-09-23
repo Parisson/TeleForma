@@ -1,0 +1,24 @@
+#!/bin/bash
+
+organization=$1
+project_dir=$2
+archives_dir=$3
+tmp_dir=$4
+log_dir=/home/$USER/log/
+date_now=`date '+%m-%d-%y_%H-%M-%S'`
+telemeta_dir=/home/$USER/apps/telemeta/
+
+# REMUX
+log=$log_dir/remux_$date_now.log
+python $telemeta_dir/tools/scripts/transcode/remux_fix_media.py $archives_dir $tmp_dir >> $log
+
+# TRANSCODE
+log=$log_dir/transcode_$date_now.log
+python $telemeta_dir/tools/scripts/transcode/transcode.py $archives_dir $log
+
+# IMPORT
+log=$log_dir/import_$date_now.log
+python $project_dir/manage.py teleforma-import-conferences-2 $organization $log
+
+
+
