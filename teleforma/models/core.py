@@ -168,11 +168,11 @@ class Course(Model):
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return self.code
+        return self.title
 
     @property
     def slug(self):
-        return slugify(self.__unicode__())
+        return slugify(self.code)
 
     def to_dict(self):
         dict = {'organization' : self.department.organization.name,
