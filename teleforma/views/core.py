@@ -507,7 +507,8 @@ class ConferenceListView(View):
                     conference.from_json_dict(conf_dict)
 
     def push(request, organization_name, department_name):
-        organization = organization.objects.get(name=organization_name)
+        from teleforma.models import Organization, Department
+        organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name, organization=organization)
         url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
