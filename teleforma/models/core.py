@@ -514,7 +514,7 @@ class Document(MediaBase):
 
     def __unicode__(self):
         types = ' - '.join([unicode(t) for t in self.course_type.all()])
-        return  ' - '.join([unicode(self.course), unicode(types), self.title ])
+        return  ' - '.join([unicode(self.course), unicode(types), self.title, str(self.date_added) ])
 
     def save(self, **kwargs):
         if not self.is_annal:
