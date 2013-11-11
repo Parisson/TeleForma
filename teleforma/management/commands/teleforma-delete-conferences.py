@@ -23,11 +23,11 @@ class Command(BaseCommand):
         if not periods:
             sys.exit("No such period")
         else:
-            periods = periods[0]
+            period = periods[0]
         start_time = datetime.datetime(start_year, start_month, 1, 0, 0)
         end_time = datetime.datetime(end_year, end_month, 30, 23, 59)
-        conferences = Conference.objects.filter(date_begin__gte=start_time)
-        conferences = conferences.filter(date_begin__lte=end_time)
+        conferences = Conference.objects.filter(date_begin__gte=start_time, period=period)
+        conferences = conferences.filter(date_begin__lte=end_time, period=period)
         for conference in conferences:
             medias = Media.objects.filter(conference=conference)
             for media in medias:
