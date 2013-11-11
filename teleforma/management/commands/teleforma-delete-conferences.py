@@ -9,7 +9,7 @@ from teleforma.models import *
 import logging
 import json
 import datetime
-
+import sys
 
 class Command(BaseCommand):
     help = "Delete all conferences between two dates"
@@ -17,8 +17,13 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
 
     def handle(self, *args, **options):
-        start_month, start_year, end_month, end_year = int(args[-4]), int(args[-3]), \
-                                                    int(args[-2]), int(args[-1])
+        period_name, start_month, start_year, end_month, end_year = args[-5], int(args[-4]), \
+                                    int(args[-3]), int(args[-2]), int(args[-1])
+        periods = Period.objects.filter(name=period_name)
+        if not periods:
+            sys.exit("No such period")
+        else:
+            periods = periods[0]
         start_time = datetime.datetime(start_year, start_month, 1, 0, 0)
         end_time = datetime.datetime(end_year, end_month, 30, 23, 59)
         conferences = Conference.objects.filter(date_begin__gte=start_time)
