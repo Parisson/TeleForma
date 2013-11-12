@@ -12,12 +12,12 @@ import codecs
 
 
 class Command(BaseCommand):
-    help = "pull teleforma courses from a remote host"
+    help = "pull teleforma courses from a remote host for an organization"
     admin_email = 'webmaster@parisson.com'
-    args = "organization_name department_name"
+    args = "organization_name"
 
     def handle(self, *args, **options):
     	organization_name = args[-2]
     	department_name = args[-1]
         view = CourseListView()
-        view.pull(organization_name, department_name)
+        view.pull(organization_name)
