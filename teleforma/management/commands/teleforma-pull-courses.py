@@ -17,7 +17,6 @@ class Command(BaseCommand):
     args = "organization_name"
 
     def handle(self, *args, **options):
-    	organization_name = args[-2]
-    	department_name = args[-1]
+    	organization_name = args[-1]
         view = CourseListView()
         view.pull(organization_name)
