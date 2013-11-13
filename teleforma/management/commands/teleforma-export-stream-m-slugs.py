@@ -27,6 +27,11 @@ server.port=8080
 streams.safe=true
 streams.safe.password=source2parisson
 streams.safe.limit=100
+
+streams.monitor=true
+streams.monitor.password=source2parisson
+streams.monitor.limit=100
+
 """
 
     def export(self):
