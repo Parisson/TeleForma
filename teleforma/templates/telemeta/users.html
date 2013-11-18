@@ -24,6 +24,12 @@
 </div>
 </div>
 
+{% if users %}
+<div class="module_action">
+<a href="{% url postman_write users|to_recipients %}" class="component_icon button" id="action_orange">{% trans "Grouped message" %}</a>
+</div>
+{% endif %}
+
 </div>
 
 <div class="desk_messages">
