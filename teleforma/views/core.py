@@ -657,28 +657,26 @@ class ProfessorListView(View):
         return [p.to_json_dict() for p in professors]
 
     def pull(request, host=None):
-        
-        if host:
-            url = 'http://' + host + '/json/'
-        else:
-            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
-        s = ServiceProxy(url)
+        from teleforma.models import Organization, Department
+        departments = Department.objects.all()
+        for department in departments:
+            url = 'http://' + department.domain + '/json/'
+            s = ServiceProxy(url)
+            remote_list = s.teleforma.get_professor_list()
+            for professor_dict in remote_list['result']:
+                user, c = User.objects.get_or_create(username=professor_dict['username'])
+                user.first_name = professor_dict['first_name']
+                user.last_name = professor_dict['last_name']
+                user.email = professor_dict['email']
+                user.save()
 
-        remote_list = s.teleforma.get_professor_list()
-        for professor_dict in remote_list['result']:
-            user, c = User.objects.get_or_create(username=professor_dict['username'])
-            user.first_name = professor_dict['first_name']
-            user.last_name = professor_dict['last_name']
-            user.email = professor_dict['email']
-            user.save()
-
-            professor, c = Professor.objects.get_or_create(user=user)
-            for course_code in professor_dict['courses']:
-                course = Course.objects.filter(code=course_code)
-                if course:
-                    if not course[0] in professor.courses.all():
-                        professor.courses.add(course[0])
-            professor.save()
+                professor, c = Professor.objects.get_or_create(user=user)
+                for course_code in professor_dict['courses']:
+                    course = Course.objects.filter(code=course_code)
+                    if course:
+                        if not course[0] in professor.courses.all():
+                            professor.courses.add(course[0])
+                professor.save()
 
 
 class HelpView(TemplateView):
