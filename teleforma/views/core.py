@@ -241,7 +241,7 @@ class CourseListView(CourseAccessMixin, ListView):
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
     def pull(request, organization_name):
-        from teleforma.models import *
+        from teleforma.models import Organization, Department
         organization = Organization.objects.get(name=organization_name)
         departments = Department.objects.filter(organization=organization)
         for department in departments:
