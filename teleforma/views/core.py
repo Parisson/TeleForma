@@ -236,6 +236,7 @@ class CourseListView(CourseAccessMixin, ListView):
 
     @jsonrpc_method('teleforma.get_course_list')
     def get_course_list(request, organization_name, department_name):
+        from teleforma.models import Organization, Department
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
