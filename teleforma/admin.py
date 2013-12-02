@@ -84,6 +84,7 @@ class MediaItemMarkerAdmin(admin.ModelAdmin):
 
 
 class TestimonialAdmin(admin.ModelAdmin):
+    model = Testimonial
     search_fields = ['course__title', 'user__username']
 
 
