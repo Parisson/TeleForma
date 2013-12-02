@@ -84,7 +84,7 @@ class MediaItemMarkerAdmin(admin.ModelAdmin):
 
 
 class TestimonialAdmin(admin.ModelAdmin):
-    search_fields = ['seminar__course__title', 'seminar__subtitle', 
+    search_fields = ['seminar__course__title', 'seminar__sub_title', 
                     'user__username', 'user__lastname']
 
 
