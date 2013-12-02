@@ -83,6 +83,11 @@ class MediaItemMarkerAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description']
 
 
+class TestimonialAdmin(admin.ModelAdmin):
+    search_fields = ['seminar__course__title', 'seminar__sub_title', 
+                    'user__username', 'user__last_name']
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(SeminarRevision)
@@ -101,7 +106,7 @@ admin.site.register(Professor, ProfessorAdmin)
 
 admin.site.register(Seminar, SeminarAdmin)
 admin.site.register(Question)
-admin.site.register(Testimonial)
+admin.site.register(Testimonial, TestimonialAdmin)
 admin.site.register(TestimonialTemplate)
 admin.site.register(SeminarType)
 admin.site.register(Answer)
