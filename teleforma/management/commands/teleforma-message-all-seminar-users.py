@@ -35,35 +35,34 @@ class Command(BaseCommand):
             auditor = user.auditor.all()
             if auditor and profile and user.is_active and user.email:
                 seminars = auditor.seminars.all()
-                    for seminar in seminars:
+                for seminar in seminars:
+                    organization = seminar.course.department.name
+                    site = Site.objects.get_current()
+                    path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+                    gender = auditor[0].get_gender_display()
 
-                        organization = seminar.course.department.name
-                        site = Site.objects.get_current()
-                        path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
-                        gender = auditor[0].get_gender_display()
+                    if seminar.sub_title:
+                        title = seminar.sub_title + ' : ' + seminar.title
+                    else:
+                    
+                    context['gender'] = gender
+                    context['first_name'] = user.first_name
+                    context['last_name'] = user.last_name
+                    context['rank'] = answer.question.rank
+                    context['site'] = site
+                    context['path'] = path
+                    context['title'] = title
+                    context['organization'] = organization
+                    context['date'] = seminar.expiry_date
+                    
+                    text = render_to_string(self.message_template, context)
+                    subject = render_to_string(self.subject_template, context)
+                    subject = '%s : %s' % (seminar.title, subject)
 
-                        if seminar.sub_title:
-                            title = seminar.sub_title + ' : ' + seminar.title
-                        else:
-                        
-                        context['gender'] = gender
-                        context['first_name'] = user.first_name
-                        context['last_name'] = user.last_name
-                        context['rank'] = answer.question.rank
-                        context['site'] = site
-                        context['path'] = path
-                        context['title'] = title
-                        context['organization'] = organization
-                        context['date'] = seminar.expiry_date
-                        
-                        text = render_to_string(self.message_template, context)
-                        subject = render_to_string(self.subject_template, context)
-                        subject = '%s : %s' % (seminar.title, subject)
-
-                        mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
-                        mess.moderation_status = 'a'
-                        #mess.save()
-                        #notify_user(mess, 'acceptance')
-                        
-                        print user.username, seminar.title
+                    mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
+                    mess.moderation_status = 'a'
+                    #mess.save()
+                    #notify_user(mess, 'acceptance')
+                    
+                    print user.username, seminar.title
 
