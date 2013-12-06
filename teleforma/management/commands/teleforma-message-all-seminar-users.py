@@ -34,6 +34,7 @@ class Command(BaseCommand):
             profile, c = Profile.objects.get_or_create(user=user)
             auditor = user.auditor.all()
             if auditor and profile and user.is_active and user.email:
+                auditor = auditor[0]
                 seminars = auditor.seminars.all()
                 for seminar in seminars:
                     organization = seminar.course.department.name
