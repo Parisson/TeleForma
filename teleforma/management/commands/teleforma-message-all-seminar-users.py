@@ -37,6 +37,7 @@ class Command(BaseCommand):
                 auditor = auditor[0]
                 seminars = auditor.seminars.all()
                 for seminar in seminars:
+                    context = {}
                     organization = seminar.course.department.name
                     site = Site.objects.get_current()
                     path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
