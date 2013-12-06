@@ -35,7 +35,7 @@ class Command(BaseCommand):
             auditor = user.auditor.all()
             professor = user.professor.all()
 
-            if auditor and not professor and user.is_active and user.email:
+            if auditor and not professor and user.is_active and user.email and seminar.expiry_date:
                 auditor = auditor[0]
                 seminars = auditor.seminars.all()
                 for seminar in seminars:
