@@ -44,11 +44,11 @@ class Command(BaseCommand):
                     if seminar.sub_title:
                         title = seminar.sub_title + ' : ' + seminar.title
                     else:
-                    
+                        title = seminar.title
+
                     context['gender'] = gender
                     context['first_name'] = user.first_name
                     context['last_name'] = user.last_name
-                    context['rank'] = answer.question.rank
                     context['site'] = site
                     context['path'] = path
                     context['title'] = title
