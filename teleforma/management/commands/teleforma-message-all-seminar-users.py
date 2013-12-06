@@ -69,7 +69,8 @@ class Command(BaseCommand):
                             mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
                             mess.moderation_status = 'a'
                             mess.save()
-                            #notify_user(mess, 'acceptance')
+                            if not settings.DEBUG:
+                                notify_user(mess, 'acceptance')
                             
                             print user.username, seminar.title, seminar.expiry_date
 
