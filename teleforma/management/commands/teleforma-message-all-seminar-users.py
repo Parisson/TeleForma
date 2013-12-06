@@ -71,5 +71,5 @@ class Command(BaseCommand):
                             mess.save()
                             #notify_user(mess, 'acceptance')
                             
-                            print user.username, seminar.title
+                            print user.username, seminar.title, seminar.expiry_date
 
