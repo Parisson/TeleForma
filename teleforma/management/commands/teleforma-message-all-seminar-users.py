@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     organization = seminar.course.department.name
                     site = Site.objects.get_current()
                     path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
-                    gender = auditor[0].get_gender_display()
+                    gender = auditor.get_gender_display()
 
                     if seminar.sub_title:
                         title = seminar.sub_title + ' : ' + seminar.title
