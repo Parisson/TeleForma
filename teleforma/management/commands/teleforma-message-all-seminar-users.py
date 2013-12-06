@@ -12,7 +12,7 @@ from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
-
+import datetime
 from postman.models import *
 from postman.utils import email_visitor, notify_user
 
@@ -29,6 +29,7 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
         sender_email = settings.DEFAULT_FROM_EMAIL
         sender = User.objects.get(email=sender_email)
+        today = datetime.datetime.now()
 
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
@@ -37,33 +38,36 @@ class Command(BaseCommand):
                 auditor = auditor[0]
                 seminars = auditor.seminars.all()
                 for seminar in seminars:
-                    context = {}
-                    organization = seminar.course.department.name
-                    site = Site.objects.get_current()
-                    path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
-                    gender = auditor.get_gender_display()
+                    delta = seminar.expiry_date - today
+                    if delta.days < 30:
+                        context = {}
+                        organization = seminar.course.department.name
+                        site = Site.objects.get_current()
+                        path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+                        gender = auditor.get_gender_display()
 
-                    if seminar.sub_title:
-                        title = seminar.sub_title + ' : ' + seminar.title
-                    else:
-                        title = seminar.title
+                        if seminar.sub_title:
+                            title = seminar.sub_title + ' : ' + seminar.title
+                        else:
+                            title = seminar.title
 
-                    context['gender'] = gender
-                    context['first_name'] = user.first_name
-                    context['last_name'] = user.last_name
-                    context['site'] = site
-                    context['path'] = path
-                    context['title'] = title
-                    context['organization'] = organization
-                    context['date'] = seminar.expiry_date
-                    
-                    text = render_to_string(self.message_template, context)
-                    subject = render_to_string(self.subject_template, context)
+                        context['gender'] = gender
+                        context['first_name'] = user.first_name
+                        context['last_name'] = user.last_name
+                        context['site'] = site
+                        context['path'] = path
+                        context['title'] = title
+                        context['organization'] = organization
+                        context['date'] = seminar.expiry_date
+                        
+                        text = render_to_string(self.message_template, context)
+                        subject = render_to_string(self.subject_template, context)
+                        subject = '%s : %s' % (seminar.title, subject)
 
-                    mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
-                    mess.moderation_status = 'a'
-                    mess.save()
-                    #notify_user(mess, 'acceptance')
-                    
-                    print user.username, seminar.title
+                        mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
+                        mess.moderation_status = 'a'
+                        mess.save()
+                        #notify_user(mess, 'acceptance')
+                        
+                        print user.username, seminar.title
 
