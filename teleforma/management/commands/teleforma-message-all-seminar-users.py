@@ -20,7 +20,7 @@ from postman.utils import email_visitor, notify_user
 class Command(BaseCommand):
     help = """Send a reminder to all users when their subscripted seminars 
             expire before a given number of days"""
-    args ['days']
+    args = ['days',]
     message_template = 'teleforma/messages/seminar_remind.txt'
     subject_template = 'teleforma/messages/seminar_remind_subject.txt'
     language_code = 'fr_FR'
