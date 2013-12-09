@@ -19,10 +19,12 @@
 <script type="text/javascript">document.getElementById("id_subject").focus();</script>
 <script type="text/javascript">
 
+{% if not user.is_superuser %}
 $(window).ready(function(){
       var recipient = '{% admin_username %}';
       $("#id_recipients").val(recipient);
     });
+{% endif %}
 
 $('#send_button').click(function() {
   $('#_messageForm').submit();
