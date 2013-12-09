@@ -68,5 +68,3 @@ class Command(BaseCommand):
                     if not settings.DEBUG:
                         notify_user(mess, 'acceptance')
                     
-                    print user.username, seminars
-
