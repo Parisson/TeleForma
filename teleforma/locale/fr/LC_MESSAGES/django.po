@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-09 17:29+0100\n"
+"POT-Creation-Date: 2013-12-09 17:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -1458,10 +1458,9 @@ msgstr ""
 msgid "expires on"
 msgstr "arrive à expiration le"
 
-#: templates/teleforma/messages/seminar_remind.txt:6
+#: templates/teleforma/messages/seminar_remind.txt:7
 #, python-format
 msgid ""
-"\n"
 "Nous vous rappelons que vous devez achever vos formations avant ces dates.\n"
 "\n"
 "De plus, si vous souhaitez conserver les supports pédagogiques écrits de "
