@@ -26,7 +26,7 @@ class Command(BaseCommand):
     language_code = 'fr_FR'
 
     def handle(self, *args, **kwargs):
-        days = args[-1]
+        days = int(args[-1])
         users = User.objects.all()
         translation.activate(self.language_code)
         sender_email = settings.DEFAULT_FROM_EMAIL
@@ -60,7 +60,7 @@ class Command(BaseCommand):
                     text = render_to_string(self.message_template, context)
                     subject = render_to_string(self.subject_template, context)
                     # subject = '%s : %s' % (seminar.title, subject)
-                    
+
                     mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
                     mess.moderation_status = 'a'
                     mess.save()
