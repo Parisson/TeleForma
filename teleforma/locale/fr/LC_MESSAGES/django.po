@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-06 21:58+0100\n"
+"POT-Creation-Date: 2013-12-09 16:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -1407,7 +1407,7 @@ msgstr ""
 "de votre formation avant le %(date)s.\n"
 "\n"
 "L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
-"reste à votre disposition pour renseignement complémentaire.\n"
+"reste à votre disposition pour tout renseignement complémentaire.\n"
 
 #: templates/teleforma/messages/answer_validated.txt:1
 #, python-format
@@ -1441,31 +1441,38 @@ msgstr ""
 "de votre formation avant le %(date)s.\n"
 "\n"
 "L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
-"reste à votre disposition pour renseignement complémentaire.\n"
+"reste à votre disposition pour tout renseignement complémentaire.\n"
 
 #: templates/teleforma/messages/seminar_remind.txt:1
 #, python-format
 msgid ""
 "%(gender)s %(last_name)s,\n"
 "\n"
-"votre abonnement au séminaire e-learning \"%(title)s\" arrive à expiration "
-"le %(date)s.\n"
+"Certains de vos séminaires e-learning arrivent bientôt à expiration :"
+msgstr ""
+"%(gender)s %(last_name)s,\n"
 "\n"
-"Nous vous rappelons que vous devez achever votre formation avant cette "
-"date.\n"
+"Certains de vos séminaires e-learning arrivent bientôt à expiration :"
+
+#: templates/teleforma/messages/seminar_remind.txt:6
+msgid "expires on"
+msgstr "arrive à expiration le"
+
+#: templates/teleforma/messages/seminar_remind.txt:8
+msgid ""
+"\n"
+"Nous vous rappelons que vous devez achever vos formations avant ces dates.\n"
 "\n"
 "De plus, si vous souhaitez conserver les supports pédagogiques écrits de "
 "votre formation (compte-rendu écrit et recueil(s) de documents d'actualité), "
 "nous vous rappelons que ceux-ci sont entièrement téléchargeables sur la "
-"plate-forme e-learning de Pro-Barreau jusqu'au %(date)s.\"\n"
+"plate-forme e-learning de %(organization)s jusqu'aux dates d'expiration de "
+"chaque séminaire.\"\n"
 "\n"
 "The team of the %(organization)s thank you for your confidence and we remain "
 "at your disposal for further information.\n"
 msgstr ""
 "%(gender)s %(last_name)s,\n"
-"\n"
-"votre abonnement au séminaire e-learning \"%(title)s\" arrive à expiration "
-"le %(date)s.\n"
 "\n"
 "Nous vous rappelons que vous devez achever votre formation avant cette "
 "date.\n"
@@ -1476,7 +1483,7 @@ msgstr ""
 "plate-forme e-learning de Pro-Barreau jusqu'au %(date)s.\"\n"
 "\n"
 "L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
-"reste à votre disposition pour renseignement complémentaire.\n"
+"reste à votre disposition pour tout renseignement complémentaire.\n"
 
 #: templates/teleforma/messages/seminar_validated.txt:1
 #, python-format
@@ -1515,7 +1522,7 @@ msgstr ""
 "de votre formation avant le %(date)s.\n"
 "\n"
 "L’équipe e-learning de %(organization)s vous remercie de votre confiance et "
-"reste à votre disposition pour renseignement complémentaire.\n"
+"reste à votre disposition pour tout renseignement complémentaire.\n"
 
 #: templates/telemeta/base.html:97
 msgid "Desk"
@@ -1679,7 +1686,6 @@ msgid "Email"
 msgstr ""
 
 #: templates/telemeta/profile_detail.html:85
-#, fuzzy
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
