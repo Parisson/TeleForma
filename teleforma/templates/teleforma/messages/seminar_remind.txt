@@ -3,7 +3,6 @@
 Certains de vos séminaires e-learning arrivent bientôt à expiration :{% endblocktrans %}
 
 {% for seminar in seminars %}"{% if seminar.sub_title %}{{ seminar.sub_title }}{% else %}{{ seminar.title }}{% endif %}" {% trans "expires on" %} {{ seminar.expiry_date }}.{% endfor %}
-
 {% blocktrans %}Nous vous rappelons que vous devez achever vos formations avant ces dates.
 
 De plus, si vous souhaitez conserver les supports pédagogiques écrits de votre formation (compte-rendu écrit et recueil(s) de documents d'actualité), nous vous rappelons que ceux-ci sont entièrement téléchargeables sur la plate-forme e-learning de {{ organization }} jusqu'aux dates d'expiration de chaque séminaire.
