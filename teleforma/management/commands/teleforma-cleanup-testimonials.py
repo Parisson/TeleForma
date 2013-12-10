@@ -37,7 +37,7 @@ class Command(BaseCommand):
                         for testimonial1 in testimonials:
                             for testimonial2 in testimonials:
                                 if testimonial2.date_added < testimonial1.date_added:
-                                    #testimonial2.delete()
+                                    testimonial2.delete()
                                     print ('kept', testimonial1.title, testimonial1.date_added)
                                     print ('deleted', testimonial2.title, testimonial2.date_added)
 
