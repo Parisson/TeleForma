@@ -79,6 +79,7 @@ def seminar_validated(user, seminar):
 
 def all_seminars(request, progress_order=False, date_order=False):
     seminars = []
+    now = datetime.datetime.now()
 
     if isinstance(request, User):
         user = request
@@ -97,15 +98,15 @@ def all_seminars(request, progress_order=False, date_order=False):
         courses = professor.courses.all()
 
         for course in courses:
-            for seminar in course.seminar.all():
+            for seminar in course.seminar.filter(expiry_date__gte=now):
                 seminars.append(seminar)
 
     elif auditor and not (user.is_staff or user.is_superuser):
         auditor = user.auditor.get()
-        seminars = auditor.seminars.filter(status=2)
+        seminars = auditor.seminars.filter(status=2, expiry_date__gte=now)
 
     elif user.is_staff or user.is_superuser:
-        seminars = Seminar.objects.all()
+        seminars = Seminar.objects.filter(expiry_date__gte=now)
     else:
         seminars = {}
 
