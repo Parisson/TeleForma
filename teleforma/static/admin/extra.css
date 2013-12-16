@@ -1,21 +1,6 @@
 
-.selector {
-    width: 960px;
-    display: block;
-    /*float: left;*/
+.stacked {
+float: left;
+width: 1024px;
 }
-
-.selector select {
-    width: 960px;
-    display: block;
-    height: 17.2em;
-}
-
-.selector-available, .selector-chosen {
-    /*float: left;*/
-    width: 960px;
-    text-align: center;
-    margin-bottom: 5px;
-}
-
 
