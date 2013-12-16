@@ -5,12 +5,8 @@
     float: left;
 }
 
-.stacked .selector-available,.stacked .selector-chosen {
+.stacked .selector-available,.stacked .selector-chosen, .stacked select {
     /*float: left;*/
     width: 960px;
-    text-align: center;
-    margin-bottom: 5px;
 }
-
-
 
