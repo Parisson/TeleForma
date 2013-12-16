@@ -27,7 +27,7 @@ $('#reject').unbind('click').click(function() {
 
 {% endblock infra_javascript %}
 
-{% block course_content %}
+{% block answers %}
 
 <div class="course_title">{% trans "Answer" %} {% trans "of" %} {{ answer.user.first_name }} {{ answer.user.last_name }} {% trans "on" %} {{ answer.date_submitted }}</div>
 
@@ -58,9 +58,5 @@ $('#reject').unbind('click').click(function() {
 <a id="reject" href="#" class="component_icon button icon_delete">{% trans " reject" %}</a>
 {% endif %}
 
-{% endblock course_content %}
-
-
-{% block progress %}
-{% endblock progress %}
+{% endblock answers %}
 

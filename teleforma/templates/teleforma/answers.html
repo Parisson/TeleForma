@@ -57,6 +57,7 @@ var answerUtils = {
 </div>
 {% endif %}
 
+{% block answers %}
 <div class="course_title">{% trans "Answers" %}</div>
 <br />
  {% if object_list %}
@@ -65,4 +66,6 @@ var answerUtils = {
     <p class="help">{% trans "No answer" %}</p>
  {% endif %}
 </div>
+{% endblock answers %}
+
 {% endblock %}
