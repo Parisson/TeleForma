@@ -1,11 +1,14 @@
 
 .selector {
     width: 960px;
-    /*float: left;*/
+    display: block;
+    float: left;
 }
 
 .selector select {
     width: 960px;
+    display: block;
+    float: left;
     height: 17.2em;
 }
 
