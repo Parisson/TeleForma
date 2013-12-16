@@ -64,14 +64,15 @@ class MediaAdmin(admin.ModelAdmin):
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['public_id', 'id']
-    filter_horizontal = ['docs_description']
+    filter_vertical = ['docs_description']
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
 
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
-    filter_vertical = ['professor', 'medias', 'docs_description',
+    filter_horizontal = ['professor', 'medias']
+    filter_vertical = ['docs_description',
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
