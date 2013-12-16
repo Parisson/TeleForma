@@ -29,6 +29,8 @@ $('#reject').unbind('click').click(function() {
 
 {% block course_content %}
 
+<div class="course_title">{% trans "Answer" %} {% trans "of" %} {{ answer.user.first_name }} {{ answer.user.last_name }} {% trans "on" %} {{ answer.date_submitted }}</div>
+
 <div class="course_content">
   <div class="course_subtitle">
    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {{ answer.question|safe }}</h3>
