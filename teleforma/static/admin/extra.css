@@ -1,15 +1,16 @@
 
 .selector {
-    width: 860px;
+    width: 1024px;
     display: block;
     float: left;
 }
 
-.selector-available, .selector-chosen {
+.stacked .selector-available,.stacked .selector-chosen {
     /*float: left;*/
-    width: 800px;
+    width: 960px;
     text-align: center;
     margin-bottom: 5px;
 }
+
 
 
