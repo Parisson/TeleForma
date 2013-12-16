@@ -56,6 +56,10 @@ $('#reject').unbind('click').click(function() {
 {% if user.is_staff %}
 <a id="validate" href="#" class="component_icon button icon_ok">{% trans " validate" %}</a>
 <a id="reject" href="#" class="component_icon button icon_delete">{% trans " reject" %}</a>
+
+<br />
+<br />
+
 {% endif %}
 
 {% endblock answers %}
