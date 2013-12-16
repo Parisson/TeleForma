@@ -107,7 +107,6 @@ def all_seminars(request, progress_order=False, date_order=False):
 
     elif user.is_staff or user.is_superuser:
         seminars = Seminar.objects.filter(expiry_date__gte=now)
-        seminars = [{'seminar': seminar, 'progress': 100} for seminar in seminars]
     else:
         seminars = {}
 
