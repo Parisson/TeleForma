@@ -1,6 +1,15 @@
 
-.stacked {
-float: left;
-width: 1024px;
+.selector {
+    width: 860px;
+    display: block;
+    float: left;
 }
+
+.selector-available, .selector-chosen {
+    /*float: left;*/
+    width: 800px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
 
