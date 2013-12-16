@@ -1,7 +1,7 @@
 
 .selector {
     width: 960px;
-    float: left;
+    /*float: left;*/
 }
 
 .selector select {
@@ -10,7 +10,7 @@
 }
 
 .selector-available, .selector-chosen {
-    float: left;
+    /*float: left;*/
     width: 960px;
     text-align: center;
     margin-bottom: 5px;
