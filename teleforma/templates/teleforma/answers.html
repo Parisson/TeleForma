@@ -40,7 +40,7 @@ var answerUtils = {
  <div style="background: white;">
   <ul>
   {% block courses %}
-   <li><a href="{% url teleforma-answers-pending %}">{% trans "Pending" %}</a></li>
+   <li><a href="{% url teleforma-answers-pending %}">{% trans "Pending" %} ({% untreated_answer_count %})</a></li>
    <li><a href="{% url teleforma-answers-treated %}">{% trans "Treated" %}</a></li>
   {% endblock courses %}
   </ul>
