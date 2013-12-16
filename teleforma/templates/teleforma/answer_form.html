@@ -81,7 +81,7 @@ $(document).ready(function(){
   <div class="course_subtitle">
    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 4 : {% trans "answer to this question" %}{% if question.rank %} n°{{ question.rank }}{% endif %} ({{question.min_nchar}} {% trans "characters" %} {% trans "minimum" %})</h3>
   </div>
-  <div style="text-align: justify; width: 100%;">
+  <div style="text-align: justify; width: 100%; padding-bottom: 0.5em;">
     {{ question.question|safe }}
   </div>
 </div>

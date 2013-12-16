@@ -21,6 +21,9 @@ class AuditorProfileInline(admin.StackedInline):
     model = Auditor
     filter_vertical = ['seminars', 'conferences']
 
+    class Media:
+        css = { 'all': ('admin/extra.css',) }
+
 class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
