@@ -1685,7 +1685,8 @@ input,textarea{
 
 
 #users {
-    padding: 0.8em 0em 3em 0em;
+    padding: 0.8em 0em 0em 0em;
+    margin: 0em 0em 3em 0em;
     background-color: #FFF;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
