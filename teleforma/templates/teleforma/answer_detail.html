@@ -33,7 +33,7 @@ $('#reject').unbind('click').click(function() {
 
 <div class="course_content">
   <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {{ answer.question|safe }} ({{ answer.question.min_nchars }} {% trans "characters"})</h3>
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {{ answer.question|safe }} ({{ answer.question.min_nchar }} {% trans "characters" %})</h3>
   </div>
   <div style="text-align: justify;">
     {{ answer.question.question|safe }}
@@ -44,7 +44,7 @@ $('#reject').unbind('click').click(function() {
 
 <div class="course_content">
 <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer" %}{% if answer.question.rank %} n° {{ answer.question.rank }}{% endif %} ({{ answer.answer|length }} {% trans "characters"})</h3>
+   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer" %}{% if answer.question.rank %} n° {{ answer.question.rank }}{% endif %} ({{ answer.answer|length }} {% trans "characters" %})</h3>
   </div>
   <div style="text-align: justify; padding: .5em;">
     {{ answer.answer|safe }}
