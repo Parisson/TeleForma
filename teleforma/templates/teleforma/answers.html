@@ -41,8 +41,8 @@ var answerUtils = {
 <div style="background: white;">
 <ul>
 {% block courses %}
-   <li><a href="{% url teleforma-answers-pending %}">{% locale "Pending" %}</a></li>
-   <li><a href="{% url teleforma-answers-treated %}">{% locale "Treated" %}</a></li>
+   <li><a href="{% url teleforma-answers-pending %}">{% trans "Pending" %}</a></li>
+   <li><a href="{% url teleforma-answers-treated %}">{% trans "Treated" %}</a></li>
 {% endblock courses %}
 </ul>
 </div>
