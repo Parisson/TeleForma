@@ -107,15 +107,16 @@ def all_seminars(request, progress_order=False, date_order=False):
 
     elif user.is_staff or user.is_superuser:
         seminars = Seminar.objects.filter(expiry_date__gte=now)
+        seminars = [{'seminar': seminar, 'progress': 100} for seminar in seminars]
     else:
         seminars = {}
 
-    if seminars and progress_order == True:
+    if not user.is_superuser  and seminars and progress_order == True:
         s_list = [{'seminar': seminar, 'progress': seminar_progress(user, seminar)} for seminar in seminars]
         seminars = sorted(s_list, key=lambda k: k['progress'], reverse=False)
         seminars = [s['seminar'] for s in seminars]
 
-    if seminars and date_order == True:
+    if not user.is_superuser and seminars and date_order == True:
         s_list = []
         for seminar in seminars:
             revisions = SeminarRevision.objects.filter(user=user, seminar=seminar)
@@ -144,6 +145,9 @@ def total_progress(request):
 
     if not user.is_authenticated():
         return {'total_progress': 0}
+
+    if user.is_superuser:
+        return {'total_progress': 100}
 
     seminars = all_seminars(request)['all_seminars']
 
