@@ -76,8 +76,8 @@ class SeminarAdmin(admin.ModelAdmin):
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
 
-    # class Media:
-    #     css = { 'all': ('admin/extra.css',) }
+    class Media:
+        css = { 'all': ('admin/extra.css',) }
 
 class MediaItemMarkerAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description']
