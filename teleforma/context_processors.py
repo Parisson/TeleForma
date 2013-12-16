@@ -110,11 +110,13 @@ def all_seminars(request, progress_order=False, date_order=False):
     else:
         seminars = {}
 
+    #TOFIX
     if not user.is_superuser  and seminars and progress_order == True:
         s_list = [{'seminar': seminar, 'progress': seminar_progress(user, seminar)} for seminar in seminars]
         seminars = sorted(s_list, key=lambda k: k['progress'], reverse=False)
         seminars = [s['seminar'] for s in seminars]
 
+    #TOFIX
     if not user.is_superuser and seminars and date_order == True:
         s_list = []
         for seminar in seminars:
@@ -145,6 +147,7 @@ def total_progress(request):
     if not user.is_authenticated():
         return {'total_progress': 0}
 
+    #TOFIX
     if user.is_superuser:
         return {'total_progress': 100}
 
