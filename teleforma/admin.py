@@ -19,7 +19,7 @@ class AEStudentProfileInline(admin.StackedInline):
 
 class AuditorProfileInline(admin.StackedInline):
     model = Auditor
-    filter_horizontal = ['seminars', 'conferences']
+    filter_vertical = ['seminars', 'conferences']
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
