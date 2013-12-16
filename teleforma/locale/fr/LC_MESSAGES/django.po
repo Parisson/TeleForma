@@ -900,7 +900,7 @@ msgstr ""
 
 #: templates/teleforma/answers.html:44
 msgid "Treated"
-msgstr "Traîtée"
+msgstr "Traîtées"
 
 #: templates/teleforma/answers.html:66
 msgid "No answer"
