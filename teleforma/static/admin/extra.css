@@ -5,13 +5,13 @@
 }
 
 .selector select {
-    width: 460px;
+    width: 960px;
     height: 17.2em;
 }
 
 .selector-available, .selector-chosen {
     float: left;
-    width: 460px;
+    width: 960px;
     text-align: center;
     margin-bottom: 5px;
 }
