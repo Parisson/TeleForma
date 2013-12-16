@@ -388,6 +388,18 @@ class AnswersView(ListView):
         notify_user(mess, 'acceptance')
 
 
+class AnswersPendingView(AnswersView):
+
+    def get_queryset(self):
+        return Answer.objects.filter(status=3, treated=False)
+
+
+class AnswersTreatedView(AnswersView):
+
+    def get_queryset(self):
+        return Answer.objects.filter(status=3, treated=True)
+
+
 class AnswerDetailViewTest(DetailView):
     """For test only"""
 

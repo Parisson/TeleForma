@@ -99,7 +99,8 @@ urlpatterns = patterns('',
     # Questions
     url(r'^desk/seminars/(?P<id>.*)/questions/(?P<pk>.*)/$', AnswerView.as_view(),
         name="teleforma-question-answer"),
-    url(r'^desk/answers/$', AnswersView.as_view(), name="teleforma-answers"),
+    url(r'^desk/answers_pending/$', AnswersPendingView.as_view(), name="teleforma-answers-pending"),
+    url(r'^desk/answers_treated/$', AnswersTreatedView.as_view(), name="teleforma-answers-treated"),
     url(r'^desk/answers/(?P<pk>.*)/$', AnswerDetailView.as_view(), name="teleforma-answer-detail"),
 
     # Evaluations

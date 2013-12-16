@@ -37,13 +37,12 @@ var answerUtils = {
 {% block modules %}
 <div class="module">
 
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Answers" %}</a></h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
-{% for seminar in all_seminars %}
-   <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
- {% endfor %}
+   <li><a href="{% url teleforma-answers-pending %}">{% locale "Pending" %}</a></li>
+   <li><a href="{% url teleforma-answers-treated %}">{% locale "Treated" %}</a></li>
 {% endblock courses %}
 </ul>
 </div>
