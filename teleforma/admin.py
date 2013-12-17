@@ -59,7 +59,8 @@ class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
     search_fields = ['title', 'course__title', 'course__code']
-
+    list_filter = ('period', 'date_added')
+    
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
@@ -79,6 +80,7 @@ class SeminarAdmin(admin.ModelAdmin):
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
+    list_filter = ('publish_date', 'expiry_date')
 
     class Media:
         css = { 'all': ('admin/extra.css',) }
