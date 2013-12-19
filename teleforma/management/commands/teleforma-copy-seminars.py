@@ -23,8 +23,8 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         to_year = int(args[-1])
         from_year = int(args[-2])
-        to_period = Period.objects.get_or_create(name=str(to_year))
-        from_period = Period.objects.get_or_create(name=str(from_year))
+        to_period, c = Period.objects.get_or_create(name=str(to_year))
+        from_period, c = Period.objects.get_or_create(name=str(from_year))
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
