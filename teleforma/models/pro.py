@@ -43,6 +43,7 @@ from teleforma.models.core import *
 from forms_builder.forms.models import Form
 from mezzanine.core.managers import DisplayableManager
 
+
 class SeminarType(models.Model):
 
     name            = models.CharField(_('name'), max_length=255, blank=True)
@@ -55,7 +56,7 @@ class SeminarType(models.Model):
         verbose_name = _('Seminar type')
 
 
-class Seminar(Displayable):
+class Seminar(ClonableMixin, Displayable):
 
     # title, description, keywords and dates are given by Displayable
 
@@ -131,7 +132,7 @@ class Seminar(Displayable):
         ordering = ['rank']
 
 
-class Question(models.Model):
+class Question(ClonableMixin, models.Model):
 
     element_type = 'question'
 

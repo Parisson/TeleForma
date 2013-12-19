@@ -27,17 +27,28 @@ class Command(BaseCommand):
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
                 if seminar.expiry_date.year == from_year:
-                    questions = seminar.question.all()
-                    seminar.pk = None
-                    seminar.save()
-                    seminar.publish_date = seminar.publish_date.replace(year=to_year)
-                    seminar.expiry_date = seminar.expiry_date.replace(year=to_year)
-                    seminar.save()
-                    print ("updated:", seminar)
+                    print ("cloning:", seminar)
+                    clone = seminar.clone()
+                    clone.publish_date = clone.publish_date.replace(year=to_year)
+                    clone.expiry_date = clone.expiry_date.replace(year=to_year)
+                    clone.save()
+                    print ('dates updated', clone)
 
+                    for field in seminar._meta.many_to_many:
+                        if type(field) == Document or type(field) == Media:
+                            source = getattr(seminar, field.attname)
+                            destination = getattr(clone, field.attname)
+                            for item in source.all():
+                                item_clone = item.clone()
+                                item_clone.readers = []
+                                item_clone.save()
+                                destination.remove(item)
+                                destination.add(item_clone)
+                    print ("documents and medias cloned and assigned:", clone)
+
+                    questions = seminar.question.all()
                     for question in questions:
-                        question.pk = None
-                        question.save()
-                        question.seminar = seminar
+                        question_clone = question.clone()
+                        question_clone.seminar = clone
                         question.save()
                         print ("updated:", question)

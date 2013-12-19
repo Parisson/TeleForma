@@ -42,6 +42,7 @@ import urllib
 import string
 import datetime
 import mimetypes
+import copy
 
 from django.conf import settings
 from django.db.models import *
@@ -90,6 +91,25 @@ GENDER_CHOICES = (('Mr', _('Mr.')), ('Mrs', _('Mrs.')))
 
 class MetaCore:
     app_label = app_label
+
+
+class ClonableMixin(object):
+    
+    def clone(self):
+        """Return an identical copy of the instance with a new ID."""
+        if not self.pk:
+            raise ValueError('Instance must be saved before it can be cloned.')
+        duplicate = copy.copy(self)
+        # Setting pk to None tricks Django into thinking this is a new object.
+        duplicate.pk = None
+        duplicate.save()
+        # ... but the trick loses all ManyToMany relations.
+        for field in self._meta.many_to_many:
+            source = getattr(self, field.attname)
+            destination = getattr(duplicate, field.attname)
+            for item in source.all():
+                destination.add(item)
+        return duplicate
 
 
 class Organization(Model):
@@ -304,7 +324,7 @@ class LiveStream(Model):
         verbose_name = _('live stream')
 
 
-class MediaBase(Model):
+class MediaBase(ClonableMixin, Model):
     "Base media resource"
 
     title           = CharField(_('title'), max_length=1024, blank=True)
