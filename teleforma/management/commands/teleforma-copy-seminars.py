@@ -55,5 +55,5 @@ class Command(BaseCommand):
                     for question in seminar.question.all():
                         question_clone = question.clone()
                         question_clone.seminar = clone
-                        question.save()
-                        print ("question cloned and assigned:", question)
+                        question_clone.save()
+                        print ("question cloned and assigned:", question_clone)
