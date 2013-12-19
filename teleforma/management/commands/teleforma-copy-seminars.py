@@ -25,7 +25,7 @@ class Command(BaseCommand):
         from_year = int(args[-2])
 
         for seminar in Seminar.objects.all():
-            if seminar.expiry_date.year:
+            if seminar.expiry_date:
                 if seminar.expiry_date.year == from_year:
                     questions = seminar.question.all()
                     seminar.pk = None
