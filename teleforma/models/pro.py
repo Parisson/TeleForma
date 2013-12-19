@@ -105,7 +105,7 @@ class Seminar(ClonableMixin, Displayable):
 
     def __unicode__(self):
         if self.publish_date:
-            return ' - '.join([self.publish_date.year, self.course.title, str(self.rank), self.title])
+            return ' - '.join([str(self.publish_date.year), self.course.title, str(self.rank), self.title])
         else:
             return ' - '.join([self.course.title, str(self.rank), self.title])
 
