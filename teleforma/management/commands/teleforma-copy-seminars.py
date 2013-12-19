@@ -40,6 +40,8 @@ class Command(BaseCommand):
                         if type(field.rel.to) == Document or type(field.rel.to) == Media:
                             source = getattr(seminar, field.attname)
                             destination = getattr(clone, field.attname)
+                            print source, destination
+                            
                             for item in source.all():
                                 print item
                                 item.period = from_period
