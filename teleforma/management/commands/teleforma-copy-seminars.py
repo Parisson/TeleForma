@@ -45,7 +45,6 @@ class Command(BaseCommand):
                                 item.period = from_period
                                 item.save()
                                 item_clone = item.clone()
-                                item_clone.save()
                                 item_clone.readers = []
                                 item_clone.period = to_period
                                 item_clone.save()
@@ -56,7 +55,6 @@ class Command(BaseCommand):
                     questions = seminar.question.all()
                     for question in questions:
                         question_clone = question.clone()
-                        question_clone.save()
                         question_clone.seminar = clone
                         question.save()
                         print ("cloned and assigned:", question)
