@@ -25,18 +25,19 @@ class Command(BaseCommand):
         from_year = int(args[-2])
 
         for seminar in Seminar.objects.all():
-            if seminar.expiry_date.year == from_year:
-                questions = seminar.question.all()
-                seminar.pk = None
-                seminar.save()
-                seminar.publish_date.replace(year=from_year)
-                seminar.expiry_date.replace(year=to_year)
-                seminar.save()
-                print ("updated:", seminar)
+            if seminar.expiry_date.year:
+                if seminar.expiry_date.year == from_year:
+                    questions = seminar.question.all()
+                    seminar.pk = None
+                    seminar.save()
+                    seminar.publish_date.replace(year=from_year)
+                    seminar.expiry_date.replace(year=to_year)
+                    seminar.save()
+                    print ("updated:", seminar)
 
-                for question in questions:
-                    question.pk = None
-                    question.save()
-                    question.seminar = seminar
-                    question.save()
-                    print ("updated:", question)
+                    for question in questions:
+                        question.pk = None
+                        question.save()
+                        question.seminar = seminar
+                        question.save()
+                        print ("updated:", question)
