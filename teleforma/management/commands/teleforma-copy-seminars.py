@@ -29,12 +29,12 @@ class Command(BaseCommand):
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
                 if seminar.expiry_date.year == from_year:
-                    print ("cloning:", seminar)
+                    print ("seminar cloning:", seminar)
                     clone = seminar.clone()
                     clone.publish_date = seminar.publish_date.replace(year=to_year)
                     clone.expiry_date = seminar.expiry_date.replace(year=to_year)
                     clone.save()
-                    print ('dates updated', clone)
+                    print ('seminar dates updated', clone)
 
                     for field in seminar._meta.many_to_many:
                         if field.rel.to == Document or field.rel.to == Media:
@@ -42,7 +42,6 @@ class Command(BaseCommand):
                             destination = getattr(clone, field.attname)
 
                             for item in source.all():
-                                print item
                                 item.period = from_period
                                 item.save()
                                 item_clone = item.clone()
@@ -51,10 +50,10 @@ class Command(BaseCommand):
                                 item_clone.save()
                                 destination.remove(item)
                                 destination.add(item_clone)
-                                print ("cloned and assigned:", item_clone)
+                                print ("media cloned and assigned:", item_clone)
 
                     for question in seminar.question.all():
                         question_clone = question.clone()
                         question_clone.seminar = clone
                         question.save()
-                        print ("cloned and assigned:", question)
+                        print ("question cloned and assigned:", question)
