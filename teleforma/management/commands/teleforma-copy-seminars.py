@@ -30,8 +30,8 @@ class Command(BaseCommand):
                     questions = seminar.question.all()
                     seminar.pk = None
                     seminar.save()
-                    seminar.publish_date.replace(year=from_year)
-                    seminar.expiry_date.replace(year=to_year)
+                    seminar.publish_date = seminar.publish_date.replace(year=to_year)
+                    seminar.expiry_date = seminar.expiry_date.replace(year=to_year)
                     seminar.save()
                     print ("updated:", seminar)
 
