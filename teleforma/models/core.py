@@ -99,7 +99,7 @@ class ClonableMixin(object):
         """Return an identical copy of the instance with a new ID."""
         if not self.pk:
             raise ValueError('Instance must be saved before it can be cloned.')
-        duplicate = self
+        duplicate = copy.copy(self)
         # Setting pk to None tricks Django into thinking this is a new object.
         duplicate.pk = None
         duplicate.save()
