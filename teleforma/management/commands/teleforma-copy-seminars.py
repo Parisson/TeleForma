@@ -37,7 +37,7 @@ class Command(BaseCommand):
                     print ('seminar dates updated', clone)
 
                     for field in seminar._meta.many_to_many:
-                        if field.rel.to == Document or field.rel.to == Media:
+                        if field.rel.to == Document:
                             source = getattr(seminar, field.attname)
                             destination = getattr(clone, field.attname)
 
