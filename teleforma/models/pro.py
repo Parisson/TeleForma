@@ -104,7 +104,10 @@ class Seminar(ClonableMixin, Displayable):
     objects = DisplayableManager()
 
     def __unicode__(self):
-        return ' - '.join([self.course.title, str(self.rank), self.title])
+        if self.publish_date:
+            return ' - '.join([self.publish_date.year, self.course.title, str(self.rank), self.title])
+        else:
+            return ' - '.join([self.course.title, str(self.rank), self.title])
 
     @property
     def pretty_title(self):

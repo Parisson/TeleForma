@@ -23,6 +23,8 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         to_year = int(args[-1])
         from_year = int(args[-2])
+        to_period = Period.objects.get_or_create(name=str(to_year))
+        from_period = Period.objects.get_or_create(name=str(from_year))
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
@@ -39,16 +41,19 @@ class Command(BaseCommand):
                             source = getattr(seminar, field.attname)
                             destination = getattr(clone, field.attname)
                             for item in source.all():
+                                item.period = from_period
+                                item.save()
                                 item_clone = item.clone()
                                 item_clone.readers = []
+                                item_clone.period = to_period
                                 item_clone.save()
                                 destination.remove(item)
                                 destination.add(item_clone)
-                    print ("documents and medias cloned and assigned:", clone)
+                                print ("cloned and assigned:", item_clone)
 
                     questions = seminar.question.all()
                     for question in questions:
                         question_clone = question.clone()
                         question_clone.seminar = clone
                         question.save()
-                        print ("updated:", question)
+                        print ("cloned and assigned:", question)

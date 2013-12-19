@@ -395,6 +395,8 @@ class Document(MediaBase):
 
     def __unicode__(self):
         strings = []
+        if self.period:
+            strings.append(self.period)
         if self.course:
             strings.append(self.course.code)
         if self.course_type.all():
@@ -450,7 +452,8 @@ class Media(MediaBase):
 
     def __unicode__(self):
         strings = []
-
+        if self.period:
+            strings.append(self.period)
         if self.course and self.course_type:
             strings.append(self.course.code + ' ' + self.course_type.name)
         elif self.course:
