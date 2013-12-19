@@ -64,7 +64,8 @@ class DocumentAdmin(admin.ModelAdmin):
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
-
+    list_filter = ('period', 'date_added')
+    
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['public_id', 'id']
