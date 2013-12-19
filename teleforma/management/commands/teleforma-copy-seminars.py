@@ -26,6 +26,7 @@ class Command(BaseCommand):
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date.year == from_year:
+                questions = seminar.question.all()
                 seminar.pk = None
                 seminar.save()
                 seminar.publish_date.replace(year=from_year)
@@ -33,7 +34,7 @@ class Command(BaseCommand):
                 seminar.save()
                 print ("updated:", seminar)
 
-                for question in seminar.question.all():
+                for question in questions:
                     question.pk = None
                     question.save()
                     question.seminar = seminar
