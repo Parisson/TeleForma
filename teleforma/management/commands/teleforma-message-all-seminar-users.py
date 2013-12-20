@@ -15,6 +15,7 @@ import logging
 import datetime
 from postman.models import *
 from postman.utils import email_visitor, notify_user
+from teleforma.context_processors import seminar_validated
 
 
 class Command(BaseCommand):
@@ -46,7 +47,7 @@ class Command(BaseCommand):
                 for seminar in all_seminars:
                     if seminar.expiry_date:
                         delta = seminar.expiry_date - today
-                        if delta.days < days:
+                        if delta.days < days and not seminar_validated(user, seminar):
                             seminars.append(seminar)
 
                 if seminars:
