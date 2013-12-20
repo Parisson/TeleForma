@@ -100,6 +100,8 @@ class Seminar(ClonableMixin, Displayable):
 
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
+    period          = ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
 
     objects = DisplayableManager()
 
