@@ -30,9 +30,12 @@ class Command(BaseCommand):
             if seminar.expiry_date:
                 if seminar.expiry_date.year == from_year:
                     print ("seminar cloning:", seminar)
+                    seminar.period = from_period
+                    seminar.save()
                     clone = seminar.clone()
                     clone.publish_date = seminar.publish_date.replace(year=to_year)
                     clone.expiry_date = seminar.expiry_date.replace(year=to_year)
+                    clone.period = to_period 
                     clone.save()
                     print ('seminar dates updated', clone)
 
@@ -57,3 +60,9 @@ class Command(BaseCommand):
                         question_clone.seminar = clone
                         question_clone.save()
                         print ("question cloned and assigned:", question_clone)
+                
+                else:
+                    seminar.period = to_period
+                    seminar.save()
+
+
