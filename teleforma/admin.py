@@ -81,7 +81,7 @@ class SeminarAdmin(admin.ModelAdmin):
                          'docs_1', 'docs_2', 'docs_correct']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
-    list_filter = ('publish_date', 'expiry_date')
+    list_filter = ('period', 'publish_date', 'expiry_date')
 
     class Media:
         css = { 'all': ('admin/extra.css',) }

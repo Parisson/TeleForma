@@ -36,6 +36,7 @@ class Command(BaseCommand):
                     clone.publish_date = seminar.publish_date.replace(year=to_year)
                     clone.expiry_date = seminar.expiry_date.replace(year=to_year)
                     clone.period = to_period 
+                    clone.status = 1
                     clone.save()
                     print ('seminar dates updated', clone)
 
