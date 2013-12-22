@@ -24,9 +24,9 @@ class Logger:
 
 
 class Command(BaseCommand):
-    help = "Import seminars from the MEDIA_ROOT directory "
+    help = "Import seminars from the MEDIA_ROOT directory for a special year (period.name)"
     admin_email = 'webmaster@parisson.com'
-    args = 'organization log_file'
+    args = 'organization year log_file'
     spacer = '_-_'
     original_format = 'webm'
     transcoded_formats = ['mp4', 'ogg', 'mp3']
@@ -65,10 +65,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         organization_name = args[0]
-        log_file = args[1]
+        year = args[1]
+        log_file = args[2]
         logger = Logger(log_file)
-
+        
         organization = Organization.objects.get(name=organization_name)
+        period = Period.objects.get(name=year)
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
 
@@ -108,7 +110,8 @@ class Command(BaseCommand):
                     course = Course.objects.get(code=course_code)
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
-                    seminar, c = Seminar.objects.get_or_create(course=course, rank=seminar_rank)
+                    seminar, c = Seminar.objects.get_or_create(course=course, 
+                                            rank=seminar_rank, period=period)
                     if c:
                         seminar.title = course.title
                         seminar.save()
