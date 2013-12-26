@@ -106,7 +106,7 @@ def all_seminars(request, progress_order=False, date_order=False):
         seminars = auditor.seminars.filter(status=2, expiry_date__gte=now)
 
     elif user.is_staff or user.is_superuser:
-        seminars = Seminar.objects.filter(expiry_date__gte=now)
+        seminars = Seminar.objects.filter(Q(expiry_date__gte=now) | Q(expiry_date=None))
     else:
         seminars = {}
 
