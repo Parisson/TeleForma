@@ -161,10 +161,15 @@ class AnswerView(SeminarAccessMixin, FormView):
     form_class = AnswerForm
     template_name='teleforma/answer_form.html'
 
+    def get_user(self):
+        user_id = self.request.user.id
+        return User.objects.get(id=user_id)
+
     def get_initial(self):
         initial = {}
         self.question = Question.objects.get(pk=self.kwargs['pk'])
-        answers = Answer.objects.filter(user=self.request.user,
+        self.user = self.get_user()
+        answers = Answer.objects.filter(user=self.user,
                                         question=self.question).order_by('-date_submitted')
         if answers:
             answer = answers[0]
@@ -177,7 +182,7 @@ class AnswerView(SeminarAccessMixin, FormView):
 
     def form_valid(self, form):
         answer = form.instance
-        answer.user = self.request.user
+        answer.user = self.get_user()
         answer.question = self.question
         answer.save()
         if answer.status <= 2:
@@ -194,7 +199,7 @@ class AnswerView(SeminarAccessMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(AnswerView, self).get_context_data(**kwargs)
-        user = self.request.user
+        user = self.get_user()
         context['question'] = self.question
         context['status'] = self.status
         context['seminar'] = self.question.seminar
