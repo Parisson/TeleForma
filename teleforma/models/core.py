@@ -454,7 +454,7 @@ class Media(MediaBase):
         strings = []
         if self.period:
             strings.append(self.period.name)
-        if self.course and :
+        if self.course:
             strings.append(self.course.code)
         elif self.course_type:
             strings.append(self.course_type.name)
