@@ -47,7 +47,7 @@ $('#reject').unbind('click').click(function() {
    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Answer" %}{% if answer.question.rank %} n° {{ answer.question.rank }}{% endif %} ({{ answer.answer|length }}/{{ answer.question.min_nchar }} {% trans "characters" %})</h3>
   </div>
   <div style="text-align: justify; padding: 0.5em;">
-    {{ answer.answer|safe }}
+    {{ answer.answer }}
   </div>
 </div>
 
