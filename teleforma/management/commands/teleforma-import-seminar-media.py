@@ -24,7 +24,7 @@ class Logger:
 
 
 class Command(BaseCommand):
-    help = "Import seminars from the MEDIA_ROOT directory for a special period.name"
+    help = "Import seminars from a media directory for a special period.name"
     admin_email = 'webmaster@parisson.com'
     args = 'organization period_name log_file media_dir'
     spacer = '_-_'

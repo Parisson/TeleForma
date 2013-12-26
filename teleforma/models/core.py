@@ -454,10 +454,10 @@ class Media(MediaBase):
         strings = []
         if self.period:
             strings.append(self.period.name)
-        if self.course and self.course_type:
-            strings.append(self.course.code + ' ' + self.course_type.name)
-        elif self.course:
+        if self.course and :
             strings.append(self.course.code)
+        elif self.course_type:
+            strings.append(self.course_type.name)
         elif self.item.title:
             strings.append(self.item.title)
         else:
@@ -465,6 +465,7 @@ class Media(MediaBase):
         if self.rank:
             strings.append(str(self.rank))
 
+        strings.append(self.date_added)
         strings.append(self.mime_type)
         return ' - '.join(strings)
 
