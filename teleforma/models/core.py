@@ -465,7 +465,7 @@ class Media(MediaBase):
         if self.rank:
             strings.append(str(self.rank))
 
-        strings.append(self.date_added)
+        strings.append(str(self.date_added))
         strings.append(self.mime_type)
         return ' - '.join(strings)
 
