@@ -182,7 +182,6 @@ class Command(BaseCommand):
 
                         if not media in seminar.medias.all():
                             seminar.medias.add(media)
-                            seminar.save()
 
                         # import previews
                         if preview_trigger:
