@@ -456,9 +456,9 @@ class Media(MediaBase):
             strings.append(self.period.name)
         if self.course:
             strings.append(self.course.code)
-        elif self.course_type:
+        if self.course_type:
             strings.append(self.course_type.name)
-        elif self.item.title:
+        if self.item.title:
             strings.append(self.item.title)
         else:
             strings.append(os.path.basename(self.item.file.path))
