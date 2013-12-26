@@ -24,9 +24,9 @@ class Logger:
 
 
 class Command(BaseCommand):
-    help = "Import seminars from the MEDIA_ROOT directory for a special year (period.name)"
+    help = "Import seminars from the MEDIA_ROOT directory for a special period.name"
     admin_email = 'webmaster@parisson.com'
-    args = 'organization year log_file'
+    args = 'organization period_name log_file media_dir'
     spacer = '_-_'
     original_format = 'webm'
     transcoded_formats = ['mp4', 'ogg', 'mp3']
@@ -65,13 +65,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         organization_name = args[0]
-        year = args[1]
+        period_name = args[1]
         log_file = args[2]
+        media_dir = args[3]
         logger = Logger(log_file)
         
         organization = Organization.objects.get(name=organization_name)
-        period = Period.objects.get(name=year)
-        self.media_dir = settings.MEDIA_ROOT + organization.name
+        period = Period.objects.get(name=period_name)
+        self.media_dir = media_dir
         file_list = []
 
         # self.cleanup()
@@ -98,11 +99,12 @@ class Command(BaseCommand):
                         preview_trigger = True
 
                     course_code = root_list[-2]
-                    master_dir = root_list[-3]
-                    department_name = root_list[-4]
-                    organization_name = root_list[-5]
+                    period_dir = root_list[-3]
+                    master_dir = root_list[-4]
+                    department_name = root_list[-5]
+                    organization_name = root_list[-6]
 
-                    dir = os.sep.join(root_list[-5:])
+                    dir = os.sep.join(root_list[-6:])
                     path = dir + os.sep + filename
 
                     seminar_title = '_'.join([course_code, str(seminar_rank)])
@@ -185,7 +187,7 @@ class Command(BaseCommand):
                         if preview_trigger:
                             dir = os.path.abspath(root + '/../preview/' +  str(seminar_rank))
                             if os.path.exists(dir):
-                                r_dir = os.sep.join(dir.split(os.sep)[-6:])
+                                r_dir = os.sep.join(dir.split(os.sep)[-7:])
                                 files = os.listdir(dir)
                                 code = item.code + '_preview'
                                 title = item.title + ' (preview)'
