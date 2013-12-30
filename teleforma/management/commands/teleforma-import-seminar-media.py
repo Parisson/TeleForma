@@ -131,7 +131,7 @@ class Command(BaseCommand):
 
                     if not seminar in seminars:
                         seminars.append(seminar)
-                        
+
                     if not exist:
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
@@ -220,5 +220,5 @@ class Command(BaseCommand):
                                 seminar.media_preview = media
                                 seminar.save()
 
-            for s in seminars:
-                print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
+        for s in seminars:
+            print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
