@@ -113,7 +113,7 @@ class Command(BaseCommand):
                     seminar_rank = int(root_list[-1][0])
 
                     if len(root_list[-1]) != 1:
-                        rank = root_list[-1][1:].copy()
+                        rank = root_list[-1][1:]
                         media_rank = self.media_rank_dict[rank.replace('_', '')]
                         preview_trigger = False
                     else:
