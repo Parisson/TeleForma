@@ -218,5 +218,5 @@ class Command(BaseCommand):
                                 seminar.save()
                     seminars.append(seminar)
 
-                for s in seminars:
-                    print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
+            for s in seminars:
+                print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
