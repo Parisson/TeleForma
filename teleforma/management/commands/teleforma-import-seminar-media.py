@@ -137,15 +137,15 @@ class Command(BaseCommand):
                         seminar.title = course.title
                         seminar.save()
 
+                    self.seminar_media_cleanup(seminar)
+
                     exist = False
                     medias = seminar.medias.all()
                     for media in medias:
                         if media.item.file == path:
                             exist = True
                             break
-                        else:
-                            self.seminar_media_cleanup(seminar)
-
+                    
                     if not seminar in seminars:
                         seminars.append(seminar)
 
