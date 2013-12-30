@@ -6,6 +6,8 @@ from django.template.defaultfilters import slugify
 from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
+from django.core.urlresolvers import reverse
+
 import logging
 import os, sys, time, datetime
 import timeside
@@ -213,3 +215,5 @@ class Command(BaseCommand):
                                 seminar.media_preview = media
                                 seminar.save()
 
+                    print reverse('teleforma-seminar-detail', kwargs={'pk': seminar.id})
+                    
