@@ -68,9 +68,10 @@ class Command(BaseCommand):
 
     def seminar_media_cleanup(self, seminar):
         for media in seminar.medias.all():
-            self.delete_media(media)
+            seminar.remove(media)
         if seminar.media_preview:
-            self.delete_media(seminar.media_preview)
+            seminar.media_preview = None
+            seminar.save()
 
     def get_duration(self, file):
         decoder = timeside.decoder.FileDecoder(file)
@@ -143,8 +144,7 @@ class Command(BaseCommand):
                         seminar.save()
 
                     exist = False
-                    medias = seminar.medias.all()
-                    for media in medias:
+                    for media in seminar.medias.all():
                         if media.item.file == path:
                             exist = True
                             break
