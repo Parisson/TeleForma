@@ -34,6 +34,7 @@ class Command(BaseCommand):
     transcoded_formats = ['mp4', 'ogg', 'mp3']
     image_formats = ['png', 'jpg']
     media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4}
+    site = Site.objects.get_current()
 
     def cleanup(self):
         items  = MediaItemTranscoded.objects.all()
@@ -76,7 +77,8 @@ class Command(BaseCommand):
         period = Period.objects.get(name=period_name)
         self.media_dir = media_dir
         file_list = []
-
+        seminars = []
+        
         # self.cleanup()
 
         walk = os.walk(self.media_dir, followlinks=True)
@@ -214,6 +216,7 @@ class Command(BaseCommand):
                                 media.save()
                                 seminar.media_preview = media
                                 seminar.save()
+                    seminars.append(seminar)
 
-                    print reverse('teleforma-seminar-detail', kwargs={'pk': seminar.id})
-                    
+                for s in seminars:
+                    print 'http://' + site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
