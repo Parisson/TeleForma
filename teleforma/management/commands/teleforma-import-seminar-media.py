@@ -69,7 +69,8 @@ class Command(BaseCommand):
     def seminar_media_cleanup(self, seminar):
         for media in seminar.medias.all():
             self.delete_media(media)
-        self.delete_media(seminar.media_preview)
+        if seminar.media_preview:
+            self.delete_media(seminar.media_preview)
 
     def get_duration(self, file):
         decoder = timeside.decoder.FileDecoder(file)
