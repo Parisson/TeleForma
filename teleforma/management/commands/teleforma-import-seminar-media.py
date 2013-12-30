@@ -129,7 +129,9 @@ class Command(BaseCommand):
                             exist = True
                             break
 
-                    seminars.append(seminar)
+                    if not seminar in seminars:
+                        seminars.append(seminar)
+                        
                     if not exist:
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
