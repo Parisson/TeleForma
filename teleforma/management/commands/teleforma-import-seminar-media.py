@@ -128,6 +128,8 @@ class Command(BaseCommand):
                         if media.item.file == path:
                             exist = True
                             break
+                        else:
+                            media.delete()
 
                     if not seminar in seminars:
                         seminars.append(seminar)
