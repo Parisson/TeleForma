@@ -108,7 +108,7 @@ class SeminarAccessMixin(object):
 
     def render_to_response(self, context):
         seminar = context['seminar']
-        if not seminar in all_seminars(self.request)['all_seminars']:
+        if not seminar in all_seminars(self.request)['all_seminars'] or not self.request.user.is_authenticated:
             messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
