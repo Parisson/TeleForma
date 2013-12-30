@@ -78,7 +78,7 @@ class Command(BaseCommand):
         self.media_dir = media_dir
         file_list = []
         seminars = []
-        
+
         # self.cleanup()
 
         walk = os.walk(self.media_dir, followlinks=True)
@@ -219,4 +219,4 @@ class Command(BaseCommand):
                     seminars.append(seminar)
 
                 for s in seminars:
-                    print 'http://' + site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
+                    print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
