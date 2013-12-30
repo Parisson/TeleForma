@@ -49,7 +49,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
-import os
+import os, datetime
 from cgi import escape
 from cStringIO import StringIO
 
@@ -327,6 +327,9 @@ class AnswersView(ListView):
 
         if seminar_validated(user, seminar):
             testimonial = Testimonial(user=user, seminar=seminar)
+            now = datetime.datetime.now()
+            if context['date'] < now:
+                testimonial.date_modified = context['date']
             testimonial.save()
             # url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':seminar.id}) + '?format=pdf'
             text = render_to_string('teleforma/messages/seminar_validated.txt', context)
