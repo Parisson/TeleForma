@@ -36,7 +36,7 @@ class Command(BaseCommand):
     media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4}
     site = Site.objects.get_current()
 
-    def cleanup(self):
+    def full_cleanup(self):
         items  = MediaItemTranscoded.objects.all()
         for i in items :
             i.delete()
@@ -56,6 +56,17 @@ class Command(BaseCommand):
         medias = Media.objects.all()
         for media in medias:
             media.delete()
+
+    def delete_media(self, media):
+        for trans in media.item.transcoded.all()
+                trans.delete()
+            media.item.delete()
+            media.delete()
+
+    def seminar_media_cleanup(self, seminar):
+        for media in seminar.medias:
+            self.delete_media(media)
+        self.delete_media(seminar.media_preview)
 
     def get_duration(self, file):
         decoder = timeside.decoder.FileDecoder(file)
@@ -129,7 +140,7 @@ class Command(BaseCommand):
                             exist = True
                             break
                         else:
-                            media.delete()
+                            self.seminar_media_cleanup(seminar)
 
                     if not seminar in seminars:
                         seminars.append(seminar)
