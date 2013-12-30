@@ -92,10 +92,7 @@ class Command(BaseCommand):
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
                     if len(root_list[-1]) != 1:
-                        suffix = root_list[-1][1:]
-                        if '_' in suffix:
-                            suffix.replace('_', '')
-                        media_rank = self.media_rank_dict[suffix]
+                        media_rank = self.media_rank_dict[root_list[-1][1:].replace('_', '')]
                         preview_trigger = False
                     else:
                         media_rank = 1
