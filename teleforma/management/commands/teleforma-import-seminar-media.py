@@ -95,6 +95,8 @@ class Command(BaseCommand):
         seminars = []
 
         # self.cleanup()
+        for seminar in Seminar.objects.filter(period=period):
+            self.seminar_media_cleanup(seminar)
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -139,8 +141,6 @@ class Command(BaseCommand):
                     if c:
                         seminar.title = course.title
                         seminar.save()
-
-                    self.seminar_media_cleanup(seminar)
 
                     exist = False
                     medias = seminar.medias.all()
