@@ -5,6 +5,7 @@
  *	http://cssglobe.com/post/7161/jquery-plugin-simplest-twitterlike-dynamic-character-count-for-textareas
  *
  *	Copyright (c) 2009 Alen Grakalic (http://cssglobe.com)
+ *	Copyright (c) 2013 Guillaume Pellerin <yomguy@parisson.com>
  *	Dual licensed under the MIT (MIT-LICENSE.txt)
  *	and GPL (GPL-LICENSE.txt) licenses.
  *
