@@ -108,10 +108,13 @@ class Command(BaseCommand):
                             and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.':
 
                     print filename
+                    
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
+
                     if len(root_list[-1]) != 1:
-                        media_rank = self.media_rank_dict[root_list[-1][1:].replace('_', '')]
+                        rank = root_list[-1][1:].copy()
+                        media_rank = self.media_rank_dict[rank.replace('_', '')]
                         preview_trigger = False
                     else:
                         media_rank = 1
