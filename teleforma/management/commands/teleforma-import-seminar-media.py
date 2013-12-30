@@ -68,7 +68,7 @@ class Command(BaseCommand):
 
     def seminar_media_cleanup(self, seminar):
         for media in seminar.medias.all():
-            seminar.remove(media)
+            seminar.medias.remove(media)
         if seminar.media_preview:
             seminar.media_preview = None
             seminar.save()
