@@ -64,7 +64,7 @@ class Command(BaseCommand):
         media.delete()
 
     def seminar_media_cleanup(self, seminar):
-        for media in seminar.medias:
+        for media in seminar.medias.all():
             self.delete_media(media)
         self.delete_media(seminar.media_preview)
 
