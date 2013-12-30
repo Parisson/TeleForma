@@ -59,9 +59,9 @@ class Command(BaseCommand):
 
     def delete_media(self, media):
         for trans in media.item.transcoded.all():
-                trans.delete()
-            media.item.delete()
-            media.delete()
+            trans.delete()
+        media.item.delete()
+        media.delete()
 
     def seminar_media_cleanup(self, seminar):
         for media in seminar.medias:
