@@ -673,7 +673,7 @@ class TestimonialListView(ListView):
         testimonials = Testimonial.objects.filter(user=user)
         for testimonial in testimonials:
             seminar = testimonial.seminar
-            if seminar_progress(user, seminar) == 100 and seminar_validated(user, seminar):
+            if seminar_validated(user, seminar):
                 t.append(testimonial)
         return t
 
