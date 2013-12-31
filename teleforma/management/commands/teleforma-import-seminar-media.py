@@ -59,19 +59,21 @@ class Command(BaseCommand):
 
     def delete_media(self, media):
         if media.item:
-            transcoded = media.item.transcoded.all()
-            if transcoded:
-                for trans in transcoded:
-                    trans.delete()
+            for trans in media.item.transcoded.all():
+                trans.delete()
+            for related in media.item.related.all():
+                related.delete()
             media.item.delete()
         media.delete()
 
     def seminar_media_cleanup(self, seminar):
         for media in seminar.medias.all():
             seminar.medias.remove(media)
+            self.delete_media(media)
         if seminar.media_preview:
             seminar.media_preview = None
             seminar.save()
+            self.delete_media(seminar.media_preview)
 
     def get_duration(self, file):
         decoder = timeside.decoder.FileDecoder(file)
