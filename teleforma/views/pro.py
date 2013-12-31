@@ -167,7 +167,7 @@ class AnswerView(SeminarAccessMixin, FormView):
 
     def get_initial(self):
         initial = {}
-        if not self.requet.user.is_authenticated:
+        if not self.request.user.is_authenticated:
             return initial
 
         self.question = Question.objects.get(pk=self.kwargs['pk'])
