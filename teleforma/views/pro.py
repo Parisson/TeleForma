@@ -166,7 +166,8 @@ class AnswerView(SeminarAccessMixin, FormView):
         return User.objects.get(id=user_id)
 
     def get_initial(self):
-        initial = {}
+        initial = super(AnswerView, self).get_initial()
+        
         if not self.request.user.is_authenticated:
             return initial
 
