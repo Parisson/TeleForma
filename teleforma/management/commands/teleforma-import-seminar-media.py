@@ -176,6 +176,7 @@ class Command(BaseCommand):
                         else:
                             item = items[0]
 
+                        print item
                         item.title = name
                         item.file = path
 
