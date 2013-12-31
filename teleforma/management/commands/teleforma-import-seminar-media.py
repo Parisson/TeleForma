@@ -167,7 +167,7 @@ class Command(BaseCommand):
                         else:
                             collection = collections[0]
 
-                        id = '_'.join([period.name, collection_id, ext, str(media_rank)])
+                        id = '_'.join([period.name, '2', collection_id, ext, str(media_rank)])
 
                         items = MediaItem.objects.filter(collection=collection, code=id)
                         if not items:
