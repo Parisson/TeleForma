@@ -166,7 +166,7 @@ class Command(BaseCommand):
 
                         id = '_'.join([period.name, collection_id, ext, str(media_rank)])
 
-                        items = MediaItem.objects.get_or_create(collection=collection, code=id)
+                        items = MediaItem.objects.filter(collection=collection, code=id)
                         if not items:
                             item = MediaItem(collection=collection, code=id)
                             item.save()
