@@ -100,8 +100,8 @@ class Command(BaseCommand):
         seminars = []
 
         # self.cleanup()
-        #for seminar in Seminar.objects.filter(period=period):
-        #    self.seminar_media_cleanup(seminar)
+        for seminar in Seminar.objects.filter(period=period):
+            self.seminar_media_cleanup(seminar)
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -147,9 +147,6 @@ class Command(BaseCommand):
                     if c:
                         seminar.title = course.title
                         seminar.save()
-                    else:
-                        if not rank:
-                            self.seminar_media_cleanup(seminar)
 
                     exist = False
                     for media in seminar.medias.all():
@@ -204,8 +201,11 @@ class Command(BaseCommand):
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
                                 markers = related.parse_markers(from_first_marker=True)
                                 if markers:
-                                    item.title = markers[0]['comment']
-                                    item.save()
+                                    for marker in markers:
+                                        if float(marker['time']) != 0:
+                                            item.title = marker['comment']
+                                            item.save()
+                                            break
                                 logger.logger.info(r_path)
 
                         media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
