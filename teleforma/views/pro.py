@@ -161,6 +161,9 @@ class AnswerView(SeminarAccessMixin, FormView):
     form_class = AnswerForm
     template_name='teleforma/answer_form.html'
 
+    def render_to_response(self, context):
+        return super(AnswerView, self).render_to_response(context)
+
     def get_user(self):
         user_id = self.request.user.id
         return User.objects.get(id=user_id)
