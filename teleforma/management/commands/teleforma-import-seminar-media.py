@@ -157,9 +157,9 @@ class Command(BaseCommand):
                     if not exist:
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
-                        collections = MediaCollection.objects.get_or_create(code=collection_id)
+                        collection = MediaCollection.objects.get_or_create(code=collection_id)
                         item_id = '_'.join([period.name, collection_id, ext, str(media_rank)])
-                        items = MediaItem.objects.get_or_create(collection=collection, code=item_id)
+                        item = MediaItem.objects.get_or_create(collection=collection, code=item_id)
                         item.title = name
                         item.file = path
                         if os.path.getsize(root+os.sep+filename):
