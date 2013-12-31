@@ -108,7 +108,7 @@ class SeminarAccessMixin(object):
 
     def render_to_response(self, context):
         seminar = context['seminar']
-        if not seminar in all_seminars(self.request)['all_seminars'] or not self.request.user.is_authenticated:
+        if not seminar in all_seminars(self.request)['all_seminars']:
             messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
@@ -161,15 +161,15 @@ class AnswerView(SeminarAccessMixin, FormView):
     form_class = AnswerForm
     template_name='teleforma/answer_form.html'
 
-    def render_to_response(self, context):
-        return super(AnswerView, self).render_to_response(context)
-
     def get_user(self):
         user_id = self.request.user.id
         return User.objects.get(id=user_id)
 
     def get_initial(self):
         initial = {}
+        if not self.requet.user.is_authenticated:
+            return initial
+
         self.question = Question.objects.get(pk=self.kwargs['pk'])
         self.user = self.get_user()
         answers = Answer.objects.filter(user=self.user,
