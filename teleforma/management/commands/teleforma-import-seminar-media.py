@@ -98,8 +98,8 @@ class Command(BaseCommand):
         seminars = []
 
         # self.cleanup()
-        for seminar in Seminar.objects.filter(period=period):
-            self.seminar_media_cleanup(seminar)
+        #for seminar in Seminar.objects.filter(period=period):
+        #    self.seminar_media_cleanup(seminar)
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -157,13 +157,28 @@ class Command(BaseCommand):
                     if not exist:
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
-                        collection, c = MediaCollection.objects.get_or_create(code=collection_id)
-                        item_id = '_'.join([period.name, collection_id, ext, str(media_rank)])
-                        item, c = MediaItem.objects.get_or_create(collection=collection, code=item_id)
+                        collections = MediaCollection.objects.filter(code=collection_id)
+                        if not collections:
+                            collection = MediaCollection(code=collection_id,title=collection_id)
+                            collection.save()
+                        else:
+                            collection = collections[0]
+
+                        id = '_'.join([period.name, collection_id, ext, str(media_rank)])
+
+                        items = MediaItem.objects.get_or_create(collection=collection, code=id)
+                        if not items:
+                            item = MediaItem(collection=collection, code=id)
+                            item.save()
+                        else:
+                            item = items[0]
+
                         item.title = name
                         item.file = path
+
                         if os.path.getsize(root+os.sep+filename):
                             item.approx_duration = self.get_duration(root+os.sep+filename)
+
                         item.save()
 
                         files = os.listdir(root)
