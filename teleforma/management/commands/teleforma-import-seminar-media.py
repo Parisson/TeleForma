@@ -124,6 +124,7 @@ class Command(BaseCommand):
                         media_rank = self.media_rank_dict[rank.replace('_', '')]
                         preview_trigger = False
                     else:
+                        rank = 0
                         media_rank = 1
                         preview_trigger = True
 
@@ -147,7 +148,7 @@ class Command(BaseCommand):
                         seminar.title = course.title
                         seminar.save()
                     else:
-                        if media_rank == 1:
+                        if rank:
                             self.seminar_media_cleanup(seminar)
 
                     exist = False
