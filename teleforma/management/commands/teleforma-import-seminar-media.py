@@ -148,7 +148,7 @@ class Command(BaseCommand):
                         seminar.title = course.title
                         seminar.save()
                     else:
-                        if rank:
+                        if not rank:
                             self.seminar_media_cleanup(seminar)
 
                     exist = False
