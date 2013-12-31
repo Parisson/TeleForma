@@ -214,6 +214,9 @@ class AnswerView(SeminarAccessMixin, FormView):
     def get_success_url(self):
         return reverse('teleforma-seminar-detail', kwargs={'pk':self.question.seminar.id})
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AnswerView, self).dispatch(*args, **kwargs)
 
 class SeminarMediaView(SeminarAccessMixin, MediaView):
 
