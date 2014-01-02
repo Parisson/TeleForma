@@ -128,6 +128,10 @@ class Seminar(ClonableMixin, Displayable):
         url = reverse('teleforma-seminar-detail', kwargs={'pk':self.id})
         return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
 
+    @property
+    def code(self):
+        return '_'.join([self.course.code, str(self.rank)])
+
     def get_absolute_url(self):
         return reverse('seminar-view', kwargs={"pk": self.id})
 
