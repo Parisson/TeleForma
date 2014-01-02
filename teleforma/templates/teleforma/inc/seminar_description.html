@@ -11,7 +11,7 @@
 <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
 <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration|hours }} {% trans "hours" %}</dd>
 <dt>{% trans "expiry date" %}</dt><dd>{{ seminar.expiry_date }}</dd>
-{% is user.is_superuser %}
+{% if user.is_superuser %}
 <dt>{% trans "code" %}</dt><dd>{{ seminar.code }}</dd>
 {% endif %}
 </dl>
