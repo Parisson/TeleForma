@@ -57,6 +57,16 @@ a:hover {
     text-decoration: underline;
 }
 
+.link_red a, a:visited {
+    color: #BB0000;  /* #BB0000  #030250 */
+    text-decoration:none;
+}
+.link_red a:hover {
+    background-color: transparent;
+    color: #BB0000 ; /* #BB0000 #4888f0 */
+    text-decoration: underline;
+}
+
 a img { border: none; }
 
 textarea {
