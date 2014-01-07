@@ -1513,7 +1513,7 @@ input,textarea{
 
 .course {
     margin: 0em 0em 2em 0em;
-    padding: 1em 0em 0em 0em;
+    padding: 5px 0em 0em 0em;
     background-color: #FFF;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
