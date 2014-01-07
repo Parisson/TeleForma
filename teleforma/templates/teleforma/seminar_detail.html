@@ -91,7 +91,7 @@ $(window).ready(function(){
             {% endif %}
             
             {% if user.is_staff %}
-            <a id="publish" href="#" class="{% if seminar.status == 2 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if seminar.status == 2 %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+            <a id="publish" href="#" class="{% if seminar.status == 2 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if seminar.status == 2 %}{% trans " published" %}{% else %}{% trans " draft" %}{% endif %}</a>
             {% endif %}
           </div>
 
