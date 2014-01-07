@@ -86,7 +86,7 @@ $(window).ready(function(){
         <div class="course_title">
           
           <div style="float: right; font-size: 0.9em;">
-            {% if seminar_progress == 100 %}
+            {% if seminar_progress == 100 and not user.is_staff %}
             <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
             {% endif %}
             
