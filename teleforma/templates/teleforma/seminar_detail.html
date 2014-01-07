@@ -95,12 +95,6 @@ $(window).ready(function(){
             {% endif %}
           </div>
 
-          <div style="float: right; font-size: 0.9em;">
-            {% if seminar_progress == 100 %}
-            <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
-            {% endif %}
-          </div>
-
           <div style="text-align: left;">
             <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
           </div>
