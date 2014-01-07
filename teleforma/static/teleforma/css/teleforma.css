@@ -67,6 +67,16 @@ a:hover {
     text-decoration: underline;
 }
 
+.link_green a {
+    color: #92b220;  /* #BB0000  #030250 */
+    text-decoration:none;
+}
+.link_green a:hover {
+    background-color: transparent;
+    color: #92b220 ; /* #BB0000 #4888f0 */
+    text-decoration: underline;
+}
+
 a img { border: none; }
 
 textarea {
