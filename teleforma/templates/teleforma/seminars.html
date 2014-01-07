@@ -46,7 +46,7 @@ $(function() {
 <ul id="seminars">
 {% block courses %}
 {% for seminar in all_seminars %}
-   <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
+   <li><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}{%% if user.is_staff and seminar.status == 2 %}<img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "published" %}" alt=""/>{% endif %}</a></li>
  {% endfor %}
 {% endblock courses %}
 </ul>
