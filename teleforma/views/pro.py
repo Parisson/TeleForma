@@ -141,6 +141,18 @@ class SeminarView(SeminarAccessMixin, DetailView):
         set_revision(user, seminar)
         return context
 
+    @jsonrpc_method('teleforma.publish_seminar')
+    def publish(request, id):
+        seminar = Seminar.objects.get(id=id)
+        seminar.status = 2
+        seminar.save()
+
+    @jsonrpc_method('teleforma.unpublish_seminar')
+    def unpublish(request, id):
+        seminar = Seminar.objects.get(id=id)
+        seminar.status = 1
+        seminar.save()
+
 
 class SeminarsView(ListView):
 

@@ -33,6 +33,47 @@ $(function () {
 });
 
 </script>
+
+{% if user.is_staff %}
+<script type="text/javascript">
+
+var seminarUtils = {
+        publish : function(id){
+            var p = $('#publish');
+            json([id],'teleforma.publish_seminar',function(){
+                p.removeClass('icon_delete').addClass('icon_ok')
+                p.html('{% trans " published" %}')
+                });
+         },
+        unpublish : function(id){
+            var p = $('#publish');
+            json([id],'teleforma.unpublish_seminar',function(){
+                p.removeClass('icon_ok').addClass('icon_delete')
+                p.html('{% trans " rejected" %}')
+                });
+         }
+        }
+
+$(window).ready(function(){
+    var p = $('#publish');
+    var f = seminarUtils;
+    p.unbind('click').click(function() {
+        if (p.hasClass('icon_ok')){
+            f.unpublish('{{media.id}}');
+            return false;
+            }
+        if (p.hasClass('icon_delete')) {
+            f.publish('{{media.id}}');
+            return false;
+            }
+        }
+        );
+
+    });
+
+</script>
+{% endif %}
+
 {% endblock infra_javascript %}
 
 
@@ -43,14 +84,25 @@ $(function () {
     <div class="course">
 
         <div class="course_title">
-         <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
-
-          <div style="float: right; font-size: 0.9em;">
-          {% if seminar_progress == 100 %}
-          <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
-          {% endif %}
+          <div style="text-align: left;">
+            <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
           </div>
 
+          <div style="float: right; font-size: 0.9em;">
+            {% if seminar_progress == 100 %}
+            <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
+            {% endif %}
+            
+            {% if user.is_staff %}
+            <a id="publish" href="#" class="{% if seminar.status == 2 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if seminar.status == 2 %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+            {% endif %}
+          </div>
+
+          <div style="float: right; font-size: 0.9em;">
+            {% if seminar_progress == 100 %}
+            <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
+            {% endif %}
+          </div>
         </div>
 
         {% block course_content %}

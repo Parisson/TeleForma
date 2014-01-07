@@ -58,7 +58,8 @@ class SeminarType(models.Model):
 
 class Seminar(ClonableMixin, Displayable):
 
-    # title, description, keywords and dates are given by Displayable
+    # title, description, keywords, dates and status are given by Displayable
+    # status values : 1: draft, 2: published
 
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
