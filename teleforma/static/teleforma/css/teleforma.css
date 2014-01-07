@@ -57,7 +57,7 @@ a:hover {
     text-decoration: underline;
 }
 
-.link_red a, a:visited {
+.link_red a {
     color: #BB0000;  /* #BB0000  #030250 */
     text-decoration:none;
 }
