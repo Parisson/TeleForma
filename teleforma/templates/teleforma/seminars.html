@@ -46,7 +46,7 @@ $(function() {
 <ul id="seminars">
 {% block courses %}
 {% for seminar in all_seminars %}
-   <li><a href="{% url teleforma-seminar-detail seminar.id %}" {% if user.is_staff and seminar.status != 2 %}class="link_red"{% endif %}>{{ seminar.title }}</a></li>
+   <li {% if user.is_staff and seminar.status != 2 %}class="link_red"{% endif %}><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
  {% endfor %}
 {% endblock courses %}
 </ul>
