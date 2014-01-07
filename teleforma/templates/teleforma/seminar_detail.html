@@ -59,11 +59,11 @@ $(window).ready(function(){
     var f = seminarUtils;
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
-            f.unpublish('{{media.id}}');
+            f.unpublish('{{seminar.id}}');
             return false;
             }
         if (p.hasClass('icon_delete')) {
-            f.publish('{{media.id}}');
+            f.publish('{{seminar.id}}');
             return false;
             }
         }
