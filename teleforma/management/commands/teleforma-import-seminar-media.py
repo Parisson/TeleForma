@@ -155,12 +155,12 @@ class Command(BaseCommand):
                             exist = True
                             break
                     
-                    if not seminar in seminars:
-                        seminars.append(seminar)
-
                     if not exist:
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
+                        if not seminar in seminars:
+                            seminars.append(seminar)
+
                         collections = MediaCollection.objects.filter(code=collection_id)
                         if not collections:
                             collection = MediaCollection(code=collection_id,title=collection_id)
