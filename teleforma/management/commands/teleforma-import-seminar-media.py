@@ -114,8 +114,6 @@ class Command(BaseCommand):
 
                 if ext in self.original_format and not 'preview' in root_list \
                             and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.':
-
-                    print filename
                     
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
@@ -156,6 +154,7 @@ class Command(BaseCommand):
                             break
                     
                     if not exist:
+                        print root + filename
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
                         if not seminar in seminars:
