@@ -693,3 +693,33 @@ class HelpView(TemplateView):
     def dispatch(self, *args, **kwargs):
         return super(HelpView, self).dispatch(*args, **kwargs)
 
+
+class SourcesStatusView(ListView):
+
+    model = Source
+    template_name='teleforma/source_monitors.html'
+
+    @jsonrpc_method('telecaster.get_source_status')
+    def get_source_status(request, public_id):
+        source = Source.objects.get(public_id=public_id)
+        url = 'http://' + source.ip + '/json/'
+        service = ServiceProxy(url)
+        status = s.teleforma.get_server_status()
+        return status
+
+    @jsonrpc_method('telecaster.get_source_station_status')
+    def get_source_station_status(request, public_id):
+        source = Source.objects.get(public_id=public_id)
+        url = 'http://' + source.ip + '/json/'
+        service = ServiceProxy(url)
+        station = s.teleforma.get_station_status()
+        return station
+
+    @jsonrpc_method('telecaster.source_station_start')
+    def start(request, station_dict):
+        pass
+
+    @jsonrpc_method('telecaster.source_station_stop')
+    def stop(request):
+        pass
+
