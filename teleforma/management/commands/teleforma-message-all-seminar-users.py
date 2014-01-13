@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 for seminar in all_seminars:
                     if seminar.expiry_date:
                         delta = seminar.expiry_date - today
-                        if delta.days < days and not seminar_validated(user, seminar):
+                        if delta.days < days and delta.days > 0 and not seminar_validated(user, seminar):
                             seminars.append(seminar)
 
                 if seminars:

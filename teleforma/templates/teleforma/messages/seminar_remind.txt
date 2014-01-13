@@ -2,7 +2,7 @@
 
 Certains de vos séminaires e-learning arrivent bientôt à expiration :{% endblocktrans %}
 
-{% for seminar in seminars %}"{% if seminar.sub_title %}{{ seminar.sub_title }}{% else %}{{ seminar.title }}{% endif %}" {% trans "expires on" %} {{ seminar.expiry_date }}.
+{% for seminar in seminars %}"{% if seminar.sub_title %}{{ seminar.sub_title }} : {{ seminar.title }}{% else %}{{ seminar.title }}{% endif %}" {% trans "expires on" %} {{ seminar.expiry_date }}.
 {% endfor %}
 
 {% blocktrans %}Nous vous rappelons que vous devez achever vos formations avant ces dates.
