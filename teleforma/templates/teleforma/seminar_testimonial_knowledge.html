@@ -41,7 +41,7 @@
       <tr><td class="bold">{% trans "Training begin date" %} : </td><td>{% if first_revision.date_modified %}{{ first_revision.date_modified|date:'j F Y' }}{% else %}{{ first_revision.date|date:'j F Y' }}{% endif %}</td></tr>
       <tr><td class="bold">{% trans "Knowledge validation dates and terms" %} : </td><td></td></tr>
       {% for answer in answers %}
-        <tr><td style="padding-left:10px;">{% trans "Answer" %} n°{{ answer.question.rank }} : </td><td>{{ answer.date_validated|date:'j F Y' }}</td></tr>
+        <tr><td style="padding-left:10px;">{% trans "Answer" %} n°{{ answer.question.rank }} : </td><td>{% if testimonial.date_modified and testimonial.date_modified < answer.date_validated %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ answer.date_validated|date:'j F Y' }}{% endif %}</td></tr>
         <tr style="padding-top: -2px;"><td style="padding-left:20px;">{% trans "Required characters" %} : </td><td>{{ answer.question.min_nchar }}</td></tr>
         <tr style="padding-top: -2px;"><td style="padding-left:20px;">{% trans "Submitted characters" %} : </td><td>{{ answer.answer|length }}</td></tr>
       {% endfor %}
