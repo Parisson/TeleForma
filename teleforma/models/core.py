@@ -625,44 +625,6 @@ class Media(MediaBase):
         ordering = ['-date_modified']
 
 
-class Source(Model):
-    "Streaming source"
-
-    public_id         = CharField(_('public_id'), max_length=255)
-    ip                = GenericIPAddressField(_('IP'))
-    room              = ForeignKey(Room, related_name='source', verbose_name=_('room')
-                                    blank=True, null=True, on_delete=models.SET_NULL)
-    monitors          = ManyToManyField(Monitor, related_name="source", 
-                                    verbose_name=_('monitors'), blank=True, null=True)    
-    class Meta:
-        db_table = app_label + '_' + 'source'
-        ordering = ['public_id']
-
-    def __unicode__(self):
-        return '-'.join([self.public_id, self.room, self.ip])
-
-
-class Monitor(Model):
-    "Streaming source monitor"
-    
-    mime_types = [('audio/ogg', 'audio/ogg'), ('audio/mp3', 'audio/mp3'), 
-            ('video/webm', 'video/webm'), ('video/mp4', 'video/mp4')]
-    
-    port             = IntegerField(_('port'))
-    mount_point      = CharField(_('public_id'), max_length=255)
-    mime_type        = CharField(_('type'), choices=self.mime_types, max_length=255)
-
-    @property
-    def slug(self):
-        return ':' + str(self.port) + '/' + self.mount_point
-
-    class Meta:
-        db_table = app_label + '_' + 'monitor'
-
-    def __unicode__(self):
-        return self.slug + '(' + self.type + ')'
-
-
 class NamePaginator(object):
     """Pagination for string-based objects"""
 
