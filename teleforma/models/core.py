@@ -72,6 +72,7 @@ streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', '
 mimetypes.add_type('video/webm','.webm')
 
 STATUS_CHOICES = (
+        (0, _('Hidden')),
         (1, _('Private')),
         (2, _('Draft')),
         (3, _('Public')),
@@ -257,7 +258,8 @@ class Conference(Model):
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
     readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
-
+    status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    
     notes = generic.GenericRelation(Note)
 
     @property

@@ -200,3 +200,8 @@ def get_host(url, host):
         return nu
     else:
         return url
+
+@register.filter
+def published(doc):
+    if doc:
+        return doc.filter(is_published=True)
