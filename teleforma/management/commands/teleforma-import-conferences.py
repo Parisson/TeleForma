@@ -52,10 +52,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         organization_name = args[0]
-        log_file = args[1]
+        department_name = args[1]
+        log_file = args[2]
         logger = Logger(log_file)
 
         organization = Organization.objects.get(name=organization_name)
+        department = Department.objects.get(name=department_name,
+                                            organization=organization)
         self.media_dir = settings.MEDIA_ROOT + organization.name
         file_list = []
         all_conferences = Conference.objects.all()
@@ -80,9 +83,6 @@ class Command(BaseCommand):
                     dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
-
-                    department = Department.objects.filter(name=department_name,
-                                                           organization=organization)
 
                     if Conference.objects.filter(public_id=public_id) and department:
                         conference = Conference.objects.get(public_id=public_id)
@@ -143,8 +143,6 @@ class Command(BaseCommand):
                             media.course_type = conference.course_type
                             media.type = ext
                             media.set_mime_type()
-                            if conference.period:
-                                media.period = conference.period
                             media.save()
                             conference.save()
                             logger.logger.info(path)
