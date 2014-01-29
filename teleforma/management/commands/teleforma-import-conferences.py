@@ -59,7 +59,7 @@ class Command(BaseCommand):
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name,
                                             organization=organization)
-        self.media_dir = settings.MEDIA_ROOT + organization.name
+        self.media_dir = settings.MEDIA_ROOT + organization.name + os.sep + department_name
         file_list = []
         all_conferences = Conference.objects.all()
         i = 1
