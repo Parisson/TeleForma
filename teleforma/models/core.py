@@ -107,6 +107,8 @@ class Department(Model):
     organization    = ForeignKey('Organization', related_name='department',
                                  verbose_name=_('organization'))
     domain          = CharField(_('Master domain'), max_length=255, blank=True)
+    default_period  = ForeignKey('Period', related_name='department', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
         return self.name

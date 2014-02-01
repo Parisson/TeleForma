@@ -175,20 +175,26 @@ def get_periods(user):
 
     return periods
 
+def get_default_period(periods):
+    for period in periods:
+        defaults = period.department.all()
+        if defaults:
+            return period
+    return period
+
 
 class HomeRedirectView(View):
 
     def get(self, request):
         if request.user.is_authenticated():
             periods = get_periods(request.user)
-            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
+            period = get_default_period(periods)
+            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 
 
 class PeriodAccessMixin(View):
-
-    period = None
 
     def get_context_data(self, **kwargs):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
@@ -196,6 +202,9 @@ class PeriodAccessMixin(View):
             period = Period.objects.filter(id=int(self.kwargs['period_id']))
             if period:
                 self.period = period[0]
+            else:
+                periods = get_periods(self.request.user)
+                self.period = get_default_period(periods)
         context['period'] = self.period
         return context
 
