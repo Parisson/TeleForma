@@ -84,7 +84,7 @@ STATUS_CHOICES = (
         (3, _('Public')),
     )
 
-WEIGHT_CHOICES = get_nint_choices(6)
+WEIGHT_CHOICES = get_nint_choices(30)
 
 GENDER_CHOICES = (('Mr', _('Mr.')), ('Mrs', _('Mrs.')))
 
