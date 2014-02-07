@@ -114,8 +114,7 @@ $(window).ready(function(){
 <div class="course_content" id="media_infos">
 <dl class="listing">
 
-<dt>{% trans "Title" %}</dt><dd>{{ media.item.title }}</dd>
-
+<dt>{% trans "Title" %}</dt><dd>{% if media.title %}{{ media.title }}{% else %}{{ media.item.title }}{% endif %}</dd>
 {% with seminar.professor.all as professors %}
   {% if professors %}
     <dt>{% if professors.count > 1 %}{% trans "Professors" %}{% else %}{% trans "Professor" %}{% endif %}</dt>
