@@ -1,4 +1,4 @@
-{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}{% trans "Hello" %} {{ usr.first_name }} {{ usr.last_name }},
+{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}{% trans "Hello" %} {{ object.recipient.first_name }} {{ object.recipient.last_name }},
 {% if action == 'rejection' %}
 {% blocktrans with object.sent_at|date:"DATETIME_FORMAT" as date and object.obfuscated_recipient as recipient %}On {{ date }}, you asked to send a message to the user '{{ recipient }}'.{% endblocktrans %}
 
