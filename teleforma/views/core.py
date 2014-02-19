@@ -249,13 +249,14 @@ class CourseListView(CourseAccessMixin, ListView):
             url = 'http://' + department.domain + '/json/'
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_course_list(organization_name, department.name)
-            for course_dict in remote_list['result']:
-                course = Course.objects.filter(code=course_dict['code'], department=department)
-                if not course:
-                    course = Course()
-                else:
-                    course = course[0]
-                course.from_dict(course_dict)
+            if remote_list['result']:
+                for course_dict in remote_list['result']:
+                    course = Course.objects.filter(code=course_dict['code'], department=department)
+                    if not course:
+                        course = Course()
+                    else:
+                        course = course[0]
+                    course.from_dict(course_dict)
                 
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
