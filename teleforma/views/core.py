@@ -250,7 +250,7 @@ class CourseListView(CourseAccessMixin, ListView):
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_course_list(organization_name, department.name)
             for course_dict in remote_list['result']:
-                course = Course.objects.filter(code=course_dict['code'])
+                course = Course.objects.filter(code=course_dict['code'], department=department)
                 if not course:
                     course = Course()
                 else:
