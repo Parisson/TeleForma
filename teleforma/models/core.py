@@ -197,6 +197,28 @@ class Course(Model):
     def slug(self):
         return slugify(self.__unicode__())
 
+    def to_dict(self):
+        dict = {'organization' : self.department.organization.name,
+                'department' : self.department.name,
+                'title' : self.title,
+                'description' : self.description,
+                'code' : self.code,
+                'title_tweeter' : self.title_tweeter,
+                'number' : str(self.number),
+                }
+        return dict
+
+    def from_dict(self, data):
+        organization, c = Organization.objects.get_or_create(name=data['organization'])
+        self.department, c = Department.objects.get_or_create(name=data['department'], organization=organization)
+        self.title = data['title']
+        self.description = data['description']
+        self.code = data['code']
+        self.title_tweeter = data['title_tweeter']
+        if data['number'] != 'None':
+            self.number = int(data['number'])
+        self.save()
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
