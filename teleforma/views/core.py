@@ -211,19 +211,10 @@ class CourseAccessMixin(object):
         return super(CourseAccessMixin, self).render_to_response(context)
 
 
-class CourseListView(CourseAccessMixin, ListView):
+class CourseListView(ListView):
 
     model = Course
     template_name='teleforma/courses.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CourseListView, self).get_context_data(**kwargs)
-        context['notes'] = Note.objects.filter(author=self.request.user)
-        context['room'] = get_room(name='site', period=context['period'].name)
-        context['doc_types'] = DocumentType.objects.all()
-        context['list_view'] = True
-        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
-        return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
