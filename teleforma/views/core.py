@@ -211,6 +211,57 @@ class CourseAccessMixin(object):
         return super(CourseAccessMixin, self).render_to_response(context)
 
 
+class CourseListView(CourseAccessMixin, ListView):
+
+    model = Course
+    template_name='teleforma/courses.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CourseListView, self).get_context_data(**kwargs)
+        context['notes'] = Note.objects.filter(author=self.request.user)
+        context['room'] = get_room(name='site', period=context['period'].name)
+        context['doc_types'] = DocumentType.objects.all()
+        context['list_view'] = True
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(CourseListView, self).dispatch(*args, **kwargs)
+
+    @jsonrpc_method('teleforma.get_course_list')
+    def get_course_list(request, organization_name, department_name):
+        from teleforma.models import Organization, Department
+        organization = Organization.objects.get(name=organization_name)
+        department = Department.objects.get(organization=organization, name=department_name)
+        return [course.to_dict() for course in Course.objects.filter(department=department)]
+
+    def pull(request, organization_name, department_name):
+        organization = Organization.objects.get(name=organization_name)
+        department = Department.objects.get(name=department_name, organization=organization)
+        url = 'http://' + department.domain + '/json/'
+        s = ServiceProxy(url)
+
+        remote_list = s.teleforma.get_course_list(organization_name, department.name)
+        for course_dict in remote_list['result']:
+            course = Course.objects.filter(code=course_dict['code'])
+            if not course:
+                course = Course()
+            else:
+                course = course[0]
+            course.from_dict(course_dict)
+            
+    @jsonrpc_method('teleforma.get_dep_courses')
+    def get_dep_courses(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+
+    @jsonrpc_method('teleforma.get_dep_periods')
+    def get_dep_periods(request, id):
+        department = Department.objects.get(id=id)
+        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
+
+
 class CourseView(DetailView):
 
     model = Course
