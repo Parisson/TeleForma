@@ -203,7 +203,6 @@ class Course(Model):
                 'title' : self.title,
                 'description' : self.description,
                 'code' : self.code,
-                'title_tweeter' : self.title_tweeter,
                 'number' : str(self.number),
                 }
         return dict
