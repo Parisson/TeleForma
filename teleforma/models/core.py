@@ -214,7 +214,6 @@ class Course(Model):
         self.title = data['title']
         self.description = data['description']
         self.code = data['code']
-        self.title_tweeter = data['title_tweeter']
         if data['number'] != 'None':
             self.number = int(data['number'])
         self.save()
