@@ -7,7 +7,6 @@ from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
 import logging
 import os, sys, time, datetime
@@ -29,7 +28,7 @@ class Logger:
 class Command(BaseCommand):
     help = "Import seminars from a media directory for a special period.name"
     admin_email = 'webmaster@parisson.com'
-    args = 'organization period_name log_file'
+    args = 'organization period_name log_file media_dir'
     spacer = '_-_'
     original_format = 'webm'
     transcoded_formats = ['mp4', 'ogg', 'mp3']
@@ -91,7 +90,7 @@ class Command(BaseCommand):
         organization_name = args[0]
         period_name = args[1]
         log_file = args[2]
-        media_dir = settings.MEDIA_ROOT
+        media_dir = args[3]
         logger = Logger(log_file)
         
         organization = Organization.objects.get(name=organization_name)
@@ -187,7 +186,7 @@ class Command(BaseCommand):
 
                         files = os.listdir(root)
                         for file in files:
-                            r_path = root + os.sep + file
+                            r_path = dir + os.sep + file
                             filename, extension = os.path.splitext(file)
                             if extension[1:] in self.image_formats:
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
