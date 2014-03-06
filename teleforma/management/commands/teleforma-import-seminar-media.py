@@ -91,7 +91,7 @@ class Command(BaseCommand):
         organization_name = args[0]
         period_name = args[1]
         log_file = args[2]
-        media_dir = setting.MEDIA_ROOT
+        media_dir = settings.MEDIA_ROOT
         logger = Logger(log_file)
         
         organization = Organization.objects.get(name=organization_name)
