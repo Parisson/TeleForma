@@ -186,7 +186,7 @@ class Command(BaseCommand):
 
                         files = os.listdir(root)
                         for file in files:
-                            r_path = dir + os.sep + file
+                            r_path = root + os.sep + file
                             filename, extension = os.path.splitext(file)
                             if extension[1:] in self.image_formats:
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
