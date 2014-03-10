@@ -5,16 +5,20 @@
 {% block content %}
 
 <script type="text/javascript">
-function update_recipients() {
-	$("#_professorSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
+function update_admin_recipient() {
 	$("#_adminSelect").click(function () {
       var htmlStr = $(this).val();
       $("#id_recipients").val(htmlStr);
     });
 }
+
+function update_professor_recipient() {
+	$("#_professorSelect").click(function () {
+      var htmlStr = $(this).val();
+      $("#id_recipients").val(htmlStr);
+    });
+}
+
 </script>
 
 <div id="postman" class="desk_messages">
@@ -23,7 +27,7 @@ function update_recipients() {
 {% if user.student.all or user.is_staff %}
 <div style="padding-top: 0.5em;">
 
-<select id="_adminSelect" name="admins" onchange="update_recipients();">
+<select id="_adminSelect" name="admins" onchange="update_admin_recipient();">
 <option value="">{% trans "to an administrator" %}</option>
 {% get_all_admins as admins %}
 {% for a in admins %}
@@ -31,7 +35,7 @@ function update_recipients() {
 {% endfor %}
 </select>
 
-<select id="_professorSelect" name="professors" onchange="update_recipients();">
+<select id="_professorSelect" name="professors" onchange="update_professor_recipient();">
 <option value="">{% trans "to a professor" %}</option>
 {% get_all_professors as professors %}
 {% for p in professors %}
