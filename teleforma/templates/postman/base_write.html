@@ -3,6 +3,20 @@
 {% load teleforma_tags %}
 
 {% block content %}
+
+<script type="text/javascript">
+function update_recipients() {
+	$("#_professorSelect").click(function () {
+      var htmlStr = $(this).val();
+      $("#id_recipients").val(htmlStr);
+    });
+	$("#_adminSelect").click(function () {
+      var htmlStr = $(this).val();
+      $("#id_recipients").val(htmlStr);
+    });
+}
+</script>
+
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
 
@@ -38,22 +52,12 @@
 <a href="#" class="component_icon button icon_next" id="send_button">{% trans "Send" %}</a>
 </div>
 </div>
-<script type="text/javascript">document.getElementById("id_subject").focus();</script>
-<script type="text/javascript">
-function update_recipients() {
-$("#_professorSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
-$("#_adminSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
-}
 
+<script type="text/javascript">
+document.getElementById("id_subject").focus();
 $('#send_button').click(function() {
   $('#_messageForm').submit();
 });
-
 </script>
+
 {% endblock %}
