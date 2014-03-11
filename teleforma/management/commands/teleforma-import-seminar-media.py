@@ -145,6 +145,7 @@ class Command(BaseCommand):
                                             rank=seminar_rank, period=period)
                     if c:
                         seminar.title = course.title
+                        seminar.status = 1
                         seminar.save()
 
                     exist = False
