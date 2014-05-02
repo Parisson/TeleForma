@@ -88,11 +88,11 @@ class Command(BaseCommand):
 
     def get_item(self, collection, id):
         items = MediaItem.objects.filter(collection=collection, code=id)
-            if not items:
-                item = MediaItem(collection=collection, code=id)
-                item.save()
-            else:
-                item = items[0]
+        if not items:
+            item = MediaItem(collection=collection, code=id)
+            item.save()
+        else:
+            item = items[0]
         return item
 
     def handle(self, *args, **options):
