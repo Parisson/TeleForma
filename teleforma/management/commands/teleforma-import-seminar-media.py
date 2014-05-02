@@ -179,7 +179,7 @@ class Command(BaseCommand):
 
                         id = '_'.join([period.name, '20', collection_id, ext, str(media_rank)])
 
-                        item = get_item(collection, id)
+                        item = self.get_item(collection, id)
                         item.title = name
                         item.file = path
 
@@ -230,7 +230,7 @@ class Command(BaseCommand):
                                 files = os.listdir(dir)
                                 code = item.code + '_preview'
                                 title = item.title + ' (preview)'
-                                item = get_item(collection, id)
+                                item = self.get_item(collection, id)
                                 item.title = title
                                 item.save()
                                 for file in files:
