@@ -86,6 +86,15 @@ class Command(BaseCommand):
         t[2] = t[2].split('.')[0]
         return ':'.join(t)
 
+    def get_item(self, collection, id):
+        items = MediaItem.objects.filter(collection=collection, code=id)
+            if not items:
+                item = MediaItem(collection=collection, code=id)
+                item.save()
+            else:
+                item = items[0]
+        return item
+
     def handle(self, *args, **options):
         organization_name = args[0]
         period_name = args[1]
@@ -145,6 +154,7 @@ class Command(BaseCommand):
                                             rank=seminar_rank, period=period)
                     if c:
                         seminar.title = course.title
+                        seminar.status = 1
                         seminar.save()
 
                     exist = False
@@ -169,13 +179,7 @@ class Command(BaseCommand):
 
                         id = '_'.join([period.name, '20', collection_id, ext, str(media_rank)])
 
-                        items = MediaItem.objects.filter(collection=collection, code=id)
-                        if not items:
-                            item = MediaItem(collection=collection, code=id)
-                            item.save()
-                        else:
-                            item = items[0]
-
+                        item = get_item(collection, id)
                         item.title = name
                         item.file = path
 
@@ -192,7 +196,7 @@ class Command(BaseCommand):
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
                                 related.title = 'preview'
                                 related.set_mime_type()
-                                related.save()
+                                related.save()  
                                 logger.logger.info(r_path)
                             elif extension[1:] in self.transcoded_formats:
                                 t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
@@ -204,7 +208,7 @@ class Command(BaseCommand):
                                     for marker in markers:
                                         if float(marker['time']) != 0:
                                             item.title = marker['comment']
-                                            item.save()
+                                            item.save() 
                                             break
                                 logger.logger.info(r_path)
 
@@ -226,7 +230,8 @@ class Command(BaseCommand):
                                 files = os.listdir(dir)
                                 code = item.code + '_preview'
                                 title = item.title + ' (preview)'
-                                item = MediaItem(collection=collection, code=code, title=title)
+                                item = get_item(collection, id)
+                                item.title = title
                                 item.save()
                                 for file in files:
                                     r_path = r_dir + os.sep + file
