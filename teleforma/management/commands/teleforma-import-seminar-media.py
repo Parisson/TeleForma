@@ -230,7 +230,7 @@ class Command(BaseCommand):
                                 files = os.listdir(dir)
                                 code = item.code + '_preview'
                                 title = item.title + ' (preview)'
-                                item = MediaItem(collection=collection, code=id)
+                                item = self.get_item(collection, code)
                                 item.title = title
                                 item.save()
                                 for file in files:
