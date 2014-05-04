@@ -164,7 +164,7 @@ class Command(BaseCommand):
                             break
                     
                     if not exist:
-                        print root + filename
+                        print root + os.sep + filename
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
                         if not seminar in seminars:
@@ -177,7 +177,7 @@ class Command(BaseCommand):
                         else:
                             collection = collections[0]
 
-                        id = '_'.join([period.name, '20', collection_id, ext, str(media_rank)])
+                        id = '_'.join([period.name, '30', collection_id, ext, str(media_rank)])
 
                         item = self.get_item(collection, id)
                         item.title = name
