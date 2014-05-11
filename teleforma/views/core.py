@@ -176,6 +176,7 @@ def get_periods(user):
     return periods
 
 def get_default_period(periods):
+    period = None
     for period in periods:
         defaults = period.department.all()
         if defaults:
@@ -188,8 +189,11 @@ class HomeRedirectView(View):
     def get(self, request):
         if request.user.is_authenticated():
             periods = get_periods(request.user)
-            period = get_default_period(periods)
-            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+            if periods:
+                period = get_default_period(periods)
+                return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+            else:
+                HttpResponseRedirect(reverse('telemeta-admin'))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 

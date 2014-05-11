@@ -100,6 +100,7 @@ class Organization(Model):
         db_table = app_label + '_' + 'organization'
         verbose_name = _('organization')
 
+
 class Department(Model):
 
     name            = CharField(_('name'), max_length=255)
@@ -145,6 +146,7 @@ class CourseType(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
+
 
 class Course(Model):
 
@@ -563,7 +565,6 @@ class DocumentSimple(MediaBase):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_simple'
         ordering = ['-date_added']
-
 
 
 class Media(MediaBase):
