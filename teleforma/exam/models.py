@@ -45,6 +45,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from teleforma.models import Course
 
+import crocodoc
+
+
 app = 'teleforma'
 
 class MetaCore:
@@ -53,7 +56,8 @@ class MetaCore:
 
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('pending')), (3, _('corrected')),)
-REJECT_REASON = ((0, _('unreadable')), (1, _('bad orientation')), (2, _('bad framing')), (3, _('incomplete')),)
+REJECT_REASON = ((0, _('none')), (1, _('unreadable')), 
+                (2, _('bad orientation')), (3, _('bad framing')), (4, _('incomplete')),)
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
@@ -81,23 +85,6 @@ def sha1sum_file(filename):
 def mimetype_file(path):
     return mimetypes.guess_type(path)[0]
 
-
-def set_file_properties(sender, **kwargs):
-    instance = kwargs['instance']
-    if instance.file:
-        if not instance.mime_type:
-            instance.mime_type = mimetype_file(instance.file.path)
-        if not instance.sha1:
-            instance.sha1 = sha1sum_file(instance.file.path)
-        try:
-            if not instance.image:
-                path = cache_path + os.sep + instance.uuid + '.jpg'
-                command = 'convert ' + instance.file.path + ' ' + path
-                os.system(command)
-                instance.image = path
-        except:
-            pass
-
 def check_unique_mimetype(l):
     i = 0
     for d in l:
@@ -120,7 +107,7 @@ class Corrector(models.Model):
         verbose_name_plural = _('Correctors')
 
     def __unicode__(self):
-        return ' '.join([self.user.first_name, self.user.last_name, str(self.id)])
+        return ' '.join([self.user.first_name, self.user.last_name])
 
 
 class Quota(models.Model):
@@ -158,15 +145,10 @@ class BaseResource(models.Model):
     class Meta(MetaCore):
         abstract = True
     
-    def save(self, **kwargs):
-        super(BaseResource, self).save(**kwargs)
-        if not self.uuid:
-            self.uuid = unicode(uuid.uuid4())
-
     def __unicode__(self):
         return self.uuid
-
-
+    
+    
 class Exam(BaseResource):
     """Examination"""
 
@@ -177,18 +159,19 @@ class Exam(BaseResource):
     description = models.TextField(_('description'), blank=True)    
     credits = models.TextField(_('credits'), blank=True)
     file = models.FileField(_('File'), upload_to='exams/%Y/%m/%d', blank=True)
-    note = models.IntegerField(_('Maximum note'), blank=True, null=True)
+    score = models.IntegerField(_('Maximum score'), blank=True, null=True)
     
     class Meta(MetaCore):
         verbose_name = _('Exam')
         verbose_name_plural = _('Exams')
 
+    
 class ScriptPage(BaseResource):
 
     script = models.ForeignKey('Script', related_name='pages', verbose_name=_('script'), blank=True, null=True)
     file = models.FileField(_('Page file'), upload_to='script_pages/%Y/%m/%d', blank=True)
     image = models.ImageField(_('Image file'), upload_to='script_pages/%Y/%m/%d', blank=True)
-    number = models.IntegerField(_('number'))
+    rank = models.IntegerField(_('rank'), blank=True, null=True)
 
     class Meta(MetaCore):
         verbose_name = _('Page')
@@ -203,23 +186,20 @@ class Script(BaseResource):
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
     box_session_key  = models.CharField(_('Box session key'), max_length='1024', blank=True)
     corrector = models.ForeignKey('Corrector', related_name="scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
-    note = models.FloatField(_('note'), blank=True)
+    score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
     status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, default=2, blank=True)
-    reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, blank=True)
+    reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, default=0, blank=True)
     date_corrected = models.DateTimeField(_('date corrected'), null=True, blank=True)
 
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
 
-
-    def save(self, **kwargs):
-        super(Script, self).save(**kwargs)
-        if self.status == 3:
-            self.date_corrected = self.date_modified
+    def save(self, *args, **kwargs):
         if not self.corrector:
             self.auto_set_corrector()
+        super(Script, self).save(*args, **kwargs)
 
     def auto_set_corrector(self):
         quota_list = []
@@ -229,7 +209,6 @@ class Script(BaseResource):
                 quota_list.append({'obj':quota, 'level': quota.level})
         lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
         self.corrector = lower_quota['obj'].corrector
-        self.save()
     
     def make_from_pages(self):
         command = 'convert '
@@ -257,22 +236,25 @@ class Script(BaseResource):
         self.save()
 
     def box_upload(self):
-        import crocodoc
         crocodoc.api_token = settings.BOX_API_TOKEN
         file_handle = open(self.file.path, 'r')
         self.box_uuid = crocodoc.document.upload(file=file_handle)
         file_handle.close()
-        user = {'id': self.corrector.id, 'name': self.corrector}
-        self.box_admin_session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user, 
+        user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
+        self.box_session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user, 
                                 filter='all', admin=True, downloadable=True,
                                 copyprotected=False, demo=False, sidebar='visible')
         self.status = 2
         self.save()
 
-    def get_box_admin_url(self):
+    def box_admin_url(self):
+        if not self.box_uuid:
+            self.box_upload()
         return 'https://crocodoc.com/view/' + self.box_session_key
 
-    def get_box_user_url(self, user):
+    def box_user_url(self, user):
+        if not self.box_uuid:
+            self.box_upload()
         user = {'id': user.id, 'name': user}
         session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user, 
                                 filter='all', admin=False, downloadable=True,
@@ -280,6 +262,21 @@ class Script(BaseResource):
         return 'https://crocodoc.com/view/' + session_key
 
 
-post_save.connect(set_file_properties, sender=Exam)
-post_save.connect(set_file_properties, sender=Script)
-post_save.connect(set_file_properties, sender=ScriptPage)
+
+def set_file_properties(sender, instance, **kwargs):
+    if instance.file:
+        if not instance.mime_type:
+            instance.mime_type = mimetype_file(instance.file.path)
+        if not instance.sha1:
+            instance.sha1 = sha1sum_file(instance.file.path)
+        if hasattr(instance, 'image'):
+            if not instance.image:
+                path = cache_path + os.sep + instance.uuid + '.jpg'
+                command = 'convert ' + instance.file.path + ' ' + path
+                os.system(command)
+                instance.image = path
+
+
+post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
+post_save.connect(set_file_properties, sender=Exam, dispatch_uid="exam_post_save")
+post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")

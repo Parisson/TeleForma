@@ -8,7 +8,7 @@ from django.contrib.auth.admin import UserAdmin
 
 class ScriptPageInline(admin.StackedInline):
     model = ScriptPage
-    ordering = ['number']
+    ordering = ['rank']
     extra = 10
 
 class QuotaInline(admin.StackedInline):
