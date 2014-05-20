@@ -227,3 +227,13 @@ $(window).ready(function(){
 {% endif %}
 {% endblock index %}
 
+{% if user.is_staff %}
+{% block video %}
+  {% if seminar.media_preview %}
+  <h3><img src="{{STATIC_URL}}telemeta/images/module_playlist.png" alt="preview" style="vertical-align:middle" /> {% trans "Preview" %}</h3>
+    <div class="module">
+    {% include "teleforma/inc/seminar_media_preview_video.html" %}
+    </div>
+  {% endif %}
+{% endblock %}
+{% endif %}
