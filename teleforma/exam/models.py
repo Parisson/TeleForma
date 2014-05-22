@@ -34,7 +34,7 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
-import os, uuid, time, hashlib, mimetypes, tempfile
+import os, uuid, time, hashlib, mimetypes, tempfile, datetime
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -55,7 +55,8 @@ class MetaCore:
     app_label = 'exam'
 
 
-SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('pending')), (3, _('corrected')),)
+SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')), 
+                (3, _('uploaded')),(4, _('corrected')) )
 REJECT_REASON = ((0, _('none')), (1, _('unreadable')), 
                 (2, _('bad orientation')), (3, _('bad framing')), (4, _('incomplete')),)
 
@@ -115,10 +116,13 @@ class Quota(models.Model):
     course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'), blank=True, null=True)
     corrector = models.ForeignKey('Corrector', related_name="quotas", verbose_name=_('corrector'), blank=True, null=True)
     value = models.IntegerField(_('value'))
+    date_start = models.DateField(_('date start'))
+    date_end = models.DateField(_('date end'))
 
     class Meta(MetaCore):
         verbose_name = _('Quota')
         verbose_name_plural = _('Quotas')
+        ordering = ['start']
 
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.value)])
@@ -188,27 +192,31 @@ class Script(BaseResource):
     corrector = models.ForeignKey('Corrector', related_name="scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
     score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
-    status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, default=2, blank=True)
+    status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, default=1, blank=True)
     reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, default=0, blank=True)
     date_corrected = models.DateTimeField(_('date corrected'), null=True, blank=True)
+    date_submitted = models.DateTimeField(_('date submitted'), null=True, blank=True)
 
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
 
     def save(self, *args, **kwargs):
-        if not self.corrector:
-            self.auto_set_corrector()
         super(Script, self).save(*args, **kwargs)
 
     def auto_set_corrector(self):
         quota_list = []
-        quotas = self.exam.course.quotas.all()
-        for quota in quotas:
-            if quota.value: 
-                quota_list.append({'obj':quota, 'level': quota.level})
-        lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
-        self.corrector = lower_quota['obj'].corrector
+        quotas = self.exam.course.quotas.filter(date_start__gte=date_submitted, date_end__lte=date_submitted)
+        if quotas:
+            for quota in quotas:
+                if quota.value:
+                    quota_list.append({'obj':quota, 'level': quota.level})
+            lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
+            self.corrector = lower_quota['obj'].corrector
+            
+        else:
+            self.corrector = User.objects.get(username=settings.TELEFORMA_DEFAULT_CORRECTOR)
+        self.save()
     
     def make_from_pages(self):
         command = 'convert '
@@ -235,6 +243,12 @@ class Script(BaseResource):
         self.file = output          
         self.save()
 
+    def submit(self):
+        self.date_submitted = datetime.datetime.now()
+        self.box_upload()
+        self.status = 2
+        self.save()
+
     def box_upload(self):
         crocodoc.api_token = settings.BOX_API_TOKEN
         file_handle = open(self.file.path, 'r')
@@ -244,7 +258,7 @@ class Script(BaseResource):
         self.box_session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user, 
                                 filter='all', admin=True, downloadable=True,
                                 copyprotected=False, demo=False, sidebar='visible')
-        self.status = 2
+        self.status = 3
         self.save()
 
     def box_admin_url(self):
@@ -261,6 +275,9 @@ class Script(BaseResource):
                                 copyprotected=False, demo=False, sidebar='visible')
         return 'https://crocodoc.com/view/' + session_key
 
+    def corrected(self):
+        self.status = 3
+        self.save()
 
 
 def set_file_properties(sender, instance, **kwargs):
