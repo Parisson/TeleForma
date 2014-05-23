@@ -500,6 +500,7 @@ class Document(MediaBase):
                                  blank=True, null=True)
     iej             = ForeignKey('IEJ', related_name='document', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
+    session         = IntegerField(_('Session'), blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
     annal_year      = IntegerField(_('year'), blank=True, null=True)
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)

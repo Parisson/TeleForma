@@ -46,7 +46,7 @@ from django.utils.translation import ugettext_lazy as _
 from teleforma.models import Course
 
 import crocodoc
-
+crocodoc.api_token = settings.BOX_API_TOKEN
 
 app = 'teleforma'
 
@@ -122,7 +122,7 @@ class Quota(models.Model):
     class Meta(MetaCore):
         verbose_name = _('Quota')
         verbose_name_plural = _('Quotas')
-        ordering = ['start']
+        ordering = ['date_start']
 
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.value)])
@@ -142,15 +142,20 @@ class BaseResource(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
-    uuid = models.CharField(_('UUID'), unique=True, blank=True, max_length=512)
+    uuid = models.CharField(_('UUID'), blank=True, max_length=512)
     mime_type = models.CharField(_('MIME type'), max_length=128, blank=True)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
 
     class Meta(MetaCore):
         abstract = True
     
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = uuid.uuid4()
+        super(BaseResource, self).save(*args, **kwargs)
+
     def __unicode__(self):
-        return self.uuid
+        return unicode(self.uuid)
     
     
 class Exam(BaseResource):
@@ -193,7 +198,7 @@ class Script(BaseResource):
     score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
     status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, default=1, blank=True)
-    reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, default=0, blank=True)
+    reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, null=True, blank=True)
     date_corrected = models.DateTimeField(_('date corrected'), null=True, blank=True)
     date_submitted = models.DateTimeField(_('date submitted'), null=True, blank=True)
 
@@ -202,6 +207,10 @@ class Script(BaseResource):
         verbose_name_plural = _('Scripts')
 
     def save(self, *args, **kwargs):
+        if self.score:
+            self.date_corrected = datetime.datetime.now()
+            self.status = 4
+
         super(Script, self).save(*args, **kwargs)
 
     def auto_set_corrector(self):
@@ -249,11 +258,8 @@ class Script(BaseResource):
         self.status = 2
         self.save()
 
-    def box_upload(self):
-        crocodoc.api_token = settings.BOX_API_TOKEN
-        file_handle = open(self.file.path, 'r')
-        self.box_uuid = crocodoc.document.upload(file=file_handle)
-        file_handle.close()
+    def box_upload(self):        
+        self.box_uuid = crocodoc.document.upload(file=self.file)
         user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
         self.box_session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user, 
                                 filter='all', admin=True, downloadable=True,
@@ -274,11 +280,7 @@ class Script(BaseResource):
                                 filter='all', admin=False, downloadable=True,
                                 copyprotected=False, demo=False, sidebar='visible')
         return 'https://crocodoc.com/view/' + session_key
-
-    def corrected(self):
-        self.status = 3
-        self.save()
-
+        
 
 def set_file_properties(sender, instance, **kwargs):
     if instance.file:
