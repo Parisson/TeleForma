@@ -144,7 +144,6 @@ class Command(BaseCommand):
 
                     dir = os.sep.join(root_list[-6:])
                     path = dir + os.sep + filename
-                    print path
 
                     seminar_title = '_'.join([course_code, str(seminar_rank)])
                     collection_id = '_'.join([department_name, seminar_title])
@@ -159,7 +158,7 @@ class Command(BaseCommand):
                         seminar.save()
 
                     if not seminar.media_preview:
-                        print root + os.sep + filename
+                        print unicode(seminar)
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
                         if not seminar in seminars:
@@ -206,6 +205,7 @@ class Command(BaseCommand):
                                 media.save()
                                 seminar.media_preview = media
                                 seminar.save()
+                                print media.file.path
 
         for s in seminars:
             print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
