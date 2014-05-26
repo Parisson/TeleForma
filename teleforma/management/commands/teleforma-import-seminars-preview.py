@@ -205,7 +205,7 @@ class Command(BaseCommand):
                                 media.save()
                                 seminar.media_preview = media
                                 seminar.save()
-                                print media.file.path
+                                print item.file.path
 
         for s in seminars:
             print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
