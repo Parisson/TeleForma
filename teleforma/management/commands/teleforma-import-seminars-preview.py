@@ -157,13 +157,7 @@ class Command(BaseCommand):
                         seminar.status = 1
                         seminar.save()
 
-                    exist = False
-                    for media in seminar.media_preview.all():
-                        if media.item.file == path:
-                            exist = True
-                            break
-
-                    if not exist:
+                    if not seminar.media_preview:
                         print root + os.sep + filename
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
