@@ -200,7 +200,7 @@ class Command(BaseCommand):
                                         t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
                                         logger.logger.info(r_path)
 
-                                media = Media.objects.get_or_create(item=item, course=course, type=ext)
+                                media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
                                 media.set_mime_type()
                                 media.is_published = True
                                 media.save()
