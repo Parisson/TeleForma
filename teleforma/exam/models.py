@@ -45,8 +45,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from teleforma.models import Course
 
-import crocodoc
-crocodoc.api_token = settings.BOX_API_TOKEN
 
 app = 'teleforma'
 
@@ -193,7 +191,6 @@ class Script(BaseResource):
     exam = models.ForeignKey('Exam', related_name="scripts", verbose_name=_('exam'), blank=True, null=True, on_delete=models.SET_NULL)
     file = models.FileField(_('PDF file'), upload_to='exams/%Y/%m/%d', blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
-    box_session_key  = models.CharField(_('Box session key'), max_length='1024', blank=True)
     corrector = models.ForeignKey('Corrector', related_name="scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
     score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
@@ -258,23 +255,22 @@ class Script(BaseResource):
         self.status = 2
         self.save()
 
-    def box_upload(self):        
-        self.box_uuid = crocodoc.document.upload(file=self.file)
-        user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
-        self.box_session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user, 
-                                filter='all', admin=True, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='visible')
+    def box_upload(self):
+        import crocodoc
+        crocodoc.api_token = settings.BOX_API_TOKEN
+        url='http://files.parisson.com/pre-barreau/LATRILLE%20Adeline%20-%20Procedure%20civile%201.pdf'
+        self.box_uuid = crocodoc.document.upload(url=url)
         self.status = 3
         self.save()
 
     def box_admin_url(self):
-        if not self.box_uuid:
-            self.box_upload()
-        return 'https://crocodoc.com/view/' + self.box_session_key
+        user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
+        session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user, 
+                                filter='all', admin=True, downloadable=True,
+                                copyprotected=False, demo=False, sidebar='visible')
+        return 'https://crocodoc.com/view/' + session_key
 
     def box_user_url(self, user):
-        if not self.box_uuid:
-            self.box_upload()
         user = {'id': user.id, 'name': user}
         session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user, 
                                 filter='all', admin=False, downloadable=True,
@@ -295,6 +291,18 @@ def set_file_properties(sender, instance, **kwargs):
                 os.system(command)
                 instance.image = path
 
+def set_file_properties(sender, instance, **kwargs):
+    if instance.file:
+        if not instance.mime_type:
+            instance.mime_type = mimetype_file(instance.file.path)
+        if not instance.sha1:
+            instance.sha1 = sha1sum_file(instance.file.path)
+        if hasattr(instance, 'image'):
+            if not instance.image:
+                path = cache_path + os.sep + instance.uuid + '.jpg'
+                command = 'convert ' + instance.file.path + ' ' + path
+                os.system(command)
+                instance.image = path
 
 post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
 post_save.connect(set_file_properties, sender=Exam, dispatch_uid="exam_post_save")
