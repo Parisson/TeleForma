@@ -144,6 +144,7 @@ class Command(BaseCommand):
 
                     dir = os.sep.join(root_list[-6:])
                     path = dir + os.sep + filename
+                    print path
 
                     seminar_title = '_'.join([course_code, str(seminar_rank)])
                     collection_id = '_'.join([department_name, seminar_title])
