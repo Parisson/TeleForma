@@ -241,7 +241,7 @@ class CourseListView(ListView):
             else:
                 course = course[0]
             course.from_dict(course_dict)
-            
+
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)
@@ -496,7 +496,7 @@ class ConferenceRecordView(FormView):
         context['mime_type'] = 'video/webm'
         status = Status()
         status.update()
-        
+
         request_host = get_host(self.request)
         local_host = status.ip
         if request_host.split('.')[0] == local_host.split('.')[0]:
@@ -630,5 +630,38 @@ class HelpView(TemplateView):
 
     def dispatch(self, *args, **kwargs):
         return super(HelpView, self).dispatch(*args, **kwargs)
+
+
+
+class ProfessorListView(View):
+
+    @jsonrpc_method('teleforma.get_professor_list')
+    def get_professor_list(request):
+        professors = Professor.objects.all()
+        return [p.to_json_dict() for p in professors]
+
+    def pull(request, host=None):
+
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+
+        remote_list = s.teleforma.get_professor_list()
+        for professor_dict in remote_list['result']:
+            user, c = User.objects.get_or_create(username=professor_dict['username'])
+            user.first_name = professor_dict['first_name']
+            user.last_name = professor_dict['last_name']
+            user.email = professor_dict['email']
+            user.save()
+
+            professor, c = Professor.objects.get_or_create(user=user)
+            for course_code in professor_dict['courses']:
+                course = Course.objects.filter(code=course_code)
+                if course:
+                    if not course[0] in professor.courses.all():
+                        professor.courses.add(course[0])
+            professor.save()
 
 
