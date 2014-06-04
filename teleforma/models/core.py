@@ -94,7 +94,7 @@ class MetaCore:
 
 
 class ClonableMixin(object):
-    
+
     def clone(self):
         """Return an identical copy of the instance with a new ID."""
         if not self.pk:
@@ -255,6 +255,15 @@ class Professor(Model):
             return self.user.last_name + ' ' + self.user.first_name
         else:
             return self.user.username
+
+    def to_json_dict(self):
+        data = {'username': self.user.username,
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name,
+                'email' : self.user.email,
+                'courses': [course.code for course in self.courses.all()],
+                 }
+        return data
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
