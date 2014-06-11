@@ -116,4 +116,6 @@ urlpatterns = patterns('',
     # JQCHAT
     url(r'^', include('jqchat.urls')),
 
+    # EXAM
+    url(r'^', include('teleforma.exam.urls')),
 )

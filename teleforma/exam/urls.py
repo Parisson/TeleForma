@@ -36,14 +36,14 @@ import os.path
 from django.conf.urls.defaults import *
 from django.views.generic import *
 from django.views.generic.base import *
-from teleforma.models import *
-from teleforma.views import *
-from telemeta.views import *
+from teleforma.exam.models import *
+from teleforma.exam.views import *
 from jsonrpc import jsonrpc_site
+
 
 urlpatterns = patterns('',
 
-    url(r'^desk/exam/script/(?P<pk>.*)/detail/$', ScriptView.as_view(),
+    url(r'^desk/periods/(?P<period_id>.*)/exam/script/(?P<pk>.*)/detail/$', ScriptView.as_view(),
         name="teleforma-exam-script-detail"),
 
 )

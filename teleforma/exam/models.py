@@ -43,7 +43,7 @@ from django.db.models.signals import post_save
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from teleforma.models import Course
+from teleforma.models import *
 
 
 app = 'teleforma'
@@ -52,9 +52,11 @@ class MetaCore:
 
     app_label = 'exam'
 
+import crocodoc
+crocodoc.api_token = settings.BOX_API_TOKEN
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
-                (3, _('uploaded')),(4, _('corrected')) )
+                (3, _('pending')),(4, _('corrected')) )
 REJECT_REASON = ((0, _('none')), (1, _('unreadable')),
                 (2, _('bad orientation')), (3, _('bad framing')), (4, _('incomplete')),)
 
@@ -168,11 +170,27 @@ class ScriptPage(BaseResource):
         verbose_name_plural = _('Pages')
 
 
+class ScriptType(models.Model):
+
+    name  = models.CharField(_('name'), max_length='512', blank=True)
+
+    class Meta:
+        verbose_name = _('ScriptType')
+        verbose_name_plural = _('ScriptTypes')
+
+    def __unicode__(self):
+        return self.name
+
+
 class Script(BaseResource):
 
-    course = models.ForeignKey(Course, related_name="scripts", verbose_name=_('courses'), blank=True, null=True, on_delete=models.SET_NULL)
-    session = models.IntegerField(_('Session'), blank=True, null=True)
-    author = models.ForeignKey(User, related_name="scripts", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
+    course = models.ForeignKey(Course, related_name="scripts", verbose_name=_('course'), null=True, on_delete=models.SET_NULL)
+    period = models.ForeignKey(Period, related_name='scripts', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
+    session = models.CharField(_('session'), choices=session_choices,
+                                      max_length=16, default="1")
+    type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, related_name="scripts", verbose_name=_('author'), null=True, on_delete=models.SET_NULL)
     file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
     corrector = models.ForeignKey('Corrector', related_name="scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -182,30 +200,25 @@ class Script(BaseResource):
     reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, null=True, blank=True)
     date_corrected = models.DateTimeField(_('date corrected'), null=True, blank=True)
     date_submitted = models.DateTimeField(_('date submitted'), null=True, blank=True)
+    url  = models.CharField(_('URL'), max_length='2048', blank=True)
 
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
 
-    def save(self, *args, **kwargs):
-        if self.score:
-            self.date_corrected = datetime.datetime.now()
-            self.status = 4
-
-        super(Script, self).save(*args, **kwargs)
-
     def auto_set_corrector(self):
         quota_list = []
-        quotas = self.course.quotas.filter(date_start__gte=date_submitted, date_end__lte=date_submitted)
+        quotas = self.course.quotas.filter(date_start__gte=self.date_submitted,
+                                            date_end__lte=self.date_submitted)
         if quotas:
             for quota in quotas:
                 if quota.value:
                     quota_list.append({'obj':quota, 'level': quota.level})
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
-
         else:
-            self.corrector = User.objects.get(username=settings.TELEFORMA_DEFAULT_CORRECTOR)
+            user = User.objects.filter(is_superuser=True)[0]
+            self.corrector = Corrector.objects.get(user=user)
         self.save()
 
     def make_from_pages(self):
@@ -233,34 +246,38 @@ class Script(BaseResource):
         self.file = output
         self.save()
 
+    def save(self, *args, **kwargs):
+        if self.score:
+            self.date_corrected = datetime.datetime.now()
+            self.status = 4
+        if self.status == 2:
+            self.submit()
+
+        super(Script, self).save(*args, **kwargs)
+
     def submit(self):
         self.date_submitted = datetime.datetime.now()
-        self.box_upload()
-        self.status = 2
-        self.save()
-
-    def box_upload(self):
-        import crocodoc
-        crocodoc.api_token = settings.BOX_API_TOKEN
-        url='http://files.parisson.com/pre-barreau/LATRILLE%20Adeline%20-%20Procedure%20civile%201.pdf'
-        self.box_uuid = crocodoc.document.upload(url=url)
+        # self.url = settings.MEDIA_URL + unicode(self.file)
+        self.url='http://files.parisson.com/pre-barreau/Bordereau_de_livraison.pdf'
+        self.box_uuid = crocodoc.document.upload(url=self.url)
+        if not self.corrector:
+            self.auto_set_corrector()
         self.status = 3
-        self.save()
 
     @property
     def box_admin_url(self):
         user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
         session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user,
                                 filter='all', admin=True, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='visible')
+                                copyprotected=False, demo=False, sidebar='invisible')
         return 'https://crocodoc.com/view/' + session_key
 
     @property
     def box_user_url(self, user):
-        user = {'id': user.id, 'name': user}
+        user = {'id': user.id, 'name': unicode(user)}
         session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
                                 filter='all', admin=False, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='visible')
+                                copyprotected=False, demo=False, sidebar='invisible')
         return 'https://crocodoc.com/view/' + session_key
 
 

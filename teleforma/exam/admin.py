@@ -28,5 +28,6 @@ class ScriptAdmin(admin.ModelAdmin):
 admin.site.register(Corrector, CorrectorAdmin)
 admin.site.register(Script, ScriptAdmin)
 admin.site.register(ScriptPage)
+admin.site.register(ScriptType)
 admin.site.register(Quota)
-admin.site.register(Exam)
+

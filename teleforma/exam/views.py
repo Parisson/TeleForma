@@ -12,8 +12,10 @@ class ScriptView(CourseAccessMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(ScriptView, self).get_context_data(**kwargs)
         script = self.get_object()
+        context['script'] = script
+        context['course'] = script.course
 
-        access = get_access(media, context['all_courses'])
+        access = get_access(script, context['all_courses'])
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
