@@ -201,3 +201,4 @@ class Command(BaseCommand):
                             seminar.media_preview = media
                             seminar.save()
 
+        print 'Done!'
