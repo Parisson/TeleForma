@@ -13,6 +13,6 @@
 <dt>{% trans "expiry date" %}</dt><dd>{{ seminar.expiry_date }}</dd>
 {% if user.is_superuser %}
 <dt>{% trans "code" %}</dt><dd>{{ seminar.code }}</dd>
-<dt>{% trans "preview" %}</dt><dd>{% url teleforma-media-video seminar.id seminar.media_preview.id %}</dd>
+<dt>{% trans "preview" %}</dt><dd><a href="{% url teleforma-media-video seminar.id seminar.media_preview.id %}">{% trans "play" %}</a></dd>
 {% endif %}
 </dl>
