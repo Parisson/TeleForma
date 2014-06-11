@@ -157,9 +157,6 @@ class Command(BaseCommand):
                         seminar.status = 1
                         seminar.save()
 
-                    print unicode(seminar)
-                    logger.logger.info(seminar.public_url())
-                    logger.logger.info(path)
                     if not seminar in seminars:
                         seminars.append(seminar)
 
@@ -176,6 +173,8 @@ class Command(BaseCommand):
                     if preview_trigger:
                         dir = os.path.abspath(root + '/../preview/' +  str(seminar_rank))
                         if os.path.exists(dir):
+                            logger.logger.info(seminar.public_url())
+                            logger.logger.info(path)
                             r_dir = os.sep.join(dir.split(os.sep)[-7:])
                             files = os.listdir(dir)
                             code = code + '_preview'
@@ -201,5 +200,4 @@ class Command(BaseCommand):
                             media.save()
                             seminar.media_preview = media
                             seminar.save()
-                            print item.file.path
 
