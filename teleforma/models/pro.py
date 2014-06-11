@@ -61,6 +61,7 @@ class Seminar(ClonableMixin, Displayable):
     # title, description, keywords, dates and status are given by Displayable
     # status values : 1: draft, 2: published
 
+    private         = models.BooleanField(_('private'), default=False)
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
@@ -103,7 +104,6 @@ class Seminar(ClonableMixin, Displayable):
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
     period          = ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    private         = models.BooleanField(_('private'), default=False)
 
     objects = DisplayableManager()
 
