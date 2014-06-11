@@ -53,9 +53,9 @@ class MetaCore:
     app_label = 'exam'
 
 
-SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')), 
+SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
                 (3, _('uploaded')),(4, _('corrected')) )
-REJECT_REASON = ((0, _('none')), (1, _('unreadable')), 
+REJECT_REASON = ((0, _('none')), (1, _('unreadable')),
                 (2, _('bad orientation')), (3, _('bad framing')), (4, _('incomplete')),)
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
@@ -99,7 +99,7 @@ def check_unique_mimetype(l):
 
 class Corrector(models.Model):
 
-    user = models.ForeignKey(User, related_name="correctors", verbose_name=_('user'), blank=True, null=True)
+    user = models.ForeignKey(User, related_name="correctors", verbose_name=_('user'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
         verbose_name = _('Corrector')
@@ -124,7 +124,7 @@ class Quota(models.Model):
 
     def __unicode__(self):
         return ' - '.join([self.course.title, str(self.value)])
-    
+
     @property
     def level(self):
         if self.value:
@@ -146,7 +146,7 @@ class BaseResource(models.Model):
 
     class Meta(MetaCore):
         abstract = True
-    
+
     def save(self, *args, **kwargs):
         if not self.uuid:
             self.uuid = uuid.uuid4()
@@ -154,25 +154,8 @@ class BaseResource(models.Model):
 
     def __unicode__(self):
         return unicode(self.uuid)
-    
-    
-class Exam(BaseResource):
-    """Examination"""
 
-    course = models.ForeignKey(Course, related_name="exams", verbose_name=_('courses'), blank=True, null=True, on_delete=models.SET_NULL)
-    session = models.IntegerField(_('Session'), blank=True, null=True)
-    author = models.ForeignKey(User, related_name="exams", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
-    title = models.CharField(_('title'), max_length=255, blank=True)
-    description = models.TextField(_('description'), blank=True)    
-    credits = models.TextField(_('credits'), blank=True)
-    file = models.FileField(_('File'), upload_to='exams/%Y/%m/%d', blank=True)
-    score = models.IntegerField(_('Maximum score'), blank=True, null=True)
-    
-    class Meta(MetaCore):
-        verbose_name = _('Exam')
-        verbose_name_plural = _('Exams')
 
-    
 class ScriptPage(BaseResource):
 
     script = models.ForeignKey('Script', related_name='pages', verbose_name=_('script'), blank=True, null=True)
@@ -187,9 +170,10 @@ class ScriptPage(BaseResource):
 
 class Script(BaseResource):
 
+    course = models.ForeignKey(Course, related_name="scripts", verbose_name=_('courses'), blank=True, null=True, on_delete=models.SET_NULL)
+    session = models.IntegerField(_('Session'), blank=True, null=True)
     author = models.ForeignKey(User, related_name="scripts", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
-    exam = models.ForeignKey('Exam', related_name="scripts", verbose_name=_('exam'), blank=True, null=True, on_delete=models.SET_NULL)
-    file = models.FileField(_('PDF file'), upload_to='exams/%Y/%m/%d', blank=True)
+    file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
     corrector = models.ForeignKey('Corrector', related_name="scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
     score = models.FloatField(_('score'), blank=True, null=True)
@@ -212,18 +196,18 @@ class Script(BaseResource):
 
     def auto_set_corrector(self):
         quota_list = []
-        quotas = self.exam.course.quotas.filter(date_start__gte=date_submitted, date_end__lte=date_submitted)
+        quotas = self.course.quotas.filter(date_start__gte=date_submitted, date_end__lte=date_submitted)
         if quotas:
             for quota in quotas:
                 if quota.value:
                     quota_list.append({'obj':quota, 'level': quota.level})
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
-            
+
         else:
             self.corrector = User.objects.get(username=settings.TELEFORMA_DEFAULT_CORRECTOR)
         self.save()
-    
+
     def make_from_pages(self):
         command = 'convert '
         all_pages = self.pages.all()
@@ -233,9 +217,9 @@ class Script(BaseResource):
 
         for page in all_pages:
             pages.append({'obj': page, 'number': page.number})
-        
+
         pages = sorted(pages, key=lambda k: k['number'])
-        
+
         for dict in pages:
             page = pages[dict]
             path = cache_path + os.sep + page.uuid + '.pdf'
@@ -246,7 +230,7 @@ class Script(BaseResource):
         output = script_path + os.sep + self.uuid + '.pdf'
         command = 'stapler ' + paths + ' ' + output
         os.system(command)
-        self.file = output          
+        self.file = output
         self.save()
 
     def submit(self):
@@ -263,20 +247,22 @@ class Script(BaseResource):
         self.status = 3
         self.save()
 
+    @property
     def box_admin_url(self):
         user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
-        session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user, 
+        session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user,
                                 filter='all', admin=True, downloadable=True,
                                 copyprotected=False, demo=False, sidebar='visible')
         return 'https://crocodoc.com/view/' + session_key
 
+    @property
     def box_user_url(self, user):
         user = {'id': user.id, 'name': user}
-        session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user, 
+        session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
                                 filter='all', admin=False, downloadable=True,
                                 copyprotected=False, demo=False, sidebar='visible')
         return 'https://crocodoc.com/view/' + session_key
-        
+
 
 def set_file_properties(sender, instance, **kwargs):
     if instance.file:
@@ -305,5 +291,4 @@ def set_file_properties(sender, instance, **kwargs):
                 instance.image = path
 
 post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
-post_save.connect(set_file_properties, sender=Exam, dispatch_uid="exam_post_save")
 post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")

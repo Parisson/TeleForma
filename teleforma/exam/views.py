@@ -4,7 +4,7 @@ from teleforma.exam.models import *
 from teleforma.views.core import *
 
 
-class ScriptView(DetailView):
+class ScriptView(CourseAccessMixin, DetailView):
 
     model = Script
     template_name='exam/script_detail.html'
@@ -12,9 +12,15 @@ class ScriptView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ScriptView, self).get_context_data(**kwargs)
         script = self.get_object()
+
+        access = get_access(media, context['all_courses'])
+        if not access:
+            context['access_error'] = access_error
+            context['message'] = contact_message
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(ConferenceView, self).dispatch(*args, **kwargs)
+        return super(ScriptView, self).dispatch(*args, **kwargs)
+
 

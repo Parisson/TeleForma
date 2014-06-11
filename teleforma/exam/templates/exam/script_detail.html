@@ -1,0 +1,160 @@
+{% extends "teleforma/course_detail.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block extra_javascript %}
+
+{% if "video" in media.mime_type %}
+<script src="{{STATIC_URL}}teleforma/video-js/video.js"></script>
+<link href="{{STATIC_URL}}teleforma/video-js/video-js.css" rel="stylesheet">
+{% endif %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    $('#my_video_1').bind('contextmenu',function() { return false; });
+    });
+</script>
+
+{% if user.is_staff %}
+<script type="text/javascript">
+    var mediaUtils = {
+        publish : function(id){
+            var p = jQuery('#publish');
+            json([id],'teleforma.publish_media',function(){
+                p.removeClass('icon_delete').addClass('icon_ok')
+                p.html('{% trans " published" %}')
+                });
+         },
+        unpublish : function(id){
+            var p = jQuery('#publish');
+            json([id],'teleforma.unpublish_media',function(){
+                p.removeClass('icon_ok').addClass('icon_delete')
+                p.html('{% trans " rejected" %}')
+                });
+         }
+        }
+
+    jQuery(window).ready(function(){
+        var p = jQuery('#publish');
+        var f = mediaUtils;
+        p.unbind('click').click(function() {
+            if (p.hasClass('icon_ok')){
+                f.unpublish('{{media.id}}');
+                return false;
+                }
+            if (p.hasClass('icon_delete')) {
+                f.publish('{{media.id}}');
+                return false;
+                }
+            }
+            );
+        });
+</script>
+{% endif %}
+
+{% endblock extra_javascript %}
+
+{% block module-action %}
+{% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
+ {% if not "video" in media.mime_type or perms.telemeta.can_play_all_items %}
+  <div class="module_action">
+   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+  </div>
+ {% endif %}
+{% endif %}
+{% endblock module-action %}
+
+{% block course %}
+<div class="course_media">
+
+<div class="course_title">
+    <div style="float: right; font-size: 0.9em;">
+        {% if "video" in media.mime_type %}
+        <a href="{% url teleforma-media-detail period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        {% endif %}
+        {% if "audio" in media.mime_type %}
+        <a href="{% url teleforma-media-detail period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        {% endif %}
+        {% if user.is_staff %}
+        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
+        {% endif %}
+    </div>
+
+    <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
+
+</div>
+
+{% if access_error %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+
+{% else %}
+<div class="media">
+
+{% if "video" in media.mime_type %}
+<div class="video">
+<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}' {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}{% thumbnail related.file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}{% endfor %}{% endif %}>
+<source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+</video>
+</div>
+
+{% elif "audio" in media.mime_type %}
+
+<div style="margin-top:1em;">
+{% if media.item.related.all %}
+ {% for related in media.item.related.all %}
+  {% if related.title == "preview" %}
+   {% thumbnail related.file "300" as im %}
+    <img src="{{ im.url }}" width="300px" alt="preview" />
+   {% endthumbnail %}
+  {% endif %}
+ {% endfor %}
+{% else %}
+ snapshot
+{% endif %}
+</div>
+<div class="audio">
+<audio controls preload="auto">
+<source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+</audio>
+</div>
+{% endif %}
+
+</div>
+{% endif %}
+
+{% block general_info %}
+<div class="course_content" id="media_infos">
+<dl class="listing">
+
+{% if media.conference %}
+<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
+<dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
+{% if media.conference.professor %}
+<dt>{% trans "Professor" %}</dt>
+    <dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+{% endif %}
+{% if media.conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>{% endif %}
+<dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+<dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
+{% if media.conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>{% endif %}
+{% if user.is_staff or user.is_superuser %}
+<dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
+<dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
+<dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
+<dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
+<dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
+{% endif %}
+{% endif %}
+
+</dl>
+</div>
+
+{% endblock general_info %}
+
+</div>
+{% endblock course %}
+
