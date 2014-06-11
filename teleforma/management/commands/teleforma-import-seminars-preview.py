@@ -171,9 +171,7 @@ class Command(BaseCommand):
                         else:
                             collection = collections[0]
 
-                        id = '_'.join([period.name, '20', collection_id, ext, str(media_rank)])
-
-                        item = self.get_item(collection, id)
+                        code = '_'.join([str(seminar.id), str(media_rank)])
 
                         # import previews
                         if preview_trigger:
@@ -181,10 +179,9 @@ class Command(BaseCommand):
                             if os.path.exists(dir):
                                 r_dir = os.sep.join(dir.split(os.sep)[-7:])
                                 files = os.listdir(dir)
-                                code = item.code + '_preview'
-                                title = item.title + ' (preview)'
+                                code = code + '_preview'
                                 item = self.get_item(collection, code)
-                                item.title = title
+                                item.title = 'preview'
                                 item.save()
                                 for file in files:
                                     r_path = r_dir + os.sep + file
@@ -207,5 +204,3 @@ class Command(BaseCommand):
                                 seminar.save()
                                 print item.file.path
 
-        for s in seminars:
-            print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
