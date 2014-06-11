@@ -179,7 +179,7 @@ class AnswerView(SeminarAccessMixin, FormView):
 
     def get_initial(self):
         initial = super(AnswerView, self).get_initial()
-        
+
         if not self.request.user.is_authenticated:
             return initial
 
@@ -230,6 +230,7 @@ class AnswerView(SeminarAccessMixin, FormView):
     def dispatch(self, *args, **kwargs):
         return super(AnswerView, self).dispatch(*args, **kwargs)
 
+
 class SeminarMediaView(SeminarAccessMixin, MediaView):
 
     template_name = 'teleforma/seminar_media_video.html'
@@ -276,16 +277,6 @@ class SeminarDocumentDownloadView(SeminarAccessMixin, DocumentDownloadView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SeminarDocumentDownloadView, self).dispatch(*args, **kwargs)
-
-
-class SeminarMediaPreviewView(DetailView):
-
-    context_object_name = "seminar"
-    model = Seminar
-    template_name = 'teleforma/inc/seminar_media_preview_video.html'
-
-    def dispatch(self, *args, **kwargs):
-        return super(SeminarMediaPreviewView, self).dispatch(*args, **kwargs)
 
 
 class AnswersView(ListView):
