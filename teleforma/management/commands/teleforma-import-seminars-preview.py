@@ -157,50 +157,49 @@ class Command(BaseCommand):
                         seminar.status = 1
                         seminar.save()
 
-                    if not seminar.media_preview:
-                        print unicode(seminar)
-                        logger.logger.info(seminar.public_url())
-                        logger.logger.info(path)
-                        if not seminar in seminars:
-                            seminars.append(seminar)
+                    print unicode(seminar)
+                    logger.logger.info(seminar.public_url())
+                    logger.logger.info(path)
+                    if not seminar in seminars:
+                        seminars.append(seminar)
 
-                        collections = MediaCollection.objects.filter(code=collection_id)
-                        if not collections:
-                            collection = MediaCollection(code=collection_id,title=collection_id)
-                            collection.save()
-                        else:
-                            collection = collections[0]
+                    collections = MediaCollection.objects.filter(code=collection_id)
+                    if not collections:
+                        collection = MediaCollection(code=collection_id,title=collection_id)
+                        collection.save()
+                    else:
+                        collection = collections[0]
 
-                        code = '_'.join([str(seminar.id), str(media_rank)])
+                    code = '_'.join([str(seminar.id), str(media_rank)])
 
-                        # import previews
-                        if preview_trigger:
-                            dir = os.path.abspath(root + '/../preview/' +  str(seminar_rank))
-                            if os.path.exists(dir):
-                                r_dir = os.sep.join(dir.split(os.sep)[-7:])
-                                files = os.listdir(dir)
-                                code = code + '_preview'
-                                item = self.get_item(collection, code)
-                                item.title = 'preview'
-                                item.save()
-                                for file in files:
-                                    r_path = r_dir + os.sep + file
-                                    filename, extension = os.path.splitext(file)
-                                    if extension[1:] in self.original_format and not '.' == filename[0]:
-                                        item.file = r_path
-                                        if os.path.getsize(dir+os.sep+file):
-                                            item.approx_duration = self.get_duration(dir+os.sep+file)
-                                        item.save()
-                                        logger.logger.info(r_path)
-                                    elif extension[1:] in self.transcoded_formats:
-                                        t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
-                                        logger.logger.info(r_path)
+                    # import previews
+                    if preview_trigger:
+                        dir = os.path.abspath(root + '/../preview/' +  str(seminar_rank))
+                        if os.path.exists(dir):
+                            r_dir = os.sep.join(dir.split(os.sep)[-7:])
+                            files = os.listdir(dir)
+                            code = code + '_preview'
+                            item = self.get_item(collection, code)
+                            item.title = 'preview'
+                            item.save()
+                            for file in files:
+                                r_path = r_dir + os.sep + file
+                                filename, extension = os.path.splitext(file)
+                                if extension[1:] in self.original_format and not '.' == filename[0]:
+                                    item.file = r_path
+                                    if os.path.getsize(dir+os.sep+file):
+                                        item.approx_duration = self.get_duration(dir+os.sep+file)
+                                    item.save()
+                                    logger.logger.info(r_path)
+                                elif extension[1:] in self.transcoded_formats:
+                                    t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
+                                    logger.logger.info(r_path)
 
-                                media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
-                                media.set_mime_type()
-                                media.is_published = True
-                                media.save()
-                                seminar.media_preview = media
-                                seminar.save()
-                                print item.file.path
+                            media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
+                            media.set_mime_type()
+                            media.is_published = True
+                            media.save()
+                            seminar.media_preview = media
+                            seminar.save()
+                            print item.file.path
 
