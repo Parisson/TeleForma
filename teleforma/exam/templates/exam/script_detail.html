@@ -58,12 +58,6 @@
 
     });
 
-    function SetValues()
-    {
-        var s = 'X=' + window.event.clientX +  ' Y=' + window.event.clientY ;
-        document.getElementById('divCoord').innerText = s;
-
-    }
     </script>
 {% endblock extra_javascript %}
 
@@ -84,8 +78,12 @@
         {% elif script.status == 0 %}
         <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
         {% else %}
-        <a id="opener_mark" href="#" class="component_icon button icon_edit">{% trans "Mark" %}</a>
-        <a id="opener_reject" href="#" class="component_icon button icon_delete">{% trans "Reject" %}</a>
+         {% if user.correctors.all %}
+        	<a id="opener_mark" href="#" class="component_icon button icon_edit">{% trans "Mark" %}</a>
+        	<a id="opener_reject" href="#" class="component_icon button icon_delete">{% trans "Reject" %}</a>
+         {% else %}
+         	<a id="opener_mark" href="#" class="component_icon button icon_time">{% trans "Submitted" %}</a>
+         {% endif %}
         {% endif %}
 
     </div>
@@ -141,7 +139,7 @@
 {% else %}
 <div class="media">
  <div class="script">
-    <iframe style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{{ script.box_admin_url }}">
+    <iframe style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.correctors.all %}{{ script.box_admin_url }}{% else %}{{ script.box_user_url }}{% endif %}">
     </iframe>
  </div>
 </div>

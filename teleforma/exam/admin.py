@@ -21,7 +21,7 @@ class CorrectorAdmin(admin.ModelAdmin):
 class ScriptAdmin(admin.ModelAdmin):
     model = Script
     # exclude = ['options']
-    inlines = [ScriptPageInline]
+    # inlines = [ScriptPageInline]
 
 
 

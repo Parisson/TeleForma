@@ -211,7 +211,16 @@ def published(doc):
 @register.simple_tag
 def untreated_scripts_count(username):
     user = User.objects.get(username=username)
-    scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector=user))
+    scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector__user=user))
+    if scripts:
+        return ' (' + str(len(scripts)) + ')'
+    else:
+        return ''
+
+@register.simple_tag
+def treated_scripts_count(username):
+    user = User.objects.get(username=username)
+    scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector__user=user))
     if scripts:
         return ' (' + str(len(scripts)) + ')'
     else:

@@ -165,7 +165,7 @@ class Course(Model):
     notes = generic.GenericRelation(Note)
 
     def __unicode__(self):
-        return self.code
+        return self.title
 
     @property
     def slug(self):

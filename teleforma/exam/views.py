@@ -57,7 +57,7 @@ class ScriptsPendingView(ScriptsView):
 
     def get_queryset(self):
     	user = self.request.user
-    	scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector=user))
+    	scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector__user=user))
         return scripts
 
 
@@ -65,7 +65,7 @@ class ScriptsTreatedView(ScriptsView):
 
     def get_queryset(self):
     	user = self.request.user
-    	scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector=user))
+    	scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector__user=user))
         return scripts
 
 
@@ -73,19 +73,37 @@ class ScriptsRejectedView(ScriptsView):
 
     def get_queryset(self):
     	user = self.request.user
-    	scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector=user))
+    	scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector__user=user))
         return scripts
 
 
-class ScriptCreate(CreateView):
+class ScriptCreateView(CreateView):
+
     model = Script
+    template_name='exam/script_form.html'
+    form_class = ScriptForm
+    success_url = reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':1})
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super(ScriptCreate, self).form_valid(form)
+        return super(ScriptCreateView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        return super(ScriptCreateView, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptCreateView, self).get_context_data(**kwargs)
+        context['create_fields'] = ['course', 'period', 'session', 'type', 'file' ]
+        print self.request
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ScriptCreateView, self).dispatch(*args, **kwargs)
 
 
-class ScriptUpdate(UpdateView):
+class ScriptUpdateView(UpdateView):
+
     model = Script
     fields = ['score']
 

@@ -113,7 +113,9 @@ alt="logo" />
   <li><a href="{% url teleforma-annals %}" class="yellow">{% trans "Annals" %}</a></li>
  {% endif %}
 
-    <li><a href="#scripts#" class="green">&nbsp;{% trans "Scripts" %}&nbsp;{% untreated_scripts_count user.username %}</a>
+    <li><a href="#scripts#" class="green">&nbsp;{% trans "Scripts" %}&nbsp;
+     {% if user.is_staff or user.correctors.all %}{% untreated_scripts_count user.username %}
+     {% else %}{% treated_scripts_count user.username %}{% endif %}</a>
       <ul>
        {% for period in periods %}
         <li><a href="{% url teleforma-exam-scripts-pending period.id %}" class="green">{{ period.name }}</a></li>

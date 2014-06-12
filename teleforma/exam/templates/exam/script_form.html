@@ -1,0 +1,52 @@
+{% extends "exam/scripts.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block extra_javascript %}
+  <script>
+    // increase the default animation speed to exaggerate the effect
+    $(function() {
+        var b2 = $('#submit_button');
+        b2.unbind('click').click(function() {
+            $(window).unbind('beforeunload');
+            b2.unbind('click');
+            $('#id_status').val("2");
+            $('#_ScriptForm').submit();
+        });
+    });
+    </script>
+{% endblock extra_javascript %}
+
+{% block answers %}
+
+<div class="course_title">
+{% trans "New script" %}
+</div>
+
+<div title="{% trans "Mark" %}" style="width: 400px; background: white;">
+
+    <form method="post" id="_ScriptForm" action="">{% csrf_token %}
+       <table>
+       <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
+       {% for field in form %}
+       <tr>
+        {% if not field.html_name in create_fields %}
+            <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
+        {% else %}
+            <tr><td class="error">{{ field.errors }}</td></tr>
+            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        {% endif %}
+        </tr>
+       {% endfor %}
+       </table>
+    </form>
+    <br />
+    <a href="#" id="submit_button" class="component_icon button icon_ok">{% trans "Submit" %}</a>
+
+
+</div>
+</div>
+
+{% endblock answers %}

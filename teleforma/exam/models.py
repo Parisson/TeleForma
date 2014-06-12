@@ -192,7 +192,7 @@ class Script(BaseResource):
     session = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
     type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
-    author = models.ForeignKey(User, related_name="scripts", verbose_name=_('author'), null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, related_name="scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
     file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
     corrector = models.ForeignKey('Corrector', related_name="scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -223,8 +223,8 @@ class Script(BaseResource):
         return 'https://crocodoc.com/view/' + session_key
 
     @property
-    def box_user_url(self, user):
-        user = {'id': user.id, 'name': unicode(user)}
+    def box_user_url(self):
+        user = {'id': 2, 'name': 'Pierre Durand'}
         session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
                                 filter='all', admin=False, downloadable=True,
                                 copyprotected=False, demo=False, sidebar='invisible')
@@ -284,7 +284,7 @@ class Script(BaseResource):
     def submit(self):
         self.date_submitted = datetime.datetime.now()
         # self.url = settings.MEDIA_URL + unicode(self.file)
-        self.url='http://files.parisson.com/pre-barreau/Bordereau_de_livraison.pdf'
+        self.url='http://files.parisson.com/pre-barreau/LATRILLE Adeline - Procedure civile 1.pdf'
         self.box_uuid = crocodoc.document.upload(url=self.url)
         if not self.corrector:
             self.auto_set_corrector()
