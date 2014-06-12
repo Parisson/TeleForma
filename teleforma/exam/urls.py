@@ -46,4 +46,11 @@ urlpatterns = patterns('',
     url(r'^desk/periods/(?P<period_id>.*)/exam/script/(?P<pk>.*)/detail/$', ScriptView.as_view(),
         name="teleforma-exam-script-detail"),
 
+    url(r'^desk/periods/(?P<period_id>.*)/exam/scripts/list/$', ScriptsView.as_view(),
+        name="teleforma-exam-script-list"),
+
+    url(r'^desk/periods/(?P<period_id>.*)/exam/scripts_pending/$', ScriptsPendingView.as_view(), name="teleforma-exam-scripts-pending"),
+    url(r'^desk/periods/(?P<period_id>.*)/exam/scripts_treated/$', ScriptsTreatedView.as_view(), name="teleforma-exam-scripts-treated"),
+    url(r'^desk/periods/(?P<period_id>.*)/exam/scripts_rejected/$', ScriptsRejectedView.as_view(), name="teleforma-exam-scripts-rejected"),
+
 )

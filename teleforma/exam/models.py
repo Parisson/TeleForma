@@ -44,7 +44,9 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from teleforma.models import *
-
+from django.template.loader import render_to_string
+from postman.utils import email_visitor, notify_user
+from postman.models import Message
 
 app = 'teleforma'
 
@@ -56,8 +58,8 @@ import crocodoc
 crocodoc.api_token = settings.BOX_API_TOKEN
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
-                (3, _('pending')),(4, _('corrected')) )
-REJECT_REASON = ((0, _('none')), (1, _('unreadable')),
+                (3, _('pending')),(4, _('marked')) )
+REJECT_REASON = ((1, _('unreadable')),
                 (2, _('bad orientation')), (3, _('bad framing')), (4, _('incomplete')),)
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
@@ -198,13 +200,35 @@ class Script(BaseResource):
     comments = models.TextField(_('comments'), blank=True)
     status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, default=1, blank=True)
     reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, null=True, blank=True)
-    date_corrected = models.DateTimeField(_('date corrected'), null=True, blank=True)
     date_submitted = models.DateTimeField(_('date submitted'), null=True, blank=True)
+    date_marked = models.DateTimeField(_('date marked'), null=True, blank=True)
+    date_rejected = models.DateTimeField(_('date rejected'), null=True, blank=True)
+
     url  = models.CharField(_('URL'), max_length='2048', blank=True)
+
+    def __unicode__(self):
+        return unicode(self.uuid)
 
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
+        ordering = ['-date_submitted']
+
+    @property
+    def box_admin_url(self):
+        user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
+        session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user,
+                                filter='all', admin=True, downloadable=True,
+                                copyprotected=False, demo=False, sidebar='invisible')
+        return 'https://crocodoc.com/view/' + session_key
+
+    @property
+    def box_user_url(self, user):
+        user = {'id': user.id, 'name': unicode(user)}
+        session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
+                                filter='all', admin=False, downloadable=True,
+                                copyprotected=False, demo=False, sidebar='invisible')
+        return 'https://crocodoc.com/view/' + session_key
 
     def auto_set_corrector(self):
         quota_list = []
@@ -247,11 +271,13 @@ class Script(BaseResource):
         self.save()
 
     def save(self, *args, **kwargs):
-        if self.score:
-            self.date_corrected = datetime.datetime.now()
-            self.status = 4
+        #FIXME
         if self.status == 2:
             self.submit()
+        if self.status == 4 and self.score:
+            self.mark()
+        if self.status == 0 and self.reject_reason:
+            self.reject()
 
         super(Script, self).save(*args, **kwargs)
 
@@ -264,23 +290,30 @@ class Script(BaseResource):
             self.auto_set_corrector()
         self.status = 3
 
-    @property
-    def box_admin_url(self):
-        user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
-        session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user,
-                                filter='all', admin=True, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='invisible')
-        return 'https://crocodoc.com/view/' + session_key
-
-    @property
-    def box_user_url(self, user):
-        user = {'id': user.id, 'name': unicode(user)}
-        session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
-                                filter='all', admin=False, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='invisible')
-        return 'https://crocodoc.com/view/' + session_key
-
-
+    def mark(self):
+        self.date_marked = datetime.datetime.now()
+        context = {}
+        text = render_to_string('exam/messages/script_marked.txt', context)
+        a = _('script')
+        v = _('marked')
+        subject = '%s : %s - %s %s' % (unicode(self), a, self.session, v)
+        mess = Message(sender=self.corrector.user, recipient=self.author, subject=subject[:119], body=text)
+        mess.moderation_status = 'a'
+        mess.save()
+        #notify_user(mess, 'acceptance')
+        
+    def reject(self):
+        self.date_rejected = datetime.datetime.now()
+        context = {}
+        text = render_to_string('exam/messages/script_rejected.txt', context)
+        a = _('script')
+        v = _('rejected')
+        subject = '%s : %s - %s %s' % (unicode(self), a, self.session, v)
+        mess = Message(sender=self.corrector.user, recipient=self.author, subject=subject[:119], body=text)
+        mess.moderation_status = 'a'
+        mess.save()
+        #notify_user(mess, 'acceptance')
+        
 def set_file_properties(sender, instance, **kwargs):
     if instance.file:
         if not instance.mime_type:

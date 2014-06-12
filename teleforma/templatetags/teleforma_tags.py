@@ -34,7 +34,6 @@
 
 from django import template
 from django.utils.http import urlquote
-from teleforma.models import *
 from django.core.urlresolvers import reverse
 from django.utils import html
 from django import template
@@ -52,8 +51,11 @@ from django.template.defaultfilters import stringfilter
 import django.utils.timezone as timezone
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
-from teleforma.views import get_courses
 from urlparse import urlparse
+
+from teleforma.views import get_courses
+from teleforma.models import *
+from teleforma.exam.models import *
 
 register = template.Library()
 
@@ -205,3 +207,12 @@ def get_host(url, host):
 def published(doc):
     if doc:
         return doc.filter(is_published=True)
+
+@register.simple_tag
+def untreated_scripts_count(username):
+    user = User.objects.get(username=username)
+    scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector=user))
+    if scripts:
+        return ' (' + str(len(scripts)) + ')'
+    else:
+        return ''

@@ -1,21 +1,33 @@
 # Create your views here.
 
 from teleforma.exam.models import *
+from teleforma.exam.forms import *
 from teleforma.views.core import *
 
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.core.urlresolvers import reverse_lazy, reverse
 
-class ScriptView(CourseAccessMixin, DetailView):
+
+class ScriptView(CourseAccessMixin, UpdateView):
 
     model = Script
     template_name='exam/script_detail.html'
+    form_class = ScriptForm
+    success_url = reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':1})
 
     def get_context_data(self, **kwargs):
         context = super(ScriptView, self).get_context_data(**kwargs)
         script = self.get_object()
         context['script'] = script
         context['course'] = script.course
+        context['mark_fields'] = ['score', 'comments' ]
+        context['reject_fields'] = ['reject_reason' ]
 
-        access = get_access(script, context['all_courses'])
+        access = self.request.user == script.author or \
+        			self.request.user == script.corrector or \
+        			self.request.user.is_superuser or \
+        			 self.request.user.is_staff
+
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
@@ -25,4 +37,55 @@ class ScriptView(CourseAccessMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ScriptView, self).dispatch(*args, **kwargs)
 
+
+class ScriptsView(ListView):
+
+    model = Script
+    template_name='exam/scripts.html'
+
+    def get_context_data(self, **kwargs):
+    	context = super(ScriptsView, self).get_context_data(**kwargs)
+    	context['period'] = Period.objects.get(id=self.kwargs['period_id'])
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ScriptsView, self).dispatch(*args, **kwargs)
+
+
+class ScriptsPendingView(ScriptsView):
+
+    def get_queryset(self):
+    	user = self.request.user
+    	scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector=user))
+        return scripts
+
+
+class ScriptsTreatedView(ScriptsView):
+
+    def get_queryset(self):
+    	user = self.request.user
+    	scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector=user))
+        return scripts
+
+
+class ScriptsRejectedView(ScriptsView):
+
+    def get_queryset(self):
+    	user = self.request.user
+    	scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector=user))
+        return scripts
+
+
+class ScriptCreate(CreateView):
+    model = Script
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(ScriptCreate, self).form_valid(form)
+
+
+class ScriptUpdate(UpdateView):
+    model = Script
+    fields = ['score']
 

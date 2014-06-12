@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load pagination_tags %}
+
+{% autopaginate object_list 8 %}
+{% paginate %}
+
+<div id="users">
+  <table class="listing" width="100%">
+   <thead>
+   <tr><th>{% trans "Last Name"%}</th>
+    <th>{% trans "First Name"%}</th>
+    <th>{% trans "Course"%}</th>
+    <th>{% trans "Session"%}</th>
+    <th>{% trans "Type"%}</th>
+    <th>{% trans "Submission date"%}</th>
+    <th>{% trans "Mark date"%}</th>
+    <th>{% trans "Score"%}</th>
+    </tr>
+    </thead>
+    <tbody id="spacing">
+    {% for script in object_list %}
+    <tr>
+     <td><a href="{% url teleforma-profile-detail script.author.username %}">{{ script.author.last_name }}</a></td>
+     <td><a href="{% url teleforma-profile-detail script.author.username %}">{{ script.author.first_name }}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.course.title }}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.session }}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.type }}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.date_submitted }}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.date_marked }}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.score }}</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>

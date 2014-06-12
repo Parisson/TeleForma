@@ -5,6 +5,66 @@
 {% load thumbnail %}
 
 {% block extra_javascript %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+  <script>
+    // increase the default animation speed to exaggerate the effect
+
+    $(function() {
+        $( "#dialog_mark" ).dialog({
+            autoOpen: false,
+            draggable: false,
+            resizable: false,
+                    modal: true,
+
+        });
+
+        $( "#dialog_reject" ).dialog({
+            autoOpen: false,
+            draggable: false,
+            resizable: false,
+                    modal: true,
+
+        });
+
+        $( "#opener_mark" ).click(function() {
+            $( "#dialog_mark" ).dialog({ width: 500 });
+            $( "#dialog_mark" ).dialog( "open");
+            return false;
+        });
+
+        $( "#opener_reject" ).click(function() {
+            $( "#dialog_reject" ).dialog( "open");
+            return false;
+        });
+
+        var b1 = $('#validate_button');
+        b1.unbind('click').click(function() {
+            $(window).unbind('beforeunload');
+            b1.unbind('click');
+            $('#_MarkForm #id_status').val("4");
+            $('#_MarkForm').submit();
+        });
+
+        var b2 = $('#reject_button');
+        b2.unbind('click').click(function() {
+            $(window).unbind('beforeunload');
+            b2.unbind('click');
+            $('#_RejectForm #id_status').val("0");
+            $('#_RejectForm').submit();
+        });
+
+    });
+
+    function SetValues()
+    {
+        var s = 'X=' + window.event.clientX +  ' Y=' + window.event.clientY ;
+        document.getElementById('divCoord').innerText = s;
+
+    }
+    </script>
 {% endblock extra_javascript %}
 
 
@@ -18,12 +78,61 @@
     <a href="{% url teleforma-desk-period-course period.id script.course.id %}">{{ course.title }} - {{ script.type }}{% if script.session %} - {% trans "Session" %} {{ script.session }}{% endif %} - {{ script.author.first_name }} {{ script.author.last_name }} - {{ script.date_submitted }}</a>
 
     <div style="float: right; font-size: 0.9em;">
-        <a id="publish" href="#" class="{% if script.score %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% trans "Score : " %}{% if script.score %}{{ script.score|floatformat }}{% else %}    {% endif %}/20</a>
-        <a id="publish" href="#" class="{% if script.status == 4 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if script.status == 4 %}{% trans " corrected" %}{% else %}{% trans " pending" %}{% endif %}</a>
+
+        {% if script.score %}
+        <a id="score" href="#" class="component_icon button icon_ok">{% trans "Score" %} : {{ script.score|floatformat }}/20</a>
+        {% elif script.status == 0 %}
+        <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
+        {% else %}
+        <a id="opener_mark" href="#" class="component_icon button icon_edit">{% trans "Mark" %}</a>
+        <a id="opener_reject" href="#" class="component_icon button icon_delete">{% trans "Reject" %}</a>
+        {% endif %}
 
     </div>
 
 </div>
+
+<div id="dialog_mark" title="{% trans "Mark" %}" style="width: 400px;">
+    <form method="post" id="_MarkForm" action="">{% csrf_token %}
+       <table>
+       <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
+       {% for field in form %}
+       <tr>
+        {% if not field.html_name in mark_fields %}
+            <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
+        {% else %}
+            <tr><td class="error">{{ field.errors }}</td></tr>
+            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        {% endif %}
+        </tr>
+       {% endfor %}
+       </table>
+    </form>
+    <br />
+    <a href="#" id="validate_button" class="component_icon button icon_ok">{% trans "Validate" %}</a>
+
+</div>
+
+<div id="dialog_reject" title="{% trans "Reject" %}">
+<form method="post" id="_RejectForm" action="">{% csrf_token %}
+       <table>
+       <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
+       {% for field in form %}
+       <tr>
+        {% if not field.html_name in reject_fields %}
+            <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
+        {% else %}
+            <tr><td class="error">{{ field.errors }}</td></tr>
+            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        {% endif %}
+        </tr>
+       {% endfor %}
+       </table>
+    </form>
+    <br />
+        <a href="#" id="reject_button" class="component_icon button icon_delete">{% trans "Reject" %}</a>
+</div>
+
 
 {% if access_error %}
   <p>{{ access_error }}</p>
@@ -32,7 +141,7 @@
 {% else %}
 <div class="media">
  <div class="script">
-    <iframe style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="{{ script.box_admin_url }}">
+    <iframe style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{{ script.box_admin_url }}">
     </iframe>
  </div>
 </div>

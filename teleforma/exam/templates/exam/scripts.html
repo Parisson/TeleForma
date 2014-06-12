@@ -1,0 +1,54 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% block head_title %}{% trans "Answers" %} - {{ block.super }}{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+
+{% block infra_javascript %}
+{% endblock infra_javascript %}
+
+{% block content %}
+
+<div id="module-set-left" style="width: 18%">
+
+{% block modules %}
+<div class="module">
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Scripts" %}</a></h3>
+ <div style="background: white;">
+  <ul>
+  {% block courses %}
+   <li><a href="{% url teleforma-exam-scripts-pending period.id %}">{% trans "Pending" %}{% untreated_scripts_count user.username %}</a></li>
+   <li><a href="{% url teleforma-exam-scripts-treated period.id %}">{% trans "Treated" %}</a></li>
+   <li><a href="{% url teleforma-exam-scripts-rejected period.id %}">{% trans "Rejected" %}</a></li>
+  {% endblock courses %}
+  </ul>
+ </div>
+</div>
+{% endblock modules %}
+
+</div>
+
+<div class="desk_messages">
+
+{% if user.is_staff %}
+<div style="float:right;">
+</div>
+{% endif %}
+
+{% block answers %}
+<div class="course_title">{% trans "Scripts" %}</div>
+<br />
+ {% if object_list %}
+  {% include "exam/inc/script_list.html" %}
+ {% else %}
+    <p class="help">{% trans "No scripts" %}</p>
+ {% endif %}
+</div>
+{% endblock answers %}
+
+{% endblock %}
