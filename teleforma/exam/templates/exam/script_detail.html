@@ -95,7 +95,7 @@
         {% elif script.status == 0 %}
         <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
         {% else %}
-         {% if user.correctors.all %}
+         {% if user.quotas.all %}
         	<a id="opener_mark" href="#" class="component_icon button icon_edit">{% trans "Scoring" %}</a>
         	<a id="opener_reject" href="#" class="component_icon button icon_delete">{% trans "Reject" %}</a>
          {% else %}
@@ -170,7 +170,7 @@
 <br /><br />
 <div class="media">
  <div class="script">
-    <iframe id="box-iframe" style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.correctors.all %}{{ script.box_admin_url }}{% else %}{{ script.box_user_url }}{% endif %}">
+    <iframe id="box-iframe" style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all %}{{ script.box_admin_url }}{% else %}{{ script.box_user_url }}{% endif %}">
     </iframe>
  </div>
 </div>

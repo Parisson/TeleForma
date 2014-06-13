@@ -123,7 +123,7 @@ class Quota(models.Model):
     def level(self):
         if self.value:
             if self.value != 0:
-                level = 100*self.user.scripts.filter(Q(status=2) | Q(status=3) | Q(status=4)).count()/self.value
+                level = 100*self.corrector.corrector_scripts.filter(Q(status=2) | Q(status=3) | Q(status=4)).count()/self.value
                 return level
             else:
                 return 0
@@ -228,8 +228,8 @@ class Script(BaseResource):
 
     def auto_set_corrector(self):
         quota_list = []
-        quotas = self.course.quotas.filter(date_start__gte=self.date_submitted,
-                                            date_end__lte=self.date_submitted)
+        quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
+                                            date_end__gte=self.date_submitted)
         if quotas:
             for quota in quotas:
                 if quota.value:
@@ -281,9 +281,9 @@ class Script(BaseResource):
         # self.url = settings.MEDIA_URL + unicode(self.file)
         self.url='http://files.parisson.com/pre-barreau/LATRILLE Adeline - Procedure civile 1.pdf'
         self.box_uuid = crocodoc.document.upload(url=self.url)
+        self.status = 3
         if not self.corrector:
             self.auto_set_corrector()
-        self.status = 3
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
@@ -292,7 +292,7 @@ class Script(BaseResource):
         a = _('script')
         v = _('marked')
         subject = '%s : %s - %s %s' % (unicode(self), a, self.session, v)
-        mess = Message(sender=self.corrector.user, recipient=self.author, subject=subject[:119], body=text)
+        mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
         #notify_user(mess, 'acceptance')
@@ -305,7 +305,7 @@ class Script(BaseResource):
         a = _('script')
         v = _('rejected')
         subject = '%s : %s - %s %s' % (unicode(self), a, self.session, v)
-        mess = Message(sender=self.corrector.user, recipient=self.author, subject=subject[:119], body=text)
+        mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
         #notify_user(mess, 'acceptance')
