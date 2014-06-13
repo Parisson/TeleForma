@@ -108,6 +108,7 @@ class ScriptCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
+        context['period'] = Period.objects.get(id=self.kwargs['period_id'])
         context['create_fields'] = ['course', 'period', 'session', 'type', 'file' ]
         return context
 

@@ -13,6 +13,8 @@
             $(window).unbind('beforeunload');
             b2.unbind('click');
             $('#id_status').val("2");
+            $('#id_period').val("{{ period.id }}");
+
             $('#_ScriptForm').submit();
         });
     });
