@@ -173,6 +173,11 @@ def get_periods(user):
         professor = user.professor.get()
         periods = Period.objects.all()
 
+    corrector = user.correctors.all()
+    if corrector:
+        corrector = user.correctors.get()
+        periods = Period.objects.all()
+
     return periods
 
 def get_default_period(periods):

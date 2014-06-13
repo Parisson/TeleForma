@@ -25,7 +25,7 @@
 {% trans "New script" %}
 </div>
 
-<div class="course_content" id="media_infos">
+<div class="course_content" id="media_infos" style="font-size: 115%;">
     <form method="post" id="_ScriptForm" action="">{% csrf_token %}
        <table>
        <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>

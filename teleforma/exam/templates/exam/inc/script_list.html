@@ -28,8 +28,8 @@
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.session }}</a></td>
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.type }}</a></td>
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.date_submitted }}</a></td>
-     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.date_marked }}</a></td>
-     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.score }}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{% if script.date_marked %}{{ script.date_marked }}{% endif %}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{% if script.score %}{{ script.score }}{% endif %}</a></td>
     </tr>
     {% endfor %}
     </tbody>

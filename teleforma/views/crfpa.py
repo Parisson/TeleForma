@@ -50,12 +50,18 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     professor = user.professor.all()
     student = user.student.all()
+    corrector = user.correctors.all()
 
     if professor:
         professor = user.professor.get()
         courses = format_courses(courses, queryset=professor.courses.all(),
                                   types=CourseType.objects.all())
 
+    if corrector:
+        corrector = user.correctors.get()
+        #FIXME
+        courses = format_courses(courses, queryset=Course.objects.all(),
+                    types=CourseType.objects)
     elif student:
         student = user.student.get()
         for training in student.trainings.all():

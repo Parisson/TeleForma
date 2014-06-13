@@ -133,7 +133,9 @@ class Quota(models.Model):
     def level(self):
         if self.value:
             if self.value != 0:
-                return 100*self.corrector.scripts.filter(Q(status=2) | Q(status=3)).count()/self.value
+                level = 100*self.corrector.scripts.filter(Q(status=2) | Q(status=3) | Q(status=4)).count()/self.value
+                print level
+                return level
             else:
                 return 0
         else:
@@ -303,6 +305,7 @@ class Script(BaseResource):
         #notify_user(mess, 'acceptance')
         
     def reject(self):
+        self.date_marked = datetime.datetime.now()
         self.date_rejected = datetime.datetime.now()
         context = {}
         text = render_to_string('exam/messages/script_rejected.txt', context)
