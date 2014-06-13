@@ -29,6 +29,14 @@
 
         });
 
+        $( "#dialog_comments" ).dialog({
+            autoOpen: false,
+            draggable: false,
+            resizable: false,
+                    modal: true,
+
+        });
+
         $( "#opener_mark" ).click(function() {
             $( "#dialog_mark" ).dialog({ width: 500 });
             $( "#dialog_mark" ).dialog( "open");
@@ -37,6 +45,11 @@
 
         $( "#opener_reject" ).click(function() {
             $( "#dialog_reject" ).dialog( "open");
+            return false;
+        });
+
+        $( "#opener_comments" ).click(function() {
+            $( "#dialog_comments" ).dialog( "open");
             return false;
         });
 
@@ -75,19 +88,24 @@
 
         {% if script.score %}
         <a id="score" href="#" class="component_icon button icon_ok">{% trans "Score" %} : {{ script.score|floatformat }}/20</a>
+        <a id="opener_comments" href="#" class="component_icon button icon_ok">{% trans "Comments" %}</a>
         {% elif script.status == 0 %}
         <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
         {% else %}
          {% if user.correctors.all %}
-        	<a id="opener_mark" href="#" class="component_icon button icon_edit">{% trans "Mark" %}</a>
+        	<a id="opener_mark" href="#" class="component_icon button icon_edit">{% trans "Scoring" %}</a>
         	<a id="opener_reject" href="#" class="component_icon button icon_delete">{% trans "Reject" %}</a>
          {% else %}
-         	<a id="opener_mark" href="#" class="component_icon button icon_time">{% trans "Submitted" %}</a>
+         	<a href="#" class="component_icon button icon_ok">{% trans "Submitted" %}</a>
          {% endif %}
         {% endif %}
 
     </div>
 
+</div>
+
+<div id="dialog_comments" title="{% trans "Comments" %}" style="width: 400px;">
+ {{ script.comments }}
 </div>
 
 <div id="dialog_mark" title="{% trans "Mark" %}" style="width: 400px;">

@@ -25,8 +25,7 @@
 {% trans "New script" %}
 </div>
 
-<div title="{% trans "Mark" %}" style="width: 400px;">
-
+<div class="course_content" id="media_infos">
     <form method="post" id="_ScriptForm" action="">{% csrf_token %}
        <table>
        <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
@@ -43,8 +42,10 @@
        </table>
     </form>
     <br />
+    <center>
     <a href="#" id="submit_button" class="component_icon button icon_ok">{% trans "Submit" %}</a>
-
+    </center>
+    <br /><br />
 
 </div>
 </div>
