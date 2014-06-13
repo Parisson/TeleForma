@@ -263,7 +263,7 @@ class Conference(Model):
     readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
-    
+
     notes = generic.GenericRelation(Note)
 
     @property
@@ -498,9 +498,10 @@ class Document(MediaBase):
                                  null=True, blank=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
                                  blank=True, null=True)
+    session         = CharField(_('session'), choices=session_choices,
+                                      max_length=16, default="1")
     iej             = ForeignKey('IEJ', related_name='document', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    session         = IntegerField(_('Session'), blank=True, null=True)
     is_annal        = BooleanField(_('annal'))
     annal_year      = IntegerField(_('year'), blank=True, null=True)
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
