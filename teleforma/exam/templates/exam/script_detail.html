@@ -117,16 +117,22 @@
         {% if not field.html_name in mark_fields %}
             <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
         {% else %}
-            <tr><td class="error">{{ field.errors }}</td></tr>
-            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        	{% if field.html_name == 'score' %}
+             <td>{{ field.label_tag }}:</td><td> {{ field }}/20</td>
+            {% else %}
+             <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        	{% endif %}    
+           
         {% endif %}
         </tr>
        {% endfor %}
        </table>
     </form>
     <br />
-    <a href="#" id="validate_button" class="component_icon button icon_ok">{% trans "Validate" %}</a>
-
+    <center>
+    <a href="#" id="validate_button" class="component_icon button icon_ok">{% trans "Scoring" %}</a>
+    </center>
+    <br /><br />
 </div>
 
 <div id="dialog_reject" title="{% trans "Reject" %}">
@@ -139,14 +145,17 @@
             <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
         {% else %}
             <tr><td class="error">{{ field.errors }}</td></tr>
-            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+            <td>{{ field.label_tag }}:</td><td> {{ field }}</td> 
         {% endif %}
         </tr>
        {% endfor %}
        </table>
     </form>
     <br />
-        <a href="#" id="reject_button" class="component_icon button icon_delete">{% trans "Reject" %}</a>
+    <center>
+     <a href="#" id="reject_button" class="component_icon button icon_delete">{% trans "Reject" %}</a>
+    </center>
+    <br /><br />
 </div>
 
 

@@ -24,9 +24,9 @@ class ScriptView(CourseAccessMixin, UpdateView):
         context['reject_fields'] = ['reject_reason' ]
 
         access = self.request.user == script.author or \
-        			self.request.user == script.corrector or \
-        			self.request.user.is_superuser or \
-        			 self.request.user.is_staff
+                    self.request.user == script.corrector or \
+                    self.request.user.is_superuser or \
+                     self.request.user.is_staff
 
         if not access:
             context['access_error'] = access_error
@@ -44,8 +44,8 @@ class ScriptsView(ListView):
     template_name='exam/scripts.html'
 
     def get_context_data(self, **kwargs):
-    	context = super(ScriptsView, self).get_context_data(**kwargs)
-    	context['period'] = Period.objects.get(id=self.kwargs['period_id'])
+        context = super(ScriptsView, self).get_context_data(**kwargs)
+        context['period'] = Period.objects.get(id=self.kwargs['period_id'])
         return context
 
     @method_decorator(login_required)
@@ -56,25 +56,40 @@ class ScriptsView(ListView):
 class ScriptsPendingView(ScriptsView):
 
     def get_queryset(self):
-    	user = self.request.user
-    	scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector__user=user))
+        user = self.request.user
+        scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector__user=user))
         return scripts
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptsPendingView, self).get_context_data(**kwargs)
+        context['title'] = ugettext('Pending scripts')
+        return context
 
 
 class ScriptsTreatedView(ScriptsView):
 
     def get_queryset(self):
-    	user = self.request.user
-    	scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector__user=user))
+        user = self.request.user
+        scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector__user=user))
         return scripts
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptsTreatedView, self).get_context_data(**kwargs)
+        context['title'] = ugettext('Treated scripts')
+        return context
 
 
 class ScriptsRejectedView(ScriptsView):
 
     def get_queryset(self):
-    	user = self.request.user
-    	scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector__user=user))
+        user = self.request.user
+        scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector__user=user))
         return scripts
+    
+    def get_context_data(self, **kwargs):
+        context = super(ScriptsRejectedView, self).get_context_data(**kwargs)
+        context['title'] = ugettext('Rejected scripts')
+        return context
 
 
 class ScriptCreateView(CreateView):

@@ -32,7 +32,7 @@
 
 {% block module-action %}
 <div class="module_action">
-<a href="{% url teleforma-exam-script-create perdiod.id %}" class="component_icon button" id="action_green">{% trans "New script" %}</a>
+<a href="{% url teleforma-exam-script-create period.id %}" class="component_icon button" id="action_green">{% trans "New script" %}</a>
 </div>
 {% endblock module-action %}
 
@@ -48,7 +48,7 @@
 {% endif %}
 
 {% block answers %}
-<div class="course_title">{% trans "Scripts" %}</div>
+<div class="course_title">{{ title }}</div>
 <br />
  {% if object_list %}
   {% include "exam/inc/script_list.html" %}

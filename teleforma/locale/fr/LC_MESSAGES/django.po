@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-13 02:42+0200\n"
+"POT-Creation-Date: 2014-06-13 02:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -218,9 +218,21 @@ msgid "Script"
 msgstr "Copie"
 
 #: exam/models.py:214 exam/templates/exam/scripts.html:21
-#: exam/templates/exam/scripts.html:51 templates/telemeta/base.html:116
+#: templates/telemeta/base.html:116
 msgid "Scripts"
 msgstr "Copies"
+
+#: exam/views.py:65
+msgid "Pending scripts"
+msgstr "Copies en attente"
+
+#: exam/views.py:78
+msgid "Treated scripts"
+msgstr "Copie traitées"
+
+#: exam/views.py:91
+msgid "Rejected scripts"
+msgstr "Copies rejetées"
 
 #: exam/templates/exam/script_detail.html:85
 #: exam/templates/exam/inc/script_list.html:15 models/core.py:503
@@ -252,12 +264,13 @@ msgid "Rejected"
 msgstr "Rejeté"
 
 #: exam/templates/exam/script_detail.html:96
+#: exam/templates/exam/script_detail.html:133
 msgid "Scoring"
 msgstr "Noter"
 
 #: exam/templates/exam/script_detail.html:97
-#: exam/templates/exam/script_detail.html:132
-#: exam/templates/exam/script_detail.html:149
+#: exam/templates/exam/script_detail.html:138
+#: exam/templates/exam/script_detail.html:156
 msgid "Reject"
 msgstr "Rejeter"
 
@@ -268,10 +281,6 @@ msgstr "Soumise"
 #: exam/templates/exam/script_detail.html:111
 msgid "Mark"
 msgstr "Note"
-
-#: exam/templates/exam/script_detail.html:128
-msgid "Validate"
-msgstr "Validée"
 
 #: exam/templates/exam/script_form.html:25 exam/templates/exam/scripts.html:35
 msgid "New script"
@@ -291,7 +300,7 @@ msgstr "En attente"
 
 #: exam/templates/exam/scripts.html:26
 msgid "Treated"
-msgstr "Traîtées"
+msgstr "Traitées"
 
 #: exam/templates/exam/scripts.html:56
 msgid "No scripts"
@@ -1440,6 +1449,9 @@ msgstr ""
 #: views/core.py:546
 msgid "A new live conference has started : "
 msgstr "Une nouvelle conférence en direct a commencé : "
+
+#~ msgid "Validate"
+#~ msgstr "Validée"
 
 #, fuzzy
 #~ msgid "Score : "
