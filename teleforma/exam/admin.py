@@ -14,18 +14,12 @@ class ScriptPageInline(admin.StackedInline):
 class QuotaInline(admin.StackedInline):
     model = Quota
 
-class CorrectorAdmin(admin.ModelAdmin):
-    model = Corrector
-    inlines = [QuotaInline]
-
 class ScriptAdmin(admin.ModelAdmin):
     model = Script
     # exclude = ['options']
     # inlines = [ScriptPageInline]
 
 
-
-admin.site.register(Corrector, CorrectorAdmin)
 admin.site.register(Script, ScriptAdmin)
 admin.site.register(ScriptPage)
 admin.site.register(ScriptType)

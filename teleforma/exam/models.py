@@ -101,22 +101,12 @@ def check_unique_mimetype(l):
     return unique
 
 
-class Corrector(models.Model):
-
-    user = models.ForeignKey(User, related_name="correctors", verbose_name=_('user'), blank=True, null=True, on_delete=models.SET_NULL)
-
-    class Meta(MetaCore):
-        verbose_name = _('Corrector')
-        verbose_name_plural = _('Correctors')
-
-    def __unicode__(self):
-        return ' '.join([self.user.first_name, self.user.last_name])
-
-
 class Quota(models.Model):
 
     course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'), blank=True, null=True)
-    corrector = models.ForeignKey('Corrector', related_name="quotas", verbose_name=_('corrector'), blank=True, null=True)
+    corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_('corrector'), blank=True, null=True)
+    period = models.ForeignKey(Period, related_name='quotas', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     value = models.IntegerField(_('value'))
     date_start = models.DateField(_('date start'))
     date_end = models.DateField(_('date end'))
@@ -127,14 +117,13 @@ class Quota(models.Model):
         ordering = ['date_start']
 
     def __unicode__(self):
-        return ' - '.join([self.course.title, str(self.value)])
+        return ' - '.join([unicode(self.corrector), self.course.title, str(self.value)])
 
     @property
     def level(self):
         if self.value:
             if self.value != 0:
-                level = 100*self.corrector.scripts.filter(Q(status=2) | Q(status=3) | Q(status=4)).count()/self.value
-                print level
+                level = 100*self.user.scripts.filter(Q(status=2) | Q(status=3) | Q(status=4)).count()/self.value
                 return level
             else:
                 return 0
@@ -194,22 +183,27 @@ class Script(BaseResource):
     session = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
     type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
-    author = models.ForeignKey(User, related_name="scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
-    file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', blank=True)
+    author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
+    corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
+    file = models.FileField(_('PDF file'), upload_to='corrector_scripts/%Y/%m/%d', blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
-    corrector = models.ForeignKey('Corrector', related_name="scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
     score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
     status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, default=1, blank=True)
-    reject_reason = models.IntegerField(_('reject_reason'), choices=REJECT_REASON, null=True, blank=True)
+    reject_reason = models.IntegerField(_('reason'), choices=REJECT_REASON, null=True, blank=True)
     date_submitted = models.DateTimeField(_('date submitted'), null=True, blank=True)
     date_marked = models.DateTimeField(_('date marked'), null=True, blank=True)
     date_rejected = models.DateTimeField(_('date rejected'), null=True, blank=True)
-
     url  = models.CharField(_('URL'), max_length='2048', blank=True)
 
+    @property
+    def title(self):
+        return ' - '.join([self.course.title, self.type.name, _("Session") + ' ' + self.session,
+                        unicode(self.author.first_name) + ' ' + unicode(self.author.first_name),
+                        unicode(self.date_submitted)])
+
     def __unicode__(self):
-        return unicode(self.uuid)
+        return unicode(self.title)
 
     class Meta(MetaCore):
         verbose_name = _('Script')
@@ -243,8 +237,7 @@ class Script(BaseResource):
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
         else:
-            user = User.objects.filter(is_superuser=True)[0]
-            self.corrector = Corrector.objects.get(user=user)
+            self.corrector = User.objects.filter(is_superuser=True)[0]
         self.save()
 
     def make_from_pages(self):
@@ -303,7 +296,7 @@ class Script(BaseResource):
         mess.moderation_status = 'a'
         mess.save()
         #notify_user(mess, 'acceptance')
-        
+
     def reject(self):
         self.date_marked = datetime.datetime.now()
         self.date_rejected = datetime.datetime.now()
@@ -316,7 +309,7 @@ class Script(BaseResource):
         mess.moderation_status = 'a'
         mess.save()
         #notify_user(mess, 'acceptance')
-        
+
 def set_file_properties(sender, instance, **kwargs):
     if instance.file:
         if not instance.mime_type:

@@ -57,7 +57,7 @@ class ScriptsPendingView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector__user=user))
+        scripts = Script.objects.filter(Q(status=3, author=user) | Q(status=3, corrector=user))
         return scripts
 
     def get_context_data(self, **kwargs):
@@ -70,7 +70,7 @@ class ScriptsTreatedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector__user=user))
+        scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector=user))
         return scripts
 
     def get_context_data(self, **kwargs):
@@ -83,9 +83,9 @@ class ScriptsRejectedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector__user=user))
+        scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector=user))
         return scripts
-    
+
     def get_context_data(self, **kwargs):
         context = super(ScriptsRejectedView, self).get_context_data(**kwargs)
         context['title'] = ugettext('Rejected scripts')
@@ -109,7 +109,6 @@ class ScriptCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         context['create_fields'] = ['course', 'period', 'session', 'type', 'file' ]
-        print self.request
         return context
 
     @method_decorator(login_required)

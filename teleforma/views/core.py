@@ -125,7 +125,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
         name = 'site'
 
     if settings.TELEFORMA_PERIOD_TWEETER and period:
-        name = name + '-' + period 
+        name = name + '-' + period
 
     if settings.TELEFORMA_GLOBAL_TWEETER:
         rooms = jqchat.models.Room.objects.filter(name=name[:20])
@@ -170,13 +170,11 @@ def get_periods(user):
 
     professor = user.professor.all()
     if professor:
-        professor = user.professor.get()
         periods = Period.objects.all()
 
-    corrector = user.correctors.all()
-    if corrector:
-        corrector = user.correctors.get()
-        periods = Period.objects.all()
+    quotas = user.quotas.all()
+    if quotas:
+        periods = [quota.period for quota in quotas]
 
     return periods
 
@@ -277,7 +275,7 @@ class CourseListView(CourseAccessMixin, ListView):
             else:
                 course = course[0]
             course.from_dict(course_dict)
-            
+
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)
@@ -678,7 +676,7 @@ class ProfessorListView(View):
         return [p.to_json_dict() for p in professors]
 
     def pull(request, host=None):
-        
+
         if host:
             url = 'http://' + host + '/json/'
         else:

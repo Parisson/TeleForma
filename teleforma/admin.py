@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from teleforma.models import *
+from teleforma.exam.models import *
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -30,9 +31,12 @@ class ProfessorAdmin(admin.ModelAdmin):
 class ProfileInline(admin.StackedInline):
     model = Profile
 
+class QuotasInline(admin.StackedInline):
+    model = Quota
+
 class UserProfileAdmin(UserAdmin):
-    inlines = [CRFPAStudentProfileInline,
-                 ProfessorProfileInline, ProfileInline]
+    inlines = [ProfileInline, CRFPAStudentProfileInline,
+                 ProfessorProfileInline, QuotasInline]
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training

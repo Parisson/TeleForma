@@ -12,7 +12,8 @@
   <script>
     // increase the default animation speed to exaggerate the effect
 
-    $(function() {
+    $(document).ready(function(){
+
         $( "#dialog_mark" ).dialog({
             autoOpen: false,
             draggable: false,
@@ -69,6 +70,8 @@
             $('#_RejectForm').submit();
         });
 
+    	$("#box-iframe").contents().find("span.btn.text-btn.strikeout-btn").hide();
+
     });
 
     </script>
@@ -82,7 +85,7 @@
 
 <div class="course_title">
 
-    <a href="{% url teleforma-desk-period-course period.id script.course.id %}">{{ course.title }} - {{ script.type }}{% if script.session %} - {% trans "Session" %} {{ script.session }}{% endif %} - {{ script.author.first_name }} {{ script.author.last_name }} - {{ script.date_submitted }}</a>
+    <a href="{% url teleforma-desk-period-course period.id script.course.id %}">{{ script.title }}</a>
 
     <div style="float: right; font-size: 0.9em;">
 
@@ -121,8 +124,8 @@
              <td>{{ field.label_tag }}:</td><td> {{ field }}/20</td>
             {% else %}
              <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
-        	{% endif %}    
-           
+        	{% endif %}
+
         {% endif %}
         </tr>
        {% endfor %}
@@ -145,7 +148,7 @@
             <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
         {% else %}
             <tr><td class="error">{{ field.errors }}</td></tr>
-            <td>{{ field.label_tag }}:</td><td> {{ field }}</td> 
+            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
         {% endif %}
         </tr>
        {% endfor %}
@@ -167,7 +170,7 @@
 <br /><br />
 <div class="media">
  <div class="script">
-    <iframe style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.correctors.all %}{{ script.box_admin_url }}{% else %}{{ script.box_user_url }}{% endif %}">
+    <iframe id="box-iframe" style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.correctors.all %}{{ script.box_admin_url }}{% else %}{{ script.box_user_url }}{% endif %}">
     </iframe>
  </div>
 </div>

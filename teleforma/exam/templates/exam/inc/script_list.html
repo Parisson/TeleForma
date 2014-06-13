@@ -16,6 +16,7 @@
     <th>{% trans "Type"%}</th>
     <th>{% trans "Submission date"%}</th>
     <th>{% trans "Mark date"%}</th>
+    <th>{% trans "Corrector"%}</th>
     <th>{% trans "Score"%}</th>
     </tr>
     </thead>
@@ -29,7 +30,8 @@
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.type }}</a></td>
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.date_submitted }}</a></td>
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{% if script.date_marked %}{{ script.date_marked }}{% endif %}</a></td>
-     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{% if script.score %}{{ script.score }}{% endif %}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{% if script.corrector %}{{ script.corrector }}{% endif %}</a></td>
+     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{% if script.score %}{{ script.score|floatformat }}{% endif %}</a></td>
     </tr>
     {% endfor %}
     </tbody>

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-13 02:59+0200\n"
+"POT-Creation-Date: 2014-06-13 10:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: exam/models.py:60 exam/models.py:310
+#: exam/models.py:60 exam/models.py:313
 msgid "rejected"
 msgstr "rejeté"
 
@@ -32,7 +32,7 @@ msgstr "soumise"
 msgid "pending"
 msgstr "en attente"
 
-#: exam/models.py:61 exam/models.py:298
+#: exam/models.py:61 exam/models.py:300
 msgid "marked"
 msgstr "corrigée"
 
@@ -65,12 +65,12 @@ msgstr "Correcteur"
 msgid "Correctors"
 msgstr "Correcteurs"
 
-#: exam/models.py:118 exam/models.py:189 models/core.py:198 models/core.py:252
+#: exam/models.py:118 exam/models.py:191 models/core.py:198 models/core.py:252
 #: models/core.py:492 models/core.py:578 models/pro.py:45
 msgid "course"
 msgstr "matière"
 
-#: exam/models.py:119 exam/models.py:198
+#: exam/models.py:119 exam/models.py:200
 msgid "corrector"
 msgstr "correcteur"
 
@@ -94,130 +94,130 @@ msgstr ""
 msgid "Quotas"
 msgstr ""
 
-#: exam/models.py:145 models/core.py:458 models/pro.py:67
+#: exam/models.py:147 models/core.py:458 models/pro.py:67
 msgid "date added"
 msgstr "date d'ajout"
 
-#: exam/models.py:146 models/core.py:159 models/core.py:459 models/pro.py:68
+#: exam/models.py:148 models/core.py:159 models/core.py:459 models/pro.py:68
 msgid "date modified"
 msgstr "date de modification"
 
-#: exam/models.py:147
+#: exam/models.py:149
 msgid "UUID"
 msgstr ""
 
-#: exam/models.py:148
+#: exam/models.py:150
 #, fuzzy
 msgid "MIME type"
 msgstr "Type mime"
 
-#: exam/models.py:149
+#: exam/models.py:151
 msgid "sha1"
 msgstr ""
 
-#: exam/models.py:165 exam/models.py:297 exam/models.py:309
+#: exam/models.py:167 exam/models.py:299 exam/models.py:312
 msgid "script"
 msgstr "copie"
 
-#: exam/models.py:166
+#: exam/models.py:168
 msgid "Page file"
 msgstr "Fichier de page"
 
-#: exam/models.py:167
+#: exam/models.py:169
 msgid "Image file"
 msgstr "Fichier image"
 
-#: exam/models.py:168 models/pro.py:49 models/pro.py:85
+#: exam/models.py:170 models/pro.py:49 models/pro.py:85
 msgid "rank"
 msgstr "rang"
 
-#: exam/models.py:171
+#: exam/models.py:173
 msgid "Page"
 msgstr "Page"
 
-#: exam/models.py:172
+#: exam/models.py:174
 msgid "Pages"
 msgstr "Pages"
 
-#: exam/models.py:177 models/core.py:93 models/core.py:106 models/core.py:128
+#: exam/models.py:179 models/core.py:93 models/core.py:106 models/core.py:128
 #: models/core.py:140 models/core.py:234 models/core.py:475 models/crfpa.py:47
 #: models/crfpa.py:63
 msgid "name"
 msgstr "nom"
 
-#: exam/models.py:180
+#: exam/models.py:182
 msgid "ScriptType"
 msgstr ""
 
-#: exam/models.py:181
+#: exam/models.py:183
 #, fuzzy
 msgid "ScriptTypes"
 msgstr "type"
 
-#: exam/models.py:190 models/ae.py:47 models/core.py:111 models/core.py:136
+#: exam/models.py:192 models/ae.py:47 models/core.py:111 models/core.py:136
 #: models/core.py:250 models/core.py:497 models/core.py:541 models/core.py:582
 #: models/crfpa.py:64
 msgid "period"
 msgstr "période"
 
-#: exam/models.py:192 models/core.py:256
+#: exam/models.py:194 models/core.py:256
 msgid "session"
-msgstr "session"
+msgstr "séance"
 
-#: exam/models.py:194 models/core.py:389 models/core.py:499 models/core.py:586
+#: exam/models.py:196 models/core.py:389 models/core.py:499 models/core.py:586
 msgid "type"
 msgstr "type"
 
-#: exam/models.py:195
+#: exam/models.py:197
 msgid "author"
 msgstr "auteur"
 
-#: exam/models.py:196
+#: exam/models.py:198
 msgid "PDF file"
 msgstr "Fichier PDF"
 
-#: exam/models.py:197
+#: exam/models.py:199
 msgid "Box UUID"
 msgstr ""
 
-#: exam/models.py:199
+#: exam/models.py:201
 msgid "score"
 msgstr "note"
 
-#: exam/models.py:200 models/pro.py:125
+#: exam/models.py:202 models/pro.py:125
 msgid "comments"
 msgstr "commentaires"
 
-#: exam/models.py:201 models/core.py:265 models/pro.py:48 models/pro.py:88
+#: exam/models.py:203 models/core.py:265 models/pro.py:48 models/pro.py:88
 #: models/pro.py:104
 msgid "status"
 msgstr "status"
 
-#: exam/models.py:202
-msgid "reject_reason"
-msgstr " raison du rejet"
+#: exam/models.py:204
+msgid "reason"
+msgstr "raison"
 
-#: exam/models.py:203
+#: exam/models.py:205
 msgid "date submitted"
 msgstr "date de soumission"
 
-#: exam/models.py:204
+#: exam/models.py:206
 msgid "date marked"
 msgstr "date de correction"
 
-#: exam/models.py:205
+#: exam/models.py:207
 msgid "date rejected"
 msgstr "date de rejet"
 
-#: exam/models.py:207
+#: exam/models.py:209
 msgid "URL"
 msgstr ""
 
-#: exam/models.py:213
+#: exam/models.py:215
 msgid "Script"
 msgstr "Copie"
 
-#: exam/models.py:214 exam/templates/exam/scripts.html:21
+#: exam/models.py:216 exam/templates/exam/scripts.html:21
 #: templates/telemeta/base.html:116
 msgid "Scripts"
 msgstr "Copies"
@@ -246,7 +246,7 @@ msgstr "Copies rejetées"
 #: templates/teleforma/inc/conference_list.html:26
 #: templates/teleforma/inc/media_list.html:37
 msgid "Session"
-msgstr "Session"
+msgstr "Séance"
 
 #: exam/templates/exam/script_detail.html:90
 #: exam/templates/exam/inc/script_list.html:19
@@ -1438,7 +1438,7 @@ msgstr ""
 "Merci de vous connecter ou bien contactez l'administateur du site pour "
 "obtenir un accès privé."
 
-#: views/core.py:218
+#: views/core.py:223
 msgid ""
 "You do NOT have access to this resource and then have been redirected to "
 "your desk."
@@ -1446,7 +1446,7 @@ msgstr ""
 "Vous n'avez pas accès à cette ressource et avez été redirigé vers votre "
 "bureau."
 
-#: views/core.py:546
+#: views/core.py:551
 msgid "A new live conference has started : "
 msgstr "Une nouvelle conférence en direct a commencé : "
 
