@@ -23,6 +23,10 @@ class ScriptView(CourseAccessMixin, UpdateView):
         context['mark_fields'] = ['score', 'comments' ]
         context['reject_fields'] = ['reject_reason' ]
 
+        doc_type = DocumentType.objects.get(number=settings.TELEFORMA_EXAM_DEFAULT_DOCUMENT_TYPE_NUMBER)
+        topics = Document.objects.filter(course=script.course, period=script.period,
+                                            session=script.session, type=doc_type)
+        context['topic'] = topics[0]
         access = self.request.user == script.author or \
                     self.request.user == script.corrector or \
                     self.request.user.is_superuser or \
