@@ -278,8 +278,7 @@ class Script(BaseResource):
 
     def submit(self):
         self.date_submitted = datetime.datetime.now()
-        # self.url = settings.MEDIA_URL + unicode(self.file)
-        self.url='http://files.parisson.com/pre-barreau/LATRILLE Adeline - Procedure civile 1.pdf'
+        self.url = settings.MEDIA_URL + unicode(self.file)
         self.box_uuid = crocodoc.document.upload(url=self.url)
         self.status = 3
         if not self.corrector:
