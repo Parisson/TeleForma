@@ -267,8 +267,8 @@ class Script(BaseResource):
 
     def save(self, *args, **kwargs):
         #FIXME
-        if self.status == 2:
-            self.submit()
+        # if self.status == 2:
+        #     self.submit()
         if self.status == 4 and self.score:
             self.mark()
         if self.status == 0 and self.reject_reason:
