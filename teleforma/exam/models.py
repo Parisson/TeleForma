@@ -185,7 +185,7 @@ class Script(BaseResource):
     type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
     corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
-    file = models.FileField(_('PDF file'), upload_to='corrector_scripts/%Y/%m/%d', blank=True)
+    file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
     score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
@@ -267,14 +267,23 @@ class Script(BaseResource):
 
     def save(self, *args, **kwargs):
         #FIXME
-        # if self.status == 2:
-        #     self.submit()
+        if self.status == 2:
+            self.status = 3
+            super(Script, self).save(*args, **kwargs)
+            self.submit()
         if self.status == 4 and self.score:
             self.mark()
         if self.status == 0 and self.reject_reason:
             self.reject()
 
         super(Script, self).save(*args, **kwargs)
+
+    def submit(self):
+        self.date_submitted = datetime.datetime.now()
+        self.url = settings.MEDIA_URL + unicode(self.file)
+        self.box_uuid = crocodoc.document.upload(url=self.url)
+        if not self.corrector:
+            self.auto_set_corrector()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
@@ -314,17 +323,6 @@ def set_file_properties(sender, instance, **kwargs):
                 os.system(command)
                 instance.image = path
 
-def submit_to_box(sender, instance, **kwargs):
-    if instance.file and instance.status == 2:
-        instance.date_submitted = datetime.datetime.now()
-        instance.url = settings.MEDIA_URL + unicode(instance.file)
-        instance.box_uuid = crocodoc.document.upload(url=instance.url)
-        instance.status = 3
-        if not instance.corrector:
-            instance.auto_set_corrector()
-        instance.save()
 
-
-post_save.connect(submit_to_box, sender=Script, dispatch_uid="script_post_save")
-# post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
+post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
 post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")

@@ -28,7 +28,7 @@
 </div>
 
 <div class="course_content" id="media_infos" style="font-size: 115%;">
-    <form method="post" id="_ScriptForm" action="">{% csrf_token %}
+    <form method="post" id="_ScriptForm" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
        <table>
        <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
        {% for field in form %}
@@ -36,7 +36,6 @@
         {% if not field.html_name in create_fields %}
             <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
         {% else %}
-            <tr><td class="error">{{ field.errors }}</td></tr>
             <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
         {% endif %}
         </tr>
