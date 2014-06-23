@@ -276,14 +276,6 @@ class Script(BaseResource):
 
         super(Script, self).save(*args, **kwargs)
 
-    def submit(self):
-        self.date_submitted = datetime.datetime.now()
-        self.url = settings.MEDIA_URL + unicode(self.file)
-        self.box_uuid = crocodoc.document.upload(url=self.url)
-        self.status = 3
-        if not self.corrector:
-            self.auto_set_corrector()
-
     def mark(self):
         self.date_marked = datetime.datetime.now()
         context = {}
@@ -322,18 +314,17 @@ def set_file_properties(sender, instance, **kwargs):
                 os.system(command)
                 instance.image = path
 
-def set_file_properties(sender, instance, **kwargs):
-    if instance.file:
-        if not instance.mime_type:
-            instance.mime_type = mimetype_file(instance.file.path)
-        if not instance.sha1:
-            instance.sha1 = sha1sum_file(instance.file.path)
-        if hasattr(instance, 'image'):
-            if not instance.image:
-                path = cache_path + os.sep + instance.uuid + '.jpg'
-                command = 'convert ' + instance.file.path + ' ' + path
-                os.system(command)
-                instance.image = path
+def submit_to_box(sender, instance, **kwargs):
+    if instance.file and instance.status = 2:
+        instance.date_submitted = datetime.datetime.now()
+        instance.url = settings.MEDIA_URL + unicode(instance.file)
+        instance.box_uuid = crocodoc.document.upload(url=instance.url)
+        instance.status = 3
+        if not instance.corrector:
+            instance.auto_set_corrector()
+        instance.save()
 
-post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
+
+post_save.connect(submit_to_box, sender=Script, dispatch_uid="script_post_save")
+# post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
 post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")
