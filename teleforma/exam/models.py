@@ -315,7 +315,7 @@ def set_file_properties(sender, instance, **kwargs):
                 instance.image = path
 
 def submit_to_box(sender, instance, **kwargs):
-    if instance.file and instance.status = 2:
+    if instance.file and instance.status == 2:
         instance.date_submitted = datetime.datetime.now()
         instance.url = settings.MEDIA_URL + unicode(instance.file)
         instance.box_uuid = crocodoc.document.upload(url=instance.url)
