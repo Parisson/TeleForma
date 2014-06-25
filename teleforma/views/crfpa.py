@@ -323,6 +323,8 @@ class AnnalsView(ListView):
         if self.student:
             context['student'] =  self.student
         context['all_courses'] = self.all_courses
+        periods = get_periods(user)
+        context['period'] = periods[0]
         return context
 
     @method_decorator(login_required)
