@@ -118,6 +118,8 @@ class ScriptCreateView(CreateView):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         context['period'] = Period.objects.get(id=self.kwargs['period_id'])
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
+        course_pk_list = [c['course'].id for c in get_courses(self.request.user)]
+        context['form'].fields['course'].queryset = Course.objects.filter(pk__in=course_pk_list)
         return context
 
     @method_decorator(login_required)
