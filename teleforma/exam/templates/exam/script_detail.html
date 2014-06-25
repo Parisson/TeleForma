@@ -89,7 +89,7 @@
 
     <div style="float: right; font-size: 0.9em;">
         {% if topic.file %}
-        <a id="topic" href="{% url teleforma-document-download topic.id %}" class="component_icon button icon_download">{% trans "Topic" %}</a>
+        <a id="topic" href="{% url teleforma-document-download topic.id %}" class="component_icon button icon_download">&nbsp;{% trans "Topic" %}</a>
         {% endif %}
         {% if script.score %}
         <a id="score" href="#" class="component_icon button icon_ok">{% trans "Score" %} : {{ script.score|floatformat }}/20</a>
@@ -135,7 +135,7 @@
     </form>
     <br />
     <center>
-    <a href="#" id="validate_button" class="component_icon button icon_ok">{% trans "Validate" %}</a>
+    <a href="#" id="validate_button" class="component_icon button icon_ok">{% trans "Send" %}</a>
     </center>
     <br /><br />
 </div>
