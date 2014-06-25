@@ -173,7 +173,7 @@ def get_periods(user):
         periods = Period.objects.all()
 
     quotas = user.quotas.all()
-    if quotas:
+    if quotas and not (user.is_superuser or user.is_staff):
         periods = [quota.period for quota in quotas]
 
     return periods
