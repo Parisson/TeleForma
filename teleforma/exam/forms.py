@@ -10,8 +10,8 @@ class ScriptForm(ModelForm):
 
     class Meta:
         model = Script
-        exclude = ['uuid', 'mime_type', 'sha1', 'url', 
+        exclude = ['uuid', 'mime_type', 'sha1', 'url',
                     'date_submitted', 'date_rejected', 'date_marked',
-                    'box_uuid', 
+                    'box_uuid',
                 ]
         #hidden_fields = ['status']
