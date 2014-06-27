@@ -112,14 +112,14 @@ alt="logo" />
   <li><a href="{% url teleforma-annals %}" class="yellow">{% trans "Annals" %}</a></li>
 
   {% if periods|length == 1 %}
-      <li><a href="{% url teleforma-exam-scripts-pending periods.0 %}" class="green">&nbsp;{% trans "Scripts" %}&nbsp;
-      {% if user.is_staff or user.correctors.all %}{% untreated_scripts_count user periods.0 %}
-     {% else %}{% treated_scripts_count user periods.0 %}{% endif %}</a>
+      <li><a href="{% url teleforma-exam-scripts-pending periods.0.id %}" class="green">&nbsp;{% trans "Scripts" %}&nbsp;
+      {% if user.is_staff or user.correctors.all %}{% untreated_scripts_count user periods.0.id %}
+     {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
      </li>
   {% else %}
     <li><a href="#scripts#" class="green">&nbsp;{% trans "Scripts" %}&nbsp;
-     {% if user.is_staff or user.correctors.all %}{% untreated_scripts_count user periods.0 %}
-     {% else %}{% treated_scripts_count user periods.0 %}{% endif %}</a>
+     {% if user.is_staff or user.correctors.all %}{% untreated_scripts_count user periods.0.id %}
+     {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
       <ul>
        {% for period in periods %}
         <li><a href="{% url teleforma-exam-scripts-pending period.id %}" class="green">{{ period.name }}</a></li>
