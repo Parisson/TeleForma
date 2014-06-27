@@ -26,6 +26,7 @@ $(document).ready(function(){
         <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
+        {% if not user.correctors.all or user.is_staff %}
         {% block conference %}
          {% include "teleforma/inc/conference_list.html" %}
         {% endblock %}
@@ -33,6 +34,7 @@ $(document).ready(function(){
         {% block media %}
          {% include "teleforma/inc/media_list.html" %}
         {% endblock %}
+        {% endif %}
 
         {% block document %}
          {% with forloop.counter as type_counter %}
