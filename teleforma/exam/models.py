@@ -58,7 +58,7 @@ import crocodoc
 crocodoc.api_token = settings.BOX_API_TOKEN
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
-                (3, _('pending')),(4, _('marked')) )
+                (3, _('pending')),(4, _('marked')), (5, _('read')) )
 REJECT_REASON = ((1, _('unreadable')),
                 (2, _('bad orientation')), (3, _('bad framing')), (4, _('incomplete')),)
 
@@ -281,7 +281,10 @@ class Script(BaseResource):
     def submit(self):
         self.date_submitted = datetime.datetime.now()
         self.url = settings.MEDIA_URL + unicode(self.file)
-        self.box_uuid = crocodoc.document.upload(url=self.url)
+        try:
+            self.box_uuid = crocodoc.document.upload(url=self.url)
+        except:
+            pass
         if not self.corrector:
             self.auto_set_corrector()
 

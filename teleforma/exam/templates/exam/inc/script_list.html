@@ -23,7 +23,7 @@
     </thead>
     <tbody id="spacing">
     {% for script in object_list %}
-    <tr>
+    <tr style="font-weight: bold;">
     <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.course.title }}</a></td>
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.session }}</a></td>
      <td><a href="{% url teleforma-exam-script-detail period.id script.id %}">{{ script.type }}</a></td>

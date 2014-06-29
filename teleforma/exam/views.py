@@ -39,6 +39,11 @@ class ScriptView(CourseAccessMixin, UpdateView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
+
+        if script.status == 4 and self.request.user == script.author:
+            script.status = 5
+            script.save()
+
         return context
 
     @method_decorator(login_required)
@@ -66,7 +71,9 @@ class ScriptsPendingView(ScriptsView):
     def get_queryset(self):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
-        scripts = Script.objects.filter(Q(status=3, author=user, period=period) | Q(status=3, corrector=user, period=period))
+        Q1 = Q(status=3, author=user, period=period)
+        Q2 = Q(status=3, corrector=user, period=period)
+        scripts = Script.objects.filter(Q1 | Q2)
         return scripts
 
     def get_context_data(self, **kwargs):
@@ -79,7 +86,11 @@ class ScriptsTreatedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        scripts = Script.objects.filter(Q(status=4, author=user) | Q(status=4, corrector=user))
+        Q1 = Q(status=4, author=user)
+        Q2 = Q(status=5, author=user)
+        Q3 = Q(status=4, corrector=user)
+        Q4 = Q(status=5, corrector=user)
+        scripts = Script.objects.filter(Q1 | Q2 | Q3 | Q4)
         return scripts
 
     def get_context_data(self, **kwargs):
@@ -92,7 +103,9 @@ class ScriptsRejectedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        scripts = Script.objects.filter(Q(status=0, author=user) | Q(status=0, corrector=user))
+        Q1 = Q(status=0, author=user)
+        Q2 = Q(status=0, corrector=user)
+        scripts = Script.objects.filter(Q1 | Q2)
         return scripts
 
     def get_context_data(self, **kwargs):
