@@ -281,10 +281,22 @@ class Script(BaseResource):
     def submit(self):
         self.date_submitted = datetime.datetime.now()
         self.url = settings.MEDIA_URL + unicode(self.file)
-        try:
-            self.box_uuid = crocodoc.document.upload(url=self.url)
-        except:
-            pass
+        self.box_uuid = crocodoc.document.upload(url=self.url)
+        while True:
+            statuses = crocodoc.document.status([self.box_uuid,])
+            if (len(statuses) != 0):
+                if (statuses[0].get('error') == None):
+                    if statuses[0]['status'] == 'DONE':
+                        break
+                    else:
+                        time.sleep(1)
+                else:
+                    print '  File #1 failed :('
+                    print '  Error Message: ' + statuses[0]['error']
+            else:
+                print 'failed :('
+                print '  Statuses were not returned.'
+
         if not self.corrector:
             self.auto_set_corrector()
 
