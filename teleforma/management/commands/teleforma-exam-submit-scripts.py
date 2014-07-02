@@ -14,6 +14,6 @@ class Command(BaseCommand):
     help = "submit all script to Box View"
 
     def handle(self, *args, **options):
-    	for script in Script.bojects.all():
+    	for script in Script.ojects.all():
     		script.submit()
     		script.save()
