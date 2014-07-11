@@ -48,11 +48,11 @@ class Command(BaseCommand):
 
         users = User.objects.all()
         translation.activate(self.language_code)
+        i = 0
 
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
             student = user.student.all()
-            i = 0
             if student:
                 if profile and user.is_active:
                     trig = False
