@@ -59,14 +59,14 @@ class Command(BaseCommand):
                     period = Period.objects.get(name='Estivale')
                     trainings = Training.objects.filter(period=period)
                     for training in trainings:
-                        if training in student[0].trainings:
+                        if training in student[0].trainings.all():
                             trig = True
                     if trig and user.email:
                         i += 1
                         # self.init_password_email(user)
                         # profile.init_password = True
                         # profile.save()
-                        # logger.logger.info('init : ' + user.username)
+                        logger.logger.info('init : ' + user.username)
 
         logger.logger.info('############## Done #################')
         print i
