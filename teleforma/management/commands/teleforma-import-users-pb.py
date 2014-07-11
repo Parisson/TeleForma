@@ -59,15 +59,14 @@ class Command(BaseCommand):
         # username unicity
         users = User.objects.filter(username=username)
         if users:
-            if users[0].email != email:
-                i = 1
-                while users:
-                    username = slugify(first_name)[:i] + '.' + slugify(last_name)
-                    username = username[:30]
-                    users = User.objects.filter(username=username)
-                    if not users:
-                        break
-                    i += 1
+            i = 1
+            while users:
+                username = slugify(first_name)[:i] + '.' + slugify(last_name)
+                username = username[:30]
+                users = User.objects.filter(username=username)
+                if not users:
+                    break
+                i += 1
 
         user, created = User.objects.get_or_create(username=username, first_name=first_name,
                                      last_name=last_name, email=email)
