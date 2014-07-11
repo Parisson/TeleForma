@@ -63,9 +63,7 @@ class Command(BaseCommand):
                             trig = True
                     if trig and user.email:
                         i += 1
-                        # self.init_password_email(user)
-                        # profile.init_password = True
-                        # profile.save()
+                        self.init_password_email(user)
                         logger.logger.info('init : ' + user.username)
 
         logger.logger.info('############## Done #################')
