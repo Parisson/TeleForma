@@ -155,8 +155,8 @@ class Profile(models.Model):
     telephone       = CharField(_('Telephone'), max_length=255, blank=True)
     expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = BooleanField(_('Password initialized'))
-    wifi_login      = CharField(_('WiFi login (ICP)'), max_length=255, blank=True)
-    wifi_pass       = CharField(_('WiFi pass (ICP)'), max_length=255, blank=True)
+    wifi_login      = CharField(_('WiFi login'), max_length=255, blank=True)
+    wifi_pass       = CharField(_('WiFi pass'), max_length=255, blank=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
