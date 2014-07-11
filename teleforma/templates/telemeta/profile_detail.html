@@ -76,6 +76,8 @@
       <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
       <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }} {{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
       <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
+      <dt>{% trans "WiFi login" %}</dt><dd>{{ usr.profile.get.wifi_login }}</dd>
+      <dt>{% trans "WiFi password" %}</dt><dd>{{ usr.profile.get.wifi_pass }}</dd>
       {% endif %}
 
       <dt>{% trans "Date added" %}</dt><dd>{{ usr.date_joined }}</dd>
