@@ -9,7 +9,7 @@ Une fois la procédure accomplie, vous pourrez vous connecter à l'adresse suiva
 
 http://{{ site.domain }}
 
-à l'aide de votre nom d'utilisateur : {{ object.recipient.username }}
+à l'aide de votre nom d'utilisateur : {{ usr.username }}
 
 Cette plateforme vous permet d’accéder tout au long de votre formation aux différents documents - fascicules de cours (selon la formule choisie), fascicules d’actualisation, sujets et corrigés - ainsi qu’à l’ensemble de vos enseignements à la demande ou en direct.
 
