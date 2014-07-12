@@ -180,18 +180,20 @@ def get_googletools():
 
 @register.filter
 def get_audio_id(media):
-    medias = media.conference.media.all()
-    for m in medias:
-        if 'audio' in m.mime_type:
-            return m.id
+    if media.conference:
+        medias = media.conference.media.all()
+        for m in medias:
+            if 'audio' in m.mime_type:
+                return m.id
     return
 
 @register.filter
 def get_video_id(media):
-    medias = media.conference.media.all()
-    for m in medias:
-        if 'video' in m.mime_type:
-            return m.id
+    if media.conference:
+        medias = media.conference.media.all()
+        for m in medias:
+            if 'video' in m.mime_type:
+                return m.id
     return
 
 @register.filter
