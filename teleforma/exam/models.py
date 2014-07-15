@@ -311,7 +311,8 @@ class Script(BaseResource):
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
-        context = {'script': self}
+        site = Site.objects.all()[0]
+        context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_marked.txt', context)
         a = ugettext('Script')
         v = ugettext('marked')
@@ -325,7 +326,8 @@ class Script(BaseResource):
     def reject(self):
         self.date_marked = datetime.datetime.now()
         self.date_rejected = datetime.datetime.now()
-        context = {'script': self}
+        site = Site.objects.all()[0]
+        context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_rejected.txt', context)
         a = ugettext('Script')
         v = ugettext('rejected')
@@ -333,7 +335,6 @@ class Script(BaseResource):
         mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
-        site = Site.objects.all()[0]
         notify_user(mess, 'acceptance', site)
 
 

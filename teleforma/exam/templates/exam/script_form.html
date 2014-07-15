@@ -27,14 +27,18 @@
 {% trans "New script" %}
 
     <div style="float: right; font-size: 0.9em;">
-        <a id="blank_script" href="#" class="component_icon button icon_download">&nbsp;{% trans "Blank script" %}</a>
+        <a id="blank_script" href="http://files.parisson.com/pre-barreau/Modele_copie.pdf" class="component_icon button icon_download" target="_blank">&nbsp;{% trans "Blank script" %}</a>
     </div>
 
 </div>
+<br />
+
+<div>Merci de fournir des fichiers au format <b>PDF uniquement</b> et nommés <b>sans accents ni caractères spéciaux</b>.</div>
 
 <div class="course_content" id="media_infos" style="font-size: 115%;">
     <form method="post" id="_ScriptForm" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
        <table>
+       <br />
        <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
        {% for field in form %}
        <tr>

@@ -15,4 +15,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
     	for script in Script.objects.filter(status=2):
+    		print unicode(script)
     		script.submit()
