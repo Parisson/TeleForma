@@ -266,17 +266,10 @@ class Script(BaseResource):
         self.save()
 
     def save(self, *args, **kwargs):
-        #FIXME
-        if self.status == 2:
-            self.status = 3
-            super(Script, self).save(*args, **kwargs)
-            # self.fix_filename()
-            self.submit()
         if self.status == 4 and self.score:
             self.mark()
         if self.status == 0 and self.reject_reason:
             self.reject()
-
         super(Script, self).save(*args, **kwargs)
 
     def fix_filename(self):
@@ -308,6 +301,8 @@ class Script(BaseResource):
 
         if not self.corrector:
             self.auto_set_corrector()
+        self.status = 3
+        self.save()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
