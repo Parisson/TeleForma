@@ -1,6 +1,6 @@
 {% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}Bonjour,
 
-Votre copie soumise le {{ script.date_created }} en {{ script.course }} pour la séance {{ script.session }} a été rejetée pour le motif suivant : {{ script.reject_reason }}.
+Votre copie soumise le {{ script.date_created }} en {{ script.course }} pour la séance {{ script.session }} a été rejetée pour le motif suivant : {% trans script.reject_reason %}.
 
 Veuiller corriger cette erreur puis resoumettre votre copie.
 

@@ -59,8 +59,11 @@ crocodoc.api_token = settings.BOX_API_TOKEN
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
                 (3, _('pending')),(4, _('marked')), (5, _('read')) )
-REJECT_REASON = ((1, _('unreadable')),
-                (2, _('bad orientation')), (3, _('bad framing')), (4, _('incomplete')),)
+
+REJECT_REASON = (('unreadable', _('unreadable')),
+                ('bad orientation', _('bad orientation')),
+                ('bad framing', _('bad framing')),
+                ('incomplete', _('incomplete')),)
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
@@ -189,8 +192,8 @@ class Script(BaseResource):
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
     score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
-    status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, default=1, blank=True)
-    reject_reason = models.IntegerField(_('reason'), choices=REJECT_REASON, null=True, blank=True)
+    status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, blank=True)
+    reject_reason = models.CharField(_('reason'), choices=REJECT_REASON, max_length='256', blank=True)
     date_submitted = models.DateTimeField(_('date submitted'), null=True, blank=True)
     date_marked = models.DateTimeField(_('date marked'), null=True, blank=True)
     date_rejected = models.DateTimeField(_('date rejected'), null=True, blank=True)
@@ -310,7 +313,7 @@ class Script(BaseResource):
         self.date_marked = datetime.datetime.now()
         context = {'script': self}
         text = render_to_string('exam/messages/script_marked.txt', context)
-        a = ugettext('script')
+        a = ugettext('Script')
         v = ugettext('marked')
         subject = '%s %s' % (a, v)
         mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
@@ -324,7 +327,7 @@ class Script(BaseResource):
         self.date_rejected = datetime.datetime.now()
         context = {'script': self}
         text = render_to_string('exam/messages/script_rejected.txt', context)
-        a = ugettext('script')
+        a = ugettext('Script')
         v = ugettext('rejected')
         subject = '%s %s' % (a, v)
         mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
