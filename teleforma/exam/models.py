@@ -270,6 +270,7 @@ class Script(BaseResource):
         if self.status == 2:
             self.status = 3
             super(Script, self).save(*args, **kwargs)
+            self.fix_filename()
             self.submit()
         if self.status == 4 and self.score:
             self.mark()
@@ -277,6 +278,14 @@ class Script(BaseResource):
             self.reject()
 
         super(Script, self).save(*args, **kwargs)
+
+    def fix_filename(self):
+        old = self.file.path
+        old_list = old.split(os.sep)
+        path = old_list[:-2]
+        new = os.sep.join(path) + os.sep + unicode(self.uuid) + '.pdf'
+        os.rename(old, new)
+        self.file = new
 
     def submit(self):
         self.date_submitted = datetime.datetime.now()
