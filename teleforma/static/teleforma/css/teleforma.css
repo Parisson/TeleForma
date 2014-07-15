@@ -1665,3 +1665,51 @@ input,textarea{
 .conference_form textarea {
     font-size: 1.2em;
     }
+
+
+.info {
+    margin-top: 0.3em;
+    color: white;
+    padding: 0.3em 0.3em 0.5em 0.8em;
+    background-color: #008000;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.success {
+    margin-top: 1em;
+    color: white;
+    padding: 0.3em 0.3em 0.5em 0.8em;
+    background-color: #008000;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.warning {
+    margin-top: 0.3em;
+    color: white;
+    padding: 0.3em 0.3em 0.5em 0.8em;
+    background-color: #e65911;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.error {
+    color: white;
+    padding: 0.3em;
+    background-color: #db4b39;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.errorlist {
+    color: red;
+}
+
+.errorlist li {
+    font-size: 1.2em;
+}

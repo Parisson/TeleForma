@@ -6,6 +6,7 @@ from teleforma.views.core import *
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.utils.translation import ugettext_lazy as _
 
 
 class ScriptView(CourseAccessMixin, UpdateView):
@@ -123,9 +124,11 @@ class ScriptCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        messages.info(self.request, _("You have successfully submitted your script. It will be processed in the next hours."))
         return super(ScriptCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
+        messages.info(self.request, _("There was a problem with your submission. Please try again, later if possible."))
         return super(ScriptCreateView, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):

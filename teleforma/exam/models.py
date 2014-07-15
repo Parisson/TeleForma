@@ -41,7 +41,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q, Max, Min
 from django.db.models.signals import post_save
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from teleforma.models import *
 from django.template.loader import render_to_string
@@ -282,7 +282,8 @@ class Script(BaseResource):
 
     def submit(self):
         self.date_submitted = datetime.datetime.now()
-        self.url = settings.MEDIA_URL + unicode(self.file)
+        self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
+        # self.url = settings.MEDIA_URL + unicode(self.file)
         self.box_uuid = crocodoc.document.upload(url=self.url)
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
@@ -301,33 +302,37 @@ class Script(BaseResource):
 
         if not self.corrector:
             self.auto_set_corrector()
+
         self.status = 3
         self.save()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
-        context = {}
+        context = {'script': self}
         text = render_to_string('exam/messages/script_marked.txt', context)
-        a = _('script')
-        v = _('marked')
-        subject = '%s : %s - %s %s' % (unicode(self), a, self.session, v)
+        a = ugettext('script')
+        v = ugettext('marked')
+        subject = '%s %s' % (a, v)
         mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
-        #notify_user(mess, 'acceptance')
+        site = Site.objects.all()[0]
+        notify_user(mess, 'acceptance', site)
 
     def reject(self):
         self.date_marked = datetime.datetime.now()
         self.date_rejected = datetime.datetime.now()
-        context = {}
+        context = {'script': self}
         text = render_to_string('exam/messages/script_rejected.txt', context)
-        a = _('script')
-        v = _('rejected')
-        subject = '%s : %s - %s %s' % (unicode(self), a, self.session, v)
+        a = ugettext('script')
+        v = ugettext('rejected')
+        subject = '%s %s' % (a, v)
         mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
-        #notify_user(mess, 'acceptance')
+        site = Site.objects.all()[0]
+        notify_user(mess, 'acceptance', site)
+
 
 def set_file_properties(sender, instance, **kwargs):
     if instance.file:
