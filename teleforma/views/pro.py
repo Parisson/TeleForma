@@ -99,7 +99,11 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 def set_revision(user, seminar):
     revisions = SeminarRevision.objects.filter(seminar=seminar, user=user)
     if revisions:
-        revisions[0].save()
+        r = revisions[0]
+        if not r.date_modified:
+            r.date_modified = datetime.datetime.now()
+        else:
+            SeminarRevision.objects.create(seminar=seminar, user=user)
     else:
         SeminarRevision.objects.create(seminar=seminar, user=user)
 
@@ -112,6 +116,18 @@ class SeminarAccessMixin(object):
             messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
+
+    @jsonrpc_method('teleforma.seminar_load')
+    def seminar_load(request, id, username):
+        seminar = Seminar.objects.get(id=id)
+        user = User.objects.get(username=username)
+        set_revision(user, seminar)
+
+    @jsonrpc_method('teleforma.seminar_unload')
+    def seminar_unload(request, id, username):
+        seminar = Seminar.objects.get(id=id)
+        user = User.objects.get(username=username)
+        set_revision(user, seminar)
 
 
 class SeminarView(SeminarAccessMixin, DetailView):
