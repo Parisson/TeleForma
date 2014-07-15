@@ -270,7 +270,7 @@ class Script(BaseResource):
         if self.status == 2:
             self.status = 3
             super(Script, self).save(*args, **kwargs)
-            self.fix_filename()
+            # self.fix_filename()
             self.submit()
         if self.status == 4 and self.score:
             self.mark()
