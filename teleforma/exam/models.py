@@ -202,7 +202,7 @@ class Script(BaseResource):
     @property
     def title(self):
         return ' - '.join([self.course.title, self.type.name, _("Session") + ' ' + self.session,
-                        unicode(self.author.first_name) + ' ' + unicode(self.author.first_name),
+                        unicode(self.author.first_name) + ' ' + unicode(self.author.last_name),
                         unicode(self.date_added)])
 
     def __unicode__(self):
