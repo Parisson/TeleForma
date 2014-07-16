@@ -15,11 +15,12 @@ class Command(BaseCommand):
     args = 'path'
 
     def handle(self, *args, **options):
-    	path = args[0]
-    	f = open(path, 'w')
+        path = args[0]
+        f = open(path, 'w')
 
-    	for user in User.objects.all():
-    		profile = user.profile.get()
-    		f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
+        for user in User.objects.all():
+            profile = user.profile.get()
+            if profile:
+            	f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
 
-    	f.close()
+        f.close()
