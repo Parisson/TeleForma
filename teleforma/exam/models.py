@@ -203,7 +203,7 @@ class Script(BaseResource):
     def title(self):
         return ' - '.join([self.course.title, self.type.name, _("Session") + ' ' + self.session,
                         unicode(self.author.first_name) + ' ' + unicode(self.author.first_name),
-                        unicode(self.date_submitted)])
+                        unicode(self.date_created)])
 
     def __unicode__(self):
         return unicode(self.title)
@@ -285,8 +285,8 @@ class Script(BaseResource):
 
     def submit(self):
         self.date_submitted = datetime.datetime.now()
-        self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
-        # self.url = settings.MEDIA_URL + unicode(self.file)
+        # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
+        self.url = settings.MEDIA_URL + unicode(self.file)
         self.box_uuid = crocodoc.document.upload(url=self.url)
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
