@@ -19,8 +19,9 @@ class Command(BaseCommand):
         f = open(path, 'w')
 
         for user in User.objects.all():
-            profile = user.profile.get()
+            profile = Profile.objects.filter(user=user)
             if profile:
-            	f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
+            	p = profile[0]
+                f.write(p.wifi_login + ',' + p.wifi_pass + '\n')
 
         f.close()
