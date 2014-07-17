@@ -1713,3 +1713,9 @@ input,textarea{
 .errorlist li {
     font-size: 1.2em;
 }
+
+.script-list tr {
+    cursor: pointer;
+    font-weight: bold;
+}
+
