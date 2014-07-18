@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-16 00:53+0200\n"
+"POT-Creation-Date: 2014-07-18 12:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -16,193 +16,193 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: exam/models.py:60 exam/models.py:333
+#: exam/models.py:61 exam/models.py:344
 msgid "rejected"
 msgstr "rejetée"
 
-#: exam/models.py:60
+#: exam/models.py:61
 msgid "draft"
 msgstr "brouillon"
 
-#: exam/models.py:60
+#: exam/models.py:61
 msgid "submitted"
 msgstr "soumise"
 
-#: exam/models.py:61
+#: exam/models.py:62
 msgid "pending"
 msgstr "en attente"
 
-#: exam/models.py:61 exam/models.py:318
+#: exam/models.py:62 exam/models.py:329
 msgid "marked"
 msgstr "corrigée"
 
-#: exam/models.py:61
+#: exam/models.py:62
 msgid "read"
 msgstr "lu"
 
-#: exam/models.py:63
+#: exam/models.py:64
 msgid "unreadable"
 msgstr "illisible"
 
-#: exam/models.py:64
+#: exam/models.py:65
 msgid "bad orientation"
 msgstr "mauvaise orientation"
 
-#: exam/models.py:65
+#: exam/models.py:66
 msgid "bad framing"
 msgstr "mauvais cadrage"
 
-#: exam/models.py:66
+#: exam/models.py:67
 msgid "incomplete"
 msgstr "incomplet"
 
-#: exam/models.py:109 exam/models.py:183 models/core.py:198 models/core.py:252
+#: exam/models.py:110 exam/models.py:184 models/core.py:198 models/core.py:252
 #: models/core.py:492 models/core.py:579 models/pro.py:45
 msgid "course"
 msgstr "matière"
 
-#: exam/models.py:110 exam/models.py:190
+#: exam/models.py:111 exam/models.py:191
 msgid "corrector"
 msgstr "correcteur"
 
-#: exam/models.py:111 exam/models.py:184 models/ae.py:47 models/core.py:111
+#: exam/models.py:112 exam/models.py:185 models/ae.py:47 models/core.py:111
 #: models/core.py:136 models/core.py:250 models/core.py:497 models/core.py:542
 #: models/core.py:583 models/crfpa.py:64
 msgid "period"
 msgstr "période"
 
-#: exam/models.py:113
+#: exam/models.py:114
 msgid "value"
 msgstr "valeur"
 
-#: exam/models.py:114
+#: exam/models.py:115
 msgid "date start"
 msgstr "date de début"
 
-#: exam/models.py:115
+#: exam/models.py:116
 msgid "date end"
 msgstr "date de fin"
 
-#: exam/models.py:118
+#: exam/models.py:119
 msgid "Quota"
 msgstr ""
 
-#: exam/models.py:119
+#: exam/models.py:120
 msgid "Quotas"
 msgstr ""
 
-#: exam/models.py:139 models/core.py:458 models/pro.py:67
+#: exam/models.py:140 models/core.py:458 models/pro.py:67
 msgid "date added"
 msgstr "date d'ajout"
 
-#: exam/models.py:140 models/core.py:159 models/core.py:459 models/pro.py:68
+#: exam/models.py:141 models/core.py:159 models/core.py:459 models/pro.py:68
 msgid "date modified"
 msgstr "date de modification"
 
-#: exam/models.py:141
+#: exam/models.py:142
 msgid "UUID"
 msgstr ""
 
-#: exam/models.py:142
+#: exam/models.py:143
 msgid "MIME type"
 msgstr "Type MIME"
 
-#: exam/models.py:143
+#: exam/models.py:144
 msgid "sha1"
 msgstr ""
 
-#: exam/models.py:159
+#: exam/models.py:160
 msgid "script"
 msgstr "copie"
 
-#: exam/models.py:160
+#: exam/models.py:161
 msgid "Page file"
 msgstr "Fichier de page"
 
-#: exam/models.py:161
+#: exam/models.py:162
 msgid "Image file"
 msgstr "Fichier image"
 
-#: exam/models.py:162 models/pro.py:49 models/pro.py:85
+#: exam/models.py:163 models/pro.py:49 models/pro.py:85
 msgid "rank"
 msgstr "rang"
 
-#: exam/models.py:165
+#: exam/models.py:166
 msgid "Page"
 msgstr "Page"
 
-#: exam/models.py:166
+#: exam/models.py:167
 msgid "Pages"
 msgstr "Pages"
 
-#: exam/models.py:171 models/core.py:93 models/core.py:106 models/core.py:128
+#: exam/models.py:172 models/core.py:93 models/core.py:106 models/core.py:128
 #: models/core.py:140 models/core.py:234 models/core.py:475 models/crfpa.py:47
 #: models/crfpa.py:63
 msgid "name"
 msgstr "nom"
 
-#: exam/models.py:174
+#: exam/models.py:175
 msgid "ScriptType"
 msgstr "Type de copie"
 
-#: exam/models.py:175
+#: exam/models.py:176
 msgid "ScriptTypes"
 msgstr "Types de copies"
 
-#: exam/models.py:186 models/core.py:256 models/core.py:501
+#: exam/models.py:187 models/core.py:256 models/core.py:501
 msgid "session"
 msgstr "séance"
 
-#: exam/models.py:188 models/core.py:389 models/core.py:499 models/core.py:587
+#: exam/models.py:189 models/core.py:389 models/core.py:499 models/core.py:587
 msgid "type"
 msgstr "type"
 
-#: exam/models.py:189
+#: exam/models.py:190
 msgid "author"
 msgstr "auteur"
 
-#: exam/models.py:191
+#: exam/models.py:192
 msgid "PDF file"
 msgstr "Fichier PDF"
 
-#: exam/models.py:192
+#: exam/models.py:193
 msgid "Box UUID"
 msgstr ""
 
-#: exam/models.py:193
+#: exam/models.py:194
 msgid "score"
 msgstr "note"
 
-#: exam/models.py:194 models/pro.py:125
+#: exam/models.py:195 models/pro.py:125
 msgid "comments"
 msgstr "commentaires"
 
-#: exam/models.py:195 models/core.py:265 models/pro.py:48 models/pro.py:88
+#: exam/models.py:196 models/core.py:265 models/pro.py:48 models/pro.py:88
 #: models/pro.py:104
 msgid "status"
 msgstr "status"
 
-#: exam/models.py:196
+#: exam/models.py:197
 msgid "reason"
 msgstr "raison"
 
-#: exam/models.py:197
+#: exam/models.py:198
 msgid "date submitted"
 msgstr "date de soumission"
 
-#: exam/models.py:198
+#: exam/models.py:199
 msgid "date marked"
 msgstr "date de correction"
 
-#: exam/models.py:199
+#: exam/models.py:200
 msgid "date rejected"
 msgstr "date de rejet"
 
-#: exam/models.py:200
+#: exam/models.py:201
 msgid "URL"
 msgstr ""
 
-#: exam/models.py:204 exam/templates/exam/inc/script_list.html:14
+#: exam/models.py:205 exam/templates/exam/inc/script_list.html:14
 #: templates/teleforma/course.html:50
 #: templates/teleforma/course_conference.html:40
 #: templates/teleforma/course_conference.html:71
@@ -215,38 +215,42 @@ msgstr ""
 msgid "Session"
 msgstr "Séance"
 
-#: exam/models.py:212 exam/models.py:317 exam/models.py:332
+#: exam/models.py:213 exam/models.py:328 exam/models.py:343
 msgid "Script"
 msgstr "Copie"
 
-#: exam/models.py:213 exam/templates/exam/scripts.html:21
+#: exam/models.py:214 exam/templates/exam/scripts.html:21
 #: templates/telemeta/base.html:116 templates/telemeta/base.html.py:121
 msgid "Scripts"
 msgstr "Copies"
 
-#: exam/views.py:82
+#: exam/views.py:83
 msgid "Pending scripts"
 msgstr "Copies en attente"
 
-#: exam/views.py:99
+#: exam/views.py:100
 msgid "Treated scripts"
 msgstr "Copie traitées"
 
-#: exam/views.py:114
+#: exam/views.py:115
 msgid "Rejected scripts"
 msgstr "Copies rejetées"
 
-#: exam/views.py:127
+#: exam/views.py:128
 msgid ""
 "You have successfully submitted your script. It will be processed in the "
 "next hours."
 msgstr ""
+"Vous avez correctement soumis votre copie. Elle sera traitée dans les "
+"prochaines heures puis corrigée."
 
-#: exam/views.py:131
+#: exam/views.py:132
 msgid ""
 "There was a problem with your submission. Please try again, later if "
 "possible."
 msgstr ""
+"Il y a une une erreur lors de votre soumission de copie. Merci de vérifier "
+"votre fichier ou de réessayer plus tard."
 
 #: exam/templates/exam/script_detail.html:92
 msgid "Topic"
@@ -299,7 +303,7 @@ msgstr "Nouvelle copie"
 msgid "Blank script"
 msgstr "Copie vierge"
 
-#: exam/templates/exam/script_form.html:56
+#: exam/templates/exam/script_form.html:58
 msgid "Submit"
 msgstr "Soumettre"
 
@@ -315,7 +319,7 @@ msgstr "En attente"
 msgid "Marked"
 msgstr "Corrigées"
 
-#: exam/templates/exam/scripts.html:66
+#: exam/templates/exam/scripts.html:65
 msgid "No scripts"
 msgstr "Aucune copie"
 
@@ -808,47 +812,47 @@ msgstr "Messages"
 msgid "Sorry, this page number is invalid."
 msgstr ""
 
-#: templates/postman/base_folder.html:31
+#: templates/postman/base_folder.html:39
 #: templates/teleforma/course_conference_record.html:69
 #: templates/telemeta/lists.html:75
 msgid "Action"
 msgstr ""
 
-#: templates/postman/base_folder.html:32
+#: templates/postman/base_folder.html:40
 msgid "Sender"
 msgstr ""
 
-#: templates/postman/base_folder.html:33 templates/postman/reply.html:4
+#: templates/postman/base_folder.html:41 templates/postman/reply.html:4
 msgid "Recipient"
 msgstr ""
 
-#: templates/postman/base_folder.html:34
+#: templates/postman/base_folder.html:42
 msgid "Subject"
 msgstr ""
 
-#: templates/postman/base_folder.html:35
+#: templates/postman/base_folder.html:43
 #: templates/telemeta/inc/module_revisions.html:16
 msgid "Date"
 msgstr "Date"
 
-#: templates/postman/base_folder.html:53
+#: templates/postman/base_folder.html:61
 msgid "g:i A,M j,n/j/y"
 msgstr ""
 
-#: templates/postman/base_folder.html:61 templates/postman/view.html:39
+#: templates/postman/base_folder.html:69 templates/postman/view.html:39
 #: templates/telemeta/lists.html:58
 msgid "Delete"
 msgstr ""
 
-#: templates/postman/base_folder.html:64 templates/postman/view.html:43
+#: templates/postman/base_folder.html:72 templates/postman/view.html:43
 msgid "Archive"
 msgstr ""
 
-#: templates/postman/base_folder.html:67
+#: templates/postman/base_folder.html:75
 msgid "Undelete"
 msgstr ""
 
-#: templates/postman/base_folder.html:73
+#: templates/postman/base_folder.html:81
 #, fuzzy
 msgid "No messages."
 msgstr "Messages"
