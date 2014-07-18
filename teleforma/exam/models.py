@@ -34,6 +34,7 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
+from __future__ import division
 import os, uuid, time, hashlib, mimetypes, tempfile, datetime
 
 from django.db import models
@@ -127,7 +128,7 @@ class Quota(models.Model):
     def level(self):
         if self.value:
             if self.value != 0:
-                level = 100*self.corrector.corrector_scripts.filter(Q(status=2) | Q(status=3) | Q(status=4) | Q(status=5)).count()./self.value
+                level = 100*self.corrector.corrector_scripts.filter(Q(status=2) | Q(status=3) | Q(status=4) | Q(status=5)).count()/self.value
                 return level
             else:
                 return 0
