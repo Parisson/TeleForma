@@ -33,7 +33,7 @@ $(document).ready(function(){
     </thead>
     <tbody id="spacing" class="script-list">
     {% for script in object_list %}
-    <tr data-href="{% url teleforma-exam-script-detail period.id script.id %}">
+    <tr {% if script.status != 2 %}data-href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>
     <td>{{ script.course.title }}</td>
      <td>{{ script.session }}</td>
      <td>{{ script.type }}</td>

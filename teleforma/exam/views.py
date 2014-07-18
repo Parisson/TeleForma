@@ -73,8 +73,9 @@ class ScriptsPendingView(ScriptsView):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
         Q1 = Q(status=3, author=user, period=period)
-        Q2 = Q(status=3, corrector=user, period=period)
-        scripts = Script.objects.filter(Q1 | Q2)
+        Q2 = Q(status=2, author=user, period=period)
+        Q3 = Q(status=3, corrector=user, period=period)
+        scripts = Script.objects.filter(Q1 | Q2 | Q3)
         return scripts
 
     def get_context_data(self, **kwargs):
