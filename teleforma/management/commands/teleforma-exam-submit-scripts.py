@@ -29,13 +29,13 @@ class Command(BaseCommand):
     args = "log_file"
 
     def handle(self, *args, **options):
-    	logger = Logger(args[0])
-    	for script in Script.objects.filter(status=2):
-    		script.fix_filename()
-    		logger.logger.info(script.title)
-    		try:
-    			script.submit()
-    		except:
-    			logger.logger.error('ERROR')
-    		logger.logger.info('OK')
-    		time.sleep(10)
+        logger = Logger(args[0])
+        for script in Script.objects.filter(status=2):
+            logger.logger.info(script.title)
+            script.fix_filename()
+            try:
+                script.submit()
+            except:
+                logger.logger.error('ERROR')
+            logger.logger.info('OK')
+            time.sleep(10)
