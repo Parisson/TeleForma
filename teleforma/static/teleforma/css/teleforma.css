@@ -1714,8 +1714,3 @@ input,textarea{
     font-size: 1.2em;
 }
 
-.script-list tr {
-    cursor: pointer;
-    font-weight: bold;
-}
-
