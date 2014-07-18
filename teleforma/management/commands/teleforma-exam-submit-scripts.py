@@ -26,6 +26,7 @@ class Logger:
 
 class Command(BaseCommand):
     help = "submit all script to Box View"
+    args = "log_file"
 
     def handle(self, *args, **options):
     	logger = Logger(args[0])
