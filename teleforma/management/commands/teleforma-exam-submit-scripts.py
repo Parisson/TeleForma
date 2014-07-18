@@ -31,6 +31,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
     	logger = Logger(args[0])
     	for script in Script.objects.filter(status=2):
+    		script.fix_filename()
     		logger.logger.info(script.title)
     		script.submit()
     		logger.logger.info('OK')
