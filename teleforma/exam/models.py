@@ -283,7 +283,7 @@ class Script(BaseResource):
         filename, ext = os.path.splitext(old_list[-1])
         new = os.sep.join(path) + os.sep + slugify(filename) + ext
         os.rename(old, new)
-        self.file = new
+        self.file.path = new
         self.save()
 
     def submit(self):
