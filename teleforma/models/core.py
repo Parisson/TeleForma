@@ -169,7 +169,7 @@ class Course(Model):
 
     @property
     def slug(self):
-        return slugify(unicode(code))
+        return slugify(unicode(self.code))
 
     def to_dict(self):
         dict = {'organization' : self.department.organization.name,
