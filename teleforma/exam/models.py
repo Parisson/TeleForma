@@ -290,9 +290,12 @@ class Script(BaseResource):
         new_abs = os.sep.join(old_abs_root) + os.sep + slugify(filename) + ext
         new_rel = os.sep.join(old_rel_root) + os.sep + slugify(filename) + ext
 
-        os.rename(old_abs, new_abs)
+        print new_abs
+        print new_rel
+
+        # os.rename(old_abs, new_abs)
         self.file = new_rel
-        self.save()
+        # self.save()
 
     def submit(self):
         self.date_submitted = datetime.datetime.now()
