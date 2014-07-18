@@ -24,9 +24,9 @@
     <tbody id="spacing" class="script-list">
     {% for script in object_list %}
     <tr>
-     <td {% script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.course.title }}</td>
-     <td {% script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.session }}</td>
-     <td {% script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.type }}</td>
+     <td {% if script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.course.title }}</td>
+     <td {% if script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.session }}</td>
+     <td {% if script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.type }}</td>
      <td>{{ script.author.last_name }}</td>
      <td>{{ script.author.first_name }}</td>
      <td>{{ script.date_added }}</td>
