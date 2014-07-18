@@ -298,7 +298,6 @@ class Script(BaseResource):
         self.date_submitted = datetime.datetime.now()
         # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
         self.url = settings.MEDIA_URL + unicode(self.file)
-        print self.url
         self.box_uuid = crocodoc.document.upload(url=self.url)
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
