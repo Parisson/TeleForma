@@ -33,6 +33,9 @@ class Command(BaseCommand):
     	for script in Script.objects.filter(status=2):
     		script.fix_filename()
     		logger.logger.info(script.title)
-    		script.submit()
+    		try:
+    			script.submit()
+    		except:
+    			logger.logger.error('ERROR')
     		logger.logger.info('OK')
     		time.sleep(10)

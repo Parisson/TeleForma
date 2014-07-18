@@ -277,13 +277,21 @@ class Script(BaseResource):
         super(Script, self).save(*args, **kwargs)
 
     def fix_filename(self):
-        old = self.file.path
-        old_list = old.split(os.sep)
-        path = old_list[:-1]
-        filename, ext = os.path.splitext(old_list[-1])
-        new = os.sep.join(path) + os.sep + slugify(filename) + ext
-        os.rename(old, new)
-        self.file.path = new
+        old_abs = self.file.path
+        old_abs_list = old_abs.split(os.sep)
+        old_abs_root = old_abs_list[:-1]
+
+        old_rel = unicode(self.file)
+        old_rel_list = old_rel.split(os.sep)
+        old_rel_root = old_rel_list[:-1]
+
+        filename, ext = os.path.splitext(old_abs_list[-1])
+
+        new_abs = os.sep.join(old_abs_root) + os.sep + slugify(filename) + ext
+        new_rel = os.sep.join(old_rel_root) + os.sep + slugify(filename) + ext
+
+        os.rename(old_abs, new_abs)
+        self.file = new_rel
         self.save()
 
     def submit(self):
