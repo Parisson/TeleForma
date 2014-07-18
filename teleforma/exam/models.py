@@ -306,7 +306,7 @@ class Script(BaseResource):
                     if statuses[0]['status'] == 'DONE':
                         break
                     else:
-                        time.sleep(1)
+                        time.sleep(3)
                 else:
                     print '  File #1 failed :('
                     print '  Error Message: ' + statuses[0]['error']
