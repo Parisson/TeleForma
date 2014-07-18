@@ -42,6 +42,7 @@ from django.db.models import Q, Max, Min
 from django.db.models.signals import post_save
 from django.conf import settings
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.template.defaultfilters import slugify
 
 from teleforma.models import *
 from django.template.loader import render_to_string
@@ -278,10 +279,12 @@ class Script(BaseResource):
     def fix_filename(self):
         old = self.file.path
         old_list = old.split(os.sep)
-        path = old_list[:-2]
-        new = os.sep.join(path) + os.sep + unicode(self.uuid) + '.pdf'
+        path = old_list[:-1]
+        filename, ext = os.path.splitext(old_list[-1])
+        new = os.sep.join(path) + os.sep + slugify(filename) + ext
         os.rename(old, new)
         self.file = new
+        self.save()
 
     def submit(self):
         self.date_submitted = datetime.datetime.now()
