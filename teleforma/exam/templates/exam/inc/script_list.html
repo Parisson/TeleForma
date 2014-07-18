@@ -6,16 +6,6 @@
 {% autopaginate object_list 8 %}
 {% paginate %}
 
-<script>
-$(document).ready(function(){
-    $('table tr').click(function(){
-        window.location = $(this).data('href');
-        return false;
-    });
-});
-</script>
-
-
 <div id="users">
   <table class="listing" width="100%">
    <thead>
@@ -33,10 +23,10 @@ $(document).ready(function(){
     </thead>
     <tbody id="spacing" class="script-list">
     {% for script in object_list %}
-    <tr {% if script.status != 2 %}data-href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>
-    <td>{{ script.course.title }}</td>
-     <td>{{ script.session }}</td>
-     <td>{{ script.type }}</td>
+    <tr>
+     <td {% script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.course.title }}</td>
+     <td {% script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.session }}</td>
+     <td {% script.status != 2 %}href="{% url teleforma-exam-script-detail period.id script.id %}"{% endif %}>{{ script.type }}</td>
      <td>{{ script.author.last_name }}</td>
      <td>{{ script.author.first_name }}</td>
      <td>{{ script.date_added }}</td>
