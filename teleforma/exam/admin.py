@@ -18,7 +18,7 @@ class ScriptAdmin(admin.ModelAdmin):
     model = Script
     ordering = ['-date_added']
     #fileds = ['date_added',]
-    readonly_fields = ("date_added",)
+    readonly_fields = ('date_added','uuid','box_uuid','sha1','mime_type')
     # exclude = ['options']
     # inlines = [ScriptPageInline]
 
