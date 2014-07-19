@@ -308,14 +308,14 @@ class Script(BaseResource):
         # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
         self.url = settings.MEDIA_URL + unicode(self.file)
 
-        if '.jpg' in self.file.path or '.JPG' in self.file.path \
-            or '.png' in self.file.path or '.PNG' in self.file.path:
+        if not '.pdf' in self.file.path or not '.PDF' in self.file.path:
             self.reject_reason = 'wrong format'
-            self.reject()
+            self.status = 0
+            self.corrector = User.objects.filter(is_superuser=True)[0]
 
         self.save()
 
-        if not self.box_uuid and not self.reject_reason:
+        if not self.box_uuid and not self.status == 0:
             self.box_uuid = crocodoc.document.upload(url=self.url)
 
             i = 0
