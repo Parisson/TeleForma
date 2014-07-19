@@ -319,12 +319,11 @@ class Script(BaseResource):
             self.box_uuid = crocodoc.document.upload(url=self.url)
 
             i = 0
-            n = 50
+            n = 30
             s = 6
             t = 0
 
             while True:
-                i += 1
                 statuses = crocodoc.document.status([self.box_uuid,])
                 if (len(statuses) != 0):
                     if (statuses[0].get('error') == None):
@@ -333,18 +332,18 @@ class Script(BaseResource):
                             break
                         else:
                             time.sleep(s)
-                            if i == n:
-                                break
                     else:
                         print 'File upload failed :('
                         print '  Error Message: ' + statuses[0]['error']
                         time.sleep(s)
+                        i += 1
                         if i == n:
                             break
                 else:
                     print 'failed :('
                     print '  Statuses were not returned.'
                     time.sleep(s)
+                    i += 1
                     if i == n:
                         break
 
