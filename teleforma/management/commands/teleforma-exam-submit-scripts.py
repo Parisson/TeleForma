@@ -38,4 +38,4 @@ class Command(BaseCommand):
             except:
                 logger.logger.error('ERROR')
             logger.logger.info('OK')
-            time.sleep(10)
+            time.sleep(60)

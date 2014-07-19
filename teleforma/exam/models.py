@@ -67,6 +67,7 @@ REJECT_REASON = (('unreadable', _('unreadable')),
                 ('bad framing', _('bad framing')),
                 ('incomplete', _('incomplete')),
                 ('wrong course', _('wrong course')),
+                ('wrong format', _('wrong format')),
                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
@@ -302,44 +303,56 @@ class Script(BaseResource):
         self.save()
 
     def submit(self):
-        import crocodoc
-        crocodoc.api_token = settings.BOX_API_TOKEN
-
         self.date_submitted = datetime.datetime.now()
+
         # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
         self.url = settings.MEDIA_URL + unicode(self.file)
-        self.box_uuid = crocodoc.document.upload(url=self.url)
 
-        i = 0
-        n = 30
-        s = 6
+        if '.jpg' in self.file.path or '.JPG' in self.file.path \
+            or '.png' in self.file.path or '.PNG' in self.file.path:
+            self.reject_reason = 'wrong format'
+            self.reject()
 
-        while True:
-            statuses = crocodoc.document.status([self.box_uuid,])
-            if (len(statuses) != 0):
-                if (statuses[0].get('error') == None):
-                    if statuses[0]['status'] == 'DONE':
-                        if not self.corrector:
-                            self.auto_set_corrector()
-                            self.status = 3
-                            self.save()
-                        break
+        self.save()
+
+        if not self.box_uuid and not self.reject_reason:
+            self.box_uuid = crocodoc.document.upload(url=self.url)
+
+            i = 0
+            n = 50
+            s = 6
+            t = 0
+
+            while True:
+                i += 1
+                statuses = crocodoc.document.status([self.box_uuid,])
+                if (len(statuses) != 0):
+                    if (statuses[0].get('error') == None):
+                        if statuses[0]['status'] == 'DONE':
+                            t = 1
+                            break
+                        else:
+                            time.sleep(s)
+                            if i == n:
+                                break
                     else:
+                        print 'File upload failed :('
+                        print '  Error Message: ' + statuses[0]['error']
                         time.sleep(s)
                         if i == n:
                             break
                 else:
-                    print 'File upload failed :('
-                    print '  Error Message: ' + statuses[0]['error']
+                    print 'failed :('
+                    print '  Statuses were not returned.'
                     time.sleep(s)
                     if i == n:
                         break
-            else:
-                print 'failed :('
-                print '  Statuses were not returned.'
-                time.sleep(s)
-                if i == n:
-                    break
+
+            if not self.corrector and t == 1:
+                self.auto_set_corrector()
+                self.status = 3
+
+            self.save()
 
 
     def mark(self):
