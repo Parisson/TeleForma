@@ -302,30 +302,45 @@ class Script(BaseResource):
         self.save()
 
     def submit(self):
+        import crocodoc
+        crocodoc.api_token = settings.BOX_API_TOKEN
+
         self.date_submitted = datetime.datetime.now()
         # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
         self.url = settings.MEDIA_URL + unicode(self.file)
         self.box_uuid = crocodoc.document.upload(url=self.url)
+
+        i = 0
+        n = 30
+        s = 6
+
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
             if (len(statuses) != 0):
                 if (statuses[0].get('error') == None):
                     if statuses[0]['status'] == 'DONE':
+                        if not self.corrector:
+                            self.auto_set_corrector()
+                            self.status = 3
+                            self.save()
                         break
                     else:
-                        time.sleep(3)
+                        time.sleep(s)
+                        if i == n:
+                            break
                 else:
-                    print '  File #1 failed :('
+                    print 'File upload failed :('
                     print '  Error Message: ' + statuses[0]['error']
+                    time.sleep(s)
+                    if i == n:
+                        break
             else:
                 print 'failed :('
                 print '  Statuses were not returned.'
+                time.sleep(s)
+                if i == n:
+                    break
 
-        if not self.corrector:
-            self.auto_set_corrector()
-
-        self.status = 3
-        self.save()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
