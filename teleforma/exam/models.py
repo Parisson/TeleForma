@@ -65,7 +65,9 @@ SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
 REJECT_REASON = (('unreadable', _('unreadable')),
                 ('bad orientation', _('bad orientation')),
                 ('bad framing', _('bad framing')),
-                ('incomplete', _('incomplete')),)
+                ('incomplete', _('incomplete')),
+                ('wrong course', _('wrong course')),
+                )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
