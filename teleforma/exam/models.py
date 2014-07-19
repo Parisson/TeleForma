@@ -308,7 +308,7 @@ class Script(BaseResource):
         # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
         self.url = settings.MEDIA_URL + unicode(self.file)
 
-        if not '.pdf' in self.file.path or not '.PDF' in self.file.path:
+        if not ('.pdf' in self.file.path or '.PDF' in self.file.path):
             self.reject_reason = 'wrong format'
             self.status = 0
             self.corrector = User.objects.filter(is_superuser=True)[0]
