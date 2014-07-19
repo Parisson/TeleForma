@@ -32,10 +32,13 @@ class Command(BaseCommand):
         logger = Logger(args[0])
         for script in Script.objects.filter(status=2):
             logger.logger.info(script.title)
-            script.fix_filename()
-            try:
-                script.submit()
-            except:
-                logger.logger.error('ERROR')
-            logger.logger.info('OK')
-            time.sleep(30)
+            if script.file:
+	            script.fix_filename()
+	            try:
+	                script.submit()
+	            except:
+	                logger.logger.error('ERROR')
+	            logger.logger.info('OK')
+	            time.sleep(30)
+	        else:
+	        	print unicode(script)
