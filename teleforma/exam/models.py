@@ -215,7 +215,7 @@ class Script(BaseResource):
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
-        ordering = ['-date_added']
+        ordering = ['date_added']
 
     @property
     def box_admin_url(self):
