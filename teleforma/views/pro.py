@@ -59,6 +59,8 @@ from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
 
+REVISION_DATE_FILTER = datetime.datetime(2014,7,19)
+
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     """
@@ -96,10 +98,11 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-def set_revision(user, seminar):
 
+
+def set_revision(user, seminar):
     revisions = SeminarRevision.objects.filter(seminar=seminar, user=user,
-                                                date__gte=date_filter, date_modified=None)
+                                                date__gte=REVISION_DATE_FILTER, date_modified=None)
     if revisions:
         r = revisions[0]
         r.date_modified = datetime.datetime.now()
@@ -120,25 +123,16 @@ class SeminarAccessMixin(object):
 
     @jsonrpc_method('teleforma.seminar_load')
     def seminar_load(request, id, username):
-        date_filter = datetime.datetime(2014,7,19)
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         r = SeminarRevision(seminar=seminar, user=user)
-        r.save()
-        # set_revision(user, seminar)
+        set_revision(user, seminar)
 
     @jsonrpc_method('teleforma.seminar_unload')
     def seminar_unload(request, id, username):
-        date_filter = datetime.datetime(2014,7,19)
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
-        revisions = SeminarRevision.objects.filter(seminar=seminar, user=user,
-                                                date__gte=date_filter, date_modified=None)
-        if revisions:
-            r = revisions[0]
-            r.date_modified = datetime.datetime.now()
-            r.save()
-        # set_revision(user, seminar)
+        set_revision(user, seminar)
 
 class SeminarView(SeminarAccessMixin, DetailView):
 
@@ -297,7 +291,7 @@ class SeminarDocumentDownloadView(SeminarAccessMixin, DocumentDownloadView):
         user = self.request.user
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
-        set_revision(user, seminar)
+        # set_revision(user, seminar)
         return context
 
     @method_decorator(login_required)
