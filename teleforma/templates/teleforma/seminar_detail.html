@@ -63,9 +63,12 @@ var seminarUtils = {
          },
         }
 
-$(window).ready(function(){
+$(window).ready(function( ){
     var f = seminarUtils;
-    f.load('{{seminar.id}}','{{user.username}}');
+
+    $(document).ready(function( ){
+      f.load('{{seminar.id}}','{{user.username}}');
+    });
 
     var p = $('#publish');
     p.unbind('click').click(function() {
