@@ -140,19 +140,18 @@ class SeminarRevisionMixin(object):
                     r.date_modified = now
                     r.save()
 
-    def get_delta(username, seminar):
-        t = datetime.timedelta()
-        for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER):
-            if r.date_modified:
-                t += r.delta()
-        return t
-
-
 class SeminarView(SeminarAccessMixin, DetailView):
 
     context_object_name = "seminar"
     model = Seminar
     template_name='teleforma/seminar_detail.html'
+
+    def get_delta(self.username, seminar):
+        t = datetime.timedelta()
+        for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER):
+            if r.date_modified:
+                t += r.delta()
+        return t
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
