@@ -325,6 +325,6 @@ class SeminarRevision(models.Model):
 
     def delta(self):
         if self.date_modified:
-            return date_modified - date
+            return self.date_modified - self.date
         else:
             return None
