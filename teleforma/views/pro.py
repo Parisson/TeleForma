@@ -108,6 +108,9 @@ class SeminarAccessMixin(object):
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
 
+
+class SeminarRevisionMixin(object):
+
     @jsonrpc_method('teleforma.seminar_load')
     def seminar_load(request, id, username):
         seminar = Seminar.objects.get(id=id)
@@ -190,7 +193,7 @@ class SeminarsView(ListView):
         return all_seminars(self.request, date_order=True)['all_seminars'][:10]
 
 
-class AnswerView(SeminarAccessMixin, FormView):
+class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
 
     model = Answer
     form_class = AnswerForm
@@ -254,7 +257,7 @@ class AnswerView(SeminarAccessMixin, FormView):
         return super(AnswerView, self).dispatch(*args, **kwargs)
 
 
-class SeminarMediaView(SeminarAccessMixin, MediaView):
+class SeminarMediaView(SeminarAccessMixin, SeminarRevisionMixin, MediaView):
 
     template_name = 'teleforma/seminar_media_video.html'
 
