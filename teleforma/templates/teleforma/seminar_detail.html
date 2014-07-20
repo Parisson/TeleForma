@@ -82,12 +82,13 @@ $(window).ready(function(){
             }
         });
 
-      $(window).unload(function(){
+    $(window).unload(function(){
+      $(window).unbind('beforeunload');
         f.unload('{{seminar.id}}','{{user.username}}');
       });
 
-
     });
+
 
 
 </script>
