@@ -322,3 +322,9 @@ class SeminarRevision(models.Model):
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
         ordering = ['-date']
+
+    def delta(self):
+        if self.date_modified:
+            return date_modified - date
+        else:
+            return None
