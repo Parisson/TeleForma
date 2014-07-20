@@ -106,7 +106,7 @@ def set_revision(user, seminar):
     if revisions:
         r = revisions[0]
         now = datetime.datetime.now()
-        if (now - r.date) > datetime.timedelta(seconds = 10):
+        if (now - r.date) > datetime.timedelta(seconds = 1):
             r.date_modified = now
     else:
         r = SeminarRevision(seminar=seminar, user=user)
