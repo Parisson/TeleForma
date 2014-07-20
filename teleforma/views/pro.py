@@ -104,11 +104,9 @@ def set_revision(user, seminar):
                                                 date__gte=REVISION_DATE_FILTER, date_modified=None)
     if revisions:
         r = revisions[0]
-        all_rev = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
-        if not all_rev[0].seminar == seminar:
-            now = datetime.datetime.now()
-            if (now - r.date) > datetime.timedelta(seconds = 1):
-                r.date_modified = now
+        now = datetime.datetime.now()
+        if (now - r.date) > datetime.timedelta(seconds = 1):
+            r.date_modified = now
     else:
         r = SeminarRevision(seminar=seminar, user=user)
     r.save()
