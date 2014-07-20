@@ -41,26 +41,26 @@ var seminarUtils = {
         publish : function(id){
             var p = $('#publish');
             json([id],'teleforma.publish_seminar',function(){
-                p.removeClass('icon_delete').addClass('icon_ok')
-                p.html('{% trans " published" %}')
+                p.removeClass('icon_delete').addClass('icon_ok');
+                p.html('{% trans " published" %}');
                 });
          },
         unpublish : function(id){
             var p = $('#publish');
             json([id],'teleforma.unpublish_seminar',function(){
-                p.removeClass('icon_ok').addClass('icon_delete')
-                p.html('{% trans " rejected" %}')
+                p.removeClass('icon_ok').addClass('icon_delete');
+                p.html('{% trans " rejected" %}');
                 });
          }
         load : function(id, username){
             json([id], [username],'teleforma.seminar_load',function(){
-                return false
+                return false;
                 });
          },
 
         unload : function(id, username){
             json([id], [username],'teleforma.seminar_unload',function(){
-                return false
+                return false;
                 });
          },
 
