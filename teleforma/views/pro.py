@@ -275,7 +275,7 @@ class SeminarMediaView(SeminarAccessMixin, SeminarRevisionMixin, MediaView):
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
         context['seminar_progress'] = seminar_progress(user, seminar)
-        set_revision(user, seminar)
+        # set_revision(user, seminar)
         return context
 
     @method_decorator(login_required)
