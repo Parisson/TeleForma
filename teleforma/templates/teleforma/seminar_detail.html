@@ -53,13 +53,13 @@ var seminarUtils = {
                 });
          }
         load : function(id, username){
-            json([id, username],'teleforma.seminar_load',function(){
+            json([id], [username],'teleforma.seminar_load',function(){
                 return false
                 });
          },
 
         unload : function(id, username){
-            json([id, username],'teleforma.seminar_unload',function(){
+            json([id], [username],'teleforma.seminar_unload',function(){
                 return false
                 });
          },
