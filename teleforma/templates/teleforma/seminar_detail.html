@@ -83,7 +83,6 @@ $(window).ready(function(){
         });
 
       $(window).beforeunload(function(){
-        $(window).unbind('beforeunload');
         f.unload('{{seminar.id}}','{{user.username}}');
       });
 
