@@ -246,6 +246,8 @@ class Script(BaseResource):
             self.corrector = lower_quota['obj'].corrector
         else:
             self.corrector = User.objects.filter(is_superuser=True)[0]
+
+        self.status = 3
         self.save()
 
     def make_from_pages(self):
@@ -302,69 +304,67 @@ class Script(BaseResource):
         self.file = new_rel
         self.save()
 
-    def submit(self):
-        self.date_submitted = datetime.datetime.now()
+    def box_upload(self):
+        i = 0
+        n = 30
+        s = 6
 
-        if not self.file:
-            self.reject_reason = 'no file'
-            self.status = 0
-            self.corrector = User.objects.filter(is_superuser=True)[0]
-            self.save()
-            return
-
-        if not os.path.exists(self.file.path):
-            self.reject_reason = 'file not found'
-            self.status = 0
-            self.corrector = User.objects.filter(is_superuser=True)[0]
-            self.save()
-            return
-
-        if not ('.pdf' in self.file.path or '.PDF' in self.file.path):
-            self.reject_reason = 'wrong format'
-            self.status = 0
-            self.corrector = User.objects.filter(is_superuser=True)[0]
-            self.save()
-            return
-
-        if not self.box_uuid and not self.status == 0 and self.file:
-            self.fix_filename()
-            # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
-            self.url = settings.MEDIA_URL + unicode(self.file)
-            self.box_uuid = crocodoc.document.upload(url=self.url)
-
-            i = 0
-            n = 30
-            s = 6
-            t = 0
-
-            while True:
-                statuses = crocodoc.document.status([self.box_uuid,])
-                if (len(statuses) != 0):
-                    if (statuses[0].get('error') == None):
-                        if statuses[0]['status'] == 'DONE':
-                            t = 1
-                            break
-                        else:
-                            time.sleep(s)
+        while True:
+            statuses = crocodoc.document.status([self.box_uuid,])
+            if (len(statuses) != 0):
+                if (statuses[0].get('error') == None):
+                    if statuses[0]['status'] == 'DONE':
+                        self.t = 1
+                        break
                     else:
-                        print 'File upload failed :('
-                        print '  Error Message: ' + statuses[0]['error']
                         time.sleep(s)
-                        i += 1
-                        if i == n:
-                            break
                 else:
-                    print 'failed :('
-                    print '  Statuses were not returned.'
+                    print 'File upload failed :('
+                    print '  Error Message: ' + statuses[0]['error']
                     time.sleep(s)
                     i += 1
                     if i == n:
                         break
+            else:
+                print 'failed :('
+                print '  Statuses were not returned.'
+                time.sleep(s)
+                i += 1
+                if i == n:
+                    break
 
-            if not self.corrector and t == 1:
-                self.auto_set_corrector()
-                self.status = 3
-                self.save()
+    def auto_reject(self, mess):
+        self.reject_reason = mess
+        self.status = 0
+        self.corrector = User.objects.filter(is_superuser=True)[0]
+        self.save()
+
+    def submit(self):
+        self.t = 0
+
+        if not self.file:
+            self.auto_reject('no file')
+            return
+        if not os.path.exists(self.file.path):
+            self.auto_reject('file not found')
+            return
+        if not ('.pdf' in self.file.path or '.PDF' in self.file.path):
+            self.auto_reject('wrong format')
+            return
+
+        if not self.status == 0 and self.file:
+            if not self.box_uuid:
+                self.fix_filename()
+                # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
+                self.url = settings.MEDIA_URL + unicode(self.file)
+                self.box_uuid = crocodoc.document.upload(url=self.url)
+                self.date_submitted = datetime.datetime.now()
+                self.box_upload()
+                if not self.corrector and self.t == 1:
+                    self.auto_set_corrector()
+            else:
+                if not self.corrector:
+                    self.auto_set_corrector()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
