@@ -172,7 +172,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         elif progress == 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
         # set_revision(user, seminar)
-        context['delta'] = str(self.get_delta(user, seminar))
+        context['delta'] = str(self.get_delta(user, seminar)).split('.')[0]
         return context
 
     @jsonrpc_method('teleforma.publish_seminar')
