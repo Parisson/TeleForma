@@ -77,7 +77,7 @@ $(window).ready(function(){
             }
         });
 
-    $(window).unload(function(){
+    $(document).unload(function(){
           f.ping('{{seminar.id}}','{{user.username}}');
         });
 
