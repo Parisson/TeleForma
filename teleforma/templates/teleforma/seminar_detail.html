@@ -55,7 +55,7 @@ var seminarUtils = {
          },
 
         load : function(id, username){
-            json([id, username],'teleforma.seminar_load', function(){return null;});
+            json_sync([id, username],'teleforma.seminar_load', function(){return null;});
          },
 
         unload : function(id, username){
