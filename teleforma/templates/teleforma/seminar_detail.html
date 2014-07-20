@@ -55,7 +55,7 @@ var seminarUtils = {
 
         ping : function(id, username){
             json([id, username],'teleforma.seminar_ping',function(){
-
+                // return false;
                 });
          },
 
@@ -69,11 +69,11 @@ $(window).ready(function(){
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
             f.unpublish('{{seminar.id}}');
-            return false;
+            // return false;
             }
         if (p.hasClass('icon_delete')) {
             f.publish('{{seminar.id}}');
-            return false;
+            // return false;
             }
         });
     });

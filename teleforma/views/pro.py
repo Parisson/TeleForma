@@ -147,7 +147,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
         elif progress == 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
-        set_revision(user, seminar)
+        # set_revision(user, seminar)
         return context
 
     @jsonrpc_method('teleforma.publish_seminar')
@@ -229,7 +229,7 @@ class AnswerView(SeminarAccessMixin, FormView):
         context['status'] = self.status
         context['seminar'] = self.question.seminar
         context['seminar_progress'] = seminar_progress(user, self.question.seminar)
-        set_revision(user, self.question.seminar)
+        # set_revision(user, self.question.seminar)
         return context
 
     def get_success_url(self):
@@ -265,7 +265,7 @@ class SeminarDocumentView(SeminarAccessMixin, DocumentReadView):
         user = self.request.user
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
-        set_revision(user, seminar)
+        # set_revision(user, seminar)
         return context
 
     @method_decorator(login_required)
@@ -543,7 +543,7 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
     context['seminar'] = seminar
     context['form'] = form
     context['seminar_progress'] = seminar_progress(user, seminar)
-    set_revision(user, seminar)
+    # set_revision(user, seminar)
     return render_to_response(template, context, request_context)
 
 
