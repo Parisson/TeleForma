@@ -72,23 +72,23 @@ $(window).ready(function(){
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
             f.unpublish('{{seminar.id}}');
-            // return false;
+            return false;
             }
         if (p.hasClass('icon_delete')) {
             f.publish('{{seminar.id}}');
-            // return false;
+            return false;
             }
         });
+
+      $(window).bind('beforeunload', function(){
+            f.unload('{{seminar.id}}','{{user.username}}');
+            return '';
+          });
+    });
 
 
     });
 
-$(document).ready(function(){
-  $(window).unload(function(){
-        var f = seminarUtils;
-        f.unload('{{seminar.id}}','{{user.username}}');
-      });
-});
 
 </script>
 {% endif %}
