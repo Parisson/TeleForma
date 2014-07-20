@@ -76,12 +76,13 @@ $(window).ready(function(){
             return false;
             }
         });
-
-    $(document).unload(function(){
-          f.ping('{{seminar.id}}','{{user.username}}');
-        });
-
     });
+
+$(window).unload(function(){
+    var f = seminarUtils;
+    f.ping('{{seminar.id}}','{{user.username}}');
+    });
+
 
 </script>
 {% endif %}
