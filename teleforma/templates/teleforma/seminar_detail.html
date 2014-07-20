@@ -75,13 +75,13 @@ $(window).ready(function(){
             }
         });
 
-    $(window).unload(function(){
+
+    });
+
+$(window).unload(function(){
       var g = seminarUtils;
       g.ping('{{seminar.id}}','{{user.username}}');
       });
-
-
-    });
 
 
 </script>
