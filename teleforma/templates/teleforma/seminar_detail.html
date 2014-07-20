@@ -55,11 +55,11 @@ var seminarUtils = {
          },
 
         load : function(id, username){
-            json_sync([id, username],'teleforma.seminar_load', function(){return null;});
+            json([id, username],'teleforma.seminar_load', function(){return null;});
          },
 
         unload : function(id, username){
-            json_sync([id, username],'teleforma.seminar_unload',function(){return null;});
+            json([id, username],'teleforma.seminar_unload',function(){return null;});
          },
         }
 
