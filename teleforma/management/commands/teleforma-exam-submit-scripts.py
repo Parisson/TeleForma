@@ -32,15 +32,13 @@ class Command(BaseCommand):
         logger = Logger(args[0])
         for script in Script.objects.filter(status=2):
             logger.logger.info(script.title)
-            if script.file:
-            	if os.path.exists(script.file.path):
-	                script.fix_filename()
-	                try:
-	                    script.submit()
-	                except:
-	                    logger.logger.error('ERROR')
-	                logger.logger.info('OK')
-	                time.sleep(30)
-            else:
-            	logger.logger.error('No file!')
+            if not script.file:
+                logger.logger.error('No file!')
+            try:
+                script.submit()
+            except:
+                logger.logger.error('ERROR')
+
+            logger.logger.info(script.status)
+            time.sleep(30)
 

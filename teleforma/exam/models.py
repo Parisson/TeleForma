@@ -305,17 +305,31 @@ class Script(BaseResource):
     def submit(self):
         self.date_submitted = datetime.datetime.now()
 
-        # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
-        self.url = settings.MEDIA_URL + unicode(self.file)
+        if not self.file:
+            self.reject_reason = 'no file'
+            self.status = 0
+            self.corrector = User.objects.filter(is_superuser=True)[0]
+            self.save()
+            return
+
+        if not os.path.exists(self.file.path):
+            self.reject_reason = 'file not found'
+            self.status = 0
+            self.corrector = User.objects.filter(is_superuser=True)[0]
+            self.save()
+            return
 
         if not ('.pdf' in self.file.path or '.PDF' in self.file.path):
             self.reject_reason = 'wrong format'
             self.status = 0
             self.corrector = User.objects.filter(is_superuser=True)[0]
+            self.save()
+            return
 
-        self.save()
-
-        if not self.box_uuid and not self.status == 0:
+        if not self.box_uuid and not self.status == 0 and self.file:
+            self.fix_filename()
+            # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
+            self.url = settings.MEDIA_URL + unicode(self.file)
             self.box_uuid = crocodoc.document.upload(url=self.url)
 
             i = 0
@@ -350,9 +364,7 @@ class Script(BaseResource):
             if not self.corrector and t == 1:
                 self.auto_set_corrector()
                 self.status = 3
-
-            self.save()
-
+                self.save()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
