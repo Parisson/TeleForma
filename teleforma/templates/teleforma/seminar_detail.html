@@ -53,7 +53,7 @@ var seminarUtils = {
                 });
          }
         load : function(id, username){
-            json([id], [username],'teleforma.seminar_load',function(){
+            json([id, username],'teleforma.seminar_load',function(){
                 return false;
                 });
          },
