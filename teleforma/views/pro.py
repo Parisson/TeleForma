@@ -128,7 +128,7 @@ class SeminarAccessMixin(object):
         # set_revision(user, seminar)
 
     @jsonrpc_method('teleforma.seminar_unload')
-        def seminar_unload(request, id, username):
+    def seminar_unload(request, id, username):
         date_filter = datetime.datetime(2014,7,19)
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
@@ -137,7 +137,7 @@ class SeminarAccessMixin(object):
         if revisions:
             r = revisions[0]
             r.date_modified = datetime.datetime.now()
-        r.save()
+            r.save()
         # set_revision(user, seminar)
 
 class SeminarView(SeminarAccessMixin, DetailView):
