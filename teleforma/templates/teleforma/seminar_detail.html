@@ -64,10 +64,8 @@ var seminarUtils = {
 
         }
 
-var f = seminarUtils;
-
 $(window).ready(function(){
-
+    var f = seminarUtils;
     f.load('{{seminar.id}}','{{user.username}}');
 
     var p = $('#publish');
@@ -85,7 +83,8 @@ $(window).ready(function(){
 
     });
 
-$(window).bind('beforeunload', function(){
+$(window).bind('unload', function(){
+        var f = seminarUtils;
         f.unload('{{seminar.id}}','{{user.username}}');
       });
 
