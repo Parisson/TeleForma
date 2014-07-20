@@ -102,7 +102,7 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 def set_revision(user, seminar):
     revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
     if revisions:
-        if not all_rev[0].seminar == seminar:
+        if not revisions[0].seminar == seminar:
             revisions = SeminarRevision.objects.filter(seminar=seminar, user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
             if revisions:
                 r = revisions[0]
