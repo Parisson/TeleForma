@@ -120,7 +120,6 @@ class SeminarAccessMixin(object):
 
     @jsonrpc_method('teleforma.seminar_load')
     def seminar_load(request, id, username):
-        import datetime
         date_filter = datetime.datetime(2014,7,19)
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
@@ -130,7 +129,6 @@ class SeminarAccessMixin(object):
 
     @jsonrpc_method('teleforma.seminar_unload')
     def seminar_unload(request, id, username):
-        import datetime
         date_filter = datetime.datetime(2014,7,19)
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
