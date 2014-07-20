@@ -82,7 +82,7 @@ $(window).ready(function(){
             }
         });
 
-      $(window).unbind('beforeunload').unload(function(){
+      $(window).unload(function(){
         f.unload('{{seminar.id}}','{{user.username}}');
       });
 
