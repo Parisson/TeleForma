@@ -33,7 +33,7 @@ class Command(BaseCommand):
         for script in Script.objects.filter(status=2):
             logger.logger.info(script.title)
             if script.file:
-            	if os.path.exists(script.file):
+            	if os.path.exists(script.file.path):
 	                script.fix_filename()
 	                try:
 	                    script.submit()
