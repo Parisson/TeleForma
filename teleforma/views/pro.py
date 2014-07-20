@@ -97,7 +97,8 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 
 
 def set_revision(user, seminar):
-    revisions = SeminarRevision.objects.filter(seminar=seminar, user=user)
+    date_filter = datetime.datetime(2014,7,19)
+    revisions = SeminarRevision.objects.filter(seminar=seminar, user=user, date__gte=date_filter)
     if revisions:
         r = revisions[0]
         if not r.date_modified:
