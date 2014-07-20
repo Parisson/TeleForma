@@ -55,11 +55,11 @@ var seminarUtils = {
          },
 
         load : function(id, username){
-            json([id, username],'teleforma.seminar_load', function(){return false;});
+            json([id, username],'teleforma.seminar_load', function(){return null;});
          },
 
         unload : function(id, username){
-            json([id, username],'teleforma.seminar_unload',function(){return false;});
+            json([id, username],'teleforma.seminar_unload',function(){return null;});
          },
 
         }
@@ -72,17 +72,16 @@ $(window).ready(function(){
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
             f.unpublish('{{seminar.id}}');
-            return false;
+            return null;
             }
         if (p.hasClass('icon_delete')) {
             f.publish('{{seminar.id}}');
-            return false;
+            return null;
             }
         });
 
       $(window).bind('beforeunload', function(){
             f.unload('{{seminar.id}}','{{user.username}}');
-            return false;
           });
     });
 
