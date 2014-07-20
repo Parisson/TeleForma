@@ -37,6 +37,7 @@ $(function () {
 {% if user.is_staff %}
 <script type="text/javascript">
 
+
 var seminarUtils = {
         publish : function(id){
             var p = $('#publish');
@@ -62,7 +63,7 @@ var seminarUtils = {
          },
         }
 
-$(document).ready(function(){
+$(window).ready(function(){
     var f = seminarUtils;
     f.load('{{seminar.id}}','{{user.username}}');
 
@@ -83,6 +84,11 @@ $(document).ready(function(){
           });
     });
 
+$(document).ready(function(){
+    $(window).bind('beforeunload', function(){
+            f.unload('{{seminar.id}}','{{user.username}}');
+          });
+    });
 
 </script>
 {% endif %}
