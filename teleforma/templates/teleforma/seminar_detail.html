@@ -55,11 +55,11 @@ var seminarUtils = {
          },
 
         load : function(id, username){
-            json([id, username],'teleforma.seminar_load', function(){a=1;});
+            json([id, username],'teleforma.seminar_load', function(){});
          },
 
         unload : function(id, username){
-            json([id, username],'teleforma.seminar_unload',function(){a=1;});
+            json([id, username],'teleforma.seminar_unload',function(){});
          },
 
         }
@@ -82,7 +82,7 @@ $(window).ready(function(){
             }
         });
 
-      $(window).beforeunload(function(){
+      $(window).unbind('beforeunload').unload(function(){
         f.unload('{{seminar.id}}','{{user.username}}');
       });
 
