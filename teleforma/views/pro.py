@@ -97,7 +97,7 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 
 
 def set_revision(user, seminar):
-    date_filter = datetime.datetime(2014,7,19)
+
     revisions = SeminarRevision.objects.filter(seminar=seminar, user=user,
                                                 date__gte=date_filter, date_modified=None)
     if revisions:
@@ -110,6 +110,7 @@ def set_revision(user, seminar):
 
 class SeminarAccessMixin(object):
 
+
     def render_to_response(self, context):
         seminar = context['seminar']
         if not seminar in all_seminars(self.request)['all_seminars']:
@@ -117,11 +118,27 @@ class SeminarAccessMixin(object):
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
 
-    @jsonrpc_method('teleforma.seminar_ping')
-    def seminar_ping(request, id, username):
+    @jsonrpc_method('teleforma.seminar_load')
+    def seminar_load(request, id, username):
+        date_filter = datetime.datetime(2014,7,19)
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
-        set_revision(user, seminar)
+        r = SeminarRevision(seminar=seminar, user=user)
+        r.save()
+        # set_revision(user, seminar)
+
+    @jsonrpc_method('teleforma.seminar_unload')
+        def seminar_unload(request, id, username):
+        date_filter = datetime.datetime(2014,7,19)
+        seminar = Seminar.objects.get(id=id)
+        user = User.objects.get(username=username)
+        revisions = SeminarRevision.objects.filter(seminar=seminar, user=user,
+                                                date__gte=date_filter, date_modified=None)
+        if revisions:
+            r = revisions[0]
+            r.date_modified = datetime.datetime.now()
+        r.save()
+        # set_revision(user, seminar)
 
 class SeminarView(SeminarAccessMixin, DetailView):
 
