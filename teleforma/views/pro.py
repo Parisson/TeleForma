@@ -142,7 +142,7 @@ class SeminarRevisionMixin(object):
 
     def get_delta(username, seminar):
         t = datetime.timedelta()
-        for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER)
+        for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER):
             if r.date_modified:
                 t += r.delta()
         return t
