@@ -315,7 +315,7 @@ class SeminarRevision(models.Model):
     date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
 
     def __unicode__(self):
-        return ' - '.join([self.seminar.title, self.user.username, str(self.date)])
+        return ' - '.join([self.seminar.title, self.user.username, str(self.date), str(self.date_modified)])
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar_revisions'

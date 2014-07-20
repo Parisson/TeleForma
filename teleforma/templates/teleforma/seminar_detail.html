@@ -52,11 +52,25 @@ var seminarUtils = {
                 p.html('{% trans " rejected" %}')
                 });
          }
+        load : function(id, username){
+            json([id, username],'teleforma.seminar_load',function(){
+                return false
+                });
+         },
+
+        unload : function(id, username){
+            json([id, username],'teleforma.seminar_unload',function(){
+                return false
+                });
+         },
+
         }
 
 $(window).ready(function(){
-    var p = $('#publish');
     var f = seminarUtils;
+    f.load('{{seminar.id}}','{{user.username}}');
+
+    var p = $('#publish');
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
             f.unpublish('{{seminar.id}}');
@@ -69,6 +83,11 @@ $(window).ready(function(){
         }
         );
 
+    });
+
+$(window).unload(function(){
+    var f = seminarUtils;
+    f.unload('{{seminar.id}}','{{user.username}}');
     });
 
 </script>
@@ -84,12 +103,12 @@ $(window).ready(function(){
     <div class="course">
 
         <div class="course_title">
-          
+
           <div style="float: right; font-size: 0.9em;">
             {% if seminar_progress == 100 and not user.is_staff %}
             <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
             {% endif %}
-            
+
             {% if user.is_staff %}
             <a id="publish" href="#" class="{% if seminar.status == 2 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if seminar.status == 2 %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
             {% endif %}
