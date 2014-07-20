@@ -59,7 +59,7 @@ var seminarUtils = {
          },
 
         unload : function(id, username){
-            json([id, username],'teleforma.seminar_unload',function(){return null;});
+            json_sync([id, username],'teleforma.seminar_unload',function(){return null;});
          },
         }
 
