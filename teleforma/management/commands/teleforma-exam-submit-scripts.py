@@ -9,7 +9,7 @@ from telemeta.util.unaccent import unaccent
 from teleforma.exam.models import *
 import logging
 import codecs
-import time
+import time, os
 
 
 class Logger:
@@ -33,12 +33,14 @@ class Command(BaseCommand):
         for script in Script.objects.filter(status=2):
             logger.logger.info(script.title)
             if script.file:
-                script.fix_filename()
-                try:
-                    script.submit()
-                except:
-                    logger.logger.error('ERROR')
-                logger.logger.info('OK')
-                time.sleep(30)
+            	if os.path.exists(script.file):
+	                script.fix_filename()
+	                try:
+	                    script.submit()
+	                except:
+	                    logger.logger.error('ERROR')
+	                logger.logger.info('OK')
+	                time.sleep(30)
             else:
-                print unicode(script)
+            	logger.logger.error('No file!')
+
