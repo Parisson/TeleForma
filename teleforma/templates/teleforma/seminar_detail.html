@@ -83,7 +83,7 @@ $(window).ready(function(){
 
     });
 
-$(window).bind('unload', function(){
+$(window).unload( function(){
         var f = seminarUtils;
         f.unload('{{seminar.id}}','{{user.username}}');
       });
