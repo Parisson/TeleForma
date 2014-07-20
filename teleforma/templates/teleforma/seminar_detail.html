@@ -85,13 +85,13 @@ $(window).ready(function(){
             }
         }
         );
+    $(window).unload(function(){
+      var f = seminarUtils;
+      f.unload('{{seminar.id}}','{{user.username}}');
+    });
 
     });
 
-$(window).unload(function(){
-    var f = seminarUtils;
-    f.unload('{{seminar.id}}','{{user.username}}');
-    });
 
 </script>
 {% endif %}
