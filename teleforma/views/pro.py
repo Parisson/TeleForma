@@ -98,25 +98,6 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-
-def set_revision(user, seminar):
-    all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
-    if all_revisions:
-        if not all_revisions[0].seminar == seminar:
-            revisions = all_revisions.filter(seminar=seminar)
-            if revisions:
-                r = revisions[0]
-                now = datetime.datetime.now()
-                if (now - r.date) > datetime.timedelta(seconds = 1):
-                    r.date_modified = now
-            else:
-                r = SeminarRevision(seminar=seminar, user=user)
-            r.save()
-    else:
-        r = SeminarRevision(seminar=seminar, user=user)
-        r.save()
-
-
 class SeminarAccessMixin(object):
 
 
