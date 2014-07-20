@@ -55,11 +55,11 @@ var seminarUtils = {
          },
 
         load : function(id, username){
-            json([id, username],'teleforma.seminar_load', function(){return '';});
+            json([id, username],'teleforma.seminar_load', function(){return false;});
          },
 
         unload : function(id, username){
-            json([id, username],'teleforma.seminar_unload',function(){return '';});
+            json([id, username],'teleforma.seminar_unload',function(){return false;});
          },
 
         }
@@ -80,9 +80,9 @@ $(window).ready(function(){
             }
         });
 
-      $(window).bind('beforeunload', function(){
+      $(window).bind('unload', function(){
             f.unload('{{seminar.id}}','{{user.username}}');
-            return '';
+            return false;
           });
     });
 
