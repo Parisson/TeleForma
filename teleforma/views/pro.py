@@ -103,7 +103,7 @@ def set_revision(user, seminar):
         r = revisions[0]
         if not r.date_modified:
             r.date_modified = datetime.datetime.now()
-            r.save()
+            # r.save()
     else:
         r = SeminarRevision(seminar=seminar, user=user)
         r.save()
