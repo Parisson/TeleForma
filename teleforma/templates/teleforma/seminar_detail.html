@@ -37,7 +37,6 @@ $(function () {
 {% if user.is_staff %}
 <script type="text/javascript">
 
-
 var seminarUtils = {
         publish : function(id){
             var p = $('#publish');
@@ -63,7 +62,7 @@ var seminarUtils = {
          },
         }
 
-$(window).ready(function(){
+$(document).ready(function(){
     var f = seminarUtils;
     f.load('{{seminar.id}}','{{user.username}}');
 
