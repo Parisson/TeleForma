@@ -116,18 +116,11 @@ class SeminarAccessMixin(object):
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
 
-    @jsonrpc_method('teleforma.seminar_load')
-    def seminar_load(request, id, username):
+    @jsonrpc_method('teleforma.seminar_ping')
+    def seminar_ping(request, id, username):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         set_revision(user, seminar)
-
-    @jsonrpc_method('teleforma.seminar_unload')
-    def seminar_unload(request, id, username):
-        seminar = Seminar.objects.get(id=id)
-        user = User.objects.get(username=username)
-        set_revision(user, seminar)
-
 
 class SeminarView(SeminarAccessMixin, DetailView):
 
