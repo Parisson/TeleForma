@@ -78,7 +78,6 @@ $(window).ready(function(){
         });
 
     $(window).unload(function(){
-          var f = seminarUtils;
           f.ping('{{seminar.id}}','{{user.username}}');
         });
 
