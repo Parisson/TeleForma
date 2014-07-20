@@ -148,14 +148,13 @@ class SeminarAccessMixin(object):
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
         if all_revisions:
-            if not all_revisions[0].seminar == seminar:
-                revisions = all_revisions.filter(seminar=seminar)
-                if revisions:
-                    r = revisions[0]
-                    now = datetime.datetime.now()
-                    if (now - r.date) > datetime.timedelta(seconds = 1):
-                        r.date_modified = now
-                        r.save()
+            revisions = all_revisions.filter(seminar=seminar)
+            if revisions:
+                r = revisions[0]
+                now = datetime.datetime.now()
+                if (now - r.date) > datetime.timedelta(seconds = 1):
+                    r.date_modified = now
+                    r.save()
 
 class SeminarView(SeminarAccessMixin, DetailView):
 
