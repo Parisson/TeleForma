@@ -65,9 +65,6 @@ $(window).ready(function(){
     var f = seminarUtils;
     f.ping('{{seminar.id}}','{{user.username}}');
 
-    $(window).unload(function(){
-      f.ping('{{seminar.id}}','{{user.username}}');
-    });
 
     var p = $('#publish');
     p.unbind('click').click(function() {
@@ -84,6 +81,9 @@ $(window).ready(function(){
 
     });
 
+  $(window).unload(function(){
+      f.ping('{{seminar.id}}','{{user.username}}');
+    });
 
 </script>
 {% endif %}
