@@ -102,9 +102,10 @@ def set_revision(user, seminar):
         r = revisions[0]
         if not r.date_modified:
             r.date_modified = datetime.datetime.now()
+            r.save()
     else:
-        r = SeminarRevision.objects.create(seminar=seminar, user=user)
-    r.save()
+        r = SeminarRevision(seminar=seminar, user=user)
+        r.save()
 
 
 class SeminarAccessMixin(object):
