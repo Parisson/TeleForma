@@ -322,6 +322,3 @@ class SeminarRevision(models.Model):
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
         ordering = ['-date']
-
-    def save(self, *args, **kwargs):
-        super(SeminarRevision, self).save(*args, **kwargs)
