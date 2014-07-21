@@ -68,6 +68,8 @@ REJECT_REASON = (('unreadable', _('unreadable')),
                 ('incomplete', _('incomplete')),
                 ('wrong course', _('wrong course')),
                 ('wrong format', _('wrong format')),
+                ('unreadable file', _('unreadable file')),
+                ('no file'), _('no file')),
                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
