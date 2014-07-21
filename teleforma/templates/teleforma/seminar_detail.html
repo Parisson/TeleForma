@@ -72,7 +72,7 @@ $(document).ready(function( ){
     });
 
 $(window).ready(function( ){
-    {% if user.is_staff %}
+  {% if user.is_staff %}
     var p = $('#publish');
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
@@ -84,11 +84,10 @@ $(window).ready(function( ){
             return null;
             }
         });
-    {% endif %}
+  {% endif %}
       $(window).bind('beforeunload', function(){
             f.unload('{{seminar.id}}','{{user.username}}');
           });
-    }
     });
 
 </script>
