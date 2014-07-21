@@ -176,7 +176,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         delta = self.get_delta(user, seminar)
         context['delta'] = str(delta).split('.')[0]
         #TODO
-        if datetime.datetime.now > REVISION_DATE_FILTER:
+        if datetime.datetime.now() > REVISION_DATE_FILTER:
             context['seminar_time'] = delta - datetime.timedelta(seconds=seminar.duration.as_seconds())
         else:
             context['seminar_time'] = 1
