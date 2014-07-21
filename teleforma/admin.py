@@ -94,10 +94,13 @@ class TestimonialAdmin(admin.ModelAdmin):
     search_fields = ['seminar__course__title', 'seminar__sub_title',
                     'user__username', 'user__last_name']
 
+class SeminarRevisionAdmin(admin.ModelAdmin):
+    search_fields = ['user__username', 'seminar__title']
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)
-admin.site.register(SeminarRevision)
+admin.site.register(SeminarRevision, SeminarRevisionAdmin)
 
 admin.site.register(Organization)
 admin.site.register(Department)
