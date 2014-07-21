@@ -59,7 +59,7 @@ from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
 
-REVISION_DATE_FILTER = datetime.datetime(2014,7,19)
+REVISION_DATE_FILTER = datetime.datetime(2014,7,21)
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -161,6 +161,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = context['seminar']
         user = self.request.user
+
         progress = seminar_progress(user, seminar)
         validated = seminar_validated(user, seminar)
         context['seminar_progress'] = progress
@@ -171,8 +172,14 @@ class SeminarView(SeminarAccessMixin, DetailView):
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
         elif progress == 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
+
         delta = self.get_delta(user, seminar)
         context['delta'] = str(delta).split('.')[0]
+        #TODO
+        if datetime.datetime.now > REVISION_DATE_FILTER:
+            context['seminar_time'] = delta - datetime.timedelta(seconds=seminar.duration.as_seconds())
+        else:
+            context['seminar_time'] = 1
         return context
 
     @jsonrpc_method('teleforma.publish_seminar')
