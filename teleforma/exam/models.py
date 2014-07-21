@@ -309,6 +309,11 @@ class Script(BaseResource):
         n = 30
         s = 6
 
+        # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
+        self.url = settings.MEDIA_URL + unicode(self.file)
+        self.box_uuid = crocodoc.document.upload(url=self.url)
+        self.date_submitted = datetime.datetime.now()
+
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
             if (len(statuses) != 0):
@@ -355,10 +360,6 @@ class Script(BaseResource):
         if not self.status == 0 and self.file:
             if not self.box_uuid:
                 self.fix_filename()
-                # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
-                self.url = settings.MEDIA_URL + unicode(self.file)
-                self.box_uuid = crocodoc.document.upload(url=self.url)
-                self.date_submitted = datetime.datetime.now()
                 self.box_upload()
                 if not self.corrector and self.t == 1:
                     self.auto_set_corrector()
