@@ -17,7 +17,7 @@ class QuotaInline(admin.StackedInline):
 class ScriptAdmin(admin.ModelAdmin):
     model = Script
     ordering = ['-date_added']
-    #fileds = ['date_added',]
+    search_fields = ['user__username', 'course__title']
     readonly_fields = ('date_added','uuid','box_uuid','sha1','mime_type')
     # exclude = ['options']
     # inlines = [ScriptPageInline]
