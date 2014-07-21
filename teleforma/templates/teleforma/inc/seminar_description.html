@@ -10,7 +10,9 @@
 {% endif %}
 <dt>{% trans "level" %}</dt><dd>{{ seminar.level }}</dd>
 <dt>{% trans "duration" %}</dt><dd>{{ seminar.duration|hours }} {% trans "hours" %}</dd>
+{% if delta %}
 <dt>{% trans "chronometer" %}</dt><dd>{{ delta }}</dd>
+{% endif %}
 <dt>{% trans "expiry date" %}</dt><dd>{{ seminar.expiry_date }}</dd>
 {% if user.is_superuser %}
 <dt>{% trans "code" %}</dt><dd>{{ seminar.code }}</dd>
