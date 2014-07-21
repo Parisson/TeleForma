@@ -34,11 +34,12 @@ $(function () {
 
 </script>
 
-{% if user.is_staff %}
+
 <script type="text/javascript">
 
-
 var seminarUtils = {
+
+        {% if user.is_staff %}
         publish : function(id){
             var p = $('#publish');
             json([id],'teleforma.publish_seminar',function(){
@@ -53,6 +54,7 @@ var seminarUtils = {
                 p.html('{% trans " rejected" %}');
                 });
          },
+        {% endif %}
 
         load : function(id, username){
             json([id, username],'teleforma.seminar_load', function(){return null;});
@@ -70,6 +72,7 @@ $(document).ready(function( ){
     });
 
 $(window).ready(function( ){
+    {% if user.is_staff %}
     var p = $('#publish');
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
@@ -81,15 +84,15 @@ $(window).ready(function( ){
             return null;
             }
         });
-
+    {% endif %}
       $(window).bind('beforeunload', function(){
             f.unload('{{seminar.id}}','{{user.username}}');
           });
+    }
     });
 
-
 </script>
-{% endif %}
+
 
 {% endblock infra_javascript %}
 
