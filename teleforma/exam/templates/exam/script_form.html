@@ -14,8 +14,7 @@
             // b2.unbind('click');
             $('#id_status').val("2");
             $('#id_period').val("{{ period.id }}");
-            $('#submit_button').switchClass('component_icon button icon_ok',
-                    'component_icon button icon_wait');
+            $(this).switchClass("icon_ok", "icon_wait");
             $('#_ScriptForm').submit();
         });
     });
