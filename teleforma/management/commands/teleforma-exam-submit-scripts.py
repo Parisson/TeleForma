@@ -4,6 +4,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.utils import translation
+from django.conf import settings
 from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.exam.models import *
@@ -29,6 +31,7 @@ class Command(BaseCommand):
     args = "log_file"
 
     def handle(self, *args, **options):
+        translation.activate(settings.LANGUAGE_CODE)
         logger = Logger(args[0])
         for script in Script.objects.filter(status=2):
             logger.logger.info(script.title)

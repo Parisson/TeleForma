@@ -4,14 +4,14 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.utils import translation
+from django.conf import settings
 from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.exam.models import *
 import logging
 import codecs
 import time, os
-from django.utils import translation
-from django.conf import settings
 
 
 class Command(BaseCommand):
