@@ -31,6 +31,6 @@ class Command(BaseCommand):
             print text
             mess = Message(sender=sender, recipient=script.author, subject=subject[:119], body=text)
             mess.moderation_status = 'a'
-            #mess.save()
-            #notify_user(mess, 'acceptance', site)
+            mess.save()
+            notify_user(mess, 'acceptance', site)
 
