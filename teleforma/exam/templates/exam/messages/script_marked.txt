@@ -1,6 +1,6 @@
 {% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}Bonjour,
 
-Votre copie soumise le {{ script.date_created }} en {{ script.course }} pour la séance {{ script.session }} a été corrigée.
+Votre copie soumise le {{ script.date_added }} en {{ script.course }} pour la séance {{ script.session }} a été corrigée.
 
 La note, les commentaires et les annotations sont disponibles à cette adresse :
 
