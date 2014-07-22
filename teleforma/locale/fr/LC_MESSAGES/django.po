@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-22 23:20+0200\n"
+"POT-Creation-Date: 2014-07-23 01:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -384,12 +384,14 @@ msgstr "Date de correction"
 msgid "Corrector"
 msgstr "Correcteur"
 
+#: exam/templates/exam/messages/script_fix.txt:9
 #: exam/templates/exam/messages/script_marked.txt:9
 #: exam/templates/exam/messages/script_rejected.txt:7
 #: templates/postman/email_user_init.txt:19
 msgid "Best regards"
 msgstr "Cordialement"
 
+#: exam/templates/exam/messages/script_fix.txt:10
 #: exam/templates/exam/messages/script_marked.txt:10
 #: exam/templates/exam/messages/script_rejected.txt:8
 #: templates/postman/email_user.txt:20
@@ -398,12 +400,14 @@ msgstr "Cordialement"
 msgid "The site administrator"
 msgstr "L'administrateur du site"
 
+#: exam/templates/exam/messages/script_fix.txt:10
 #: exam/templates/exam/messages/script_marked.txt:10
 #: exam/templates/exam/messages/script_rejected.txt:8
 #: templates/postman/email_user_init.txt:20
 msgid "of the"
 msgstr "du"
 
+#: exam/templates/exam/messages/script_fix.txt:13
 #: exam/templates/exam/messages/script_marked.txt:13
 #: exam/templates/exam/messages/script_rejected.txt:11
 #: templates/postman/email_user.txt:22
