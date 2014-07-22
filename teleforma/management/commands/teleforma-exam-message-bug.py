@@ -16,7 +16,7 @@ class Command(BaseCommand):
     help = "Send a message"
 
     def handle(self, *args, **options):
-        sender = User.objects.get(is_superuser=True)[0]
+        sender = User.objects.filter(is_superuser=True)[0]
         site = Site.objects.all()[0]
         subject = 'Erreur dans la transmission de votre copie'
         scripts = Script.objects.filter(file='scripts/2014/07/22/home')
