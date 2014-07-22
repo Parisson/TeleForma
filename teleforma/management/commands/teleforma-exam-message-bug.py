@@ -10,12 +10,15 @@ from teleforma.exam.models import *
 import logging
 import codecs
 import time, os
+from django.utils import translation
+from django.conf import settings
 
 
 class Command(BaseCommand):
     help = "Send a message"
 
     def handle(self, *args, **options):
+        translation.activate(settings.LANGUAGE_CODE)
         sender = User.objects.filter(is_superuser=True)[0]
         site = Site.objects.all()[0]
         subject = 'Erreur dans la transmission de votre copie'
