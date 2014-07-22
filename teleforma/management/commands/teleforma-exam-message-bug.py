@@ -26,6 +26,7 @@ class Command(BaseCommand):
         print scripts.count()
 
         for script in scripts:
+            script.reject()
             context = {'script': script, 'site': site}
             text = render_to_string('exam/messages/script_fix.txt', context)
             print text
