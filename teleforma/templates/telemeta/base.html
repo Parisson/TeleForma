@@ -217,7 +217,16 @@ alt="logo" />
 {% analytics_code %}
 {% endblock analytics %}
 
-<script type='text/javascript'>window.scrollTo(0, 1);</script>
+<script type='text/javascript'>
+window.scrollTo(0, 1);
+
+$(document).ready(function(){
+  $("*").dblclick(function(e){
+    e.preventDefault();
+  });
+});
+
+</script>
 
 </body>
 </html>
