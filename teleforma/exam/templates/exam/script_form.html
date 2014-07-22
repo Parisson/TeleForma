@@ -6,7 +6,10 @@
 
 {% block extra_javascript %}
   <script>
-    $('#loading').hide();
+    $(document).ready(function(){
+        $('#loading').hide();
+    });
+
     $(function() {
         $('#submit_button').unbind('click').click(function() {
             $(window).unbind('beforeunload');
