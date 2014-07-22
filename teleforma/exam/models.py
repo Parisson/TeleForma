@@ -247,7 +247,7 @@ class Script(BaseResource):
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
         else:
-            self.corrector = User.objects.filter(is_superuser=True)[-1]
+            self.corrector = User.objects.filter(is_superuser=True)[1]
 
         self.status = 3
         self.save()
@@ -293,7 +293,7 @@ class Script(BaseResource):
         old_rel_list = old_rel.split(os.sep)
         old_rel_root = old_rel_list[:-1]
 
-        filename, ext = os.path.splitext(old_abs_list[-1])
+        filename, ext = os.path.splitext(old_abs_list[1])
 
         new_abs = os.sep.join(old_abs_root) + os.sep + slugify(filename) + ext
         new_rel = os.sep.join(old_rel_root) + os.sep + slugify(filename) + ext
@@ -343,7 +343,7 @@ class Script(BaseResource):
     def auto_reject(self, mess):
         self.reject_reason = mess
         self.status = 0
-        self.corrector = User.objects.filter(is_superuser=True)[-1]
+        self.corrector = User.objects.filter(is_superuser=True)[1]
         self.save()
 
     def submit(self):
