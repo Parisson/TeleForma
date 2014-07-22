@@ -23,7 +23,7 @@ class Command(BaseCommand):
         print scripts.count()
 
         for script in scripts:
-            context = {'script': self, 'site': site}
+            context = {'script': script, 'site': site}
             text = render_to_string('exam/messages/script_fix.txt', context)
             print text
             mess = Message(sender=sender, recipient=script.author, subject=subject[:119], body=text)
