@@ -247,7 +247,7 @@ class Script(BaseResource):
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
         else:
-            self.corrector = User.objects.filter(is_superuser=True)[0]
+            self.corrector = User.objects.filter(is_superuser=True)[-1]
 
         self.status = 3
         self.save()
@@ -343,7 +343,7 @@ class Script(BaseResource):
     def auto_reject(self, mess):
         self.reject_reason = mess
         self.status = 0
-        self.corrector = User.objects.filter(is_superuser=True)[0]
+        self.corrector = User.objects.filter(is_superuser=True)[-1]
         self.save()
 
     def submit(self):
