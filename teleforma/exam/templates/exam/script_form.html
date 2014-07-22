@@ -6,15 +6,15 @@
 
 {% block extra_javascript %}
   <script>
-    // increase the default animation speed to exaggerate the effect
+    $('#loading').hide();
     $(function() {
-        var b2 = $('#submit_button');
-        b2.unbind('click').click(function() {
+        $('#submit_button').unbind('click').click(function() {
             $(window).unbind('beforeunload');
             // b2.unbind('click');
             $('#id_status').val("2");
             $('#id_period').val("{{ period.id }}");
-            $(this).switchClass("icon_ok", "icon_wait");
+            $(this).hide();
+            $('#loading').show();
             $('#_ScriptForm').submit();
         });
     });
@@ -56,6 +56,7 @@
     <br />
     <center>
     <a href="#" id="submit_button" class="component_icon button icon_ok">{% trans "Submit" %}</a>
+    <img id="loading" src="{{STATIC_URL}}teleforma/images/loading.gif" style="vertical-align:middle" alt="loading" />
     </center>
     <br /><br />
 
