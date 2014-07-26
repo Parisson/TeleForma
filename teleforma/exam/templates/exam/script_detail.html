@@ -75,13 +75,14 @@
 
     });
 
-  $(window).ready(function(){
-    $( "#dialog_comments" ).dialog( "open");
-  });
-
+  {% if script.comments %}
+    $(window).ready(function(){
+      $( "#dialog_comments" ).dialog( "open");
+    });
+  {% endif %}
     </script>
-{% endblock extra_javascript %}
 
+{% endblock extra_javascript %}
 
 {% block content %}
 
