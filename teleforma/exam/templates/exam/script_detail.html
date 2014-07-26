@@ -71,9 +71,13 @@
         });
 
     	// $("#box-iframe").contents().find("span.btn.text-btn.strikeout-btn").hide();
-      $( "#dialog_comments" ).dialog( "open");
+
 
     });
+
+  $(window).ready(function(){
+    $( "#dialog_comments" ).dialog( "open");
+  });
 
     </script>
 {% endblock extra_javascript %}
