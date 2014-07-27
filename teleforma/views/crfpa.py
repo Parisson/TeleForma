@@ -290,7 +290,7 @@ class AnnalsView(ListView):
         annals = {}
         courses = [c['course'] for c in self.all_courses]
 
-        if self.user.is_staff or self.user.is_superuser or self.user.professor.all():
+        if self.user.is_staff or self.user.is_superuser or self.user.professor.all() or self.user.quotas.all():
             docs = Document.objects.filter(is_annal=True).order_by('-annal_year')
         elif students:
             self.student = students[0]
