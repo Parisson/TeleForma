@@ -17,11 +17,18 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 
 class Command(BaseCommand):
     help = "init all user wifi pass"
+	args = 'path'
 
     def handle(self, *args, **options):
+    	path = args[0]
+        f = open(path, 'w')
+
         for user in User.objects.all():
             profile = user.profile.get()
             if not profile.wifi_pass:
                 profile.wifi_login = user.username + '.' + args[-1]
                 profile.wifi_pass = id_generator(8)
                 profile.save()
+                f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
+
+		f.close()
