@@ -7,6 +7,7 @@ class ScriptForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ScriptForm, self).__init__(*args, **kwargs)
+        self.fields['score'].localize = True
 
     class Meta:
         model = Script
