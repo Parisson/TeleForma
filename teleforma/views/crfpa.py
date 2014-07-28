@@ -62,7 +62,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
         for quota in quotas:
             queryset = queryset.filter(quotas=quota)
         courses = format_courses(courses, queryset=queryset,
-                    types=CourseType.objects)
+                    types=CourseType.objects.all())
 
     elif student:
         student = user.student.get()
