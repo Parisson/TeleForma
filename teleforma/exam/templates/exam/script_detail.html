@@ -129,7 +129,7 @@
             <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
         {% else %}
         	{% if field.html_name == 'score' %}
-             <td>{{ field.label_tag }}:</td><td> {{ field }}/20 (utilisez la virgule pour les décimales)</td>
+             <td>{{ field.label_tag }}:</td><td> {{ field }}/20 <br />(utilisez la virgule pour les décimales)</td>
             {% else %}
              <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
         	{% endif %}
