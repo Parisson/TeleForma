@@ -17,10 +17,10 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 
 class Command(BaseCommand):
     help = "init all user wifi pass"
-	args = 'path'
+    args = 'path'
 
     def handle(self, *args, **options):
-    	path = args[0]
+        path = args[0]
         f = open(path, 'w')
 
         for user in User.objects.all():
@@ -31,4 +31,4 @@ class Command(BaseCommand):
                 profile.save()
                 f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
 
-		f.close()
+        f.close()
