@@ -199,7 +199,7 @@ class Script(BaseResource):
     corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
     file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
-    score = models.FloatField(_('score'), blank=True, null=True, localize=True)
+    score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
     status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, blank=True)
     reject_reason = models.CharField(_('reason'), choices=REJECT_REASON, max_length='256', blank=True)
