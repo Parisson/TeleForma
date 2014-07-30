@@ -56,4 +56,6 @@ urlpatterns = patterns('',
     url(r'^desk/periods/(?P<period_id>.*)/exam/scripts_treated/$', ScriptsTreatedView.as_view(), name="teleforma-exam-scripts-treated"),
     url(r'^desk/periods/(?P<period_id>.*)/exam/scripts_rejected/$', ScriptsRejectedView.as_view(), name="teleforma-exam-scripts-rejected"),
 
+    url(r'^desk/periods/(?P<period_id>.*)/exam/quotas/$', QuotasView.as_view(), name="teleforma-exam-quotas"),
+
 )

@@ -150,3 +150,17 @@ class ScriptUpdateView(UpdateView):
     model = Script
     fields = ['score']
 
+
+class QuotasView(ListView):
+
+    model = Quota
+    template_name='exam/quotas.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuotasView, self).get_context_data(**kwargs)
+        context['period'] = Period.objects.get(id=self.kwargs['period_id'])
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(QuotasView, self).dispatch(*args, **kwargs)
