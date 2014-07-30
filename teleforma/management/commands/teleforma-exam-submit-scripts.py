@@ -43,5 +43,5 @@ class Command(BaseCommand):
                 logger.logger.error('ERROR')
 
             logger.logger.info(script.status)
-            time.sleep(30)
+            time.sleep(10)
 

@@ -39,5 +39,5 @@ class Command(BaseCommand):
                 logger.logger.error('No file!')
             script.submit()
             logger.logger.info(script.status)
-            time.sleep(30)
+            time.sleep(10)
 
