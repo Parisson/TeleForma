@@ -25,6 +25,9 @@
    <li><a href="{% url teleforma-exam-scripts-pending period.id %}">{% trans "Pending" %}{% if user.is_staff or user.quotass.all %}{% untreated_scripts_count user period %}{% endif %}</a></li>
    <li><a href="{% url teleforma-exam-scripts-treated period.id %}">{% trans "Marked" %}{% if not user.is_staff and not user.quotas.all %}{% treated_scripts_count user period %}{% endif %}</a></li>
    <li><a href="{% url teleforma-exam-scripts-rejected period.id %}">{% trans "Rejected" %}</a></li>
+   {% if user.is_staff or user.is_superuser %}
+    <li><a href="{% url teleforma-exam-quotas period.id %}">{% trans "Quotas" %}</a></li>
+   {% endif %}
   {% endblock courses %}
   </ul>
  </div>
