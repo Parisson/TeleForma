@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-23 01:22+0200\n"
+"POT-Creation-Date: 2014-07-30 17:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -99,11 +99,11 @@ msgstr "période"
 msgid "value"
 msgstr "valeur"
 
-#: exam/models.py:123
+#: exam/models.py:123 exam/templates/exam/quotas.html:22
 msgid "date start"
 msgstr "date de début"
 
-#: exam/models.py:124
+#: exam/models.py:124 exam/templates/exam/quotas.html:23
 msgid "date end"
 msgstr "date de fin"
 
@@ -111,7 +111,8 @@ msgstr "date de fin"
 msgid "Quota"
 msgstr ""
 
-#: exam/models.py:128
+#: exam/models.py:128 exam/templates/exam/quotas.html:12
+#: exam/templates/exam/scripts.html:29
 msgid "Quotas"
 msgstr ""
 
@@ -276,50 +277,71 @@ msgstr ""
 "Il y a une une erreur lors de votre soumission de copie. Merci de vérifier "
 "votre fichier ou de réessayer plus tard."
 
-#: exam/templates/exam/script_detail.html:92
+#: exam/templates/exam/quotas.html:20
+#: exam/templates/exam/inc/script_list.html:20
+msgid "Corrector"
+msgstr "Correcteur"
+
+#: exam/templates/exam/quotas.html:21
+#: exam/templates/exam/inc/script_list.html:13
+#: templates/teleforma/course_conference.html:70
+#: templates/teleforma/course_media.html:134
+#: templates/teleforma/course_media_video_embed.html:33
+msgid "Course"
+msgstr "Matière"
+
+#: exam/templates/exam/quotas.html:24
+msgid "Value"
+msgstr "Valeur"
+
+#: exam/templates/exam/quotas.html:25
+msgid "Level"
+msgstr "Niveau"
+
+#: exam/templates/exam/script_detail.html:98
 msgid "Topic"
 msgstr "Sujet"
 
-#: exam/templates/exam/script_detail.html:95
+#: exam/templates/exam/script_detail.html:101
 #: exam/templates/exam/inc/script_list.html:21
 msgid "Score"
 msgstr "Note"
 
-#: exam/templates/exam/script_detail.html:96
-#: exam/templates/exam/script_detail.html:112
+#: exam/templates/exam/script_detail.html:102
+#: exam/templates/exam/script_detail.html:118
 msgid "Comments"
 msgstr "Commentaire"
 
-#: exam/templates/exam/script_detail.html:98
+#: exam/templates/exam/script_detail.html:104
 #: exam/templates/exam/scripts.html:27 templates/postman/view.html:25
 msgid "Rejected"
 msgstr "Rejeté"
 
-#: exam/templates/exam/script_detail.html:101
+#: exam/templates/exam/script_detail.html:107
 msgid "Scoring"
 msgstr "Noter"
 
-#: exam/templates/exam/script_detail.html:102
-#: exam/templates/exam/script_detail.html:143
-#: exam/templates/exam/script_detail.html:161
+#: exam/templates/exam/script_detail.html:108
+#: exam/templates/exam/script_detail.html:149
+#: exam/templates/exam/script_detail.html:167
 msgid "Reject"
 msgstr "Rejeter"
 
-#: exam/templates/exam/script_detail.html:104
+#: exam/templates/exam/script_detail.html:110
 msgid "Submitted"
 msgstr "Soumise"
 
-#: exam/templates/exam/script_detail.html:116
+#: exam/templates/exam/script_detail.html:122
 msgid "Mark"
 msgstr "Note"
 
-#: exam/templates/exam/script_detail.html:138
+#: exam/templates/exam/script_detail.html:144
 #: templates/postman/base_write.html:56
 #: templates/teleforma/inc/chat_room.html:13
 msgid "Send"
 msgstr "Envoyer"
 
-#: exam/templates/exam/script_form.html:30 exam/templates/exam/scripts.html:35
+#: exam/templates/exam/script_form.html:30 exam/templates/exam/scripts.html:38
 msgid "New script"
 msgstr "Nouvelle copie"
 
@@ -343,16 +365,9 @@ msgstr "En attente"
 msgid "Marked"
 msgstr "Corrigées"
 
-#: exam/templates/exam/scripts.html:65
+#: exam/templates/exam/scripts.html:68
 msgid "No scripts"
 msgstr "Aucune copie"
-
-#: exam/templates/exam/inc/script_list.html:13
-#: templates/teleforma/course_conference.html:70
-#: templates/teleforma/course_media.html:134
-#: templates/teleforma/course_media_video_embed.html:33
-msgid "Course"
-msgstr "Matière"
 
 #: exam/templates/exam/inc/script_list.html:15
 #: templates/telemeta/lists.html:70
@@ -379,10 +394,6 @@ msgstr "Date de soumission"
 #: exam/templates/exam/inc/script_list.html:19
 msgid "Mark date"
 msgstr "Date de correction"
-
-#: exam/templates/exam/inc/script_list.html:20
-msgid "Corrector"
-msgstr "Correcteur"
 
 #: exam/templates/exam/messages/script_fix.txt:9
 #: exam/templates/exam/messages/script_marked.txt:9

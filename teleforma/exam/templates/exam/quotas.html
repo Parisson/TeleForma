@@ -21,8 +21,8 @@
     <th>{% trans "Course"%}</th>
     <th>{% trans "date start"%}</th>
     <th>{% trans "date end"%}</th>
-    <th>{% trans "value"%}</th>
-    <th>{% trans "level"%} (%)</th>
+    <th>{% trans "Value"%}</th>
+    <th>{% trans "Level"%} (%)</th>
     </tr>
     </thead>
     <tbody id="spacing" class="script-list">
@@ -33,7 +33,7 @@
      <td>{{ quota.date_start }}</td>
      <td>{{ quota.date_end }}</td>
      <td>{{ quota.value }}</td>
-     <td>{{ quota.level }}</td>
+     <td>{{ quota.level|floatformat }}</td>
     </tr>
     {% endfor %}
     </tbody>
