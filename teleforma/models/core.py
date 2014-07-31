@@ -134,6 +134,7 @@ class Period(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'period'
         verbose_name = _('period')
+        ordering = ['name']
 
 class CourseType(Model):
 
