@@ -300,7 +300,7 @@ class Script(BaseResource):
         new_abs = os.sep.join(old_abs_root) + os.sep + slugify(filename) + ext
         new_rel = os.sep.join(old_rel_root) + os.sep + slugify(filename) + ext
 
-        if os.path.exists(new_abs):
+        if os.path.exists(new_abs) and not old_abs == new_abs:
             new_abs = os.sep.join(old_abs_root) + os.sep + unicode(self.uuid) + ext
             new_rel = os.sep.join(old_rel_root) + os.sep + unicode(self.uuid) + ext
 
