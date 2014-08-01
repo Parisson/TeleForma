@@ -301,8 +301,8 @@ class Script(BaseResource):
         new_rel = os.sep.join(old_rel_root) + os.sep + slugify(filename) + ext
 
         if os.path.exists(new_abs):
-             new_abs = os.sep.join(old_abs_root) + os.sep + unicode(self.uuid) + ext
-             new_rel = os.sep.join(old_rel_root) + os.sep + unicode(self.uuid) + ext
+            new_abs = os.sep.join(old_abs_root) + os.sep + unicode(self.uuid) + ext
+            new_rel = os.sep.join(old_rel_root) + os.sep + unicode(self.uuid) + ext
 
         if not os.path.exists(new_abs):
             os.rename(old_abs, new_abs)
