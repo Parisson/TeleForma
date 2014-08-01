@@ -21,6 +21,7 @@
     <th>{% trans "Course"%}</th>
     <th>{% trans "date start"%}</th>
     <th>{% trans "date end"%}</th>
+    <th>{% trans "Pending"%}</th>
     <th>{% trans "Marked"%}</th>
     <th>{% trans "Value"%}</th>
     <th>{% trans "Level"%} (%)</th>
@@ -33,7 +34,8 @@
      <td>{{ quota.course.title }}</td>
      <td>{{ quota.date_start }}</td>
      <td>{{ quota.date_end }}</td>
-     <td>{{ quota.count }}</td>
+     <td>{{ quota.pending_script_count }}</td>
+     <td>{{ quota.marked_script_count }}</td>
      <td>{{ quota.value }}</td>
      <td>{{ quota.level|floatformat }}</td>
     </tr>

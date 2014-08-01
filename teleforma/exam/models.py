@@ -132,14 +132,22 @@ class Quota(models.Model):
         return ' - '.join([unicode(self.corrector), self.course.title, str(self.value)])
 
     @property
-    def count(self):
-        return self.corrector.corrector_scripts.filter(Q(status=2) | Q(status=3) | Q(status=4) | Q(status=5)).count()
+    def all_script_count(self):
+        return self.corrector.corrector_scripts.filter(Q(status=3) | Q(status=4) | Q(status=5)).count()
+
+    @property
+    def pending_script_count(self):
+        return self.corrector.corrector_scripts.filter(Q(status=3)).count()
+
+    @property
+    def marked_script_count(self):
+        return self.corrector.corrector_scripts.filter(Q(status=4) | Q(status=5)).count()
 
     @property
     def level(self):
         if self.value:
             if self.value != 0:
-                level = 100*self.count/self.value
+                level = 100*self.all_script_count/self.value
                 return level
             else:
                 return 0
