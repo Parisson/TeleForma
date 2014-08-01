@@ -23,6 +23,7 @@
     <th>{% trans "date end"%}</th>
     <th>{% trans "Value"%}</th>
     <th>{% trans "Level"%} (%)</th>
+    <th>{% trans "Marked"%} (%)</th>
     </tr>
     </thead>
     <tbody id="spacing" class="script-list">
@@ -34,6 +35,7 @@
      <td>{{ quota.date_end }}</td>
      <td>{{ quota.value }}</td>
      <td>{{ quota.level|floatformat }}</td>
+     <td>{{ quota.count }}</td>
     </tr>
     {% endfor %}
     </tbody>
