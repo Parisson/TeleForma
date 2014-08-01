@@ -126,7 +126,7 @@ class Quota(models.Model):
     class Meta(MetaCore):
         verbose_name = _('Quota')
         verbose_name_plural = _('Quotas')
-        ordering = ['date_start']
+        ordering = ['corrector']
 
     def __unicode__(self):
         return ' - '.join([unicode(self.corrector), self.course.title, str(self.value)])
