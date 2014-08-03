@@ -325,7 +325,7 @@ class Script(BaseResource):
 
     def box_upload(self):
         i = 0
-        n = 30
+        n = 10
         s = 6
 
         # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
@@ -348,6 +348,10 @@ class Script(BaseResource):
                     time.sleep(s)
                     i += 1
                     if i == n:
+                        if 'too large' in statuses[0]['error']:
+                            self.status = 0
+                            self.reject_reason = 'file too large'
+                            self.reject()
                         break
             else:
                 print 'failed :('
