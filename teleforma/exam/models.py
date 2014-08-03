@@ -362,6 +362,7 @@ class Script(BaseResource):
             return
 
         mime_type = mimetype_file(self.file.path)
+        print mime_type
         if not 'pdf' in mime_type:
             self.auto_reject('wrong format')
             return
