@@ -299,7 +299,7 @@ class Script(BaseResource):
             self.reject()
         super(Script, self).save(*args, **kwargs)
 
-    def fix_filename(self):
+    def uuid_link(self):
         old_abs = self.file.path
         old_abs_list = old_abs.split(os.sep)
         old_abs_root = old_abs_list[:-1]
@@ -310,26 +310,17 @@ class Script(BaseResource):
 
         filename, ext = os.path.splitext(old_abs_list[-1])
 
-        new_abs = os.sep.join(old_abs_root) + os.sep + slugify(filename) + ext
-        new_rel = os.sep.join(old_rel_root) + os.sep + slugify(filename) + ext
-
-        if os.path.exists(new_abs) and not old_abs == new_abs:
-            new_abs = os.sep.join(old_abs_root) + os.sep + unicode(self.uuid) + ext
-            new_rel = os.sep.join(old_rel_root) + os.sep + unicode(self.uuid) + ext
+        new_abs = os.sep.join(old_abs_root) + os.sep + unicode(self.uuid) + ext
+        new_rel = os.sep.join(old_rel_root) + os.sep + unicode(self.uuid) + ext
 
         if not os.path.exists(new_abs):
-            os.rename(old_abs, new_abs)
-            self.file = new_rel
-
-        self.save()
+            os.symlink(old_abs, new_abs)
+            # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
+            self.url = settings.MEDIA_URL + unicode(new_rel)
+            self.save()
 
     def box_upload(self):
-        i = 0
-        n = 10
-        s = 6
-
-        # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
-        self.url = settings.MEDIA_URL + unicode(self.file)
+        s = 10
         self.box_uuid = crocodoc.document.upload(url=self.url)
         self.date_submitted = datetime.datetime.now()
 
@@ -345,21 +336,13 @@ class Script(BaseResource):
                 else:
                     print 'File upload failed :('
                     print '  Error Message: ' + statuses[0]['error']
-                    time.sleep(s)
-                    i += 1
-                    if i == n:
-                        if 'too large' in statuses[0]['error']:
-                            self.status = 0
-                            self.reject_reason = 'file too large'
-                            self.reject()
-                        break
+                    if 'too large' in statuses[0]['error']:
+                        self.auto_reject('file too large')
+                    break
             else:
                 print 'failed :('
                 print '  Statuses were not returned.'
-                time.sleep(s)
-                i += 1
-                if i == n:
-                    break
+                break
 
     def auto_reject(self, mess):
         self.reject_reason = mess
@@ -373,16 +356,19 @@ class Script(BaseResource):
         if not self.file:
             self.auto_reject('no file')
             return
+
         if not os.path.exists(self.file.path):
             self.auto_reject('file not found')
             return
-        if not ('.pdf' in self.file.path or '.PDF' in self.file.path):
+
+        mime_type = mimetype_file(self.file.path)
+        if not ('.pdf' in self.file.path or '.PDF' in self.file.path or 'pdf' in mime_type):
             self.auto_reject('wrong format')
             return
 
         if not self.status == 0 and self.file:
             if not self.box_uuid:
-                self.fix_filename()
+                self.uuid_link()
                 self.box_upload()
                 if not self.corrector and self.t == 1:
                     self.auto_set_corrector()
