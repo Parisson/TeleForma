@@ -134,15 +134,21 @@ class Quota(models.Model):
 
     @property
     def all_script_count(self):
-        return self.corrector.corrector_scripts.filter(Q(status=3) | Q(status=4) | Q(status=5)).count()
+        q = self.corrector.corrector_scripts.filter(Q(status=3) | Q(status=4) | Q(status=5))
+        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
+        return q.count()
 
     @property
     def pending_script_count(self):
-        return self.corrector.corrector_scripts.filter(Q(status=3)).count()
+        q = self.corrector.corrector_scripts.filter(Q(status=3))
+        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
+        return q.count()
 
     @property
     def marked_script_count(self):
-        return self.corrector.corrector_scripts.filter(Q(status=4) | Q(status=5)).count()
+        q = self.corrector.corrector_scripts.filter(Q(status=4) | Q(status=5))
+        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
+        return q.count()
 
     @property
     def level(self):
