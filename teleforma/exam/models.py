@@ -188,7 +188,7 @@ class BaseResource(models.Model):
 class ScriptPage(BaseResource):
 
     script = models.ForeignKey('Script', related_name='pages', verbose_name=_('script'), blank=True, null=True)
-    file = models.FileField(_('Page file'), upload_to='script_pages/%Y/%m/%d', blank=True)
+    file = models.FileField(_('Page file'), upload_to='script_pages/%Y/%m/%d', max_length=1024, blank=True)
     image = models.ImageField(_('Image file'), upload_to='script_pages/%Y/%m/%d', blank=True)
     rank = models.IntegerField(_('rank'), blank=True, null=True)
 
@@ -219,7 +219,7 @@ class Script(BaseResource):
     type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
     corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
-    file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', blank=True)
+    file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', max_length=1024, blank=True)
     box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
     score = models.FloatField(_('score'), blank=True, null=True)
     comments = models.TextField(_('comments'), blank=True)
