@@ -505,7 +505,8 @@ class Document(MediaBase):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     is_annal        = BooleanField(_('annal'))
     annal_year      = IntegerField(_('year'), blank=True, null=True)
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
+                                max_length=1024, blank=True)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
                                         blank=True, null=True)
 
@@ -542,7 +543,8 @@ class DocumentSimple(MediaBase):
 
     period          = ForeignKey('Period', related_name='document_simple', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename", blank=True)
+    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
+                                max_length=1024, blank=True)
     readers         = ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
                                         blank=True, null=True)
 
@@ -622,7 +624,7 @@ class Media(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
-        ordering = ['-date_modified']
+        ordering = ['-conference__session', '-date_modified']
 
 
 class NamePaginator(object):
