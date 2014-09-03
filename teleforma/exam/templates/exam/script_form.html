@@ -5,6 +5,7 @@
 {% load thumbnail %}
 
 {% block extra_javascript %}
+{% if upload %}
   <script>
     $(document).ready(function(){
         $('#loading').hide();
@@ -22,6 +23,7 @@
         });
     });
     </script>
+{% endif %}
 {% endblock extra_javascript %}
 
 {% block answers %}
@@ -58,11 +60,13 @@
        {% endfor %}
        </table>
     </form>
+    {% if upload %}
     <br />
     <center>
     <a href="#" id="submit_button" class="component_icon button icon_next">{% trans "Submit" %}</a>
     <img id="loading" src="{{STATIC_URL}}teleforma/images/loading.gif" style="vertical-align:middle" alt="loading" />
     </center>
+    {% endif %}
     <br /><br />
 
 </div>

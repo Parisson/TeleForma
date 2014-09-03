@@ -60,6 +60,7 @@ class ScriptsView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ScriptsView, self).get_context_data(**kwargs)
         context['period'] = Period.objects.get(id=self.kwargs['period_id'])
+        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True)
         return context
 
     @method_decorator(login_required)
