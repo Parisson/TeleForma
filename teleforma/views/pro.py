@@ -174,13 +174,9 @@ class SeminarView(SeminarAccessMixin, DetailView):
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
 
         delta = self.get_delta(user, seminar)
-        if user.is_superuser or 'cnb' in user.username or 'test' in user.username:
-            time = delta - datetime.timedelta(seconds=seminar.duration.as_seconds())
-            context['seminar_time'] = time.total_seconds()
-            context['delta'] = str(delta).split('.')[0]
-        else:
-            context['seminar_time'] = 1
-            context['delta'] = '10:37:28'
+        time = delta - datetime.timedelta(seconds=seminar.duration.as_seconds())
+        context['seminar_time'] = time.total_seconds()
+        context['delta'] = str(delta).split('.')[0]
         return context
 
     @jsonrpc_method('teleforma.publish_seminar')
