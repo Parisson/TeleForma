@@ -11,7 +11,7 @@ setup(
   long_description = open('README.rst').read(),
   author = "Guillaume Pellerin",
   author_email = "yomguy@parisson.com",
-  version = '0.9',
+  version = '1.0',
   install_requires = [
         'django>=1.4',
         'telemeta',
@@ -22,6 +22,8 @@ setup(
         'django-notes',
         'django-timezones',
         'django-jqchat',
+        'django-googletools',
+        'crocodoc',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
