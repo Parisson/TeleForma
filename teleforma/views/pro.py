@@ -676,9 +676,9 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     def get_context_data(self, **kwargs):
         context = super(TestimonialView, self).get_context_data(**kwargs)
         seminar = context['seminar']
-        revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user)
+        revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user).order_by('date')
         if revisions:
-            context['first_revision'] = revisions[-1]
+            context['first_revision'] = revisions[0]
         testimonials = Testimonial.objects.filter(seminar=seminar, user=self.request.user)
         if testimonials:
             context['testimonial'] = testimonials[0]
