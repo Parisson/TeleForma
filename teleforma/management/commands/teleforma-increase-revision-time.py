@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 for seminar in seminars:
                     revisions = SeminarRevision.objects.filter(user=user, seminar=seminar)
                     if revisions:
-                        if not revisions[0].date_modified and revisions[1]:
+                        if not revisions[0].date_modified and len(revisions) > 1:
                             revision = revisions[1]
                         else:
                             revision = revisions[0]
