@@ -30,13 +30,15 @@ class Command(BaseCommand):
                 for seminar in seminars:
                     revisions = SeminarRevision.objects.filter(user=user, seminar=seminar)
                     if revisions:
+                        delta = datetime.timedelta(seconds=seminar.duration.as_seconds())
                         if not revisions[0].date_modified:
                             if len(revisions) > 1:
                                 revision = revisions[1]
+                                revision.date_modified = revision.date_modified + delta
                             else:
                                 revision = revisions[0]
+                                revision.date_modified = revision.date + delta
                         else:
                             revision = revisions[0]
-                        delta = datetime.timedelta(seconds=seminar.duration.as_seconds())
-                        revision.date_modified = revision.date_modified + delta
+                            revision.date_modified = revision.date_modified + delta
                         revision.save()
