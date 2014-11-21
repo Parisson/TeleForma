@@ -34,7 +34,7 @@ class Command(BaseCommand):
                         if not revisions[0].date_modified:
                             if len(revisions) > 1:
                                 revision = revisions[1]
-                                if revisions.date_modified:
+                                if revision.date_modified:
                                     revision.date_modified = revision.date_modified + delta
                                 else:
                                     revision.date_modified = revision.date + delta
