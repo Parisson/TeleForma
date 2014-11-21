@@ -178,7 +178,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
         elif progress == 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
-        if progress == 100 and validated and delta <= 0:
+        if progress == 100 and validated and time <= 0:
             messages.info(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you have to work at least the time required for this seminar."))
 
         return context
