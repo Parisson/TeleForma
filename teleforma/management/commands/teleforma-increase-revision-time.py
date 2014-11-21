@@ -33,6 +33,8 @@ class Command(BaseCommand):
                         if not revisions[0].date_modified:
                             if len(revisions) > 1:
                                 revision = revisions[1]
+                            else:
+                                revision = revisions[0]
                         else:
                             revision = revisions[0]
                         delta = datetime.timedelta(seconds=seminar.duration.as_seconds())
