@@ -172,7 +172,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
         delta_sec = delta.total_seconds()
         context['delta_sec'] = delta_sec
-        context['delta'] = str(delta).split('.')[0]
+        context['timer'] = str(delta).split('.')[0]
 
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
