@@ -168,7 +168,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
 
-        timer = get_seminar_timer(seminar)
+        timer = get_seminar_timer(user, seminar)
         delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
         delta_sec = delta.total_seconds()
         context['delta_sec'] = delta_sec
