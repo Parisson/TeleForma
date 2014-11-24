@@ -31,10 +31,12 @@ class Command(BaseCommand):
                 for seminar in seminars:
                     revisions = SeminarRevision.objects.filter(user=user, seminar=seminar)
                     if revisions:
+                        progress = seminar_progress(user, seminar)
+                        validated = seminar_validated(user, seminar)
                         timer = get_seminar_timer(user, seminar)
                         bonus = datetime.timedelta(seconds=seminar.duration.as_seconds())
                         delta = timer - bonus
-                        if delta.total_seconds() < 0:
+                        if delta.total_seconds() < 0 and progress == 100 and validated:
                             if not revisions[0].date_modified:
                                 if len(revisions) > 1:
                                     revision = revisions[1]
