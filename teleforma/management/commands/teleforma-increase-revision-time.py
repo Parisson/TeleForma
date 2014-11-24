@@ -11,6 +11,7 @@ from django.utils import translation
 from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
+from teleforma.views import *
 import logging
 import datetime
 
@@ -30,18 +31,21 @@ class Command(BaseCommand):
                 for seminar in seminars:
                     revisions = SeminarRevision.objects.filter(user=user, seminar=seminar)
                     if revisions:
-                        delta = datetime.timedelta(seconds=seminar.duration.as_seconds())
-                        if not revisions[0].date_modified:
-                            if len(revisions) > 1:
-                                revision = revisions[1]
-                                if revision.date_modified:
-                                    revision.date_modified = revision.date_modified + delta
+                        timer = get_seminar_timer(user, seminar)
+                        bonus = datetime.timedelta(seconds=seminar.duration.as_seconds())
+                        delta = timer - bonus
+                        if delta.total_seconds() < 0:
+                            if not revisions[0].date_modified:
+                                if len(revisions) > 1:
+                                    revision = revisions[1]
+                                    if revision.date_modified:
+                                        revision.date_modified = revision.date_modified + bonus
+                                    else:
+                                        revision.date_modified = revision.date + bonus
                                 else:
-                                    revision.date_modified = revision.date + delta
+                                    revision = revisions[0]
+                                    revision.date_modified = revision.date + bonus
                             else:
                                 revision = revisions[0]
-                                revision.date_modified = revision.date + delta
-                        else:
-                            revision = revisions[0]
-                            revision.date_modified = revision.date_modified + delta
-                        revision.save()
+                                revision.date_modified = revision.date_modified + bonus
+                            revision.save()

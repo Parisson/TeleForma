@@ -98,6 +98,14 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
+def get_seminar_timer(user, seminar):
+    t = datetime.timedelta()
+    for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER):
+        if r.date_modified:
+            t += r.delta()
+    return t
+
+
 class SeminarAccessMixin(object):
 
 
@@ -146,13 +154,6 @@ class SeminarView(SeminarAccessMixin, DetailView):
     model = Seminar
     template_name='teleforma/seminar_detail.html'
 
-    def get_delta(self, user, seminar):
-        t = datetime.timedelta()
-        for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER):
-            if r.date_modified:
-                t += r.delta()
-        return t
-
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(SeminarView, self).dispatch(*args, **kwargs)
@@ -167,19 +168,20 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
 
-        delta = self.get_delta(user, seminar)
-        time = delta - datetime.timedelta(seconds=seminar.duration.as_seconds())
-        seminar_time = time.total_seconds()
-        context['seminar_time'] = seminar_time
+        timer = get_seminar_timer(seminar)
+        delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
+        delta_sec = delta.total_seconds()
+        context['delta_sec'] = delta_sec
         context['delta'] = str(delta).split('.')[0]
 
-        if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
+        if progress == 100 and not validated
+         and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
-        elif progress == 100 and validated and seminar_time >= 0 and self.template_name == 'teleforma/seminar_detail.html':
+        elif progress == 100 and validated and delta_sec >= 0 and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
-        if progress == 100 and validated and seminar_time < 0:
+        if progress == 100 and validated and delta_sec < 0:
             messages.info(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you have to work at least the time required for this seminar."))
 
         return context
