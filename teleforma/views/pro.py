@@ -174,8 +174,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['delta_sec'] = delta_sec
         context['delta'] = str(delta).split('.')[0]
 
-        if progress == 100 and not validated:
-         and self.template_name == 'teleforma/seminar_detail.html':
+        if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
