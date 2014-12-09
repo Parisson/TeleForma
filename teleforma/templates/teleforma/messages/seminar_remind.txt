@@ -7,6 +7,14 @@ Certains de vos séminaires e-learning arrivent bientôt à expiration :{% endbl
 
 {% blocktrans %}Nous vous rappelons que vous devez achever vos formations avant ces dates.
 
+Pour valider un séminaire e-learning, vous devez :
+
+1) avoir consulté toutes les étapes de votre formation
+
+2) avoir validé toutes vos consultations fictives
+
+3) avoir consacré le temps requis à l’accomplissement de votre formation
+
 De plus, si vous souhaitez conserver les supports pédagogiques écrits de votre formation (compte-rendu écrit et recueil(s) de documents d'actualité), nous vous rappelons que ceux-ci sont entièrement téléchargeables sur la plate-forme e-learning de {{ organization }} jusqu'aux dates d'expiration de chaque séminaire.
 
 The team of the {{ organization }} thank you for your confidence and we remain at your disposal for further information.
