@@ -19,6 +19,7 @@ class Command(BaseCommand):
     help = """Copy some seminars and their content thanks to their expiry date year"""
     args = ['from_year to_year']
     language_code = 'fr_FR'
+    more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
 
     def handle(self, *args, **kwargs):
         to_year = int(args[-1])
@@ -28,14 +29,15 @@ class Command(BaseCommand):
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
-                if seminar.expiry_date.year == from_year:
+                if seminar.expiry_date.year == from_year \
+                  or (seminar.period == from_period and seminar.code in more):
                     print ("seminar cloning:", seminar)
                     seminar.period = from_period
                     seminar.save()
                     clone = seminar.clone()
                     clone.publish_date = seminar.publish_date.replace(year=to_year)
                     clone.expiry_date = seminar.expiry_date.replace(year=to_year)
-                    clone.period = to_period 
+                    clone.period = to_period
                     clone.status = 1
                     clone.save()
                     print ('seminar dates updated', clone)
@@ -61,7 +63,7 @@ class Command(BaseCommand):
                         question_clone.seminar = clone
                         question_clone.save()
                         print ("question cloned and assigned:", question_clone)
-                
+
                 else:
                     seminar.period = to_period
                     seminar.save()
