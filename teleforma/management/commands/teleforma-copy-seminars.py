@@ -21,13 +21,14 @@ class Command(BaseCommand):
     args = ['from_year to_year']
     language_code = 'fr_FR'
     more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
+    site = Site.objects.get_current()
 
     def handle(self, *args, **kwargs):
         to_year = int(args[-1])
         from_year = int(args[-2])
         to_period, c = Period.objects.get_or_create(name=str(to_year))
         from_period, c = Period.objects.get_or_create(name=str(from_year))
-        site = Site.objects.get_current()
+
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
