@@ -30,7 +30,7 @@ class Command(BaseCommand):
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
                 if seminar.expiry_date.year == from_year \
-                  or (seminar.period == from_period and seminar.code in more):
+                  or (seminar.period == from_period and seminar.code in self.more):
                     print ("seminar cloning:", seminar)
                     seminar.period = from_period
                     seminar.save()
@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     clone.period = to_period
                     clone.status = 1
                     clone.save()
-                    print ('seminar dates updated', clone)
+                    print ('new seminar:', clone)
 
                     for field in seminar._meta.many_to_many:
                         if field.rel.to == Document:
@@ -56,13 +56,13 @@ class Command(BaseCommand):
                                 item_clone.save()
                                 destination.remove(item)
                                 destination.add(item_clone)
-                                print ("media cloned and assigned:", item_clone)
+                                # print ("media cloned and assigned:", item_clone)
 
                     for question in seminar.question.all():
                         question_clone = question.clone()
                         question_clone.seminar = clone
                         question_clone.save()
-                        print ("question cloned and assigned:", question_clone)
+                        # print ("question cloned and assigned:", question_clone)
 
                 else:
                     seminar.period = to_period
