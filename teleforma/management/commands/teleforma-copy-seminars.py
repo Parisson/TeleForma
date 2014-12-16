@@ -8,6 +8,7 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
+from django.core.urlresolvers import reverse
 from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
@@ -26,12 +27,12 @@ class Command(BaseCommand):
         from_year = int(args[-2])
         to_period, c = Period.objects.get_or_create(name=str(to_year))
         from_period, c = Period.objects.get_or_create(name=str(from_year))
+        site = Site.objects.get_current()
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
                 if seminar.expiry_date.year == from_year \
                   or (seminar.period == from_period and seminar.code in self.more):
-                    print ("seminar cloning:", seminar)
                     seminar.period = from_period
                     seminar.save()
                     clone = seminar.clone()
@@ -40,7 +41,8 @@ class Command(BaseCommand):
                     clone.period = to_period
                     clone.status = 1
                     clone.save()
-                    print ('new seminar:', clone)
+                    print 'new seminar:', clone
+                    print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': seminar.id})
 
                     for field in seminar._meta.many_to_many:
                         if field.rel.to == Document:

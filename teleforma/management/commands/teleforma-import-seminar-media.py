@@ -101,14 +101,14 @@ class Command(BaseCommand):
         log_file = args[2]
         media_dir = args[3]
         logger = Logger(log_file)
-        
+
         organization = Organization.objects.get(name=organization_name)
         period = Period.objects.get(name=period_name)
         self.media_dir = media_dir
         file_list = []
         seminars = []
 
-        # NOT FOR PROD : CLEANUP 
+        # NOT FOR PROD : CLEANUP
         # self.cleanup()
         #for seminar in Seminar.objects.filter(period=period):
         #    self.seminar_media_cleanup(seminar)
@@ -123,7 +123,7 @@ class Command(BaseCommand):
 
                 if ext in self.original_format and not 'preview' in root_list \
                             and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.':
-                    
+
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
 
@@ -150,7 +150,7 @@ class Command(BaseCommand):
                     course = Course.objects.get(code=course_code)
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
-                    seminar, c = Seminar.objects.get_or_create(course=course, 
+                    seminar, c = Seminar.objects.get_or_create(course=course,
                                             rank=seminar_rank, period=period)
                     if c:
                         seminar.title = course.title
@@ -162,7 +162,7 @@ class Command(BaseCommand):
                         if media.item.file == path:
                             exist = True
                             break
-                    
+
                     if not exist:
                         print root + os.sep + filename
                         logger.logger.info(seminar.public_url())
@@ -196,7 +196,7 @@ class Command(BaseCommand):
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
                                 related.title = 'preview'
                                 related.set_mime_type()
-                                related.save()  
+                                related.save()
                                 logger.logger.info(r_path)
                             elif extension[1:] in self.transcoded_formats:
                                 t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
@@ -208,7 +208,7 @@ class Command(BaseCommand):
                                     for marker in markers:
                                         if float(marker['time']) != 0:
                                             item.title = marker['comment']
-                                            item.save() 
+                                            item.save()
                                             break
                                 logger.logger.info(r_path)
 
