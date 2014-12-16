@@ -43,7 +43,7 @@ class Command(BaseCommand):
                     clone.status = 1
                     clone.save()
                     print 'new seminar:', clone
-                    print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': seminar.id})
+                    print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': clone.id})
 
                     for field in seminar._meta.many_to_many:
                         if field.rel.to == Document:
