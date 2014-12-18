@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
-                if seminar.expiry_date.date == expiry_date.date \
+                if seminar.expiry_date.date() == expiry_date.date() \
                   or (seminar.period == from_period and seminar.code in self.more):
                     seminar.period = from_period
                     seminar.save()
