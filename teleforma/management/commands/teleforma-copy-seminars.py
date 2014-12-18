@@ -58,7 +58,7 @@ class Command(BaseCommand):
                     clone.period = to_period
                     clone.status = 1
                     clone.save()
-                    log = 'new seminar:' + clone
+                    log = 'new seminar:' + unicode(clone)
                     logger.logger.info(log)
                     print log
                     log = 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': clone.id})
