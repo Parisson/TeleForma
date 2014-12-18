@@ -28,15 +28,20 @@ class Logger:
 
 class Command(BaseCommand):
     help = """Copy some seminars and their content thanks to their expiry date year"""
-    args = ['from_year to_year']
+    args = ['from_year to_year log_file']
     language_code = 'fr_FR'
     more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
+    new_site = "sandbox.e-learning.pro-barreau.com"
     site = Site.objects.get_current()
 
     def handle(self, *args, **kwargs):
         to_year = int(args[-2])
         from_year = int(args[-3])
         logger = Logger(args[-1])
+
+        self.site.name = self.new_site
+        self.site.save()
+
         to_period, c = Period.objects.get_or_create(name=str(to_year))
         from_period, c = Period.objects.get_or_create(name=str(from_year))
         expiry_date = datetime.datetime(2014, 12, 31)
@@ -53,7 +58,7 @@ class Command(BaseCommand):
                     clone.period = to_period
                     clone.status = 1
                     clone.save()
-                    log = 'new seminar:', clone
+                    log = 'new seminar:' + clone
                     logger.logger.info(log)
                     print log
                     log = 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': clone.id})
