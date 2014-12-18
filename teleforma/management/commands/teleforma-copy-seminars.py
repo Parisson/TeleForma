@@ -28,18 +28,18 @@ class Logger:
 
 class Command(BaseCommand):
     help = """Copy some seminars and their content thanks to their expiry date year"""
-    args = ['from_year to_year log_file']
+    args = ['site_domain from_year to_year log_file']
     language_code = 'fr_FR'
     more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
-    new_site = "sandbox.e-learning.pro-barreau.com"
     site = Site.objects.get_current()
 
     def handle(self, *args, **kwargs):
         to_year = int(args[-2])
         from_year = int(args[-3])
         logger = Logger(args[-1])
+        domain = args[-4]
 
-        self.site.domain = self.new_site
+        self.site.domain = domain
         self.site.save()
 
         to_period, c = Period.objects.get_or_create(name=str(to_year))
