@@ -28,11 +28,11 @@ class Command(BaseCommand):
         from_year = int(args[-2])
         to_period, c = Period.objects.get_or_create(name=str(to_year))
         from_period, c = Period.objects.get_or_create(name=str(from_year))
-
+        expiry_date = datetime.datetime(2014, 12, 31)
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
-                if seminar.expiry_date.year == from_year \
+                if seminar.expiry_date.date == expiry_date.date \
                   or (seminar.period == from_period and seminar.code in self.more):
                     seminar.period = from_period
                     seminar.save()
@@ -66,9 +66,5 @@ class Command(BaseCommand):
                         question_clone.seminar = clone
                         question_clone.save()
                         # print ("question cloned and assigned:", question_clone)
-
-                else:
-                    seminar.period = to_period
-                    seminar.save()
 
 
