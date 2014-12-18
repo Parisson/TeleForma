@@ -15,6 +15,16 @@ from teleforma.models import *
 import logging
 import datetime
 
+class Logger:
+    """A logging object"""
+
+    def __init__(self, file):
+        self.logger = logging.getLogger('teleforma')
+        self.hdlr = logging.FileHandler(file)
+        self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        self.hdlr.setFormatter(self.formatter)
+        self.logger.addHandler(self.hdlr)
+        self.logger.setLevel(logging.INFO)
 
 class Command(BaseCommand):
     help = """Copy some seminars and their content thanks to their expiry date year"""
@@ -24,8 +34,9 @@ class Command(BaseCommand):
     site = Site.objects.get_current()
 
     def handle(self, *args, **kwargs):
-        to_year = int(args[-1])
-        from_year = int(args[-2])
+        to_year = int(args[-2])
+        from_year = int(args[-3])
+        logger = Logger(args[-1])
         to_period, c = Period.objects.get_or_create(name=str(to_year))
         from_period, c = Period.objects.get_or_create(name=str(from_year))
         expiry_date = datetime.datetime(2014, 12, 31)
@@ -42,8 +53,12 @@ class Command(BaseCommand):
                     clone.period = to_period
                     clone.status = 1
                     clone.save()
-                    print 'new seminar:', clone
-                    print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': clone.id})
+                    log = 'new seminar:', clone
+                    logger.logger.info(log)
+                    print log
+                    log = 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': clone.id})
+                    logger.logger.info(log)
+                    print log
 
                     for field in seminar._meta.many_to_many:
                         if field.rel.to == Document:
