@@ -39,7 +39,7 @@ class Command(BaseCommand):
         from_year = int(args[-3])
         logger = Logger(args[-1])
 
-        self.site.name = self.new_site
+        self.site.domain = self.new_site
         self.site.save()
 
         to_period, c = Period.objects.get_or_create(name=str(to_year))
