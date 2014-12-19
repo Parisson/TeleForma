@@ -108,7 +108,6 @@ def get_seminar_timer(user, seminar):
 
 class SeminarAccessMixin(object):
 
-
     def render_to_response(self, context):
         seminar = context['seminar']
         if not seminar in all_seminars(self.request)['all_seminars']:
@@ -147,6 +146,7 @@ class SeminarRevisionMixin(object):
                 if (now - r.date) > datetime.timedelta(seconds = 1):
                     r.date_modified = now
                     r.save()
+
 
 class SeminarView(SeminarAccessMixin, DetailView):
 
