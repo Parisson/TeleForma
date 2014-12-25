@@ -126,6 +126,7 @@ class Command(BaseCommand):
                 if ext in self.original_format and not 'preview' in root_list \
                             and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.':
 
+                    print root + os.sep + filename
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
 
@@ -162,7 +163,6 @@ class Command(BaseCommand):
                     for media in seminar.medias.all():
                         seminar.medias.remove(media)
 
-                    print root + os.sep + filename
                     logger.logger.info(seminar.public_url())
                     logger.logger.info(path)
                     if not seminar in seminars:
