@@ -120,6 +120,7 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
                 root_list = root.split(os.sep)
+                print root + os.sep + filename
 
                 if ext in self.original_format and not 'preview' in root_list \
                             and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.':
@@ -164,7 +165,6 @@ class Command(BaseCommand):
                             break
 
                     if not exist:
-                        print root + os.sep + filename
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
                         if not seminar in seminars:

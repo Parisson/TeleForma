@@ -107,6 +107,9 @@ class Command(BaseCommand):
         domain = args[4]
         logger = Logger(log_file)
 
+        self.site.domain = domain
+        self.site.save()
+
         organization = Organization.objects.get(name=organization_name)
         period = Period.objects.get(name=period_name)
         self.media_dir = media_dir
