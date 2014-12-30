@@ -78,13 +78,16 @@ class Command(BaseCommand):
             self.delete_media(preview)
 
     def get_duration(self, file):
-        decoder = timeside.decoder.FileDecoder(file)
-        decoder.setup()
-        # time.sleep(0.5)
-        value = str(datetime.timedelta(0,decoder.input_duration))
-        t = value.split(':')
-        t[2] = t[2].split('.')[0]
-        return ':'.join(t)
+        try:
+            decoder = timeside.decoder.FileDecoder(file)
+            decoder.setup()
+            # time.sleep(0.5)
+            value = str(datetime.timedelta(0,decoder.input_duration))
+            t = value.split(':')
+            t[2] = t[2].split('.')[0]
+            return ':'.join(t)
+        except:
+            return '0:0:0'
 
     def get_item(self, collection, id):
         items = MediaItem.objects.filter(collection=collection, code=id)
