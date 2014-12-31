@@ -168,6 +168,8 @@ class Command(BaseCommand):
 
                     for media in seminar.medias.all():
                         seminar.medias.remove(media)
+                        media.item.delete()
+                        media.delete()
 
                     logger.logger.info(seminar.public_url())
                     logger.logger.info(path)
