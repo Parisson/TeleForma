@@ -35,6 +35,7 @@ class Command(BaseCommand):
     image_formats = ['png', 'jpg']
     media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4}
     site = Site.objects.get_current()
+    id_incr = '40'
 
     def full_cleanup(self):
         items  = MediaItemTranscoded.objects.all()
@@ -103,18 +104,23 @@ class Command(BaseCommand):
         period_name = args[1]
         log_file = args[2]
         media_dir = args[3]
+        domain = args[4]
         logger = Logger(log_file)
+
+        self.site.domain = domain
+        self.site.save()
 
         organization = Organization.objects.get(name=organization_name)
         period = Period.objects.get(name=period_name)
+
         self.media_dir = media_dir
         file_list = []
         seminars = []
 
         # NOT FOR PROD : CLEANUP
-        # self.cleanup()
-        #for seminar in Seminar.objects.filter(period=period):
-        #    self.seminar_media_cleanup(seminar)
+        date_limit = datetime.datetime(2015,12,31)
+        for seminar in Seminar.objects.filter(period=period, expiry_date__gte=date_limit):
+            self.seminar_media_cleanup(seminar)
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -180,7 +186,7 @@ class Command(BaseCommand):
                         else:
                             collection = collections[0]
 
-                        id = '_'.join([period.name, '30', collection_id, ext, str(media_rank)])
+                        id = '_'.join([period.name, id_incr, collection_id, ext, str(media_rank)])
 
                         item = self.get_item(collection, id)
                         item.title = name
