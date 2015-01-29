@@ -103,7 +103,7 @@ urlpatterns = patterns('',
     url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/export/$',
         UsersExportView.as_view(), name="teleforma-users-export"),
 
-    url(r'^users/(?P<username>[A-Za-z0-9@._-]+)/profile/$', profile_view.profile_detail,
+    url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
 
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
