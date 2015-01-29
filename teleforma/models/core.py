@@ -202,12 +202,15 @@ class Course(Model):
 
 class Professor(Model):
 
-    user            = ForeignKey(User, related_name='professor',
+    user = ForeignKey(User, related_name='professor',
                                  verbose_name=_('user'), unique=True)
-    courses         = ManyToManyField('Course', related_name="professor",
+    courses = ManyToManyField('Course', related_name="professor",
                                         verbose_name=_('courses'),
                                         blank=True, null=True)
-
+    department = ForeignKey('Department', related_name='professor',
+                                 verbose_name=_('department'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
+    
     def __unicode__(self):
         if self.user.first_name and self.user.last_name:
             return self.user.last_name + ' ' + self.user.first_name[0] + '.'
