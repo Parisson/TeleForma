@@ -15,7 +15,10 @@ class ScriptView(CourseAccessMixin, UpdateView):
     model = Script
     template_name='exam/script_detail.html'
     form_class = ScriptForm
-    success_url = reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':1})
+
+    def get_success_url(self):
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
 
     def get_context_data(self, **kwargs):
         context = super(ScriptView, self).get_context_data(**kwargs)
@@ -123,7 +126,10 @@ class ScriptCreateView(CreateView):
     model = Script
     template_name='exam/script_form.html'
     form_class = ScriptForm
-    success_url = reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':1})
+    
+    def get_success_url(self):
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
 
     def form_valid(self, form):
         form.instance.author = self.request.user
