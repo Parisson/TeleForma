@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 
 
+
 class ScriptView(CourseAccessMixin, UpdateView):
 
     model = Script
@@ -135,6 +136,7 @@ class ScriptCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
+        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True)
         context['period'] = Period.objects.get(id=self.kwargs['period_id'])
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
         course_pk_list = [c['course'].id for c in get_courses(self.request.user)]
