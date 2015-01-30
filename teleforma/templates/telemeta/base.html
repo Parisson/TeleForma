@@ -118,7 +118,7 @@ alt="logo" />
      {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
      </li>
   {% else %}
-    <li><a href="#scripts#" class="green">&nbsp;{% trans "Scripts" %}
+    <li><a href="#exam#" class="green">&nbsp;{% trans "Scripts" %}
      {% if user.is_staff or user.quotas.all %}{% untreated_scripts_count user periods.0.id %}
      {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
       <ul>
