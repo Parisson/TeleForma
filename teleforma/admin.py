@@ -16,9 +16,13 @@ class AEStudentProfileInline(admin.StackedInline):
     filter_horizontal = ['courses']
     extra = 1
 
+class StudentPaymentInline(admin.StackedInline):
+    model = Payment
+
 class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
+    inlines = [StudentPaymentInline]
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor

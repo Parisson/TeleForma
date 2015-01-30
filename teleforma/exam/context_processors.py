@@ -43,12 +43,13 @@ def exam_access(request):
         students = user.student.all()
         quotas = user.quotas.all()
 
+        # Option for restricting access to platform user only
         if students:
             platform_only = students[0].platform_only
         else:
             platform_only = False
 
-        if platform_only or quotas or user.is_staff or user.is_superuser:
+        if students or quotas or user.is_staff or user.is_superuser:
             return {'exam_access': True}
         else:
             return {'exam_access': False}
