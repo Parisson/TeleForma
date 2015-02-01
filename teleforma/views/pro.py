@@ -105,6 +105,11 @@ def get_seminar_timer(user, seminar):
             t += r.delta()
     return t
 
+def get_seminar_delta(user, seminar):
+    timer = get_seminar_timer(user, seminar)
+    delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
+    return delta.total_seconds()
+
 
 class SeminarAccessMixin(object):
 
@@ -169,9 +174,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_validated'] = validated
 
         timer = get_seminar_timer(user, seminar)
-        delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
-        delta_sec = delta.total_seconds()
-        context['delta_sec'] = delta_sec
+        context['delta_sec'] = get_seminar_delta(user, seminar)
         context['timer'] = str(timer).split('.')[0]
 
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
@@ -720,7 +723,7 @@ class TestimonialListView(ListView):
         testimonials = Testimonial.objects.filter(user=user)
         for testimonial in testimonials:
             seminar = testimonial.seminar
-            if seminar_validated(user, seminar):
+            if seminar_validated(user, seminar) and get_seminar_delta(user, seminar) >= 0:
                 t.append(testimonial)
         return t
 
