@@ -174,7 +174,8 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_validated'] = validated
 
         timer = get_seminar_timer(user, seminar)
-        context['delta_sec'] = get_seminar_delta(user, seminar)
+        delta_sec = get_seminar_delta(user, seminar)
+        context['delta_sec'] = delta_sec
         context['timer'] = str(timer).split('.')[0]
 
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
