@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-29 23:28+0100\n"
+"POT-Creation-Date: 2015-02-08 22:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -99,7 +99,7 @@ msgstr "correcteur"
 msgid "period"
 msgstr "période"
 
-#: exam/models.py:123 models/crfpa.py:174
+#: exam/models.py:123
 msgid "value"
 msgstr "valeur"
 
@@ -124,8 +124,7 @@ msgstr ""
 msgid "date added"
 msgstr "date d'ajout"
 
-#: exam/models.py:171 models/core.py:160 models/core.py:463
-#: models/crfpa.py:177 models/pro.py:68
+#: exam/models.py:171 models/core.py:160 models/core.py:463 models/pro.py:68
 msgid "date modified"
 msgstr "date de modification"
 
@@ -254,19 +253,19 @@ msgstr "Copie"
 msgid "Scripts"
 msgstr "Copies"
 
-#: exam/views.py:84
+#: exam/views.py:85
 msgid "Pending scripts"
 msgstr "Copies en attente"
 
-#: exam/views.py:101
+#: exam/views.py:102
 msgid "Treated scripts"
 msgstr "Copie traitées"
 
-#: exam/views.py:116
+#: exam/views.py:117
 msgid "Rejected scripts"
 msgstr "Copies rejetées"
 
-#: exam/views.py:129
+#: exam/views.py:130
 msgid ""
 "You have successfully submitted your script. It will be processed in the "
 "next hours."
@@ -274,7 +273,7 @@ msgstr ""
 "Vous avez correctement soumis votre copie. Elle sera traitée dans les "
 "prochaines heures puis corrigée."
 
-#: exam/views.py:133
+#: exam/views.py:134
 msgid ""
 "There was a problem with your submission. Please try again, later if "
 "possible."
@@ -713,20 +712,6 @@ msgstr ""
 msgid "profile"
 msgstr "profil"
 
-#: models/crfpa.py:173
-#, fuzzy
-msgid "student"
-msgstr "Etudiant AE"
-
-#: models/crfpa.py:175
-msgid "month"
-msgstr ""
-
-#: models/crfpa.py:176
-#, fuzzy
-msgid "date created"
-msgstr "date de rejet"
-
 #: models/pro.py:47
 msgid "price"
 msgstr "prix"
@@ -1058,6 +1043,226 @@ msgstr ""
 msgid "Write"
 msgstr ""
 
+#: templates/registration/activate.html:3
+#: templates/registration/activation_complete.html:3
+#, fuzzy
+msgid "Activation complete"
+msgstr "incomplet"
+
+#: templates/registration/activate.html:3
+msgid "Activation problem"
+msgstr ""
+
+#: templates/registration/activate.html:7
+#, python-format
+msgid ""
+"\n"
+"Thanks %(account)s, activation complete!\n"
+"You may now <a href='%(auth_login_url)s'>login</a> using the username and "
+"password you set at registration.\n"
+msgstr ""
+
+#: templates/registration/activate.html:12
+msgid ""
+"Oops &ndash; it seems that your activation key is invalid.  Please check the "
+"url again."
+msgstr ""
+
+#: templates/registration/activation_complete.html:6
+#, python-format
+msgid ""
+"\n"
+"Thanks, activation complete!  You may now <a "
+"href='%(auth_login_url)s'>login</a> using the username and password you set "
+"at registration.\n"
+msgstr ""
+
+#: templates/registration/activation_email.html:8
+#, python-format
+msgid ""
+"<body>\n"
+"<h3>Account registration for %(sitename)s</h3>\n"
+"<p>\n"
+"You (or someone pretending to be you) have asked to register an account at\n"
+"<b>%(sitename)s</b>.<br/>\n"
+"If this wasn't you, please ignore this email and your address will be "
+"removed\n"
+"from our records.\n"
+"</p>\n"
+"<p>\n"
+"To activate this account, please click the following link within the next \n"
+"<b>%(expiration_days)s</b> days:<br/>\n"
+"<a href=\"http://%(sitedomain)s%(activation_key_url)s\">http://%(sitedomain)s"
+"%(activation_key_url)s</a>\n"
+"</p>\n"
+"<p>\n"
+"Sincerely,<br/>\n"
+"%(sitename)s Management\n"
+"</p>\n"
+"</body>\n"
+msgstr ""
+
+#: templates/registration/activation_email.txt:3
+#, python-format
+msgid ""
+"\n"
+"You (or someone pretending to be you) have asked to register an account at\n"
+"%(sitename)s.  If this wasn't you, please ignore this email\n"
+"and your address will be removed from our records.\n"
+"\n"
+"To activate this account, please click the following link within the next \n"
+"%(expiration_days)s days:\n"
+"\n"
+"http://%(siteurl)s%(activation_key_url)s\n"
+"\n"
+"Sincerely,\n"
+"%(sitename)s Management\n"
+msgstr ""
+
+#: templates/registration/activation_email_subject.txt:1
+#, python-format
+msgid "Account registration for %(sitename)s"
+msgstr ""
+
+#: templates/registration/login.html:3
+#, fuzzy
+msgid "Login"
+msgstr "Se connecter en tant que"
+
+#: templates/registration/login.html:9 templates/telemeta/login.html:19
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+
+#: templates/registration/login.html:23
+#, python-format
+msgid ""
+"<a href=\"%(auth_pwd_reset_url)s\">Forgot</a> your password?\n"
+"    <a href=\"%(register_url)s\">Need an account</a>?"
+msgstr ""
+
+#: templates/registration/login.html:26
+#, fuzzy
+msgid "login"
+msgstr "Se connecter en tant que"
+
+#: templates/registration/logout.html:3
+msgid "Logged out"
+msgstr ""
+
+#: templates/registration/logout.html:5
+msgid "Successfully logged out!"
+msgstr ""
+
+#: templates/registration/password_change_done.html:3
+#, fuzzy
+msgid "Password changed"
+msgstr "Mot de passe initialisé"
+
+#: templates/registration/password_change_done.html:5
+msgid "Password successfully changed!"
+msgstr ""
+
+#: templates/registration/password_change_form.html:3
+#: templates/registration/password_change_form.html:8
+#: templates/telemeta/profile_detail.html:49
+msgid "Change password"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:3
+#, fuzzy
+msgid "Password reset complete"
+msgstr "Réinitialisation du mot de passe"
+
+#: templates/registration/password_reset_complete.html:4
+#, python-format
+msgid ""
+"\n"
+"Your password has been reset!  You may now <a href=\"%(login_url)s\">log in</"
+"a>.\n"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:3
+#, fuzzy
+msgid "Confirm password reset"
+msgstr "Réinitialisation du mot de passe"
+
+#: templates/registration/password_reset_confirm.html:5
+msgid "Enter your new password below to reset your password:"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:9
+msgid "Set password"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:3
+#: templates/telemeta/profile_detail.html:106
+msgid "Password reset"
+msgstr "Réinitialisation du mot de passe"
+
+#: templates/registration/password_reset_done.html:6
+msgid ""
+"We have sent you an email with a link to reset your password.\n"
+"Please check your email and click the link to continue."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:1
+msgid "Greetings"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:3
+#, python-format
+msgid ""
+"You are receiving this email because you (or someone pretending to be you)\n"
+"requested that your password be reset on the %(domain)s site.  If you do "
+"not \n"
+"wish to reset your password, please ignore this message.\n"
+"\n"
+"To reset your password, please click the following link, or copy and paste "
+"it\n"
+"into your web browser:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:12
+#, python-format
+msgid ""
+"\n"
+"Your username, in case you've forgotten: %(username)s\n"
+"\n"
+"Best regards,\n"
+"%(site_name)s Management\n"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:3
+#: templates/registration/password_reset_form.html:10
+msgid "Reset password"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:4
+msgid ""
+"\n"
+"Forgot your password?  Enter your email in the form below and we'll send "
+"you\n"
+"instructions for creating a new one."
+msgstr ""
+
+#: templates/registration/registration_complete.html:3
+msgid "Activation email sent"
+msgstr ""
+
+#: templates/registration/registration_complete.html:5
+msgid ""
+"An activation email has been sent.\n"
+"Please check your email and click on the link to activate your account."
+msgstr ""
+
+#: templates/registration/registration_form.html:4
+msgid "Registration"
+msgstr "Inscription"
+
+#: templates/registration/registration_form.html:20
+msgid "Save and download the registration form"
+msgstr "Enregistrer et télécharger le formulaire"
+
 #: templates/teleforma/annals.html:6 templates/teleforma/annals.html.py:54
 #: templates/telemeta/base.html:112
 msgid "Annals"
@@ -1354,10 +1559,6 @@ msgstr "Sonore"
 msgid "deleted"
 msgstr ""
 
-#: templates/telemeta/login.html:19
-msgid "Your username and password didn't match. Please try again."
-msgstr ""
-
 #: templates/telemeta/login.html:29
 msgid "Password forgotten"
 msgstr ""
@@ -1381,10 +1582,6 @@ msgstr "Envoyer un message"
 #: templates/telemeta/profile_detail.html:44
 msgid "User profile"
 msgstr "Profil utilisateur"
-
-#: templates/telemeta/profile_detail.html:49
-msgid "Change password"
-msgstr ""
 
 #: templates/telemeta/profile_detail.html:51
 msgid "Login as"
@@ -1451,10 +1648,6 @@ msgstr ""
 #: templates/telemeta/profile_detail.html:96
 msgid "Apply"
 msgstr ""
-
-#: templates/telemeta/profile_detail.html:106
-msgid "Password reset"
-msgstr "Réinitialisation du mot de passe"
 
 #: templates/telemeta/search_criteria.html:5
 #: templates/telemeta/search_criteria.html:76
@@ -1545,6 +1738,24 @@ msgstr ""
 #: views/core.py:549
 msgid "A new live conference has started : "
 msgstr "Une nouvelle conférence en direct a commencé : "
+
+#: views/crfpa.py:374
+msgid "You have successfully register your account."
+msgstr ""
+
+#~ msgid "First name"
+#~ msgstr "Prénom"
+
+#~ msgid "Last name"
+#~ msgstr "Nom"
+
+#, fuzzy
+#~ msgid "student"
+#~ msgstr "Etudiant AE"
+
+#, fuzzy
+#~ msgid "date created"
+#~ msgstr "date de rejet"
 
 #~ msgid "CRFPA Profile"
 #~ msgstr "Profil CRFPA"

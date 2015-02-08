@@ -24,6 +24,7 @@ setup(
         'django-jqchat',
         'django-googletools',
         'crocodoc',
+        'django-extra-views',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',

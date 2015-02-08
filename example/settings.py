@@ -148,6 +148,7 @@ INSTALLED_APPS = (
 #    'follow',
      'googletools',
      # 'telecaster',
+     'extra_views',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

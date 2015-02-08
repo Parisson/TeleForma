@@ -39,6 +39,8 @@ from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
 from telemeta.views import *
+from teleforma.forms import *
+from registration.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
@@ -118,4 +120,7 @@ urlpatterns = patterns('',
 
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
+
+    (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
+    (r'^accounts/register/$', UserAddView.as_view()),
 )
