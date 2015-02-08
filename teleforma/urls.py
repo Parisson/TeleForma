@@ -52,8 +52,11 @@ urlpatterns = patterns('',
 
 
     # login
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
         name="teleforma-login"),
+    # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
+    url(r'^accounts/register/$', UserAddView.as_view()),
+    url(r'^captcha/', include('captcha.urls')),
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
@@ -121,8 +124,5 @@ urlpatterns = patterns('',
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
 
-    # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
-    url(r'^accounts/register/$', UserAddView.as_view()),
-    url(r'^captcha/', include('captcha.urls')),
 
 )

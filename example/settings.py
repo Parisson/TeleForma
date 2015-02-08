@@ -180,7 +180,7 @@ TELEMETA_DEFAULT_GRAPHER_SIZES = ['360x130', '640x130']
 TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_contour_wh'
 
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
-LOGIN_URL = '/login/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
@@ -215,5 +215,5 @@ SOUTH_MIGRATION_MODULES = {
 }
 
 SUIT_CONFIG = {
-    'ADMIN_NAME': 'TeleForma Admin'
+    'ADMIN_NAME': 'TeleForma Admin',
 }

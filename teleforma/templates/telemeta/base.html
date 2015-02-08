@@ -102,7 +102,7 @@ alt="logo" />
   {% endif %}
 
  {% else %}
-  <li><a href="{% url teleforma-login %}" class="red">{% trans "Home" %}</a></li>
+  <li><a href="#accounts#" class="red">{% trans "Home" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
@@ -132,8 +132,12 @@ alt="logo" />
 
  {% if user.is_authenticated %}
   {% if user.is_staff %}
-  <li><a href="{% url teleforma-users 0 0 0 %}" class="blue">{% trans "Users" %}</a></li>
-  <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
+  <li><a href="#admin#" class="blue">{% trans "Admin" %}</a>
+   <ul>
+    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
+    <li><a href="{% url teleforma-users 0 0 0 %}">{% trans "Users" %}</a></li>
+    </ul>
+  </li>
   {% else %}
    <li><a href="{% url teleforma-help %}" class="green">{% trans "Help" %}</a></li>
  {% endif %}
