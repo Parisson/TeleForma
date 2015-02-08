@@ -213,3 +213,7 @@ BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
 SOUTH_MIGRATION_MODULES = {
     'captcha': 'captcha.south_migrations',
 }
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'TeleForma Admin'
+}
