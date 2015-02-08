@@ -23,6 +23,7 @@ class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
     # inlines = [StudentPaymentInline]
+    search_fields = ['user__first_name', 'user__last_name', 'user__username',]
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor

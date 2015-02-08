@@ -4,6 +4,7 @@ from teleforma.models import *
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from captcha.fields import CaptchaField
 
 
 class ConferenceForm(ModelForm):
@@ -14,6 +15,7 @@ class ConferenceForm(ModelForm):
 class UserForm(ModelForm):
     # first_name = forms.CharField(_('First name'), required=True)
     # last_name = forms.CharField(_('Last name'), required=True)
+    captcha = CaptchaField()
 
     class Meta:
         model = User

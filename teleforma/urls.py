@@ -121,6 +121,8 @@ urlpatterns = patterns('',
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
 
-    (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
-    (r'^accounts/register/$', UserAddView.as_view()),
+    # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
+    url(r'^accounts/register/$', UserAddView.as_view()),
+    url(r'^captcha/', include('captcha.urls')),
+
 )

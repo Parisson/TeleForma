@@ -149,6 +149,7 @@ INSTALLED_APPS = (
      'googletools',
      # 'telecaster',
      'extra_views',
+     'captcha',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -207,3 +208,7 @@ JQCHAT_DISPLAY_COUNT = 50
 JQCHAT_DISPLAY_TIME  = 48
 
 BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
+
+SOUTH_MIGRATION_MODULES = {
+    'captcha': 'captcha.south_migrations',
+}
