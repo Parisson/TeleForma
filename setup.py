@@ -27,6 +27,7 @@ setup(
         'django-registration',
         'django-extra-views',
         'django-simple-captcha',
+        'django-suit',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
