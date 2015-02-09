@@ -39,6 +39,8 @@ from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
 from telemeta.views import *
+from teleforma.forms import *
+from registration.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
@@ -50,8 +52,11 @@ urlpatterns = patterns('',
 
 
     # login
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
         name="teleforma-login"),
+    # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
+    url(r'^accounts/register/$', UserAddView.as_view()),
+    url(r'^captcha/', include('captcha.urls')),
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
@@ -118,4 +123,6 @@ urlpatterns = patterns('',
 
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
+
+
 )

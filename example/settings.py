@@ -123,6 +123,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -148,6 +149,8 @@ INSTALLED_APPS = (
 #    'follow',
      'googletools',
      # 'telecaster',
+     'extra_views',
+     'captcha',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -177,7 +180,7 @@ TELEMETA_DEFAULT_GRAPHER_SIZES = ['360x130', '640x130']
 TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_contour_wh'
 
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
-LOGIN_URL = '/login/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
@@ -206,3 +209,11 @@ JQCHAT_DISPLAY_COUNT = 50
 JQCHAT_DISPLAY_TIME  = 48
 
 BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
+
+SOUTH_MIGRATION_MODULES = {
+    'captcha': 'captcha.south_migrations',
+}
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'TeleForma Admin',
+}

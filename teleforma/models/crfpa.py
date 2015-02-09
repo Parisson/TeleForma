@@ -168,17 +168,18 @@ months_choices = []
 for i in range(1,13):
     months_choices.append((i, _(datetime.date(2015, i, 1).strftime('%B'))))
 
-class Payment(models.Model):
-    "a payment from a student"
-    
-    student = models.ForeignKey(Student, related_name='payments', verbose_name=_('student'))
-    value = models.FloatField(_('value'))
-    month = models.IntegerField(_('month'), choices=months_choices, default=1)
-    date_created = models.DateTimeField(_('date created'), auto_now_add=True)
-    date_modified = models.DateTimeField(_('date modified'), auto_now=True)
 
-    class Meta:
-        db_table = app_label + '_' + 'payments'
-        verbose_name = "Payment"
-        verbose_name_plural = "Payments"
+# class Payment(models.Model):
+#     "a payment from a student"
+
+#     student = models.ForeignKey(Student, related_name='payments', verbose_name=_('student'))
+#     value = models.FloatField(_('value'))
+#     month = models.IntegerField(_('month'), choices=months_choices, default=1)
+#     date_created = models.DateTimeField(_('date created'), auto_now_add=True)
+#     date_modified = models.DateTimeField(_('date modified'), auto_now=True)
+
+#     class Meta:
+#         db_table = app_label + '_' + 'payments'
+#         verbose_name = "Payment"
+#         verbose_name_plural = "Payments"
 

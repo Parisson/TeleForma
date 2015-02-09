@@ -34,6 +34,9 @@
 
 
 from teleforma.views.core import *
+from registration.views import *
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from django.utils.translation import ugettext_lazy as _
 
 
 def get_course_code(obj):
@@ -349,3 +352,28 @@ class AnnalsCourseView(AnnalsView):
         return self.get_docs(course=self.course)
 
 
+def get_unique_username(first_name, last_name):
+    username = slugify(first_name)[0] + '.' + slugify(last_name)
+    username = username[:30]
+    i = 1
+    while User.objects.filter(username=username[:30]):
+        username = slugify(first_name)[:i] + '.' + slugify(last_name)
+        i += 1
+    return username[:30]
+
+
+class UserAddView(CreateWithInlinesView):
+
+    model = User
+    template_name = 'registration/registration_form.html'
+    form_class = UserForm
+    inlines = [ProfileInline, StudentInline]
+    success_url = '/'
+
+    def forms_valid(self, form, inlines):
+        messages.info(self.request, _("You have successfully register your account."))
+        user = form.save()
+        user.username = get_unique_username(user.first_name, user.last_name)
+        user.is_active = False
+        user.save()
+        return super(UserAddView, self).forms_valid(form, inlines)

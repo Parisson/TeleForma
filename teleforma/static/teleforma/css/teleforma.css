@@ -1717,3 +1717,22 @@ input,textarea{
     font-size: 1.2em;
 }
 
+form.register {
+    width: 40%;
+    font-size: 1.1em;
+    float: center;
+    margin-top: 1em;
+    margin-bottom: 4em;
+    margin-left: 25%;
+    border: 0px dotted #888;
+    padding: 1em;
+    background-color: #FFF;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.register-error {
+    color: #BB0000;
+}
+
