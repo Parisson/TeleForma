@@ -28,7 +28,7 @@ class ProfileForm(ModelForm):
     class Meta:
         model = Profile
         exclude = ['user', 'wifi_login', 'wifi_pass', 'language', 'expiration_date',
-                    'init_password', ]
+                    'init_password', 'country' ]
 
 RegistrationForm.base_fields.update(ProfileForm.base_fields)
 
