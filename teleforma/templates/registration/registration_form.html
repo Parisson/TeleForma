@@ -6,6 +6,7 @@
 {% block title %}<center>{% trans "Registration" %} - {% description %}</center>{% endblock %}
 
 {% block content %}
+<center>
     <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
     <table>
         {{ form }}
@@ -17,8 +18,9 @@
         {% endfor %}
     </table>
     <br><br>
-    <center><a href="#" class="component_icon button" id="action_green" onclick="$('#_registerForm').submit();"><img src="{{STATIC_URL}}telemeta/images/download.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Save and download the registration form" %}</a></center>
+    <a href="#" class="component_icon button" id="action_green" onclick="$('#_registerForm').submit();"><img src="{{STATIC_URL}}telemeta/images/next.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Submit" %}</a>
     </form>
+</center>
 {% endblock %}
 
 

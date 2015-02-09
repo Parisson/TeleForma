@@ -130,6 +130,8 @@ class Student(Model):
                                         blank=True, null=True)
     options         = ForeignKey('Course', related_name="options", verbose_name=_('options'),
                                         blank=True, null=True)
+    period          = ForeignKey('Period', related_name='student', verbose_name=_('period'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
         try:

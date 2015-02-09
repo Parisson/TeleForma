@@ -1717,12 +1717,11 @@ input,textarea{
     font-size: 1.2em;
 }
 
-form.register {
+.register {
     width: 40%;
     font-size: 1.1em;
     margin-top: 1em;
     margin-bottom: 4em;
-    margin-left: 29%;
     border: 0px dotted #888;
     padding: 1em;
     background-color: #FFF;

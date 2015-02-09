@@ -368,7 +368,7 @@ class UserAddView(CreateWithInlinesView):
     template_name = 'registration/registration_form.html'
     form_class = UserForm
     inlines = [ProfileInline, StudentInline]
-    success_url = '/'
+    success_url = reverse_lazy('teleforma-register-complete')
 
     def forms_valid(self, form, inlines):
         messages.info(self.request, _("You have successfully register your account."))
@@ -377,3 +377,14 @@ class UserAddView(CreateWithInlinesView):
         user.is_active = False
         user.save()
         return super(UserAddView, self).forms_valid(form, inlines)
+
+
+class UserCompleteView(TemplateView):
+
+    template_name = 'registration/registration_complete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserCompleteView, self).get_context_data(**kwargs)
+        context['register_doc_print'] = Document.objects.get(id=settings.TELEFORMA_REGISTER_DEFAULT_DOC_ID)
+        return context
+

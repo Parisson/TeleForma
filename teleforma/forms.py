@@ -55,7 +55,7 @@ class ProfileInline(InlineFormSet):
 
     model = Profile
     can_delete = False
-    exclude = ['user', 'wifi_login', 'wifi_pass', 'language', 'expiration_date',
+    exclude = ['wifi_login', 'wifi_pass', 'language', 'expiration_date',
                     'init_password', ]
 
 
@@ -63,5 +63,5 @@ class StudentInline(InlineFormSet):
 
     model = Student
     can_delete = False
-    exclude = ['user', 'trainings', 'options']
+    fields = ['iej', 'period', 'platform_only']
 

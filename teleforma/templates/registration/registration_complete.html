@@ -1,8 +1,30 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Activation email sent" %}{% endblock %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% block title %}<center>{% trans "Registration" %} - {% description %}</center>{% endblock %}
+
 {% block content %}
-{% blocktrans %}An activation email has been sent.
-Please check your email and click on the link to activate your account.{% endblocktrans %}
+<center>
+<div class="register">
+Vous venez de réaliser avec succès votre préinscription à la formation <br> « semestrielle » ou « estivale » du Pré-Barreau.
+<br><br>
+
+Afin de valider votre inscription, nous vous invitons à imprimer le formulaire ci-dessous et à nous le retourner sous huitaine, accompagné du règlement (+ photocopie émetteur) et des photos d’identité à l’adresse suivante :
+<br><br>
+
+LE PRE-BARREAU<br>
+Service inscription<br>
+3, rue de Nesle<br>
+75006 Paris
+<br><br><br>
+
+<a href="{{ register_doc_print.file.url }}" class="component_icon button" id="action_green"><img src="{{STATIC_URL}}telemeta/images/download.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+
+</center>
+</div>
+
 {% endblock %}
+
 
