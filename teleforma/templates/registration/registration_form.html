@@ -1,7 +1,9 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
 
-{% block title %}{% trans "Registration" %}{% endblock %}
+{% block title %}<center>{% trans "Registration" %} - {% description %}</center>{% endblock %}
 
 {% block content %}
     <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
