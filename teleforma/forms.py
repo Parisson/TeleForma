@@ -28,7 +28,7 @@ class ProfileForm(ModelForm):
     class Meta:
         model = Profile
         exclude = ['user', 'wifi_login', 'wifi_pass', 'language', 'expiration_date',
-                    'init_password', 'country' ]
+                    'init_password', ]
 
 RegistrationForm.base_fields.update(ProfileForm.base_fields)
 
@@ -56,7 +56,7 @@ class ProfileInline(InlineFormSet):
     model = Profile
     can_delete = False
     exclude = ['wifi_login', 'wifi_pass', 'language', 'expiration_date',
-                    'init_password', ]
+                    'init_password', 'country']
 
 
 class StudentInline(InlineFormSet):
