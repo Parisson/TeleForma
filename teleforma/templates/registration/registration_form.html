@@ -1,0 +1,22 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Registration" %}{% endblock %}
+
+{% block content %}
+    <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
+    <table>
+        {{ form }}
+        {% for formset in inlines %}
+          {{ formset.management_form }}
+          {% for form in formset %}
+           {{form }}
+          {% endfor %}
+        {% endfor %}
+    </table>
+    <br><br>
+    <center><a href="#" class="component_icon button" id="action_green" onclick="$('#_registerForm').submit();"><img src="{{STATIC_URL}}telemeta/images/download.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Save and download the registration form" %}</a></center>
+    </form>
+{% endblock %}
+
+
