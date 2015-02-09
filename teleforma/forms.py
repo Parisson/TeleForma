@@ -63,5 +63,5 @@ class StudentInline(InlineFormSet):
 
     model = Student
     can_delete = False
-    fields = ['iej', 'period', 'platform_only']
+    fields = ['iej', 'period',]
 
