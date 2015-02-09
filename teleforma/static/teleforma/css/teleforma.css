@@ -1720,10 +1720,9 @@ input,textarea{
 form.register {
     width: 40%;
     font-size: 1.1em;
-    float: center;
     margin-top: 1em;
     margin-bottom: 4em;
-    margin-left: 25%;
+    margin-left: 29%;
     border: 0px dotted #888;
     padding: 1em;
     background-color: #FFF;
