@@ -129,10 +129,16 @@ class Quota(models.Model):
     class Meta(MetaCore):
         verbose_name = _('Quota')
         verbose_name_plural = _('Quotas')
-        ordering = ['corrector__username']
+        ordering = ['-date_end']
 
     def __unicode__(self):
-        return ' - '.join([unicode(self.corrector), self.course.title, str(self.value)])
+        title = ' - '.join([unicode(self.corrector), self.course.title,
+                            str(self.all_script_count) + '/' + str(self.value)])
+        if self.date_start:
+            title = ' - '.join([title, unicode(self.date_start)])
+        if self.date_end:
+            title = ' - '.join([title, unicode(self.date_end)])
+        return title
 
     @property
     def all_script_count(self):
