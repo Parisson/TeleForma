@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 
+class StudentPaymentInline(admin.StackedInline):
+    model = Payment
+
 class CRFPAStudentProfileInline(admin.StackedInline):
     model = Student
     exclude = ['options']
@@ -16,13 +19,10 @@ class AEStudentProfileInline(admin.StackedInline):
     filter_horizontal = ['courses']
     extra = 1
 
-# class StudentPaymentInline(admin.StackedInline):
-#     model = Payment
-
 class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
-    # inlines = [StudentPaymentInline]
+    inlines = [StudentPaymentInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username',]
 
 class ProfessorProfileInline(admin.StackedInline):
@@ -36,12 +36,8 @@ class ProfessorAdmin(admin.ModelAdmin):
 class ProfileInline(admin.StackedInline):
     model = Profile
 
-class QuotasInline(admin.StackedInline):
-    model = Quota
-
 class UserProfileAdmin(UserAdmin):
-    inlines = [ProfileInline, CRFPAStudentProfileInline,
-                 ProfessorProfileInline, QuotasInline]
+    inlines = [ProfileInline, CRFPAStudentProfileInline]
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
@@ -52,6 +48,9 @@ class TrainingAdmin(admin.ModelAdmin):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     ordering = ['number']
+
+class QuotaAdmin(admin.ModelAdmin):
+    model = Quota
 
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']

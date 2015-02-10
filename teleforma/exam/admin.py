@@ -5,6 +5,13 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
+class QuotaAdminForm(forms.ModelForm):
+    corrector = forms.ModelChoiceField(queryset=User.objects.order_by('last_name'))
+    class Meta:
+        model = Quota
+
+class QuotaAdmin(admin.ModelAdmin):
+     form = QuotaAdminForm
 
 class ScriptPageInline(admin.StackedInline):
     model = ScriptPage
@@ -27,5 +34,5 @@ class ScriptAdmin(admin.ModelAdmin):
 admin.site.register(Script, ScriptAdmin)
 admin.site.register(ScriptPage)
 admin.site.register(ScriptType)
-admin.site.register(Quota)
+admin.site.register(Quota, QuotaAdmin)
 
