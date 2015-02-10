@@ -183,6 +183,6 @@ class Payment(models.Model):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'payments'
-        verbose_name = "Payment"
-        verbose_name_plural = "Payments"
+        verbose_name = _("Payment")
+        verbose_name_plural = _("Payments")
 
