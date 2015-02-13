@@ -428,7 +428,7 @@ class LiveStream(Model):
         if self.server.type == 'stream-m':
             return  'consume/' + self.slug
         else:
-            return self.slug
+            return self.slug + '.' + self.stream_type
 
     @property
     def snapshot_url(self):
