@@ -27,8 +27,10 @@ class ScriptAdmin(admin.ModelAdmin):
     search_fields = ['author__username', 'author__last_name', 'corrector__username',
                     'corrector__last_name', 'course__title']
     readonly_fields = ('date_added','uuid','box_uuid','sha1','mime_type')
-    # exclude = ['options']
-    # inlines = [ScriptPageInline]
+    list_display = ('title', 'author_name')
+
+    def author_name(self, instance):
+        return instance.author.username
 
 
 admin.site.register(Script, ScriptAdmin)

@@ -210,7 +210,7 @@ class Professor(Model):
     department = ForeignKey('Department', related_name='professor',
                                  verbose_name=_('department'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    
+
     def __unicode__(self):
         if self.user.first_name and self.user.last_name:
             return self.user.last_name + ' ' + self.user.first_name[0] + '.'
@@ -428,7 +428,7 @@ class LiveStream(Model):
         if self.server.type == 'stream-m':
             return  'consume/' + self.slug
         else:
-            return self.slug + '.' + self.stream_type
+            return self.slug
 
     @property
     def snapshot_url(self):
