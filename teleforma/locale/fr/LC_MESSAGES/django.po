@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-17 23:30+0100\n"
+"POT-Creation-Date: 2015-02-17 23:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -125,7 +125,7 @@ msgid "date added"
 msgstr "date d'ajout"
 
 #: exam/models.py:179 models/core.py:160 models/core.py:463
-#: models/crfpa.py:204 models/pro.py:68
+#: models/crfpa.py:205 models/pro.py:68
 msgid "date modified"
 msgstr "date de modification"
 
@@ -437,7 +437,7 @@ msgstr ""
 "NB: Ce message est émis par un automate. Ne faites pas de réponse, elle ne "
 "serait pas prise en compte."
 
-#: models/ae.py:46 models/core.py:206 models/crfpa.py:109 models/crfpa.py:174
+#: models/ae.py:46 models/core.py:206 models/crfpa.py:109 models/crfpa.py:175
 #: models/pro.py:101 models/pro.py:140
 msgid "user"
 msgstr "utilisateur"
@@ -472,8 +472,8 @@ msgstr "Publié"
 
 #: models/core.py:94 models/core.py:107 models/core.py:129 models/core.py:142
 #: models/core.py:157 models/core.py:239 models/core.py:394 models/core.py:460
-#: models/core.py:480 models/crfpa.py:48 models/crfpa.py:218
-#: models/crfpa.py:231 models/pro.py:124
+#: models/core.py:480 models/crfpa.py:48 models/crfpa.py:219
+#: models/crfpa.py:232 models/pro.py:124
 msgid "description"
 msgstr "description"
 
@@ -672,102 +672,106 @@ msgid "subscription fees"
 msgstr "frais d'inscription"
 
 #: models/crfpa.py:135
+msgid "subscription date"
+msgstr "date d'inscription"
+
+#: models/crfpa.py:136
 msgid "subscribed"
 msgstr "inscrit"
 
-#: models/crfpa.py:136
+#: models/crfpa.py:137
 msgid "confirmation sent"
 msgstr "confirmation envoyée"
 
-#: models/crfpa.py:166
+#: models/crfpa.py:167
 msgid "Student"
 msgstr "Etudiant"
 
-#: models/crfpa.py:167
+#: models/crfpa.py:168
 msgid "Students"
 msgstr "Etudiants"
 
-#: models/crfpa.py:175 templates/telemeta/profile_detail.html:77
+#: models/crfpa.py:176 templates/telemeta/profile_detail.html:77
 msgid "Address"
 msgstr "Adresse"
 
-#: models/crfpa.py:176
+#: models/crfpa.py:177
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models/crfpa.py:177
+#: models/crfpa.py:178
 msgid "City"
 msgstr "Ville"
 
-#: models/crfpa.py:178
+#: models/crfpa.py:179
 msgid "Country"
 msgstr "Pays"
 
-#: models/crfpa.py:179 templates/telemeta/profile_detail.html:88
+#: models/crfpa.py:180 templates/telemeta/profile_detail.html:88
 msgid "Language"
 msgstr "Langue"
 
-#: models/crfpa.py:180 templates/telemeta/profile_detail.html:78
+#: models/crfpa.py:181 templates/telemeta/profile_detail.html:78
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models/crfpa.py:181
+#: models/crfpa.py:182
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models/crfpa.py:182
+#: models/crfpa.py:183
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
-#: models/crfpa.py:183 templates/telemeta/profile_detail.html:79
+#: models/crfpa.py:184 templates/telemeta/profile_detail.html:79
 msgid "WiFi login"
 msgstr ""
 
-#: models/crfpa.py:184
+#: models/crfpa.py:185
 msgid "WiFi pass"
 msgstr ""
 
-#: models/crfpa.py:188
+#: models/crfpa.py:189
 msgid "profile"
 msgstr "profil"
 
-#: models/crfpa.py:199 models/crfpa.py:216 models/crfpa.py:229
+#: models/crfpa.py:200 models/crfpa.py:217 models/crfpa.py:230
 msgid "student"
 msgstr "étudiant"
 
-#: models/crfpa.py:200 models/crfpa.py:217 models/crfpa.py:230
+#: models/crfpa.py:201 models/crfpa.py:218 models/crfpa.py:231
 msgid "amount"
 msgstr "montant"
 
-#: models/crfpa.py:201
+#: models/crfpa.py:202
 msgid "month"
 msgstr "mois"
 
-#: models/crfpa.py:202
+#: models/crfpa.py:203
 msgid "collected"
 msgstr "encaissé"
 
-#: models/crfpa.py:203
+#: models/crfpa.py:204
 msgid "date created"
 msgstr "date de création"
 
-#: models/crfpa.py:208
+#: models/crfpa.py:209
 msgid "Payment"
 msgstr "Paiement"
 
-#: models/crfpa.py:209
+#: models/crfpa.py:210
 msgid "Payments"
 msgstr "Paiements"
 
-#: models/crfpa.py:222
+#: models/crfpa.py:223
 msgid "Discount"
 msgstr "Réduction"
 
-#: models/crfpa.py:223
+#: models/crfpa.py:224
 msgid "Discounts"
 msgstr "Réductions"
 
-#: models/crfpa.py:235 models/crfpa.py:236
+#: models/crfpa.py:236 models/crfpa.py:237
 msgid "Optional fees"
 msgstr "Frais optionnels"
 
