@@ -36,8 +36,13 @@ class Migration(SchemaMigration):
                       self.gf('telemeta.models.core.FloatField')(default=0, blank=True),
                       keep_default=False)
 
-        # Adding field 'Student.subscribed'
-        db.add_column('teleforma_student', 'subscribed',
+        # Adding field 'Student.is_subscribed'
+        db.add_column('teleforma_student', 'is_subscribed',
+                      self.gf('telemeta.models.core.BooleanField')(default=False),
+                      keep_default=False)
+
+        # Adding field 'Student.confirmation_sent'
+        db.add_column('teleforma_student', 'confirmation_sent',
                       self.gf('telemeta.models.core.BooleanField')(default=False),
                       keep_default=False)
 
@@ -55,8 +60,11 @@ class Migration(SchemaMigration):
         # Deleting field 'Student.subscription_fees'
         db.delete_column('teleforma_student', 'subscription_fees')
 
-        # Deleting field 'Student.subscribed'
-        db.delete_column('teleforma_student', 'subscribed')
+        # Deleting field 'Student.is_subscribed'
+        db.delete_column('teleforma_student', 'is_subscribed')
+
+        # Deleting field 'Student.confirmation_sent'
+        db.delete_column('teleforma_student', 'confirmation_sent')
 
 
     models = {
@@ -333,8 +341,10 @@ class Migration(SchemaMigration):
         'teleforma.student': {
             'Meta': {'ordering': "['user__last_name']", 'object_name': 'Student'},
             'application_fees': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
+            'confirmation_sent': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'iej': ('telemeta.models.core.ForeignKey', [], {'related_name': "'student'", 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': "orm['teleforma.IEJ']", 'blank': 'True', 'null': 'True'}),
+            'is_subscribed': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
             'options': ('telemeta.models.core.ForeignKey', [], {'default': 'None', 'related_name': "'options'", 'null': 'True', 'blank': 'True', 'to': "orm['teleforma.Course']"}),
             'oral_1': ('telemeta.models.core.ForeignKey', [], {'default': 'None', 'related_name': "'oral_1'", 'null': 'True', 'blank': 'True', 'to': "orm['teleforma.Course']"}),
             'oral_2': ('telemeta.models.core.ForeignKey', [], {'default': 'None', 'related_name': "'oral_2'", 'null': 'True', 'blank': 'True', 'to': "orm['teleforma.Course']"}),
@@ -342,7 +352,6 @@ class Migration(SchemaMigration):
             'period': ('telemeta.models.core.ForeignKey', [], {'related_name': "'student'", 'on_delete': 'models.SET_NULL', 'default': 'None', 'to': "orm['teleforma.Period']", 'blank': 'True', 'null': 'True'}),
             'platform_only': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
             'procedure': ('telemeta.models.core.ForeignKey', [], {'default': 'None', 'related_name': "'procedure'", 'null': 'True', 'blank': 'True', 'to': "orm['teleforma.Course']"}),
-            'subscribed': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
             'subscription_fees': ('telemeta.models.core.FloatField', [], {'default': '0', 'blank': 'True'}),
             'trainings': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'student_trainings'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.Training']"}),
             'user': ('telemeta.models.core.ForeignKey', [], {'related_name': "'student'", 'unique': 'True', 'to': "orm['auth.User']"}),

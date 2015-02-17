@@ -132,7 +132,8 @@ class Student(Model):
     application_fees = BooleanField(_('application fees'))
     default_application_fees = 40
     subscription_fees = FloatField(_('subscription fees'))
-    subscribed = BooleanField(_('subscribed'))
+    is_subscribed = BooleanField(_('subscribed'))
+    confirmation_sent = BooleanField(_('confirmation sent'))
 
     def __unicode__(self):
         try:

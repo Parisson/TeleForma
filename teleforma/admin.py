@@ -17,22 +17,13 @@ class DiscountInline(admin.StackedInline):
     model = Discount
     extra = 1
 
-class CRFPAStudentProfileInline(admin.StackedInline):
-    model = Student
-    exclude = ['options']
-    filter_horizontal = ['trainings']
-
-class AEStudentProfileInline(admin.StackedInline):
-    model = AEStudent
-    filter_horizontal = ['courses']
-    extra = 1
-
 class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
+    filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
-    list_filter = ['user__is_active']
+    list_filter = ['user__is_active', 'is_subscribed']
     list_display = ['student_name', 'total_payments', 'total_fees', 'balance']
 
     def student_name(self, instance):
@@ -53,7 +44,7 @@ class ProfileInline(admin.StackedInline):
     model = Profile
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [ProfileInline, CRFPAStudentProfileInline]
+    inlines = [ProfileInline]
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
