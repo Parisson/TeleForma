@@ -104,17 +104,13 @@ class Training(Model):
 
 
 class Student(Model):
+    "A student profile"
 
     user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
-    #period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
-    #                             blank=True, null=True)
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    #training        = ForeignKey('Training', related_name='student', verbose_name=_('training'),
-    #                             blank=True, null=True, on_delete=models.SET_NULL)
     trainings       = ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
-    platform_only   = BooleanField(_('platform only'))
     procedure       = ForeignKey('Course', related_name="procedure",
                                         verbose_name=_('procedure'),
                                         blank=True, null=True)
@@ -132,12 +128,37 @@ class Student(Model):
                                         blank=True, null=True)
     period          = ForeignKey('Period', related_name='student', verbose_name=_('period'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
+    platform_only   = BooleanField(_('platform only'))
+    application_fees = BooleanField(_('application fees'))
+    default_application_fees = 40
+    subscription_fees = FloatField(_('subscription fees'))
+    subscribed = BooleanField(_('subscribed'))
 
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:
             return ''
+
+    @property
+    def total_fees(self):
+        amount = 0
+        if self.subscription_fees:
+            amount += self.subscription_fees
+        if self.application_fees:
+            amount += self.default_application_fees
+        for optional_fee in self.optional_fees.all():
+            amount += optional_fee.value
+        for discount in self.discounts.all():
+            amount -= discount.value
+        return amount
+
+    @property
+    def total_payments(self):
+        amount = 0
+        for payment in self.payments.all():
+            amount += payment.value
+        return amount
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
@@ -185,4 +206,32 @@ class Payment(models.Model):
         db_table = app_label + '_' + 'payments'
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
+        ordering = ['month']
+
+
+class Discount(models.Model):
+    "a discount for a student subscription"
+
+    student = models.ForeignKey(Student, related_name='discounts', verbose_name=_('student'))
+    value = models.FloatField(_('amount'), help_text='€')
+    description = models.CharField(_('description'), max_length=255, blank=True)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'discounts'
+        verbose_name = _("Discount")
+        verbose_name_plural = _("Discounts")
+
+
+class OptionalFee(models.Model):
+    "an optional fee for a student subscription"
+
+    student = models.ForeignKey(Student, related_name='optional_fees', verbose_name=_('student'))
+    value = models.FloatField(_('amount'), help_text='€')
+    description = models.CharField(_('description'), max_length=255, blank=True)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'optional_fees'
+        verbose_name = _("Optional fees")
+        verbose_name_plural = _("Optional fees")
+
 

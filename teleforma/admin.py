@@ -6,8 +6,16 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 
-class StudentPaymentInline(admin.StackedInline):
+class PaymentInline(admin.StackedInline):
     model = Payment
+
+class OptionalFeeInline(admin.StackedInline):
+    model = OptionalFee
+    extra = 1
+
+class DiscountInline(admin.StackedInline):
+    model = Discount
+    extra = 1
 
 class CRFPAStudentProfileInline(admin.StackedInline):
     model = Student
@@ -22,9 +30,16 @@ class AEStudentProfileInline(admin.StackedInline):
 class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
-    inlines = [StudentPaymentInline]
+    inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active']
+    list_display = ['student_name', 'total_payments', 'total_fees', 'balance']
+
+    def student_name(self, instance):
+        return instance.user.last_name + ' ' + instance.user.first_name
+
+    def balance(self, instance):
+        return  instance.total_payments - instance.total_fees
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
