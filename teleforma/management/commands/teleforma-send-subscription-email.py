@@ -39,9 +39,9 @@ class Command(BaseCommand):
             message_template = 'teleforma/messages/email_inscr_internautes.txt'
         else:
             message_template = 'teleforma/messages/email_inscr_presentiels.txt'
-        subject = render_to_string(self.subject_template, ctx_dict)
+        subject = render_to_string(subject_template, ctx_dict)
         subject = ''.join(subject.splitlines())
-        message = render_to_string(self.message_template, ctx_dict)
+        message = render_to_string(message_template, ctx_dict)
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [student.user.email], fail_silently=False)
 
     def handle(self, *args, **options):
