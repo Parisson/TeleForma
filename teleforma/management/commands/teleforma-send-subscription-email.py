@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
     def email(self, student):
         site = Site.objects.get_current()
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'usr': user}
+        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'usr': student.user}
         subject_template = 'teleforma/messages/email_inscr_sujet.txt'
         if student.platform_only:
             message_template = 'teleforma/messages/email_inscr_internautes.txt'
