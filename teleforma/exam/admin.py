@@ -19,7 +19,7 @@ class QuotaAdmin(admin.ModelAdmin):
     date_hierarchy = ['date_start', 'date_end']
 
     def corrector_name(self, instance):
-        return instance.user.last_name + ' ' + instance.user.first_name
+        return instance.corrector.last_name + ' ' + instance.corrector.first_name
 
 
 class ScriptPageInline(admin.StackedInline):
