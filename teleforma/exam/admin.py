@@ -10,27 +10,39 @@ class QuotaAdminForm(forms.ModelForm):
     class Meta:
         model = Quota
 
+
 class QuotaAdmin(admin.ModelAdmin):
-     form = QuotaAdminForm
+    form = QuotaAdminForm
+    list_display = ['corrector_name', 'course', 'date_start', 'date_end',
+                    'pending_script_count', 'marked_script_count', 'all_script_count']
+    search_fields = ['corrector__username', 'corrector__last_name', 'course__title', 'course__code']
+    date_hierarchy = ['date_start', 'date_end']
+
+    def corrector_name(self, instance):
+        return instance.user.last_name + ' ' + instance.user.first_name
+
 
 class ScriptPageInline(admin.StackedInline):
     model = ScriptPage
     ordering = ['rank']
     extra = 10
 
+
 class QuotaInline(admin.StackedInline):
     model = Quota
+
 
 class ScriptAdmin(admin.ModelAdmin):
     model = Script
     ordering = ['-date_added']
     search_fields = ['author__username', 'author__last_name', 'corrector__username',
-                    'corrector__last_name', 'course__title']
+                    'corrector__last_name', 'course__title', 'course__code']
     readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
     list_display = ['title', 'author_name']
 
     def author_name(self, instance):
         return instance.author.username
+
 
 admin.site.register(Script, ScriptAdmin)
 admin.site.register(ScriptPage)
