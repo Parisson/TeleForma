@@ -12,11 +12,12 @@ class QuotaAdminForm(forms.ModelForm):
 
 
 class QuotaAdmin(admin.ModelAdmin):
+    model= Quota
     form = QuotaAdminForm
     list_display = ['corrector_name', 'course', 'date_start', 'date_end',
-                    'pending_script_count', 'marked_script_count', 'all_script_count']
-    search_fields = ['corrector__username', 'corrector__last_name', 'course__title', 'course__code']
-    date_hierarchy = ['date_start', 'date_end']
+                    'pending_script_count', 'marked_script_count', 'all_script_count', 'value']
+    list_filter = ['course__title']
+    search_fields = ['corrector__username', 'corrector__last_name']
 
     def corrector_name(self, instance):
         return instance.corrector.last_name + ' ' + instance.corrector.first_name
