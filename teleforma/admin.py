@@ -17,6 +17,10 @@ class DiscountInline(admin.StackedInline):
     model = Discount
     extra = 1
 
+class StudentInline(admin.StackedInline):
+    model = Student
+    extra = 1
+
 class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
@@ -44,7 +48,7 @@ class ProfileInline(admin.StackedInline):
     model = Profile
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [ProfileInline]
+    inlines = [ProfileInline, StudentInline]
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
