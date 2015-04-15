@@ -436,7 +436,7 @@ class DocumentView(CourseAccessMixin, DetailView):
 
     def download(self, request, pk):
         courses = get_courses(request.user)
-        document = Document.objects.get(id=pk)
+        document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
@@ -450,7 +450,7 @@ class DocumentView(CourseAccessMixin, DetailView):
 
     def view(self, request, pk):
         courses = get_courses(request.user)
-        document = Document.objects.get(id=pk)
+        document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]

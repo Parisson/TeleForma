@@ -27,7 +27,9 @@ class StudentAdmin(admin.ModelAdmin):
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
-    list_filter = ['user__is_active', 'is_subscribed']
+    list_filter = ['user__is_active', 'is_subscribed', 'trainings', 'iej',
+                    'procedure', 'written_speciality', 'oral_speciality',
+                    'oral_1', 'oral_2']
     list_display = ['student_name', 'total_payments', 'total_fees', 'balance']
 
     def student_name(self, instance):
@@ -35,6 +37,11 @@ class StudentAdmin(admin.ModelAdmin):
 
     def balance(self, instance):
         return  instance.total_payments - instance.total_fees
+
+    def queryset(self, request):
+        qs = super(StudentAdmin, self).queryset(request)
+        qs = qs.annotate(models.Count('warehouse__amount'))
+        return qs
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
