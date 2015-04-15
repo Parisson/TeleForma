@@ -38,10 +38,10 @@ class StudentAdmin(admin.ModelAdmin):
     def balance(self, instance):
         return  instance.total_payments - instance.total_fees
 
-    def queryset(self, request):
-        qs = super(StudentAdmin, self).queryset(request)
-        qs = qs.annotate(models.Count('warehouse__amount'))
-        return qs
+    # def queryset(self, request):
+    #     qs = super(StudentAdmin, self).queryset(request)
+    #     qs = qs.annotate(models.Count('warehouse__amount'))
+    #     return qs
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
