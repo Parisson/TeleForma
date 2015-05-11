@@ -15,7 +15,8 @@ class QuotaAdmin(admin.ModelAdmin):
     model= Quota
     form = QuotaAdminForm
     list_display = ['corrector_name', 'course', 'date_start', 'date_end',
-                    'pending_script_count', 'marked_script_count', 'all_script_count', 'value']
+                    'pending_script_count', 'marked_script_count',
+                    'all_script_count', 'value', 'level']
     list_filter = ['course__title']
     search_fields = ['corrector__username', 'corrector__last_name']
 

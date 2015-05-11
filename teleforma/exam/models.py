@@ -166,7 +166,7 @@ class Quota(models.Model):
         if self.value:
             if self.value != 0:
                 level = 100*self.all_script_count/self.value
-                return level
+                return round(level, 2)
             else:
                 return 0
         else:

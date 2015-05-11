@@ -119,9 +119,6 @@ class CourseAdmin(admin.ModelAdmin):
     model = Course
     ordering = ['number']
 
-class QuotaAdmin(admin.ModelAdmin):
-    model = Quota
-
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
