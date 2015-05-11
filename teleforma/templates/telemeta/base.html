@@ -133,12 +133,7 @@ alt="logo" />
 
  {% if user.is_authenticated %}
   {% if user.is_staff %}
-  <li><a href="#admin#" class="blue">{% trans "Admin" %}</a>
-   <ul>
-    <li><a href="{% url telemeta-admin-general %}">{% trans "General" %}</a></li>
-    <li><a href="{% url teleforma-users 0 0 0 %}">{% trans "Users" %}</a></li>
-    </ul>
-  </li>
+  <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
   {% else %}
    <li><a href="{% url teleforma-help %}" class="blue">{% trans "Help" %}</a></li>
  {% endif %}
