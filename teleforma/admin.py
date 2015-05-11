@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from teleforma.models import *
+from teleforma.views import *
 from teleforma.exam.models import *
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.admin import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
+from django.http import HttpResponse
+from django.core import serializers
 
 
 class PeriodListFilter(SimpleListFilter):
@@ -49,7 +52,9 @@ class StudentInline(admin.StackedInline):
     model = Student
     extra = 1
 
+
 class StudentAdmin(admin.ModelAdmin):
+
     model = Student
     exclude = ['options']
     filter_horizontal = ['trainings']
@@ -59,6 +64,7 @@ class StudentAdmin(admin.ModelAdmin):
                     'procedure', 'written_speciality', 'oral_speciality',
                     'oral_1', 'oral_2']
     list_display = ['student_name', 'total_payments', 'total_fees', 'balance']
+    actions = ['export_xls']
 
     def student_name(self, instance):
         return instance.user.last_name + ' ' + instance.user.first_name
@@ -70,6 +76,20 @@ class StudentAdmin(admin.ModelAdmin):
     #     qs = super(StudentAdmin, self).queryset(request)
     #     qs = qs.annotate(models.Count('warehouse__amount'))
     #     return qs
+
+    def export_json(self, request, queryset):
+        response = HttpResponse(content_type="application/json")
+        serializers.serialize("json", queryset, stream=response)
+        return response
+
+    def export_xls(self, request, queryset):
+        view = UsersExportView()
+        view.users = queryset
+        return view.get(request)
+
+    export_xls.short_description = "Export to XLS"
+
+
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor

@@ -203,9 +203,14 @@ class UserLoginView(View):
         return super(UserLoginView, self).dispatch(*args, **kwargs)
 
 
-class UsersExportView(UsersView):
+class UserBook(object):
 
     first_row = 2
+
+    def __init__(self, users):
+        self.book = Workbook()
+        self.users = users
+        self.sheet = self.book.add_sheet('Etudiants')
 
     def export_user(self, counter, user):
         student = Student.objects.filter(user=user)
@@ -243,13 +248,7 @@ class UsersExportView(UsersView):
         else:
             return counter
 
-    @method_decorator(permission_required('is_staff'))
-    def get(self, *args, **kwargs):
-        super(UsersExportView, self).get(*args, **kwargs)
-        self.users = self.users
-        self.book = Workbook()
-        self.sheet = self.book.add_sheet('Etudiants')
-
+    def write(self):
         row = self.sheet.row(0)
         cols = [{'name':'NOM', 'width':5000},
                 {'name':'PRENOM', 'width':5000},
@@ -276,9 +275,19 @@ class UsersExportView(UsersView):
         counter = 0
         for user in self.users:
             counter = self.export_user(counter, user)
+
+
+
+class UsersExportView(UsersView):
+
+    @method_decorator(permission_required('is_staff'))
+    def get(self, *args, **kwargs):
+        super(UsersExportView, self).get(*args, **kwargs)
+        book = UserBook(self.users)
+        book.write()
         response = HttpResponse(mimetype="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
-        self.book.save(response)
+        book.book.save(response)
         return response
 
 
