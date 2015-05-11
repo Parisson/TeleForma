@@ -4,6 +4,34 @@ from teleforma.exam.models import *
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin import SimpleListFilter
+from django.utils.translation import ugettext_lazy as _
+
+
+class PeriodListFilter(SimpleListFilter):
+
+    title = _('period')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'period'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return ( (period.name, period.name) for period in Period.objects.all() )
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        return queryset.filter(trainings__period__name=self.value())
 
 
 class PaymentInline(admin.StackedInline):
@@ -27,7 +55,7 @@ class StudentAdmin(admin.ModelAdmin):
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
-    list_filter = ['user__is_active', 'is_subscribed', 'trainings', 'iej',
+    list_filter = [PeriodListFilter, 'user__is_active', 'is_subscribed', 'trainings', 'iej',
                     'procedure', 'written_speciality', 'oral_speciality',
                     'oral_1', 'oral_2']
     list_display = ['student_name', 'total_payments', 'total_fees', 'balance']
