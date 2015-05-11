@@ -64,7 +64,7 @@ class StudentAdmin(admin.ModelAdmin):
         return instance.user.last_name + ' ' + instance.user.first_name
 
     def balance(self, instance):
-        return  instance.total_payments - instance.total_fees
+        return  round(instance.total_payments - instance.total_fees, 2)
 
     # def queryset(self, request):
     #     qs = super(StudentAdmin, self).queryset(request)
