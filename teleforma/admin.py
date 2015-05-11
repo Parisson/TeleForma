@@ -63,7 +63,8 @@ class StudentAdmin(admin.ModelAdmin):
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
-    list_filter = [PeriodListFilter, 'user__is_active', 'is_subscribed', 'trainings', 'iej',
+    list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
+                    'trainings', 'iej',
                     'procedure', 'written_speciality', 'oral_speciality',
                     'oral_1', 'oral_2']
     list_display = ['student_name', 'total_payments', 'total_fees', 'balance']
