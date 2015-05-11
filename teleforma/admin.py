@@ -34,7 +34,10 @@ class PeriodListFilter(SimpleListFilter):
         provided in the query string and retrievable via
         `self.value()`.
         """
-        return queryset.filter(trainings__period__name=self.value())
+        if self.value():
+            return queryset.filter(trainings__period__name=self.value())
+        else:
+            return queryset
 
 
 class PaymentInline(admin.StackedInline):
