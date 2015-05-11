@@ -83,9 +83,13 @@ class StudentAdmin(admin.ModelAdmin):
         return response
 
     def export_xls(self, request, queryset):
-        view = UsersExportView()
-        view.users = queryset
-        return view.get(request)
+        users = [student.user for student in queryset]
+        book = UserXLSBook(users)
+        book.write()
+        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response['Content-Disposition'] = 'attachment; filename=users.xls'
+        book.book.save(response)
+        return response
 
     export_xls.short_description = "Export to XLS"
 

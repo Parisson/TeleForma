@@ -203,7 +203,7 @@ class UserLoginView(View):
         return super(UserLoginView, self).dispatch(*args, **kwargs)
 
 
-class UserBook(object):
+class UserXLSBook(object):
 
     first_row = 2
 
@@ -283,7 +283,7 @@ class UsersExportView(UsersView):
     @method_decorator(permission_required('is_staff'))
     def get(self, *args, **kwargs):
         super(UsersExportView, self).get(*args, **kwargs)
-        book = UserBook(self.users)
+        book = UserXLSBook(self.users)
         book.write()
         response = HttpResponse(mimetype="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
