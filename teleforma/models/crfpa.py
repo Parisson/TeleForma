@@ -162,6 +162,10 @@ class Student(Model):
             amount += payment.value
         return amount
 
+    @property
+    def balance(self):
+        return  round(self.total_payments - self.total_fees, 2)
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
         verbose_name = _('Student')

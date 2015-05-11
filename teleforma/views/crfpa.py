@@ -244,6 +244,11 @@ class UserXLSBook(object):
                 row.write(12, profile.city)
                 row.write(13, profile.telephone)
                 row.write(14, user.date_joined.strftime("%d/%m/%Y"))
+
+            row.write(15, student.total_payments)
+            row.write(16, student.total_fees)
+            row.write(17, student.balance)
+
             return counter + 1
         else:
             return counter
@@ -264,7 +269,10 @@ class UserXLSBook(object):
                 {'name':'CP', 'width':2500},
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
-                {'name':"Date d'inscription", 'width':5000}
+                {'name':"Date d'inscription", 'width':5000},
+                {'name':"Total paiements", 'width':4000},
+                {'name':"Total reductions", 'width':4000},
+                {'name':"Balance", 'width':4000},
                 ]
         i = 0
         for col in cols:

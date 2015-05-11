@@ -72,9 +72,6 @@ class StudentAdmin(admin.ModelAdmin):
     def student_name(self, instance):
         return instance.user.last_name + ' ' + instance.user.first_name
 
-    def balance(self, instance):
-        return  round(instance.total_payments - instance.total_fees, 2)
-
     # def queryset(self, request):
     #     qs = super(StudentAdmin, self).queryset(request)
     #     qs = qs.annotate(models.Count('warehouse__amount'))
