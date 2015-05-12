@@ -170,7 +170,7 @@ class Student(Model):
         db_table = app_label + '_' + 'student'
         verbose_name = _('Student')
         verbose_name_plural = _('Students')
-        ordering = ['user__last_name']
+        ordering = ['user__last_name', '-date_subscribed']
 
 
 class Profile(models.Model):

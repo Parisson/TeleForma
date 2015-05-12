@@ -67,7 +67,8 @@ class StudentAdmin(admin.ModelAdmin):
                     'trainings', 'iej',
                     'procedure', 'written_speciality', 'oral_speciality',
                     'oral_1', 'oral_2']
-    list_display = ['student_name', 'total_payments', 'total_fees', 'balance']
+    list_display = ['student_name', 'date_subscribed', 'platform_only',
+                    'total_payments', 'total_fees', 'balance']
     actions = ['export_xls']
 
     def student_name(self, instance):
