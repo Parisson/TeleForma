@@ -56,6 +56,7 @@ import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 from sorl.thumbnail import default as sorl_default
+from django.core.urlresolvers import reverse, reverse_lazy
 
 app_label = 'teleforma'
 
