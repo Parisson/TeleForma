@@ -166,6 +166,9 @@ class Student(Model):
     def balance(self):
         return  round(self.total_payments - self.total_fees, 2)
 
+    def get_absolute_url(self):
+        return reverse_lazy('teleforma-profile-detail', kwargs={'username':self.user.username})
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
         verbose_name = _('Student')
