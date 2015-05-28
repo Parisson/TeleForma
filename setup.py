@@ -28,6 +28,7 @@ setup(
         'django-extra-views',
         'django-simple-captcha',
         'django-suit',
+        'django-nvd3',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
