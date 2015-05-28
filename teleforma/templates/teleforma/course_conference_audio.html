@@ -8,7 +8,7 @@
     var conferenceUtils = {
         stop : function(id){
             json([id],'teleforma.conference_stop',function(){
-                location.href = '{% url teleforma-conference-record %}';});
+                location.href = '{% url 'teleforma-conference-record' %}';});
         }}
 
     jQuery(window).ready(function(){
@@ -33,7 +33,7 @@
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-detail period.id conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url 'teleforma-conference-detail' period.id conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
     </div>
 
 {{ course.title }}{% if course.description %} - {{ course.description }}{% endif %} - {{ conference.session }} - {{ conference.professor }}
@@ -64,7 +64,7 @@
 <div class="course_content" id="media_infos">
 <dl class="listing">
 <dt>{% trans "Title" %}</dt><dd>{{ conference.course.title }}</dd>
-<dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
+<dt>{% trans "Professor" %}</dt><dd><a href="{% url 'telemeta-profile-detail' conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
 <dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>
 <dt>{% trans "Begin" %}</dt><dd>{{ conference.date_begin }}</dd>
