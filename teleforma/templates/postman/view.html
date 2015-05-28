@@ -14,10 +14,10 @@
 {% for message in pm_messages %}
 <div class="pm_message{% if message.is_pending %} pm_pending{% endif %}{% if message.is_rejected %} pm_rejected{% endif %}{% if message.sender == user and message.sender_archived or message.recipient == user and message.recipient_archived %} pm_archived{% endif %}{% if message.sender == user and message.sender_deleted_at or message.recipient == user and message.recipient_deleted_at %} pm_deleted{% endif %}{% if message.recipient == user and not message.read_at %} pm_unread{% endif %}">
  <div class="pm_header">
-  <a href="{% url telemeta-profile-detail message.obfuscated_sender %}">
+  <a href="{% url 'telemeta-profile-detail' message.obfuscated_sender %}">
   <span class="pm_sender">{{ message.obfuscated_sender|or_me:user }}</span>
   </a>&raquo;
-  <a href="{% url telemeta-profile-detail message.obfuscated_recipient %}">
+  <a href="{% url 'telemeta-profile-detail' message.obfuscated_recipient %}">
   <span class="pm_recipient">{{ message.obfuscated_recipient|or_me:user }}</span>
   </a> |
   <span class="pm_date">{{ message.sent_at|date:"DATETIME_FORMAT"}}</span> |
@@ -36,19 +36,19 @@
 <a href="{{ next_url }}" class="component_icon button icon_previous">{% trans "Back" %}</a>
 <span id="pm_buttons">
 {% block pm_delete_button %}
-<a href="#" class="component_icon button icon_delete" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_delete %}'; f.submit(); return false;">{% trans "Delete" %}</a>
+<a href="#" class="component_icon button icon_delete" onclick="f=document.getElementById('_messageForm'); f.action='{% url 'postman_delete' %}'; f.submit(); return false;">{% trans "Delete" %}</a>
 {% endblock %}
 {% block pm_archive_button %}
 {% if not archived %}
-<a href="#" class="component_icon button icon_save" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_archive %}'; f.submit(); return false;">{% trans "Archive" %}</a>
+<a href="#" class="component_icon button icon_save" onclick="f=document.getElementById('_messageForm'); f.action='{% url 'postman_archive' %}'; f.submit(); return false;">{% trans "Archive" %}</a>
 {% endif %}
 {% endblock %}
 
-{% if reply_to_pk %}<a class="component_icon button icon_next" href="{% url postman_reply reply_to_pk %}?next={{ next_url|urlencode }}">{% trans "Reply" %}</a>{% endif %}
+{% if reply_to_pk %}<a class="component_icon button icon_next" href="{% url 'postman_reply' reply_to_pk %}?next={{ next_url|urlencode }}">{% trans "Reply" %}</a>{% endif %}
 </form>
 {% if reply_to_pk %}<hr />
 <h2>{% trans 'Reply' %}</h2>
-<form id="_messageReply" action="{% url postman_reply reply_to_pk %}?next={{ next_url|urlencode }}" method="post">{% csrf_token %}
+<form id="_messageReply" action="{% url 'postman_reply' reply_to_pk %}?next={{ next_url|urlencode }}" method="post">{% csrf_token %}
 <div id="pm_reply">{{ form.body }}</div><br />
 <a href="#" class="component_icon button icon_next" onclick="f=document.getElementById('_messageReply'); f.submit(); return false;">{% trans "Reply" %}</a>
 

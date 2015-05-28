@@ -243,7 +243,6 @@ class CourseListView(CourseAccessMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
-        context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site', period=context['period'].name)
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True

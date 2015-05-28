@@ -24,11 +24,11 @@
     <tbody id="spacing" class="script-list">
     {% for script in object_list %}
     <tr>
-     <td>{% if script.status != 2 %}<a href="{% url teleforma-exam-script-detail period.id script.id %}">{% endif %}{{ script.course.title }}{% if script.status != 2 %}</a>{% endif %}</td>
-     <td>{% if script.status != 2 %}<a href="{% url teleforma-exam-script-detail period.id script.id %}">{% endif %}{{ script.session }}{% if script.status != 2 %}</a>{% endif %}</td>
-     <td>{% if script.status != 2 %}<a href="{% url teleforma-exam-script-detail period.id script.id %}">{% endif %}{{ script.type }}{% if script.status != 2 %}</a>{% endif %}</td>
-     <td>{% if script.author.username %}<a href="{% url teleforma-profile-detail script.author.username %}">{{ script.author.last_name }}</a>{% endif %}</td>
-     <td>{% if script.author.username %}<a href="{% url teleforma-profile-detail script.author.username %}">{{ script.author.first_name }}</a>{% endif %}</td>
+     <td>{% if script.status != 2 %}<a href="{% url 'teleforma-exam-script-detail' period.id script.id %}">{% endif %}{{ script.course.title }}{% if script.status != 2 %}</a>{% endif %}</td>
+     <td>{% if script.status != 2 %}<a href="{% url 'teleforma-exam-script-detail' period.id script.id %}">{% endif %}{{ script.session }}{% if script.status != 2 %}</a>{% endif %}</td>
+     <td>{% if script.status != 2 %}<a href="{% url 'teleforma-exam-script-detail' period.id script.id %}">{% endif %}{{ script.type }}{% if script.status != 2 %}</a>{% endif %}</td>
+     <td>{% if script.author.username %}<a href="{% url 'teleforma-profile-detail' script.author.username %}">{{ script.author.last_name }}</a>{% endif %}</td>
+     <td>{% if script.author.username %}<a href="{% url 'teleforma-profile-detail' script.author.username %}">{{ script.author.first_name }}</a>{% endif %}</td>
      <td>{{ script.date_added }}</td>
      <td>{% if script.date_marked %}{{ script.date_marked }}{% endif %}</td>
      <td>{% if script.corrector %}{{ script.corrector }}{% endif %}</td>

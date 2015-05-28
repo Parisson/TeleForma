@@ -33,9 +33,10 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import os.path
-from django.conf.urls.defaults import *
-from django.views.generic import *
-from django.views.generic.base import *
+from django.conf.urls import patterns, url, include
+from django.conf import settings
+from django.views.generic.base import RedirectView
+from django.views.generic.list import ListView
 from teleforma.models import *
 from teleforma.views import *
 from telemeta.views import *
