@@ -126,7 +126,7 @@ class ScriptCreateView(CreateView):
     model = Script
     template_name='exam/script_form.html'
     form_class = ScriptForm
-    
+
     def get_success_url(self):
         period = Period.objects.get(id=self.kwargs['period_id'])
         return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
@@ -173,3 +173,33 @@ class QuotasView(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(QuotasView, self).dispatch(*args, **kwargs)
+
+
+class ScriptsScoreView(ScriptsTreatedView):
+
+    template_name='exam/scores.html'
+
+    def get_nvd3_data(self):
+        scripts = self.get_queryset()
+        xdata = [script.session for script in scripts]
+        ydata = [float(script.score) for script in scripts]
+        chartdata = {'x': xdata,  'name1': 'scores', 'y1': ydata}
+        charttype = "lineChart"
+        chartcontainer = 'linechart_container'
+        data = {
+            'charttype': charttype,
+            'chartdata': chartdata,
+            'chartcontainer': chartcontainer,
+            'extra': {
+            'x_is_date': False,
+            'x_axis_format': '',
+            'tag_script_js': True,
+            'jquery_on_ready': False,}
+            }
+        return data
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptsScoreView, self).get_context_data(**kwargs)
+        context['title'] = ugettext('Scores')
+        context['data'] = self.get_nvd3_data()
+        return context
