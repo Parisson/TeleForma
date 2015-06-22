@@ -292,9 +292,6 @@ class Conference(Model):
                          self.course_type.name.lower()])
         return slug
 
-    def __unicode__(self):
-        return self.description
-
     def save(self, *args, **kwargs):
         if not self.public_id:
             self.public_id = get_random_hash()
@@ -628,7 +625,7 @@ class Media(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
-        ordering = ['-conference__session', '-date_modified']
+        ordering = ['-date_modified', '-conference__session']
 
 
 class NamePaginator(object):
