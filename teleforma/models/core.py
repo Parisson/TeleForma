@@ -51,7 +51,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
-from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
@@ -164,8 +163,6 @@ class Course(Model):
     obligation      = BooleanField(_('obligations'))
     magistral       = BooleanField(_('magistral'))
 
-    notes = generic.GenericRelation(Note)
-
     def __unicode__(self):
         return self.title
 
@@ -269,10 +266,18 @@ class Conference(Model):
                                         blank=True, null=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
-    notes = generic.GenericRelation(Note)
-
     @property
     def description(self):
+        return self.__unicode__()
+
+    @property
+    def slug(self):
+        slug = '-'.join([self.course.department.slug,
+                         self.course.slug,
+                         self.course_type.name.lower()])
+        return slug
+
+    def __unicode__(self):
         if self.professor:
             list = [self.course.department.name, self.course.title,
                            self.course_type.name, self.session,
@@ -463,7 +468,6 @@ class MediaBase(Model):
     is_published    = BooleanField(_('published'))
     mime_type       = CharField(_('mime type'), max_length=255, blank=True)
     weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
-    notes = generic.GenericRelation(Note)
 
     def get_fields(self):
         return self._meta.fields
