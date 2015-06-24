@@ -64,9 +64,7 @@ class StudentAdmin(admin.ModelAdmin):
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
-                    'trainings', 'iej',
-                    'procedure', 'written_speciality', 'oral_speciality',
-                    'oral_1', 'oral_2']
+                    'trainings', 'iej', 'procedure']
     list_display = ['student_name', 'date_subscribed', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
     actions = ['export_xls']
