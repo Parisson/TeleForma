@@ -64,8 +64,8 @@ class StudentAdmin(admin.ModelAdmin):
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
-                    'trainings', 'iej', 'procedure']
-    list_display = ['student_name', 'date_subscribed', 'platform_only',
+                    'trainings', 'iej', 'procedure', 'written_speciality']
+    list_display = ['student_name', 'trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
     actions = ['export_xls']
 
@@ -93,8 +93,6 @@ class StudentAdmin(admin.ModelAdmin):
 
     export_xls.short_description = "Export to XLS"
 
-
-
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
     filter_horizontal = ['courses']
@@ -108,6 +106,7 @@ class ProfileInline(admin.StackedInline):
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfileInline, StudentInline]
+    search_fields = ['username', 'email']
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
