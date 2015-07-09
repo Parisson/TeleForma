@@ -65,7 +65,7 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
                     'trainings', 'iej', 'procedure', 'written_speciality']
-    list_display = ['student_name', 'trainings', 'platform_only',
+    list_display = ['student_name', 'trainings__all', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
     actions = ['export_xls']
 
