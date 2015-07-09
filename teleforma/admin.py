@@ -70,7 +70,7 @@ class StudentAdmin(admin.ModelAdmin):
     actions = ['export_xls']
 
     def get_trainings(self, instance):
-        return ' - '.join([training.name for training in instance.trainings.all()])
+        return ' - '.join([unicode(training) for training in instance.trainings.all()])
 
     def student_name(self, instance):
         return instance.user.last_name + ' ' + instance.user.first_name
