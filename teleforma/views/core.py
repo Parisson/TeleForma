@@ -160,6 +160,8 @@ def get_host(request):
     return host
 
 def get_periods(user):
+    periods = []
+
     student = user.student.all()
     if student:
         student = user.student.get()
