@@ -125,6 +125,7 @@ class Quota(models.Model):
     value = models.IntegerField(_('value'))
     date_start = models.DateField(_('date start'))
     date_end = models.DateField(_('date end'))
+    script_type = models.ForeignKey('ScriptType', related_name='quotas', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
         verbose_name = _('Quota')
@@ -134,6 +135,8 @@ class Quota(models.Model):
     def __unicode__(self):
         title = ' - '.join([unicode(self.corrector), self.course.title,
                             str(self.all_script_count) + '/' + str(self.value)])
+        if self.script_type:
+            title = ' - '.join([title, unicode(self.script_type)])
         if self.date_start:
             title = ' - '.join([title, unicode(self.date_start)])
         if self.date_end:
@@ -271,7 +274,8 @@ class Script(BaseResource):
     def auto_set_corrector(self):
         quota_list = []
         quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
-                                            date_end__gte=self.date_submitted)
+                                            date_end__gte=self.date_submitted,
+                                            script_type=self.type)
         if quotas:
             for quota in quotas:
                 if quota.value:
