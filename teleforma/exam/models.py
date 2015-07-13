@@ -265,7 +265,7 @@ class Script(BaseResource):
 
     @property
     def box_user_url(self):
-        user = {'id': 2, 'name': 'Pierre Durand'}
+        user = {'id': 3, 'name': 'TeleForma'}
         session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
                                 filter='all', admin=False, downloadable=True,
                                 copyprotected=False, demo=False, sidebar='invisible')
@@ -276,6 +276,9 @@ class Script(BaseResource):
         quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
                                             script_type=self.type)
+        if not quotas:
+            quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
+                                            date_end__gte=self.date_submitted)
         if quotas:
             for quota in quotas:
                 if quota.value:
