@@ -163,7 +163,6 @@ class Course(Model):
     obligation      = models.BooleanField(_('obligations'))
     magistral       = models.BooleanField(_('magistral'))
 
-
     def __unicode__(self):
         return self.title
 
@@ -267,9 +266,18 @@ class Conference(Model):
                                         blank=True, null=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
-
     @property
     def description(self):
+        return self.__unicode__()
+
+    @property
+    def slug(self):
+        slug = '-'.join([self.course.department.slug,
+                         self.course.slug,
+                         self.course_type.name.lower()])
+        return slug
+
+    def __unicode__(self):
         if self.professor:
             list = [self.course.department.name, self.course.title,
                            self.course_type.name, self.session,
@@ -288,9 +296,6 @@ class Conference(Model):
                          self.course.slug,
                          self.course_type.name.lower()])
         return slug
-
-    def __unicode__(self):
-        return self.description
 
     def save(self, *args, **kwargs):
         if not self.public_id:
@@ -624,7 +629,7 @@ class Media(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
-        ordering = ['-conference__session', '-date_modified']
+        ordering = ['-date_modified', '-conference__session']
 
 
 class NamePaginator(object):
