@@ -229,3 +229,15 @@ def treated_scripts_count(user, period):
         return ' (' + str(len(scripts)) + ')'
     else:
         return ''
+
+@register.simple_tag
+def get_training_profile(user):
+    text = ''
+    student = user.student.all()
+    if student:
+        student = student[0]
+        if student.platform_only:
+            text += '(I)'
+        for training in student.trainings.all():
+            text += ' - ' + unicode(training)
+    return text
