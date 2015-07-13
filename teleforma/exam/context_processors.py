@@ -42,6 +42,7 @@ def exam_access(request):
     if user.is_authenticated():
         students = user.student.all()
         quotas = user.quotas.all()
+        professor = user.professor.all()
 
         # Option for restricting access to platform user only
         if students:
