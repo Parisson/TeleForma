@@ -180,11 +180,14 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
     template_name='exam/scores.html'
 
-    def get_score_data(self, xdata, y1data, y1title, y2data, y2title):
-        chartdata = {'x': xdata,
-                     'name1': y1title, 'y1': y1data,
-                     'name2': y2title, 'y2': y2data,
-                     }
+    def score_data_setup(self, x, y):
+        chartdata = x
+        i = 1
+        for data in y:
+            chartdata['name'+str(i)] = data['name']
+            chartdata['y'+str(i)] = data['data']
+            i += 1
+        print chartdata
         charttype = "multiBarChart"
         chartcontainer = 'multibarchart_container'
         extra_serie = {"tooltip": {"y_start": "There are ", "y_end": " calls"}}
@@ -203,26 +206,35 @@ class ScriptsScoreAllView(ScriptsTreatedView):
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
         scripts = self.get_queryset()
-
         sessions = []
+        scores = []
+
         for script in scripts:
             if not script.session in sessions:
                 sessions.append(script.session)
         sessions = sorted(sessions)
+        sessions_x = {'x': sessions}
 
-        # user mean scores
-        user_scores = []
+        data = []
         for session in sessions:
-            user_scores.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+            data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+        scores.append({'name': 'Moyenne personnelle', 'data': data})
 
-        # all user mean scores
-        all_user_score = []
+        data = []
         for session in sessions:
             scripts = Script.objects.filter(session=session).exclude(score=None)
-            all_user_score.append(np.mean([s.score for s in scripts]))
+            data.append(np.mean([s.score for s in scripts]))
+        scores.append({'name': 'Moyenne generale', 'data': data})
 
+        for script_type in ScriptType.objects.all():
+            data = []
+            for session in sessions:
+                scripts = Script.objects.filter(session=session, type=script_type).exclude(score=None)
+                data.append(np.mean([s.score for s in scripts]))
+            scores.append({'name': 'Moyenne ' + script_type.name, 'data': data})
+
+        context['data'] = self.score_data_setup(sessions_x, scores)
         context['course'] = ugettext('all courses')
-        context['data'] = self.get_score_data(sessions, user_scores, 'moyenne personnelle', all_user_score, 'moyenne generale')
         return context
 
 
@@ -233,25 +245,34 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
         course = Course.objects.get(id=self.kwargs['course_id'])
         scripts = self.get_queryset()
         scripts = scripts.filter(course=course)
-
         sessions = []
+        scores = []
+
         for script in scripts:
             if not script.session in sessions:
                 sessions.append(script.session)
         sessions = sorted(sessions)
+        sessions_x = {'x': sessions}
 
-        # user mean scores
-        user_scores = []
+        data = []
         for session in sessions:
-            user_scores.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+            data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+        scores.append({'name':'Note personnelle' , 'data': data})
 
-        # all user mean scores
-        all_user_score = []
+        data = []
         for session in sessions:
             scripts = Script.objects.filter(session=session, course=course).exclude(score=None)
-            all_user_score.append(np.mean([s.score for s in scripts]))
+            data.append(np.mean([s.score for s in scripts]))
+        scores.append({'name':'Moyenne generale', 'data': data})
 
+        for script_type in ScriptType.objects.all():
+            data = []
+            for session in sessions:
+                scripts = Script.objects.filter(session=session, type=script_type, course=course).exclude(score=None)
+                data.append(np.mean([s.score for s in scripts]))
+            scores.append({'name': 'Moyenne ' + script_type.name, 'data': data})
+
+        context['data'] = self.score_data_setup(sessions_x, scores)
         context['course'] = course.title
-        context['data'] = self.get_score_data(sessions, user_scores, 'note personnelle', all_user_score, 'moyenne generale')
         return context
 
