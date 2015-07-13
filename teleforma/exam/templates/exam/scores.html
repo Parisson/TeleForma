@@ -1,0 +1,43 @@
+{% extends "exam/scripts.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load static %}
+{% load nvd3_tags %}
+
+{% block extra_javascript %}
+<link media="all" href="{{ STATIC_URL }}teleforma/lib/nvd3/build/nv.d3.min.css" rel="stylesheet">
+<script src="{{ STATIC_URL }}teleforma/lib/d3/d3.min.js"></script>
+<script src="{{ STATIC_URL }}teleforma/lib/nvd3/build/nv.d3.min.js"></script>
+{% load_chart data.charttype data.chartdata data.chartcontainer data.extra %}
+{% endblock extra_javascript %}
+
+{% block module-action %}
+
+    <div class="module">
+    <h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+    <div style="background: white;">
+    <ul>
+    {% with user|user_courses as courses %}
+     {% for c in courses %}
+       {% with c.course as course %}
+       <li><a href="{% url teleforma-exam-scripts-scores-course period.id course.id %}">{{ course.title}} {{ course.type }}</a></li>
+       {% endwith %}
+     {% endfor %}
+    {% endwith %}
+    </ul>
+    </div>
+    </div>
+
+{% endblock module-action %}
+
+{% block answers %}
+
+<div class="course_title">
+{% trans "Scores" %} : {{ course }}
+</div>
+<br />
+
+{% include_container data.chartcontainer 600 '100%' %}
+
+{% endblock answers %}

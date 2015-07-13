@@ -2,14 +2,14 @@
 {% load i18n %}
 {% block title %}{% trans "Login" %}{% endblock %}
 {% block content %}
-{% url 'auth_password_reset' as auth_pwd_reset_url %}
-{% url 'registration_register' as register_url%}
+{% url auth_password_reset as auth_pwd_reset_url %}
+{% url registration_register as register_url%}
 
 {% if form.errors %}
 <p>{% blocktrans %}Your username and password didn't match. Please try again.{% endblocktrans %}</p>
 {% endif %}
 
-<form method="post" action="{% url 'auth_login' %}">{% csrf_token %}
+<form method="post" action="{% url auth_login %}">{% csrf_token %}
 <table>
 <tr>
     <td>{% trans form.username.label_tag %}</td>

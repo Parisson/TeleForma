@@ -33,9 +33,8 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import os.path
-from django.conf.urls.defaults import *
-from django.views.generic import *
-from django.views.generic.base import *
+from django.conf.urls import patterns, url, include
+from django.http import HttpResponse
 from teleforma.exam.models import *
 from teleforma.exam.views import *
 from jsonrpc import jsonrpc_site
@@ -55,6 +54,8 @@ urlpatterns = patterns('',
     url(r'^exam/periods/(?P<period_id>.*)/scripts_pending/$', ScriptsPendingView.as_view(), name="teleforma-exam-scripts-pending"),
     url(r'^exam/periods/(?P<period_id>.*)/scripts_treated/$', ScriptsTreatedView.as_view(), name="teleforma-exam-scripts-treated"),
     url(r'^exam/periods/(?P<period_id>.*)/scripts_rejected/$', ScriptsRejectedView.as_view(), name="teleforma-exam-scripts-rejected"),
+    url(r'^exam/periods/(?P<period_id>.*)/scripts_scores_all/$', ScriptsScoreAllView.as_view(), name="teleforma-exam-scripts-scores-all"),
+    url(r'^exam/periods/(?P<period_id>.*)/scripts_scores/(?P<course_id>.*)/$', ScriptsScoreCourseView.as_view(), name="teleforma-exam-scripts-scores-course"),
 
     url(r'^exam/periods/(?P<period_id>.*)/quotas/$', QuotasView.as_view(), name="teleforma-exam-quotas"),
 

@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 
+import numpy as np
 
 
 class ScriptView(CourseAccessMixin, UpdateView):
@@ -28,7 +29,7 @@ class ScriptView(CourseAccessMixin, UpdateView):
         context['mark_fields'] = ['score', 'comments' ]
         context['reject_fields'] = ['reject_reason' ]
 
-        doc_type = DocumentType.objects.get(number=settings.TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_NUMBER)
+        doc_type = DocumentType.objects.get(id=settings.TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID)
         topics = Document.objects.filter(course=script.course, period=script.period,
                                             session=script.session, type=doc_type)
         topic = None
@@ -126,7 +127,7 @@ class ScriptCreateView(CreateView):
     model = Script
     template_name='exam/script_form.html'
     form_class = ScriptForm
-    
+
     def get_success_url(self):
         period = Period.objects.get(id=self.kwargs['period_id'])
         return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
@@ -173,3 +174,84 @@ class QuotasView(ListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(QuotasView, self).dispatch(*args, **kwargs)
+
+
+class ScriptsScoreAllView(ScriptsTreatedView):
+
+    template_name='exam/scores.html'
+
+    def get_score_data(self, xdata, y1data, y1title, y2data, y2title):
+        chartdata = {'x': xdata,
+                     'name1': y1title, 'y1': y1data,
+                     'name2': y2title, 'y2': y2data,
+                     }
+        charttype = "multiBarChart"
+        chartcontainer = 'multibarchart_container'
+        extra_serie = {"tooltip": {"y_start": "There are ", "y_end": " calls"}}
+        data = {
+            'charttype': charttype,
+            'chartdata': chartdata,
+            'chartcontainer': chartcontainer,
+            'extra': {
+            'x_is_date': False,
+            'x_axis_format': '',
+            'tag_script_js': True,
+            'jquery_on_ready': False,}
+            }
+        return data
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
+        scripts = self.get_queryset()
+
+        sessions = []
+        for script in scripts:
+            if not script.session in sessions:
+                sessions.append(script.session)
+        sessions = sorted(sessions)
+
+        # user mean scores
+        user_scores = []
+        for session in sessions:
+            user_scores.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+
+        # all user mean scores
+        all_user_score = []
+        for session in sessions:
+            scripts = Script.objects.filter(session=session).exclude(score=None)
+            all_user_score.append(np.mean([s.score for s in scripts]))
+
+        context['course'] = ugettext('all courses')
+        context['data'] = self.get_score_data(sessions, user_scores, 'moyenne personnelle', all_user_score, 'moyenne generale')
+        return context
+
+
+class ScriptsScoreCourseView(ScriptsScoreAllView):
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptsScoreCourseView, self).get_context_data(**kwargs)
+        course = Course.objects.get(id=self.kwargs['course_id'])
+        scripts = self.get_queryset()
+        scripts = scripts.filter(course=course)
+
+        sessions = []
+        for script in scripts:
+            if not script.session in sessions:
+                sessions.append(script.session)
+        sessions = sorted(sessions)
+
+        # user mean scores
+        user_scores = []
+        for session in sessions:
+            user_scores.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+
+        # all user mean scores
+        all_user_score = []
+        for session in sessions:
+            scripts = Script.objects.filter(session=session, course=course).exclude(score=None)
+            all_user_score.append(np.mean([s.score for s in scripts]))
+
+        context['course'] = course.title
+        context['data'] = self.get_score_data(sessions, user_scores, 'note personnelle', all_user_score, 'moyenne generale')
+        return context
+

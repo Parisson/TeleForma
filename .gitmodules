@@ -4,3 +4,6 @@
 [submodule "teleforma/static/teleforma/lib/d3"]
 	path = teleforma/static/teleforma/lib/d3
 	url = https://github.com/mbostock/d3.git
+[submodule "teleforma/static/teleforma/lib/angular-bootstrap-select"]
+	path = teleforma/static/teleforma/lib/angular-bootstrap-select
+	url = https://github.com/joaoneto/angular-bootstrap-select.git
