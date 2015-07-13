@@ -17,7 +17,7 @@
 <ul>
 {% block trainings %}
 {% for t in trainings %}
-<li><a href="{% url 'teleforma-users' t.id iej.id course.id %}">{{ t.code|lower|capfirst }} - {{ t.period|lower|capfirst }}</a></li>
+<li><a href="{% url teleforma-users t.id iej.id course.id %}">{{ t.code|lower|capfirst }} - {{ t.period|lower|capfirst }}</a></li>
 {% endfor %}
 {% endblock trainings %}
 </ul>
@@ -30,7 +30,7 @@
 <ul>
 {% block iej %}
 {% for i in iejs %}
-<li><a href="{% url 'teleforma-users' training.id i.id course.id %}">{{ i.name|lower|capfirst }}</a></li>
+<li><a href="{% url teleforma-users training.id i.id course.id %}">{{ i.name|lower|capfirst }}</a></li>
 {% endfor %}
 {% endblock iej %}
 </ul>
@@ -43,7 +43,7 @@
 <ul>
 {% block courses %}
 {% for c in courses %}
-<li><a href="{% url 'teleforma-users' training.id iej.id c.id %}">{{ c }}</a></li>
+<li><a href="{% url teleforma-users training.id iej.id c.id %}">{{ c }}</a></li>
 {% endfor %}
 {% endblock courses %}
 </ul>
@@ -52,7 +52,7 @@
 
 {% if users %}
 <div class="module_action">
-<a href="{% url 'postman_write' users|to_recipients %}" class="component_icon button" id="action_orange">{% trans "Grouped message" %}</a>
+<a href="{% url postman_write users|to_recipients %}" class="component_icon button" id="action_orange">{% trans "Grouped message" %}</a>
 </div>
 {% endif %}
 
@@ -62,7 +62,7 @@
 
 {% if user.is_staff %}
 <div style="float:right;">
-<a href="{% url 'teleforma-users-export' training.id iej.id course.id %}" class="component_icon button icon_csv">XLS Export</a>
+<a href="{% url teleforma-users-export training.id iej.id course.id %}" class="component_icon button icon_csv">XLS Export</a>
 </div>
 {% endif %}
 

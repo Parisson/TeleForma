@@ -30,7 +30,7 @@
     <tbody id="spacing" class="script-list">
     {% for quota in object_list %}
     <tr>
-     <td><a href="{% url 'teleforma-profile-detail' quota.corrector.username %}">{{ quota.corrector.username }}</a></td>
+     <td><a href="{% url teleforma-profile-detail quota.corrector.username %}">{{ quota.corrector.username }}</a></td>
      <td>{{ quota.course.title }}</td>
      <td>{{ quota.date_start }}</td>
      <td>{{ quota.date_end }}</td>

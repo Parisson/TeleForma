@@ -13,7 +13,7 @@
   {% block modules %}
 
     <div class="module">
-    <h3><a href="{% url 'teleforma-home' %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
+    <h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
     <div style="background: white;">
     <ul>
     {% block courses %}
@@ -33,7 +33,7 @@
 
   {% if user.is_authenticated and user.username != usr.username %}
    <div class="module_action">
-    <a href="{% url 'postman_write' usr.username %}" class="component_icon button" id="action_orange">{% trans "Send a message" %}</a>
+    <a href="{% url postman_write usr.username %}" class="component_icon button" id="action_orange">{% trans "Send a message" %}</a>
    </div>
   {%  endif %}
  </div>
@@ -46,9 +46,9 @@
 
     <div id="password" style="float: right;">
     {% if user.is_authenticated and user.username == usr.username %}
-    <a href="{% url 'telemeta-password-change' %}" class="component_icon button icon_login">{% trans "Change password" %}</a>
+    <a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Change password" %}</a>
     {% elif user.is_staff %}
-        <a href="{% url 'teleforma-user-login' usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
+        <a href="{% url teleforma-user-login usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
     {%  endif %}
     </div>
 
@@ -103,7 +103,7 @@
   </div>
 
 <div class="buttons">
-<!--<a href="{% url 'telemeta-password-change' %}" class="component_icon button icon_login">{% trans "Password reset" %}</a>-->
+<!--<a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Password reset" %}</a>-->
 </div>
 
 </div>

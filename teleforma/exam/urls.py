@@ -54,7 +54,8 @@ urlpatterns = patterns('',
     url(r'^exam/periods/(?P<period_id>.*)/scripts_pending/$', ScriptsPendingView.as_view(), name="teleforma-exam-scripts-pending"),
     url(r'^exam/periods/(?P<period_id>.*)/scripts_treated/$', ScriptsTreatedView.as_view(), name="teleforma-exam-scripts-treated"),
     url(r'^exam/periods/(?P<period_id>.*)/scripts_rejected/$', ScriptsRejectedView.as_view(), name="teleforma-exam-scripts-rejected"),
-    url(r'^exam/periods/(?P<period_id>.*)/scripts_scores/$', ScriptsScoreView.as_view(), name="teleforma-exam-scripts-scores"),
+    url(r'^exam/periods/(?P<period_id>.*)/scripts_scores_all/$', ScriptsScoreAllView.as_view(), name="teleforma-exam-scripts-scores-all"),
+    url(r'^exam/periods/(?P<period_id>.*)/scripts_scores/(?P<course_id>.*)/$', ScriptsScoreCourseView.as_view(), name="teleforma-exam-scripts-scores-course"),
 
     url(r'^exam/periods/(?P<period_id>.*)/quotas/$', QuotasView.as_view(), name="teleforma-exam-quotas"),
 

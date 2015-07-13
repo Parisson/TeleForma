@@ -4,7 +4,7 @@ Votre copie soumise le {{ script.date_added }} en {{ script.course }} pour la s√
 
 La note, les commentaires et les annotations sont disponibles √† cette adresse :
 
-http://{{ site.domain }}{% url 'teleforma-exam-script-detail' script.period.id script.id %}
+http://{{ site.domain }}{% url teleforma-exam-script-detail script.period.id script.id %}
 
 {% trans "Best regards" %},
 {% trans "The site administrator" %} {% trans "of the" %} {% organization %}

@@ -31,8 +31,8 @@
     <tbody id="spacing">
     {% for user in page.object_list %}
     <tr>
-     <td><a href="{% url 'teleforma-profile-detail' user.username %}">{{ user.last_name }}</a></td>
-     <td><a href="{% url 'teleforma-profile-detail' user.username %}">{{ user.first_name }}</a></td>
+     <td><a href="{% url teleforma-profile-detail user.username %}">{{ user.last_name }}</a></td>
+     <td><a href="{% url teleforma-profile-detail user.username %}">{{ user.first_name }}</a></td>
 
      {% if user.student.get %}
       {% with user.student.get as student %}
@@ -69,7 +69,7 @@
         <td></td>
         <td></td>
     {%  endif %}
-    <td><a href="{% url 'postman_write' user.username %}" class="component_icon button" id="action_orange">{% trans "Message" %}</a></td>
+    <td><a href="{% url postman_write user.username %}" class="component_icon button" id="action_orange">{% trans "Message" %}</a></td>
     </tr>
     {% endfor %}
     </tbody>

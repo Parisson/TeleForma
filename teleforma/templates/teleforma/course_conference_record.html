@@ -16,7 +16,7 @@ jQuery(window).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
-    InitChatWindow("{% url 'jqchat_ajax' room.id %}", null);
+    InitChatWindow("{% url jqchat_ajax room.id %}", null);
     });
 </script>
 

@@ -12,13 +12,13 @@
 <div id="module-set-left" style="width: 20%">
 
 <div class="module">
-<h3><a href="{% url 'teleforma-home' %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+<h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url 'teleforma-annals-course' course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url teleforma-annals-course course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}
@@ -33,7 +33,7 @@
 		<ul>
 		{% block iej %}
 		{% for iej in iejs %}
-		<li><a href="{% url 'teleforma-annals-iej' iej.id %}">{{ iej.name|lower|capfirst }}</a></li>
+		<li><a href="{% url teleforma-annals-iej iej.id %}">{{ iej.name|lower|capfirst }}</a></li>
 		{% endfor %}
 		{% endblock iej %}
 		</ul>
@@ -67,11 +67,11 @@
 					    <tbody>
 					        {% for doc in docs %}
 					        <tr>
-					        <td {% if forloop.first %}class="border-top"{% endif %} width="50%">{% if doc.file %}<a href="{% url 'teleforma-document-view' doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+					        <td {% if forloop.first %}class="border-top"{% endif %} width="50%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="{{ STATIC_URL }}/teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
 
 							<td {% if forloop.first %}class="border-top"{% endif %} width="40%">{{ year }}</td>
 
-					        <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">{% if doc.file %}<a href="{% url 'teleforma-document-download' doc.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+					        <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">{% if doc.file %}<a href="{% url teleforma-document-download doc.id %}"><img src="{{ STATIC_URL }}teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
 					        </tr>
 					    	{% endfor %}
 					    </tbody>
