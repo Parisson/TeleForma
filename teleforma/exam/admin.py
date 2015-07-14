@@ -40,7 +40,7 @@ class ScriptAdmin(admin.ModelAdmin):
     search_fields = ['author__username', 'author__last_name', 'corrector__username',
                     'corrector__last_name', 'course__title', 'course__code']
     readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
-    list_filter = ['course__title', 'session', 'type', 'status']
+    list_filter = ['period', 'course__title', 'session', 'type', 'status']
     list_display = ['title', 'author_name', 'status']
 
     def author_name(self, instance):
