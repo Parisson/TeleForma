@@ -203,7 +203,6 @@ class ScriptsScoreAllView(ScriptsTreatedView):
             chartdata['name'+str(i)] = data['name']
             chartdata['y'+str(i)] = data['data']
             i += 1
-        print chartdata
         charttype = "multiBarChart"
         chartcontainer = 'multibarchart_container'
         extra_serie = {"tooltip": {"y_start": "There are ", "y_end": " calls"}}
