@@ -251,6 +251,17 @@ class UserXLSBook(object):
             row.write(16, student.total_fees)
             row.write(17, student.balance)
 
+            payments = student.payments.all()
+            i = 18
+            for month in months_choices:
+                payment = payments.filter(month=month[0])
+                if payment:
+                    value = payment[0].value
+                else:
+                    value = 0
+                row.write(i, value)
+                i += 1
+
             return counter + 1
         else:
             return counter
@@ -276,6 +287,9 @@ class UserXLSBook(object):
                 {'name':"Total reductions", 'width':4000},
                 {'name':"Balance", 'width':4000},
                 ]
+        for month in months_choices:
+            cols.append({'name': 'Paiement ' + slugify(month[1]), 'width': 4000})
+
         i = 0
         for col in cols:
             row.write(i, col['name'])
