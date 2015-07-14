@@ -30,6 +30,11 @@
     </div>
 
 {% block module-action %}
+{% if upload %}
+<div class="module_action">
+<a href="{% url teleforma-exam-scores-create period.id %}" class="component_icon button" id="action_green">{% trans "New score" %}</a>
+</div>
+{% endif %}
 {% endblock module-action %}
 
 {% endblock modules %}

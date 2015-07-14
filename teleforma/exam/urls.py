@@ -42,19 +42,16 @@ from jsonrpc import jsonrpc_site
 
 urlpatterns = patterns('',
 
-    url(r'^scripts/periods/(?P<period_id>.*)/(?P<pk>.*)/detail/$', ScriptView.as_view(),
-        name="teleforma-exam-script-detail"),
-    url(r'^scripts/periods/(?P<period_id>.*)/list/$', ScriptsView.as_view(),
-        name="teleforma-exam-script-list"),
-    url(r'^scripts/periods/(?P<period_id>.*)/create/$', ScriptCreateView.as_view(),
-        name="teleforma-exam-script-create"),
+    url(r'^scripts/periods/(?P<period_id>.*)/(?P<pk>.*)/detail/$', ScriptView.as_view(), name="teleforma-exam-script-detail"),
+    url(r'^scripts/periods/(?P<period_id>.*)/list/$', ScriptsView.as_view(), name="teleforma-exam-script-list"),
+    url(r'^scripts/periods/(?P<period_id>.*)/create/$', ScriptCreateView.as_view(), name="teleforma-exam-script-create"),
     url(r'^scripts/periods/(?P<period_id>.*)/pending/$', ScriptsPendingView.as_view(), name="teleforma-exam-scripts-pending"),
     url(r'^scripts/periods/(?P<period_id>.*)/treated/$', ScriptsTreatedView.as_view(), name="teleforma-exam-scripts-treated"),
     url(r'^scripts/periods/(?P<period_id>.*)/rejected/$', ScriptsRejectedView.as_view(), name="teleforma-exam-scripts-rejected"),
 
     url(r'^scores/periods/(?P<period_id>.*)/all/$', ScriptsScoreAllView.as_view(), name="teleforma-exam-scripts-scores-all"),
     url(r'^scores/periods/(?P<period_id>.*)/courses/(?P<course_id>.*)/$', ScriptsScoreCourseView.as_view(), name="teleforma-exam-scripts-scores-course"),
-
+    url(r'^scores/periods/(?P<period_id>.*)/create/$', ScoreCreateView.as_view(), name="teleforma-exam-scores-create"),
     # url(r'^exam/periods/(?P<period_id>.*)/quotas/$', QuotasView.as_view(), name="teleforma-exam-quotas"),
 
 )

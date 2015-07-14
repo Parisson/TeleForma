@@ -66,7 +66,7 @@ def get_n_choices(n):
 def get_nint_choices(n):
     return [(x, y) for x in range(1, n) for y in range(1, n) if x == y]
 
-session_choices = get_n_choices(21)
+session_choices = get_n_choices(8)
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
 mimetypes.add_type('video/webm','.webm')

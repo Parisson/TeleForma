@@ -13,6 +13,18 @@ class ScriptForm(ModelForm):
         model = Script
         exclude = ['uuid', 'mime_type', 'sha1', 'url',
                     'date_submitted', 'date_rejected', 'date_marked',
-                    'box_uuid',
-                ]
+                    'box_uuid',]
         #hidden_fields = ['status']
+
+
+class ScoreForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ScriptForm, self).__init__(*args, **kwargs)
+        self.fields['score'].localize = True
+
+    class Meta:
+        model = Script
+        exclude = ['uuid', 'mime_type', 'sha1', 'url',
+                    'date_submitted', 'date_rejected', 'date_marked',
+                    'box_uuid', file]
