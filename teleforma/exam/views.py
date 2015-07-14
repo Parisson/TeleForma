@@ -229,9 +229,10 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
+        period = Period.objects.get(id=self.kwargs['period_id'])
 
         if self.request.user.is_staff or self.request.user.professor.all():
-            scripts = Script.objects.all().exclude(score=None)
+            scripts = Script.objects.filter(period=period).exclude(score=None)
         else:
             scripts = self.get_queryset()
 
@@ -252,14 +253,14 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
         data = []
         for session in sessions:
-            scripts = Script.objects.filter(session=session).exclude(score=None)
+            scripts = Script.objects.filter(session=session, period=period).exclude(score=None)
             data.append(np.mean([s.score for s in scripts]))
         scores.append({'name': 'Moyenne generale', 'data': data})
 
         for script_type in ScriptType.objects.all():
             data = []
             for session in sessions:
-                scripts = Script.objects.filter(session=session, type=script_type).exclude(score=None)
+                scripts = Script.objects.filter(session=session, period=period, type=script_type).exclude(score=None)
                 data.append(np.mean([s.score for s in scripts]))
             scores.append({'name': 'Moyenne ' + script_type.name, 'data': data})
 
@@ -273,9 +274,10 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreCourseView, self).get_context_data(**kwargs)
         course = Course.objects.get(id=self.kwargs['course_id'])
+        period = Period.objects.get(id=self.kwargs['period_id'])
 
         if self.request.user.is_staff or self.request.user.professor.all():
-            scripts = Script.objects.all().filter(course=course).exclude(score=None)
+            scripts = Script.objects.all().filter(course=course, period=period).exclude(score=None)
         else:
             scripts = self.get_queryset().filter(course=course)
 
@@ -296,14 +298,14 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
 
         data = []
         for session in sessions:
-            scripts = Script.objects.filter(session=session, course=course).exclude(score=None)
+            scripts = Script.objects.filter(session=session, course=course, period=period).exclude(score=None)
             data.append(np.mean([s.score for s in scripts]))
         scores.append({'name':'Moyenne generale', 'data': data})
 
         for script_type in ScriptType.objects.all():
             data = []
             for session in sessions:
-                scripts = Script.objects.filter(session=session, type=script_type, course=course).exclude(score=None)
+                scripts = Script.objects.filter(session=session, type=script_type, course=course, period=period).exclude(score=None)
                 data.append(np.mean([s.score for s in scripts]))
             scores.append({'name': 'Moyenne ' + script_type.name, 'data': data})
 
