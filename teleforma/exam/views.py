@@ -241,7 +241,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         for script in scripts:
             if not script.session in sessions:
                 sessions.append(script.session)
-        sessions = sorted(sessions)
+        sessions = map(str, sorted(map(int, sessions)))
         sessions_x = {'x': sessions}
 
         data = []
