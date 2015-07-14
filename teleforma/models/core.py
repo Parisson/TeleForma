@@ -224,6 +224,9 @@ class Professor(Model):
                  }
         return data
 
+    def get_absolute_url(self):
+        return reverse_lazy('teleforma-profile-detail', kwargs={'username':self.user.username})
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
         verbose_name = _('professor')

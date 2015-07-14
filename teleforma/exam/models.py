@@ -250,6 +250,10 @@ class Script(BaseResource):
     def __unicode__(self):
         return unicode(self.title)
 
+    def get_absolute_url(self):
+        return reverse_lazy('teleforma-exam-script-detail',
+                            kwargs={'pk':self.id, 'period_id': self.period.id})
+
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
