@@ -78,10 +78,15 @@ class ScriptsPendingView(ScriptsView):
     def get_queryset(self):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
-        Q1 = Q(status=3, author=user, period=period)
-        Q2 = Q(status=2, author=user, period=period)
-        Q3 = Q(status=3, corrector=user, period=period)
-        scripts = Script.objects.filter(Q1 | Q2 | Q3)
+        if user.professor.all():
+            Q1 = Q(status=3, period=period)
+            Q2 = Q(status=2, period=period)
+            scripts = Script.objects.filter(Q1 | Q2)
+        else:
+            Q1 = Q(status=3, author=user, period=period)
+            Q2 = Q(status=2, author=user, period=period)
+            Q3 = Q(status=3, corrector=user, period=period)
+            scripts = Script.objects.filter(Q1 | Q2 | Q3)
         return scripts
 
     def get_context_data(self, **kwargs):
@@ -94,11 +99,17 @@ class ScriptsTreatedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        Q1 = Q(status=4, author=user)
-        Q2 = Q(status=5, author=user)
-        Q3 = Q(status=4, corrector=user)
-        Q4 = Q(status=5, corrector=user)
-        scripts = Script.objects.filter(Q1 | Q2 | Q3 | Q4)
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        if user.professor.all():
+            Q1 = Q(status=4, period=period)
+            Q2 = Q(status=5, period=period)
+            scripts = Script.objects.filter(Q1 | Q2)
+        else:
+            Q1 = Q(status=4, author=user, period=period)
+            Q2 = Q(status=5, author=user, period=period)
+            Q3 = Q(status=4, corrector=user, period=period)
+            Q4 = Q(status=5, corrector=user, period=period)
+            scripts = Script.objects.filter(Q1 | Q2 | Q3 | Q4)
         return scripts
 
     def get_context_data(self, **kwargs):
@@ -111,9 +122,14 @@ class ScriptsRejectedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        Q1 = Q(status=0, author=user)
-        Q2 = Q(status=0, corrector=user)
-        scripts = Script.objects.filter(Q1 | Q2)
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        if user.professor.all():
+            Q1 = Q(status=0)
+            scripts = Script.objects.filter(Q1)
+        else:
+            Q1 = Q(status=0, author=user)
+            Q2 = Q(status=0, corrector=user)
+            scripts = Script.objects.filter(Q1 | Q2)
         return scripts
 
     def get_context_data(self, **kwargs):
@@ -205,7 +221,12 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
-        scripts = self.get_queryset()
+
+        if self.request.user.is_staff or self.request.user.professor.all():
+            scripts = Script.objects.all().exclude(score=None)
+        else:
+            scripts = self.get_queryset()
+
         sessions = []
         scores = []
 
@@ -243,8 +264,12 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreCourseView, self).get_context_data(**kwargs)
         course = Course.objects.get(id=self.kwargs['course_id'])
-        scripts = self.get_queryset()
-        scripts = scripts.filter(course=course)
+
+        if self.request.user.is_staff or self.request.user.professor.all():
+            scripts = Script.objects.all().filter(course=course).exclude(score=None)
+        else:
+            scripts = self.get_queryset().filter(course=course)
+
         sessions = []
         scores = []
 

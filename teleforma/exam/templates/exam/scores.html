@@ -12,8 +12,8 @@
 {% load_chart data.charttype data.chartdata data.chartcontainer data.extra %}
 {% endblock extra_javascript %}
 
-{% block module-action %}
 
+{% block modules %}
     <div class="module">
     <h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
     <div style="background: white;">
@@ -29,7 +29,11 @@
     </div>
     </div>
 
+{% block module-action %}
 {% endblock module-action %}
+
+{% endblock modules %}
+
 
 {% block answers %}
 
