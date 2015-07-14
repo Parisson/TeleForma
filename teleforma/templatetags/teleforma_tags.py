@@ -237,7 +237,7 @@ def get_training_profile(user):
     if student:
         student = student[0]
         if student.platform_only:
-            text += '(I)'
+            text += 'Internaute - '
         for training in student.trainings.all():
-            text += ' - ' + unicode(training)
+            text += unicode(training) + ' '
     return text

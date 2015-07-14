@@ -237,13 +237,15 @@ class UserXLSBook(object):
             row.write(8, get_course_code(student.oral_2))
 
             profile = Profile.objects.filter(user=user)
+            student = Student.objects.get(user=user)
             if profile:
                 profile = Profile.objects.get(user=user)
                 row.write(10, profile.address)
                 row.write(11, profile.postal_code)
                 row.write(12, profile.city)
                 row.write(13, profile.telephone)
-                row.write(14, user.date_joined.strftime("%d/%m/%Y"))
+                if student.date_subscribed:
+                    row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
 
             row.write(15, student.total_payments)
             row.write(16, student.total_fees)

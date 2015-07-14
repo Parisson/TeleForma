@@ -40,7 +40,7 @@ class ScriptView(CourseAccessMixin, UpdateView):
         access = self.request.user == script.author or \
                     self.request.user == script.corrector or \
                     self.request.user.is_superuser or \
-                     self.request.user.is_staff
+                     self.request.user.is_staff or self.request.user.professor.all()
 
         if not access:
             context['access_error'] = access_error
@@ -99,11 +99,20 @@ class ScriptsTreatedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
+        professor = user.professor.all()
         period = Period.objects.get(id=self.kwargs['period_id'])
-        if user.professor.all():
-            Q1 = Q(status=4, period=period)
-            Q2 = Q(status=5, period=period)
-            scripts = Script.objects.filter(Q1 | Q2)
+        if professor:
+            professor = professor[0]
+            i = 0
+            for course in professor.courses.all():
+                Q1 = Q(status=4, period=period, course=course)
+                Q2 = Q(status=5, period=period, course=course)
+                if i == 0:
+                    QT = Q1 | Q2
+                else:
+                    QT = QT | Q1 | Q2
+                i += 1
+            scripts = Script.objects.filter(QT)
         else:
             Q1 = Q(status=4, author=user, period=period)
             Q2 = Q(status=5, author=user, period=period)
