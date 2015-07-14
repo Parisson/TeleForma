@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-14 16:21+0200\n"
+"POT-Creation-Date: 2015-07-14 18:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -49,7 +49,7 @@ msgstr "lu"
 
 #: exam/models.py:63
 msgid "backup"
-msgstr ""
+msgstr "sauvegardé"
 
 #: exam/models.py:65
 msgid "unreadable"
@@ -359,8 +359,8 @@ msgstr "Niveau"
 msgid "New score"
 msgstr "Nouvelle note"
 
-#: exam/templates/exam/score_form.html:59
-#: exam/templates/exam/script_form.html:66
+#: exam/templates/exam/score_form.html:60
+#: exam/templates/exam/script_form.html:68
 #: templates/registration/registration_form.html:21
 msgid "Submit"
 msgstr "Soumettre"
@@ -457,7 +457,7 @@ msgstr ""
 "Il y a une une erreur lors de votre soumission de copie. Merci de vérifier "
 "votre fichier ou de réessayer plus tard."
 
-#: exam/views.py:266
+#: exam/views.py:267
 msgid "all courses"
 msgstr "toutes les matières"
 
@@ -1540,9 +1540,8 @@ msgid "Peding media"
 msgstr ""
 
 #: templates/teleforma/media_pending.html:27
-#, fuzzy
 msgid "Testimonials"
-msgstr "Attestation"
+msgstr "Attestations"
 
 #: templates/teleforma/media_pending.html:45
 #, fuzzy
