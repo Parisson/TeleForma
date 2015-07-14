@@ -60,7 +60,7 @@ import crocodoc
 crocodoc.api_token = settings.BOX_API_TOKEN
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
-                (3, _('pending')),(4, _('marked')), (5, _('read')) )
+                (3, _('pending')),(4, _('marked')), (5, _('read')), (6, _('backup')) )
 
 REJECT_REASON = (('unreadable', _('unreadable')),
                 ('bad orientation', _('bad orientation')),
