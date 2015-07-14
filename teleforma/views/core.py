@@ -181,12 +181,12 @@ def get_periods(user):
     return periods
 
 def get_default_period(periods):
-    period = None
-    for period in periods:
-        defaults = period.department.all()
-        if defaults:
-            return period
-    return period
+    if not periods:
+        return None
+    elif len(periods) == 1:
+        return periods[0]
+    else:
+        return Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
 
 
 class HomeRedirectView(View):
