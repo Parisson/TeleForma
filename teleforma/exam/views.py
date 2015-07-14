@@ -244,10 +244,11 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         sessions = map(str, sorted(map(int, sessions)))
         sessions_x = {'x': sessions}
 
-        data = []
-        for session in sessions:
-            data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
-        scores.append({'name': 'Moyenne personnelle', 'data': data})
+        if not (self.request.user.is_staff or self.request.user.professor.all()):
+            data = []
+            for session in sessions:
+                data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+            scores.append({'name': 'Moyenne personnelle', 'data': data})
 
         data = []
         for session in sessions:
@@ -287,10 +288,11 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
         sessions = sorted(sessions)
         sessions_x = {'x': sessions}
 
-        data = []
-        for session in sessions:
-            data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
-        scores.append({'name':'Note personnelle' , 'data': data})
+        if not (self.request.user.is_staff or self.request.user.professor.all()):
+            data = []
+            for session in sessions:
+                data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+            scores.append({'name':'Note personnelle' , 'data': data})
 
         data = []
         for session in sessions:
