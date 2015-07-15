@@ -131,7 +131,7 @@ class Student(Model):
     platform_only   = models.BooleanField(_('platform only'))
     application_fees = models.BooleanField(_('application fees'), blank=True)
     default_application_fees = 40
-    subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True)
+    subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
     date_subscribed = models.DateTimeField(_('subscription date'), null=True, blank=True)
     is_subscribed = models.BooleanField(_('subscribed'))
     confirmation_sent = models.BooleanField(_('confirmation sent'))
