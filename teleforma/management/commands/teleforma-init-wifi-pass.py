@@ -26,7 +26,7 @@ class Command(BaseCommand):
         for user in User.objects.all():
             profile = user.profile.get()
             if not profile.wifi_pass:
-                profile.wifi_login = user.username + '.' + args[-1]
+                profile.wifi_login = user.username
                 profile.wifi_pass = id_generator(8)
                 profile.save()
                 f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
