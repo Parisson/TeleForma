@@ -24,11 +24,14 @@ class Command(BaseCommand):
         f = open(path, 'w')
 
         for user in User.objects.all():
-            profile = user.profile.get()
-            if not profile.wifi_pass:
-                profile.wifi_login = user.username
-                profile.wifi_pass = id_generator(8)
-                profile.save()
-                f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
+            try:
+                profile = user.profile.get()
+                if not profile.wifi_pass:
+                    profile.wifi_login = user.username
+                    profile.wifi_pass = id_generator(8)
+                    profile.save()
+                    f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
+            except:
+                continue
 
         f.close()
