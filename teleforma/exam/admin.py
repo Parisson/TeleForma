@@ -5,15 +5,8 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
-class QuotaAdminForm(forms.ModelForm):
-    corrector = forms.ModelChoiceField(queryset=User.objects.order_by('last_name'))
-    class Meta:
-        model = Quota
-
-
 class QuotaAdmin(admin.ModelAdmin):
     model= Quota
-    form = QuotaAdminForm
     list_display = ['corrector_name', 'course', 'script_type', 'date_start', 'date_end',
                     'pending_script_count', 'marked_script_count',
                     'all_script_count', 'value', 'level']
