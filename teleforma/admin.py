@@ -2,6 +2,7 @@
 from teleforma.models import *
 from teleforma.views import *
 from teleforma.exam.models import *
+from teleforma.templatetags.teleforma_tags import to_recipients
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -67,7 +68,7 @@ class StudentAdmin(admin.ModelAdmin):
                     'trainings', 'iej', 'procedure', 'written_speciality']
     list_display = ['student_name', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
-    actions = ['export_xls']
+    actions = ['export_xls', 'write_message']
 
     def get_trainings(self, instance):
         return ' - '.join([unicode(training) for training in instance.trainings.all()])
@@ -93,8 +94,12 @@ class StudentAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         book.book.save(response)
         return response
+    export_xls.short_description = "Export vers XLS"
 
-    export_xls.short_description = "Export to XLS"
+    def write_message(self, request, queryset):
+        users = [student.user for student in queryset]
+        return redirect('postman_write', to_recipients(users))
+    write_message.short_description = "Envoyer un message"
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
