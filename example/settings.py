@@ -161,7 +161,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     'django.core.context_processors.static',
     "teleforma.context_processors.periods",
-    "teleforma.exam.context_processors.exam_access",
 )
 
 TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
