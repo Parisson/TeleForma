@@ -29,6 +29,7 @@ setup(
         'django-simple-captcha',
         'django-suit',
         'django-nvd3',
+        'django-user-agents',
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
