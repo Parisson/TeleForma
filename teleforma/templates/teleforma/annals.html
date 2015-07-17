@@ -48,7 +48,6 @@
 	{% if not object_list.items %}
 	<div class="course_title">{% trans "No document" %}</div>
 	{% else %}
-
 	{% for course, iejs in object_list.items %}
 
 			<div class="course_title">{{ course.title }} - {% trans "Annals" %}</div>

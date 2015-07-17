@@ -27,6 +27,13 @@ function update_professor_recipient() {
 {% if user.student.all or user.is_staff or user.quotas.all %}
 <div style="padding-top: 0.5em;">
 
+{% trans "Vous pouvez ici échanger des messages avec les professeurs et les administrateurs." %}
+<br/>
+{% trans "Pour les questions concernant l'organisation des cours, le planning ou les documents de cours, adressez-vous à <b>Admin-CRFPA</b>." %}
+<br/>
+{% trans "Pour les questions concernant uniquement l'accès à la plateforme et aux médias vidéo ou audio, lire d'abord" %} <a href="{% url teleforma-help %}">la page d'aide</a> {% trans "puis adressez-vous à <b>Support technique</b>." %}
+<br/><br/>
+
 <select id="_adminSelect" name="admins" onchange="update_admin_recipient();">
 <option value="">{% trans "to an administrator" %}</option>
 {% get_all_admins as admins %}

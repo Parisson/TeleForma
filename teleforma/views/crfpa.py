@@ -350,7 +350,6 @@ class AnnalsView(ListView):
     def get_queryset(self):
         self.user = self.request.user
         self.all_courses = get_courses(self.request.user)
-        print self.all_courses
         return self.get_docs()
 
     def get_context_data(self, **kwargs):
