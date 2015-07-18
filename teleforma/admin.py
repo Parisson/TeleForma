@@ -2,6 +2,7 @@
 from teleforma.models import *
 from teleforma.views import *
 from teleforma.exam.models import *
+from teleforma.exam.admin import *
 from teleforma.templatetags.teleforma_tags import to_recipients
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -113,7 +114,7 @@ class ProfileInline(admin.StackedInline):
     model = Profile
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [ProfileInline, StudentInline]
+    inlines = [ProfileInline, StudentInline, QuotaInline]
     search_fields = ['username', 'email']
 
 class TrainingAdmin(admin.ModelAdmin):
