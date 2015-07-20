@@ -131,14 +131,16 @@ class ScriptsRejectedView(ScriptsView):
     def get_queryset(self):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
-        if user.professor.all():
-            Q1 = Q(status=0)
-            scripts = Script.objects.filter(Q1)
-        else:
-            Q1 = Q(status=0, author=user)
-            Q2 = Q(status=0, corrector=user)
-            scripts = Script.objects.filter(Q1 | Q2)
-        return scripts
+        QT = Q(status=0, author=user)
+        QT = Q(status=0, corrector=user) | QT
+
+        professor = user.professor.all()
+        if professor:
+            professor = professor[0]
+            for course in professor.courses.all():
+                QT = Q(status=0, period=period, course=course) | QT
+
+        return Script.objects.filter(QT)
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsRejectedView, self).get_context_data(**kwargs)
