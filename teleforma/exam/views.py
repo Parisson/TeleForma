@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 # Create your views here.
 
 from teleforma.exam.models import *
@@ -78,16 +80,19 @@ class ScriptsPendingView(ScriptsView):
     def get_queryset(self):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
-        if user.professor.all():
-            Q1 = Q(status=3, period=period)
-            Q2 = Q(status=2, period=period)
-            scripts = Script.objects.filter(Q1 | Q2)
-        else:
-            Q1 = Q(status=3, author=user, period=period)
-            Q2 = Q(status=2, author=user, period=period)
-            Q3 = Q(status=3, corrector=user, period=period)
-            scripts = Script.objects.filter(Q1 | Q2 | Q3)
-        return scripts
+
+        QT = Q(status=2, author=user, period=period)
+        QT = Q(status=3, author=user, period=period) | QT
+        QT = Q(status=3, corrector=user, period=period) | QT
+
+        professor = user.professor.all()
+        if professor:
+            professor = professor[0]
+            for course in professor.courses.all():
+                QT = Q(status=2, period=period, course=course) | QT
+                QT = Q(status=3, period=period, course=course) | QT
+
+        return Script.objects.filter(QT)
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsPendingView, self).get_context_data(**kwargs)
@@ -99,27 +104,21 @@ class ScriptsTreatedView(ScriptsView):
 
     def get_queryset(self):
         user = self.request.user
-        professor = user.professor.all()
         period = Period.objects.get(id=self.kwargs['period_id'])
+
+        QT = Q(status=4, author=user, period=period)
+        QT = Q(status=5, author=user, period=period) | QT
+        QT = Q(status=4, corrector=user, period=period) | QT
+        QT = Q(status=5, corrector=user, period=period) | QT
+
+        professor = user.professor.all()
         if professor:
             professor = professor[0]
-            i = 0
             for course in professor.courses.all():
-                Q1 = Q(status=4, period=period, course=course)
-                Q2 = Q(status=5, period=period, course=course)
-                if i == 0:
-                    QT = Q1 | Q2
-                else:
-                    QT = QT | Q1 | Q2
-                i += 1
-            scripts = Script.objects.filter(QT)
-        else:
-            Q1 = Q(status=4, author=user, period=period)
-            Q2 = Q(status=5, author=user, period=period)
-            Q3 = Q(status=4, corrector=user, period=period)
-            Q4 = Q(status=5, corrector=user, period=period)
-            scripts = Script.objects.filter(Q1 | Q2 | Q3 | Q4)
-        return scripts
+                QT = Q(status=4, period=period, course=course) | QT
+                QT = Q(status=5, period=period, course=course) | QT
+
+        return Script.objects.filter(QT)
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsTreatedView, self).get_context_data(**kwargs)
