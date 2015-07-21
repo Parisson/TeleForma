@@ -131,7 +131,7 @@ class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
     search_fields = ['course__code', 'course__title']
-    list_filter = ('period', 'date_added')
+    list_filter = ('course', 'period', 'date_added')
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
