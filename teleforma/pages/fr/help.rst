@@ -5,14 +5,14 @@ Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc ac
 
 Les flux vidéo en direct et en différé utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
 
- * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
- * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
+ * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_ (recommandé, version >=44)
+ * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_
  * Internet Explorer (version > 9) avec `l'extension WebM <https://tools.google.com/dlpage/webmmf/>`_ (uniquement en différé)
 
 Les flux audio au format MP3 sont compatibles avec les navigateurs suivants :
 
- * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
- * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
+ * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_ (recommandé)
+ * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_
  * Safari
  * Internet Explorer
  * Opera
