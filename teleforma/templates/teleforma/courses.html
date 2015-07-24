@@ -5,11 +5,6 @@
 
 
 {% block extra_javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-    });
-</script>
 {% endblock extra_javascript %}
 
 
@@ -42,6 +37,13 @@ $(document).ready(function(){
 <a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
 </div>
 {% endif %}
+
+{% if user.is_staff %}
+<div class="module_action">
+<a href="{% url teleforma-desk-period-pending period.id %}" class="component_icon button" id="action_red">{% trans "Pending" %}</a>
+</div>
+{% endif %}
+
 {% endblock module-action %}
 
 {% block notes %}

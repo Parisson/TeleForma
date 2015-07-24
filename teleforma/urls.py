@@ -72,6 +72,7 @@ urlpatterns = patterns('',
     # Desk
     url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/$', CourseListView.as_view(), name="teleforma-desk-period-list"),
+    url(r'^desk/periods/(?P<period_id>.*)/courses_pending/$', CoursePendingListView.as_view(), name="teleforma-desk-period-pending"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
         name="teleforma-desk-period-course"),
 

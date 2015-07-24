@@ -325,6 +325,16 @@ class CourseView(CourseAccessMixin, DetailView):
         return media_list
 
 
+class CoursePendingListView(CourseListView):
+
+    template_name='teleforma/courses_pending.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CoursePendingListView, self).get_context_data(**kwargs)
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)
+        return context
+
+
 class MediaView(CourseAccessMixin, DetailView):
 
     model = Media
