@@ -117,6 +117,7 @@ urlpatterns = patterns('',
 
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
+    url(r'jsonrpc/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
 
 #    url(r'^private_files/', include('private_files.urls')),
 
