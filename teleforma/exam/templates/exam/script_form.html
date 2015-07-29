@@ -38,6 +38,15 @@
 </div>
 <br />
 
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+          <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+<br />
+
 <div>Ce formulaire vous permet de soumettre une copie <b>non corrigée</b> à la correction en ligne.</div>
 <div>Merci de fournir <b>un seul fichier par épreuve</b> au format <b>PDF uniquement</b> et de <b>taille inférieure à 50 Mo</b>.</div>
 <br/>

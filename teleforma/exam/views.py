@@ -159,8 +159,14 @@ class ScriptCreateView(CreateView):
         return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
-        messages.info(self.request, _("You have successfully submitted your script. It will be processed in the next hours."))
+        scripts = Script.objects.filter(course=form.cleaned_data['course'], session=form.cleaned_data['session'],
+                                        type=form.cleaned_data['type'], author=self.request.user)
+        if scripts:
+            messages.error(self.request, _("Error: you have already submitted a script for this session, the same course and the same type!"))
+            return redirect('teleforma-exam-script-create', self.kwargs['period_id'])
+        else:
+            form.instance.author = self.request.user
+            messages.info(self.request, _("You have successfully submitted your script. It will be processed in the next hours."))
         return super(ScriptCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
