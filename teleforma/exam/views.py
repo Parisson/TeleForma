@@ -213,6 +213,9 @@ class ScriptsScoreAllView(ScriptsTreatedView):
     template_name='exam/scores.html'
 
     def score_data_setup(self, x, y):
+        if not x['x']:
+            messages.warning(self.request, _("You must add one new score at least to access to the statistics."))
+
         chartdata = x
         i = 1
         for data in y:
