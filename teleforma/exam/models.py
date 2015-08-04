@@ -282,7 +282,8 @@ class Script(BaseResource):
                                             script_type=self.type)
         if not quotas:
             quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
-                                            date_end__gte=self.date_submitted)
+                                            date_end__gte=self.date_submitted,
+                                            script_type=None)
         if quotas:
             for quota in quotas:
                 if quota.value:
@@ -290,6 +291,7 @@ class Script(BaseResource):
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
         else:
+            #FIXME: default corrector goes to settings
             self.corrector = User.objects.filter(is_superuser=True)[1]
 
         self.status = 3

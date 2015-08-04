@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-04 22:52+0200\n"
+"POT-Creation-Date: 2015-08-05 01:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "period"
 msgstr "période"
 
-#: exam/models.py:62 exam/models.py:436
+#: exam/models.py:62 exam/models.py:438
 msgid "rejected"
 msgstr "rejetée"
 
@@ -39,7 +39,7 @@ msgstr "soumise"
 msgid "pending"
 msgstr "en attente"
 
-#: exam/models.py:63 exam/models.py:421
+#: exam/models.py:63 exam/models.py:423
 msgid "marked"
 msgstr "corrigée"
 
@@ -251,7 +251,7 @@ msgstr ""
 msgid "Session"
 msgstr "Séance"
 
-#: exam/models.py:258 exam/models.py:420 exam/models.py:435
+#: exam/models.py:258 exam/models.py:422 exam/models.py:437
 msgid "Script"
 msgstr "Copie"
 
@@ -466,7 +466,7 @@ msgstr ""
 "votre fichier ou de réessayer plus tard."
 
 #: exam/views.py:217
-msgid "You must add one new score at least to access to the statistics."
+msgid "You must add your score to access to the statistics."
 msgstr ""
 
 #: exam/views.py:282
