@@ -255,7 +255,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         if not (self.request.user.is_staff or self.request.user.professor.all()):
             data = []
             for session in sessions:
-                data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+                data.append(np.mean([float(script.score) for script in scripts.filter(session=session) if script.score]))
             scores.append({'name': 'Moyenne personnelle' + ' (' + str(len(sessions)) + ')', 'data': data})
 
         data = []
@@ -263,7 +263,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         for session in sessions:
             scripts = Script.objects.filter(session=session, period=period).exclude(score=None)
             counter += scripts.count()
-            data.append(np.mean([s.score for s in scripts]))
+            data.append(np.mean([s.score for s in scripts if script.score]))
         scores.append({'name': 'Moyenne generale'  + ' (' + str(counter) + ')', 'data': data})
 
         for script_type in ScriptType.objects.all():
@@ -271,7 +271,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
             counter = 0
             for session in sessions:
                 scripts = Script.objects.filter(session=session, period=period, type=script_type).exclude(score=None)
-                data.append(np.mean([s.score for s in scripts]))
+                data.append(np.mean([s.score for s in scripts if script.score]))
                 counter += scripts.count()
             scores.append({'name': 'Moyenne ' + script_type.name + ' (' + str(counter) + ')', 'data': data})
 
@@ -304,7 +304,7 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
         if not (self.request.user.is_staff or self.request.user.professor.all()):
             data = []
             for session in sessions:
-                data.append(np.mean([float(script.score) for script in scripts.filter(session=session)]))
+                data.append(np.mean([float(script.score) for script in scripts.filter(session=session) if script.score]))
             scores.append({'name':'Note personnelle' , 'data': data})
 
         data = []
@@ -312,7 +312,7 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
         for session in sessions:
             scripts = Script.objects.filter(session=session, course=course, period=period).exclude(score=None)
             counter += scripts.count()
-            data.append(np.mean([s.score for s in scripts]))
+            data.append(np.mean([s.score for s in scripts if script.score]))
         scores.append({'name':'Moyenne generale' + ' (' + str(counter) + ')', 'data': data})
 
         for script_type in ScriptType.objects.all():
@@ -321,7 +321,7 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
             for session in sessions:
                 scripts = Script.objects.filter(session=session, type=script_type, course=course, period=period).exclude(score=None)
                 counter += scripts.count()
-                data.append(np.mean([s.score for s in scripts]))
+                data.append(np.mean([s.score for s in scripts if script.score]))
             scores.append({'name': 'Moyenne ' + script_type.name + ' (' + str(counter) + ')', 'data': data})
 
         context['data'] = self.score_data_setup(sessions_x, scores)
