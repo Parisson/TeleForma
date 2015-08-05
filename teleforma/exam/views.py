@@ -160,7 +160,7 @@ class ScriptCreateView(CreateView):
 
     def form_valid(self, form):
         scripts = Script.objects.filter(course=form.cleaned_data['course'], session=form.cleaned_data['session'],
-                                        type=form.cleaned_data['type'], author=self.request.user)
+                                        type=form.cleaned_data['type'], author=self.request.user).exclude(status=0)
         if scripts:
             messages.error(self.request, _("Error: you have already submitted a script for this session, the same course and the same type!"))
             return redirect('teleforma-exam-script-create', self.kwargs['period_id'])
