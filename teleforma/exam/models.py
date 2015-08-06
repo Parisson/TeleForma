@@ -73,7 +73,7 @@ REJECT_REASON = (('unreadable', _('unreadable')),
                 ('unreadable file', _('unreadable file')),
                 ('no file', _('no file')),
                 ('file too large', _('file too large')),
-                ('error retrieving file'), _('error retrieving file')),
+                ('error retrieving file', _('error retrieving file')),
                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
