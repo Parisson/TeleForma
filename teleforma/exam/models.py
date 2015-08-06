@@ -369,7 +369,7 @@ class Script(BaseResource):
                     print '  Error Message: ' + statuses[0]['error']
                     if 'too large' in statuses[0]['error']:
                         self.auto_reject('file too large')
-                    elif 'retrieving file' in in statuses[0]['error']:
+                    elif 'retrieving file' in statuses[0]['error']:
                         self.auto_reject('error retrieving file')
                     break
             else:
