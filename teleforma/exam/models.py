@@ -73,6 +73,7 @@ REJECT_REASON = (('unreadable', _('unreadable')),
                 ('unreadable file', _('unreadable file')),
                 ('no file', _('no file')),
                 ('file too large', _('file too large')),
+                ('error retrieving file'), _('error retrieving file')),
                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
@@ -368,6 +369,8 @@ class Script(BaseResource):
                     print '  Error Message: ' + statuses[0]['error']
                     if 'too large' in statuses[0]['error']:
                         self.auto_reject('file too large')
+                    elif 'retrieving file' in in statuses[0]['error']:
+                        self.auto_reject('error retrieving file')
                     break
             else:
                 print 'failed :('

@@ -2,7 +2,7 @@
 
 Votre copie soumise le {{ script.date_added }} en {{ script.course }} pour la séance {{ script.session }} a été rejetée pour le motif suivant : {% trans script.reject_reason %}.
 
-Veuillez s'il vous plaît corriger cette erreur puis resoumettre votre copie.
+Veuillez s'il vous plaît corriger cette erreur et/ou re-soumettre votre copie (voir le recommandations sur la formulaire d'envoi).
 
 {% trans "Best regards" %},
 {% trans "The site administrator" %} {% trans "of the" %} {% organization %}
