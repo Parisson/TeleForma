@@ -44,7 +44,6 @@ class ScriptAdmin(admin.ModelAdmin):
     def file_size(self, instance):
         if instance.file:
             if os.path.exists(instance.file.path):
-                print instance.file.path
                 return filesizeformat(os.stat(instance.file.path).st_size)
             else:
                 return '0'
