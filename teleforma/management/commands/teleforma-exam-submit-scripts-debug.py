@@ -35,10 +35,10 @@ class Command(BaseCommand):
         logger = Logger(args[0])
         for script in Script.objects.filter(status=2):
             logger.logger.info(script.title)
-            logger.logger.info(str(script.id) + ' : ' + script.url)
             if not script.file:
                 logger.logger.error('No file!')
             script.submit()
+            logger.logger.info(str(script.id) + ' : ' + script.url)
             logger.logger.info(script.status)
             time.sleep(10)
 

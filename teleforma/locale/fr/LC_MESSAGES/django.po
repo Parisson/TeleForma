@@ -453,7 +453,7 @@ msgid ""
 "and the same type!"
 msgstr ""
 "Erreur : vous avez déjà soumis une copie du même type pour la même matière "
-"et la même session."
+"et la même séance."
 
 #: exam/views.py:169
 msgid ""
