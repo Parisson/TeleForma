@@ -79,7 +79,7 @@ REJECT_REASON = (('unreadable', _('unreadable')),
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
 
-SCRIPT_MAX_SIZE = 31457280
+SCRIPT_MAX_SIZE = 26214400
 
 
 def sha1sum_file(filename):
