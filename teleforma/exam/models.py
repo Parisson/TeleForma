@@ -361,6 +361,7 @@ class Script(BaseResource):
                 if (statuses[0].get('error') == None):
                     if statuses[0]['status'] == 'DONE':
                         self.t = 1
+                        self.save()
                         break
                     else:
                         time.sleep(s)
