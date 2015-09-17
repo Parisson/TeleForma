@@ -64,12 +64,14 @@ class Seminar(ClonableMixin, Displayable):
     private         = models.BooleanField(_('private'), default=False)
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
+    period          = ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
+    rank            = models.IntegerField(_('rank'), blank=True, null=True)
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
     level           = models.CharField(_('level'), max_length=255, blank=True)
     price           = models.FloatField(_('price'), blank=True, null=True)
-    rank            = models.IntegerField(_('rank'), blank=True, null=True)
     magistral       = models.BooleanField(_('magistral'))
     approved        = models.BooleanField(_('approved'), default=True)
     index           = tinymce.models.HTMLField(_('index'), blank=True)
@@ -102,8 +104,6 @@ class Seminar(ClonableMixin, Displayable):
 
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
-    period          = ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
 
     objects = DisplayableManager()
 
@@ -315,11 +315,16 @@ class SeminarRevision(models.Model):
     date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
 
     def __unicode__(self):
-        return ' - '.join([self.seminar.title, self.user.username, str(self.date)])
+        return ' - '.join([self.seminar.title, self.user.username, str(self.date), str(self.date_modified)])
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar_revisions'
         verbose_name = _('Seminar revision')
         verbose_name_plural = _('Seminar revisions')
-        ordering = ['-date_modified']
+        ordering = ['-date']
 
+    def delta(self):
+        if self.date_modified:
+            return self.date_modified - self.date
+        else:
+            return None

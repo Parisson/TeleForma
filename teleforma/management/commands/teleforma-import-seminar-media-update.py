@@ -112,15 +112,14 @@ class Command(BaseCommand):
 
         organization = Organization.objects.get(name=organization_name)
         period = Period.objects.get(name=period_name)
-
         self.media_dir = media_dir
         file_list = []
         seminars = []
 
         # NOT FOR PROD : CLEANUP
-        date_limit = datetime.datetime(2015,12,31)
-        for seminar in Seminar.objects.filter(period=period, expiry_date__gte=date_limit):
-            self.seminar_media_cleanup(seminar)
+        # self.cleanup()
+        #for seminar in Seminar.objects.filter(period=period):
+        #    self.seminar_media_cleanup(seminar)
 
         walk = os.walk(self.media_dir, followlinks=True)
 
@@ -129,11 +128,11 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
                 root_list = root.split(os.sep)
-                print root + os.sep + filename
 
                 if ext in self.original_format and not 'preview' in root_list \
                             and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.':
 
+                    print root + os.sep + filename
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
 
@@ -167,34 +166,31 @@ class Command(BaseCommand):
                         seminar.status = 1
                         seminar.save()
 
-                    exist = False
-                    for media in seminar.medias.all():
-                        if media.item.file == path:
-                            exist = True
-                            break
+                    # for media in seminar.medias.all():
+                    #     seminar.medias.remove(media)
+                    #     media.item.delete()
+                    #     media.delete()
 
-                    if not exist:
+                    collections = MediaCollection.objects.filter(code=collection_id)
+                    if not collections:
+                        collection = MediaCollection(code=collection_id,title=collection_id)
+                        collection.save()
+                    else:
+                        collection = collections[0]
+
+                    id = '_'.join([period.name, self.id_incr, collection_id, ext, str(media_rank)])
+                    item = self.get_item(collection, id)
+                    item.title = name
+
+                    if not item.file == path:
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
                         if not seminar in seminars:
                             seminars.append(seminar)
 
-                        collections = MediaCollection.objects.filter(code=collection_id)
-                        if not collections:
-                            collection = MediaCollection(code=collection_id,title=collection_id)
-                            collection.save()
-                        else:
-                            collection = collections[0]
-
-                        id = '_'.join([period.name, self.id_incr, collection_id, ext, str(media_rank)])
-
-                        item = self.get_item(collection, id)
-                        item.title = name
                         item.file = path
-
                         if os.path.getsize(root+os.sep+filename):
                             item.approx_duration = self.get_duration(root+os.sep+filename)
-
                         item.save()
 
                         files = os.listdir(root)

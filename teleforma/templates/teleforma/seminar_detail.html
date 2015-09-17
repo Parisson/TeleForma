@@ -34,45 +34,64 @@ $(function () {
 
 </script>
 
-{% if user.is_staff %}
+
 <script type="text/javascript">
 
 var seminarUtils = {
+
+        {% if user.is_staff %}
         publish : function(id){
             var p = $('#publish');
             json([id],'teleforma.publish_seminar',function(){
-                p.removeClass('icon_delete').addClass('icon_ok')
-                p.html('{% trans " published" %}')
+                p.removeClass('icon_delete').addClass('icon_ok');
+                p.html('{% trans " published" %}');
                 });
          },
         unpublish : function(id){
             var p = $('#publish');
             json([id],'teleforma.unpublish_seminar',function(){
-                p.removeClass('icon_ok').addClass('icon_delete')
-                p.html('{% trans " rejected" %}')
+                p.removeClass('icon_ok').addClass('icon_delete');
+                p.html('{% trans " rejected" %}');
                 });
-         }
+         },
+        {% endif %}
+
+        load : function(id, username){
+            json([id, username],'teleforma.seminar_load', function(){return null;});
+         },
+
+        unload : function(id, username){
+            json_sync([id, username],'teleforma.seminar_unload',function(){return null;});
+         },
         }
 
-$(window).ready(function(){
+var f = seminarUtils;
+
+$(document).ready(function( ){
+      f.load('{{seminar.id}}','{{user.username}}');
+    });
+
+$(window).ready(function( ){
+  {% if user.is_staff %}
     var p = $('#publish');
-    var f = seminarUtils;
     p.unbind('click').click(function() {
         if (p.hasClass('icon_ok')){
             f.unpublish('{{seminar.id}}');
-            return false;
+            return null;
             }
         if (p.hasClass('icon_delete')) {
             f.publish('{{seminar.id}}');
-            return false;
+            return null;
             }
-        }
-        );
-
+        });
+  {% endif %}
+      $(window).bind('beforeunload', function(){
+            f.unload('{{seminar.id}}','{{user.username}}');
+          });
     });
 
 </script>
-{% endif %}
+
 
 {% endblock infra_javascript %}
 
@@ -84,12 +103,12 @@ $(window).ready(function(){
     <div class="course">
 
         <div class="course_title">
-          
+
           <div style="float: right; font-size: 0.9em;">
             {% if seminar_progress == 100 and not user.is_staff %}
             <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
             {% endif %}
-            
+
             {% if user.is_staff %}
             <a id="publish" href="#" class="{% if seminar.status == 2 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if seminar.status == 2 %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
             {% endif %}
@@ -179,7 +198,7 @@ $(window).ready(function(){
       {% endwith %}
      {% endif %}
 
-     {% if seminar_validated and seminar_progress == 100 %}
+     {% if seminar_validated and seminar_progress == 100 and delta_sec >= 0 %}
        <div class="course_content">
         <div class="course_subtitle">
           <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7 : {% trans "download your testimonial" %}</h3>

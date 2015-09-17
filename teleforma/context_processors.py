@@ -46,17 +46,19 @@ def seminar_progress(user, seminar):
     objects = [seminar.docs_1, seminar.docs_2, seminar.medias, seminar.docs_correct]
     for obj in objects:
         for item in obj.all():
-            total += item.weight
-            if user in item.readers.all():
-                progress += item.weight
+            if item.weight:
+                total += item.weight
+                if user in item.readers.all():
+                    progress += item.weight
 
     questions = Question.objects.filter(seminar=seminar, status=3)
     for question in questions:
-        total += question.weight
-        answer = Answer.objects.filter(question=question, status=3, user=user, 
-                                        validated=True, treated=True)
-        if answer:
-            progress += question.weight
+        if question.weight:
+            total += question.weight
+            answer = Answer.objects.filter(question=question, status=3, user=user,
+                                            validated=True, treated=True)
+            if answer:
+                progress += question.weight
 
     if total != 0:
         return int(progress*100/total)

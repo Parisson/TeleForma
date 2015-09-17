@@ -59,6 +59,8 @@ from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
 
+REVISION_DATE_FILTER = datetime.datetime(2014,7,21)
+
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     """
@@ -96,12 +98,17 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-def set_revision(user, seminar):
-    revisions = SeminarRevision.objects.filter(seminar=seminar, user=user)
-    if revisions:
-        revisions[0].save()
-    else:
-        SeminarRevision.objects.create(seminar=seminar, user=user)
+def get_seminar_timer(user, seminar):
+    t = datetime.timedelta()
+    for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER):
+        if r.date_modified:
+            t += r.delta()
+    return t
+
+def get_seminar_delta(user, seminar):
+    timer = get_seminar_timer(user, seminar)
+    delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
+    return delta.total_seconds()
 
 
 class SeminarAccessMixin(object):
@@ -112,6 +119,38 @@ class SeminarAccessMixin(object):
             messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
+
+
+class SeminarRevisionMixin(object):
+
+    @jsonrpc_method('teleforma.seminar_load')
+    def seminar_load(request, id, username):
+        seminar = Seminar.objects.get(id=id)
+        user = User.objects.get(username=username)
+        all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
+        if all_revisions:
+            if not all_revisions[0].seminar == seminar:
+                revisions = all_revisions.filter(seminar=seminar)
+                if not revisions:
+                    r = SeminarRevision(seminar=seminar, user=user)
+                    r.save()
+        else:
+            r = SeminarRevision(seminar=seminar, user=user)
+            r.save()
+
+    @jsonrpc_method('teleforma.seminar_unload')
+    def seminar_unload(request, id, username):
+        seminar = Seminar.objects.get(id=id)
+        user = User.objects.get(username=username)
+        all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
+        if all_revisions:
+            revisions = all_revisions.filter(seminar=seminar)
+            if revisions:
+                r = revisions[0]
+                now = datetime.datetime.now()
+                if (now - r.date) > datetime.timedelta(seconds = 1):
+                    r.date_modified = now
+                    r.save()
 
 
 class SeminarView(SeminarAccessMixin, DetailView):
@@ -128,17 +167,26 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = context['seminar']
         user = self.request.user
+
         progress = seminar_progress(user, seminar)
         validated = seminar_validated(user, seminar)
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
+
+        timer = get_seminar_timer(user, seminar)
+        delta_sec = get_seminar_delta(user, seminar)
+        context['delta_sec'] = delta_sec
+        context['timer'] = str(timer).split('.')[0]
+
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
-        elif progress == 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
+        elif progress == 100 and validated and delta_sec >= 0 and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
-        set_revision(user, seminar)
+        if progress == 100 and validated and delta_sec < 0:
+            messages.info(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you have to work at least the time required for this seminar."))
+
         return context
 
     @jsonrpc_method('teleforma.publish_seminar')
@@ -167,7 +215,7 @@ class SeminarsView(ListView):
         return all_seminars(self.request, date_order=True)['all_seminars'][:10]
 
 
-class AnswerView(SeminarAccessMixin, FormView):
+class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
 
     model = Answer
     form_class = AnswerForm
@@ -220,7 +268,7 @@ class AnswerView(SeminarAccessMixin, FormView):
         context['status'] = self.status
         context['seminar'] = self.question.seminar
         context['seminar_progress'] = seminar_progress(user, self.question.seminar)
-        set_revision(user, self.question.seminar)
+        # set_revision(user, self.question.seminar)
         return context
 
     def get_success_url(self):
@@ -231,7 +279,7 @@ class AnswerView(SeminarAccessMixin, FormView):
         return super(AnswerView, self).dispatch(*args, **kwargs)
 
 
-class SeminarMediaView(SeminarAccessMixin, MediaView):
+class SeminarMediaView(SeminarAccessMixin, SeminarRevisionMixin, MediaView):
 
     template_name = 'teleforma/seminar_media_video.html'
 
@@ -241,7 +289,7 @@ class SeminarMediaView(SeminarAccessMixin, MediaView):
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
         context['seminar_progress'] = seminar_progress(user, seminar)
-        set_revision(user, seminar)
+        # set_revision(user, seminar)
         return context
 
     @method_decorator(login_required)
@@ -256,7 +304,7 @@ class SeminarDocumentView(SeminarAccessMixin, DocumentReadView):
         user = self.request.user
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
-        set_revision(user, seminar)
+        # set_revision(user, seminar)
         return context
 
     @method_decorator(login_required)
@@ -271,7 +319,7 @@ class SeminarDocumentDownloadView(SeminarAccessMixin, DocumentDownloadView):
         user = self.request.user
         seminar = Seminar.objects.get(pk=self.kwargs['id'])
         context['seminar'] = seminar
-        set_revision(user, seminar)
+        # set_revision(user, seminar)
         return context
 
     @method_decorator(login_required)
@@ -534,7 +582,7 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
     context['seminar'] = seminar
     context['form'] = form
     context['seminar_progress'] = seminar_progress(user, seminar)
-    set_revision(user, seminar)
+    # set_revision(user, seminar)
     return render_to_response(template, context, request_context)
 
 
@@ -638,7 +686,7 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     def get_context_data(self, **kwargs):
         context = super(TestimonialView, self).get_context_data(**kwargs)
         seminar = context['seminar']
-        revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user)
+        revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user).order_by('date')
         if revisions:
             context['first_revision'] = revisions[0]
         testimonials = Testimonial.objects.filter(seminar=seminar, user=self.request.user)
@@ -676,7 +724,7 @@ class TestimonialListView(ListView):
         testimonials = Testimonial.objects.filter(user=user)
         for testimonial in testimonials:
             seminar = testimonial.seminar
-            if seminar_validated(user, seminar):
+            if seminar_validated(user, seminar) and get_seminar_delta(user, seminar) >= 0:
                 t.append(testimonial)
         return t
 
