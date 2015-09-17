@@ -60,12 +60,12 @@ class DocumentAdmin(admin.ModelAdmin):
     filter_horizontal = ['course_type']
     search_fields = ['title', 'course__title', 'course__code']
     list_filter = ('period', 'date_added')
-    
+
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = ('period', 'date_added')
-    
+
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['public_id', 'id']
@@ -77,7 +77,7 @@ class SeminarQuestionInline(admin.StackedInline):
 class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
     filter_horizontal = ['professor',]
-    filter_vertical = ['docs_description', 'docs_1', 
+    filter_vertical = ['docs_description', 'docs_1',
                         'docs_2', 'docs_correct', 'medias']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
@@ -91,9 +91,11 @@ class MediaItemMarkerAdmin(admin.ModelAdmin):
 
 
 class TestimonialAdmin(admin.ModelAdmin):
-    search_fields = ['seminar__course__title', 'seminar__sub_title', 
+    search_fields = ['seminar__course__title', 'seminar__sub_title',
                     'user__username', 'user__last_name']
 
+class AnswerAdmin(admin.ModelAdmin):
+    search_fields = ['user__username', 'user__last_name']
 
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)
@@ -116,7 +118,7 @@ admin.site.register(Question)
 admin.site.register(Testimonial, TestimonialAdmin)
 admin.site.register(TestimonialTemplate)
 admin.site.register(SeminarType)
-admin.site.register(Answer)
+admin.site.register(Answer, AnswerAdmin)
 
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)
@@ -128,4 +130,3 @@ admin.site.register(LiveStream)
 
 # TELEMETA
 admin.site.register(MediaItemMarker, MediaItemMarkerAdmin)
-
