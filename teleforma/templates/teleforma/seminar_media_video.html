@@ -156,12 +156,11 @@ $(window).ready(function(){
 
 <script type="text/javascript">
 
-var video = $('#my_video_1');
-var Player = _V_("my_video_1");
-
 // jump to time offset action using Media Fragments
 function jumpToTimeoffset(time) {
     // Player.currentTime(time);
+    var video = $('#my_video_1');
+    var Player = _V_("my_video_1");
     var url = video.attr("src");
     var abs_url = url.split("#")[0];
     video.attr("src", abs_url + '#t=' + String(time));
