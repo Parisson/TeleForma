@@ -126,7 +126,7 @@ $(document).ready(function(){
 {% endblock index %}
 
 {% block module-action-right %}
-{% if media.item.file and media.is_published and media.item.file.path|in_download_formats %}
+{% if media.item.file and media.is_published and media.item.file.path|in_download_formats and user.is_superuser %}
  <div class="module_action">
    <a href="{{ MEDIA_URL }}{{ media.item.transcoded.all.0.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
  </div>
