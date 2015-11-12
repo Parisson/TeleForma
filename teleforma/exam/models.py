@@ -73,12 +73,13 @@ REJECT_REASON = (('unreadable', _('unreadable')),
                 ('unreadable file', _('unreadable file')),
                 ('no file', _('no file')),
                 ('file too large', _('file too large')),
+                ('error retrieving file', _('error retrieving file')),
                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
 
-SCRIPT_MAX_SIZE = 50000000
+SCRIPT_MAX_SIZE = 26214400
 
 
 def sha1sum_file(filename):
@@ -360,6 +361,7 @@ class Script(BaseResource):
                 if (statuses[0].get('error') == None):
                     if statuses[0]['status'] == 'DONE':
                         self.t = 1
+                        self.save()
                         break
                     else:
                         time.sleep(s)
@@ -368,6 +370,8 @@ class Script(BaseResource):
                     print '  Error Message: ' + statuses[0]['error']
                     if 'too large' in statuses[0]['error']:
                         self.auto_reject('file too large')
+                    elif 'retrieving file' in statuses[0]['error']:
+                        self.auto_reject('error retrieving file')
                     break
             else:
                 print 'failed :('

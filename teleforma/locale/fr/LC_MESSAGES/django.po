@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-05 01:43+0200\n"
+"POT-Creation-Date: 2015-08-07 00:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -16,14 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: admin.py:18 exam/models.py:123 exam/models.py:225 models/ae.py:47
+#: admin.py:18 exam/models.py:124 exam/models.py:226 models/ae.py:47
 #: models/core.py:111 models/core.py:136 models/core.py:255 models/core.py:506
 #: models/core.py:552 models/core.py:594 models/crfpa.py:64
 #: models/crfpa.py:129
 msgid "period"
 msgstr "période"
 
-#: exam/models.py:62 exam/models.py:438
+#: exam/models.py:62 exam/models.py:441
 msgid "rejected"
 msgstr "rejetée"
 
@@ -39,7 +39,7 @@ msgstr "soumise"
 msgid "pending"
 msgstr "en attente"
 
-#: exam/models.py:63 exam/models.py:423
+#: exam/models.py:63 exam/models.py:426
 msgid "marked"
 msgstr "corrigée"
 
@@ -95,149 +95,153 @@ msgstr "pas de fichier"
 msgid "file too large"
 msgstr "fichier trop gros"
 
-#: exam/models.py:121 exam/models.py:224 models/core.py:197 models/core.py:257
+#: exam/models.py:76
+msgid "error retrieving file"
+msgstr "erreur de lecture de fichier"
+
+#: exam/models.py:122 exam/models.py:225 models/core.py:197 models/core.py:257
 #: models/core.py:501 models/core.py:590 models/pro.py:45
 msgid "course"
 msgstr "matière"
 
-#: exam/models.py:122 exam/models.py:231
+#: exam/models.py:123 exam/models.py:232
 msgid "corrector"
 msgstr "correcteur"
 
-#: exam/models.py:124
+#: exam/models.py:125
 msgid "value"
 msgstr "valeur"
 
-#: exam/models.py:125 exam/templates/exam/quotas.html:22
+#: exam/models.py:126 exam/templates/exam/quotas.html:22
 msgid "date start"
 msgstr "date de début"
 
-#: exam/models.py:126 exam/templates/exam/quotas.html:23
+#: exam/models.py:127 exam/templates/exam/quotas.html:23
 msgid "date end"
 msgstr "date de fin"
 
-#: exam/models.py:127 exam/models.py:229 models/core.py:399 models/core.py:508
+#: exam/models.py:128 exam/models.py:230 models/core.py:399 models/core.py:508
 #: models/core.py:598
 msgid "type"
 msgstr "type"
 
-#: exam/models.py:130
+#: exam/models.py:131
 msgid "Quota"
 msgstr ""
 
-#: exam/models.py:131 exam/templates/exam/quotas.html:12
+#: exam/models.py:132 exam/templates/exam/quotas.html:12
 msgid "Quotas"
 msgstr ""
 
-#: exam/models.py:180 models/core.py:468 models/pro.py:67
+#: exam/models.py:181 models/core.py:468 models/pro.py:67
 msgid "date added"
 msgstr "date d'ajout"
 
-#: exam/models.py:181 models/core.py:160 models/core.py:469
+#: exam/models.py:182 models/core.py:160 models/core.py:469
 #: models/crfpa.py:212 models/pro.py:68
 msgid "date modified"
 msgstr "date de modification"
 
-#: exam/models.py:182
+#: exam/models.py:183
 msgid "UUID"
 msgstr ""
 
-#: exam/models.py:183
+#: exam/models.py:184
 msgid "MIME type"
 msgstr "Type MIME"
 
-#: exam/models.py:184
+#: exam/models.py:185
 msgid "sha1"
 msgstr ""
 
-#: exam/models.py:200
+#: exam/models.py:201
 msgid "script"
 msgstr "copie"
 
-#: exam/models.py:201
+#: exam/models.py:202
 msgid "Page file"
 msgstr "Fichier de page"
 
-#: exam/models.py:202
+#: exam/models.py:203
 msgid "Image file"
 msgstr "Fichier image"
 
-#: exam/models.py:203 models/pro.py:49 models/pro.py:85
+#: exam/models.py:204 models/pro.py:49 models/pro.py:85
 msgid "rank"
 msgstr "rang"
 
-#: exam/models.py:206
+#: exam/models.py:207
 msgid "Page"
 msgstr "Page"
 
-#: exam/models.py:207
+#: exam/models.py:208
 msgid "Pages"
 msgstr "Pages"
 
-#: exam/models.py:212 models/core.py:93 models/core.py:106 models/core.py:128
+#: exam/models.py:213 models/core.py:93 models/core.py:106 models/core.py:128
 #: models/core.py:141 models/core.py:239 models/core.py:484 models/crfpa.py:47
 #: models/crfpa.py:63
 msgid "name"
 msgstr "nom"
 
-#: exam/models.py:215
+#: exam/models.py:216
 msgid "ScriptType"
 msgstr "Type de copie"
 
-#: exam/models.py:216
+#: exam/models.py:217
 msgid "ScriptTypes"
 msgstr "Types de copies"
 
-#: exam/models.py:227 models/core.py:261 models/core.py:510
+#: exam/models.py:228 models/core.py:261 models/core.py:510
 msgid "session"
 msgstr "séance"
 
-#: exam/models.py:230
+#: exam/models.py:231
 msgid "author"
 msgstr "auteur"
 
-#: exam/models.py:232
+#: exam/models.py:233
 msgid "PDF file"
 msgstr "Fichier PDF"
 
-#: exam/models.py:233
+#: exam/models.py:234
 msgid "Box UUID"
 msgstr ""
 
-#: exam/models.py:234
+#: exam/models.py:235
 msgid "score"
 msgstr "note"
 
-#: exam/models.py:235 models/pro.py:125
+#: exam/models.py:236 models/pro.py:125
 msgid "comments"
 msgstr "commentaires"
 
-#: exam/models.py:236 models/core.py:270 models/pro.py:48 models/pro.py:88
+#: exam/models.py:237 models/core.py:270 models/pro.py:48 models/pro.py:88
 #: models/pro.py:104
 msgid "status"
 msgstr "status"
 
-#: exam/models.py:237
+#: exam/models.py:238
 msgid "reason"
 msgstr "raison"
 
-#: exam/models.py:238
+#: exam/models.py:239
 msgid "date submitted"
 msgstr "date de soumission"
 
-#: exam/models.py:239
+#: exam/models.py:240
 msgid "date marked"
 msgstr "date de correction"
 
-#: exam/models.py:240
+#: exam/models.py:241
 msgid "date rejected"
 msgstr "date de rejet"
 
-#: exam/models.py:241
+#: exam/models.py:242
 msgid "URL"
 msgstr ""
 
-#: exam/models.py:245 exam/templates/exam/inc/script_list.html:14
+#: exam/models.py:246 exam/templates/exam/inc/script_list.html:14
 #: templates/teleforma/course.html:50
 #: templates/teleforma/course_conference.html:40
 #: templates/teleforma/course_conference.html:71
@@ -251,11 +255,11 @@ msgstr ""
 msgid "Session"
 msgstr "Séance"
 
-#: exam/models.py:258 exam/models.py:422 exam/models.py:437
+#: exam/models.py:259 exam/models.py:425 exam/models.py:440
 msgid "Script"
 msgstr "Copie"
 
-#: exam/models.py:259 exam/templates/exam/scripts.html:21
+#: exam/models.py:260 exam/templates/exam/scripts.html:21
 #: templates/telemeta/base.html:116 templates/telemeta/base.html.py:121
 msgid "Scripts"
 msgstr "Copies"
@@ -449,7 +453,7 @@ msgid ""
 "and the same type!"
 msgstr ""
 "Erreur : vous avez déjà soumis une copie du même type pour la même matière "
-"et la même session."
+"et la même séance."
 
 #: exam/views.py:169
 msgid ""

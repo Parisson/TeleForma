@@ -38,6 +38,7 @@ class Command(BaseCommand):
             if not script.file:
                 logger.logger.error('No file!')
             script.submit()
+            logger.logger.info(str(script.id) + ' : ' + script.url)
             logger.logger.info(script.status)
             time.sleep(10)
 

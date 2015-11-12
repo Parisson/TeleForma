@@ -4,6 +4,8 @@ from teleforma.exam.models import *
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+from django.template.defaultfilters import filesizeformat
+
 
 class QuotaAdmin(admin.ModelAdmin):
     model= Quota
@@ -34,10 +36,19 @@ class ScriptAdmin(admin.ModelAdmin):
                     'corrector__last_name', 'course__title', 'course__code']
     readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
     list_filter = ['period', 'course__title', 'session', 'type', 'status']
-    list_display = ['title', 'author_name', 'status']
+    list_display = ['title', 'author_name', 'file_size', 'status']
 
     def author_name(self, instance):
         return instance.author.username
+
+    def file_size(self, instance):
+        if instance.file:
+            if os.path.exists(instance.file.path):
+                return filesizeformat(os.stat(instance.file.path).st_size)
+            else:
+                return '0'
+        else:
+            return '0'
 
 
 admin.site.register(Script, ScriptAdmin)
