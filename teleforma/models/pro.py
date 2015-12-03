@@ -42,7 +42,7 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 from forms_builder.forms.models import Form
 from mezzanine.core.managers import DisplayableManager
-from quiz import Quiz
+from quiz.models import Quiz
 
 class SeminarType(models.Model):
 
@@ -103,10 +103,10 @@ class Seminar(ClonableMixin, Displayable):
                                         blank=True, null=True, on_delete=models.SET_NULL)
     quiz            = models.ForeignKey(Quiz, related_name="seminar",
                                         verbose_name=_('quiz'),
-                                        blank=True, null=True, on_delete=models.SET_NULL))
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
-    date_forced   = models.DateTimeField(_('date forced'))
+    date_forced   = models.DateTimeField(_('date forced'), null=True, blank=True)
 
     objects = DisplayableManager()
 
