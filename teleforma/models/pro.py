@@ -102,9 +102,11 @@ class Seminar(ClonableMixin, Displayable):
                                         verbose_name=_('conference'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
     quiz            = models.ForeignKey(Quiz, related_name="seminar",
-                        verbose_name=_('quiz'), blank=True, null=True, on_delete=models.SET_NULL))
+                                        verbose_name=_('quiz'),
+                                        blank=True, null=True, on_delete=models.SET_NULL))
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
+    date_forced   = models.DateTimeField(_('date forced'))
 
     objects = DisplayableManager()
 
