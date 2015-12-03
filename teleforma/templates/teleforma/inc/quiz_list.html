@@ -1,0 +1,30 @@
+{% load teleforma_tags %}
+{% load i18n %}
+
+<table class="listing" width="100%">
+    <tbody>
+            <tr>
+            <td class="border-top" width="35%">
+            	<a href="{% url teleforma-quiz seminar.id quiz.id %}">{{ quiz.title }}</a></td>
+            <td class="border-top" width="60%">
+            	{% if question|submitted:user and not question|validated:user %}
+            		{% trans "submitted on" %} {{ question|submitted:user }}
+            	{% elif question|saved:user and not question|submitted:user %}
+            		{% trans "saved on" %} {{ question|saved:user }}
+            	{% elif question|submitted:user and question|validated:user %}
+            		{% trans "validated on" %} {{ question|validated:user }}
+            	{% endif %}
+            </td>
+            <td class="border-top" width="5%" align="center">
+            	{% if question|submitted:user and not question|validated:user %}
+            		<img src="{{ STATIC_URL }}teleforma/images/chronometer.png" style="vertical-align:middle" alt="" title="{% trans "Waiting for validation" %}" />
+            	{% elif question|saved:user and not question|submitted:user %}
+            		<img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" alt="" title="{% trans "Saved" %}" />
+            	{% elif question|submitted:user and question|validated:user %}
+            		<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
+            	{% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
