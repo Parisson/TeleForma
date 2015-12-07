@@ -156,12 +156,14 @@ $(window).ready(function( ){
        </div>
       {% endwith %}
 
+      {% if seminar.quiz %}
       <div class="course_content">
        <div class="course_subtitle">
          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2bis : {% trans "Quiz" %}</h3>
        </div>
        {% include "teleforma/inc/quiz_list.html" %}
       </div>
+      {% endif %}
 
      {% with seminar.docs_2 as docs %}
        <div class="course_content">
