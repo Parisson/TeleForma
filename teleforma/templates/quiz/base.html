@@ -8,14 +8,4 @@
 {% block extra_stylesheets %}{% endblock %}
 
 {% block course_content %}
-
-<div class="course_content">
-  <div class="course_subtitle">
-   <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2bis : {% trans "answer to this quiz" %}</h3>
-  </div>
-  <div style="text-align: justify; width: 100%; padding-bottom: 0.5em;">
-    {% include quiz/quiz/quiz_detail.html %}
-  </div>
-</div>
-
 {% endblock course_content %}
