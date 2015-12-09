@@ -5,7 +5,10 @@
     <tbody>
             <tr>
             <td class="border-top" width="35%">
-            	<a href="{% url teleforma-quiz seminar.id quiz.id %}">{{ quiz.title }}</a></td>
+                {% if seminar.quiz %}
+            	<a href="{% url teleforma-quiz seminar.id  seminar.quiz.url %}">{{ seminar.quiz.title }}</a>
+                {% endif %}
+            </td>
             <td class="border-top" width="60%">
             	{% if question|submitted:user and not question|validated:user %}
             		{% trans "submitted on" %} {{ question|submitted:user }}
@@ -25,6 +28,5 @@
             	{% endif %}
             </td>
             </tr>
-        {% endfor %}
     </tbody>
 </table>

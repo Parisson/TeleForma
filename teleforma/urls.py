@@ -104,7 +104,7 @@ urlpatterns = patterns('',
     # Evaluations
     url(r'^forms/', include('forms_builder.forms.urls')),
     url(r'^desk/seminars/(?P<pk>.*)/form/$', evaluation_form_detail, name="teleforma-seminar-form"),
-    url(r'^desk/seminars/(?P<pk>.*)/quiz/$', QuizTake.as_view(), name="teleforma-quiz"),
+    url(r'^desk/seminars/(?P<pk>.*)/quiz/(?P<quiz_name>[\w-]+)/$', QuizTake.as_view(), name="teleforma-quiz"),
 
     # Testimonial
     url(r'^desk/seminars/(?P<pk>.*)/testimonial/$', TestimonialView.as_view(),
