@@ -324,6 +324,9 @@ def integer(value):
 
 @register.filter
 def quiz_progress(progress):
-    return int(progress[0]*100.0/progress[1])
+    if progress:
+        return int(progress[0]*100.0/progress[1])
+    else:
+        return 100
 
 

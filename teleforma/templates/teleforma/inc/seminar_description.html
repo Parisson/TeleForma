@@ -14,7 +14,7 @@
 <dt>{% trans "chronometer" %}</dt><dd>{{ timer }}</dd>
 {% endif %}
 <dt>{% trans "expiry date" %}</dt><dd>{{ seminar.expiry_date }}</dd>
-<dt>{% trans "last modification date" %}</dt><dd>{{ seminar.date_modified }}</dd>
+<dt>{% trans "last modification date" %}</dt><dd>{% if seminar.date_forced %}{{ seminar.date_forced }}{% else %}{{ seminar.date_modified }}{% endif %}</dd>
 {% if user.is_superuser %}
 <dt>{% trans "code" %}</dt><dd>{{ seminar.code }}</dd>
 {% if seminar.media_preview %}
