@@ -1,6 +1,6 @@
 {% extends "quiz/base.html" %}
 {% load i18n%}
-
+{% load teleforma_tags %}
 {% load quiz_tags %}
 
 {% comment %}
@@ -103,7 +103,7 @@
     <li>{% trans "Seminar" %} : {{ seminar_progress }}%
      <div id="progressbar-seminar"></div>
     </li>
-    <li>{% trans "Quiz" %} : {{ progress }}
+    <li>{% trans "Quiz" %} : {{ progress|quiz_progress }}%
      <div id="progressbar-answer"></div>
     </li>
 

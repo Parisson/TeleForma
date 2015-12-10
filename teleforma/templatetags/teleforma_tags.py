@@ -321,3 +321,9 @@ def integer(value):
         return int(value)
     else:
         return 0
+
+@register.filter
+def quiz_progress(progress):
+    return int(progress[0]*100.0/progress[1])
+
+
