@@ -42,7 +42,6 @@ from telemeta.views import *
 import forms_builder.forms.urls
 from jsonrpc import jsonrpc_site
 from longerusername.forms import AuthenticationForm
-from quiz.views import *
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
@@ -104,7 +103,7 @@ urlpatterns = patterns('',
     # Evaluations
     url(r'^forms/', include('forms_builder.forms.urls')),
     url(r'^desk/seminars/(?P<pk>.*)/form/$', evaluation_form_detail, name="teleforma-seminar-form"),
-    url(r'^desk/seminars/(?P<pk>.*)/quiz/(?P<quiz_name>[\w-]+)/$', QuizTake.as_view(), name="teleforma-quiz"),
+    url(r'^desk/seminars/(?P<pk>.*)/quiz/(?P<quiz_name>[\w-]+)/$', QuizQuestionView.as_view(), name="teleforma-quiz"),
 
     # Testimonial
     url(r'^desk/seminars/(?P<pk>.*)/testimonial/$', TestimonialView.as_view(),

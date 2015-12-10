@@ -59,6 +59,8 @@ from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
 
+from quiz.views import QuizTake
+
 REVISION_DATE_FILTER = datetime.datetime(2014,7,21)
 
 
@@ -767,3 +769,20 @@ class TestimonialPaybackView(TestimonialView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TestimonialPaybackView, self).dispatch(*args, **kwargs)
+
+
+class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
+
+    template_name='quiz/question.html'
+
+    def get_user(self):
+        user_id = self.request.user.id
+        return User.objects.get(id=user_id)
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizQuestionView, self).get_context_data(**kwargs)
+        user = self.get_user()
+        seminar = Seminar.objects.get(pk=self.kwargs['pk'])
+        context['seminar'] = seminar
+        context['seminar_progress'] = seminar_progress(user, seminar)
+        return context
