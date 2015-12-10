@@ -30,7 +30,7 @@
 	</div>
   <br>
 	{% include 'correct_answer.html' %}
- 
+
   <br>
 
   {% if previous.previous_question.explanation %}
@@ -88,5 +88,29 @@
 
 {% block result %}
 {% endblock result %}
+
+{% block progress %}
+<div class="module">
+  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progressions" %}</h3>
+ <div>
+ <div class="progress">
+  <ul>
+    <li>{% trans "General" %} : {{ total_progress }}%
+     <div id="progressbar-general"></div>
+    </li>
+    <li>{% trans "Seminar" %} : {{ seminar_progress }}%
+     <div id="progressbar-seminar"></div>
+    </li>
+    <li>{% trans "Answer" %} : {{ seminar_progress }}%
+     <div id="progressbar-answer"></div>
+    </li>
+
+  </ul>
+
+ </div>
+</div>
+</div>
+{% endblock progress %}
+
 
 {% endblock %}
