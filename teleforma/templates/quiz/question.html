@@ -3,8 +3,10 @@
 
 {% load quiz_tags %}
 
+{% comment %}
 {% block title %} {{ quiz.title }} {% endblock %}
 {% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+{% endcomment %}
 
 {% block course_content %}
 
@@ -14,26 +16,29 @@
   <p>{{ previous.previous_question }}</p>
 
   {% if previous.previous_outcome %}
-	<div class="alert alert-success">
+	<div class="alert success">
   {% else %}
-	<div class="alert alert-warning">
+	<div class="alert error">
   {% endif %}
   	  <p><small>
 		{% trans "Your answer was" %} </small>
 		<strong>
-		  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+		  {{ previous.previous_outcome|yesno:"correcte,incorrecte" }}
 		</strong>
 	  </p>
 
 	</div>
-
+  <br>
 	{% include 'correct_answer.html' %}
+ 
+  <br>
 
+  {% if previous.previous_question.explanation %}
 	<p><strong>{% trans "Explanation" %}:</strong></p>
 	<div class="well " style="background-color: #fcf8e3;">
 	  <p>{{ previous.previous_question.explanation }}</p>
 	</div>
-
+  {% endif %}
 	<hr>
 
 {% endif %}
@@ -43,15 +48,18 @@
 {% if question %}
 
 {% if progress %}
-<div style="float: right;">
+<div style="float: left;">
 {% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
 </div>
+<br>
 {% endif %}
 
+{% comment %}
 <p>
   <small class="muted">{% trans "Question category" %}:</small>
   <strong>{{ question.category }}</strong>
 </p>
+{% endcomment %}
 
 <p class="lead">{{ question.content }}</p>
 
@@ -73,10 +81,12 @@
   </ul>
   <input type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
 </form>
-
+<br>
 {% endif %}
 
 <hr>
 
+{% block result %}
+{% endblock result %}
 
 {% endblock %}

@@ -782,7 +782,33 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
     def get_context_data(self, **kwargs):
         context = super(QuizQuestionView, self).get_context_data(**kwargs)
         user = self.get_user()
-        seminar = Seminar.objects.get(pk=self.kwargs['pk'])
-        context['seminar'] = seminar
-        context['seminar_progress'] = seminar_progress(user, seminar)
+        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
+        context['seminar'] = self.seminar
+        context['seminar_progress'] = seminar_progress(user, self.seminar)
         return context
+
+    def final_result_user(self):
+        self.seminar = self.quiz.seminar.all()[0]
+        results = {
+            'quiz': self.quiz,
+            'score': self.sitting.get_current_score,
+            'max_score': self.sitting.get_max_score,
+            'percent': self.sitting.get_percent_correct,
+            'sitting': self.sitting,
+            'previous': self.previous,
+            'seminar': self.seminar,
+        }
+
+        self.sitting.mark_quiz_complete()
+
+        if self.quiz.answers_at_end:
+            results['questions'] =\
+                self.sitting.get_questions(with_answers=True)
+            results['incorrect_questions'] =\
+                self.sitting.get_incorrect_questions
+
+        if self.quiz.exam_paper is False:
+            self.sitting.delete()
+
+        return render(self.request, 'quiz/result.html', results)
+
