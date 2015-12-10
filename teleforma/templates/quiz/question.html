@@ -89,6 +89,8 @@
 {% block result %}
 {% endblock result %}
 
+{% endblock %}
+
 {% block progress %}
 <div class="module">
   <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Progressions" %}</h3>
@@ -101,7 +103,7 @@
     <li>{% trans "Seminar" %} : {{ seminar_progress }}%
      <div id="progressbar-seminar"></div>
     </li>
-    <li>{% trans "Answer" %} : {{ seminar_progress }}%
+    <li>{% trans "Answer" %} : {{ progress }}%
      <div id="progressbar-answer"></div>
     </li>
 
@@ -111,6 +113,3 @@
 </div>
 </div>
 {% endblock progress %}
-
-
-{% endblock %}
