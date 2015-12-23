@@ -87,4 +87,6 @@ class Command(BaseCommand):
                         question_clone.save()
                         # print ("question cloned and assigned:", question_clone)
 
-
+                    clone.quiz = seminar.quiz
+                    clone.save()
+                        
