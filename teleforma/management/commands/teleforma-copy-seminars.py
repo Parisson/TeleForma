@@ -58,6 +58,7 @@ class Command(BaseCommand):
                     clone.date_forced = datetime.datetime(2016, 1, 1)
                     clone.period = to_period
                     clone.status = 1
+                    clone.quiz = seminar.quiz
                     clone.save()
                     log = 'new seminar:' + unicode(clone)
                     logger.logger.info(log)
@@ -87,6 +88,3 @@ class Command(BaseCommand):
                         question_clone.seminar = clone
                         question_clone.save()
                         # print ("question cloned and assigned:", question_clone)
-
-                    clone.quiz = seminar.quiz
-                    clone.save()

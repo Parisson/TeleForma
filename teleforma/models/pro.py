@@ -106,7 +106,7 @@ class Seminar(ClonableMixin, Displayable):
                                         blank=True, null=True, on_delete=models.SET_NULL)
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
-    date_forced   = models.DateTimeField(_('date forced'), null=True, blank=True)
+    date_forced     = models.DateTimeField(_('date forced'), null=True, blank=True)
 
     objects = DisplayableManager()
 
