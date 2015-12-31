@@ -33,7 +33,7 @@ class Command(BaseCommand):
     original_format = 'webm'
     transcoded_formats = ['mp4', 'ogg', 'mp3']
     image_formats = ['png', 'jpg']
-    media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4}
+    media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4, 'sexies': 6}
     site = Site.objects.get_current()
     id_incr = '40'
 
