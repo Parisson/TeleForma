@@ -36,6 +36,7 @@ class Command(BaseCommand):
     media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4, 'sexies': 6}
     site = Site.objects.get_current()
     id_incr = '40'
+    size_limit = 16384
 
     def full_cleanup(self):
         items  = MediaItemTranscoded.objects.all()
@@ -128,11 +129,14 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
                 root_list = root.split(os.sep)
+                path = root + os.sep + filename
+                statinfo = os.stat(path)
 
                 if ext in self.original_format and not 'preview' in root_list \
-                            and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.':
+                        and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.' \
+                        and statinfo.st_size > self.size_limit:
 
-                    print root + os.sep + filename
+                    print path
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
 
