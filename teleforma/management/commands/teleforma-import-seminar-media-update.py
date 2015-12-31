@@ -103,9 +103,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         organization_name = args[0]
         period_name = args[1]
-        log_file = args[2]
-        media_dir = args[3]
-        domain = args[4]
+        media_dir = args[2]
+        domain = args[3]
+        log_file = args[4]
+        
         logger = Logger(log_file)
 
         self.site.domain = domain
