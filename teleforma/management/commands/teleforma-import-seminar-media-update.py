@@ -166,10 +166,10 @@ class Command(BaseCommand):
                         seminar.status = 1
                         seminar.save()
 
-                    # for media in seminar.medias.all():
-                    #     seminar.medias.remove(media)
-                    #     media.item.delete()
-                    #     media.delete()
+                    for media in seminar.medias.all():
+                         seminar.medias.remove(media)
+                         media.item.delete()
+                         media.delete()
 
                     collections = MediaCollection.objects.filter(code=collection_id)
                     if not collections:
@@ -233,6 +233,8 @@ class Command(BaseCommand):
                             if os.path.exists(dir):
                                 r_dir = os.sep.join(dir.split(os.sep)[-7:])
                                 files = os.listdir(dir)
+                                if files and seminar.media_preview:
+                                    seminar.media_preview.delete()
                                 code = item.code + '_preview'
                                 title = item.title + ' (preview)'
                                 item = self.get_item(collection, code)
