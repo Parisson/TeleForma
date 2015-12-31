@@ -166,11 +166,6 @@ class Command(BaseCommand):
                         seminar.status = 1
                         seminar.save()
 
-                    for media in seminar.medias.all():
-                         seminar.medias.remove(media)
-                         media.item.delete()
-                         media.delete()
-
                     collections = MediaCollection.objects.filter(code=collection_id)
                     if not collections:
                         collection = MediaCollection(code=collection_id,title=collection_id)
@@ -181,6 +176,11 @@ class Command(BaseCommand):
                     id = '_'.join([period.name, self.id_incr, collection_id, ext, str(media_rank)])
                     item = self.get_item(collection, id)
                     item.title = name
+
+                    # cleanup old media
+                    for media in seminar.medias.all():
+                        if not period.name in item.code:
+                            seminar.medias.remove(media)
 
                     if not item.file == path:
                         logger.logger.info(seminar.public_url())
