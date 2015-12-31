@@ -179,7 +179,7 @@ class Command(BaseCommand):
 
                     # cleanup old media
                     for media in seminar.medias.all():
-                        if not period.name in item.code:
+                        if not period.name in media.item.code:
                             seminar.medias.remove(media)
 
                     if not item.file == path:
