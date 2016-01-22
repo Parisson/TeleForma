@@ -68,7 +68,8 @@ def seminar_progress(user, seminar):
 def seminar_validated(user, seminar):
     validated = []
     questions = seminar.question.filter(status=3)
-    if questions:
+    quiz_validations = QuizValidation.objects.filter(user=user, quiz=seminar.quiz, validated=True)
+    if questions and quiz_validations:
         for question in questions:
             answers = Answer.objects.filter(question=question, user=user,
                                             validated=True, treated=True)
