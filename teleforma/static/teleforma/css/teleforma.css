@@ -1496,7 +1496,7 @@ input,textarea{
     float: left;
     width: 50%;
     padding: 0em 3em 0em 2em;
-    max-height: 575px;
+    max-height: 800px;
     overflow-y: auto;
     }
 
