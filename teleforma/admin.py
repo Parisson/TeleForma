@@ -130,7 +130,7 @@ class CourseAdmin(admin.ModelAdmin):
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
-    list_filter = ('course', 'period', 'date_added')
+    list_filter = ('course', 'period', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
 
 class MediaAdmin(admin.ModelAdmin):
@@ -139,7 +139,8 @@ class MediaAdmin(admin.ModelAdmin):
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['public_id', 'id', 'course__code', 'course__title', 'course__title', 'session']
+    list_filter = ('course', 'period', 'date_begin', 'session')
+    search_fields = ['public_id', 'id', 'course__code', 'course__title', 'session']
 
 
 admin.site.unregister(User)
