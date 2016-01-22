@@ -420,4 +420,3 @@ class UserCompleteView(TemplateView):
         context = super(UserCompleteView, self).get_context_data(**kwargs)
         context['register_doc_print'] = Document.objects.get(id=settings.TELEFORMA_REGISTER_DEFAULT_DOC_ID)
         return context
-
