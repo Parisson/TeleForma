@@ -56,7 +56,7 @@ class QuotaAdmin(admin.ModelAdmin):
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
     filter_horizontal = ['course_type']
-    search_fields = ['course__code', 'course__title']
+    search_fields = ['course__code', 'course__title', 'type__name']
     list_filter = ('period', 'date_added')
 
 class MediaAdmin(admin.ModelAdmin):
@@ -65,7 +65,7 @@ class MediaAdmin(admin.ModelAdmin):
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
-    search_fields = ['public_id', 'id', 'course__code', 'course__title']
+    search_fields = ['public_id', 'id', 'course__code', 'course__title', 'course__title', 'session']
 
 
 admin.site.unregister(User)
