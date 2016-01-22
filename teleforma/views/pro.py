@@ -789,7 +789,7 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
 
     def final_result_user(self):
         user = self.get_user()
-        self.seminar = self.quiz.seminar.all()[0]
+        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
 
         results = {
             'quiz': self.quiz,
