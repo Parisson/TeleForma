@@ -16,6 +16,7 @@ class QuestionForm(ModelForm):
         model = Question
         # exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
 
+
 class AnswerForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -29,6 +30,3 @@ class AnswerForm(ModelForm):
         model = Answer
         exclude = ['user', 'question', 'validated', 'date_submitted', 'date_validated']
         hidden_fields = ['status']
-
-
-

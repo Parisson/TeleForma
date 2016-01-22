@@ -788,7 +788,10 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
         return context
 
     def final_result_user(self):
+        user = self.get_user()
         self.seminar = self.quiz.seminar.all()[0]
+        validation_form = QuizValidationForm(user=user, seminar=self.seminar)
+
         results = {
             'quiz': self.quiz,
             'score': self.sitting.get_current_score,
@@ -797,6 +800,7 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
             'sitting': self.sitting,
             'previous': self.previous,
             'seminar': self.seminar,
+            'form': validation_form,
         }
 
         self.sitting.mark_quiz_complete()
@@ -810,5 +814,8 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
         if self.quiz.exam_paper is False:
             self.sitting.delete()
 
-        return render(self.request, 'quiz/result.html', results)
+        if self.sitting.get_percent_correct >= self.quiz.pass_mark:
+            validation = QuizValidation(user=user, quiz=self.seminar.quiz, validated=True)
+            validation.save()
 
+        return render(self.request, 'quiz/result.html', results)

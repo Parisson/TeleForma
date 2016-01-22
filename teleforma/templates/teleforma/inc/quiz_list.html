@@ -4,10 +4,15 @@
 <table class="listing" width="100%">
     <tbody>
             <tr>
-            <td class="border-top" width="35%">
+            <td class="border-top" width="95%">
                 {% if seminar.quiz %}
             	<a href="{% url teleforma-quiz seminar.id  seminar.quiz.url %}">{{ seminar.quiz.title }}</a>
                 {% endif %}
+            </td>
+            <td width="5%" align="center">
+            	{% if quiz|quiz_validated:user %}
+            		<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
+            	{% endif %}
             </td>
             </tr>
     </tbody>

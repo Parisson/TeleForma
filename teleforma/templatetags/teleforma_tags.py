@@ -242,6 +242,14 @@ def validated(question, user):
         return ''
 
 @register.filter
+def quiz_validated(quiz, user):
+    validations = QuizValidation.objects.filter(quiz=quiz, user=user, validated=True)
+    if validations:
+        return validations[0].date_validated
+    else:
+        return ''
+
+@register.filter
 def summary(text, N):
     t = text[:N]
     if not ' ' in t:
@@ -328,5 +336,3 @@ def quiz_progress(progress):
         return int(progress[0]*100.0/progress[1])
     else:
         return 100
-
-

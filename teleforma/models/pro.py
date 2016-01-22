@@ -12,7 +12,7 @@
 # "http://www.cecill.info".
 
 # As a counterpart to the access to the source code and  rights to copy,
-# modify and redistribute granted by the license, users are provided only
+# modify and redistribute granted by th e license, users are provided only
 # with a limited warranty  and the software's author,  the holder of the
 # economic rights,  and the successive licensors  have only  limited
 # liability.
@@ -331,3 +331,28 @@ class SeminarRevision(models.Model):
             return self.date_modified - self.date
         else:
             return None
+
+
+class QuizValidation(models.Model):
+
+    user        = models.ForeignKey(User, related_name="quiz_validation", verbose_name=_('user'))
+    quiz        = models.ForeignKey(Quiz, related_name="quiz_validation", verbose_name=_('quiz'),
+                    blank=True, null=True, on_delete=models.SET_NULL)
+    validated   = models.BooleanField(_('validated'))
+    date_validated = models.DateTimeField(_('date validated'), auto_now_add=True, null=True)
+
+    def __unicode__(self):
+        return ' - '.join([unicode(self.quiz), self.user.username, unicode(self.date_submitted)])
+
+    def validate(self):
+        self.validated = True
+        self.save()
+
+    def reject(self):
+        self.validated = False
+        self.save()
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'quiz_validation'
+        verbose_name = _('Quiz validation')
+        ordering = ['-date_validated']
