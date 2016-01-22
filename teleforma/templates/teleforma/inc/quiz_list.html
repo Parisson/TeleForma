@@ -10,7 +10,7 @@
                 {% endif %}
             </td>
             <td width="5%" align="center">
-            	{% if quiz|quiz_validated:user %}
+            	{% if seminar.quiz|quiz_validated:user %}
             		<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
             	{% endif %}
             </td>
