@@ -125,6 +125,7 @@ admin.site.register(Testimonial, TestimonialAdmin)
 admin.site.register(TestimonialTemplate)
 admin.site.register(SeminarType)
 admin.site.register(Answer, AnswerAdmin)
+admin.site.register(QuizValidation)
 
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentType)

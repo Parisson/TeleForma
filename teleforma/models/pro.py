@@ -342,7 +342,7 @@ class QuizValidation(models.Model):
     date_validated = models.DateTimeField(_('date validated'), auto_now_add=True, null=True)
 
     def __unicode__(self):
-        return ' - '.join([unicode(self.quiz), self.user.username, unicode(self.date_submitted)])
+        return ' - '.join([unicode(self.quiz), self.user.username, unicode(self.date_validated)])
 
     def validate(self):
         self.validated = True

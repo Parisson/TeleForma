@@ -790,7 +790,6 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
     def final_result_user(self):
         user = self.get_user()
         self.seminar = self.quiz.seminar.all()[0]
-        validation_form = QuizValidationForm(user=user, seminar=self.seminar)
 
         results = {
             'quiz': self.quiz,
@@ -800,7 +799,6 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
             'sitting': self.sitting,
             'previous': self.previous,
             'seminar': self.seminar,
-            'form': validation_form,
         }
 
         self.sitting.mark_quiz_complete()
