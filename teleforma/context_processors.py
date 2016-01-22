@@ -60,6 +60,12 @@ def seminar_progress(user, seminar):
             if answer:
                 progress += question.weight
 
+    quiz_weight = 3
+    quiz_validations = QuizValidation.objects.filter(user=user, quiz=seminar.quiz, validated=True)
+    total += quiz_weight
+    if quiz_validations:
+        progress += quiz_weight
+
     if total != 0:
         return int(progress*100/total)
     else:
