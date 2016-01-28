@@ -33,7 +33,7 @@ class GroupedMessage(models.Model):
     message = models.TextField(_('message'))
     to_send = models.BooleanField(default=False)
     sent = models.BooleanField(default=False)
-    date_sent = models.DateTimeField(_('date sent'), null=True)
+    date_sent = models.DateTimeField(_('date sent'), null=True, blank=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'grouped_messages'
@@ -42,7 +42,7 @@ class GroupedMessage(models.Model):
         return self.group.name + ' ' + self.subject
 
     def save(self, *args, **kwargs):
-        if self.to_sent:
+        if self.to_send:
             self.send()
             self.sent = True
             self.date_sent = datetime.datetime.now()
