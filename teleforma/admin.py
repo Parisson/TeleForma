@@ -109,11 +109,10 @@ class StudentAdmin(admin.ModelAdmin):
 
     def add_to_new_group(self, request, queryset):
         group_name = request.POST['group_name']
-        users = [student.user for student in queryset]
         group, c = TeleFormaGroup.objects.get_or_create(name=group_name)
-        for user in users:
-            group.users.add(user)
-        self.message_user(request, ("Successfully added group : %s") % (group_name,), messages.SUCCESS)
+        for student in queryset:
+            group.students.add(student)
+        self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor

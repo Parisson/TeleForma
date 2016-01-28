@@ -1,28 +1,27 @@
 
 from teleforma.models import *
-from django.contrib.auth.models import User
 from postman.utils import email_visitor, notify_user
 from postman.models import Message
 
 
-class TeleFormaGroup(models.Model):
+class StudentGroup(models.Model):
     """(Group description)"""
 
     name = models.CharField(_('name'), max_length=255)
-    users = models.ManyToManyField(User, related_name="teleforma_groups", verbose_name=_('users'),
+    students = models.ManyToManyField(Student, related_name="groups", verbose_name=_('students'),
                                         blank=True, null=True)
 
     class Meta(MetaCore):
-        db_table = app_label + '_' + 'groups'
+        db_table = app_label + '_' + 'student_groups'
 
     def __unicode__(self):
-        return _("Group")
+        return _("Student group")
 
 
 class GroupedMessage(models.Model):
     """(GroupedMessage description)"""
 
-    group = models.ForeignKey('TeleFormaGroup', related_name='grouped_messages',
+    group = models.ForeignKey('StudentGroup', related_name='grouped_messages',
                                      verbose_name=_('group'),
                                      blank=True, null=True, on_delete=models.SET_NULL)
     sender = = models.ForeignKey('User', related_name='grouped_messages',
@@ -49,7 +48,8 @@ class GroupedMessage(models.Model):
 
     def send(self):
         site = Site.objects.all()[0]
-        for user in self.group:
+        users = [student.user for student in self.group.students.all()]
+        for user in users:
             mess = Message(sender=self.sender, recipient=user, subject=self.subject[:119], body=self.message)
             mess.moderation_status = 'a'
             mess.save()
