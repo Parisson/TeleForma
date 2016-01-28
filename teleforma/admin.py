@@ -62,6 +62,10 @@ class StudentInline(admin.StackedInline):
 class StudentGroupForm(ActionForm):
     group_name = forms.CharField()
 
+class StudentGroupAdmin(admin.ModelAdmin):
+    model = StudentGroup
+    filter_horizontal = ['students']
+
 class StudentAdmin(admin.ModelAdmin):
 
     model = Student
@@ -170,5 +174,5 @@ admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Professor, ProfessorAdmin)
-admin.site.register(StudentGroup)
+admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
