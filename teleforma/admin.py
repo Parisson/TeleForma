@@ -5,13 +5,14 @@ from teleforma.exam.models import *
 from teleforma.exam.admin import *
 from teleforma.templatetags.teleforma_tags import to_recipients
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.admin import SimpleListFilter
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse
 from django.core import serializers
-
+from django.contrib.admin.helpers import ActionForm
+from django import forms
 
 class PeriodListFilter(SimpleListFilter):
 
@@ -58,6 +59,9 @@ class StudentInline(admin.StackedInline):
     extra = 1
 
 
+class StudentGroupForm(ActionForm):
+    group_name = forms.CharField()
+
 class StudentAdmin(admin.ModelAdmin):
 
     model = Student
@@ -70,6 +74,7 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ['student_name', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
     actions = ['export_xls', 'write_message']
+    action_form = StudentGroupForm
 
     def get_trainings(self, instance):
         return ' - '.join([unicode(training) for training in instance.trainings.all()])
@@ -101,6 +106,14 @@ class StudentAdmin(admin.ModelAdmin):
         users = [student.user for student in queryset]
         return redirect('postman_write', to_recipients(users))
     write_message.short_description = "Envoyer un message"
+
+    def add_to_new_group(self, request, queryset):
+        group_name = request.POST['group_name']
+        users = [student.user for student in queryset]
+        group, c = TeleFormaGroup.objects.get_or_create(name=group_name)
+        for user in users:
+            group.users.add(user)
+        self.message_user(request, ("Successfully added group : %s") % (group_name,), messages.SUCCESS)
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
@@ -162,3 +175,5 @@ admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Professor, ProfessorAdmin)
+admin.site.register(TeleFormaGroup)
+admin.site.register(GroupedMessage)
