@@ -17,7 +17,7 @@ class StudentGroup(models.Model):
         db_table = app_label + '_' + 'student_groups'
 
     def __unicode__(self):
-        return _("Student group")
+        return self.name
 
 
 class GroupedMessage(models.Model):
@@ -39,7 +39,7 @@ class GroupedMessage(models.Model):
         db_table = app_label + '_' + 'grouped_messages'
 
     def __unicode__(self):
-        return _("GroupedMessage")
+        return self.group.name + ' ' + self.subject
 
     def save(self, *args, **kwargs):
         if self.to_sent:

@@ -107,7 +107,7 @@ class StudentAdmin(admin.ModelAdmin):
         group, c = StudentGroup.objects.get_or_create(name=group_name)
         for student in queryset:
             group.students.add(student)
-        self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
+        # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
     add_to_group.short_description = "Ajouter au groupe"
 
 class ProfessorProfileInline(admin.StackedInline):
