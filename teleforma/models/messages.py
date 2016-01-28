@@ -1,5 +1,6 @@
 
 from teleforma.models import *
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from postman.utils import email_visitor, notify_user
 from postman.models import Message
@@ -25,7 +26,7 @@ class GroupedMessage(models.Model):
     group = models.ForeignKey('StudentGroup', related_name='grouped_messages',
                                      verbose_name=_('group'),
                                      blank=True, null=True, on_delete=models.SET_NULL)
-    sender = models.ForeignKey('User', related_name='grouped_messages',
+    sender = models.ForeignKey(User, related_name='grouped_messages',
                                      verbose_name=_('sender'),
                                      blank=True, null=True, on_delete=models.SET_NULL)
     subject = models.CharField(_('subject'), max_length=119)
