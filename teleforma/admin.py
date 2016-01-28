@@ -104,7 +104,7 @@ class StudentAdmin(admin.ModelAdmin):
 
     def add_to_group(self, request, queryset):
         group_name = request.POST['group_name']
-        group, c = TeleFormaGroup.objects.get_or_create(name=group_name)
+        group, c = StudentGroup.objects.get_or_create(name=group_name)
         for student in queryset:
             group.students.add(student)
         self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
