@@ -1,5 +1,6 @@
 
 from teleforma.models import *
+from django.utils.translation import ugettext_lazy as _
 from postman.utils import email_visitor, notify_user
 from postman.models import Message
 
