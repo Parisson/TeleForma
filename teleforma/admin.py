@@ -73,7 +73,7 @@ class StudentAdmin(admin.ModelAdmin):
                     'trainings', 'iej', 'procedure', 'written_speciality']
     list_display = ['student_name', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
-    actions = ['export_xls', 'write_message']
+    actions = ['export_xls', 'write_message', 'add_to_group']
     action_form = StudentGroupForm
 
     def get_trainings(self, instance):
@@ -102,18 +102,13 @@ class StudentAdmin(admin.ModelAdmin):
         return response
     export_xls.short_description = "Export vers XLS"
 
-    def write_message(self, request, queryset):
-        users = [student.user for student in queryset]
-        return redirect('postman_write', to_recipients(users))
-    write_message.short_description = "Envoyer un message"
-
-    def add_to_new_group(self, request, queryset):
+    def add_to_group(self, request, queryset):
         group_name = request.POST['group_name']
         group, c = TeleFormaGroup.objects.get_or_create(name=group_name)
         for student in queryset:
             group.students.add(student)
         self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
-    write_message.short_description = "Ajouter au groupe"
+    add_to_group.short_description = "Ajouter au groupe"
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
