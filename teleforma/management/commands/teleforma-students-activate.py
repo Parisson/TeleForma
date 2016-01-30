@@ -37,12 +37,12 @@ class Command(BaseCommand):
         users = User.objects.all()
 
         for user in users:
-            student = user.student.all()
-            if student:
+            students = user.student.all()
+            if students:
+                student = students[0]
                 if student.is_subscribed and not user.is_active:
                     user.is_active = True
                     user.save()
                     logger.logger.info('init : ' + user.username)
 
         logger.logger.info('############## Done #################')
-        
