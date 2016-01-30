@@ -132,9 +132,11 @@ class Student(Model):
     application_fees = models.BooleanField(_('application fees'), blank=True)
     default_application_fees = 40
     subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
+    promo_code = models.CharField(_('promo code'), blank=True, max_length=100)
     date_subscribed = models.DateTimeField(_('subscription date'), null=True, blank=True)
     is_subscribed = models.BooleanField(_('subscribed'))
     confirmation_sent = models.BooleanField(_('confirmation sent'))
+    level = models.CharField(_('studying level'), blank=True, max_length=100)
 
     def __unicode__(self):
         try:
@@ -190,6 +192,7 @@ class Profile(models.Model):
     init_password   = models.BooleanField(_('Password initialized'))
     wifi_login      = models.CharField(_('WiFi login'), max_length=255, blank=True)
     wifi_pass       = models.CharField(_('WiFi pass'), max_length=255, blank=True)
+    birthday        = models.DateField(_('birthday'), blank=True, null=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
@@ -242,5 +245,3 @@ class OptionalFee(models.Model):
         db_table = app_label + '_' + 'optional_fees'
         verbose_name = _("Optional fees")
         verbose_name_plural = _("Optional fees")
-
-

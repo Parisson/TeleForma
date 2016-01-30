@@ -723,4 +723,3 @@ class HelpView(TemplateView):
 
     def dispatch(self, *args, **kwargs):
         return super(HelpView, self).dispatch(*args, **kwargs)
-""""""
