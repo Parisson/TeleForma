@@ -61,7 +61,7 @@ from forms_builder.forms.signals import form_invalid, form_valid
 
 from quiz.views import QuizTake
 
-REVISION_DATE_FILTER = datetime.datetime(2014,7,21)
+REVISION_DATE_FILTER = datetime.datetime(2015,2,2)
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
