@@ -430,7 +430,7 @@ class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
     pdf_template_name = template_name
 
     def get_context_data(self, **kwargs):
-        context = super RegistrationPDFView, self).get_context_data(**kwargs)
+        context = super(RegistrationPDFView, self).get_context_data(**kwargs)
         user = User.objects.get(username=kwargs['username'])
         student = user.student.all()[0]
         if student.training and not student.trainings:
