@@ -59,7 +59,7 @@ urlpatterns = patterns('',
     url(r'^accounts/register/$', UserAddView.as_view(), name="teleforma-register"),
     url(r'^accounts/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
     url(r'^accounts/register/(?P<pk>.*)/download/$', RegistrationPDFViewDownload.as_view(), name="teleforma-registration-download"),
-    url(r'^accounts/register/(?P<pk>.*)/view/$', RegistrationPDFView.as_view(), name="teleforma-registration-view"),
+    url(r'^accounts/register/(?P<username>.*)/view/$', RegistrationPDFView.as_view(), name="teleforma-registration-view"),
 
     url(r'^captcha/', include('captcha.urls')),
 

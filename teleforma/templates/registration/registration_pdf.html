@@ -42,9 +42,9 @@
       <tr><td class="bold">{% trans "Birthday" %} : </td><td>{{ profile.birthday }}</td></tr>
 
       <tr><td class="bold">{% trans "Level" %} : </td><td>{{ student.level }}</td></tr>
-      <tr><td class="bold">{% trans "IEJ" %} : </td><td>{{ student.eij }}</td></tr>
+      <tr><td class="bold">{% trans "IEJ" %} : </td><td>{{ student.eij.name }}</td></tr>
       <tr><td class="bold">{% trans "Training" %} : </td><td>{{ student.training.name }}</td></tr>
-      <tr><td class="bold">{% trans "Training type" %} : </td><td>{% if student.platform_only %}E-learning{% else %}Présentielle et E-learning{% endif %}</td></tr>
+      <tr><td class="bold">{% trans "Training type" %} : </td><td>{% if student.platform_only %}E-learning seulement{% else %}Présentielle et E-learning{% endif %}</td></tr>
       <tr><td class="bold">{% trans "Matière de procédure" %} : </td><td>{{ student.procedure }}</td></tr>
       <tr><td class="bold">{% trans "Matière juridique de spécialité" %} : </td><td>{{ student.written_speciality }}</td></tr>
       <tr><td class="bold">{% trans "Matière d'oral de spécialité" %} : </td><td>{{ student.oral_speciality }}</td></tr>
@@ -57,6 +57,7 @@
     </table>
 
     <h3>Je certifie avoir pris connaissance des conditions générales d’inscription et du règlement intérieur.</h3>
+    <br>
 
     <table class="table2">
       <tr><td>

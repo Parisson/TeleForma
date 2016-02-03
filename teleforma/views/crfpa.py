@@ -423,16 +423,15 @@ class UserCompleteView(TemplateView):
         return context
 
 
-class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
+class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
 
-    model = User
     template_name = 'registration/registration_pdf.html'
     pdf_template_name = template_name
 
     def get_context_data(self, **kwargs):
         context = super(RegistrationPDFView, self).get_context_data(**kwargs)
-        # user = User.objects.get(pk=kwargs['pk'])
-        user = self.get_object()
+        user = User.objects.get(username=kwargs['username'])
+        # user = self.get_object()
         student = user.student.all()[0]
         if student.training and not student.trainings.all():
             student.trainings.add(student.training)
@@ -448,7 +447,8 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
 
     def get_pdf_filename(self):
         super(RegistrationPDFViewDownload, self).get_pdf_filename()
-        user = self.get_object()
+        user = User.objects.get(username=kwargs['username'])
+        # user = self.get_object()
         student = user.student.all()[0]
         prefix = unicode(_('Registration'))
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
