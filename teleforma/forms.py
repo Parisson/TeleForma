@@ -15,7 +15,7 @@ class ConferenceForm(ModelForm):
 
 class UserForm(ModelForm):
 
-    captcha = CaptchaField(help_text="Merci de recopier le texte présenté")
+    captcha = CaptchaField()
 
     class Meta:
         model = User
