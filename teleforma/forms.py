@@ -65,6 +65,8 @@ class StudentInline(InlineFormSet):
     fields = ['iej', 'period', 'procedure', 'written_speciality', 'oral_speciality',
                 'oral_1', ]
 
-    def __init__(self, *args, **kwargs):
-        super(StudentInline,self ).__init__(*args,**kwargs) # populates the post
-        self.fields['procedure'].queryset = Course.objects.filter(name__in='civil')
+    def get_initial(self):
+        initial = super(StudentInline,self ).get_initial()
+        initial['procedure'].queryset = Course.objects.filter(title__contains='civil')
+        return initial
+        
