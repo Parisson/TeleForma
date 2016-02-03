@@ -56,7 +56,7 @@ class ProfileInline(InlineFormSet):
     model = Profile
     can_delete = False
     exclude = ['wifi_login', 'wifi_pass', 'language', 'expiration_date',
-                    'init_password', 'country']
+                    'init_password']
 
 
 class StudentInline(InlineFormSet):
