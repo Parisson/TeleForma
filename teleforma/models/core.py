@@ -200,6 +200,21 @@ class Course(Model):
         ordering = ['number']
 
 
+class CourseGroup(models.Model):
+    """(CourseGroup description)"""
+
+    name = models.CharField(_('name'), max_length=255)
+    courses = models.ManyToManyField(Course, related_name="course_groups", verbose_name=_('courses'),
+                                        blank=True, null=True)
+
+    def __unicode__(self):
+        return u"CourseGroup"
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'course_group'
+        verbose_name = _('course group')
+
+
 class Professor(Model):
 
     user = models.ForeignKey(User, related_name='professor',

@@ -63,5 +63,9 @@ class StudentInline(InlineFormSet):
 
     model = Student
     can_delete = False
-    fields = ['iej', 'period',]
+    fields = ['iej', 'period', 'procedure', 'written_speciality', 'oral_speciality',
+                'oral_1', ]
 
+    def __init__(self, *args, **kwargs):
+        super(StudentInline,self ).__init__(*args,**kwargs) # populates the post
+        self.fields['procedure'].queryset = Course.objects.filter(name__in='civil')
