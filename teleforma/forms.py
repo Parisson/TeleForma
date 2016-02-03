@@ -50,7 +50,6 @@ class CustomRegistrationForm(RegistrationForm):
             telephone=self.cleaned_data['telephone'])
 
 
-
 class ProfileInline(InlineFormSet):
 
     model = Profile
