@@ -425,17 +425,18 @@ class UserCompleteView(TemplateView):
 
 class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
 
-    context_object_name = "student"
-    model = Student
+    model = User
     template_name = 'teleforma/registration_pdf.html'
     pdf_template_name = template_name
 
     def get_context_data(self, **kwargs):
-        student = self.get_object()
+        context = super RegistrationPDFView, self).get_context_data(**kwargs)
+        user = User.objects.get(username=kwargs['username'])
+        student = user.student.all()[0]
         if student.training and not student.trainings:
             student.trainings.add(student.training)
             student.save()
-        context = super RegistrationPDFView, self).get_context_data(**kwargs)
+        context['student'] = student
         return context
 
 
@@ -445,8 +446,8 @@ class RegistrationPDFViewDowload(RegistrationPDFView):
 
     def get_pdf_filename(self):
         super(RegistrationPDFViewDowload, self).get_pdf_filename()
-        student = self.get_object()
+        student = self.context['student']
         prefix = unicode(_('Registration'))
-        filename = '_'.join([prefix, student.first_name, student.user.last_name])
+        filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
