@@ -50,7 +50,6 @@ class CustomRegistrationForm(RegistrationForm):
             telephone=self.cleaned_data['telephone'])
 
 
-
 class ProfileInline(InlineFormSet):
 
     model = Profile
@@ -63,5 +62,5 @@ class StudentInline(InlineFormSet):
 
     model = Student
     can_delete = False
-    fields = ['iej', 'period', 'procedure', 'written_speciality', 'oral_speciality',
-                'oral_1',  ]
+    fields = ['iej', 'period']
+    
