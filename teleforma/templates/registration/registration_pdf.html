@@ -42,8 +42,7 @@
       <tr><td class="bold">{% trans "Birthday" %} : </td><td>{{ profile.birthday }}</td></tr>
 
       <tr><td class="bold">{% trans "Level" %} : </td><td>{{ student.level }}</td></tr>
-      <tr><td class="bold">{% trans "Level" %} : </td><td>{{ student.eij }}</td></tr>
-
+      <tr><td class="bold">{% trans "IEJ" %} : </td><td>{{ student.eij }}</td></tr>
       <tr><td class="bold">{% trans "Training" %} : </td><td>{{ student.training.name }}</td></tr>
       <tr><td class="bold">{% trans "Training type" %} : </td><td>{% if student.platform_only %}E-learning{% else %}Présentielle et E-learning{% endif %}</td></tr>
       <tr><td class="bold">{% trans "Matière de procédure" %} : </td><td>{{ student.procedure }}</td></tr>
@@ -57,16 +56,17 @@
 
     </table>
 
-    <p>Je certifie avoir pris connaissance des conditions générales d’inscription et du règlement intérieur.</p>
+    <h4>Je certifie avoir pris connaissance des conditions générales d’inscription et du règlement intérieur.</h4>
+    <br><br>
 
     <table class="table2">
       <tr><td>
         &nbsp;
       </td>
       <td>
-          <p>A ...................................., le .......................................</p>
+          <h4>A ...................................., le .......................................</h4>
           <br>
-          <p>Signature</p>
+          <h4>Signature</h4>
       </td></tr>
     </table>
 
