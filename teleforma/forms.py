@@ -64,4 +64,4 @@ class StudentInline(InlineFormSet):
     model = Student
     can_delete = False
     fields = ['level', 'iej', 'period', 'training', 'platform_only', 'procedure',
-                'written_speciality', 'oral_speciality', 'oral_1', 'oral_2']
+                'written_speciality', 'oral_speciality', 'oral_1', 'oral_2', 'promo_code']

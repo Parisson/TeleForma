@@ -405,7 +405,7 @@ class UserAddView(CreateWithInlinesView):
 
     def forms_valid(self, form, inlines):
         messages.info(self.request, _("You have successfully register your account."))
-        user = form.save()
+        self.user = form.save()
         user.username = get_unique_username(user.first_name, user.last_name)
         user.is_active = False
         user.save()
@@ -418,5 +418,35 @@ class UserCompleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(UserCompleteView, self).get_context_data(**kwargs)
-        context['register_doc_print'] = Document.objects.get(id=settings.TELEFORMA_REGISTER_DEFAULT_DOC_ID)
+        # context['register_doc_print'] = Document.objects.get(id=settings.TELEFORMA_REGISTER_DEFAULT_DOC_ID)
+        context['username'] = kwargs['username']
         return context
+
+
+class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
+
+    context_object_name = "student"
+    model = Student
+    template_name = 'teleforma/registration_pdf.html'
+    pdf_template_name = template_name
+
+    def get_context_data(self, **kwargs):
+        student = self.get_object()
+        if student.training and not student.trainings:
+            student.trainings.add(student.training)
+            student.save()
+        context = super RegistrationPDFView, self).get_context_data(**kwargs)
+        return context
+
+
+class RegistrationPDFViewDowload(RegistrationPDFView):
+
+    pdf_filename = 'registration.pdf'
+
+    def get_pdf_filename(self):
+        super(RegistrationPDFViewDowload, self).get_pdf_filename()
+        student = self.get_object()
+        prefix = unicode(_('Registration'))
+        filename = '_'.join([prefix, student.first_name, student.user.last_name])
+        filename += '.pdf'
+        return filename.encode('utf-8')

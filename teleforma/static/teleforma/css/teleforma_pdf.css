@@ -1,0 +1,49 @@
+@page {
+  margin: 1cm;
+  margin-bottom: 2.5cm;
+  @frame footer {
+    -pdf-frame-content: footer;
+    bottom: 1cm;
+    margin-left: 1cm;
+    margin-right: 1cm;
+    height: 1cm;
+  }
+}
+
+#header{   
+    font-size: 4em;
+    color: white;
+    padding-top: 2em;
+    padding-left: 1em;
+    background-color: #3a69b1;
+}
+
+#content {
+    margin: 50px;
+    
+}
+
+.table1 {
+    font-size: 1.5em;
+    padding-top: 2px;
+}
+
+
+.table2 {
+    margin: 0px;
+    font-size: 1em;
+    padding: 0px;
+}
+
+#footer{   
+    font-size: 1em;
+    color: white;
+    padding: 1em;
+    background-color: #3a69b1;
+    text-align: center;
+}
+
+.bold {
+    font-weight: bold;
+	vertical-align: top;
+}

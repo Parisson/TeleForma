@@ -145,6 +145,7 @@ class Student(Model):
     default_application_fees = 40
     subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
     promo_code = models.CharField(_('promo code'), blank=True, max_length=100)
+    date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
     date_subscribed = models.DateTimeField(_('subscription date'), null=True, blank=True)
     is_subscribed = models.BooleanField(_('subscribed'))
     confirmation_sent = models.BooleanField(_('confirmation sent'))
