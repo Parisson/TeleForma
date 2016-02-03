@@ -9,13 +9,17 @@
 <center>
     <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
     <table>
+        <tr><td>
         {{ form }}
         <hr/>
+        </td></tr>
         {% for formset in inlines %}
           {{ formset.management_form }}
           {% for form in formset %}
-           <hr/>
+          <tr><td>
            {{ form }}
+           <hr/>
+          </td></tr>
           {% endfor %}
         {% endfor %}
     </table>
