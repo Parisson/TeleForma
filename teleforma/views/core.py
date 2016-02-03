@@ -75,6 +75,8 @@ from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
 
+from cgi import escape
+from cStringIO import StringIO
 from xhtml2pdf import pisa
 
 try:
