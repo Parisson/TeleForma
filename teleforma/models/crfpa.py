@@ -91,8 +91,15 @@ class Training(Model):
                                         verbose_name=_('magistral'),
                                         blank=True, null=True)
     cost            = models.FloatField(_('cost'), blank=True, null=True)
+    available       = models.BooleanField(_('available'))
 
     def __unicode__(self):
+        if self.name:
+            return self.name
+        else:
+            return self.get_code()
+
+    def get_code(self):
         code = self.code
         if self.period:
             code += ' - ' + self.period.name
@@ -110,6 +117,8 @@ class Student(Model):
     iej             = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     trainings       = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
+                                      blank=True, null=True)
+    training       = models.ForeignKey('Training', related_name='student_training', verbose_name=_('training'),
                                       blank=True, null=True)
     procedure       = models.ForeignKey('Course', related_name="procedure_students",
                                         verbose_name=_('procedure'), help_text="Matière de procédure",

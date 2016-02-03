@@ -15,7 +15,7 @@ class ConferenceForm(ModelForm):
 
 class UserForm(ModelForm):
 
-    captcha = CaptchaField()
+    captcha = CaptchaField(help_text="Merci de recopier le texte présenté")
 
     class Meta:
         model = User
@@ -63,5 +63,5 @@ class StudentInline(InlineFormSet):
 
     model = Student
     can_delete = False
-    fields = ['level', 'iej', 'period', 'platform_only', 'trainings', 'procedure',
+    fields = ['level', 'iej', 'period', 'training', 'platform_only', 'procedure',
                 'written_speciality', 'oral_speciality', 'oral_1', 'oral_2']
