@@ -115,7 +115,7 @@ class Student(Model):
                                         verbose_name=_('procedure'), help_text="Matière de procédure",
                                         blank=True, null=True, limit_choices_to={'procedure': True})
     written_speciality = models.ForeignKey('Course', related_name="written_speciality_students",
-                                        verbose_name=_('written speciality'), help_text="Matière juridique de spécialité"
+                                        verbose_name=_('written speciality'), help_text="Matière juridique de spécialité",
                                         blank=True, null=True, limit_choices_to={'written_speciality': True})
     oral_speciality = models.ForeignKey('Course', related_name="oral_speciality_students",
                                         verbose_name=_('oral speciality'),
