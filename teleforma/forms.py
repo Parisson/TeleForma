@@ -66,7 +66,6 @@ class StudentInline(InlineFormSet):
                 'oral_1', ]
 
     def get_initial(self):
-        initial = super(StudentInline,self ).get_initial()
-        initial['procedure'].queryset = Course.objects.filter(title__contains='civil')
+        initial = super(StudentInline, self).get_initial()
+        initial['procedure'] = Course.objects.filter(title__contains='civil')
         return initial
-        
