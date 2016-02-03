@@ -10,9 +10,11 @@
     <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
     <table>
         {{ form }}
+        <hr>
         {% for formset in inlines %}
           {{ formset.management_form }}
           {% for form in formset %}
+           <hr>
            {{form }}
           {% endfor %}
         {% endfor %}
@@ -22,5 +24,3 @@
     </form>
 </center>
 {% endblock %}
-
-

@@ -131,7 +131,7 @@ class Student(Model):
                                         blank=True, null=True)
     period          = models.ForeignKey('Period', related_name='student', verbose_name=_('period'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    platform_only   = models.BooleanField(_('platform only'), help_text="")
+    platform_only   = models.BooleanField(_('e-learning platform only'))
     application_fees = models.BooleanField(_('application fees'), blank=True)
     default_application_fees = 40
     subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)

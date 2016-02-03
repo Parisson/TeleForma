@@ -1718,7 +1718,7 @@ input,textarea{
 }
 
 .register {
-    width: 40%;
+    width: 80%;
     font-size: 1.1em;
     margin-top: 1em;
     margin-bottom: 4em;
@@ -1733,4 +1733,3 @@ input,textarea{
 .register-error {
     color: #BB0000;
 }
-

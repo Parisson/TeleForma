@@ -8,13 +8,13 @@ from captcha.fields import CaptchaField
 
 
 class ConferenceForm(ModelForm):
+
     class Meta:
         model = Conference
 
 
 class UserForm(ModelForm):
-    # first_name = forms.CharField(_('First name'), required=True)
-    # last_name = forms.CharField(_('Last name'), required=True)
+
     captcha = CaptchaField()
 
     class Meta:
@@ -34,14 +34,6 @@ RegistrationForm.base_fields.update(ProfileForm.base_fields)
 
 
 class StudentForm(ModelForm):
-
-    def has_changed(self):
-        """
-        Overriding this, as the initial data passed to the form does not get noticed,
-        and so does not get saved, unless it actually changes
-        """
-        changed_data = super(ModelForm, self).has_changed()
-        return bool(self.initial or changed_data)
 
     class Meta:
         model = Student
