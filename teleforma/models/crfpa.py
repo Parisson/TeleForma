@@ -40,7 +40,6 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 
 
-# CRFPA
 
 class IEJ(Model):
 
@@ -61,6 +60,7 @@ class Training(Model):
 
     code            = models.CharField(_('code'), max_length=255)
     name            = models.CharField(_('name'), max_length=255, blank=True)
+    description     = models.CharField(_('description'), max_length=512, blank=True)
     period          = models.ForeignKey('Period', related_name='training', verbose_name=_('period'),
                                  blank=True, null=True)
     synthesis_note  = models.ManyToManyField('CourseType', related_name="training_synthesis_note",
@@ -113,17 +113,17 @@ class Student(Model):
                                       blank=True, null=True)
     procedure       = models.ForeignKey('Course', related_name="procedure",
                                         verbose_name=_('procedure'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, limit_choices_to={'procedure': True})
     written_speciality = models.ForeignKey('Course', related_name="written_speciality",
                                         verbose_name=_('written speciality'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, limit_choices_to={'written_speciality': True})
     oral_speciality = models.ForeignKey('Course', related_name="oral_speciality",
                                         verbose_name=_('oral speciality'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, limit_choices_to={'oral_speciality': True})
     oral_1          = models.ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, limit_choices_to={'oral_1': True})
     oral_2          = models.ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, limit_choices_to={'oral_2': True})
     options         = models.ForeignKey('Course', related_name="options", verbose_name=_('options'),
                                         blank=True, null=True)
     period          = models.ForeignKey('Period', related_name='student', verbose_name=_('period'),

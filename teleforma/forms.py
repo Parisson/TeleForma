@@ -37,7 +37,7 @@ class StudentForm(ModelForm):
 
     def has_changed(self):
         """
-        Overriding this, as the initial data passed to the form does not get noticed, 
+        Overriding this, as the initial data passed to the form does not get noticed,
         and so does not get saved, unless it actually changes
         """
         changed_data = super(ModelForm, self).has_changed()
@@ -71,6 +71,6 @@ class StudentInline(InlineFormSet):
 
     model = Student
     can_delete = False
-    fields = ['iej', 'period', 'procedure', 'written_speciality', 'oral_speciality',
+    fields = ['iej', 'period', 'trainings', 'procedure', 'written_speciality', 'oral_speciality',
                 'oral_1', ]
-
+                

@@ -164,6 +164,11 @@ class Course(Model):
     synthesis_note  = models.BooleanField(_('synthesis note'))
     obligation      = models.BooleanField(_('obligations'))
     magistral       = models.BooleanField(_('magistral'))
+    procedure = models.BooleanField(_('procedure'))
+    written_speciality = models.BooleanField(_('written_speciality'))
+    oral_speciality = models.BooleanField(_('oral_speciality'))
+    oral_1 = models.BooleanField(_('oral_1'))
+    oral_2 = models.BooleanField(_('oral_2'))
 
     def __unicode__(self):
         return self.title
