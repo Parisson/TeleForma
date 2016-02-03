@@ -434,9 +434,10 @@ class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
         # user = User.objects.get(pk=kwargs['pk'])
         user = self.get_object()
         student = user.student.all()[0]
-        if student.training and not student.trainings:
+        if student.training and not student.trainings.all():
             student.trainings.add(student.training)
-            student.save()
+        if not student.training and student.trainings.all():
+            student.training = student.trainings.all()[0]
         context['student'] = student
         return context
 
