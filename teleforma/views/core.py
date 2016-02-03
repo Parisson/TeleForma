@@ -43,7 +43,7 @@ from jsonrpc import jsonrpc_method
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
-from django.template import RequestContext, loader
+from django.template import RequestContext, loader, Context
 from django import template
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
