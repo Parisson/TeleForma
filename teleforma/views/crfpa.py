@@ -405,11 +405,10 @@ class UserAddView(CreateWithInlinesView):
 
     def forms_valid(self, form, inlines):
         messages.info(self.request, _("You have successfully register your account."))
-        username = get_unique_username(form.cleaned_data['first_name'], form.cleaned_data['last_name'])
-        form.cleaned_data['username'] = username
-        self.user = form.save()
-        self.user.is_active = False
-        self.user.save()
+        user = form.save()
+        user.username = get_unique_username(user.first_name, user.last_name)
+        user.is_active = False
+        user.save()
         return super(UserAddView, self).forms_valid(form, inlines)
 
 
@@ -432,7 +431,8 @@ class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RegistrationPDFView, self).get_context_data(**kwargs)
-        user = User.objects.get(username=kwargs['username'])
+        user = User.objects.get(pk=kwargs['pk'])
+        user = self.get_object()
         student = user.student.all()[0]
         if student.training and not student.trainings:
             student.trainings.add(student.training)
