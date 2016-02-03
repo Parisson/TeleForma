@@ -111,18 +111,18 @@ class Student(Model):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     trainings       = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
-    procedure       = models.ForeignKey('Course', related_name="procedure",
+    procedure       = models.ForeignKey('Course', related_name="students",
                                         verbose_name=_('procedure'),
                                         blank=True, null=True, limit_choices_to={'procedure': True})
-    written_speciality = models.ForeignKey('Course', related_name="written_speciality",
+    written_speciality = models.ForeignKey('Course', related_name="students",
                                         verbose_name=_('written speciality'),
                                         blank=True, null=True, limit_choices_to={'written_speciality': True})
-    oral_speciality = models.ForeignKey('Course', related_name="oral_speciality",
+    oral_speciality = models.ForeignKey('Course', related_name="students",
                                         verbose_name=_('oral speciality'),
                                         blank=True, null=True, limit_choices_to={'oral_speciality': True})
-    oral_1          = models.ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
+    oral_1          = models.ForeignKey('Course', related_name="students", verbose_name=_('oral 1'),
                                         blank=True, null=True, limit_choices_to={'oral_1': True})
-    oral_2          = models.ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
+    oral_2          = models.ForeignKey('Course', related_name="students", verbose_name=_('oral 2'),
                                         blank=True, null=True, limit_choices_to={'oral_2': True})
     options         = models.ForeignKey('Course', related_name="options", verbose_name=_('options'),
                                         blank=True, null=True)
