@@ -191,6 +191,42 @@ def get_default_period(periods):
         return Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
 
 
+def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
+    """
+    Write into *dest* file object the given html *content*.
+    Return True if the operation completed successfully.
+    """
+    from xhtml2pdf import pisa
+    src = StringIO(content.encode(encoding))
+    pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
+    return not pdf.err
+
+def content_to_response(content, filename=None):
+    """
+    Return a pdf response using given *content*.
+    """
+    response = HttpResponse(content, mimetype='application/pdf')
+    if filename is not None:
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    return response
+
+def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
+    **kwargs):
+    """
+    Render a pdf response using given *request*, *template* and *context*.
+    """
+    if not isinstance(context, Context):
+        context = RequestContext(request, context)
+
+    content = loader.render_to_string(template, context)
+    buffer = StringIO()
+
+    succeed = content_to_pdf(content, buffer, encoding, **kwargs)
+    if succeed:
+        return content_to_response(buffer.getvalue(), filename)
+    return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
+
+
 class HomeRedirectView(View):
 
     def get(self, request):

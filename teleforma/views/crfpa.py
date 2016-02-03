@@ -441,12 +441,12 @@ class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
         return context
 
 
-class RegistrationPDFViewDowload(RegistrationPDFView):
+class RegistrationPDFViewDownload(RegistrationPDFView):
 
     pdf_filename = 'registration.pdf'
 
     def get_pdf_filename(self):
-        super(RegistrationPDFViewDowload, self).get_pdf_filename()
+        super(RegistrationPDFViewDownload, self).get_pdf_filename()
         student = self.context['student']
         prefix = unicode(_('Registration'))
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
