@@ -405,8 +405,9 @@ class UserAddView(CreateWithInlinesView):
 
     def forms_valid(self, form, inlines):
         messages.info(self.request, _("You have successfully register your account."))
+        username = get_unique_username(form.cleaned_data['first_name'], form.cleaned_data['last_name'])
+        form.cleaned_data['username'] = username
         self.user = form.save()
-        self.user.username = get_unique_username(self.user.first_name, self.user.last_name)
         self.user.is_active = False
         self.user.save()
         return super(UserAddView, self).forms_valid(form, inlines)
