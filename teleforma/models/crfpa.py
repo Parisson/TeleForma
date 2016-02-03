@@ -112,17 +112,20 @@ class Student(Model):
     trainings       = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
     procedure       = models.ForeignKey('Course', related_name="procedure_students",
-                                        verbose_name=_('procedure'), help_text="Matière de procédure choisie :",
+                                        verbose_name=_('procedure'), help_text="Matière de procédure",
                                         blank=True, null=True, limit_choices_to={'procedure': True})
     written_speciality = models.ForeignKey('Course', related_name="written_speciality_students",
-                                        verbose_name=_('written speciality'),
+                                        verbose_name=_('written speciality'), help_text="Matière juridique de spécialité"
                                         blank=True, null=True, limit_choices_to={'written_speciality': True})
     oral_speciality = models.ForeignKey('Course', related_name="oral_speciality_students",
                                         verbose_name=_('oral speciality'),
+                                        help_text="Matière d’oral de spécialité (matière incluse dans la formation approfondie, en option pour toutes les autres formations)",
                                         blank=True, null=True, limit_choices_to={'oral_speciality': True})
     oral_1          = models.ForeignKey('Course', related_name="oral_1_students", verbose_name=_('oral 1'),
+                                        help_text="Matière d’oral technique 1",
                                         blank=True, null=True, limit_choices_to={'oral_1': True})
     oral_2          = models.ForeignKey('Course', related_name="oral_2_students", verbose_name=_('oral 2'),
+                                        help_text="Matière d’oral technique 2",
                                         blank=True, null=True, limit_choices_to={'oral_2': True})
     options         = models.ForeignKey('Course', related_name="options_students", verbose_name=_('options'),
                                         blank=True, null=True)
