@@ -112,7 +112,7 @@ class Student(Model):
     trainings       = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
     procedure       = models.ForeignKey('Course', related_name="procedure_students",
-                                        verbose_name=_('procedure'),
+                                        verbose_name=_('procedure'), help_text="Matière de procédure choisie :",
                                         blank=True, null=True, limit_choices_to={'procedure': True})
     written_speciality = models.ForeignKey('Course', related_name="written_speciality_students",
                                         verbose_name=_('written speciality'),
