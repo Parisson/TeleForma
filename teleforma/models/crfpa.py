@@ -131,7 +131,7 @@ class Student(Model):
                                         blank=True, null=True)
     period          = models.ForeignKey('Period', related_name='student', verbose_name=_('period'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    platform_only   = models.BooleanField(_('platform only'))
+    platform_only   = models.BooleanField(_('platform only'), help_text="")
     application_fees = models.BooleanField(_('application fees'), blank=True)
     default_application_fees = 40
     subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
@@ -195,7 +195,7 @@ class Profile(models.Model):
     init_password   = models.BooleanField(_('Password initialized'))
     wifi_login      = models.CharField(_('WiFi login'), max_length=255, blank=True)
     wifi_pass       = models.CharField(_('WiFi pass'), max_length=255, blank=True)
-    birthday        = models.DateField(_('birthday'), blank=True, null=True)
+    birthday        = models.DateField(_('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
