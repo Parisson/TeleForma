@@ -426,7 +426,7 @@ class UserCompleteView(TemplateView):
 class RegistrationPDFView(PDFTemplateResponseMixin, DetailView):
 
     model = User
-    template_name = 'teleforma/registration/registration_pdf.html'
+    template_name = 'registration/registration_pdf.html'
     pdf_template_name = template_name
 
     def get_context_data(self, **kwargs):
