@@ -34,6 +34,15 @@ RegistrationForm.base_fields.update(ProfileForm.base_fields)
 
 
 class StudentForm(ModelForm):
+
+    def has_changed(self):
+        """
+        Overriding this, as the initial data passed to the form does not get noticed, 
+        and so does not get saved, unless it actually changes
+        """
+        changed_data = super(ModelForm, self).has_changed()
+        return bool(self.initial or changed_data)
+
     class Meta:
         model = Student
         exclude = ['user', 'trainings', 'options']
@@ -65,7 +74,3 @@ class StudentInline(InlineFormSet):
     fields = ['iej', 'period', 'procedure', 'written_speciality', 'oral_speciality',
                 'oral_1', ]
 
-    def get_initial(self):
-        initial = super(StudentInline, self).get_initial()
-        initial['procedure'] = Course.objects.filter(title__contains='civil')
-        return initial

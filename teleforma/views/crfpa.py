@@ -411,6 +411,13 @@ class UserAddView(CreateWithInlinesView):
         user.save()
         return super(UserAddView, self).forms_valid(form, inlines)
 
+    #def construct_inlines(self):
+        #Filtra el socio de negocio del detalle por tipo=Proveedor (Aseguradora)
+    #    inlines = super(CreateWithInlinesView, self).construct_inlines()
+    #    student_inline = inlines[1]                        
+    #    student_inline.form.base_fields['procedure'].queryset = Course.objects.filter(title__contains='civil')
+    #    return inlines
+
 
 class UserCompleteView(TemplateView):
 
