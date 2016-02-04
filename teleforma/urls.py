@@ -57,7 +57,7 @@ urlpatterns = patterns('',
         name="teleforma-login"),
     # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
     url(r'^accounts/register/$', UserAddView.as_view(), name="teleforma-register"),
-    url(r'^accounts/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
+    url(r'^accounts/complete/(?P<username>.*)/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
     url(r'^accounts/register/(?P<pk>.*)/download/$', RegistrationPDFViewDownload.as_view(), name="teleforma-registration-download"),
     url(r'^accounts/register/(?P<username>.*)/view/$', RegistrationPDFView.as_view(), name="teleforma-registration-view"),
 
