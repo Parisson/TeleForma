@@ -411,6 +411,7 @@ class UserAddView(CreateWithInlinesView):
         user = form.save()
         user.username = username
         user.last_name = last_name.upper()
+        user.first_name.capitalize()
         user.is_active = False
         user.save()
 
