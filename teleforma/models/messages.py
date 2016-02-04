@@ -47,6 +47,7 @@ class GroupedMessage(models.Model):
         if self.to_send:
             self.send()
             self.sent = True
+            self.to_sent = False
             self.date_sent = datetime.datetime.now()
         super(GroupedMessage, self).save(*args, **kwargs)
 
