@@ -82,11 +82,12 @@ a img { border: none; }
 #content li a {
     padding: .1em 0;
 }
+
 #content h1 {
     color: #000000;
     font-weight: bold;
     display:  inline;
-    font-size: 2em;
+    font-size: 4em;
 }
 #content h3 {
     color: #000000;
