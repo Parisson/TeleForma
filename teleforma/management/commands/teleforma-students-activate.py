@@ -31,16 +31,18 @@ class Command(BaseCommand):
     help = "Activate all user account for subscribed students"
 
     def handle(self, *args, **options):
+        period_name = args[-2]
         log_file = args[-1]
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
         users = User.objects.all()
+        period = Period.objects.get(name=period_name)
 
         for user in users:
             students = user.student.all()
             if students:
                 student = students[0]
-                if student.is_subscribed and not user.is_active:
+                if student.is_subscribed and not user.is_active and student.period == period:
                     user.is_active = True
                     user.save()
                     logger.logger.info('init : ' + user.username)
