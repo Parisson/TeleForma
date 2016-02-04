@@ -36,7 +36,7 @@ class Command(BaseCommand):
         if student.platform_only:
             mode = 'E-learning'
         else:
-            mode = 'Présentielle'
+            mode = 'Presentielle'
         ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
         subject_template = 'teleforma/messages/email_inscr_sujet.txt'
         message_template = 'teleforma/messages/email_inscription.txt'
