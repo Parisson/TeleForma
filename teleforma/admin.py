@@ -59,8 +59,7 @@ class StudentInline(admin.StackedInline):
     extra = 1
 
 class StudentGroupForm(ActionForm):
-    group_name = forms.CharField(_('Group'), blank=True, null=True, max_length=255)
-
+    group_name = forms.CharField(_('Group'), required=False)
 
 class StudentGroupAdmin(admin.ModelAdmin):
     model = StudentGroup
