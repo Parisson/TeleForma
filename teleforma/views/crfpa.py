@@ -457,7 +457,7 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
 
     def get_pdf_filename(self):
         super(RegistrationPDFViewDownload, self).get_pdf_filename()
-        user = User.objects.get(username=kwargs['username'])
+        user = User.objects.get(username=self.kwargs['username'])
         # user = self.get_object()
         student = user.student.all()[0]
         prefix = unicode(_('Registration'))
