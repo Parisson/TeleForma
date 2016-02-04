@@ -7,8 +7,8 @@
 
 {% block content %}
 <center>
-    <h2><span class="error">Tous les champs sont requis</span></h2>
     <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
+    <h2><span class="error">Tous les champs sont requis</span></h2>
     <table>
         {{ form }}
         {% for formset in inlines %}
