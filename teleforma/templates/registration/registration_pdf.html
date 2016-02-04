@@ -27,31 +27,31 @@
 <div id="layout">
 
 <div id="header">
-    <span style="color: yellow; font-weight: bold;">&gt;</span> {% trans "Training registration" %} - {% trans "Training" %} {{ student.period }} 
+    <span style="color: yellow; font-weight: bold;">&gt;</span> {% trans "Inscription" %} CRFPA - {{ student.period }}
 </div>
 
 <div id="content">
 
    <table class="table1">
-      <tr><td class="bold">{% trans "First name" %} : </td><td>{{ student.user.first_name|upper }}</td></tr>
-      <tr><td class="bold">{% trans "Last name" %} : </td><td>{{ student.user.last_name|upper }}</td></tr>
-      <tr><td class="bold">{% trans "Address" %} : </td><td>{{ profile.address }} {{ profile.postal_code }} {{ profile.city }}, {{ profile.country }}</td></tr>
-      <tr><td class="bold">{% trans "Telephone" %} : </td><td>{{ profile.telephone }}</td></tr>
+      <tr><td class="bold">{% trans "Prénom" %} : </td><td>{{ student.user.first_name|upper }}</td></tr>
+      <tr><td class="bold">{% trans "Nom" %} : </td><td>{{ student.user.last_name|upper }}</td></tr>
+      <tr><td class="bold">{% trans "Addresse" %} : </td><td>{{ profile.address }} {{ profile.postal_code }} {{ profile.city }}, {{ profile.country }}</td></tr>
+      <tr><td class="bold">{% trans "Téléphone" %} : </td><td>{{ profile.telephone }}</td></tr>
       <tr><td class="bold">{% trans "E-mail" %} : </td><td>{{ student.user.email }}</td></tr>
-      <tr><td class="bold">{% trans "Username" %} : </td><td>{{ student.user.username }}</td></tr>
-      <tr><td class="bold">{% trans "Birthday" %} : </td><td>{{ profile.birthday }}</td></tr>
+      <tr><td class="bold">{% trans "Nom d'utilisateur" %} : </td><td>{{ student.user.username }}</td></tr>
+      <tr><td class="bold">{% trans "Date d'anniversaire" %} : </td><td>{{ profile.birthday }}</td></tr>
 
-      <tr><td class="bold">{% trans "Level" %} : </td><td>{{ student.level }}</td></tr>
+      <tr><td class="bold">{% trans "Niveau d'étude" %} : </td><td>{{ student.level }}</td></tr>
       <tr><td class="bold">{% trans "IEJ" %} : </td><td>{{ student.iej.name }}</td></tr>
-      <tr><td class="bold">{% trans "Training" %} : </td><td>{{ student.training.name }}</td></tr>
-      <tr><td class="bold">{% trans "Training type" %} : </td><td>{% if student.platform_only %}E-learning seulement{% else %}Présentielle et E-learning{% endif %}</td></tr>
+      <tr><td class="bold">{% trans "Formation" %} : </td><td>{{ student.training.name }}</td></tr>
+      <tr><td class="bold">{% trans "Type de formation" %} : </td><td>{% if student.platform_only %}E-learning seulement{% else %}Présentielle et E-learning{% endif %}</td></tr>
       <tr><td class="bold">{% trans "Matière de procédure" %} : </td><td>{{ student.procedure }}</td></tr>
       <tr><td class="bold">{% trans "Matière juridique de spécialité" %} : </td><td>{{ student.written_speciality }}</td></tr>
       <tr><td class="bold">{% trans "Matière d'oral de spécialité" %} : </td><td>{{ student.oral_speciality }}</td></tr>
       <tr><td class="bold">{% trans "Matière d'oral technique oral_1" %} : </td><td>{{ student.oral_1 }}</td></tr>
       <tr><td class="bold">{% trans "Matière d'oral technique oral_2" %} : </td><td>{{ student.oral_2 }}</td></tr>
 
-      <tr><td class="bold">{% trans "Registration date" %} : </td><td>{{ student.date_registered}}</td></tr>
+      <tr><td class="bold">{% trans "Date de pré-inscription" %} : </td><td>{{ student.date_registered}}</td></tr>
       <tr><td class="bold">{% trans "PROMO code" %} : </td><td>{{ student.promo_code}}</td></tr>
 
     </table>
@@ -61,7 +61,10 @@
 
     <table class="table2">
       <tr><td>
-        &nbsp;
+          LE PRE-BARREAU<br>
+          Service inscription<br>
+          3, rue de Nesle<br>
+          75006 Paris
       </td>
       <td>
           <h3>A ...................................., le .......................................</h3>
