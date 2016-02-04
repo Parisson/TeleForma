@@ -401,18 +401,21 @@ class UserAddView(CreateWithInlinesView):
     template_name = 'registration/registration_form.html'
     form_class = UserForm
     inlines = [ProfileInline, StudentInline]
-    success_url = reverse_lazy('teleforma-register-complete')
 
     def forms_valid(self, form, inlines):
         messages.info(self.request, _("You have successfully register your account."))
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
         username = get_unique_username(first_name, last_name)
+        self.username = username
         form.cleaned_data['username'] = username
         user = form.save()
         user.is_active = False
         user.save()
         return super(UserAddView, self).forms_valid(form, inlines)
+
+    def get_success_url(self):
+        return reverse_lazy('teleforma-register-complete', self.username)
 
 
 class UserCompleteView(TemplateView):
