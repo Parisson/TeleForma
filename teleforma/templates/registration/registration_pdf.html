@@ -27,11 +27,14 @@
 <div id="layout">
 
 <div id="header">
-    <span style="color: yellow; font-weight: bold;">&gt;</span> {% trans "Training registration" %} - {% trans "Training" %} CRFPA {{ student.period }}
+    <span style="color: yellow; font-weight: bold;">&gt;</span> Le Pré-Barreau - Préparation au CRFPA
 </div>
 
 <div id="content">
-
+   <center>
+   <h1>{% trans "Training registration" %} - {% trans "Training" %} {{ student.period }}</h1>
+   <h1>du {{ student.period.date_begin }} au {{ student.period.date_end }}</h1>
+   </center>
    <table class="table1">
       <tr><td class="bold">{% trans "First name" %} : </td><td>{{ student.user.first_name|upper }}</td></tr>
       <tr><td class="bold">{% trans "Last name" %} : </td><td>{{ student.user.last_name|upper }}</td></tr>
