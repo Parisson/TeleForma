@@ -1,8 +1,8 @@
 Bonjour,
 
-Nous avons le plaisir, de vous confirmer la bonne réception de votre inscription à la formation {{ period.name }} {{ mode }} du Pré- Barreau qui se déroulera du {{ period.date_begin }} au {{ period.date_end }}
+Nous avons le plaisir, de vous confirmer la bonne réception de votre inscription à la formation {{ student.period.name }} {{ mode }} du {{ organization }} qui se déroulera du {{ student.period.date_begin }} au {{ student.period.date_end }}.
 
-Votre emploi du temps personnalisé et vos identifiants de connexion à notre plateforme e-learning, vous seront communiqués quelques jours avant le {{ period.date_begin }}.
+Votre emploi du temps personnalisé et vos identifiants de connexion à notre plateforme e-learning, vous seront communiqués quelques jours avant le {{ student.period.date_begin }}.
 
 Vous avez la possibilité de vous rétracter, par lettre recommandée adressée à la Responsable administrative, dans les 10 jours suivants votre inscription. Pendant ce délai, l'intégralité des sommes versées sera remboursée. Passé ce délai, aucun remboursement ne sera, en revanche, possible, sauf cas de force majeure ou motif légitime ou impérieux, dûment justifié.
 

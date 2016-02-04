@@ -33,12 +33,13 @@ class Command(BaseCommand):
 
     def email(self, student):
         site = Site.objects.get_current()
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'usr': student.user}
-        subject_template = 'teleforma/messages/email_inscr_sujet.txt'
         if student.platform_only:
-            message_template = 'teleforma/messages/email_inscr_internautes.txt'
+            mode = 'E-learning'
         else:
-            message_template = 'teleforma/messages/email_inscr_presentiels.txt'
+            mode = 'Présentielle'
+        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
+        subject_template = 'teleforma/messages/email_inscr_sujet.txt'
+        message_template = 'teleforma/messages/email_inscription.txt'
         subject = render_to_string(subject_template, ctx_dict)
         subject = ''.join(subject.splitlines())
         message = render_to_string(message_template, ctx_dict)
@@ -46,14 +47,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         log_file = args[-1]
+        period_name = args[-2]
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
+        period = Period.objects.get(name=period_name)
         students = Student.objects.all()
         translation.activate(self.language_code)
 
         for student in students:
-            if student.is_subscribed and not student.confirmation_sent and not student.user.is_active and student.user.email:
+            if student.is_subscribed and not student.confirmation_sent and not student.user.is_active and student.user.email and student.period == period:
                 self.email(student)
                 student.confirmation_sent = True
                 student.save()
