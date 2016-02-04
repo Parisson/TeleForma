@@ -408,8 +408,9 @@ class UserAddView(CreateWithInlinesView):
         last_name = form.cleaned_data['last_name']
         username = get_unique_username(first_name, last_name)
         self.username = username
-        form.cleaned_data['username'] = username
+        # form.cleaned_data['username'] = username
         user = form.save()
+        user.username = username
         user.is_active = False
         user.save()
         return super(UserAddView, self).forms_valid(form, inlines)
