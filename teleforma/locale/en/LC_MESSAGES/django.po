@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 10:10+0100\n"
+"POT-Creation-Date: 2016-02-04 10:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -371,7 +371,7 @@ msgstr "Nouvelle note"
 
 #: exam/templates/exam/score_form.html:60
 #: exam/templates/exam/script_form.html:78
-#: templates/registration/registration_form.html:21
+#: templates/registration/registration_form.html:22
 msgid "Submit"
 msgstr "Soumettre"
 
@@ -710,11 +710,11 @@ msgstr "spécialité écrit"
 msgid "oral speciality"
 msgstr "spécialité orale"
 
-#: models/crfpa.py:82 models/crfpa.py:133
+#: models/crfpa.py:82
 msgid "oral 1"
 msgstr ""
 
-#: models/crfpa.py:85 models/crfpa.py:136
+#: models/crfpa.py:85
 msgid "oral 2"
 msgstr ""
 
@@ -737,6 +737,14 @@ msgstr "formation"
 #: models/crfpa.py:119
 msgid "trainings"
 msgstr "formations"
+
+#: models/crfpa.py:133
+msgid "oral 1 (option)"
+msgstr ""
+
+#: models/crfpa.py:136
+msgid "oral 2 (option)"
+msgstr ""
 
 #: models/crfpa.py:143
 #, fuzzy
@@ -884,30 +892,40 @@ msgstr "Frais optionnels"
 msgid "students"
 msgstr "étudiant"
 
-#: models/messages.py:27
+#: models/messages.py:18
+#, fuzzy
+#| msgid "Student"
+msgid "Student group"
+msgstr "Etudiant"
+
+#: models/messages.py:28
 msgid "group"
 msgstr ""
 
-#: models/messages.py:30
+#: models/messages.py:31
 msgid "sender"
 msgstr ""
 
-#: models/messages.py:32
+#: models/messages.py:33
 #, fuzzy
 #| msgid "Reject"
 msgid "subject"
 msgstr "Rejeter"
 
-#: models/messages.py:33
+#: models/messages.py:34
 #, fuzzy
 msgid "message"
 msgstr "Messages"
 
-#: models/messages.py:36
+#: models/messages.py:37
 #, fuzzy
 #| msgid "date end"
 msgid "date sent"
 msgstr "date de fin"
+
+#: models/messages.py:41 templates/telemeta/users.html:55
+msgid "Grouped message"
+msgstr "Message groupé"
 
 #: models/pro.py:47
 msgid "price"
@@ -1460,7 +1478,7 @@ msgid ""
 msgstr ""
 
 #: templates/registration/registration_complete.html:6
-#: templates/registration/registration_pdf.html:13 views/crfpa.py:469
+#: templates/registration/registration_pdf.html:13 views/crfpa.py:471
 msgid "Registration"
 msgstr "Inscription"
 
@@ -1965,10 +1983,6 @@ msgstr ""
 msgid "Courses"
 msgstr "Matières"
 
-#: templates/telemeta/users.html:55
-msgid "Grouped message"
-msgstr "Message groupé"
-
 #: templates/telemeta/users.html:74
 msgid "No users"
 msgstr "Pas d'utilisateurs"
@@ -2015,6 +2029,11 @@ msgstr "Une nouvelle conférence en direct a commencé : "
 #: views/crfpa.py:406
 msgid "You have successfully register your account."
 msgstr ""
+
+#, fuzzy
+#~| msgid "Grouped message"
+#~ msgid "Group messages"
+#~ msgstr "Message groupé"
 
 #~ msgid "Testimonials"
 #~ msgstr "Attestations"

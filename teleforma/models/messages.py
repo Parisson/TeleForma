@@ -15,6 +15,7 @@ class StudentGroup(models.Model):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student_groups'
+        verbose_name = _('Student group')
 
     def __unicode__(self):
         return self.name
@@ -37,6 +38,7 @@ class GroupedMessage(models.Model):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'grouped_messages'
+        verbose_name = _('Grouped message')
 
     def __unicode__(self):
         return self.group.name + ' ' + self.subject
