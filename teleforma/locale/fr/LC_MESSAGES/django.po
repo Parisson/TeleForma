@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 10:37+0100\n"
+"POT-Creation-Date: 2016-02-04 10:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -881,8 +881,6 @@ msgid "students"
 msgstr "étudiants"
 
 #: models/messages.py:18
-#, fuzzy
-#| msgid "Student"
 msgid "Student group"
 msgstr "Etudiant groupe"
 
