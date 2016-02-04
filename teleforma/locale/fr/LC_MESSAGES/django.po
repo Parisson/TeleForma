@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 02:30+0100\n"
+"POT-Creation-Date: 2016-02-04 02:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -763,10 +763,8 @@ msgid "confirmation sent"
 msgstr "confirmation envoyée"
 
 #: models/crfpa.py:152
-#, fuzzy
-#| msgid "streaming server"
 msgid "studying level"
-msgstr "serveur de diffusion"
+msgstr "niveau d'étude"
 
 #: models/crfpa.py:189
 msgid "Student"
@@ -820,7 +818,7 @@ msgstr ""
 
 #: models/crfpa.py:208
 msgid "birthday"
-msgstr ""
+msgstr "date de naissance"
 
 #: models/crfpa.py:212
 msgid "profile"
