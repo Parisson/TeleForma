@@ -36,7 +36,7 @@
    <h1>du {{ student.period.date_begin }} au {{ student.period.date_end }}</h1>
    </center>
    <table class="table1">
-      <tr><td class="bold">{% trans "First name" %} : </td><td>{{ student.user.first_name|upper }}</td></tr>
+      <tr><td class="bold">{% trans "First name" %} : </td><td>{{ student.user.first_name }}</td></tr>
       <tr><td class="bold">{% trans "Last name" %} : </td><td>{{ student.user.last_name|upper }}</td></tr>
       <tr><td class="bold">{% trans "Address" %} : </td><td>{{ profile.address }} {{ profile.postal_code }} {{ profile.city }}, {{ profile.country }}</td></tr>
       <tr><td class="bold">{% trans "Telephone" %} : </td><td>{{ profile.telephone }}</td></tr>
