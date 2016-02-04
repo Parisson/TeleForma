@@ -10,17 +10,17 @@
   }
 }
 
-#header{   
-    font-size: 4em;
+#header{
+    font-size: 3em;
     color: white;
-    padding-top: 2em;
+    padding-top: 1em;
     padding-left: 1em;
     background-color: #3a69b1;
 }
 
 #content {
     margin: 50px;
-    
+
 }
 
 .table1 {
@@ -35,7 +35,7 @@
     padding: 0px;
 }
 
-#footer{   
+#footer{
     font-size: 1em;
     color: white;
     padding: 1em;
