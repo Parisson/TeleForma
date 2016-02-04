@@ -19,7 +19,7 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['last_name', 'first_name', 'email', ]
+        fields = ['first_name', 'last_name', 'email', ]
 
 RegistrationForm.base_fields.update(UserForm.base_fields)
 
