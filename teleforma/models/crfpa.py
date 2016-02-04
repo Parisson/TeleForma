@@ -130,10 +130,10 @@ class Student(Model):
                                         verbose_name=_('oral speciality'),
                                         help_text="Matière d’oral de spécialité (matière incluse dans la formation approfondie, en option pour toutes les autres formations)",
                                         blank=True, null=True, limit_choices_to={'oral_speciality': True})
-    oral_1          = models.ForeignKey('Course', related_name="oral_1_students", verbose_name=_('oral 1'),
+    oral_1          = models.ForeignKey('Course', related_name="oral_1_students", verbose_name=_('oral 1 (option)'),
                                         help_text="Matière d’oral technique 1 (en option)",
                                         blank=True, null=True, limit_choices_to={'oral_1': True})
-    oral_2          = models.ForeignKey('Course', related_name="oral_2_students", verbose_name=_('oral 2'),
+    oral_2          = models.ForeignKey('Course', related_name="oral_2_students", verbose_name=_('oral 2 (option)'),
                                         help_text="Matière d’oral technique 2 (en option)",
                                         blank=True, null=True, limit_choices_to={'oral_2': True})
     options         = models.ForeignKey('Course', related_name="options_students", verbose_name=_('options'),
