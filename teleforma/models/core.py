@@ -127,8 +127,8 @@ class Period(Model):
 
     name            = models.CharField(_('name'), max_length=255)
     description     = models.CharField(_('description'), max_length=255, blank=True)
-    date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
-    date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
+    date_begin      = models.DateField(_('begin date'), null=True, blank=True)
+    date_end        = models.DateField(_('end date'), null=True, blank=True)
 
     def __unicode__(self):
         return self.name
