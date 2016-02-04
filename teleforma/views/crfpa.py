@@ -435,6 +435,9 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
     template_name = 'registration/registration_pdf.html'
     pdf_template_name = template_name
 
+    def is_pdf(self):
+        return True
+
     def get_context_data(self, **kwargs):
         context = super(RegistrationPDFView, self).get_context_data(**kwargs)
         user = User.objects.get(username=kwargs['username'])
