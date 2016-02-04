@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 01:52+0100\n"
+"POT-Creation-Date: 2016-02-04 02:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -358,7 +358,6 @@ msgid "Value"
 msgstr "Valeur"
 
 #: exam/templates/exam/quotas.html:27
-#: templates/registration/registration_pdf.html:44
 msgid "Level"
 msgstr "Niveau"
 
@@ -693,7 +692,7 @@ msgid "file"
 msgstr "fichier"
 
 #: models/crfpa.py:54 models/crfpa.py:55
-#: templates/registration/registration_pdf.html:45
+#: templates/registration/registration_pdf.html:48
 #: templates/teleforma/annals.html:31 templates/telemeta/inc/user_list.html:21
 #: templates/telemeta/profile_detail.html:64 templates/telemeta/users.html:28
 msgid "IEJ"
@@ -785,7 +784,7 @@ msgstr "Etudiant"
 msgid "Students"
 msgstr "Etudiants"
 
-#: models/crfpa.py:198 templates/registration/registration_pdf.html:38
+#: models/crfpa.py:198 templates/registration/registration_pdf.html:41
 #: templates/telemeta/profile_detail.html:77
 msgid "Address"
 msgstr "Adresse"
@@ -806,7 +805,7 @@ msgstr "Pays"
 msgid "Language"
 msgstr "Langue"
 
-#: models/crfpa.py:203 templates/registration/registration_pdf.html:39
+#: models/crfpa.py:203 templates/registration/registration_pdf.html:42
 #: templates/telemeta/profile_detail.html:78
 msgid "Telephone"
 msgstr "Téléphone"
@@ -1475,70 +1474,77 @@ msgstr "Télécharger"
 msgid "Pre-registration"
 msgstr "Inscription"
 
-#: templates/registration/registration_pdf.html:30
+#: templates/registration/registration_pdf.html:35
 #, fuzzy
 #| msgid "Registration"
 msgid "Training registration"
 msgstr "Inscription"
 
-#: templates/registration/registration_pdf.html:36
+#: templates/registration/registration_pdf.html:35
+#: templates/registration/registration_pdf.html:49
+msgid "Training"
+msgstr "Formation"
+
+#: templates/registration/registration_pdf.html:39
 msgid "First name"
 msgstr "Prénom"
 
-#: templates/registration/registration_pdf.html:37
+#: templates/registration/registration_pdf.html:40
 msgid "Last name"
 msgstr "Nom"
 
-#: templates/registration/registration_pdf.html:40
+#: templates/registration/registration_pdf.html:43
 msgid "E-mail"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:41
+#: templates/registration/registration_pdf.html:44
 #: templates/telemeta/profile_detail.html:61
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: templates/registration/registration_pdf.html:42
+#: templates/registration/registration_pdf.html:45
 msgid "Birthday"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:46
-msgid "Training"
-msgstr "Formation"
-
 #: templates/registration/registration_pdf.html:47
+#, fuzzy
+#| msgid "streaming server"
+msgid "Studying level"
+msgstr "serveur de diffusion"
+
+#: templates/registration/registration_pdf.html:50
 #, fuzzy
 #| msgid "Training"
 msgid "Training type"
 msgstr "Formation"
 
-#: templates/registration/registration_pdf.html:48
+#: templates/registration/registration_pdf.html:51
 msgid "Matière de procédure"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:49
+#: templates/registration/registration_pdf.html:52
 msgid "Matière juridique de spécialité"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:50
+#: templates/registration/registration_pdf.html:53
 msgid "Matière d'oral de spécialité"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:51
+#: templates/registration/registration_pdf.html:54
 msgid "Matière d'oral technique oral_1"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:52
+#: templates/registration/registration_pdf.html:55
 msgid "Matière d'oral technique oral_2"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:54
+#: templates/registration/registration_pdf.html:57
 #, fuzzy
 #| msgid "Registration"
 msgid "Registration date"
 msgstr "Inscription"
 
-#: templates/registration/registration_pdf.html:55
+#: templates/registration/registration_pdf.html:58
 msgid "PROMO code"
 msgstr ""
 
