@@ -410,9 +410,11 @@ class UserAddView(CreateWithInlinesView):
         self.username = username
         user = form.save()
         user.username = username
-        user.last_name = last_name.uuper()
+        user.last_name = last_name.upper()
         user.is_active = False
         user.save()
+
+        # period = inlines[1].cleaned_data['period']
         return super(UserAddView, self).forms_valid(form, inlines)
 
     def get_success_url(self):
