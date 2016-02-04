@@ -51,10 +51,10 @@ class Command(BaseCommand):
 
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
-            student = user.student.all()
-            professor = user.professor.all()
+            students = user.student.all()
+            professors = user.professor.all()
             quotas = user.quotas.all()
-            if student or professor or quotas:
+            if students or professors or quotas:
                 if profile and user.is_active:
                     if not profile.init_password and user.email:
                         self.init_password_email(user)
