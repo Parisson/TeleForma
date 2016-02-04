@@ -23,6 +23,13 @@
 
 }
 
+#content h1 {
+    color: #000000;
+    font-weight: bold;
+    display:  inline;
+    font-size: 2em;
+}
+
 .table1 {
     font-size: 1.5em;
     padding-top: 2px;

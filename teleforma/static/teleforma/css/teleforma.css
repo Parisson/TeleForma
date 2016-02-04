@@ -71,14 +71,17 @@ a img { border: none; }
     font-size: 0.8em;
     clear: both;
 }
+
 #content ul ul {
     font-size: 1.1em;
     padding-left: 0;
 }
+
 #content li {
     padding: .2em;
     padding-left: 0;
 }
+
 #content li a {
     padding: .1em 0;
 }
@@ -87,7 +90,7 @@ a img { border: none; }
     color: #000000;
     font-weight: bold;
     display:  inline;
-    font-size: 4em;
+    font-size: 1.2em;
 }
 #content h3 {
     color: #000000;
