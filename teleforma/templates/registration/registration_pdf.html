@@ -35,7 +35,7 @@
    <table class="table1">
       <tr><td class="bold">{% trans "First name" %} : </td><td>{{ student.user.first_name|upper }}</td></tr>
       <tr><td class="bold">{% trans "Last name" %} : </td><td>{{ student.user.last_name|upper }}</td></tr>
-      <tr><td class="bold">{% trans "Address" %} : </td><td>{{ profile.address }} {{ profile.postal_code }} {{ profile.city }} {{ profile.country }}</td></tr>
+      <tr><td class="bold">{% trans "Address" %} : </td><td>{{ profile.address }} {{ profile.postal_code }} {{ profile.city }}, {{ profile.country }}</td></tr>
       <tr><td class="bold">{% trans "Telephone" %} : </td><td>{{ profile.telephone }}</td></tr>
       <tr><td class="bold">{% trans "E-mail" %} : </td><td>{{ student.user.email }}</td></tr>
       <tr><td class="bold">{% trans "Username" %} : </td><td>{{ student.user.username }}</td></tr>
