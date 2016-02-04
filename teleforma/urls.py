@@ -51,7 +51,6 @@ media = MediaView()
 
 urlpatterns = patterns('',
 
-
     # login
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
         name="teleforma-login"),
@@ -130,6 +129,4 @@ urlpatterns = patterns('',
 
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
-
-
 )
