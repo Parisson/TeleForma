@@ -416,7 +416,7 @@ class UserAddView(CreateWithInlinesView):
         return super(UserAddView, self).forms_valid(form, inlines)
 
     def get_success_url(self):
-        return reverse_lazy('teleforma-register-complete', {'username': self.username})
+        return reverse_lazy('teleforma-register-complete', kwargs={'username':self.username})
 
 
 class UserCompleteView(TemplateView):
