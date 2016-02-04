@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 02:33+0100\n"
+"POT-Creation-Date: 2016-02-04 10:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -22,6 +22,10 @@ msgstr ""
 #: models/crfpa.py:141
 msgid "period"
 msgstr "période"
+
+#: admin.py:62
+msgid "Group"
+msgstr ""
 
 #: exam/models.py:62 exam/models.py:442
 msgid "rejected"
@@ -732,7 +736,7 @@ msgstr "formations"
 
 #: models/crfpa.py:143
 msgid "e-learning platform only"
-msgstr "plateforme e-learning seulement"
+msgstr "formation e-learning uniquement"
 
 #: models/crfpa.py:144
 msgid "application fees"
@@ -1444,7 +1448,7 @@ msgid ""
 msgstr ""
 
 #: templates/registration/registration_complete.html:6
-#: templates/registration/registration_pdf.html:13 views/crfpa.py:463
+#: templates/registration/registration_pdf.html:13 views/crfpa.py:469
 msgid "Registration"
 msgstr "Inscription"
 
