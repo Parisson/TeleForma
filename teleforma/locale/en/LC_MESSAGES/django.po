@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 10:51+0100\n"
+"POT-Creation-Date: 2016-02-04 12:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -917,6 +917,18 @@ msgstr "Rejeter"
 msgid "message"
 msgstr "Messages"
 
+#: models/messages.py:35
+#, fuzzy
+#| msgid "date end"
+msgid "to send"
+msgstr "date de fin"
+
+#: models/messages.py:36
+#, fuzzy
+#| msgid "date end"
+msgid "sent"
+msgstr "date de fin"
+
 #: models/messages.py:37
 #, fuzzy
 #| msgid "date end"
@@ -1478,7 +1490,7 @@ msgid ""
 msgstr ""
 
 #: templates/registration/registration_complete.html:6
-#: templates/registration/registration_pdf.html:13 views/crfpa.py:471
+#: templates/registration/registration_pdf.html:13 views/crfpa.py:475
 msgid "Registration"
 msgstr "Inscription"
 

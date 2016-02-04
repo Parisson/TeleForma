@@ -32,8 +32,8 @@ class GroupedMessage(models.Model):
                                      blank=True, null=True, on_delete=models.SET_NULL)
     subject = models.CharField(_('subject'), max_length=119)
     message = models.TextField(_('message'))
-    to_send = models.BooleanField(default=False)
-    sent = models.BooleanField(default=False)
+    to_send = models.BooleanField(_('to send'), default=False)
+    sent = models.BooleanField(_('sent'), default=False)
     date_sent = models.DateTimeField(_('date sent'), null=True, blank=True)
 
     class Meta(MetaCore):

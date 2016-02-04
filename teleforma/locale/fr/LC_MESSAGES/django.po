@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 10:51+0100\n"
+"POT-Creation-Date: 2016-02-04 12:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -421,7 +421,7 @@ msgstr "Note"
 #: templates/postman/base_write.html:63
 #: templates/teleforma/inc/chat_room.html:13
 msgid "Send"
-msgstr "Envoyer"
+msgstr "Envoyé"
 
 #: exam/templates/exam/script_form.html:32 exam/templates/exam/scripts.html:36
 msgid "New script"
@@ -890,7 +890,7 @@ msgstr "group"
 
 #: models/messages.py:31
 msgid "sender"
-msgstr ""
+msgstr "expéditeur"
 
 #: models/messages.py:33
 #, fuzzy
@@ -899,9 +899,16 @@ msgid "subject"
 msgstr "Rejeter"
 
 #: models/messages.py:34
-#, fuzzy
 msgid "message"
-msgstr "Messages"
+msgstr "message"
+
+#: models/messages.py:35
+msgid "to send"
+msgstr "à envoyer"
+
+#: models/messages.py:36
+msgid "sent"
+msgstr "envoyé"
 
 #: models/messages.py:37
 #, fuzzy
@@ -1464,7 +1471,7 @@ msgid ""
 msgstr ""
 
 #: templates/registration/registration_complete.html:6
-#: templates/registration/registration_pdf.html:13 views/crfpa.py:471
+#: templates/registration/registration_pdf.html:13 views/crfpa.py:475
 msgid "Registration"
 msgstr "Inscription"
 

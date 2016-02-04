@@ -450,7 +450,11 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
             student.trainings.add(student.training)
         if not student.training and student.trainings.all():
             student.training = student.trainings.all()[0]
-            student.save()
+        if not student.oral_1:
+            student.oral_1 = Course.object.get(code='X')
+        if not student.oral_2:
+            student.oral_2 = Course.object.get(code='X')
+        student.save()
         profile = user.profile.all()[0]
         if profile.city:
             profile.city = profile.city.upper()
