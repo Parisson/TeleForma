@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 12:16+0100\n"
+"POT-Creation-Date: 2016-02-04 13:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -911,10 +911,8 @@ msgid "sent"
 msgstr "envoyé"
 
 #: models/messages.py:37
-#, fuzzy
-#| msgid "date end"
 msgid "date sent"
-msgstr "date de fin"
+msgstr "date d'envoi"
 
 #: models/messages.py:41 templates/telemeta/users.html:55
 msgid "Grouped message"
@@ -1471,7 +1469,7 @@ msgid ""
 msgstr ""
 
 #: templates/registration/registration_complete.html:6
-#: templates/registration/registration_pdf.html:13 views/crfpa.py:475
+#: templates/registration/registration_pdf.html:13 views/crfpa.py:479
 msgid "Registration"
 msgstr "Inscription"
 
