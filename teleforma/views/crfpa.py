@@ -408,9 +408,9 @@ class UserAddView(CreateWithInlinesView):
         last_name = form.cleaned_data['last_name']
         username = get_unique_username(first_name, last_name)
         self.username = username
-        # form.cleaned_data['username'] = username
         user = form.save()
         user.username = username
+        user.last_name = last_name.uuper()
         user.is_active = False
         user.save()
         return super(UserAddView, self).forms_valid(form, inlines)
@@ -441,12 +441,18 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(RegistrationPDFView, self).get_context_data(**kwargs)
         user = User.objects.get(username=kwargs['username'])
-        # user = self.get_object()
+
+        # some form fixes
         student = user.student.all()[0]
         if student.training and not student.trainings.all():
             student.trainings.add(student.training)
         if not student.training and student.trainings.all():
             student.training = student.trainings.all()[0]
+            student.save()
+        profile = user.profile.all()[0]
+        if profile.city:
+            profile.city = profile.city.upper()
+            profile.save()
         context['student'] = student
         return context
 
