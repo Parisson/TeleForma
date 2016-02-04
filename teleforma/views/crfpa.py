@@ -411,10 +411,9 @@ class UserAddView(CreateWithInlinesView):
         user = form.save()
         user.username = username
         user.last_name = last_name.upper()
-        user.first_name.capitalize()
+        user.first_name = first_name.capitalize()
         user.is_active = False
         user.save()
-
         # period = inlines[1].cleaned_data['period']
         return super(UserAddView, self).forms_valid(form, inlines)
 
@@ -456,10 +455,14 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
         if not student.oral_2:
             student.oral_2 = Course.objects.get(code='X')
         student.save()
+
         profile = user.profile.all()[0]
         if profile.city:
             profile.city = profile.city.upper()
-            profile.save()
+        if profile.country:
+            profile.country = profile.country.upper()
+        profile.save()
+
         context['student'] = student
         return context
 
