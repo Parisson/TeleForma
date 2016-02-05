@@ -56,7 +56,7 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
 
         for student in students:
-            if student.is_subscribed and not student.confirmation_sent and student.user.is_active and student.user.email and student.period == period:
+            if student.is_subscribed and not student.confirmation_sent and student.user.email and student.period == period:
                 self.email(student)
                 student.confirmation_sent = True
                 student.save()

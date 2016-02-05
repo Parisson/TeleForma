@@ -43,18 +43,24 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         log_file = args[-1]
+        period_name = args[-2]
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
+        period = Period.objects.get(name=period_name)
         users = User.objects.all()
         translation.activate(self.language_code)
 
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
             students = user.student.all()
+            if students:
+                student = students[0]
+            else:
+                student = Student()
             professors = user.professor.all()
             quotas = user.quotas.all()
-            if students or professors or quotas:
+            if student.period == period or professors or quotas:
                 if profile and user.is_active:
                     if not profile.init_password and user.email:
                         self.init_password_email(user)
