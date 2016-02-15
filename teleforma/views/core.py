@@ -180,7 +180,10 @@ def get_periods(user):
 
     quotas = user.quotas.all()
     if quotas and not (user.is_superuser or user.is_staff) and not professor:
-        periods = [quota.period for quota in quotas]
+        periods = []
+        for quota in quotas:
+            if not quota.period in periods:
+                periods.append(quota.period)
 
     return periods
 
