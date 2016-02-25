@@ -106,7 +106,7 @@ class Command(BaseCommand):
         media_dir = args[2]
         domain = args[3]
         log_file = args[4]
-        
+
         logger = Logger(log_file)
 
         self.site.domain = domain
@@ -120,8 +120,8 @@ class Command(BaseCommand):
 
         # NOT FOR PROD : CLEANUP
         # self.cleanup()
-        #for seminar in Seminar.objects.filter(period=period):
-        #    self.seminar_media_cleanup(seminar)
+        for seminar in Seminar.objects.filter(period=period):
+            self.seminar_media_cleanup(seminar)
 
         walk = os.walk(self.media_dir, followlinks=True)
 
