@@ -129,7 +129,7 @@ class Period(Model):
     description     = models.CharField(_('description'), max_length=255, blank=True)
     date_begin      = models.DateField(_('begin date'), null=True, blank=True)
     date_end        = models.DateField(_('end date'), null=True, blank=True)
-    date_password_send = models.DateField(_("date d'envoi de mot de passe"), null=True, blank=True)
+    date_password_init = models.DateField(_("date d'init de mot de passe"), null=True, blank=True)
     message_platform = models.TextField(_('message pour internaute'), blank=True)
     message_local = models.TextField(_('message pour presentielle'), blank=True)
 
