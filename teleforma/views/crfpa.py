@@ -214,7 +214,7 @@ class UserXLSBook(object):
 
     def export_user(self, counter, user):
         student = Student.objects.filter(user=user)
-        if student:
+        if student and (student.training or student.trainings.all()):
             student = Student.objects.get(user=user)
             row = self.sheet.row(counter + self.first_row)
             row.write(0, user.last_name)
@@ -247,12 +247,21 @@ class UserXLSBook(object):
                 if student.date_subscribed:
                     row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
 
-            row.write(15, student.total_payments)
-            row.write(16, student.total_fees)
-            row.write(17, student.balance)
+            if student.training:
+                training = student.training
+            else:
+                training = student.trainings.all()[0]
+
+            row.write(15, training.cost)
+            row.write(16, student.total_discount)
+            row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
+
+            row.write(18, student.total_payments)
+            row.write(19, student.total_fees)
+            row.write(20, student.balance)
 
             payments = student.payments.all()
-            i = 18
+            i = 21
             for month in months_choices:
                 payment = payments.filter(month=month[0])
                 if payment:
@@ -283,10 +292,14 @@ class UserXLSBook(object):
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
                 {'name':"Date d'inscription", 'width':5000},
+                {'name':"Prix formation brut", 'width':4000},
+                {'name':"Total réductions", 'width':4000},
+                {'name':"Description réduction", 'width':4000},
                 {'name':"Total paiements", 'width':4000},
-                {'name':"Total reductions", 'width':4000},
+                {'name':"Prix formation net", 'width':4000},
                 {'name':"Balance", 'width':4000},
                 ]
+
         for month in months_choices:
             cols.append({'name': 'Paiement ' + slugify(month[1]), 'width': 4000})
 
@@ -299,7 +312,6 @@ class UserXLSBook(object):
         counter = 0
         for user in self.users:
             counter = self.export_user(counter, user)
-
 
 
 class UsersExportView(UsersView):

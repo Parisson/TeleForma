@@ -70,6 +70,7 @@ session_choices = get_n_choices(8)
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
 mimetypes.add_type('video/webm','.webm')
+payment_choices = [('check', _('check')), ('tranfer', _('transfer')), ('credit card', _('credit card')), ('money', _('money'))]
 
 STATUS_CHOICES = (
         (0, _('Hidden')),
@@ -88,10 +89,10 @@ class MetaCore:
     app_label = app_label
 
 
-class Organization(Model):
+class Organization(models.Model):
 
-    name            = models.CharField(_('name'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(_('description'), max_length=255, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -101,15 +102,13 @@ class Organization(Model):
         verbose_name = _('organization')
 
 
-class Department(Model):
+class Department(models.Model):
 
-    name            = models.CharField(_('name'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
-    organization    = models.ForeignKey('Organization', related_name='department',
-                                 verbose_name=_('organization'))
-    domain          = models.CharField(_('Master domain'), max_length=255, blank=True)
-    default_period  = models.ForeignKey('Period', related_name='department', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(_('description'), max_length=255, blank=True)
+    organization = models.ForeignKey('Organization', related_name='department', verbose_name=_('organization'))
+    domain = models.CharField(_('Master domain'), max_length=255, blank=True)
+    default_period  = models.ForeignKey('Period', related_name='department', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
         return self.name
