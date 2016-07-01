@@ -8,80 +8,15 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
+  <script src="{{ STATIC_URL }}exam/js/exam.js"></script>
   <script>
     // increase the default animation speed to exaggerate the effect
-
-    $(document).ready(function(){
-
-        $( "#dialog_mark" ).dialog({
-            autoOpen: false,
-            draggable: false,
-            resizable: false,
-                    modal: true,
-
-        });
-
-        $( "#dialog_reject" ).dialog({
-            autoOpen: false,
-            draggable: false,
-            resizable: false,
-                    modal: true,
-
-        });
-
-        $( "#dialog_comments" ).dialog({
-            autoOpen: false,
-            draggable: false,
-            resizable: false,
-                    modal: true,
-
-        });
-
-        $( "#opener_mark" ).click(function() {
-            $( "#dialog_mark" ).dialog({ width: 500 });
-            $( "#dialog_mark" ).dialog( "open");
-            return false;
-        });
-
-        $( "#opener_reject" ).click(function() {
-            $( "#dialog_reject" ).dialog( "open");
-            return false;
-        });
-
-        $( "#opener_comments" ).click(function() {
-            $( "#dialog_comments" ).dialog( "open");
-            return false;
-        });
-
-        var b1 = $('#validate_button');
-        b1.unbind('click').click(function() {
-            $(window).unbind('beforeunload');
-            b1.unbind('click');
-            $('#_MarkForm #id_status').val("4");
-            $('#_MarkForm').submit();
-        });
-
-        var b2 = $('#reject_button');
-        b2.unbind('click').click(function() {
-            $(window).unbind('beforeunload');
-            b2.unbind('click');
-            $('#_RejectForm #id_status').val("0");
-            $('#_RejectForm').submit();
-        });
-
-    	// $("#box-iframe").contents().find("span.btn.text-btn.strikeout-btn").hide();
-
-
-    });
-
   {% if script.comments %}
     $(window).ready(function(){
       $( "#dialog_comments" ).dialog( "open");
     });
   {% endif %}
     </script>
-
 {% endblock extra_javascript %}
 
 {% block content %}
@@ -169,6 +104,15 @@
     <br /><br />
 </div>
 
+<div id="dialog_help" title="{% trans "Help" %}" style="width: 400px;">
+ <h2>Impression de la copie corrigée</h2>
+   Pour imprimer votre copie corrigée avec les annotations, veuillez :
+   <ul>
+       <li>Téléchager votre copie à l'aide du boutton "flêche vers le bas" du menu au dessus de la copie (Download annotated PDF)</li>
+       <li>Ouvir le fichier PDF obtenu avec <a href="https://get.adobe.com/fr/reader/">Acrobat Reader</a></li>
+       <li>Imprimer le document avec l'option "Document et annotations" comme expliqué <a href="https://helpx.adobe.com/fr/acrobat/kb/print-comments-acrobat-reader.html">ici</a></li>
+   </ul>
+</div>
 
 {% if access_error %}
   <p>{{ access_error }}</p>
