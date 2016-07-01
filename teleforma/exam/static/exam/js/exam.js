@@ -46,6 +46,7 @@ $(document).ready(function(){
     });
 
     $( "#opener_print" ).click(function() {
+        $( "#dialog_print" ).dialog({ width: 800 });
         $( "#dialog_print" ).dialog( "open");
         return false;
     });
