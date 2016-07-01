@@ -22,7 +22,7 @@ $(document).ready(function(){
                 modal: true,
     });
 
-    $( "#dialog_help" ).dialog({
+    $( "#dialog_print" ).dialog({
         autoOpen: false,
         draggable: false,
         resizable: false,
@@ -45,8 +45,8 @@ $(document).ready(function(){
         return false;
     });
 
-    $( "#opener_help" ).click(function() {
-        $( "#dialog_help" ).dialog( "open");
+    $( "#opener_print" ).click(function() {
+        $( "#dialog_print" ).dialog( "open");
         return false;
     });
 
@@ -67,6 +67,5 @@ $(document).ready(function(){
     });
 
 	// $("#box-iframe").contents().find("span.btn.text-btn.strikeout-btn").hide();
-
 
 });

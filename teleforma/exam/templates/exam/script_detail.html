@@ -35,6 +35,7 @@
         {% if script.score %}
         <a id="score" href="#" class="component_icon button icon_ok">{% trans "Score" %} : {{ script.score|floatformat }}/20</a>
         <a id="opener_comments" href="#" class="component_icon button icon_ok">{% trans "Comments" %}</a>
+        <a id="opener_comments" href="#" class="component_icon button icon_download">{% trans "Imprimer" %}</a>
         {% elif script.status == 0 %}
         <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
         {% else %}
@@ -104,7 +105,7 @@
     <br /><br />
 </div>
 
-<div id="dialog_help" title="{% trans "Help" %}" style="width: 400px;">
+<div id="dialog_print" title="{% trans "Help" %}" style="width: 400px;">
  <h2>Impression de la copie corrigée</h2>
    Pour imprimer votre copie corrigée avec les annotations, veuillez :
    <ul>
