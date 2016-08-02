@@ -661,6 +661,9 @@ class ProfessorListView(View):
     def pull(request, host=None):
         from teleforma.models import Organization, Department
         departments = Department.objects.all()
+        professors_old = Professor.objects.all()
+        professors_new = []
+
         for department in departments:
             url = 'http://' + department.domain + '/json/'
             s = ServiceProxy(url)
@@ -679,6 +682,12 @@ class ProfessorListView(View):
                         if not course[0] in professor.courses.all():
                             professor.courses.add(course[0])
                 professor.save()
+                professors_new.append(professor)
+                #print professor
+
+        for professor in professors_old:
+            if not professor in professors_new:
+                professor.delete()
 
 
 class HelpView(TemplateView):
