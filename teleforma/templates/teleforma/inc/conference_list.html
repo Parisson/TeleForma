@@ -24,7 +24,7 @@
                     <dl class="listing" style="font-size: 1.2em;">
                     <dt>{% trans "Title" %}</dt><dd>{{ stream.conference.course.title }}</dd>
                     <dt>{% trans "Session" %}</dt><dd>{{ stream.conference.session }}</dd>
-                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail stream.conference.professor.user.username %}" target="_blank">{{ stream.conference.professor }}</a></dd>
+                    <dt>{% trans "Professor" %}</dt><dd>{% if stream.conference.professor.user.username %}<a href="{% url telemeta-profile-detail stream.conference.professor.user.username %}" target="_blank">{{ stream.conference.professor }}</a>{% endif %}</dd>
                     <dt>{% trans "Begin" %}</dt><dd>{{ stream.conference.date_begin }}</dd>
                     </dl>
                  </div>
