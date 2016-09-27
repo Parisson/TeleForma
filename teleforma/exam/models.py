@@ -79,8 +79,6 @@ REJECT_REASON = (('unreadable', _('unreadable')),
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
 
-SCRIPT_MAX_SIZE = 26214400
-
 
 def sha1sum_file(filename):
     '''
@@ -404,7 +402,7 @@ class Script(BaseResource):
             self.auto_reject('wrong format')
             return
 
-        if os.stat(self.file.path).st_size > SCRIPT_MAX_SIZE:
+        if os.stat(self.file.path).st_size > settings.TELEFORMA_EXAM_SCRIPT_MAX_SIZE:
             self.auto_reject('file too large')
             return
 
