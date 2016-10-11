@@ -136,9 +136,10 @@ def get_room(content_type=None, id=None, name=None, period=None):
 
 def get_access(obj, courses):
     access = False
-    for course in courses:
-        if obj.course == course['course']:
-            access = True
+    if courses:
+        for course in courses:
+            if obj.course == course['course']:
+                access = True
     return access
 
 access_error = _('Access not allowed.')
