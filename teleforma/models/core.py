@@ -56,6 +56,7 @@ from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 from sorl.thumbnail import default as sorl_default
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.conf import settings
 
 app_label = 'teleforma'
 
@@ -66,7 +67,8 @@ def get_n_choices(n):
 def get_nint_choices(n):
     return [(x, y) for x in range(1, n) for y in range(1, n) if x == y]
 
-session_choices = get_n_choices(8)
+session_choices = get_n_choices(settings.TELEFORMA_EXAM_MAX_SESSIONS+1)
+
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
 mimetypes.add_type('video/webm','.webm')

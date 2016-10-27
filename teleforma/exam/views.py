@@ -175,7 +175,7 @@ class ScriptCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
-        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True)
+        context['upload'] = (getattr(settings, 'TELEFORMA_EXAM_SCRiIPT_UPLOAD', True) or self.request.user.is_superuser)
         context['period'] = Period.objects.get(id=self.kwargs['period_id'])
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
         course_pk_list = [c['course'].id for c in get_courses(self.request.user)]
@@ -343,7 +343,7 @@ class ScoreCreateView(ScriptCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
-        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True)
+        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) 
         context['period'] = Period.objects.get(id=self.kwargs['period_id'])
         context['create_fields'] = ['course', 'session', 'type', 'score' ]
         course_pk_list = [c['course'].id for c in get_courses(self.request.user)]
