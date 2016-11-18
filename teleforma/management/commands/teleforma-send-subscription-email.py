@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 self.email(student)
                 student.confirmation_sent = True
                 student.save()
-                student.user.is_active = True
+                # student.user.is_active = True
                 student.user.save()
                 logger.logger.info('email send : ' + student.user.username)
 
