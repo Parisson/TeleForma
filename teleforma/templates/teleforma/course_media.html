@@ -11,12 +11,12 @@
 <link href="{{STATIC_URL}}teleforma/video-js/video-js.css" rel="stylesheet">
 {% endif %}
 
-    <script type="text/javascript">
-    $(document).ready(function(){
-        InitChatWindow("{% url jqchat_ajax room.id %}", null);
-        $('#my_video_1').bind('contextmenu',function() { return false; });
-        });
-    </script>
+<script type="text/javascript">
+$(document).ready(function(){
+    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    $('#my_video_1').bind('contextmenu',function() { return false; });
+    });
+</script>
 
 {% if user.is_staff %}
 <script type="text/javascript">
