@@ -33,9 +33,7 @@ class Command(BaseCommand):
     # more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
     more = []
     site = Site.objects.get_current()
-    expiry_date = datetime.datetime(2016, 12, 31)
-    new_date = datetime.datetime(2017, 1, 1)
-
+    
     def handle(self, *args, **kwargs):
         to_year = int(args[-2])
         from_year = int(args[-3])
@@ -47,7 +45,7 @@ class Command(BaseCommand):
 
         to_period, c = Period.objects.get_or_create(name=str(to_year))
         from_period, c = Period.objects.get_or_create(name=str(from_year))
-        expiry_date = self.expiry_date
+        expiry_date = datetime.datetime(from_year, 12, 31)
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
@@ -58,7 +56,7 @@ class Command(BaseCommand):
                     clone = seminar.clone()
                     clone.publish_date = seminar.publish_date.replace(year=to_year)
                     clone.expiry_date = seminar.expiry_date.replace(year=to_year)
-                    clone.date_forced = self.new_date
+                    clone.date_forced = datetime.datetime(to_year, 1, 1)
                     clone.period = to_period
                     clone.status = 1
                     clone.quiz = seminar.quiz
