@@ -30,10 +30,10 @@ class Command(BaseCommand):
     help = """Copy some seminars and their content thanks to their expiry date year"""
     args = ['site_domain from_year to_year log_file']
     language_code = 'fr_FR'
-    # more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
+    more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
     more = []
     site = Site.objects.get_current()
-    
+
     def handle(self, *args, **kwargs):
         to_year = int(args[-2])
         from_year = int(args[-3])
