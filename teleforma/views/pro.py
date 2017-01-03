@@ -725,9 +725,10 @@ class TestimonialListView(ListView):
         user = self.request.user
         testimonials = Testimonial.objects.filter(user=user)
         for testimonial in testimonials:
-            seminar = testimonial.seminar
-            if seminar_validated(user, seminar) and (get_seminar_delta(user, seminar) >= 0 or testimonial.date_added <= REVISION_DATE_FILTER):
-                t.append(testimonial)
+            if testimonial.seminar:
+                seminar = testimonial.seminar
+                if seminar_validated(user, seminar) and (get_seminar_delta(user, seminar) >= 0 or testimonial.date_added <= REVISION_DATE_FILTER):
+                    t.append(testimonial)
         return t
 
     @method_decorator(login_required)
