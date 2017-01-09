@@ -219,8 +219,8 @@ class UserXLSBook(object):
             if student.training or student.trainings.all():
                 student = Student.objects.get(user=user)
                 row = self.sheet.row(counter + self.first_row)
-                row.write(0, user.last_name.decode('utf-8'))
-                row.write(1, user.first_name.decode('utf-8'))
+                row.write(0, user.last_name)
+                row.write(1, user.first_name)
                 row.write(9, user.email)
                 row.write(2, unicode(student.iej))
 
@@ -242,9 +242,9 @@ class UserXLSBook(object):
                 student = Student.objects.get(user=user)
                 if profile:
                     profile = Profile.objects.get(user=user)
-                    row.write(10, profile.address.decode('utf-8'))
+                    row.write(10, profile.address)
                     row.write(11, profile.postal_code)
-                    row.write(12, profile.city.decode('utf-8'))
+                    row.write(12, profile.city)
                     row.write(13, profile.telephone)
                     if student.date_subscribed:
                         row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
@@ -293,10 +293,10 @@ class UserXLSBook(object):
                 {'name':'CP', 'width':2500},
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
-                {'name':"Date d'inscription", 'width':5000},
+                {'name':"Date inscription", 'width':5000},
                 {'name':"Prix formation brut", 'width':4000},
-                {'name':"Total réductions", 'width':4000},
-                {'name':"Description réduction", 'width':4000},
+                {'name':"Total reductions", 'width':4000},
+                {'name':"Description reduction", 'width':4000},
                 {'name':"Total paiements", 'width':4000},
                 {'name':"Prix formation net", 'width':4000},
                 {'name':"Balance", 'width':4000},
