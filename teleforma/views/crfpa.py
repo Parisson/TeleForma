@@ -219,8 +219,8 @@ class UserXLSBook(object):
             if student.training or student.trainings.all():
                 student = Student.objects.get(user=user)
                 row = self.sheet.row(counter + self.first_row)
-                row.write(0, user.last_name.encode('utf8'))
-                row.write(1, user.first_name.encode('utf8'))
+                row.write(0, user.last_name.decode('utf-8'))
+                row.write(1, user.first_name.decode('utf-8'))
                 row.write(9, user.email)
                 row.write(2, unicode(student.iej))
 
@@ -242,9 +242,9 @@ class UserXLSBook(object):
                 student = Student.objects.get(user=user)
                 if profile:
                     profile = Profile.objects.get(user=user)
-                    row.write(10, profile.address.encode('utf8'))
+                    row.write(10, profile.address.decode('utf-8'))
                     row.write(11, profile.postal_code)
-                    row.write(12, profile.city.encode('utf8'))
+                    row.write(12, profile.city.decode('utf-8'))
                     row.write(13, profile.telephone)
                     if student.date_subscribed:
                         row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
@@ -259,7 +259,7 @@ class UserXLSBook(object):
                 row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
 
                 row.write(18, student.total_payments)
-                row.write(19, student.total_fees)
+                row.write(19, student.total_fees)m
                 row.write(20, student.balance)
 
                 payments = student.payments.all()
