@@ -261,9 +261,10 @@ class UserXLSBook(object):
                 row.write(18, student.total_payments)
                 row.write(19, student.total_fees)
                 row.write(20, student.balance)
+                row.write(21, student.total_paybacks)
 
                 payments = student.payments.all()
-                i = 21
+                i = 22
                 for month in months_choices:
                     payment = payments.filter(month=month[0])
                     if payment:
@@ -300,6 +301,7 @@ class UserXLSBook(object):
                 {'name':"Total paiements", 'width':4000},
                 {'name':"Prix formation net", 'width':4000},
                 {'name':"Balance", 'width':4000},
+                {'name':"Total remboursement", 'width':4000},
                 ]
 
         for month in months_choices:

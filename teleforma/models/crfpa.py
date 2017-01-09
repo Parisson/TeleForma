@@ -185,6 +185,13 @@ class Student(Model):
         return amount
 
     @property
+    def total_paybacks(self):
+        amount = 0
+        for payback in self.paybacks.all():
+            amount -= payback.value
+        return amount
+
+    @property
     def balance(self):
         return  round(self.total_payments - self.total_fees, 2)
 
@@ -266,3 +273,16 @@ class OptionalFee(models.Model):
         db_table = app_label + '_' + 'optional_fees'
         verbose_name = _("Optional fees")
         verbose_name_plural = _("Optional fees")
+
+
+class Payback(models.Model):
+    "an payback for a student subscription"
+
+    student = models.ForeignKey(Student, related_name='paybacks', verbose_name=_('student'))
+    value = models.FloatField(_('amount'), help_text='€')
+    description = models.CharField(_('description'), max_length=255, blank=True)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'paybacks'
+        verbose_name = _("Payback")
+        verbose_name_plural = _("Paybacks")

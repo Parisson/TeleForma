@@ -14,6 +14,7 @@ from django.core import serializers
 from django.contrib.admin.helpers import ActionForm
 from django import forms
 
+
 class PeriodListFilter(SimpleListFilter):
 
     title = _('period')
@@ -54,6 +55,10 @@ class DiscountInline(admin.StackedInline):
     model = Discount
     extra = 1
 
+class PaybackInline(admin.StackedInline):
+    model = Payback
+    extra = 1
+
 class StudentInline(admin.StackedInline):
     model = Student
     extra = 1
@@ -70,7 +75,7 @@ class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options']
     filter_horizontal = ['trainings']
-    inlines = [PaymentInline, OptionalFeeInline, DiscountInline]
+    inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
                     'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
