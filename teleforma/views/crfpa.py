@@ -213,7 +213,7 @@ class UserXLSBook(object):
         self.sheet = self.book.add_sheet('Etudiants')
 
     def export_user(self, counter, user):
-        students = Student.objects.filter(user=muser)
+        students = Student.objects.filter(user=user)
         if students:
             student = students[0]
             if student.training or student.trainings.all():
