@@ -259,7 +259,7 @@ class UserXLSBook(object):
                 row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
 
                 row.write(18, student.total_payments)
-                row.write(19, student.total_fees)m
+                row.write(19, student.total_fees)
                 row.write(20, student.balance)
 
                 payments = student.payments.all()
