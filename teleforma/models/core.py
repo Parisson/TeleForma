@@ -3,7 +3,7 @@
 """
    teleforma
 
-   Copyright (c) 2006-2012 Guillaume Pellerin <yomguy@parisson.com>
+   Copyright (c) 2012-2017 Guillaume Pellerin <yomguy@parisson.com>
 
 # This software is governed by the CeCILL  license under French law and
 # abiding by the rules of distribution of free software.  You can  use,

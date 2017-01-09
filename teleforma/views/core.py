@@ -730,7 +730,6 @@ class ProfessorListView(View):
         return [p.to_json_dict() for p in professors]
 
     def pull(request, host=None):
-
         if host:
             url = 'http://' + host + '/json/'
         else:
