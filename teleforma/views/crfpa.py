@@ -189,7 +189,7 @@ class UsersView(ListView):
         return super(UsersView, self).dispatch(*args, **kwargs)
 
 
-class UserLoginView(View):
+class UserLoginView(View):m
 
     def get(self, request, id):
         user = User.objects.get(id=id)
@@ -211,16 +211,16 @@ class UserXLSBook(object):
         self.book = Workbook()
         self.users = users
         self.sheet = self.book.add_sheet('Etudiants')
-
+m
     def export_user(self, counter, user):
-        students = Student.objects.filter(user=user)
+        students = Student.objects.filter(user=muser)
         if students:
             student = students[0]
             if student.training or student.trainings.all():
                 student = Student.objects.get(user=user)
                 row = self.sheet.row(counter + self.first_row)
-                row.write(0, user.last_name.decode('utf-8'))
-                row.write(1, user.first_name.decode('utf-8'))
+                row.write(0, user.last_name.encode('utf-8'))
+                row.write(1, user.first_name.encode('utf-8'))
                 row.write(9, user.email)
                 row.write(2, unicode(student.iej))
 
@@ -242,9 +242,9 @@ class UserXLSBook(object):
                 student = Student.objects.get(user=user)
                 if profile:
                     profile = Profile.objects.get(user=user)
-                    row.write(10, profile.address.decode('utf-8'))
+                    row.write(10, profile.address.encode('utf-8'))
                     row.write(11, profile.postal_code)
-                    row.write(12, profile.city.decode('utf-8'))
+                    row.write(12, profile.city.encode('utf-8'))
                     row.write(13, profile.telephone)
                     if student.date_subscribed:
                         row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
