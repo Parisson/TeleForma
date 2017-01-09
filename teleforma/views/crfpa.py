@@ -213,65 +213,67 @@ class UserXLSBook(object):
         self.sheet = self.book.add_sheet('Etudiants')
 
     def export_user(self, counter, user):
-        student = Student.objects.filter(user=user)
-        if student and (student.training or student.trainings.all()):
-            student = Student.objects.get(user=user)
-            row = self.sheet.row(counter + self.first_row)
-            row.write(0, user.last_name)
-            row.write(1, user.first_name)
-            row.write(9, user.email)
-            row.write(2, unicode(student.iej))
+        students = Student.objects.filter(user=user)
+        if students:
+            student = students[0]
+            if student.training or student.trainings.all():
+                student = Student.objects.get(user=user)
+                row = self.sheet.row(counter + self.first_row)
+                row.write(0, user.last_name)
+                row.write(1, user.first_name)
+                row.write(9, user.email)
+                row.write(2, unicode(student.iej))
 
-            codes = []
-            for training in student.trainings.all():
-                if student.platform_only:
-                    codes.append('I - ' + training.code)
+                codes = []
+                for training in student.trainings.all():
+                    if student.platform_only:
+                        codes.append('I - ' + training.code)
+                    else:
+                        codes.append(training.code)
+                row.write(3, unicode(' '.join(codes)))
+
+                row.write(4, get_course_code(student.procedure))
+                row.write(5, get_course_code(student.written_speciality))
+                row.write(6, get_course_code(student.oral_speciality))
+                row.write(7, get_course_code(student.oral_1))
+                row.write(8, get_course_code(student.oral_2))
+
+                profile = Profile.objects.filter(user=user)
+                student = Student.objects.get(user=user)
+                if profile:
+                    profile = Profile.objects.get(user=user)
+                    row.write(10, profile.address)
+                    row.write(11, profile.postal_code)
+                    row.write(12, profile.city)
+                    row.write(13, profile.telephone)
+                    if student.date_subscribed:
+                        row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
+
+                if student.training:
+                    training = student.training
                 else:
-                    codes.append(training.code)
-            row.write(3, unicode(' '.join(codes)))
+                    training = student.trainings.all()[0]
 
-            row.write(4, get_course_code(student.procedure))
-            row.write(5, get_course_code(student.written_speciality))
-            row.write(6, get_course_code(student.oral_speciality))
-            row.write(7, get_course_code(student.oral_1))
-            row.write(8, get_course_code(student.oral_2))
+                row.write(15, training.cost)
+                row.write(16, student.total_discount)
+                row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
 
-            profile = Profile.objects.filter(user=user)
-            student = Student.objects.get(user=user)
-            if profile:
-                profile = Profile.objects.get(user=user)
-                row.write(10, profile.address)
-                row.write(11, profile.postal_code)
-                row.write(12, profile.city)
-                row.write(13, profile.telephone)
-                if student.date_subscribed:
-                    row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
+                row.write(18, student.total_payments)
+                row.write(19, student.total_fees)
+                row.write(20, student.balance)
 
-            if student.training:
-                training = student.training
-            else:
-                training = student.trainings.all()[0]
+                payments = student.payments.all()
+                i = 21
+                for month in months_choices:
+                    payment = payments.filter(month=month[0])
+                    if payment:
+                        value = payment[0].value
+                    else:
+                        value = 0
+                    row.write(i, value)
+                    i += 1
 
-            row.write(15, training.cost)
-            row.write(16, student.total_discount)
-            row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
-
-            row.write(18, student.total_payments)
-            row.write(19, student.total_fees)
-            row.write(20, student.balance)
-
-            payments = student.payments.all()
-            i = 21
-            for month in months_choices:
-                payment = payments.filter(month=month[0])
-                if payment:
-                    value = payment[0].value
-                else:
-                    value = 0
-                row.write(i, value)
-                i += 1
-
-            return counter + 1
+                return counter + 1
         else:
             return counter
 
