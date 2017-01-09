@@ -219,8 +219,8 @@ class UserXLSBook(object):
             if student.training or student.trainings.all():
                 student = Student.objects.get(user=user)
                 row = self.sheet.row(counter + self.first_row)
-                row.write(0, user.last_name)
-                row.write(1, user.first_name)
+                row.write(0, user.last_name.encode('utf8'))
+                row.write(1, user.first_name.encode('utf8'))
                 row.write(9, user.email)
                 row.write(2, unicode(student.iej))
 
@@ -242,9 +242,9 @@ class UserXLSBook(object):
                 student = Student.objects.get(user=user)
                 if profile:
                     profile = Profile.objects.get(user=user)
-                    row.write(10, profile.address)
+                    row.write(10, profile.address.encode('utf8'))
                     row.write(11, profile.postal_code)
-                    row.write(12, profile.city)
+                    row.write(12, profile.city.encode('utf8'))
                     row.write(13, profile.telephone)
                     if student.date_subscribed:
                         row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
