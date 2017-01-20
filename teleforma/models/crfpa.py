@@ -92,7 +92,7 @@ class Training(Model):
 
     def __unicode__(self):
         if self.name:
-            return ' - '.join([self.name, self.period])
+            return ' - '.join([self.name, self.period.name])
         else:
             return self.get_code()
 
