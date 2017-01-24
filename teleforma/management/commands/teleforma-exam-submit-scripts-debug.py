@@ -29,7 +29,7 @@ class Logger:
 class Command(BaseCommand):
     help = "submit all script to Box View"
     args = "log_file"
-
+    
     def handle(self, *args, **options):
         translation.activate(settings.LANGUAGE_CODE)
         logger = Logger(args[0])
@@ -41,4 +41,3 @@ class Command(BaseCommand):
             logger.logger.info(str(script.id) + ' : ' + script.url)
             logger.logger.info(script.status)
             time.sleep(10)
-

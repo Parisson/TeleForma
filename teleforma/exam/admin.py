@@ -37,6 +37,7 @@ class ScriptAdmin(admin.ModelAdmin):
     readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
     list_filter = ['period', 'course__title', 'session', 'type', 'status']
     list_display = ['title', 'author_name', 'file_size', 'status']
+    actions = ['submit',]
 
     def author_name(self, instance):
         return instance.author.username
@@ -50,9 +51,15 @@ class ScriptAdmin(admin.ModelAdmin):
         else:
             return '0'
 
+    def submit(self, request, queryset):
+        for script in queryset.all():
+            script.status = 2
+            script.submit()
+
+    submit.short_description = "Submit scripts"
+
 
 admin.site.register(Script, ScriptAdmin)
 admin.site.register(ScriptPage)
 admin.site.register(ScriptType)
 admin.site.register(Quota, QuotaAdmin)
-

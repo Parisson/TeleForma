@@ -409,9 +409,9 @@ class Script(BaseResource):
         if not self.status == 0 and self.file:
             if not self.box_uuid:
                 self.uuid_link()
-                self.box_upload()
-                if not self.corrector and self.t == 1:
-                    self.auto_set_corrector()
+            self.box_upload()
+            if not self.corrector and self.t == 1:
+                self.auto_set_corrector()
             else:
                 if not self.corrector:
                     self.auto_set_corrector()
