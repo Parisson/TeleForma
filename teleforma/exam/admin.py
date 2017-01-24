@@ -58,8 +58,9 @@ class ScriptAdmin(admin.ModelAdmin):
             script.corrector = None
             script.date_marked = None
             script.date_rejected = None
+            script.url = ''
             script.save()
-            
+
     force_resubmit.short_description = "Re-submit scripts"
 
 

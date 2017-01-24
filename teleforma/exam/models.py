@@ -345,6 +345,8 @@ class Script(BaseResource):
         if not os.path.exists(new_abs):
             os.symlink(old_abs, new_abs)
             # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
+
+        if not self.url:
             self.url = settings.MEDIA_URL + unicode(new_rel)
             self.save()
 
