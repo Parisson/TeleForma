@@ -35,7 +35,8 @@ class ScriptAdmin(admin.ModelAdmin):
     search_fields = ['author__username', 'author__last_name', 'corrector__username',
                     'corrector__last_name', 'course__title', 'course__code']
     readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
-    list_filter = ['period', 'course__title', 'session', 'type', 'status',]
+    list_filter = ['period', 'course__title', 'session', 'type', 'status',
+                    'date_submitted', 'date_marked', 'date_rejected']
     list_display = ['title', 'author_name', 'file_size', 'status']
     actions = ['force_resubmit',]
 
@@ -60,7 +61,7 @@ class ScriptAdmin(admin.ModelAdmin):
             script.save()
             script.submit()
 
-    submit.short_description = "Re-submit scripts"
+    force_resubmit.short_description = "Re-submit scripts"
 
 
 admin.site.register(Script, ScriptAdmin)
