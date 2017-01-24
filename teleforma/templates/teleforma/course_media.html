@@ -7,8 +7,8 @@
 {% block extra_javascript %}
 
 {% if "video" in media.mime_type %}
-<script src="{{STATIC_URL}}teleforma/video-js/video.js"></script>
-<link href="{{STATIC_URL}}teleforma/video-js/video-js.css" rel="stylesheet">
+<script src="/static/teleforma/video-js/video.js"></script>
+<link href="/static/teleforma/video-js/video-js.css" rel="stylesheet">
 {% endif %}
 
 <script type="text/javascript">
@@ -61,7 +61,7 @@ $(document).ready(function(){
 {% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
  {% if not "video" in media.mime_type or perms.telemeta.can_play_all_items or request.user_agent.os.family == 'iOS' %}
   <div class="module_action">
-   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="/static/teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
   </div>
  {% endif %}
 {% endif %}

@@ -27,7 +27,7 @@ $(document).ready(function() {
 </p>
 <div style="margin-top: 2em;">
 <span style="align: right; font-weight: bold; margin-right: 2em;"><a href="{% url telemeta-password-reset %}">{% trans "Password forgotten" %} ?</a></span>
-<a href="#" class="component_icon button" id="action_red" onclick="$('#_loginForm').submit();"><img src="{{STATIC_URL}}telemeta/images/password.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Sign in" %}</a>
+<a href="#" class="component_icon button" id="action_red" onclick="$('#_loginForm').submit();"><img src="/static/telemeta/images/password.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Sign in" %}</a>
 <input type="hidden" name="next" value="{{ next }}" />
 </div>
 </form>
