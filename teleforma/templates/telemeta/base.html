@@ -18,19 +18,19 @@
 <meta name="Viewport" content="user-scalable=1" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<link rel="icon" href="{{ STATIC_URL }}teleforma/images/favicon.ico"/>
+<link rel="icon" href="/static/teleforma/images/favicon.ico"/>
 
 <title>{%block head_title %}{% description %} - TeleForma{% endblock %}</title>
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta.css" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/teleforma.css" />
+<link rel="stylesheet" type="text/css" href="/static/telemeta/css/telemeta.css" />
+<link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma.css" />
 
 <!--[if IE]>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta_ie.css" />
+<link rel="stylesheet" type="text/css" href="/static/telemeta/css/telemeta_ie.css" />
 <![endif]-->
 <!--[if lte IE 6]>
-<link rel="stylesheet"type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta_ie6.css" />
+<link rel="stylesheet"type="text/css" href="/static/telemeta/css/telemeta_ie6.css" />
 <![endif]-->
 {% endblock %}
 
@@ -38,15 +38,15 @@
 
 {% block javascript %}
 <script src="{% url django.views.i18n.javascript_catalog %}" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/jquery-1.6.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/jquery-ui.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/jquery.expander.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/messi.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/rainbowvis.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}jqchat/jqchat.js" type="text/javascript" ></script>
-<script src="{{ STATIC_URL }}telemeta/js/locale.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}telemeta/js/application.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/jquery-1.6.min.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/jquery-ui.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/jquery.expander.min.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/messi.min.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/rainbowvis.js" type="text/javascript"></script>
+<script src="/static/jqchat/jqchat.js" type="text/javascript" ></script>
+<script src="/static/telemeta/js/locale.js" type="text/javascript"></script>
+<script src="/static/telemeta/js/application.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/application.js" type="text/javascript"></script>
 
 {% if user.is_authenticated %}
 <script type='text/javascript'>var CURRENT_USER_NAME="{{ user.username }}";</script>
@@ -57,7 +57,7 @@
 {% block js-status %}
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
-<script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
+<script src="/static/telecaster/js/application.js" type="text/javascript"></script>
 {% endif %}
 {% endblock js-status %}
 
@@ -148,7 +148,7 @@ alt="logo" />
    <li><a href="{% url teleforma-help %}" class="blue">{% trans "Help" %}</a></li>
  {% endif %}
 
- <li style="a.active{background-image:{{ STATIC_URL }}telemeta/images/user_tr_bk.png; background-repeat: no-repeat; background-position: 1ex .5ex;}">
+ <li style="a.active{background-image:/static/telemeta/images/user_tr_bk.png; background-repeat: no-repeat; background-position: 1ex .5ex;}">
     <a href="#accounts#" class="blue">{% if user.first_name and user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}</a>
     <ul>
     <li><a href="{% url telemeta-profile-detail user.username %}" class="yellow">{% trans "Profile" %}</a></li>
@@ -196,7 +196,7 @@ alt="logo" />
  <table width="100%">
   <tr>
    <td>
-    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{{ STATIC_URL }}telemeta/images/logo_mini_2.png" alt="Telemeta Powered"/></a>
+    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="/static/telemeta/images/logo_mini_2.png" alt="Telemeta Powered"/></a>
     <p class="left">
     {% trans "Powered by" %} <a href="http://parisson.com" target="_blank"><br /><strong>TeleForma {% teleforma_version %}</strong></a><br />
     </p>

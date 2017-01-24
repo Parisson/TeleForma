@@ -5,7 +5,7 @@
 {% if conferences|from_period:period %}
 <div class="course_content">
 <div class="course_subtitle">
-    <h3><img src="{{ STATIC_URL }}telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
+    <h3><img src="/static/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
@@ -33,8 +33,8 @@
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
                 {% if stream.streaming %}
-                <img src="{{ STATIC_URL }}teleforma/images/network-wireless.png" style="vertical-align:middle" title="streaming" />
-                <img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" title="recording" />
+                <img src="/static/teleforma/images/network-wireless.png" style="vertical-align:middle" title="streaming" />
+                <img src="/static/telemeta/images/media-record.png" style="vertical-align:middle" title="recording" />
               {% endif %}
             </td>
             {% else %}

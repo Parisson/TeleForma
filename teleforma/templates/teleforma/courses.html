@@ -20,7 +20,7 @@ $(document).ready(function(){
 {% block modules %}
 <div class="module">
 
-<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{{ period }}</h3>
+<h3><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{{ period }}</h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
@@ -53,7 +53,7 @@ $(document).ready(function(){
 
 {% block notes %}
 <!--<div class="module">
-<h3><img src="{{ STATIC_URL }}telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
+<h3><img src="/static/telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
 <div style="background: white;">
 <ul>
 {% for note in notes %}
