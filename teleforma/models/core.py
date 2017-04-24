@@ -128,6 +128,7 @@ class Period(Model):
 
     name            = models.CharField(_('name'), max_length=255)
     description     = models.CharField(_('description'), max_length=255, blank=True)
+    parent = models.ForeignKey('Period', related_name='children', verbose_name=_('parent'), blank=True, null=True)
     date_begin      = models.DateField(_('begin date'), null=True, blank=True)
     date_end        = models.DateField(_('end date'), null=True, blank=True)
     date_password_init = models.DateField(_("date d'init de mot de passe"), null=True, blank=True)
