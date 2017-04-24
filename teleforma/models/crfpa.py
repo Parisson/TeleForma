@@ -55,7 +55,7 @@ class IEJ(Model):
         ordering = ['name']
 
 
-class WebClassGroup(modles.Model):
+class WebClassGroup(models.Model):
 
     name = models.CharField(_('name'), max_length=255)
     iejs = models.ManyToManyField('IEJ', related_name="web_class_group", verbose_name=_('IEJ'),
@@ -79,7 +79,7 @@ class Training(Model):
     name = models.CharField(_('name'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=512, blank=True)
     period = models.ForeignKey('Period', related_name='training', verbose_name=_('period'), blank=True, null=True)
-    parent = models.ForeignKey('Training', related_name='parent', verbose_name=_('children'), blank=True, null=True)
+    parent = models.ForeignKey('Training', related_name='children', verbose_name=_('parent'), blank=True, null=True)
     synthesis_note  = models.ManyToManyField('CourseType', related_name="training_synthesis_note", verbose_name=_('synthesis note'),
                                         blank=True, null=True)
     obligation = models.ManyToManyField('CourseType', related_name="training_obligation",
