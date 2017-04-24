@@ -145,6 +145,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
         room = rooms[0]
     return room
 
+
 def get_access(obj, courses):
     access = False
     for course in courses:
@@ -394,7 +395,12 @@ class MediaView(CourseAccessMixin, DetailView):
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=media.course.code,period=context['period'].name,
+
+        room_name = media.course.code
+        if media.conference.web_class_group:
+            room_name += '_' + media.conference.public_id
+
+        context['room'] = get_room(name=room_name,period=context['period'].name,
                                    content_type=content_type,
                                    id=media.course.id)
 
@@ -527,9 +533,15 @@ class ConferenceView(CourseAccessMixin, DetailView):
         context['type'] = conference.course_type
         # context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=conference.course.code, period=context['period'].name,
+
+        room_name = conference.course.code
+        if conference.web_class_group:
+            room_name += '_' + conference.public_id
+
+        context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
                                    id=conference.course.id)
+
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
         access = get_access(conference, context['all_courses'])
@@ -709,10 +721,12 @@ class ConferenceRecordView(FormView):
                     stream = LiveStream(conference=conference, server=server,
                                         stream_type=stream_type, streaming=True)
                     stream.save()
-                try:
-                    live_message(conference)
-                except:
-                    pass
+
+                if not conference.web_class_group:
+                    try:
+                        live_message(conference)
+                    except:
+                        pass
         else:
             raise 'Error : input must be a conference dictionnary'
 
@@ -751,6 +765,25 @@ class ProfessorListView(View):
                     if not course[0] in professor.courses.all():
                         professor.courses.add(course[0])
             professor.save()
+
+
+class WebClassGroupView(View):
+
+    @jsonrpc_method('teleforma.get_web_class_group_list')
+    def get_web_class_group_list(request):
+        web_class_groups = WebClassGroup.objects.all()
+        return [w.to_json_dict() for w in web_class_groups]
+
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+
+        remote_list = s.teleforma.get_web_class_group_list()
+        for web_class_group_dict in remote_list['result']:
+            web_class_group, c = WebClassGroup.objects.get_or_create(name=web_class_group_dict['name'])
 
 
 class HelpView(TemplateView):

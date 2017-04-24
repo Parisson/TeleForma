@@ -294,6 +294,8 @@ class Conference(Model):
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
+                             blank=True, null=True, on_delete=models.SET_NULL)
 
     @property
     def description(self):
@@ -356,6 +358,7 @@ class Conference(Model):
                 'streams': [],
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
+                'web_class_group': self.web_class_group.name if self.web_class_group else 'None',
                  }
 
         if self.room:
@@ -409,6 +412,11 @@ class Conference(Model):
         if 'room' in data.keys():
             self.room, c = Room.objects.get_or_create(name=data['room'],
                                                    organization=organization)
+
+        if 'web_class_group' in data:
+            if data['web_class_group'] != 'None':
+                self.web_class_group = WebClassGroup.objet.get(name=data['web_class_group'])
+
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'

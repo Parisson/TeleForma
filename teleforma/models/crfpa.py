@@ -42,8 +42,8 @@ from teleforma.models.core import *
 
 class IEJ(Model):
 
-    name            = models.CharField(_('name'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(_('description'), max_length=255, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -55,12 +55,31 @@ class IEJ(Model):
         ordering = ['name']
 
 
+class WebClassGroup(modles.Model):
+
+    name = models.CharField(_('name'), max_length=255)
+    iejs = models.ManyToManyField('IEJ', related_name="web_class_group", verbose_name=_('IEJ'),
+                                        blank=True, null=True)
+
+    class Meta(MetaCore):
+        verbose_name = _('web class group')
+        verbose_name_plural = _('web class group')
+        ordering = ['name']
+
+    def to_json_dict(self):
+        data = {'name': self.name,
+                'iejs': [iej.name for iej in self.iejs.all()],
+                 }
+        return data
+
+
 class Training(Model):
 
     code = models.CharField(_('code'), max_length=255)
     name = models.CharField(_('name'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=512, blank=True)
     period = models.ForeignKey('Period', related_name='training', verbose_name=_('period'), blank=True, null=True)
+    parent = models.ForeignKey('Training', related_name='parent', verbose_name=_('children'), blank=True, null=True)
     synthesis_note  = models.ManyToManyField('CourseType', related_name="training_synthesis_note", verbose_name=_('synthesis note'),
                                         blank=True, null=True)
     obligation = models.ManyToManyField('CourseType', related_name="training_obligation",

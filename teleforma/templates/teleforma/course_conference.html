@@ -36,30 +36,26 @@
     <div style="float: right; font-size: 0.9em;">
         <a href="{% url teleforma-conference-audio period.id conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
     </div>
-
-<a href="{% url teleforma-desk-period-course period.id course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }} - {% trans "Session" %} {{ conference.session }}
-
+    <a href="{% url teleforma-desk-period-course period.id course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }} - {% trans "Session" %} {{ conference.session }}
 </div>
 
 <div class="media">
+
 {% if access_error %}
   <p>{{ access_error }}</p>
   <p>{{ message }}</p>
-
 {% else %}
-
-{% for livestream in livestreams %}
-{% if "webm" == livestream.stream_type %}
-<div class="video">
-<video width="864" height="480" controls autoplay preload="auto">
-<!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ livestream.url|get_host:host }}" type="video/webm" />
-</video>
-</div>
+    {% for livestream in livestreams %}
+        {% if "webm" == livestream.stream_type %}
+            <div class="video">
+                <video id="video" width="864" height="480" controls autoplay preload="auto">
+                    <source src="{{ livestream.url|get_host:host }}" type="video/webm" />
+                </video>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endif %}
-{% endfor %}
 
-{% endif %}
 </div>
 
 {% block general_info %}
@@ -67,18 +63,19 @@
 <dl class="listing">
 
 {% if conference.professor %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
-<dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
-<dt>{% trans "Professor" %}</dt>
-    <dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
+    <dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
+    <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
+    <dt>{% trans "Professor" %}</dt>
+        <dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
 {% endif %}
+
 {% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}
-<dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
-{% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end|yes_no }}</dd>{% endif %}
-<dt>{% trans "Live" %}</dt><dd>{% trans "Yes" %}</dd>
-{% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %}
-{% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Conference ID" %}</dt><dd>{{ conference.public_id }}</dd>
+    <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
+    {% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end|yes_no }}</dd>{% endif %}
+    <dt>{% trans "Live" %}</dt><dd>{% trans "Yes" %}</dd>
+    {% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %}
+    {% if user.is_staff or user.is_superuser %}
+    <dt>{% trans "Conference ID" %}</dt><dd>{{ conference.public_id }}</dd>
 {% endif %}
 
 </dl>
@@ -87,4 +84,3 @@
 
 </div>
 {% endblock course %}
-
