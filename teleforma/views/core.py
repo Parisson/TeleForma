@@ -171,7 +171,10 @@ def get_periods(user):
     if student:
         student = user.student.get()
         periods = [training.period for training in student.trainings.all()]
-
+        for period in periods:
+            for child in period.children.all():
+                periods.append(child)
+                
     if user.is_superuser or user.is_staff:
         periods = Period.objects.all()
 
