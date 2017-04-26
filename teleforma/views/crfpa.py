@@ -392,6 +392,7 @@ class AnnalsIEJView(AnnalsView):
         self.iej = IEJ.objects.filter(id=self.args[0])
         return self.get_docs(iej=self.iej)
 
+
 class AnnalsCourseView(AnnalsView):
 
     def get_queryset(self):

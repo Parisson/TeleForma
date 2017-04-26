@@ -174,7 +174,7 @@ def get_periods(user):
         for period in periods:
             for child in period.children.all():
                 periods.append(child)
-                
+
     if user.is_superuser or user.is_staff:
         periods = Period.objects.all()
 
