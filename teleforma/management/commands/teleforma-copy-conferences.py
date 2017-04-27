@@ -28,14 +28,18 @@ class Command(BaseCommand):
     courses = ['OB','PAC','PC','PP','DA','Affaires','DIE','Civil','Penal','Social']
     period_1_name = 'Semestrielle'
     period_2_name = 'Pré-Estivale'
+    course_type = 'Cours'
 
     def handle(self, *args, **options):
         period_1 = Period.objects.get(name=self.period_1_name)
         period_2 = Period.objects.get(name=self.period_2_name)
+        course_type = CourseType.objects.get(name=course_type)
+
         for course in self.courses:
-            medias = Media.objects.filter(period=period_1, course=course)
+            medias = Media.objects.filter(period=period_1, course=course, type=course_type)
             for media in medias:
                 media.pk = None
                 media.save()
                 media.period = period_2
+                media.is_published = False
                 media.save()
