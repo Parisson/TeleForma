@@ -1,6 +1,8 @@
 {% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}{% trans "Hello" %} {{ object.recipient.first_name }} {{ object.recipient.last_name }},
 
-Suite à votre inscription à la formation semestrielle 2016 du Pré-Barreau, nous vous invitons à initialiser votre compte sur notre plateforme e-learning interactive et multi-média. Pour cela, merci de cliquer sur le lien suivant puis d'indiquez votre adresse e-mail :
+Suite à votre inscription à la formation estivale 2017 du Pré-Barreau, nous vous invitons à initialiser votre compte sur notre plateforme e-learning interactive et multi-média.
+
+Pour cela, merci de cliquer sur le lien suivant puis d'indiquez votre adresse e-mail :
 
 http://{{ site.domain }}/accounts/password_reset/
 
@@ -13,8 +15,11 @@ http://{{ site.domain }}
 
 Cette plateforme vous permet d’accéder tout au long de votre formation aux différents documents - fascicules de cours (selon la formule choisie), fascicules d’actualisation, sujets et corrigés - ainsi qu’à l’ensemble de vos enseignements à la demande ou en direct.
 
+Avant de commencer à utiliser la plateforme e-learning, nous vous invitons à consulter la page « Aide ». En effet, il est parfois nécessaire de télécharger des logiciels (gratuits) afin d’optimiser la navigation et la lecture des vidéos.
+
+Une vidéo de présentation générale de la formation pré-estivale est disponible dans la rubrique « Information et organisation ». Celle-ci a pour but de vous guider dans l’utilisation de l’ensemble des vidéos et fascicules disponibles.
+
 La messagerie intégrée vous donne aussi la possibilité de communiquer avec les administrateurs et les professeurs.
-Une page d'aide est disponible pour vous assister lors de la découverte de ces nouveaux services.
 
 {% trans "Best regards" %},
 {% trans "The site administrator" %} {% trans "of the" %} {% organization %}
