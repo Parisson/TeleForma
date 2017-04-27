@@ -88,7 +88,15 @@ $(document).ready(function(){
         {% endblock %}
 
         {% block media %}
-         {% include "teleforma/inc/media_list.html" %}
+            {% with "Passed conferences" as title %}
+                {% include "teleforma/inc/media_list.html" %}
+            {% endwith %}
+        {% endblock %}
+
+        {% block media %}
+            {% with "Web class" as title %}
+                {% include "teleforma/inc/media_list.html" %}
+            {% endwith %}
         {% endblock %}
 
         {% block document %}
