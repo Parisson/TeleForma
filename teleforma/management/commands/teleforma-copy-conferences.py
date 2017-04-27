@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -26,13 +28,14 @@ class Logger:
 class Command(BaseCommand):
     help = "Copy conferences from one period to another"
     courses = ['OB','PAC','PC','PP','DA','Affaires','DIE','Civil','Penal','Social']
-    period_1_name = 'Semestrielle'
-    period_2_name = 'Pré-Estivale'
+    period_1_name = u'Semestrielle'
+    period_2_name = u'Pré-Estivale'
 
     def handle(self, *args, **options):
         period_1 = Period.objects.get(name=self.period_1_name)
         period_2 = Period.objects.get(name=self.period_2_name)
-        for course in self.courses:
+        for course_code in self.courses:
+            course = Course.objects.get(code=course_code)
             medias = Media.objects.filter(period=period_1, course=course)
             for media in medias:
                 media.pk = None
