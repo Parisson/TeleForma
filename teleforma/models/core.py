@@ -414,7 +414,7 @@ class Conference(Model):
             self.room, c = Room.objects.get_or_create(name=data['room'],
                                                    organization=organization)
 
-        if 'web_class_group' in data:
+        if 'web_class_group' in data.keys():
             if data['web_class_group'] != 'None':
                 self.web_class_group = WebClassGroup.objet.get(name=data['web_class_group'])
 
@@ -506,6 +506,7 @@ class MediaBase(Model):
     is_published    = models.BooleanField(_('published'))
     mime_type       = models.CharField(_('mime type'), max_length=255, blank=True)
     weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
+    periods          = models.ManyToManyField('Period', related_name='medias', verbose_name=_('periods'), blank=True)
 
     def get_fields(self):
         return self._meta.fields
@@ -535,7 +536,7 @@ class Document(MediaBase):
 
     course          = models.ForeignKey('Course', related_name='document', verbose_name=_('course'))
     course_type     = models.ManyToManyField('CourseType', related_name='document',
-                                      verbose_name=_('course type'), blank=True, null=True)
+                                      verbose_name=_('course type'), blank=True)
     conference      = models.ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     period          = models.ForeignKey('Period', related_name='document', verbose_name=_('period'),
