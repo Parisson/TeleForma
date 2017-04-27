@@ -506,7 +506,6 @@ class MediaBase(Model):
     is_published    = models.BooleanField(_('published'))
     mime_type       = models.CharField(_('mime type'), max_length=255, blank=True)
     weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
-    periods          = models.ManyToManyField('Period', related_name='medias', verbose_name=_('periods'), blank=True)
 
     def get_fields(self):
         return self._meta.fields
