@@ -278,11 +278,13 @@ class Script(BaseResource):
         quota_list = []
         quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
-                                            script_type=self.type)
+                                            script_type=self.type,
+                                            period=self.period)
         if not quotas:
             quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
-                                            script_type=None)
+                                            script_type=None,
+                                            period=self.period)
         if quotas:
             for quota in quotas:
                 if quota.value:
