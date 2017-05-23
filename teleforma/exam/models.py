@@ -117,7 +117,7 @@ def check_unique_mimetype(l):
 
 class Quota(models.Model):
 
-    course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'))
+    course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'), null=True, blank=True, on_delete=models.SET_NULL)
     corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_('corrector'))
     period = models.ForeignKey(Period, related_name='quotas', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
     session = models.CharField(_('session'), choices=session_choices, max_length=16, default="1")
