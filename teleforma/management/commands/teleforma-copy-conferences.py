@@ -41,7 +41,7 @@ class Command(BaseCommand):
             course = Course.objects.get(code=course_code)
             medias = Media.objects.filter(period=period_1, course=course, course_type=course_type)
             for media in medias:
-                if not Media.object.filter(period=period_2, course=course, course_type=course_type, code=media.code):
+                if not Media.objects.filter(period=period_2, course=course, course_type=course_type, code=media.code):
                     media.pk = None
                     media.save()
                     media.period = period_2
