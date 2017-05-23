@@ -120,6 +120,7 @@ class Quota(models.Model):
     course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'))
     corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_('corrector'))
     period = models.ForeignKey(Period, related_name='quotas', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
+    session = models.CharField(_('session'), choices=session_choices, max_length=16, default="1")
     value = models.IntegerField(_('value'))
     date_start = models.DateField(_('date start'))
     date_end = models.DateField(_('date end'))
