@@ -159,8 +159,9 @@ class ScriptCreateView(CreateView):
         return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
 
     def form_valid(self, form):
+        period = Period.objects.get(id=self.kwargs['period_id'])
         scripts = Script.objects.filter(course=form.cleaned_data['course'], session=form.cleaned_data['session'],
-                                        type=form.cleaned_data['type'], author=self.request.user).exclude(status=0)
+                                        type=form.cleaned_data['type'], author=self.request.user, period=period).exclude(status=0)
         if scripts:
             messages.error(self.request, _("Error: you have already submitted a script for this session, the same course and the same type!"))
             return redirect('teleforma-exam-script-create', self.kwargs['period_id'])
@@ -343,7 +344,7 @@ class ScoreCreateView(ScriptCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
-        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) 
+        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True)
         context['period'] = Period.objects.get(id=self.kwargs['period_id'])
         context['create_fields'] = ['course', 'session', 'type', 'score' ]
         course_pk_list = [c['course'].id for c in get_courses(self.request.user)]

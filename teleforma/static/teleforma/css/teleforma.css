@@ -1430,7 +1430,7 @@ input,textarea{
     float: left;
     width: 50%;
     padding: 0em 3em 0em 2em;
-    max-height: 550px;
+    /*max-height: 550px;*/
     overflow-y: auto;
     }
 
@@ -1460,7 +1460,7 @@ input,textarea{
     }
 
 #large_scroll {
-    max-height: 750px;
+    /*max-height: 750px;*/
     overflow-y: auto;
     padding: 0em 1em 0em 0em;
     }
