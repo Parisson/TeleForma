@@ -331,6 +331,9 @@ class Script(BaseResource):
             self.reject()
         super(Script, self).save(*args, **kwargs)
 
+    def update(self, *args, **kwargs):
+        super(Script, self).save(*args, **kwargs)
+
     def uuid_link(self):
         old_abs = self.file.path
         old_abs_list = old_abs.split(os.sep)
