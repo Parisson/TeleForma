@@ -346,7 +346,10 @@ class ScoreCreateView(ScriptCreateView):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         period = Period.objects.get(id=self.kwargs['period_id'])
         context['period'] = period
-        context['upload'] = datetime.datetime.now() <= period.date_exam_end
+        if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True):
+            context['upload'] = datetime.datetime.now() <= period.date_exam_end
+        else:
+            context['upload'] = False
         context['create_fields'] = ['course', 'session', 'type', 'score' ]
         course_pk_list = [c['course'].id for c in get_courses(self.request.user)]
         context['form'].fields['course'].queryset = Course.objects.filter(pk__in=course_pk_list)
