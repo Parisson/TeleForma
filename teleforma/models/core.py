@@ -160,22 +160,23 @@ class CourseType(Model):
 
 class Course(Model):
 
-    department      = models.ForeignKey('Department', related_name='course',
+    department = models.ForeignKey('Department', related_name='course',
                                  verbose_name=_('department'))
-    title           = models.CharField(_('title'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
-    code            = models.CharField(_('code'), max_length=255)
-    title_tweeter   = models.CharField(_('tweeter title'), max_length=255)
-    date_modified   = models.DateTimeField(_('date modified'), auto_now=True, null=True)
-    number          = models.IntegerField(_('number'), blank=True, null=True)
-    synthesis_note  = models.BooleanField(_('synthesis note'))
-    obligation      = models.BooleanField(_('obligations'))
-    magistral       = models.BooleanField(_('magistral'))
+    title = models.CharField(_('title'), max_length=255)
+    description = models.CharField(_('description'), max_length=255, blank=True)
+    code = models.CharField(_('code'), max_length=255)
+    title_tweeter = models.CharField(_('tweeter title'), max_length=255)
+    date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
+    number = models.IntegerField(_('number'), blank=True, null=True)
+    synthesis_note = models.BooleanField(_('synthesis note'))
+    obligation = models.BooleanField(_('obligations'))
+    magistral = models.BooleanField(_('magistral'))
     procedure = models.BooleanField(_('procedure'))
     written_speciality = models.BooleanField(_('written_speciality'))
     oral_speciality = models.BooleanField(_('oral_speciality'))
     oral_1 = models.BooleanField(_('oral_1'))
     oral_2 = models.BooleanField(_('oral_2'))
+    exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
 
     def __unicode__(self):
         return self.title
