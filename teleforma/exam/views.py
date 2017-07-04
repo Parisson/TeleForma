@@ -17,8 +17,8 @@ class ScriptMixinView(View):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptMixinView, self).get_context_data(**kwargs)
-        period = Period.objects.get(id=self.kwargs['period_id'])
-        context['period'] = period
+        self.period = Period.objects.get(id=self.kwargs['period_id'])
+        context['period'] = self.period
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and period.date_exam_end:
             context['upload'] = datetime.datetime.now() <= period.date_exam_end
         else:
@@ -242,7 +242,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
 
         if self.request.user.is_staff or self.request.user.professor.all():
-            scripts = Script.objects.filter(period=period).exclude(score=None)
+            scripts = Script.objects.filter(period=self.period).exclude(score=None)
         else:
             scripts = self.get_queryset()
 
@@ -264,7 +264,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         data = []
         counter = 0
         for session in sessions:
-            scripts = Script.objects.filter(session=session, period=period).exclude(score=None)
+            scripts = Script.objects.filter(session=session, period=self.period).exclude(score=None)
             counter += scripts.count()
             data.append(np.mean([s.score for s in scripts if script.score]))
         scores.append({'name': 'Moyenne generale'  + ' (' + str(counter) + ')', 'data': data})
@@ -273,7 +273,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
             data = []
             counter = 0
             for session in sessions:
-                scripts = Script.objects.filter(session=session, period=period, type=script_type).exclude(score=None)
+                scripts = Script.objects.filter(session=session, period=self.period, type=script_type).exclude(score=None)
                 data.append(np.mean([s.score for s in scripts if script.score]))
                 counter += scripts.count()
             scores.append({'name': 'Moyenne ' + script_type.name + ' (' + str(counter) + ')', 'data': data})
@@ -291,7 +291,7 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
         period = Period.objects.get(id=self.kwargs['period_id'])
 
         if self.request.user.is_staff or self.request.user.professor.all():
-            scripts = Script.objects.all().filter(course=course, period=period).exclude(score=None)
+            scripts = Script.objects.all().filter(course=course, period=self.period).exclude(score=None)
         else:
             scripts = self.get_queryset().filter(course=course)
 
@@ -313,7 +313,7 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
         data = []
         counter = 0
         for session in sessions:
-            scripts = Script.objects.filter(session=session, course=course, period=period).exclude(score=None)
+            scripts = Script.objects.filter(session=session, course=course, period=self.period).exclude(score=None)
             counter += scripts.count()
             data.append(np.mean([s.score for s in scripts if script.score]))
         scores.append({'name':'Moyenne generale' + ' (' + str(counter) + ')', 'data': data})
@@ -322,7 +322,7 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
             data = []
             counter = 0
             for session in sessions:
-                scripts = Script.objects.filter(session=session, type=script_type, course=course, period=period).exclude(score=None)
+                scripts = Script.objects.filter(session=session, type=script_type, course=course, period=self.period).exclude(score=None)
                 counter += scripts.count()
                 data.append(np.mean([s.score for s in scripts if script.score]))
             scores.append({'name': 'Moyenne ' + script_type.name + ' (' + str(counter) + ')', 'data': data})
