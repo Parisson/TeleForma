@@ -135,6 +135,7 @@ class Period(Model):
     message_platform = models.TextField(_('message pour internaute'), blank=True)
     message_local = models.TextField(_('message pour presentielle'), blank=True)
     is_open = models.BooleanField(_('is open'), default=True)
+    date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
 
     def __unicode__(self):
         return self.name
