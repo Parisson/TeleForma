@@ -25,6 +25,7 @@ class Command(BaseCommand):
         qss.append(Document.objects.filter(period=period_from, date_added__year=year))
         qss.append(DocumentSimple.objects.filter(period=period_from, date_added__year=year))
         qss.append(Media.objects.filter(period=period_from, date_added__year=year))
+        qss.append(Scripts.objects.filter(period=period_from, date_added__year=year))
 
         for qs in qss:
             for obj in qs:
