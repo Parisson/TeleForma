@@ -117,9 +117,10 @@ def check_unique_mimetype(l):
 
 class Quota(models.Model):
 
-    course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'))
-    corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_('corrector'))
+    course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'), null=True, blank=True, on_delete=models.SET_NULL)
+    corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_('corrector'), null=True, blank=True, on_delete=models.SET_NULL)
     period = models.ForeignKey(Period, related_name='quotas', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
+    session = models.CharField(_('session'), choices=session_choices, max_length=16, default="1")
     value = models.IntegerField(_('value'))
     date_start = models.DateField(_('date start'))
     date_end = models.DateField(_('date end'))
@@ -278,11 +279,13 @@ class Script(BaseResource):
         quota_list = []
         quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
-                                            script_type=self.type)
+                                            script_type=self.type,
+                                            period=self.period)
         if not quotas:
             quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
-                                            script_type=None)
+                                            script_type=None,
+                                            period=self.period)
         if quotas:
             for quota in quotas:
                 if quota.value:
@@ -326,6 +329,9 @@ class Script(BaseResource):
             self.mark()
         if self.status == 0 and self.reject_reason:
             self.reject()
+        super(Script, self).save(*args, **kwargs)
+
+    def update(self, *args, **kwargs):
         super(Script, self).save(*args, **kwargs)
 
     def uuid_link(self):

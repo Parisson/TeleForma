@@ -134,6 +134,7 @@ class Period(Model):
     date_password_init = models.DateField(_("date d'init de mot de passe"), null=True, blank=True)
     message_platform = models.TextField(_('message pour internaute'), blank=True)
     message_local = models.TextField(_('message pour presentielle'), blank=True)
+    is_open = models.BooleanField(_('is open'), default=True)
 
     def __unicode__(self):
         return self.name
