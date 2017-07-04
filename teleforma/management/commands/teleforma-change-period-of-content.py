@@ -21,10 +21,10 @@ class Command(BaseCommand):
         period_to = Period.objects.get(id=period_to_id)
 
         qss = []
-        qss.append(Conference.objects.filter(period=period_from, date_added__year=year))
+        qss.append(Conference.objects.filter(period=period_from, date_begin__year=year))
         qss.append(Document.objects.filter(period=period_from, date_added__year=year))
-        qss.appedn(DocumentSimple.objects.filter(period=period_from, date_added__year=year))
-        qqss.append(Media.objects.filter(period=period_from, date_added__year=year))
+        qss.append(DocumentSimple.objects.filter(period=period_from, date_added__year=year))
+        qss.append(Media.objects.filter(period=period_from, date_added__year=year))
 
         for qs in qss:
             for obj in qs:
