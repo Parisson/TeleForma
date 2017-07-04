@@ -13,7 +13,20 @@ from django.utils.translation import ugettext_lazy as _
 import numpy as np
 
 
-class ScriptView(CourseAccessMixin, UpdateView):
+class ScriptMixinView(View):
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptMixinView, self).get_context_data(**kwargs)
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        context['period'] = period
+        if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and period.date_exam_end:
+            context['upload'] = datetime.datetime.now() <= period.date_exam_end
+        else:
+            context['upload'] = False
+        return context
+
+
+class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 
     model = Script
     template_name='exam/script_detail.html'
@@ -59,16 +72,10 @@ class ScriptView(CourseAccessMixin, UpdateView):
         return super(ScriptView, self).dispatch(*args, **kwargs)
 
 
-class ScriptsView(ListView):
+class ScriptsView(ScriptMixinView, ListView):
 
     model = Script
     template_name='exam/scripts.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ScriptsView, self).get_context_data(**kwargs)
-        context['period'] = Period.objects.get(id=self.kwargs['period_id'])
-        context['upload'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True)
-        return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -148,7 +155,7 @@ class ScriptsRejectedView(ScriptsView):
         return context
 
 
-class ScriptCreateView(CreateView):
+class ScriptCreateView(ScriptMixinView, CreateView):
 
     model = Script
     template_name='exam/script_form.html'
@@ -176,13 +183,6 @@ class ScriptCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
-        period = Period.objects.get(id=self.kwargs['period_id'])
-        context['period'] = period
-        if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and period.date_exam_end:
-            context['upload'] = datetime.datetime.now() <= period.date_exam_end
-        else:
-            context['upload'] = False
-        context['period'] = period
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
         course_pk_list = [c['course'].id for c in get_courses(self.request.user)]
         context['form'].fields['course'].queryset = Course.objects.filter(pk__in=course_pk_list)
@@ -203,11 +203,6 @@ class QuotasView(ListView):
 
     model = Quota
     template_name='exam/quotas.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(QuotasView, self).get_context_data(**kwargs)
-        context['period'] = Period.objects.get(id=self.kwargs['period_id'])
-        return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -245,7 +240,6 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
-        period = Period.objects.get(id=self.kwargs['period_id'])
 
         if self.request.user.is_staff or self.request.user.professor.all():
             scripts = Script.objects.filter(period=period).exclude(score=None)
