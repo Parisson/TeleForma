@@ -176,11 +176,11 @@ def get_periods(user):
                 periods.append(child)
 
     if user.is_superuser or user.is_staff:
-        periods = Period.objects.all()
+        periods = Period.objects.filter(is_open=True)
 
     professor = user.professor.all()
     if professor:
-        periods = Period.objects.all()
+        periods = Period.objects.filter(is_open=True)
 
     quotas = user.quotas.all()
     if quotas and not (user.is_superuser or user.is_staff) and not professor:
