@@ -346,7 +346,7 @@ class ScoreCreateView(ScriptCreateView):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         period = Period.objects.get(id=self.kwargs['period_id'])
         context['period'] = period
-        if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True):
+        if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and period.date_exam_end:
             context['upload'] = datetime.datetime.now() <= period.date_exam_end
         else:
             context['upload'] = False
