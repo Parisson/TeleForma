@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
+from teleforma.exam.models import *
 
 
 class Command(BaseCommand):
