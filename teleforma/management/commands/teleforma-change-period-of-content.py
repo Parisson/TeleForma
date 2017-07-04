@@ -14,8 +14,8 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
 
     def handle(self, *args, **options):
-        period_id_from = args[0]
-        period_id_to = args[1]
+        period_from_id = args[0]
+        period_to_id = args[1]
         year = args[2]
         period_from = Period.objects.get(id=period_from_id)
         period_to = Period.objects.get(id=period_to_id)
