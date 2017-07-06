@@ -93,11 +93,13 @@ $(document).ready(function(){
             {% endwith %}
         {% endblock %}
 
+        {% comment %}
         {% block webclass %}
             {% with "Web class" as title %}
                 {% include "teleforma/inc/media_list.html" %}
             {% endwith %}
         {% endblock %}
+        {% endcomment %}
 
         {% block document %}
          {% with forloop.counter as type_counter %}
