@@ -184,7 +184,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
-        course_pk_list = [c['course'].id for c in get_courses(self.request.user) if c['course'].exam_scripts]
+        course_pk_list = [c['course'].id for c in get_courses(self.request.user) if c.exam_scripts]
         context['form'].fields['course'].queryset = Course.objects.filter(pk__in=course_pk_list)
         return context
 
