@@ -375,7 +375,7 @@ class Script(BaseResource):
                     else:
                         loop += 1
                         time.sleep(sleep)
-                        if loop => max_loop:
+                        if loop > max_loop:
                             break
                 else:
                     print 'File upload failed :('
