@@ -357,7 +357,10 @@ class Script(BaseResource):
             self.save()
 
     def box_upload(self):
-        s = 10
+        sleep = 10
+        max_loop = 12
+        loop = 0
+
         self.box_uuid = crocodoc.document.upload(url=self.url)
         self.date_submitted = datetime.datetime.now()
 
@@ -366,11 +369,14 @@ class Script(BaseResource):
             if (len(statuses) != 0):
                 if (statuses[0].get('error') == None):
                     if statuses[0]['status'] == 'DONE':
-                        self.t = 1
+                        self.box_upload_done = 1
                         self.save()
                         break
                     else:
-                        time.sleep(s)
+                        loop += 1
+                        time.sleep(sleep)
+                        if loop => max_loop:
+                            break
                 else:
                     print 'File upload failed :('
                     print '  Error Message: ' + statuses[0]['error']
@@ -391,7 +397,7 @@ class Script(BaseResource):
         self.save()
 
     def submit(self):
-        self.t = 0
+        self.box_upload_done = 0
 
         if not self.file:
             self.auto_reject('no file')
@@ -418,7 +424,7 @@ class Script(BaseResource):
             if not self.box_uuid:
                 self.uuid_link()
             self.box_upload()
-            if not self.corrector and self.t == 1:
+            if not self.corrector and self.box_upload_done == 1:
                 self.auto_set_corrector()
             else:
                 if not self.corrector:
