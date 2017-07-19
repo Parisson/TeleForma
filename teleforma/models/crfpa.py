@@ -55,15 +55,15 @@ class IEJ(Model):
         ordering = ['name']
 
 
-class WebClassGroup(models.Model):
+class ClassGroup(models.Model):
 
     name = models.CharField(_('name'), max_length=255)
-    iejs = models.ManyToManyField('IEJ', related_name="web_class_group", verbose_name=_('IEJ'),
+    iejs = models.ManyToManyField('IEJ', related_name="class_groups", verbose_name=_('IEJ'),
                                         blank=True, null=True)
 
     class Meta(MetaCore):
-        verbose_name = _('web class group')
-        verbose_name_plural = _('web class group')
+        verbose_name = _('class group')
+        verbose_name_plural = _('class group')
         ordering = ['name']
 
     def to_json_dict(self):
