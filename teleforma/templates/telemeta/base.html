@@ -215,9 +215,11 @@ alt="logo" />
 </div>
 {% endblock layout %}
 
-{% block analytics %}
-{% analytics_code %}
-{% endblock analytics %}
+{% comment %}
+    {% block analytics %}
+        {% analytics_code %}
+    {% endblock analytics %}
+{% endcomment %}
 
 <script type='text/javascript'>
 window.scrollTo(0, 1);

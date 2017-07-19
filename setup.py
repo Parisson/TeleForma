@@ -31,7 +31,6 @@ setup(
         'django-user-agents',
         'xhtml2pdf',
         'html5lib==0.95',
-
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
