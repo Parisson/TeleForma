@@ -298,7 +298,7 @@ class Conference(Model):
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
-    web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
+    class_group     = models.ForeignKey('ClassGroup', related_name='conferences', verbose_name=_('class group'),
                              blank=True, null=True, on_delete=models.SET_NULL)
 
     @property
@@ -362,7 +362,7 @@ class Conference(Model):
                 'streams': [],
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
-                'web_class_group': self.web_class_group.name if self.web_class_group else 'None',
+                'class_group': self.class_group.name if self.class_group else 'None',
                  }
 
         if self.room:
@@ -417,9 +417,9 @@ class Conference(Model):
             self.room, c = Room.objects.get_or_create(name=data['room'],
                                                    organization=organization)
 
-        if 'web_class_group' in data.keys():
-            if data['web_class_group'] != 'None':
-                self.web_class_group = WebClassGroup.objet.get(name=data['web_class_group'])
+        if 'class_group' in data.keys():
+            if data['class_group'] != 'None':
+                self.class_group = ClassGroup.objet.get(name=data['class_group'])
 
 
     class Meta(MetaCore):
