@@ -17,7 +17,7 @@ setup(
         'telemeta==1.4.6',
         'south',
         'django-pagination==1.0.7',
-        'django-postman',
+        'django-postman==3.2.0',
         'django-extensions==0.9',
         'django-notes',
         'django-timezones==0.2',
@@ -31,7 +31,7 @@ setup(
         'django-user-agents',
         'xhtml2pdf',
         'html5lib==0.95',
-        
+
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
