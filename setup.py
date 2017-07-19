@@ -29,6 +29,9 @@ setup(
         'django-suit',
         'django-nvd3',
         'django-user-agents',
+        'xhtml2pdf',
+        'html5lib==0.95',
+        
   ],
   platforms=['OS Independent'],
   license='CeCILL v2',
