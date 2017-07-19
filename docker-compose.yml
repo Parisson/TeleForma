@@ -1,13 +1,13 @@
 data:
-  image: debian:wheezy
+  image: debian:jessie
   volumes:
-     - ./data/media/:/srv/media
-     - ./data/static/:/srv/static
-     - ./data/backup/:/srv/backup
+     - ./var/media/:/srv/media
+     - ./var/static/:/srv/static
+     - ./var/backup/:/srv/backup
   command: "true"
 
 db:
-  image: mysql
+  image: mariadb
   environment:
     - MYSQL_ROOT_PASSWORD=mysecretpassword
     - MYSQL_DATABASE=teleforma
@@ -22,7 +22,7 @@ app:
   command: /bin/sh deploy/start_app.sh
   volumes:
     - ./app/:/srv/app
-    - ./teleforma/:/srv/src/teleforma
+    - ./teleforma/:/srv/lib/teleforma/teleforma
   volumes_from:
     - data
   ports:
