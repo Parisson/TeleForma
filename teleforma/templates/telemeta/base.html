@@ -14,18 +14,19 @@
 <meta name="Viewport" content="user-scalable=1" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="icon" href="/static/teleforma/images/favicon.ico"/>
 
 <title>{%block head_title %}{% description %} - TeleForma{% endblock %}</title>
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta.css" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/teleforma.css" />
+<link rel="stylesheet" type="text/css" href="/static/telemeta/css/telemeta.css" />
+<link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma.css" />
 
 <!--[if IE]>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta_ie.css" />
+<link rel="stylesheet" type="text/css" href="/static/telemeta/css/telemeta_ie.css" />
 <![endif]-->
 <!--[if lte IE 6]>
-<link rel="stylesheet"type="text/css" href="{{ STATIC_URL }}telemeta/css/telemeta_ie6.css" />
+<link rel="stylesheet"type="text/css" href="/static/telemeta/css/telemeta_ie6.css" />
 <![endif]-->
 {% endblock %}
 
@@ -33,15 +34,15 @@
 
 {% block javascript %}
 <script src="{% url django.views.i18n.javascript_catalog %}" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/jquery-1.6.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/jquery-ui.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/jquery.expander.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/messi.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/rainbowvis.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}jqchat/jqchat.js" type="text/javascript" ></script>
-<script src="{{ STATIC_URL }}telemeta/js/locale.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}telemeta/js/application.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}teleforma/js/application.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/jquery-1.6.min.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/jquery-ui.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/jquery.expander.min.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/messi.min.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/rainbowvis.js" type="text/javascript"></script>
+<script src="/static/jqchat/jqchat.js" type="text/javascript" ></script>
+<script src="/static/telemeta/js/locale.js" type="text/javascript"></script>
+<script src="/static/telemeta/js/application.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/application.js" type="text/javascript"></script>
 
 {% if user.is_authenticated %}
 <script type='text/javascript'>var CURRENT_USER_NAME="{{ user.username }}";</script>
@@ -52,7 +53,7 @@
 {% block js-status %}
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
-<script src="{{ STATIC_URL }}telecaster/js/application.js" type="text/javascript"></script>
+<script src="/static/telecaster/js/application.js" type="text/javascript"></script>
 {% endif %}
 {% endblock js-status %}
 
@@ -70,7 +71,7 @@
 
 <div id="logo_wrapper">
 <div id="logo">
-<img src="{{STATIC_URL}}teleforma/images/logo_pb.png" style="vertical-align:middle"
+<img src="/static/teleforma/images/logo_pb.png" style="vertical-align:middle"
 alt="logo" />
 </div>
 </div>
@@ -92,44 +93,59 @@ alt="logo" />
       </ul>
     </li>
   {% else %}
-   <li><a href="{% url teleforma-home %}" class="red">{% trans "Desk" %}</a></li>
+  {% with periods.0 as period %}
+   <li><a href="{% url teleforma-desk-period-list period.id %}" class="red">{% trans "Desk" %}</a></li>
+  {% endwith %}
   {% endif %}
 
  {% else %}
-  <li><a href="{% url teleforma-login %}" class="red">{% trans "Home" %}</a></li>
+  <li><a href="#accounts#" class="red">{% trans "Home" %}</a></li>
  {% endif %}
 
  {% if user.is_authenticated %}
 
  <li><a href="{% url postman_inbox %}" class="orange">{% trans "Messaging" %}{% if postman_unread_count %} ({{ postman_unread_count }}){% endif %}</a></li>
 
- {% if user.is_staff %}
-  <li><a href="{% url teleforma-users 0 0 0 %}" class="yellow">{% trans "Users" %}</a></li>
- {% else %}
   <li><a href="{% url teleforma-annals %}" class="yellow">{% trans "Annals" %}</a></li>
- {% endif %}
+
+  {% if periods|length == 1 %}
+      <li><a href="{% url teleforma-exam-scripts-pending periods.0.id %}" class="green">&nbsp;{% trans "Scripts" %}
+      {% if user.is_staff or user.quotas.all %}{% untreated_scripts_count user periods.0.id %}
+     {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
+     </li>
+  {% else %}
+    <li><a href="#scripts#" class="green">&nbsp;{% trans "Scripts" %}
+     {% if user.is_staff or user.quotas.all %}{% untreated_scripts_count user periods.0.id %}
+     {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
+      <ul>
+       {% for period in periods %}
+        <li><a href="{% url teleforma-exam-scripts-pending period.id %}" class="green">{{ period.name }}</a></li>
+       {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+
+  {% if periods|length == 1 %}
+      <li><a href="{% url teleforma-exam-scripts-scores-all periods.0.id %}" class="green">&nbsp;{% trans "Scores" %}</a></li>
+  {% else %}
+    <li><a href="#scores#" class="green">&nbsp;{% trans "Scores" %}</a>
+      <ul>
+        {% for period in periods %}
+        <li><a href="{% url teleforma-exam-scripts-scores-all period.id %}" class="green">{{ period.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
 
  {% if user.is_authenticated %}
-  {% if user.is_staff %}
-   <li><a href="#archives#" class="green">{% trans "Archives" %}</a>
- <ul>
- <li><a href="{% url telemeta-search-criteria %}">{% trans "Search" %}</a></li>
- <li><a href="{% url telemeta-collections %}">{% trans "Collections" %}</a></li>
- <li><a href="{% url telemeta-items %}">{% trans "Items" %}</a></li>
- <li><a href="{% url teleforma-annals %}">{% trans "Annals" %}</a></li>
- </ul>
- </li>
- <li><a href="{% url telemeta-admin-general %}" class="blue">{% trans "Admin" %}</a></li>
+  {% if user.is_superuser %}
+  <li><a href="/admin/django/" target="_blank" class="blue">{% trans "Admin" %}</a></li>
   {% else %}
-   <li><a href="{% url teleforma-help %}" class="green">{% trans "Help" %}</a></li>
+   <li><a href="{% url teleforma-help %}" class="blue">{% trans "Help" %}</a></li>
  {% endif %}
 
- <li style="a.active{background-image:{{ STATIC_URL }}telemeta/images/user_tr_bk.png; background-repeat: no-repeat;
-    background-position: 1ex .5ex;}"><a href="#accounts#" class="blue">{% if user.first_name and user.last_name %}
- {{ user.first_name }} {{ user.last_name }}
- {% else %}
- {{ user.username }}
- {% endif %}</a>
+ <li style="a.active{background-image:/static/telemeta/images/user_tr_bk.png; background-repeat: no-repeat; background-position: 1ex .5ex;}">
+    <a href="#accounts#" class="blue">{% if user.first_name and user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}</a>
     <ul>
     <li><a href="{% url telemeta-profile-detail user.username %}" class="yellow">{% trans "Profile" %}</a></li>
     {% if user.is_staff %}
@@ -176,7 +192,7 @@ alt="logo" />
  <table width="100%">
   <tr>
    <td>
-    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="{{ STATIC_URL }}telemeta/images/logo_mini_2.png" alt="Telemeta Powered"/></a>
+    <a id="telemeta_powered" href="{% telemeta_url %}" target="_blank"><img src="/static/telemeta/images/logo_mini_2.png" alt="Telemeta Powered"/></a>
     <p class="left">
     {% trans "Powered by" %} <a href="http://parisson.com" target="_blank"><br /><strong>TeleForma {% teleforma_version %}</strong></a><br />
     </p>
@@ -199,7 +215,20 @@ alt="logo" />
 </div>
 {% endblock layout %}
 
-<script type='text/javascript'>window.scrollTo(0, 1);</script>
+{% block analytics %}
+{% analytics_code %}
+{% endblock analytics %}
+
+<script type='text/javascript'>
+window.scrollTo(0, 1);
+
+$(document).ready(function(){
+  $("*").dblclick(function(e){
+    e.preventDefault();
+  });
+});
+
+</script>
 
 </body>
 </html>

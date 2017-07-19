@@ -3,13 +3,38 @@
 {% load teleforma_tags %}
 
 {% block content %}
+
+<script type="text/javascript">
+function update_admin_recipient() {
+	$("#_adminSelect").click(function () {
+      var htmlStr = $(this).val();
+      $("#id_recipients").val(htmlStr);
+    });
+}
+
+function update_professor_recipient() {
+	$("#_professorSelect").click(function () {
+      var htmlStr = $(this).val();
+      $("#id_recipients").val(htmlStr);
+    });
+}
+
+</script>
+
 <div id="postman" class="desk_messages">
 <h1>{% block pm_write_title %}{% endblock %}</h1>
 
-{% if user.student.all or user.is_staff %}
+{% if user.student.all or user.is_staff or user.quotas.all %}
 <div style="padding-top: 0.5em;">
 
-<select id="_adminSelect" name="admins" onchange="update_recipients();">
+{% trans "Vous pouvez ici échanger des messages avec les professeurs et les administrateurs." %}
+<br/>
+{% trans "Pour les questions concernant l'organisation des cours, le planning, les documents de cours ou les copies, adressez-vous à <b>Admin-CRFPA</b>." %}
+<br/>
+{% trans "Pour les questions concernant uniquement l'accès à la plateforme et aux médias vidéo ou audio, lire d'abord" %} <a href="{% url teleforma-help %}">la page d'aide</a> {% trans "puis adressez-vous à <b>Support technique</b>." %}
+<br/><br/>
+
+<select id="_adminSelect" name="admins" onchange="update_admin_recipient();">
 <option value="">{% trans "to an administrator" %}</option>
 {% get_all_admins as admins %}
 {% for a in admins %}
@@ -17,7 +42,7 @@
 {% endfor %}
 </select>
 
-<select id="_professorSelect" name="professors" onchange="update_recipients();">
+<select id="_professorSelect" name="professors" onchange="update_professor_recipient();">
 <option value="">{% trans "to a professor" %}</option>
 {% get_all_professors as professors %}
 {% for p in professors %}
@@ -38,22 +63,12 @@
 <a href="#" class="component_icon button icon_next" id="send_button">{% trans "Send" %}</a>
 </div>
 </div>
-<script type="text/javascript">document.getElementById("id_subject").focus();</script>
-<script type="text/javascript">
-function update_recipients() {
-$("#_professorSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
-$("#_adminSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
-}
 
+<script type="text/javascript">
+document.getElementById("id_subject").focus();
 $('#send_button').click(function() {
   $('#_messageForm').submit();
 });
-
 </script>
+
 {% endblock %}

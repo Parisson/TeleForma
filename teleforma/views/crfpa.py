@@ -34,6 +34,9 @@
 
 
 from teleforma.views.core import *
+from registration.views import *
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from django.utils.translation import ugettext_lazy as _
 
 
 def get_course_code(obj):
@@ -50,11 +53,19 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     professor = user.professor.all()
     student = user.student.all()
+    quotas = user.quotas.all()
 
     if professor:
         professor = user.professor.get()
         courses = format_courses(courses, queryset=professor.courses.all(),
                                   types=CourseType.objects.all())
+
+    elif quotas and not user.is_staff:
+        queryset = Course.objects.all()
+        for quota in quotas:
+            queryset = queryset.filter(quotas=quota)
+        courses = format_courses(courses, queryset=queryset,
+                    types=CourseType.objects.all())
 
     elif student:
         student = user.student.get()
@@ -192,53 +203,82 @@ class UserLoginView(View):
         return super(UserLoginView, self).dispatch(*args, **kwargs)
 
 
-class UsersExportView(UsersView):
+class UserXLSBook(object):
 
     first_row = 2
 
+    def __init__(self, users):
+        self.book = Workbook()
+        self.users = users
+        self.sheet = self.book.add_sheet('Etudiants')
+
     def export_user(self, counter, user):
-        student = Student.objects.filter(user=user)
-        if student:
-            student = Student.objects.get(user=user)
-            row = self.sheet.row(counter + self.first_row)
-            row.write(0, user.last_name)
-            row.write(1, user.first_name)
-            row.write(9, user.email)
-            row.write(2, unicode(student.iej))
+        students = Student.objects.filter(user=user)
+        if students:
+            student = students[0]
+            if student.training or student.trainings.all():
+                student = Student.objects.get(user=user)
+                row = self.sheet.row(counter + self.first_row)
+                row.write(0, user.last_name)
+                row.write(1, user.first_name)
+                row.write(9, user.email)
+                row.write(2, unicode(student.iej))
 
-            codes = []
-            for training in student.trainings.all():
-                if student.platform_only:
-                    codes.append('I - ' + training.code)
+                codes = []
+                for training in student.trainings.all():
+                    if student.platform_only:
+                        codes.append('I - ' + training.code)
+                    else:
+                        codes.append(training.code)
+                row.write(3, unicode(' '.join(codes)))
+
+                row.write(4, get_course_code(student.procedure))
+                row.write(5, get_course_code(student.written_speciality))
+                row.write(6, get_course_code(student.oral_speciality))
+                row.write(7, get_course_code(student.oral_1))
+                row.write(8, get_course_code(student.oral_2))
+
+                profile = Profile.objects.filter(user=user)
+                student = Student.objects.get(user=user)
+                if profile:
+                    profile = Profile.objects.get(user=user)
+                    row.write(10, profile.address)
+                    row.write(11, profile.postal_code)
+                    row.write(12, profile.city)
+                    row.write(13, profile.telephone)
+                    if student.date_subscribed:
+                        row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
+
+                if student.training:
+                    training = student.training
                 else:
-                    codes.append(training.code)
-            row.write(3, unicode(' '.join(codes)))
+                    training = student.trainings.all()[0]
 
-            row.write(4, get_course_code(student.procedure))
-            row.write(5, get_course_code(student.written_speciality))
-            row.write(6, get_course_code(student.oral_speciality))
-            row.write(7, get_course_code(student.oral_1))
-            row.write(8, get_course_code(student.oral_2))
+                row.write(15, training.cost)
+                row.write(16, student.total_discount)
+                row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
 
-            profile = Profile.objects.filter(user=user)
-            if profile:
-                profile = Profile.objects.get(user=user)
-                row.write(10, profile.address)
-                row.write(11, profile.postal_code)
-                row.write(12, profile.city)
-                row.write(13, profile.telephone)
-                row.write(14, user.date_joined.strftime("%d/%m/%Y"))
-            return counter + 1
+                row.write(18, student.total_payments)
+                row.write(19, student.total_fees)
+                row.write(20, student.balance)
+                row.write(21, student.total_paybacks)
+
+                payments = student.payments.all()
+                i = 22
+                for month in months_choices:
+                    payment = payments.filter(month=month[0])
+                    if payment:
+                        value = payment[0].value
+                    else:
+                        value = 0
+                    row.write(i, value)
+                    i += 1
+
+                return counter + 1
         else:
             return counter
 
-    @method_decorator(permission_required('is_staff'))
-    def get(self, *args, **kwargs):
-        super(UsersExportView, self).get(*args, **kwargs)
-        self.users = self.users
-        self.book = Workbook()
-        self.sheet = self.book.add_sheet('Etudiants')
-
+    def write(self):
         row = self.sheet.row(0)
         cols = [{'name':'NOM', 'width':5000},
                 {'name':'PRENOM', 'width':5000},
@@ -254,8 +294,19 @@ class UsersExportView(UsersView):
                 {'name':'CP', 'width':2500},
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
-                {'name':"Date d'inscription", 'width':5000}
+                {'name':"Date inscription", 'width':5000},
+                {'name':"Prix formation brut", 'width':4000},
+                {'name':"Total reductions", 'width':4000},
+                {'name':"Description reduction", 'width':4000},
+                {'name':"Total paiements", 'width':4000},
+                {'name':"Prix formation net", 'width':4000},
+                {'name':"Balance", 'width':4000},
+                {'name':"Total remboursement", 'width':4000},
                 ]
+
+        for month in months_choices:
+            cols.append({'name': 'Paiement ' + slugify(month[1]), 'width': 4000})
+
         i = 0
         for col in cols:
             row.write(i, col['name'])
@@ -265,9 +316,18 @@ class UsersExportView(UsersView):
         counter = 0
         for user in self.users:
             counter = self.export_user(counter, user)
+
+
+class UsersExportView(UsersView):
+
+    @method_decorator(permission_required('is_staff'))
+    def get(self, *args, **kwargs):
+        super(UsersExportView, self).get(*args, **kwargs)
+        book = UserXLSBook(self.users)
+        book.write()
         response = HttpResponse(mimetype="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
-        self.book.save(response)
+        book.book.save(response)
         return response
 
 
@@ -282,7 +342,7 @@ class AnnalsView(ListView):
         annals = {}
         courses = [c['course'] for c in self.all_courses]
 
-        if self.user.is_staff or self.user.is_superuser or self.user.professor.all():
+        if self.user.is_staff or self.user.is_superuser or self.user.professor.all() or self.user.quotas.all():
             docs = Document.objects.filter(is_annal=True).order_by('-annal_year')
         elif students:
             self.student = students[0]
@@ -315,6 +375,8 @@ class AnnalsView(ListView):
         if self.student:
             context['student'] =  self.student
         context['all_courses'] = self.all_courses
+        periods = get_periods(user)
+        context['period'] = periods[0]
         return context
 
     @method_decorator(login_required)
@@ -330,6 +392,7 @@ class AnnalsIEJView(AnnalsView):
         self.iej = IEJ.objects.filter(id=self.args[0])
         return self.get_docs(iej=self.iej)
 
+
 class AnnalsCourseView(AnnalsView):
 
     def get_queryset(self):
@@ -339,3 +402,98 @@ class AnnalsCourseView(AnnalsView):
         return self.get_docs(course=self.course)
 
 
+def get_unique_username(first_name, last_name):
+    username = slugify(first_name)[0] + '.' + slugify(last_name)
+    username = username[:30]
+    i = 1
+    while User.objects.filter(username=username[:30]):
+        username = slugify(first_name)[:i] + '.' + slugify(last_name)
+        i += 1
+    return username[:30]
+
+
+class UserAddView(CreateWithInlinesView):
+
+    model = User
+    template_name = 'registration/registration_form.html'
+    form_class = UserForm
+    inlines = [ProfileInline, StudentInline]
+
+    def forms_valid(self, form, inlines):
+        messages.info(self.request, _("You have successfully register your account."))
+        first_name = form.cleaned_data['first_name']
+        last_name = form.cleaned_data['last_name']
+        username = get_unique_username(first_name, last_name)
+        self.username = username
+        user = form.save()
+        user.username = username
+        user.last_name = last_name.upper()
+        user.first_name = first_name.capitalize()
+        user.is_active = False
+        user.save()
+        # period = inlines[1].cleaned_data['period']
+        return super(UserAddView, self).forms_valid(form, inlines)
+
+    def get_success_url(self):
+        return reverse_lazy('teleforma-register-complete', kwargs={'username':self.username})
+
+
+class UserCompleteView(TemplateView):
+
+    template_name = 'registration/registration_complete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserCompleteView, self).get_context_data(**kwargs)
+        # context['register_doc_print'] = Document.objects.get(id=settings.TELEFORMA_REGISTER_DEFAULT_DOC_ID)
+        context['username'] = kwargs['username']
+        return context
+
+
+class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
+
+    template_name = 'registration/registration_pdf.html'
+    pdf_template_name = template_name
+
+    def is_pdf(self):
+        return True
+
+    def get_context_data(self, **kwargs):
+        context = super(RegistrationPDFView, self).get_context_data(**kwargs)
+        user = User.objects.get(username=kwargs['username'])
+
+        # some form fixes
+        student = user.student.all()[0]
+        if student.training and not student.trainings.all():
+            student.trainings.add(student.training)
+        if not student.training and student.trainings.all():
+            student.training = student.trainings.all()[0]
+        if not student.oral_1:
+            student.oral_1 = Course.objects.get(code='X')
+        if not student.oral_2:
+            student.oral_2 = Course.objects.get(code='X')
+        student.save()
+
+        profile = user.profile.all()[0]
+        if profile.city:
+            profile.city = profile.city.upper()
+        if profile.country:
+            profile.country = profile.country.upper()
+        profile.save()
+
+        context['student'] = student
+        return context
+
+
+class RegistrationPDFViewDownload(RegistrationPDFView):
+
+    pdf_filename = 'registration.pdf'
+
+    def get_pdf_filename(self):
+        super(RegistrationPDFViewDownload, self).get_pdf_filename()
+        user = User.objects.get(username=self.kwargs['username'])
+        # user = self.get_object()
+        student = user.student.all()[0]
+        prefix = unicode(_('Registration'))
+        filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
+        filename += '.pdf'
+        return filename.encode('utf-8')

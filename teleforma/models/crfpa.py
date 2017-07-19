@@ -3,7 +3,7 @@
 """
    teleforma
 
-   Copyright (c) 2006-2012 Guillaume Pellerin <yomguy@parisson.com>
+   Copyright (c) 2012-2017 Guillaume Pellerin <yomguy@parisson.com>
 
 # This software is governed by the CeCILL  license under French law and
 # abiding by the rules of distribution of free software.  You can  use,
@@ -40,12 +40,10 @@ from telemeta.models.core import *
 from teleforma.models.core import *
 
 
-# CRFPA
-
 class IEJ(Model):
 
-    name            = CharField(_('name'), max_length=255)
-    description     = CharField(_('description'), max_length=255, blank=True)
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(_('description'), max_length=255, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -57,42 +55,67 @@ class IEJ(Model):
         ordering = ['name']
 
 
+class WebClassGroup(models.Model):
+
+    name = models.CharField(_('name'), max_length=255)
+    iejs = models.ManyToManyField('IEJ', related_name="web_class_group", verbose_name=_('IEJ'),
+                                        blank=True, null=True)
+
+    class Meta(MetaCore):
+        verbose_name = _('web class group')
+        verbose_name_plural = _('web class group')
+        ordering = ['name']
+
+    def to_json_dict(self):
+        data = {'name': self.name,
+                'iejs': [iej.name for iej in self.iejs.all()],
+                 }
+        return data
+
+
 class Training(Model):
 
-    code            = CharField(_('code'), max_length=255)
-    name            = CharField(_('name'), max_length=255, blank=True)
-    period          = ForeignKey('Period', related_name='training', verbose_name=_('period'),
-                                 blank=True, null=True)
-    synthesis_note  = ManyToManyField('CourseType', related_name="training_synthesis_note",
-                                        verbose_name=_('synthesis note'),
+    code = models.CharField(_('code'), max_length=255)
+    name = models.CharField(_('name'), max_length=255, blank=True)
+    description = models.CharField(_('description'), max_length=512, blank=True)
+    period = models.ForeignKey('Period', related_name='training', verbose_name=_('period'), blank=True, null=True)
+    parent = models.ForeignKey('Training', related_name='children', verbose_name=_('parent'), blank=True, null=True)
+    synthesis_note  = models.ManyToManyField('CourseType', related_name="training_synthesis_note", verbose_name=_('synthesis note'),
                                         blank=True, null=True)
-    obligation      = ManyToManyField('CourseType', related_name="training_obligation",
+    obligation = models.ManyToManyField('CourseType', related_name="training_obligation",
                                         verbose_name=_('obligations'),
                                         blank=True, null=True)
-    procedure       = ManyToManyField('CourseType', related_name="training_procedure",
+    procedure = models.ManyToManyField('CourseType', related_name="training_procedure",
                                         verbose_name=_('procedure'),
                                         blank=True, null=True)
-    written_speciality = ManyToManyField('CourseType', related_name="training_written_speciality",
+    written_speciality = models.ManyToManyField('CourseType', related_name="training_written_speciality",
                                         verbose_name=_('written speciality'),
                                         blank=True, null=True)
-    oral_speciality = ManyToManyField('CourseType', related_name="training_oral_speciality",
+    oral_speciality = models.ManyToManyField('CourseType', related_name="training_oral_speciality",
                                         verbose_name=_('oral speciality'),
                                         blank=True, null=True)
-    oral_1          = ManyToManyField('CourseType', related_name="training_oral_1",
+    oral_1 = models.ManyToManyField('CourseType', related_name="training_oral_1",
                                         verbose_name=_('oral 1'),
                                         blank=True, null=True)
-    oral_2          = ManyToManyField('CourseType', related_name="training_oral_2",
+    oral_2 = models.ManyToManyField('CourseType', related_name="training_oral_2",
                                         verbose_name=_('oral 2'),
                                         blank=True, null=True)
-    options         = ManyToManyField('CourseType', related_name="training_options",
+    options = models.ManyToManyField('CourseType', related_name="training_options",
                                         verbose_name=_('options'),
                                         blank=True, null=True)
-    magistral       = ManyToManyField('CourseType', related_name="training_magistral",
+    magistral = models.ManyToManyField('CourseType', related_name="training_magistral",
                                         verbose_name=_('magistral'),
                                         blank=True, null=True)
-    cost            = FloatField(_('cost'), blank=True, null=True)
+    cost = models.FloatField(_('cost'), blank=True, null=True)
+    available = models.BooleanField(_('available'))
 
     def __unicode__(self):
+        if self.name:
+            return ' - '.join([self.name, self.period.name])
+        else:
+            return self.get_code()
+
+    def get_code(self):
         code = self.code
         if self.period:
             code += ' - ' + self.period.name
@@ -104,32 +127,48 @@ class Training(Model):
 
 
 class Student(Model):
+    "A student profile"
 
-    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
-    #period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
-    #                             blank=True, null=True)
-    iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
+    user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
+    iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    #training        = ForeignKey('Training', related_name='student', verbose_name=_('training'),
-    #                             blank=True, null=True, on_delete=models.SET_NULL)
-    trainings       = ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
+    trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
-    platform_only   = BooleanField(_('platform only'))
-    procedure       = ForeignKey('Course', related_name="procedure",
-                                        verbose_name=_('procedure'),
-                                        blank=True, null=True)
-    written_speciality = ForeignKey('Course', related_name="written_speciality",
-                                        verbose_name=_('written speciality'),
-                                        blank=True, null=True)
-    oral_speciality = ForeignKey('Course', related_name="oral_speciality",
+    training = models.ForeignKey('Training', related_name='student_training', verbose_name=_('training'),
+                                      blank=True, null=True, limit_choices_to={'available': True})
+    procedure = models.ForeignKey('Course', related_name="procedure_students",
+                                        verbose_name=_('procedure'), help_text="Matière de procédure",
+                                        blank=True, null=True, limit_choices_to={'procedure': True})
+    written_speciality = models.ForeignKey('Course', related_name="written_speciality_students",
+                                        verbose_name=_('written speciality'), help_text="Matière juridique de spécialité",
+                                        blank=True, null=True, limit_choices_to={'written_speciality': True})
+    written_speciality = models.ForeignKey('Course', related_name="written_speciality_2students",
+                                    verbose_name=_('written speciality'), help_text="Matière juridique de spécialité",
+                                    blank=True, null=True, limit_choices_to={'written_speciality': True})
+    oral_speciality = models.ForeignKey('Course', related_name="oral_speciality_students",
                                         verbose_name=_('oral speciality'),
+                                        help_text="Matière d’oral de spécialité (matière incluse dans la formation approfondie, en option pour toutes les autres formations)",
+                                        blank=True, null=True, limit_choices_to={'oral_speciality': True})
+    oral_1 = models.ForeignKey('Course', related_name="oral_1_students", verbose_name=_('oral de langue (option)'),
+                                        help_text="Matière d’oral de langue (en option)",
+                                        blank=True, null=True, limit_choices_to={'oral_1': True})
+    oral_2 = models.ForeignKey('Course', related_name="oral_2_students", verbose_name=_('oral 2 (option)'),
+                                        help_text="Matière d’oral technique 2 (en option)",
+                                        blank=True, null=True, limit_choices_to={'oral_2': True})
+    options = models.ForeignKey('Course', related_name="options_students", verbose_name=_('options'),
                                         blank=True, null=True)
-    oral_1          = ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
-                                        blank=True, null=True)
-    oral_2          = ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
-                                        blank=True, null=True)
-    options         = ForeignKey('Course', related_name="options", verbose_name=_('options'),
-                                        blank=True, null=True)
+    period = models.ForeignKey('Period', related_name='student', verbose_name=_('period'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
+    platform_only   = models.BooleanField(_('e-learning platform only'))
+    application_fees = models.BooleanField(_('application fees'), blank=True)
+    default_application_fees = 40
+    subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
+    promo_code = models.CharField(_('promo code'), blank=True, max_length=100)
+    date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
+    date_subscribed = models.DateTimeField(_('subscription date'), null=True, blank=True)
+    is_subscribed = models.BooleanField(_('subscribed'))
+    confirmation_sent = models.BooleanField(_('confirmation sent'))
+    level = models.CharField(_('studying level'), blank=True, max_length=100)
 
     def __unicode__(self):
         try:
@@ -137,27 +176,132 @@ class Student(Model):
         except:
             return ''
 
+    @property
+    def total_fees(self):
+        amount = 0
+        if self.subscription_fees:
+            amount += self.subscription_fees
+        if self.application_fees:
+            amount += self.default_application_fees
+        for optional_fee in self.optional_fees.all():
+            amount += optional_fee.value
+        for discount in self.discounts.all():
+            amount -= discount.value
+        return amount
+
+    @property
+    def total_payments(self):
+        amount = 0
+        for payment in self.payments.all():
+            amount += payment.value
+        return amount
+
+    @property
+    def total_discount(self):
+        amount = 0
+        for discount in self.discounts.all():
+            amount -= discount.value
+        return amount
+
+    @property
+    def total_paybacks(self):
+        amount = 0
+        for payback in self.paybacks.all():
+            amount -= payback.value
+        return amount
+
+    @property
+    def balance(self):
+        return  round(self.total_payments - self.total_fees, 2)
+
+    def get_absolute_url(self):
+        return reverse_lazy('teleforma-profile-detail', kwargs={'username':self.user.username})
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
-        verbose_name = _('CRFPA Profile')
-        ordering = ['user__last_name']
+        verbose_name = _('Student')
+        verbose_name_plural = _('Students')
+        ordering = ['user__last_name', '-date_subscribed']
 
 
 class Profile(models.Model):
     "User profile extension"
 
-    user            = ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
-    address         = TextField(_('Address'), blank=True)
-    postal_code     = CharField(_('Postal code'), max_length=255, blank=True)
-    city            = CharField(_('City'), max_length=255, blank=True)
-    country         = CharField(_('Country'), max_length=255, blank=True)
-    language        = CharField(_('Language'), max_length=255, blank=True)
-    telephone       = CharField(_('Telephone'), max_length=255, blank=True)
-    expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
-    init_password   = BooleanField(_('Password initialized'))
+    user = models.ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
+    address = models.TextField(_('Address'), blank=True)
+    postal_code = models.CharField(_('Postal code'), max_length=255, blank=True)
+    city = models.CharField(_('City'), max_length=255, blank=True)
+    country = models.CharField(_('Country'), max_length=255, blank=True)
+    language = models.CharField(_('Language'), max_length=255, blank=True)
+    telephone = models.CharField(_('Telephone'), max_length=255, blank=True)
+    expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
+    init_password = models.BooleanField(_('Password initialized'))
+    wifi_login = models.CharField(_('WiFi login'), max_length=255, blank=True)
+    wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
+    birthday = models.DateField(_('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
         verbose_name = _('profile')
 
 
+months_choices = []
+for i in range(1,13):
+    months_choices.append((i, datetime.date(2015, i, 1).strftime('%B')))
+
+
+class Payment(models.Model):
+    "a payment from a student"
+
+    student = models.ForeignKey(Student, related_name='payments', verbose_name=_('student'))
+    value = models.FloatField(_('amount'), help_text='€')
+    month = models.IntegerField(_('month'), choices=months_choices, default=1)
+    collected = models.BooleanField(_('collected'))
+    type = models.CharField(_('payment type'), choices=payment_choices, max_length=64)
+    date_created = models.DateTimeField(_('date created'), auto_now_add=True)
+    date_modified = models.DateTimeField(_('date modified'), auto_now=True)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'payments'
+        verbose_name = _("Payment")
+        verbose_name_plural = _("Payments")
+        ordering = ['month']
+
+
+class Discount(models.Model):
+    "a discount for a student subscription"
+
+    student = models.ForeignKey(Student, related_name='discounts', verbose_name=_('student'))
+    value = models.FloatField(_('amount'), help_text='€')
+    description = models.CharField(_('description'), max_length=255, blank=True)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'discounts'
+        verbose_name = _("Discount")
+        verbose_name_plural = _("Discounts")
+
+
+class OptionalFee(models.Model):
+    "an optional fee for a student subscription"
+
+    student = models.ForeignKey(Student, related_name='optional_fees', verbose_name=_('student'))
+    value = models.FloatField(_('amount'), help_text='€')
+    description = models.CharField(_('description'), max_length=255, blank=True)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'optional_fees'
+        verbose_name = _("Optional fees")
+        verbose_name_plural = _("Optional fees")
+
+
+class Payback(models.Model):
+    "an payback for a student subscription"
+
+    student = models.ForeignKey(Student, related_name='paybacks', verbose_name=_('student'))
+    value = models.FloatField(_('amount'), help_text='€')
+    description = models.CharField(_('description'), max_length=255, blank=True)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'paybacks'
+        verbose_name = _("Payback")
+        verbose_name_plural = _("Paybacks")

@@ -21,8 +21,8 @@
     <th>{% trans "IEJ"%}</th>
     <th>{% trans "Trainings"%}</th>
     <th>{% trans "Procedure"%}</th>
-    <th>{% trans "Oral spe"%}</th>
     <th>{% trans "Written spe"%}</th>
+    <th>{% trans "Oral spe"%}</th>
     <th>{% trans "Oral 1"%}</th>
     <th>{% trans "Oral 2"%}</th>
     <th>{% trans "Write"%}</th>
@@ -39,8 +39,8 @@
         <td>{{ student.iej.name }}</td>
         <td>{% for training in student.trainings.all %}{{ training }} {% endfor %}</td>
         <td>{{ student.procedure.code }}</td>
-        <td>{{ student.oral_speciality.code }}</td>
         <td>{{ student.written_speciality.code }}</td>
+        <td>{{ student.oral_speciality.code }}</td>
         <td>{{ student.oral_1.code }}</td>
         <td>{{ student.oral_2.code }}</td>
      {% endwith %}

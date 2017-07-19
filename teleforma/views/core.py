@@ -43,7 +43,7 @@ from jsonrpc import jsonrpc_method
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
-from django.template import RequestContext, loader
+from django.template import RequestContext, loader, Context
 from django import template
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
@@ -74,6 +74,10 @@ from teleforma.forms import *
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
+
+from cgi import escape
+from cStringIO import StringIO
+from xhtml2pdf import pisa
 
 try:
     from telecaster.models import *
@@ -121,7 +125,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
         name = 'site'
 
     if settings.TELEFORMA_PERIOD_TWEETER and period:
-        name = name + '-' + period 
+        name = name + '-' + period
 
     if settings.TELEFORMA_GLOBAL_TWEETER:
         rooms = jqchat.models.Room.objects.filter(name=name[:20])
@@ -136,6 +140,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
     else:
         room = rooms[0]
     return room
+
 
 def get_access(obj, courses):
     access = False
@@ -156,20 +161,75 @@ def get_host(request):
     return host
 
 def get_periods(user):
+    periods = []
+
     student = user.student.all()
     if student:
         student = user.student.get()
         periods = [training.period for training in student.trainings.all()]
+        for period in periods:
+            for child in period.children.all():
+                periods.append(child)
 
     if user.is_superuser or user.is_staff:
-        periods = Period.objects.all()
+        periods = Period.objects.filter(is_open=True)
 
     professor = user.professor.all()
     if professor:
-        professor = user.professor.get()
-        periods = Period.objects.all()
+        periods = Period.objects.filter(is_open=True)
+
+    quotas = user.quotas.all()
+    if quotas and not (user.is_superuser or user.is_staff) and not professor:
+        periods = []
+        for quota in quotas:
+            if not quota.period in periods:
+                periods.append(quota.period)
 
     return periods
+
+def get_default_period(periods):
+    if not periods:
+        return None
+    elif len(periods) == 1:
+        return periods[0]
+    else:
+        return Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
+
+
+def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
+    """
+    Write into *dest* file object the given html *content*.
+    Return True if the operation completed successfully.
+    """
+    from xhtml2pdf import pisa
+    src = StringIO(content.encode(encoding))
+    pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
+    return not pdf.err
+
+def content_to_response(content, filename=None):
+    """
+    Return a pdf response using given *content*.
+    """
+    response = HttpResponse(content, mimetype='application/pdf')
+    if filename is not None:
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    return response
+
+def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
+    **kwargs):
+    """
+    Render a pdf response using given *request*, *template* and *context*.
+    """
+    if not isinstance(context, Context):
+        context = RequestContext(request, context)
+
+    content = loader.render_to_string(template, context)
+    buffer = StringIO()
+
+    succeed = content_to_pdf(content, buffer, encoding, **kwargs)
+    if succeed:
+        return content_to_response(buffer.getvalue(), filename)
+    return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
 class HomeRedirectView(View):
@@ -177,14 +237,16 @@ class HomeRedirectView(View):
     def get(self, request):
         if request.user.is_authenticated():
             periods = get_periods(request.user)
-            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
+            if periods:
+                period = get_default_period(periods)
+                return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+            else:
+                HttpResponseRedirect(reverse('telemeta-admin'))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 
 
 class PeriodAccessMixin(View):
-
-    period = None
 
     def get_context_data(self, **kwargs):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
@@ -192,6 +254,9 @@ class PeriodAccessMixin(View):
             period = Period.objects.filter(id=int(self.kwargs['period_id']))
             if period:
                 self.period = period[0]
+            else:
+                periods = get_periods(self.request.user)
+                self.period = get_default_period(periods)
         context['period'] = self.period
         return context
 
@@ -223,11 +288,10 @@ class CourseListView(CourseAccessMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
-        context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site', period=context['period'].name)
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
-        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:3]
         return context
 
     @method_decorator(login_required)
@@ -257,7 +321,7 @@ class CourseListView(CourseAccessMixin, ListView):
                     else:
                         course = course[0]
                     course.from_dict(course_dict)
-                
+
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)
@@ -306,6 +370,16 @@ class CourseView(CourseAccessMixin, DetailView):
         return media_list
 
 
+class CoursePendingListView(CourseListView):
+
+    template_name='teleforma/courses_pending.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CoursePendingListView, self).get_context_data(**kwargs)
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)
+        return context
+
+
 class MediaView(CourseAccessMixin, DetailView):
 
     model = Media
@@ -322,7 +396,12 @@ class MediaView(CourseAccessMixin, DetailView):
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=media.course.code,period=context['period'].name,
+
+        room_name = media.course.code
+        if media.conference.web_class_group:
+            room_name += '_' + media.conference.public_id
+
+        context['room'] = get_room(name=room_name,period=context['period'].name,
                                    content_type=content_type,
                                    id=media.course.id)
 
@@ -418,7 +497,7 @@ class DocumentView(CourseAccessMixin, DetailView):
 
     def download(self, request, pk):
         courses = get_courses(request.user)
-        document = Document.objects.get(id=pk)
+        document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
@@ -432,7 +511,7 @@ class DocumentView(CourseAccessMixin, DetailView):
 
     def view(self, request, pk):
         courses = get_courses(request.user)
-        document = Document.objects.get(id=pk)
+        document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             fsock = open(document.file.path, 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
@@ -455,9 +534,15 @@ class ConferenceView(CourseAccessMixin, DetailView):
         context['type'] = conference.course_type
         # context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=conference.course.code, period=context['period'].name,
+
+        room_name = conference.course.code
+        if conference.web_class_group:
+            room_name += '_' + conference.public_id
+
+        context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
                                    id=conference.course.id)
+
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
         access = get_access(conference, context['all_courses'])
@@ -638,10 +723,12 @@ class ConferenceRecordView(FormView):
                     stream = LiveStream(conference=conference, server=server,
                                         stream_type=stream_type, streaming=True)
                     stream.save()
-                try:
-                    live_message(conference)
-                except:
-                    pass
+
+                if not conference.web_class_group:
+                    try:
+                        live_message(conference)
+                    except:
+                        pass
         else:
             raise 'Error : input must be a conference dictionnary'
 
@@ -690,6 +777,25 @@ class ProfessorListView(View):
                 professor.delete()
 
 
+class WebClassGroupView(View):
+
+    @jsonrpc_method('teleforma.get_web_class_group_list')
+    def get_web_class_group_list(request):
+        web_class_groups = WebClassGroup.objects.all()
+        return [w.to_json_dict() for w in web_class_groups]
+
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+
+        remote_list = s.teleforma.get_web_class_group_list()
+        for web_class_group_dict in remote_list['result']:
+            web_class_group, c = WebClassGroup.objects.get_or_create(name=web_class_group_dict['name'])
+
+
 class HelpView(TemplateView):
 
     template_name='teleforma/help.html'
@@ -733,3 +839,92 @@ class SourcesStatusView(ListView):
     def stop(request):
         pass
 
+
+class PDFTemplateResponseMixin(TemplateResponseMixin):
+    """
+    Mixin for Django class based views.
+    Switch normal and pdf template based on request.
+
+    The switch is made when the request has a particular querydict, e.g.::
+
+        http://www.example.com?format=pdf
+
+    The key and value of the querydict can be overridable using *as_view()*.
+    That pdf url will be present in the context as *pdf_url*.
+
+    For example it is possible to define a view like this::
+
+        from django.views.generic import View
+
+        class MyView(PDFTemplateResponseMixin, View):
+            template_name = 'myapp/myview.html'
+            pdf_filename = 'report.pdf'
+
+    The pdf generation is automatically done by *xhtml2pdf* using
+    the *myapp/myview_pdf.html* template.
+
+    Note that the pdf template takes the same context as the normal template.
+    """
+    pdf_template_name = None
+    pdf_template_name_suffix = '_pdf'
+    pdf_querydict_key = 'format'
+    pdf_querydict_value = 'pdf'
+    pdf_encoding = 'utf-8'
+    pdf_filename = None
+    pdf_url_varname = 'pdf_url'
+    pdf_kwargs = {}
+
+    def is_pdf(self):
+        value = self.request.REQUEST.get(self.pdf_querydict_key, '')
+        return value.lower() == self.pdf_querydict_value.lower()
+
+    def _get_pdf_template_name(self, name):
+        base, ext = os.path.splitext(name)
+        return '%s%s%s' % (base, self.pdf_template_name_suffix, ext)
+
+    def get_pdf_template_names(self):
+        """
+        If the template name is not given using the class attribute
+        *pdf_template_name*, then it is obtained using normal template
+        names, appending *pdf_template_name_suffix*, e.g.::
+
+            path/to/detail.html -> path/to/detail_pdf.html
+        """
+        if self.pdf_template_name is None:
+            names = super(PDFTemplateResponseMixin, self).get_template_names()
+            return map(self._get_pdf_template_name, names)
+        return [self.pdf_template_name]
+
+    def get_pdf_filename(self):
+        """
+        Return the pdf attachment filename.
+        If the filename is None, the pdf will not be an attachment.
+        """
+        return self.pdf_filename
+
+    def get_pdf_url(self):
+        """
+        This method is used to put the pdf url in the context.
+        """
+        querydict = self.request.GET.copy()
+        querydict[self.pdf_querydict_key] = self.pdf_querydict_value
+        return '%s?%s' % (self.request.path, querydict.urlencode())
+
+    def get_pdf_response(self, context, **response_kwargs):
+        return render_to_pdf(
+            request=self.request,
+            template=self.get_pdf_template_names(),
+            context=context,
+            encoding=self.pdf_encoding,
+            filename=self.get_pdf_filename(),
+            **self.pdf_kwargs
+        )
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.is_pdf():
+            from django.conf import settings
+            context['STATIC_ROOT'] = settings.STATIC_ROOT
+            return self.get_pdf_response(context, **response_kwargs)
+        context[self.pdf_url_varname] = self.get_pdf_url()
+        return super(PDFTemplateResponseMixin, self).render_to_response(
+            context, **response_kwargs)

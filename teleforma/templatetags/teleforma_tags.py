@@ -34,7 +34,6 @@
 
 from django import template
 from django.utils.http import urlquote
-from teleforma.models import *
 from django.core.urlresolvers import reverse
 from django.utils import html
 from django import template
@@ -52,8 +51,11 @@ from django.template.defaultfilters import stringfilter
 import django.utils.timezone as timezone
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
-from teleforma.views import get_courses
 from urlparse import urlparse
+
+from teleforma.views import get_courses
+from teleforma.models import *
+from teleforma.exam.models import *
 
 register = template.Library()
 
@@ -178,22 +180,65 @@ def get_googletools():
 
 @register.filter
 def get_audio_id(media):
-    medias = media.conference.media.all()
-    for m in medias:
-        if 'audio' in m.mime_type:
-            return m.id
+    if media.conference:
+        medias = media.conference.media.all()
+        for m in medias:
+            if 'audio' in m.mime_type:
+                return m.id
     return
 
 @register.filter
 def get_video_id(media):
-    medias = media.conference.media.all()
-    for m in medias:
-        if 'video' in m.mime_type:
-            return m.id
+    if media.conference:
+        medias = media.conference.media.all()
+        for m in medias:
+            if 'video' in m.mime_type:
+                return m.id
     return
 
 @register.filter
 def set_host(url, host):
     u = urlparse(url)
-    return u.scheme + '://' + host + ':' + str(u.port) + u.path
-    
+    if host == '127.0.0.1' or host == 'localhost':
+        nu = u.scheme + '://' + host + ':' + str(u.port) + u.path
+        return nu
+    else:
+        return url
+
+@register.filter
+def published(doc):
+    if doc:
+        return doc.filter(is_published=True)
+
+@register.simple_tag
+def untreated_scripts_count(user, period):
+    Q1 = Q(status=3, author=user, period=period)
+    Q2 = Q(status=3, corrector=user, period=period)
+    scripts = Script.objects.filter(Q1 | Q2)
+    if scripts:
+        return ' (' + str(len(scripts)) + ')'
+    else:
+        return ''
+
+@register.simple_tag
+def treated_scripts_count(user, period):
+    Q1 = Q(status=4, author=user, period=period)
+    Q2 = Q(status=4, corrector=user, period=period)
+    scripts = Script.objects.filter(Q1 | Q2)
+    if scripts:
+        return ' (' + str(len(scripts)) + ')'
+    else:
+        return ''
+
+@register.simple_tag
+def get_training_profile(user):
+    text = ''
+    if user:
+        student = user.student.all()
+        if student:
+            student = student[0]
+            if student.platform_only:
+                text += 'Internaute - '
+            for training in student.trainings.all():
+                text += unicode(training) + ' '
+    return text

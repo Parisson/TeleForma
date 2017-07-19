@@ -1,0 +1,63 @@
+{% extends "exam/scripts.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load static %}
+{% load nvd3_tags %}
+
+{% block extra_javascript %}
+<link media="all" href="/static/teleforma/lib/nvd3/build/nv.d3.min.css" rel="stylesheet">
+<script src="/static/teleforma/lib/d3/d3.min.js"></script>
+<script src="/static/teleforma/lib/nvd3/build/nv.d3.min.js"></script>
+
+{% load_chart data.charttype data.chartdata data.chartcontainer data.extra %}
+
+{% endblock extra_javascript %}
+
+
+{% block modules %}
+    <div class="module">
+    <h3><a href="{% url teleforma-home %}"><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+    <div style="background: white;">
+    <ul>
+    {% with user|user_courses as courses %}
+     {% for c in courses %}
+       {% with c.course as course %}
+       <li><a href="{% url teleforma-exam-scripts-scores-course period.id course.id %}">{{ course.title}} {{ course.type }}</a></li>
+       {% endwith %}
+     {% endfor %}
+    {% endwith %}
+    </ul>
+    </div>
+    </div>
+
+{% block module-action %}
+{% if upload %}
+<div class="module_action">
+<a href="{% url teleforma-exam-scores-create period.id %}" class="component_icon button" id="action_green">{% trans "New score" %}</a>
+</div>
+{% endif %}
+{% endblock module-action %}
+
+{% endblock modules %}
+
+
+{% block answers %}
+
+<div class="course_title">
+{% trans "Scores" %} : {{ course }}
+</div>
+<br />
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+          <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+<br />
+
+{% include_container data.chartcontainer 500 '100%' %}
+
+{% endblock answers %}

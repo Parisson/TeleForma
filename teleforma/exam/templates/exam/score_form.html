@@ -1,0 +1,69 @@
+{% extends "exam/scores.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block extra_javascript %}
+{% if upload %}
+  <script>
+    $(document).ready(function(){
+        $('#loading').hide();
+    });
+
+    $(function() {
+        $('#submit_button').unbind('click').click(function() {
+            $(window).unbind('beforeunload');
+            // b2.unbind('click');
+            $('#id_status').val("5");
+            $('#id_period').val("{{ period.id }}");
+            $(this).hide();
+            $('#loading').show();
+            $('#_ScriptForm').submit();
+        });
+    });
+    </script>
+{% endif %}
+{% endblock extra_javascript %}
+
+{% block answers %}
+
+<div class="course_title">
+{% trans "New score" %}
+</div>
+<br />
+
+<div>Ce formulaire vous permet d'enregistrer la note d'une copie papier <b>déjà corrigée hors de la plateforme e-learning</b>.</div>
+<div>Pour soumettre une nouvelle copie d'épreuve scannée à la correction en ligne, merci d'utiliser <a href="{% url teleforma-exam-script-create period.id %}">ce formulaire</a>.</div>
+<br/>
+<div>Veuillez indiquer <b>tous les champs</b> du formulaire suivant :</div>
+
+<div class="course_content" id="media_infos" style="font-size: 115%;">
+    <form method="post" id="_ScriptForm" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
+       <table>
+       <br />
+       <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
+       {% for field in form %}
+       <tr>
+        {% if not field.html_name in create_fields %}
+            <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
+        {% else %}
+            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        {% endif %}
+        </tr>
+       {% endfor %}
+       </table>
+    </form>
+    {% if upload %}
+    <br />
+    <center>
+    <a href="#" id="submit_button" class="component_icon button icon_next">{% trans "Submit" %}</a>
+    <img id="loading" src="/static/teleforma/images/loading.gif" style="vertical-align:middle" alt="loading" />
+    </center>
+    {% endif %}
+    <br /><br />
+
+</div>
+</div>
+
+{% endblock answers %}

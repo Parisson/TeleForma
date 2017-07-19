@@ -20,7 +20,7 @@ $(document).ready(function(){
 {% block modules %}
 <div class="module">
 
-<h3><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{{ period }}</h3>
+<h3><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{{ period }}</h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
@@ -42,11 +42,18 @@ $(document).ready(function(){
 <a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
 </div>
 {% endif %}
+
+{% if user.is_staff %}
+<div class="module_action">
+<a href="{% url teleforma-desk-period-pending period.id %}" class="component_icon button" id="action_red">{% trans "Pending" %}</a>
+</div>
+{% endif %}
+
 {% endblock module-action %}
 
 {% block notes %}
 <!--<div class="module">
-<h3><img src="{{ STATIC_URL }}telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
+<h3><img src="/static/telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
 <div style="background: white;">
 <ul>
 {% for note in notes %}
@@ -81,8 +88,18 @@ $(document).ready(function(){
         {% endblock %}
 
         {% block media %}
-         {% include "teleforma/inc/media_list.html" %}
+            {% with "Passed conferences" as title %}
+                {% include "teleforma/inc/media_list.html" %}
+            {% endwith %}
         {% endblock %}
+
+        {% comment %}
+        {% block webclass %}
+            {% with "Web class" as title %}
+                {% include "teleforma/inc/media_list.html" %}
+            {% endwith %}
+        {% endblock %}
+        {% endcomment %}
 
         {% block document %}
          {% with forloop.counter as type_counter %}
@@ -104,7 +121,7 @@ $(document).ready(function(){
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module">
-  <h3><img src="{{STATIC_URL}}teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
+  <h3><img src="/static/teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
   <div id="server_status_table_wrapper" class="status"></div>
 </div>
 <script type="text/javascript">server_status_callback();</script>

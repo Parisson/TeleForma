@@ -19,10 +19,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'teleforma',                      # Or path to database file if using sqlite3.
-        'USER': 'teleforma',                      # Not used with sqlite3.
-        'PASSWORD': 'HMYsrZLEtYeBrvER',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'teleforma_exam.sql',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -64,7 +64,7 @@ if not os.path.exists(MEDIA_ROOT):
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://localhost:8040/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -111,6 +111,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -123,6 +124,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -134,6 +136,7 @@ INSTALLED_APPS = (
     'jsonrpc',
     'south',
     'teleforma',
+    'teleforma.exam',
     'sorl.thumbnail',
     'django_extensions',
     'pagination',
@@ -146,7 +149,10 @@ INSTALLED_APPS = (
     'jqchat',
 #    'follow',
      'googletools',
-     'telecaster',
+     # 'telecaster',
+     'extra_views',
+     'captcha',
+     'django_user_agents',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -175,7 +181,7 @@ TELEMETA_DEFAULT_GRAPHER_SIZES = ['360x130', '640x130']
 TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_contour_wh'
 
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
-LOGIN_URL = '/login/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
@@ -198,6 +204,31 @@ TELECASTER_MASTER_STREAMING = True
 TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
 TELEFORMA_GLOBAL_TWEETER = False
 TELEFORMA_PERIOD_TWEETER = True
+TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_NUMBER = 2
+TELEFORMA_EXAM_SCRIPT_UPLOAD = True
+TELEFORMA_REGISTER_DEFAULT_DOC_ID = 1
 
 JQCHAT_DISPLAY_COUNT = 50
 JQCHAT_DISPLAY_TIME  = 48
+
+BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
+
+SOUTH_MIGRATION_MODULES = {
+    'captcha': 'captcha.south_migrations',
+}
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'TeleForma Admin',
+}
+
+# Cache backend is optional, but recommended to speed up user agent parsing
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
+# Name of cache backend to cache user agents. If it not specified default
+# cache alias will be used. Set to `None` to disable caching.
+USER_AGENTS_CACHE = 'default'

@@ -3,8 +3,8 @@
 {% load i18n %}
 
 {% block extra_javascript %}
-<script src="{{ STATIC_URL }}telemeta/js/popupdiv-min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}telemeta/js/playlist.js" type="text/javascript"></script>
+<script src="/static/telemeta/js/popupdiv-min.js" type="text/javascript"></script>
+<script src="/static/telemeta/js/playlist.js" type="text/javascript"></script>
 <script>
     jQuery(window).ready(function(){
         var p = playlistUtils;
@@ -107,7 +107,7 @@
             </td>
             <td align="center" style="vertical-align:middle">
                 {% if resource.element.file or resource.element.has_mediafile %}
-                <img src="{{ STATIC_URL }}telemeta/images/ok.png" alt="yes" style="vertical-align:middle" /></a>
+                <img src="/static/telemeta/images/ok.png" alt="yes" style="vertical-align:middle" /></a>
                 {% endif %}
             </td>
             <td style="vertical-align:middle">

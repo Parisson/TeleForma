@@ -13,7 +13,7 @@
   {% block modules %}
 
     <div class="module">
-    <h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
+    <h3><a href="{% url teleforma-home %}"><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
     <div style="background: white;">
     <ul>
     {% block courses %}
@@ -72,10 +72,12 @@
         <dt>{% trans "Options"%}</dt><dd>{{ usr.student.get.options }}</dd>
       {% endif %}
 
-      {% if user.is_staff or user.is_superuser %}
+      {% if user.is_staff or user.is_superuser or usr == user %}
       <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
       <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }} {{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
       <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
+      <dt>{% trans "WiFi login" %}</dt><dd>{{ usr.profile.get.wifi_login }}</dd>
+      <dt>{% trans "WiFi password" %}</dt><dd>{{ usr.profile.get.wifi_pass }}</dd>
       {% endif %}
 
       <dt>{% trans "Date added" %}</dt><dd>{{ usr.date_joined }}</dd>

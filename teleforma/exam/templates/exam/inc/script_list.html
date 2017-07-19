@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load pagination_tags %}
+
+{% autopaginate object_list 15 %}
+{% paginate %}
+
+<div id="users">
+  <table class="listing" width="100%">
+   <thead>
+   <tr>
+    <th>{% trans "Course"%}</th>
+    <th>{% trans "Session"%}</th>
+    <th>{% trans "Type"%}</th>
+    <th>{% trans "Last Name"%}</th>
+    <th>{% trans "First Name"%}</th>
+    <th>{% trans "Submission date"%}</th>
+    <th>{% trans "Mark date"%}</th>
+    <th>{% trans "Corrector"%}</th>
+    <th>{% trans "Score"%}</th>
+    </tr>
+    </thead>
+    <tbody id="spacing" class="script-list">
+    {% for script in object_list %}
+    <tr>
+     <td>{% if script.status != 2 and script.file %}<a href="{% url teleforma-exam-script-detail period.id script.id %}">{% endif %}{{ script.course.title }}{% if script.status != 2 and script.file %}</a>{% endif %}</td>
+     <td>{% if script.status != 2  and script.file%}<a href="{% url teleforma-exam-script-detail period.id script.id %}">{% endif %}{{ script.session }}{% if script.status != 2 and script.file %}</a>{% endif %}</td>
+     <td>{% if script.status != 2 and script.file %}<a href="{% url teleforma-exam-script-detail period.id script.id %}">{% endif %}{{ script.type }}{% if script.status != 2 and script.file %}</a>{% endif %}</td>
+     <td>{% if script.author.username %}<a href="{% url teleforma-profile-detail script.author.username %}">{{ script.author.last_name }}</a>{% endif %}</td>
+     <td>{% if script.author.username %}<a href="{% url teleforma-profile-detail script.author.username %}">{{ script.author.first_name }}</a>{% endif %}</td>
+     <td>{{ script.date_added }}</td>
+     <td>{% if script.date_marked %}{{ script.date_marked }}{% endif %}</td>
+     <td>{% if script.corrector %}{{ script.corrector }}{% endif %}</td>
+     <td>{% if script.score %}{{ script.score|floatformat }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>

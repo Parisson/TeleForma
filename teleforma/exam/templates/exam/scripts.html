@@ -1,0 +1,73 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% block head_title %}{% trans "Answers" %} - {{ block.super }}{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+
+{% block infra_javascript %}
+{% endblock infra_javascript %}
+
+{% block content %}
+
+<div id="module-set-left" style="width: 18%">
+
+{% block modules %}
+<div class="module">
+<h3><a href="{% url teleforma-desk %}"><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Scripts" %}</a></h3>
+ <div style="background: white;">
+  <ul>
+  {% block courses %}
+   <li><a href="{% url teleforma-exam-scripts-pending period.id %}">{% trans "Pending" %}{% if user.is_staff or user.quotass.all %}{% untreated_scripts_count user period %}{% endif %}</a></li>
+   <li><a href="{% url teleforma-exam-scripts-treated period.id %}">{% trans "Marked" %}{% if not user.is_staff and not user.quotas.all %}{% treated_scripts_count user period %}{% endif %}</a></li>
+   <li><a href="{% url teleforma-exam-scripts-rejected period.id %}">{% trans "Rejected" %}</a></li>
+  {% endblock courses %}
+  </ul>
+ </div>
+</div>
+
+{% block module-action %}
+{% if upload %}
+<div class="module_action">
+<a href="{% url teleforma-exam-script-create period.id %}" class="component_icon button" id="action_green">{% trans "New script" %}</a>
+</div>
+{% endif %}
+{% endblock module-action %}
+
+{% endblock modules %}
+
+</div>
+
+<div class="desk_messages">
+
+{% if user.is_staff %}
+<div style="float:right;">
+</div>
+{% endif %}
+
+{% block answers %}
+<div class="course_title">{{ title }}</div>
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+          <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+<br />
+
+ {% if object_list %}
+  {% include "exam/inc/script_list.html" %}
+ {% else %}
+    <p class="help">{% trans "No scripts" %}</p>
+ {% endif %}
+{% endblock answers %}
+
+</div>
+
+{% endblock %}

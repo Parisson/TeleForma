@@ -24,6 +24,14 @@
 {% autopaginate pm_messages %}{% paginate %}
 </div>
 
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+          <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <form id="_messageForm" action="{% block pm_form_action %}{% endblock %}" method="post">{% csrf_token %}
 <table id="pm_messages" class="listing" >
  <thead>
@@ -39,9 +47,9 @@
   <tr>
    <td><input type="checkbox" {% if by_conversation and message.thread_id %}name="tpks" value="{{ message.thread_id }}"{% else %}name="pks" value="{{ message.pk }}"{% endif %} /></td>
 
-   {% block pm_sender_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}">{% if message.is_new %}<strong>{% endif %}{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}{% if message.is_new %}</strong>{% endif %}</a></td>{% endblock %}
+   {% block pm_sender_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}" title="{% get_training_profile message.sender %}">{% if message.is_new %}<strong>{% endif %}{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}{% if message.is_new %}</strong>{% endif %}</a></td>{% endblock %}
 
-   {% block pm_recipient_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}">{{ message.obfuscated_recipient|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</a></td>{% endblock %}
+   {% block pm_recipient_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}" title="{% get_training_profile message.recipient %}">{{ message.obfuscated_recipient|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</a></td>{% endblock %}
 
    <td>{% if message.is_new %}<strong>{% endif %}{% if message.is_replied %}<em>{% endif %}
    {% block pm_subject %}

@@ -1,0 +1,2153 @@
+# Copyright (C) 2012 PARISSON SARL
+# This file is distributed under the same license as the Teleforma package.
+# Guillaume Pellerin <yomguy@parisson.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-04 13:01+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
+"Language-Team: LANGUAGE <lists@parisson.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: admin.py:19 exam/models.py:124 exam/models.py:226 models/ae.py:47
+#: models/core.py:111 models/core.py:138 models/core.py:277 models/core.py:528
+#: models/core.py:574 models/core.py:616 models/crfpa.py:64
+#: models/crfpa.py:141
+msgid "period"
+msgstr "période"
+
+#: admin.py:62
+msgid "Group"
+msgstr ""
+
+#: exam/models.py:62 exam/models.py:442
+msgid "rejected"
+msgstr "rejetée"
+
+#: exam/models.py:62
+msgid "draft"
+msgstr "brouillon"
+
+#: exam/models.py:62
+msgid "submitted"
+msgstr "soumise"
+
+#: exam/models.py:63
+msgid "pending"
+msgstr "en attente"
+
+#: exam/models.py:63 exam/models.py:427
+msgid "marked"
+msgstr "corrigée"
+
+#: exam/models.py:63
+msgid "read"
+msgstr "lu"
+
+#: exam/models.py:63
+msgid "backup"
+msgstr "sauvegardé"
+
+#: exam/models.py:65
+msgid "unreadable"
+msgstr "illisible"
+
+#: exam/models.py:66
+msgid "bad orientation"
+msgstr "mauvaise orientation"
+
+#: exam/models.py:67
+msgid "bad framing"
+msgstr "mauvais cadrage"
+
+#: exam/models.py:68
+msgid "incomplete"
+msgstr "incomplet"
+
+#: exam/models.py:69
+msgid "wrong course"
+msgstr "mauvaise matière"
+
+#: exam/models.py:70
+msgid "duplicate"
+msgstr "doublon"
+
+#: exam/models.py:71
+msgid "other"
+msgstr "autre"
+
+#: exam/models.py:72
+msgid "wrong format"
+msgstr "mauvais format"
+
+#: exam/models.py:73
+msgid "unreadable file"
+msgstr "fichier illisible"
+
+#: exam/models.py:74
+msgid "no file"
+msgstr "pas de fichier"
+
+#: exam/models.py:75
+msgid "file too large"
+msgstr "fichier trop gros"
+
+#: exam/models.py:76
+msgid "error retrieving file"
+msgstr ""
+
+#: exam/models.py:122 exam/models.py:225 models/core.py:204 models/core.py:279
+#: models/core.py:523 models/core.py:612 models/pro.py:45
+msgid "course"
+msgstr "matière"
+
+#: exam/models.py:123 exam/models.py:232
+msgid "corrector"
+msgstr "correcteur"
+
+#: exam/models.py:125
+msgid "value"
+msgstr "valeur"
+
+#: exam/models.py:126 exam/templates/exam/quotas.html:22
+msgid "date start"
+msgstr "date de début"
+
+#: exam/models.py:127 exam/templates/exam/quotas.html:23
+msgid "date end"
+msgstr "date de fin"
+
+#: exam/models.py:128 exam/models.py:230 models/core.py:421 models/core.py:530
+#: models/core.py:620
+msgid "type"
+msgstr "type"
+
+#: exam/models.py:131
+msgid "Quota"
+msgstr ""
+
+#: exam/models.py:132 exam/templates/exam/quotas.html:12
+msgid "Quotas"
+msgstr ""
+
+#: exam/models.py:181 models/core.py:490 models/pro.py:67
+msgid "date added"
+msgstr "date d'ajout"
+
+#: exam/models.py:182 models/core.py:162 models/core.py:491
+#: models/crfpa.py:228 models/pro.py:68
+msgid "date modified"
+msgstr "date de modification"
+
+#: exam/models.py:183
+msgid "UUID"
+msgstr ""
+
+#: exam/models.py:184
+msgid "MIME type"
+msgstr "Type MIME"
+
+#: exam/models.py:185
+msgid "sha1"
+msgstr ""
+
+#: exam/models.py:201
+msgid "script"
+msgstr "copie"
+
+#: exam/models.py:202
+msgid "Page file"
+msgstr "Fichier de page"
+
+#: exam/models.py:203
+msgid "Image file"
+msgstr "Fichier image"
+
+#: exam/models.py:204 models/pro.py:49 models/pro.py:85
+msgid "rank"
+msgstr "rang"
+
+#: exam/models.py:207
+msgid "Page"
+msgstr "Page"
+
+#: exam/models.py:208
+msgid "Pages"
+msgstr "Pages"
+
+#: exam/models.py:213 models/core.py:93 models/core.py:106 models/core.py:128
+#: models/core.py:143 models/core.py:211 models/core.py:261 models/core.py:506
+#: models/crfpa.py:46 models/crfpa.py:62 models/messages.py:12
+msgid "name"
+msgstr "nom"
+
+#: exam/models.py:216
+msgid "ScriptType"
+msgstr "Type de copie"
+
+#: exam/models.py:217
+msgid "ScriptTypes"
+msgstr "Types de copies"
+
+#: exam/models.py:228 models/core.py:283 models/core.py:532
+msgid "session"
+msgstr "séance"
+
+#: exam/models.py:231
+msgid "author"
+msgstr "auteur"
+
+#: exam/models.py:233
+msgid "PDF file"
+msgstr "Fichier PDF"
+
+#: exam/models.py:234
+msgid "Box UUID"
+msgstr ""
+
+#: exam/models.py:235
+msgid "score"
+msgstr "note"
+
+#: exam/models.py:236 models/pro.py:125
+msgid "comments"
+msgstr "commentaires"
+
+#: exam/models.py:237 models/core.py:292 models/pro.py:48 models/pro.py:88
+#: models/pro.py:104
+msgid "status"
+msgstr "status"
+
+#: exam/models.py:238
+msgid "reason"
+msgstr "raison"
+
+#: exam/models.py:239
+msgid "date submitted"
+msgstr "date de soumission"
+
+#: exam/models.py:240
+msgid "date marked"
+msgstr "date de correction"
+
+#: exam/models.py:241
+msgid "date rejected"
+msgstr "date de rejet"
+
+#: exam/models.py:242
+msgid "URL"
+msgstr ""
+
+#: exam/models.py:246 exam/templates/exam/inc/script_list.html:14
+#: templates/teleforma/course.html:50
+#: templates/teleforma/course_conference.html:40
+#: templates/teleforma/course_conference.html:71
+#: templates/teleforma/course_conference_audio.html:68
+#: templates/teleforma/course_media.html:86
+#: templates/teleforma/course_media.html:135
+#: templates/teleforma/course_media_video_embed.html:34
+#: templates/teleforma/inc/conference_list.html:26
+#: templates/teleforma/inc/media_list.html:37
+#: templates/teleforma/inc/media_list_pending.html:37
+msgid "Session"
+msgstr "Séance"
+
+#: exam/models.py:259 exam/models.py:426 exam/models.py:441
+msgid "Script"
+msgstr "Copie"
+
+#: exam/models.py:260 exam/templates/exam/scripts.html:21
+#: templates/telemeta/base.html:116 templates/telemeta/base.html.py:121
+msgid "Scripts"
+msgstr "Copies"
+
+#: exam/templates/exam/inc/script_list.html:13
+#: exam/templates/exam/quotas.html:21
+#: templates/teleforma/course_conference.html:70
+#: templates/teleforma/course_media.html:134
+#: templates/teleforma/course_media_video_embed.html:33
+msgid "Course"
+msgstr "Matière"
+
+#: exam/templates/exam/inc/script_list.html:15
+#: templates/telemeta/inc/module_revisions.html:18
+#: templates/telemeta/lists.html:70
+msgid "Type"
+msgstr "Type"
+
+#: exam/templates/exam/inc/script_list.html:16
+#: templates/telemeta/inc/user_list.html:19
+#: templates/telemeta/profile_detail.html:60
+msgid "Last Name"
+msgstr "Nom"
+
+#: exam/templates/exam/inc/script_list.html:17
+#: templates/telemeta/inc/user_list.html:20
+#: templates/telemeta/profile_detail.html:59
+msgid "First Name"
+msgstr "Prénom"
+
+#: exam/templates/exam/inc/script_list.html:18
+msgid "Submission date"
+msgstr "Date de soumission"
+
+#: exam/templates/exam/inc/script_list.html:19
+msgid "Mark date"
+msgstr "Date de correction"
+
+#: exam/templates/exam/inc/script_list.html:20
+#: exam/templates/exam/quotas.html:20
+msgid "Corrector"
+msgstr "Correcteur"
+
+#: exam/templates/exam/inc/script_list.html:21
+#: exam/templates/exam/script_detail.html:101
+msgid "Score"
+msgstr "Note"
+
+#: exam/templates/exam/messages/script_fix.txt:9
+#: exam/templates/exam/messages/script_marked.txt:9
+#: exam/templates/exam/messages/script_rejected.txt:7
+#: templates/postman/email_user_init.txt:19
+msgid "Best regards"
+msgstr "Cordialement"
+
+#: exam/templates/exam/messages/script_fix.txt:10
+#: exam/templates/exam/messages/script_marked.txt:10
+#: exam/templates/exam/messages/script_rejected.txt:8
+#: templates/postman/email_user.txt:20
+#: templates/postman/email_user_init.txt:20
+#: templates/postman/email_visitor.txt:16
+msgid "The site administrator"
+msgstr "L'administrateur du site"
+
+#: exam/templates/exam/messages/script_fix.txt:10
+#: exam/templates/exam/messages/script_marked.txt:10
+#: exam/templates/exam/messages/script_rejected.txt:8
+#: templates/postman/email_user_init.txt:20
+msgid "of the"
+msgstr "du"
+
+#: exam/templates/exam/messages/script_fix.txt:13
+#: exam/templates/exam/messages/script_marked.txt:13
+#: exam/templates/exam/messages/script_rejected.txt:11
+#: templates/postman/email_user.txt:22
+#: templates/postman/email_user_init.txt:23
+#: templates/postman/email_visitor.txt:18
+msgid ""
+"Note: This message is issued by an automated system.\n"
+"Do not reply, this would not be taken into account."
+msgstr ""
+"NB: Ce message est émis par un automate. Ne faites pas de réponse, elle ne "
+"serait pas prise en compte."
+
+#: exam/templates/exam/quotas.html:24 exam/templates/exam/scripts.html:25
+#: templates/teleforma/courses.html:48
+msgid "Pending"
+msgstr "En attente"
+
+#: exam/templates/exam/quotas.html:25 exam/templates/exam/scripts.html:26
+msgid "Marked"
+msgstr "Corrigées"
+
+#: exam/templates/exam/quotas.html:26
+msgid "Value"
+msgstr "Valeur"
+
+#: exam/templates/exam/quotas.html:27
+msgid "Level"
+msgstr "Niveau"
+
+#: exam/templates/exam/score_form.html:32 exam/templates/exam/scores.html:37
+msgid "New score"
+msgstr "Nouvelle note"
+
+#: exam/templates/exam/score_form.html:60
+#: exam/templates/exam/script_form.html:78
+#: templates/registration/registration_form.html:22
+msgid "Submit"
+msgstr "Soumettre"
+
+#: exam/templates/exam/scores.html:20 templates/teleforma/annals.html:15
+#: templates/telemeta/profile_detail.html:16
+msgid "My courses"
+msgstr "Mes matières"
+
+#: exam/templates/exam/scores.html:48 templates/telemeta/base.html:133
+#: templates/telemeta/base.html.py:135
+msgid "Scores"
+msgstr "Notes"
+
+#: exam/templates/exam/script_detail.html:98
+msgid "Topic"
+msgstr "Sujet"
+
+#: exam/templates/exam/script_detail.html:102
+#: exam/templates/exam/script_detail.html:118
+msgid "Comments"
+msgstr "Commentaire"
+
+#: exam/templates/exam/script_detail.html:104
+#: exam/templates/exam/scripts.html:27 templates/postman/view.html:25
+msgid "Rejected"
+msgstr "Rejeté"
+
+#: exam/templates/exam/script_detail.html:107
+msgid "Scoring"
+msgstr "Noter"
+
+#: exam/templates/exam/script_detail.html:108
+#: exam/templates/exam/script_detail.html:149
+#: exam/templates/exam/script_detail.html:167
+msgid "Reject"
+msgstr "Rejeter"
+
+#: exam/templates/exam/script_detail.html:110
+msgid "Submitted"
+msgstr "Soumise"
+
+#: exam/templates/exam/script_detail.html:122
+msgid "Mark"
+msgstr "Note"
+
+#: exam/templates/exam/script_detail.html:144
+#: templates/postman/base_write.html:63
+#: templates/teleforma/inc/chat_room.html:13
+msgid "Send"
+msgstr "Envoyer"
+
+#: exam/templates/exam/script_form.html:32 exam/templates/exam/scripts.html:36
+msgid "New script"
+msgstr "Nouvelle copie"
+
+#: exam/templates/exam/script_form.html:35
+msgid "Blank script"
+msgstr "Copie vierge"
+
+#: exam/templates/exam/scripts.html:6
+msgid "Answers"
+msgstr "Réponses"
+
+#: exam/templates/exam/scripts.html:67
+msgid "No scripts"
+msgstr "Aucune copie"
+
+#: exam/views.py:99
+msgid "Pending scripts"
+msgstr "Copies en attente"
+
+#: exam/views.py:125
+msgid "Treated scripts"
+msgstr "Copie traitées"
+
+#: exam/views.py:147
+msgid "Rejected scripts"
+msgstr "Copies rejetées"
+
+#: exam/views.py:165
+msgid ""
+"Error: you have already submitted a script for this session, the same course "
+"and the same type!"
+msgstr ""
+
+#: exam/views.py:169
+msgid ""
+"You have successfully submitted your script. It will be processed in the "
+"next hours."
+msgstr ""
+"Vous avez correctement soumis votre copie. Elle sera traitée dans les "
+"prochaines heures puis corrigée."
+
+#: exam/views.py:173
+msgid ""
+"There was a problem with your submission. Please try again, later if "
+"possible."
+msgstr ""
+"Il y a une une erreur lors de votre soumission de copie. Merci de vérifier "
+"votre fichier ou de réessayer plus tard."
+
+#: exam/views.py:217
+msgid "You must add your score to access to the statistics."
+msgstr ""
+
+#: exam/views.py:282
+msgid "all courses"
+msgstr "toutes les matières"
+
+#: models/ae.py:46 models/core.py:226 models/crfpa.py:116 models/crfpa.py:197
+#: models/pro.py:101 models/pro.py:140
+msgid "user"
+msgstr "utilisateur"
+
+#: models/ae.py:49
+msgid "platform only"
+msgstr "plateforme seulement"
+
+#: models/ae.py:51 models/core.py:212 models/core.py:228
+msgid "courses"
+msgstr "matières"
+
+#: models/ae.py:62
+msgid "AE student"
+msgstr "Etudiant AE"
+
+#: models/core.py:75
+msgid "Hidden"
+msgstr "Caché"
+
+#: models/core.py:76
+msgid "Private"
+msgstr "Privé"
+
+#: models/core.py:77
+msgid "Draft"
+msgstr "Brouillon"
+
+#: models/core.py:78
+msgid "Public"
+msgstr "Publié"
+
+#: models/core.py:94 models/core.py:107 models/core.py:129 models/core.py:144
+#: models/core.py:159 models/core.py:262 models/core.py:422 models/core.py:488
+#: models/core.py:507 models/crfpa.py:47 models/crfpa.py:63
+#: models/crfpa.py:242 models/crfpa.py:255 models/pro.py:124
+msgid "description"
+msgstr "description"
+
+#: models/core.py:101 models/core.py:109 models/core.py:260 models/pro.py:123
+msgid "organization"
+msgstr "organisation"
+
+#: models/core.py:110
+msgid "Master domain"
+msgstr ""
+
+#: models/core.py:123 models/core.py:157 models/core.py:231 models/core.py:275
+msgid "department"
+msgstr "département"
+
+#: models/core.py:130 models/core.py:288
+msgid "begin date"
+msgstr "date de début"
+
+#: models/core.py:131 models/core.py:289
+msgid "end date"
+msgstr "date de fin"
+
+#: models/core.py:151 models/core.py:280 models/core.py:525 models/core.py:614
+msgid "course type"
+msgstr "type de matière"
+
+#: models/core.py:158 models/core.py:487 models/pro.py:46 models/pro.py:83
+msgid "title"
+msgstr "titre"
+
+#: models/core.py:160 models/core.py:492 models/crfpa.py:61
+msgid "code"
+msgstr "cote"
+
+#: models/core.py:161
+msgid "tweeter title"
+msgstr "titre tweeter"
+
+#: models/core.py:163 models/core.py:508
+msgid "number"
+msgstr "nombre"
+
+#: models/core.py:164 models/crfpa.py:67
+msgid "synthesis note"
+msgstr "note de synthèse"
+
+#: models/core.py:165 models/crfpa.py:70
+msgid "obligations"
+msgstr "obligations"
+
+#: models/core.py:166 models/crfpa.py:91
+msgid "magistral"
+msgstr "magistral"
+
+#: models/core.py:167 models/crfpa.py:73 models/crfpa.py:124
+msgid "procedure"
+msgstr "procédure"
+
+#: models/core.py:168
+#, fuzzy
+#| msgid "written speciality"
+msgid "written_speciality"
+msgstr "spécialité écrit"
+
+#: models/core.py:169
+#, fuzzy
+#| msgid "oral speciality"
+msgid "oral_speciality"
+msgstr "spécialité orale"
+
+#: models/core.py:170
+msgid "oral_1"
+msgstr ""
+
+#: models/core.py:171
+msgid "oral_2"
+msgstr ""
+
+#: models/core.py:220
+#, fuzzy
+#| msgid "course type"
+msgid "course group"
+msgstr "type de matière"
+
+#: models/core.py:254 models/core.py:281
+msgid "professor"
+msgstr "professeur"
+
+#: models/core.py:269 models/core.py:285
+msgid "room"
+msgstr "salle"
+
+#: models/core.py:274
+msgid "public_id"
+msgstr "public id"
+
+#: models/core.py:287
+msgid "comment"
+msgstr "commentaire"
+
+#: models/core.py:290 models/core.py:540 models/core.py:578 models/core.py:621
+msgid "readers"
+msgstr ""
+
+#: models/core.py:411 models/core.py:439 models/core.py:526 models/core.py:610
+msgid "conference"
+msgstr "conférence"
+
+#: models/core.py:419
+msgid "host"
+msgstr "hôte"
+
+#: models/core.py:420
+msgid "port"
+msgstr "port"
+
+#: models/core.py:423
+msgid "source password"
+msgstr ""
+
+#: models/core.py:424
+msgid "admin password"
+msgstr ""
+
+#: models/core.py:431 models/core.py:442
+msgid "streaming server"
+msgstr "serveur de diffusion"
+
+#: models/core.py:443
+msgid "Streaming type"
+msgstr "Type de flux"
+
+#: models/core.py:445
+msgid "streaming"
+msgstr "diffusion"
+
+#: models/core.py:481
+msgid "live stream"
+msgstr "stream en direct"
+
+#: models/core.py:489
+msgid "credits"
+msgstr "crédits"
+
+#: models/core.py:493
+msgid "published"
+msgstr "publié"
+
+#: models/core.py:494
+msgid "mime type"
+msgstr "Type mime"
+
+#: models/core.py:495 models/pro.py:86
+msgid "weight"
+msgstr "poids"
+
+#: models/core.py:515
+msgid "document type"
+msgstr "type de document"
+
+#: models/core.py:534 models/crfpa.py:117
+msgid "iej"
+msgstr "iej"
+
+#: models/core.py:536
+msgid "annal"
+msgstr "annale"
+
+#: models/core.py:537
+msgid "year"
+msgstr "année"
+
+#: models/core.py:538 models/core.py:576
+msgid "file"
+msgstr "fichier"
+
+#: models/crfpa.py:54 models/crfpa.py:55
+#: templates/registration/registration_pdf.html:48
+#: templates/teleforma/annals.html:31 templates/telemeta/inc/user_list.html:21
+#: templates/telemeta/profile_detail.html:64 templates/telemeta/users.html:28
+msgid "IEJ"
+msgstr "IEJ"
+
+#: models/crfpa.py:76 models/crfpa.py:127
+msgid "written speciality"
+msgstr "spécialité écrit"
+
+#: models/crfpa.py:79 models/crfpa.py:130
+msgid "oral speciality"
+msgstr "spécialité orale"
+
+#: models/crfpa.py:82
+msgid "oral 1"
+msgstr ""
+
+#: models/crfpa.py:85
+msgid "oral 2"
+msgstr ""
+
+#: models/crfpa.py:88 models/crfpa.py:139
+msgid "options"
+msgstr "options"
+
+#: models/crfpa.py:93
+msgid "cost"
+msgstr "coût"
+
+#: models/crfpa.py:94
+msgid "available"
+msgstr ""
+
+#: models/crfpa.py:110 models/crfpa.py:121
+msgid "training"
+msgstr "formation"
+
+#: models/crfpa.py:119
+msgid "trainings"
+msgstr "formations"
+
+#: models/crfpa.py:133
+msgid "oral 1 (option)"
+msgstr ""
+
+#: models/crfpa.py:136
+msgid "oral 2 (option)"
+msgstr ""
+
+#: models/crfpa.py:143
+#, fuzzy
+#| msgid "platform only"
+msgid "e-learning platform only"
+msgstr "plateforme seulement"
+
+#: models/crfpa.py:144
+msgid "application fees"
+msgstr "frais de dossier"
+
+#: models/crfpa.py:146
+msgid "subscription fees"
+msgstr "frais d'inscription"
+
+#: models/crfpa.py:147
+msgid "promo code"
+msgstr ""
+
+#: models/crfpa.py:148
+#, fuzzy
+#| msgid "Registration"
+msgid "registration date"
+msgstr "Inscription"
+
+#: models/crfpa.py:149
+msgid "subscription date"
+msgstr "date d'inscription"
+
+#: models/crfpa.py:150
+msgid "subscribed"
+msgstr "inscrit"
+
+#: models/crfpa.py:151
+msgid "confirmation sent"
+msgstr "confirmation envoyée"
+
+#: models/crfpa.py:152
+#, fuzzy
+#| msgid "streaming server"
+msgid "studying level"
+msgstr "serveur de diffusion"
+
+#: models/crfpa.py:189
+msgid "Student"
+msgstr "Etudiant"
+
+#: models/crfpa.py:190
+msgid "Students"
+msgstr "Etudiants"
+
+#: models/crfpa.py:198 templates/registration/registration_pdf.html:41
+#: templates/telemeta/profile_detail.html:77
+msgid "Address"
+msgstr "Adresse"
+
+#: models/crfpa.py:199
+msgid "Postal code"
+msgstr "Code postal"
+
+#: models/crfpa.py:200
+msgid "City"
+msgstr "Ville"
+
+#: models/crfpa.py:201
+msgid "Country"
+msgstr "Pays"
+
+#: models/crfpa.py:202 templates/telemeta/profile_detail.html:88
+msgid "Language"
+msgstr "Langue"
+
+#: models/crfpa.py:203 templates/registration/registration_pdf.html:42
+#: templates/telemeta/profile_detail.html:78
+msgid "Telephone"
+msgstr "Téléphone"
+
+#: models/crfpa.py:204
+msgid "Expiration_date"
+msgstr "Date d'expiration"
+
+#: models/crfpa.py:205
+msgid "Password initialized"
+msgstr "Mot de passe initialisé"
+
+#: models/crfpa.py:206 templates/telemeta/profile_detail.html:79
+msgid "WiFi login"
+msgstr ""
+
+#: models/crfpa.py:207
+msgid "WiFi pass"
+msgstr ""
+
+#: models/crfpa.py:208
+msgid "birthday"
+msgstr ""
+
+#: models/crfpa.py:212
+msgid "profile"
+msgstr "profil"
+
+#: models/crfpa.py:223 models/crfpa.py:240 models/crfpa.py:253
+msgid "student"
+msgstr "étudiant"
+
+#: models/crfpa.py:224 models/crfpa.py:241 models/crfpa.py:254
+msgid "amount"
+msgstr "montant"
+
+#: models/crfpa.py:225
+msgid "month"
+msgstr "mois"
+
+#: models/crfpa.py:226
+msgid "collected"
+msgstr "encaissé"
+
+#: models/crfpa.py:227
+msgid "date created"
+msgstr "date de création"
+
+#: models/crfpa.py:232
+msgid "Payment"
+msgstr "Paiement"
+
+#: models/crfpa.py:233
+msgid "Payments"
+msgstr "Paiements"
+
+#: models/crfpa.py:246
+msgid "Discount"
+msgstr "Réduction"
+
+#: models/crfpa.py:247
+msgid "Discounts"
+msgstr "Réductions"
+
+#: models/crfpa.py:259 models/crfpa.py:260
+msgid "Optional fees"
+msgstr "Frais optionnels"
+
+#: models/messages.py:13
+#, fuzzy
+#| msgid "student"
+msgid "students"
+msgstr "étudiant"
+
+#: models/messages.py:18
+#, fuzzy
+#| msgid "Student"
+msgid "Student group"
+msgstr "Etudiant"
+
+#: models/messages.py:28
+msgid "group"
+msgstr ""
+
+#: models/messages.py:31
+msgid "sender"
+msgstr ""
+
+#: models/messages.py:33
+#, fuzzy
+#| msgid "Reject"
+msgid "subject"
+msgstr "Rejeter"
+
+#: models/messages.py:34
+#, fuzzy
+msgid "message"
+msgstr "Messages"
+
+#: models/messages.py:35
+#, fuzzy
+#| msgid "date end"
+msgid "to send"
+msgstr "date de fin"
+
+#: models/messages.py:36
+#, fuzzy
+#| msgid "date end"
+msgid "sent"
+msgstr "date de fin"
+
+#: models/messages.py:37
+#, fuzzy
+#| msgid "date end"
+msgid "date sent"
+msgstr "date de fin"
+
+#: models/messages.py:41 templates/telemeta/users.html:55
+msgid "Grouped message"
+msgstr "Message groupé"
+
+#: models/pro.py:47
+msgid "price"
+msgstr "prix"
+
+#: models/pro.py:50
+msgid "public concerned"
+msgstr ""
+
+#: models/pro.py:53
+msgid "document 1"
+msgstr "document 1"
+
+#: models/pro.py:56
+msgid "media"
+msgstr "médias"
+
+#: models/pro.py:59
+msgid "document 2"
+msgstr "document 2"
+
+#: models/pro.py:62
+msgid "corrected document"
+msgstr "document corrigé"
+
+#: models/pro.py:64
+msgid "suscribers"
+msgstr "inscrits"
+
+#: models/pro.py:69
+msgid "approximative duration"
+msgstr "durée approximative"
+
+#: models/pro.py:70
+msgid "keywords"
+msgstr "mots clés"
+
+#: models/pro.py:77
+msgid "Seminar"
+msgstr "Sémimaire"
+
+#: models/pro.py:82 models/pro.py:139
+msgid "seminar"
+msgstr "séminaire"
+
+#: models/pro.py:84 models/pro.py:102
+msgid "question"
+msgstr "question"
+
+#: models/pro.py:87
+msgid "minimum numbers of characters"
+msgstr "nombre de caractère minimum"
+
+#: models/pro.py:96
+msgid "Question"
+msgstr "Questions"
+
+#: models/pro.py:101 models/pro.py:102 models/pro.py:103
+msgid "answer"
+msgstr "réponse"
+
+#: models/pro.py:105
+msgid "validated"
+msgstr "validé"
+
+#: models/pro.py:117
+msgid "Answer"
+msgstr "Réponse"
+
+#: models/pro.py:126 models/pro.py:142
+msgid "testimonial_template"
+msgstr ""
+
+#: models/pro.py:127
+msgid "template"
+msgstr "modèle"
+
+#: models/pro.py:134
+msgid "Testimonial template"
+msgstr "Modèle d'attestation"
+
+#: models/pro.py:140 models/pro.py:141 models/pro.py:143
+msgid "testimonial"
+msgstr "attestation"
+
+#: models/pro.py:148
+msgid "Testimonial"
+msgstr "Attestation"
+
+#: templates/404.html:10
+msgid "Page not found"
+msgstr "Page non trouvée"
+
+#: templates/500.html:10
+msgid "Server error"
+msgstr "Erreur du serveur"
+
+#: templates/postman/archives.html:3
+#, fuzzy
+msgid "Archived Messages"
+msgstr "Messages"
+
+#: templates/postman/archives.html:7
+msgid ""
+"Messages in this folder will never be removed. You can use this folder for "
+"long term storage."
+msgstr ""
+
+#: templates/postman/base.html:10
+msgid "Folders"
+msgstr "Dossiers"
+
+#: templates/postman/base.html:15
+msgid "Inbox"
+msgstr ""
+
+#: templates/postman/base.html:16 templates/postman/sent.html:3
+#, fuzzy
+msgid "Sent Messages"
+msgstr "Messages"
+
+#: templates/postman/base.html:17
+msgid "Archives"
+msgstr ""
+
+#: templates/postman/base.html:18
+msgid "Trash"
+msgstr ""
+
+#: templates/postman/base.html:23
+msgid "New message"
+msgstr "Nouveau message"
+
+#: templates/postman/base_folder.html:12
+msgid "by conversation"
+msgstr ""
+
+#: templates/postman/base_folder.html:13
+#, fuzzy
+msgid "by message"
+msgstr "Messages"
+
+#: templates/postman/base_folder.html:18
+msgid "Sorry, this page number is invalid."
+msgstr ""
+
+#: templates/postman/base_folder.html:39
+#: templates/teleforma/course_conference_record.html:69
+#: templates/telemeta/lists.html:75
+msgid "Action"
+msgstr ""
+
+#: templates/postman/base_folder.html:40
+msgid "Sender"
+msgstr ""
+
+#: templates/postman/base_folder.html:41 templates/postman/reply.html:4
+msgid "Recipient"
+msgstr ""
+
+#: templates/postman/base_folder.html:42
+msgid "Subject"
+msgstr ""
+
+#: templates/postman/base_folder.html:43
+#: templates/telemeta/inc/module_revisions.html:16
+msgid "Date"
+msgstr "Date"
+
+#: templates/postman/base_folder.html:61
+msgid "g:i A,M j,n/j/y"
+msgstr ""
+
+#: templates/postman/base_folder.html:69 templates/postman/view.html:39
+#: templates/telemeta/lists.html:58
+msgid "Delete"
+msgstr ""
+
+#: templates/postman/base_folder.html:72 templates/postman/view.html:43
+msgid "Archive"
+msgstr ""
+
+#: templates/postman/base_folder.html:75
+msgid "Undelete"
+msgstr ""
+
+#: templates/postman/base_folder.html:81
+#, fuzzy
+msgid "No messages."
+msgstr "Messages"
+
+#: templates/postman/base_write.html:30
+msgid ""
+"Vous pouvez ici échanger des messages avec les professeurs et les "
+"administrateurs."
+msgstr ""
+
+#: templates/postman/base_write.html:32
+msgid ""
+"Pour les questions concernant l'organisation des cours, le planning, les "
+"documents de cours ou les copies, adressez-vous à <b>Admin-CRFPA</b>."
+msgstr ""
+
+#: templates/postman/base_write.html:34
+msgid ""
+"Pour les questions concernant uniquement l'accès à la plateforme et aux "
+"médias vidéo ou audio, lire d'abord"
+msgstr ""
+
+#: templates/postman/base_write.html:34
+msgid "puis adressez-vous à <b>Support technique</b>."
+msgstr ""
+
+#: templates/postman/base_write.html:38
+msgid "to an administrator"
+msgstr "à un administrateur"
+
+#: templates/postman/base_write.html:46
+msgid "to a professor"
+msgstr "à un professeur"
+
+#: templates/postman/email_user.txt:1 templates/postman/email_user_init.txt:1
+msgid "Hello"
+msgstr "Bonjour"
+
+#: templates/postman/email_user.txt:3 templates/postman/email_visitor.txt:3
+#, python-format
+msgid "On %(date)s, you asked to send a message to the user '%(recipient)s'."
+msgstr ""
+
+#: templates/postman/email_user.txt:5 templates/postman/email_visitor.txt:5
+msgid "Your message has been rejected by the moderator"
+msgstr ""
+
+#: templates/postman/email_user.txt:5 templates/postman/email_visitor.txt:5
+msgid ", for the following reason:"
+msgstr ""
+
+#: templates/postman/email_user.txt:9 templates/postman/email_visitor.txt:10
+#, python-format
+msgid "On %(date)s, you sent a message to the user '%(sender)s'."
+msgstr ""
+
+#: templates/postman/email_user.txt:10
+msgid "Your correspondent has given you an answer."
+msgstr ""
+
+#: templates/postman/email_user.txt:11
+#, python-format
+msgid "You have received a copy of a response from the user '%(sender)s'."
+msgstr ""
+
+#: templates/postman/email_user.txt:13
+#, python-format
+msgid "You have received a message from the user '%(sender)s'."
+msgstr ""
+
+#: templates/postman/email_user.txt:14
+msgid ""
+"You can read and respond to this message from your e-learning desk following "
+"this link:"
+msgstr ""
+"Vous pouvez lire et répondre à ce message depuis votre bureau e-learning en "
+"suivant ce lien :"
+
+#: templates/postman/email_user.txt:19 templates/postman/email_visitor.txt:14
+msgid "Thank you again for your interest in our services."
+msgstr ""
+
+#: templates/postman/email_user.txt:20
+msgid "of"
+msgstr "de"
+
+#: templates/postman/email_user_subject.txt:1
+#: templates/postman/email_visitor_subject.txt:1
+#, python-format
+msgid "Message \"%(subject)s\" on the site %(sitename)s"
+msgstr ""
+
+#: templates/postman/email_user_subject_init.txt:1
+#, python-format
+msgid "%(organization)s : initialization of your e-learning account"
+msgstr "%(organization)s : initialisation de votre compte e-learning"
+
+#: templates/postman/email_visitor.txt:1
+msgid "Dear visitor,"
+msgstr ""
+
+#: templates/postman/email_visitor.txt:8
+msgid "As a reminder, please find below the content of your message."
+msgstr ""
+
+#: templates/postman/email_visitor.txt:11
+msgid "Please find below the answer from your correspondent."
+msgstr ""
+
+#: templates/postman/email_visitor.txt:15
+msgid "For more comfort, we encourage you to open an account on the site."
+msgstr ""
+
+#: templates/postman/inbox.html:3
+#, fuzzy
+msgid "Received Messages"
+msgstr "Messages"
+
+#: templates/postman/inbox.html:6
+msgid "Received"
+msgstr ""
+
+#: templates/postman/reply.html:3 templates/postman/view.html:47
+#: templates/postman/view.html.py:50 templates/postman/view.html:53
+msgid "Reply"
+msgstr ""
+
+#: templates/postman/sent.html:6
+msgid "Sent"
+msgstr ""
+
+#: templates/postman/trash.html:3
+#, fuzzy
+msgid "Deleted Messages"
+msgstr "Messages"
+
+#: templates/postman/trash.html:10
+msgid ""
+"Messages in this folder can be removed from time to time. For long term "
+"storage, use instead the archive folder."
+msgstr ""
+
+#: templates/postman/view.html:9
+msgid "Conversation"
+msgstr ""
+
+#: templates/postman/view.html:9 templates/telemeta/inc/user_list.html:72
+#, fuzzy
+msgid "Message"
+msgstr "Messages"
+
+#: templates/postman/view.html:25
+msgid ":"
+msgstr ""
+
+#: templates/postman/view.html:36
+msgid "Back"
+msgstr ""
+
+#: templates/postman/write.html:3 templates/telemeta/inc/user_list.html:28
+msgid "Write"
+msgstr ""
+
+#: templates/registration/activate.html:3
+#: templates/registration/activation_complete.html:3
+#, fuzzy
+msgid "Activation complete"
+msgstr "incomplet"
+
+#: templates/registration/activate.html:3
+msgid "Activation problem"
+msgstr ""
+
+#: templates/registration/activate.html:7
+#, python-format
+msgid ""
+"\n"
+"Thanks %(account)s, activation complete!\n"
+"You may now <a href='%(auth_login_url)s'>login</a> using the username and "
+"password you set at registration.\n"
+msgstr ""
+
+#: templates/registration/activate.html:12
+msgid ""
+"Oops &ndash; it seems that your activation key is invalid.  Please check the "
+"url again."
+msgstr ""
+
+#: templates/registration/activation_complete.html:6
+#, python-format
+msgid ""
+"\n"
+"Thanks, activation complete!  You may now <a "
+"href='%(auth_login_url)s'>login</a> using the username and password you set "
+"at registration.\n"
+msgstr ""
+
+#: templates/registration/activation_email.html:8
+#, python-format
+msgid ""
+"<body>\n"
+"<h3>Account registration for %(sitename)s</h3>\n"
+"<p>\n"
+"You (or someone pretending to be you) have asked to register an account at\n"
+"<b>%(sitename)s</b>.<br/>\n"
+"If this wasn't you, please ignore this email and your address will be "
+"removed\n"
+"from our records.\n"
+"</p>\n"
+"<p>\n"
+"To activate this account, please click the following link within the next \n"
+"<b>%(expiration_days)s</b> days:<br/>\n"
+"<a href=\"http://%(sitedomain)s%(activation_key_url)s\">http://%(sitedomain)s"
+"%(activation_key_url)s</a>\n"
+"</p>\n"
+"<p>\n"
+"Sincerely,<br/>\n"
+"%(sitename)s Management\n"
+"</p>\n"
+"</body>\n"
+msgstr ""
+
+#: templates/registration/activation_email.txt:3
+#, python-format
+msgid ""
+"\n"
+"You (or someone pretending to be you) have asked to register an account at\n"
+"%(sitename)s.  If this wasn't you, please ignore this email\n"
+"and your address will be removed from our records.\n"
+"\n"
+"To activate this account, please click the following link within the next \n"
+"%(expiration_days)s days:\n"
+"\n"
+"http://%(siteurl)s%(activation_key_url)s\n"
+"\n"
+"Sincerely,\n"
+"%(sitename)s Management\n"
+msgstr ""
+
+#: templates/registration/activation_email_subject.txt:1
+#, python-format
+msgid "Account registration for %(sitename)s"
+msgstr ""
+
+#: templates/registration/login.html:3
+#, fuzzy
+msgid "Login"
+msgstr "Se connecter en tant que"
+
+#: templates/registration/login.html:9 templates/telemeta/login.html:19
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+
+#: templates/registration/login.html:23
+#, python-format
+msgid ""
+"<a href=\"%(auth_pwd_reset_url)s\">Forgot</a> your password?\n"
+"    <a href=\"%(register_url)s\">Need an account</a>?"
+msgstr ""
+
+#: templates/registration/login.html:26
+#, fuzzy
+msgid "login"
+msgstr "Se connecter en tant que"
+
+#: templates/registration/logout.html:3
+msgid "Logged out"
+msgstr ""
+
+#: templates/registration/logout.html:5
+msgid "Successfully logged out!"
+msgstr ""
+
+#: templates/registration/password_change_done.html:3
+#, fuzzy
+msgid "Password changed"
+msgstr "Mot de passe initialisé"
+
+#: templates/registration/password_change_done.html:5
+msgid "Password successfully changed!"
+msgstr ""
+
+#: templates/registration/password_change_form.html:3
+#: templates/registration/password_change_form.html:8
+#: templates/telemeta/profile_detail.html:49
+msgid "Change password"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:3
+#, fuzzy
+msgid "Password reset complete"
+msgstr "Réinitialisation du mot de passe"
+
+#: templates/registration/password_reset_complete.html:4
+#, python-format
+msgid ""
+"\n"
+"Your password has been reset!  You may now <a href=\"%(login_url)s\">log in</"
+"a>.\n"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:3
+msgid "Confirm password reset"
+msgstr "Confirmation de la réinitialisation du mot de passe"
+
+#: templates/registration/password_reset_confirm.html:5
+msgid "Enter your new password below to reset your password:"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:9
+msgid "Set password"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:3
+#: templates/telemeta/profile_detail.html:106
+msgid "Password reset"
+msgstr "Réinitialisation du mot de passe"
+
+#: templates/registration/password_reset_done.html:6
+msgid ""
+"We have sent you an email with a link to reset your password.\n"
+"Please check your email and click the link to continue."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:1
+msgid "Greetings"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:3
+#, python-format
+msgid ""
+"You are receiving this email because you (or someone pretending to be you)\n"
+"requested that your password be reset on the %(domain)s site.  If you do "
+"not \n"
+"wish to reset your password, please ignore this message.\n"
+"\n"
+"To reset your password, please click the following link, or copy and paste "
+"it\n"
+"into your web browser:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:12
+#, python-format
+msgid ""
+"\n"
+"Your username, in case you've forgotten: %(username)s\n"
+"\n"
+"Best regards,\n"
+"%(site_name)s Management\n"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:3
+#: templates/registration/password_reset_form.html:10
+msgid "Reset password"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:4
+msgid ""
+"\n"
+"Forgot your password?  Enter your email in the form below and we'll send "
+"you\n"
+"instructions for creating a new one."
+msgstr ""
+
+#: templates/registration/registration_complete.html:6
+#: templates/registration/registration_pdf.html:13 views/crfpa.py:479
+msgid "Registration"
+msgstr "Inscription"
+
+#: templates/registration/registration_complete.html:23
+#: templates/teleforma/annals.html:73 templates/teleforma/course_media.html:64
+#: templates/teleforma/inc/document_list.html:22
+#: templates/teleforma/inc/media_list.html:56
+#: templates/teleforma/inc/media_list_pending.html:56
+msgid "Download"
+msgstr "Télécharger"
+
+#: templates/registration/registration_form.html:6
+#, fuzzy
+#| msgid "Registration"
+msgid "Pre-registration"
+msgstr "Inscription"
+
+#: templates/registration/registration_pdf.html:35
+#, fuzzy
+#| msgid "Registration"
+msgid "Training registration"
+msgstr "Inscription"
+
+#: templates/registration/registration_pdf.html:35
+#: templates/registration/registration_pdf.html:49
+msgid "Training"
+msgstr "Formation"
+
+#: templates/registration/registration_pdf.html:39
+msgid "First name"
+msgstr "Prénom"
+
+#: templates/registration/registration_pdf.html:40
+msgid "Last name"
+msgstr "Nom"
+
+#: templates/registration/registration_pdf.html:43
+msgid "E-mail"
+msgstr ""
+
+#: templates/registration/registration_pdf.html:44
+#: templates/telemeta/profile_detail.html:61
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: templates/registration/registration_pdf.html:45
+msgid "Birthday"
+msgstr ""
+
+#: templates/registration/registration_pdf.html:47
+#, fuzzy
+#| msgid "streaming server"
+msgid "Studying level"
+msgstr "serveur de diffusion"
+
+#: templates/registration/registration_pdf.html:50
+#, fuzzy
+#| msgid "Training"
+msgid "Training type"
+msgstr "Formation"
+
+#: templates/registration/registration_pdf.html:51
+msgid "Matière de procédure"
+msgstr ""
+
+#: templates/registration/registration_pdf.html:52
+msgid "Matière juridique de spécialité"
+msgstr ""
+
+#: templates/registration/registration_pdf.html:53
+msgid "Matière d'oral de spécialité"
+msgstr ""
+
+#: templates/registration/registration_pdf.html:54
+msgid "Matière d'oral technique oral_1"
+msgstr ""
+
+#: templates/registration/registration_pdf.html:55
+msgid "Matière d'oral technique oral_2"
+msgstr ""
+
+#: templates/registration/registration_pdf.html:57
+#, fuzzy
+#| msgid "Registration"
+msgid "Registration date"
+msgstr "Inscription"
+
+#: templates/registration/registration_pdf.html:58
+msgid "PROMO code"
+msgstr ""
+
+#: templates/teleforma/annals.html:6 templates/teleforma/annals.html.py:53
+#: templates/telemeta/base.html:113
+msgid "Annals"
+msgstr "Annales"
+
+#: templates/teleforma/annals.html:49
+#: templates/teleforma/inc/document_list.html:36
+msgid "No document"
+msgstr "Aucun document"
+
+#: templates/teleforma/annals.html:69
+#: templates/teleforma/inc/conference_list.html:18
+#: templates/teleforma/inc/document_list.html:20
+msgid "View"
+msgstr "Voir"
+
+#: templates/teleforma/course.html:14
+#: templates/teleforma/inc/document_list.html:7
+msgid "Documents"
+msgstr "Supports écrits"
+
+#: templates/teleforma/course.html:17 templates/teleforma/course.html.py:33
+#: templates/teleforma/course_conference_audio.html:66
+#: templates/teleforma/course_document.html:73
+#: templates/teleforma/inc/conference_list.html:25
+#: templates/teleforma/inc/media_list.html:36
+#: templates/teleforma/inc/media_list_pending.html:36
+#: templates/telemeta/inc/module_revisions.html:17
+#: templates/telemeta/lists.html:69 templates/telemeta/search_criteria.html:97
+msgid "Title"
+msgstr "Titre"
+
+#: templates/teleforma/course.html:18 templates/teleforma/course.html.py:34
+msgid "Description"
+msgstr "Description"
+
+#: templates/teleforma/course.html:19 templates/teleforma/course.html.py:35
+#: templates/teleforma/course.html:52
+#: templates/teleforma/course_media.html:146
+#: templates/telemeta/profile_detail.html:83
+msgid "Date added"
+msgstr "Date d'ajout"
+
+#: templates/teleforma/course.html:30
+msgid "Medias"
+msgstr "Médias"
+
+#: templates/teleforma/course.html:47
+msgid "Conferences"
+msgstr "Conférences"
+
+#: templates/teleforma/course.html:51
+#: templates/teleforma/course_conference.html:72
+#: templates/teleforma/course_conference_audio.html:67
+#: templates/teleforma/course_media.html:137
+#: templates/teleforma/course_media_video_embed.html:36
+#: templates/teleforma/inc/conference_list.html:28
+#: templates/teleforma/inc/media_list.html:39
+#: templates/teleforma/inc/media_list_pending.html:39
+#: templates/telemeta/inc/user_list.html:48
+msgid "Professor"
+msgstr "Professeur"
+
+#: templates/teleforma/course_conference.html:27
+#: templates/teleforma/course_conference_audio.html:25
+msgid "S T O P"
+msgstr "S T O P"
+
+#: templates/teleforma/course_conference.html:37
+#: templates/teleforma/course_media.html:76
+msgid "Audio"
+msgstr ""
+
+#: templates/teleforma/course_conference.html:75
+#: templates/teleforma/course_media.html:140
+#: templates/teleforma/course_media_video_embed.html:39
+#: templates/teleforma/inc/media_list.html:43
+#: templates/teleforma/inc/media_list_pending.html:43
+msgid "Comment"
+msgstr "Commentaire"
+
+#: templates/teleforma/course_conference.html:76
+#: templates/teleforma/course_media.html:141
+#: templates/teleforma/course_media_video_embed.html:40
+msgid "Begin date"
+msgstr "Date de début"
+
+#: templates/teleforma/course_conference.html:77
+#: templates/teleforma/course_media.html:142
+#: templates/teleforma/course_media_video_embed.html:41
+msgid "End date"
+msgstr "Date de fin"
+
+#: templates/teleforma/course_conference.html:78
+#: templates/teleforma/course_conference_audio.html:72
+msgid "Live"
+msgstr "Direct"
+
+#: templates/teleforma/course_conference.html:78
+#: templatetags/teleforma_tags.py:134
+msgid "Yes"
+msgstr "Oui"
+
+#: templates/teleforma/course_conference.html:79
+#: templates/teleforma/course_conference_audio.html:69
+#: templates/teleforma/course_media.html:143
+#: templates/teleforma/course_media_video_embed.html:42
+msgid "Room"
+msgstr "Salle"
+
+#: templates/teleforma/course_conference.html:81
+#: templates/teleforma/course_media.html:149
+msgid "Conference ID"
+msgstr "ID Conférence"
+
+#: templates/teleforma/course_conference_audio.html:36
+#: templates/teleforma/course_media.html:79
+msgid "Video"
+msgstr ""
+
+#: templates/teleforma/course_conference_audio.html:70
+#: templates/teleforma/inc/conference_list.html:30
+#: templates/teleforma/inc/media_list.html:41
+#: templates/teleforma/inc/media_list_pending.html:41
+msgid "Begin"
+msgstr "Début"
+
+#: templates/teleforma/course_conference_audio.html:71
+msgid "End"
+msgstr "Fin"
+
+#: templates/teleforma/course_conference_record.html:30
+#: templates/teleforma/courses.html:114
+msgid "Status"
+msgstr "Status"
+
+#: templates/teleforma/course_conference_record.html:41
+#: templates/teleforma/courses.html:42
+msgid "New conference"
+msgstr "Nouvelle conférence"
+
+#: templates/teleforma/course_conference_record.html:70
+msgid "Record and stream"
+msgstr "Enregistrer et diffuser"
+
+#: templates/teleforma/course_media.html:28
+#: templates/teleforma/course_media.html:82
+#: templates/teleforma/inc/media_list.html:50
+#: templates/teleforma/inc/media_list_pending.html:50
+msgid " published"
+msgstr " publié"
+
+#: templates/teleforma/course_media.html:35
+#: templates/teleforma/course_media.html:82
+#: templates/teleforma/inc/media_list.html:52
+#: templates/teleforma/inc/media_list_pending.html:52
+msgid " rejected"
+msgstr " rejeté"
+
+#: templates/teleforma/course_media.html:145
+msgid "Mime type"
+msgstr "Type mime"
+
+#: templates/teleforma/course_media.html:147
+msgid "Date modified"
+msgstr "Date de modification"
+
+#: templates/teleforma/course_media.html:148
+msgid "Media ID"
+msgstr "ID Média"
+
+#: templates/teleforma/courses.html:56
+msgid "My notes"
+msgstr "Mes notes"
+
+#: templates/teleforma/courses.html:66
+msgid "New note"
+msgstr "Nouvelle note"
+
+#: templates/teleforma/help.html:11 templates/telemeta/base.html:148
+#: templates/telemeta/base.html.py:157
+msgid "Help"
+msgstr "Aide"
+
+#: templates/teleforma/inc/conference_list.html:8
+msgid "Live conferences"
+msgstr "Conférences en direct"
+
+#: templates/teleforma/inc/conference_list.html:19
+#: templates/teleforma/inc/media_list.html:23
+#: templates/teleforma/inc/media_list.html:29
+#: templates/teleforma/inc/media_list_pending.html:23
+#: templates/teleforma/inc/media_list_pending.html:29
+msgid "Click here"
+msgstr "Cliquez ici"
+
+#: templates/teleforma/inc/media_list.html:8
+#: templates/teleforma/inc/media_list_pending.html:8
+msgid "Passed conferences"
+msgstr "Conférences en différé"
+
+#: templates/teleforma/inc/media_list.html:17
+#: templates/teleforma/inc/media_list_pending.html:17
+msgid "Play"
+msgstr "Lire"
+
+#: templates/telemeta/base.html:92 templates/telemeta/base.html.py:101
+msgid "Desk"
+msgstr "Bureau"
+
+#: templates/telemeta/base.html:106
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/telemeta/base.html:111
+msgid "Messaging"
+msgstr "Messagerie"
+
+#: templates/telemeta/base.html:146
+msgid "Admin"
+msgstr ""
+
+#: templates/telemeta/base.html:154
+msgid "Profile"
+msgstr "Profil"
+
+#: templates/telemeta/base.html:156
+msgid "Lists"
+msgstr ""
+
+#: templates/telemeta/base.html:159
+msgid "Sign out"
+msgstr ""
+
+#: templates/telemeta/base.html:201
+msgid "Powered by"
+msgstr ""
+
+#: templates/telemeta/base.html:211
+msgid "Legal notices"
+msgstr ""
+
+#: templates/telemeta/home.html:26
+msgid "Connexion"
+msgstr ""
+
+#: templates/telemeta/inc/module_revisions.html:19
+msgid "User"
+msgstr ""
+
+#: templates/telemeta/inc/module_revisions.html:40
+#: templates/telemeta/lists.html:92
+msgid "deleted"
+msgstr ""
+
+#: templates/telemeta/inc/module_searches.html:12
+msgid "Criteria"
+msgstr ""
+
+#: templates/telemeta/inc/user_list.html:22
+#: templates/telemeta/profile_detail.html:65 templates/telemeta/users.html:15
+msgid "Trainings"
+msgstr "Formations"
+
+#: templates/telemeta/inc/user_list.html:23
+#: templates/telemeta/profile_detail.html:67
+msgid "Procedure"
+msgstr "Procédure"
+
+#: templates/telemeta/inc/user_list.html:24
+#: templates/telemeta/profile_detail.html:69
+msgid "Written spe"
+msgstr "Ecrit Spé"
+
+#: templates/telemeta/inc/user_list.html:25
+#: templates/telemeta/profile_detail.html:68
+msgid "Oral spe"
+msgstr "Oral Spé"
+
+#: templates/telemeta/inc/user_list.html:26
+#: templates/telemeta/profile_detail.html:70
+msgid "Oral 1"
+msgstr ""
+
+#: templates/telemeta/inc/user_list.html:27
+#: templates/telemeta/profile_detail.html:71
+msgid "Oral 2"
+msgstr ""
+
+#: templates/telemeta/inc/user_list.html:56
+msgid "Administrator"
+msgstr ""
+
+#: templates/telemeta/inc/user_list.html:64
+msgid "Unknown"
+msgstr ""
+
+#: templates/telemeta/lists.html:47
+msgid "My playlists"
+msgstr ""
+
+#: templates/telemeta/lists.html:49
+msgid "Add"
+msgstr ""
+
+#: templates/telemeta/lists.html:55
+msgid "Edit"
+msgstr ""
+
+#: templates/telemeta/lists.html:71
+msgid "Code"
+msgstr ""
+
+#: templates/telemeta/lists.html:72
+msgid "Recordist"
+msgstr "Opérateur d'enregistrement"
+
+#: templates/telemeta/lists.html:73
+msgid "Recording period"
+msgstr "période d'enregistrement"
+
+#: templates/telemeta/lists.html:74
+#: templates/telemeta/search_criteria.html:149
+msgid "Sound"
+msgstr "Sonore"
+
+#: templates/telemeta/login.html:29
+msgid "Password forgotten"
+msgstr ""
+
+#: templates/telemeta/login.html:30
+msgid "Sign in"
+msgstr ""
+
+#: templates/telemeta/profile_detail.html:6
+msgid "User Profile"
+msgstr "Profil utilisateur"
+
+#: templates/telemeta/profile_detail.html:16
+msgid "His courses"
+msgstr "Ses matières"
+
+#: templates/telemeta/profile_detail.html:36
+msgid "Send a message"
+msgstr "Envoyer un message"
+
+#: templates/telemeta/profile_detail.html:44
+msgid "User profile"
+msgstr "Profil utilisateur"
+
+#: templates/telemeta/profile_detail.html:51
+msgid "Login as"
+msgstr "Se connecter en tant que"
+
+#: templates/telemeta/profile_detail.html:66
+msgid "Platform only"
+msgstr "Plateforme seulement"
+
+#: templates/telemeta/profile_detail.html:72
+msgid "Options"
+msgstr "Options"
+
+#: templates/telemeta/profile_detail.html:76
+msgid "Email"
+msgstr ""
+
+#: templates/telemeta/profile_detail.html:80
+msgid "WiFi password"
+msgstr ""
+
+#: templates/telemeta/profile_detail.html:84
+msgid "Expiration date"
+msgstr "Date d'expiration"
+
+#: templates/telemeta/profile_detail.html:85
+msgid "Last login"
+msgstr ""
+
+#: templates/telemeta/profile_detail.html:96
+msgid "Apply"
+msgstr ""
+
+#: templates/telemeta/search_criteria.html:5
+#: templates/telemeta/search_criteria.html:76
+msgid "Advanced Search"
+msgstr ""
+
+#: templates/telemeta/search_criteria.html:69
+msgid "Search"
+msgstr ""
+
+#: templates/telemeta/search_criteria.html:113
+msgid "Year of recording"
+msgstr ""
+
+#: templates/telemeta/search_criteria.html:120
+#: templates/telemeta/search_criteria.html:139
+msgid "to"
+msgstr "à"
+
+#: templates/telemeta/search_criteria.html:132
+#, fuzzy
+msgid "Year of publication"
+msgstr "obligation"
+
+#: templates/telemeta/users.html:6 templates/telemeta/users.html.py:69
+msgid "Users"
+msgstr ""
+
+#: templates/telemeta/users.html:41
+msgid "Courses"
+msgstr "Matières"
+
+#: templates/telemeta/users.html:74
+msgid "No users"
+msgstr "Pas d'utilisateurs"
+
+#: templatetags/teleforma_tags.py:63
+msgid "General tweeter"
+msgstr "Tweeter général"
+
+#: templatetags/teleforma_tags.py:64
+msgid "Local tweeter"
+msgstr "Tweeter local"
+
+#: templatetags/teleforma_tags.py:129
+msgid "me"
+msgstr "moi"
+
+#: templatetags/teleforma_tags.py:136
+msgid "No"
+msgstr "Non"
+
+#: views/core.py:155
+msgid "Access not allowed."
+msgstr "Accès non autorisé."
+
+#: views/core.py:156
+msgid ""
+"Please login or contact the website administator to get a private access."
+msgstr ""
+"Merci de vous connecter ou bien contactez l'administateur du site pour "
+"obtenir un accès privé."
+
+#: views/core.py:263
+msgid ""
+"You do NOT have access to this resource and then have been redirected to "
+"your desk."
+msgstr ""
+"Vous n'avez pas accès à cette ressource et avez été redirigé vers votre "
+"bureau."
+
+#: views/core.py:600
+msgid "A new live conference has started : "
+msgstr "Une nouvelle conférence en direct a commencé : "
+
+#: views/crfpa.py:406
+msgid "You have successfully register your account."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Grouped message"
+#~ msgid "Group messages"
+#~ msgstr "Message groupé"
+
+#~ msgid "Testimonials"
+#~ msgstr "Attestations"
+
+#, fuzzy
+#~ msgid "No testimonial"
+#~ msgstr "attestation"
+
+#, fuzzy
+#~ msgid "General"
+#~ msgstr "Tweeter général"
+
+#~ msgid "Save and download the registration form"
+#~ msgstr "Enregistrer et télécharger le formulaire"
+
+#~ msgid "CRFPA Profile"
+#~ msgstr "Profil CRFPA"
+
+#~ msgid "Validate"
+#~ msgstr "Validée"
+
+#~ msgid "Correctors"
+#~ msgstr "Correcteurs"
+
+#~ msgid "Treated"
+#~ msgstr "Traitées"
+
+#, fuzzy
+#~ msgid "Score : "
+#~ msgstr "Note"
+
+#~ msgid " marked"
+#~ msgstr " corrigée"
+
+#~ msgid " pending"
+#~ msgstr " en attente"
+
+#~ msgid "AE students"
+#~ msgstr "Etudiants AE"
+
+#~ msgid "CRFPA student"
+#~ msgstr "Etudiant CRFPA"
+
+#~ msgid "is live"
+#~ msgstr "en direct"
+
+#~ msgid "STOP"
+#~ msgstr "STOP"
+
+#~ msgid "to an IEJ"
+#~ msgstr "à un IEJ"
+
+#~ msgid "Duration"
+#~ msgstr "Durée"
+
+#~ msgid "obligation"
+#~ msgstr "obligation"
+
+#~ msgid "procedures"
+#~ msgstr "procédures"
+
+#~ msgid "oral specialities"
+#~ msgstr "spécialités orales"
+
+#~ msgid "written specialities"
+#~ msgstr "spécialités écrites"
+
+#~ msgid "Differed"
+#~ msgstr "Différé"
+
+#~ msgid "category"
+#~ msgstr "catégorie"
+
+#~ msgid "categories"
+#~ msgstr "catégories"
+
+#~ msgid "speciality"
+#~ msgstr "spécialité"
+
+#, fuzzy
+#~ msgid "Join date"
+#~ msgstr "date de début"
+
+#, fuzzy
+#~ msgid "Department"
+#~ msgstr "département"
+
+#~ msgid "All trainings"
+#~ msgstr "Toutes les formations"
+
+#~ msgid "Date begin"
+#~ msgstr "Date de début"
+
+#~ msgid "Modify profile"
+#~ msgstr "Modifier le profil"
+
+#~ msgid "All"
+#~ msgstr "Tous"
+
+#, fuzzy
+#~ msgid "Last modification"
+#~ msgstr "date de modification"
+
+#~ msgid "course types"
+#~ msgstr "types de matières"

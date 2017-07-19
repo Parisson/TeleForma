@@ -71,17 +71,21 @@ a img { border: none; }
     font-size: 0.8em;
     clear: both;
 }
+
 #content ul ul {
     font-size: 1.1em;
     padding-left: 0;
 }
+
 #content li {
     padding: .2em;
     padding-left: 0;
 }
+
 #content li a {
     padding: .1em 0;
 }
+
 #content h1 {
     color: #000000;
     font-weight: bold;
@@ -596,7 +600,7 @@ color:#FFF;
     font-size: 0.8125em;
     border-top: 1px solid #FFF;
     border-bottom: 1px solid #000;
-    height: 30px;
+    height: 36px;
     padding: 0em 0.5em 10px 0.5em;
     margin-top: 1.5em;
 }
@@ -1254,6 +1258,9 @@ a.image-link {
 .icon_speaker{
     background-image: url('/static/telemeta/images/text-speak.png');
 }
+.icon_wait{
+    background-image: url('/static/telemeta/images/wait.gif');
+}
 .icon_rss,.icon_rss:hover{
     background: url('/static/telemeta/images/feed-icon-14x14.png') no-repeat;
     background-position: 0ex .8ex;
@@ -1344,7 +1351,7 @@ input,textarea{
 
 #module-set .module {
     border: 1px solid #000;
-    background: repeat-y url(/static/telemeta/images/tw_hd.png) 0 0;
+    background: repeat url(/static/telemeta/images/tw_hd.png) 0 0;
     padding: 0.2em;
     margin: 2em 1em 0em 0em;
     -moz-border-radius: 8px 0px 11px 11px;
@@ -1373,7 +1380,7 @@ input,textarea{
 
 #module-set-left .module {
         border: 1px solid #000;
-        background: repeat-y url(/static/telemeta/images/tw_hd.png) 0 0;
+        background: repeat url(/static/telemeta/images/tw_hd.png) 0 0;
         padding: 0.2em;
         margin: 0em 0em 1.5em 0em;
         -moz-border-radius: 8px 0px 11px 11px;
@@ -1423,7 +1430,7 @@ input,textarea{
     float: left;
     width: 50%;
     padding: 0em 3em 0em 2em;
-    max-height: 550px;
+    /*max-height: 550px;*/
     overflow-y: auto;
     }
 
@@ -1453,7 +1460,7 @@ input,textarea{
     }
 
 #large_scroll {
-    max-height: 750px;
+    /*max-height: 750px;*/
     overflow-y: auto;
     padding: 0em 1em 0em 0em;
     }
@@ -1665,3 +1672,68 @@ input,textarea{
 .conference_form textarea {
     font-size: 1.2em;
     }
+
+
+.info {
+    margin-top: 0.3em;
+    color: white;
+    padding: 0.3em 0.3em 0.5em 0.8em;
+    background-color: #008000;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.success {
+    margin-top: 1em;
+    color: white;
+    padding: 0.3em 0.3em 0.5em 0.8em;
+    background-color: #008000;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.warning {
+    margin-top: 0.3em;
+    color: white;
+    padding: 0.3em 0.3em 0.5em 0.8em;
+    background-color: #e65911;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.error {
+    color: white;
+    padding: 0.3em;
+    background-color: #db4b39;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.errorlist {
+    color: red;
+}
+
+.errorlist li {
+    font-size: 1.2em;
+}
+
+.register {
+    width: 80%;
+    font-size: 1.1em;
+    margin-top: 1em;
+    margin-bottom: 4em;
+    border: 0px dotted #888;
+    padding: 1em;
+    background-color: #FFF;
+    -moz-border-radius: 8px 0px 8px 8px;
+    -webkit-border-radius: 8px 0px 8px 8px;
+    border-radius: 8px 0px 8px 8px;
+}
+
+.register-error {
+    color: #BB0000;
+}

@@ -33,12 +33,15 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import os.path
-from django.conf.urls.defaults import *
-from django.views.generic import *
-from django.views.generic.base import *
+from django.conf.urls import patterns, url, include
+from django.conf import settings
+from django.views.generic.base import RedirectView
+from django.views.generic.list import ListView
 from teleforma.models import *
 from teleforma.views import *
 from telemeta.views import *
+from teleforma.forms import *
+from registration.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
@@ -48,10 +51,16 @@ media = MediaView()
 
 urlpatterns = patterns('',
 
-
     # login
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
         name="teleforma-login"),
+    # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
+    url(r'^accounts/register/$', UserAddView.as_view(), name="teleforma-register"),
+    url(r'^accounts/register/(?P<username>.*)/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
+    url(r'^accounts/register/(?P<username>.*)/download/$', RegistrationPDFViewDownload.as_view(), name="teleforma-registration-download"),
+    url(r'^accounts/register/(?P<username>.*)/view/$', RegistrationPDFView.as_view(), name="teleforma-registration-view"),
+
+    url(r'^captcha/', include('captcha.urls')),
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
@@ -65,6 +74,7 @@ urlpatterns = patterns('',
     # Desk
     url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/$', CourseListView.as_view(), name="teleforma-desk-period-list"),
+    url(r'^desk/periods/(?P<period_id>.*)/courses_pending/$', CoursePendingListView.as_view(), name="teleforma-desk-period-pending"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
         name="teleforma-desk-period-course"),
 
@@ -103,17 +113,20 @@ urlpatterns = patterns('',
     url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/export/$',
         UsersExportView.as_view(), name="teleforma-users-export"),
 
-    url(r'^users/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail,
+    url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
 
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
 
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
+    url(r'jsonrpc/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
 
 #    url(r'^private_files/', include('private_files.urls')),
 
     # JQCHAT
     url(r'^', include('jqchat.urls')),
 
+    # EXAM
+    url(r'^', include('teleforma.exam.urls')),
 )
