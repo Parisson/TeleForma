@@ -11,7 +11,7 @@ setup(
   long_description = open('README.rst').read(),
   author = "Guillaume Pellerin",
   author_email = "yomguy@parisson.com",
-  version = '1.0',
+  version = '1.1',
   install_requires = [
         'django>=1.4',
         'telemeta',
