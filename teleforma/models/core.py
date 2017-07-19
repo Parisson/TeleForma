@@ -110,7 +110,7 @@ class Department(models.Model):
     description = models.CharField(_('description'), max_length=255, blank=True)
     organization = models.ForeignKey('Organization', related_name='department', verbose_name=_('organization'))
     domain = models.CharField(_('Master domain'), max_length=255, blank=True)
-    default_period  = models.ForeignKey('Period', related_name='department', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
+    default_period  = models.ForeignKey('Period', related_name='departments', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
         return self.name
@@ -129,6 +129,9 @@ class Period(Model):
     name            = models.CharField(_('name'), max_length=255)
     description     = models.CharField(_('description'), max_length=255, blank=True)
     parent = models.ForeignKey('Period', related_name='children', verbose_name=_('parent'), blank=True, null=True)
+    department      = ForeignKey('Department', related_name='period',
+    							 verbose_name=_('department'),
+    							 blank=True, null=True)
     date_begin      = models.DateField(_('begin date'), null=True, blank=True)
     date_end        = models.DateField(_('end date'), null=True, blank=True)
     date_password_init = models.DateField(_("date d'init de mot de passe"), null=True, blank=True)
