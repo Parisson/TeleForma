@@ -14,18 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM parisson/telemeta:latest
+FROM python:2
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 
-RUN mkdir /srv/app
-RUN mkdir /srv/src
-RUN mkdir /srv/src/app
+ENV PYTHONUNBUFFERED 1
 
-COPY . /srv/src/app
-WORKDIR /srv/src/app
+RUN mkdir -p /srv/app
+RUN mkdir -p /srv/lib/
+RUN mkdir -p /srv/lib/telemeta
+
+ENV LANG fr_FR.UTF-8
+ENV LANGUAGE fr_FR:fr
+ENV LC_ALL fr_FR.UTF-8
+
+ADD . /srv/lib/teleforma
+WORKDIR /srv/lib/teleforma
+
 RUN pip install -r requirements.txt
-RUN pip install -r requirements-dev.txt --src /srv/src
+RUN pip install -r requirements-dev.txt --src /srv/lib
+
 WORKDIR /srv/app
 
 EXPOSE 8000

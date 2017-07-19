@@ -13,8 +13,8 @@ setup(
   author_email = "yomguy@parisson.com",
   version = '1.1',
   install_requires = [
-        'django>=1.4',
-        'telemeta',
+        'django==1.4.19',
+        'telemeta==1.4.6',
         'south',
         'django-pagination',
         'django-postman',
@@ -22,7 +22,6 @@ setup(
         'django-notes',
         'django-timezones',
         'django-jqchat',
-        'django-googletools',
         'crocodoc',
         'django-registration',
         'django-extra-views',
