@@ -1,4 +1,19 @@
---index-url https://pypi.python.org/simple/
-
 setuptools
--e .
+django==1.4.19
+telemeta==1.4.6
+south
+django-pagination==1.0.7
+django-postman==3.2.0
+django-extensions==0.9
+django-notes
+django-timezones==0.2
+django-jqchat
+crocodoc
+django-registration==0.8
+django-extra-views==0.6.5
+django-simple-captcha
+django-suit
+django-nvd3
+django-user-agents
+xhtml2pdf
+html5lib==0.95

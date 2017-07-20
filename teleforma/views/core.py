@@ -400,7 +400,7 @@ class MediaView(CourseAccessMixin, DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
 
         room_name = media.course.code
-        if media.conference.web_class_group:
+        if media.conference.class_group:
             room_name += '_' + media.conference.public_id
 
         context['room'] = get_room(name=room_name,period=context['period'].name,
@@ -538,7 +538,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
 
         room_name = conference.course.code
-        if conference.web_class_group:
+        if conference.class_group:
             room_name += '_' + conference.public_id
 
         context['room'] = get_room(name=room_name, period=context['period'].name,
@@ -725,7 +725,7 @@ class ConferenceRecordView(FormView):
                                         stream_type=stream_type, streaming=True)
                     stream.save()
 
-                if not conference.web_class_group:
+                if not conference.class_group:
                     try:
                         live_message(conference)
                     except:
@@ -770,12 +770,12 @@ class ProfessorListView(View):
             professor.save()
 
 
-class WebClassGroupView(View):
+class ClassGroupView(View):
 
-    @jsonrpc_method('teleforma.get_web_class_group_list')
-    def get_web_class_group_list(request):
-        web_class_groups = WebClassGroup.objects.all()
-        return [w.to_json_dict() for w in web_class_groups]
+    @jsonrpc_method('teleforma.get_class_group_list')
+    def get_class_group_list(request):
+        class_groups = ClassGroup.objects.all()
+        return [w.to_json_dict() for w in class_groups]
 
     def pull(request, host=None):
         if host:
@@ -784,9 +784,9 @@ class WebClassGroupView(View):
             url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
         s = ServiceProxy(url)
 
-        remote_list = s.teleforma.get_web_class_group_list()
-        for web_class_group_dict in remote_list['result']:
-            web_class_group, c = WebClassGroup.objects.get_or_create(name=web_class_group_dict['name'])
+        remote_list = s.teleforma.get_class_group_list()
+        for class_group_dict in remote_list['result']:
+            class_group, c = ClassGroup.objects.get_or_create(name=class_group_dict['name'])
 
 
 class HelpView(TemplateView):
