@@ -179,7 +179,7 @@ class Course(Model):
     oral_speciality = models.BooleanField(_('oral_speciality'))
     oral_1 = models.BooleanField(_('oral_1'))
     oral_2 = models.BooleanField(_('oral_2'))
-    exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
+    has_exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
 
     def __unicode__(self):
         return self.title
