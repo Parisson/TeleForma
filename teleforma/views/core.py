@@ -295,7 +295,7 @@ class CourseListView(CourseAccessMixin, ListView):
         context['room'] = get_room(name='site', period=context['period'].name)
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
-        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:3]
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
         return context
 
     @method_decorator(login_required)
