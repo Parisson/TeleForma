@@ -110,7 +110,7 @@ class Training(Model):
     available = models.BooleanField(_('available'))
 
     def __unicode__(self):
-        if self.name:
+        if self.name and self.period:
             return ' - '.join([self.name, self.period.name])
         else:
             return self.get_code()
