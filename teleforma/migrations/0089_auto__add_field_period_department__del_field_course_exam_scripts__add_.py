@@ -8,10 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        for profile in orm.Profile.objects.all():
-            profile.address.replace('\n', ' ')
-            profile.save()
-
         # Adding field 'Period.department'
         db.add_column('teleforma_period', 'department',
                       self.gf('telemeta.models.core.ForeignKey')(default=None, related_name='period', null=True, blank=True, to=orm['teleforma.Department']),
