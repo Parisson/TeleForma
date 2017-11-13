@@ -770,11 +770,11 @@ class ProfessorListView(View):
             professor.save()
 
 
-class ClassGroupView(View):
+class WebClassGroupView(View):
 
     @jsonrpc_method('teleforma.get_class_group_list')
     def get_class_group_list(request):
-        class_groups = ClassGroup.objects.all()
+        class_groups = WebClassGroup.objects.all()
         return [w.to_json_dict() for w in class_groups]
 
     def pull(request, host=None):
@@ -786,7 +786,7 @@ class ClassGroupView(View):
 
         remote_list = s.teleforma.get_class_group_list()
         for class_group_dict in remote_list['result']:
-            class_group, c = ClassGroup.objects.get_or_create(name=class_group_dict['name'])
+            class_group, c = WebClassGroup.objects.get_or_create(name=class_group_dict['name'])
 
 
 class HelpView(TemplateView):

@@ -8,6 +8,11 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Period.department'
+        db.add_column('teleforma_period', 'department',
+                      self.gf('telemeta.models.core.ForeignKey')(default=None, related_name='period', null=True, blank=True, to=orm['teleforma.Department']),
+                      keep_default=False)
+
         # Deleting field 'Course.exam_scripts'
         db.delete_column('teleforma_course', 'exam_scripts')
 
@@ -16,8 +21,19 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.BooleanField')(default=True),
                       keep_default=False)
 
+        # Adding field 'Profile.address_detail'
+        db.add_column('teleforma_profiles', 'address_detail',
+                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True),
+                      keep_default=False)
+
+
+        # Changing field 'Profile.address'
+        db.alter_column('teleforma_profiles', 'address', self.gf('django.db.models.fields.CharField')(max_length=255))
 
     def backwards(self, orm):
+        # Deleting field 'Period.department'
+        db.delete_column('teleforma_period', 'department_id')
+
         # Adding field 'Course.exam_scripts'
         db.add_column('teleforma_course', 'exam_scripts',
                       self.gf('django.db.models.fields.BooleanField')(default=True),
@@ -26,6 +42,12 @@ class Migration(SchemaMigration):
         # Deleting field 'Course.has_exam_scripts'
         db.delete_column('teleforma_course', 'has_exam_scripts')
 
+        # Deleting field 'Profile.address_detail'
+        db.delete_column('teleforma_profiles', 'address_detail')
+
+
+        # Changing field 'Profile.address'
+        db.alter_column('teleforma_profiles', 'address', self.gf('django.db.models.fields.TextField')())
 
     models = {
         'auth.group': {
@@ -72,15 +94,8 @@ class Migration(SchemaMigration):
             'platform_only': ('telemeta.models.core.BooleanField', [], {'default': 'False'}),
             'user': ('telemeta.models.core.ForeignKey', [], {'related_name': "'ae_student'", 'unique': 'True', 'to': "orm['auth.User']"})
         },
-        'teleforma.classgroup': {
-            'Meta': {'ordering': "['name']", 'object_name': 'ClassGroup'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'iejs': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'class_groups'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.IEJ']"}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-        },
         'teleforma.conference': {
             'Meta': {'ordering': "['-date_begin']", 'object_name': 'Conference'},
-            'class_group': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'conferences'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['teleforma.ClassGroup']"}),
             'comment': ('teleforma.fields.ShortTextField', [], {'max_length': '255', 'blank': 'True'}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'conference'", 'to': "orm['teleforma.Course']"}),
             'course_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'conference'", 'to': "orm['teleforma.CourseType']"}),
@@ -94,7 +109,8 @@ class Migration(SchemaMigration):
             'readers': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'conference'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['auth.User']"}),
             'room': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'conference'", 'null': 'True', 'to': "orm['teleforma.Room']"}),
             'session': ('django.db.models.fields.CharField', [], {'default': "'1'", 'max_length': '16'}),
-            'status': ('django.db.models.fields.IntegerField', [], {'default': '2'})
+            'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
+            'web_class_group': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'conferences'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['teleforma.WebClassGroup']"})
         },
         'teleforma.course': {
             'Meta': {'ordering': "['number']", 'object_name': 'Course'},
@@ -291,7 +307,8 @@ class Migration(SchemaMigration):
         },
         'teleforma.profile': {
             'Meta': {'object_name': 'Profile', 'db_table': "'teleforma_profiles'"},
-            'address': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'address': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'address_detail': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'birthday': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'city': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'country': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -371,6 +388,12 @@ class Migration(SchemaMigration):
             'procedure': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'training_procedure'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.CourseType']"}),
             'synthesis_note': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'training_synthesis_note'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.CourseType']"}),
             'written_speciality': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'training_written_speciality'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.CourseType']"})
+        },
+        'teleforma.webclassgroup': {
+            'Meta': {'ordering': "['name']", 'object_name': 'WebClassGroup'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'iejs': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'web_class_group'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['teleforma.IEJ']"}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'telemeta.acquisitionmode': {
             'Meta': {'ordering': "['value']", 'object_name': 'AcquisitionMode', 'db_table': "'acquisition_modes'"},

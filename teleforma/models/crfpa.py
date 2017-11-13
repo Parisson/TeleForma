@@ -228,7 +228,8 @@ class Profile(models.Model):
     "User profile extension"
 
     user = models.ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
-    address = models.TextField(_('Address'), blank=True)
+    address = models.CharField(_('Address'), max_length=255, blank=True)
+    address_detail = models.CharField(_('Address detail'), max_length=255, blank=True, null=True)
     postal_code = models.CharField(_('Postal code'), max_length=255, blank=True)
     city = models.CharField(_('City'), max_length=255, blank=True)
     country = models.CharField(_('Country'), max_length=255, blank=True)
