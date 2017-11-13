@@ -400,7 +400,7 @@ class MediaView(CourseAccessMixin, DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
 
         room_name = media.course.code
-        if media.conference.class_group:
+        if media.conference.web_class_group:
             room_name += '_' + media.conference.public_id
 
         context['room'] = get_room(name=room_name,period=context['period'].name,
@@ -538,7 +538,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
 
         room_name = conference.course.code
-        if conference.class_group:
+        if conference.web_class_group:
             room_name += '_' + conference.public_id
 
         context['room'] = get_room(name=room_name, period=context['period'].name,
@@ -725,7 +725,7 @@ class ConferenceRecordView(FormView):
                                         stream_type=stream_type, streaming=True)
                     stream.save()
 
-                if not conference.class_group:
+                if not conference.web_class_group:
                     try:
                         live_message(conference)
                     except:
