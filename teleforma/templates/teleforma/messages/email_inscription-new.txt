@@ -6,10 +6,6 @@ Votre emploi du temps personnalisé et vos identifiants de connexion à notre pl
 
 {% if student.platform_only %}{{ student.period.message_platform }}{% else %}{{ student.period.message_local }}{% endif %}
 
-Vous avez la possibilité de vous rétracter, par lettre recommandée adressée à la Responsable administrative, dans les 10 jours suivants votre inscription. Pendant ce délai, l'intégralité des sommes versées sera remboursée. Passé ce délai, aucun remboursement ne sera, en revanche, possible, sauf cas de force majeure ou motif légitime ou impérieux, dûment justifié.
-
-Toute participation à un enseignement non retenu par l’étudiant lors de son inscription ouvrira droit pour le Pré-Barreau de lui réclamer le règlement prix de l’intégralité de la matière considérée, et ce quel que soit le nombre d’heures suivies.
-
 Vous souhaitant bonne réception de ce message, nous vous prions de croire, cher(e) étudiant(e), en nos respectueuses salutations.
 
 L’équipe du Pré-Barreau
