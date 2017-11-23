@@ -28,24 +28,45 @@ class Logger:
 
 
 class Command(BaseCommand):
-    help = "Activate all user account for subscribed students"
-    username = 'test'
+    help = "Reset the password for all (active) users "
+    message_template = 'postman/email_user_init.txt'
+    subject_template = 'postman/email_user_subject_init.txt'
+    language_code = 'fr_FR'
+    username = test
+
+    def init_password_email(self, user):
+        site = Site.objects.get_current()
+        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'usr': user}
+        subject = render_to_string(self.subject_template, ctx_dict)
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(self.message_template, ctx_dict)
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
 
     def handle(self, *args, **options):
-        period_name = args[-2]
         log_file = args[-1]
+        period_name = args[-2]
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
-        users = User.objects.filter(username=self.username)
+
         period = Period.objects.get(name=period_name)
+        users = User.objects.filter(username=self.username)
+        translation.activate(self.language_code)
 
         for user in users:
+            profile, c = Profile.objects.get_or_create(user=user)
             students = user.student.all()
             if students:
                 student = students[0]
-                if student.is_subscribed and not user.is_active and student.period == period:
-                    user.is_active = True
-                    user.save()
-                    logger.logger.info('init : ' + user.username)
+            else:
+                student = Student()
+            professors = user.professor.all()
+            quotas = user.quotas.all()
+            if student.period == period or professors or quotas:
+                if profile and user.is_active:
+                    if not profile.init_password and user.email:
+                        self.init_password_email(user)
+                        profile.init_password = True
+                        profile.save()
+                        logger.logger.info('init : ' + user.username)
 
         logger.logger.info('############## Done #################')
