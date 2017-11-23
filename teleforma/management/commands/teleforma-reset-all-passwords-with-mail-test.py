@@ -32,7 +32,7 @@ class Command(BaseCommand):
     message_template = 'postman/email_user_init.txt'
     subject_template = 'postman/email_user_subject_init.txt'
     language_code = 'fr_FR'
-    username = test
+    username = 'test'
 
     def init_password_email(self, user):
         site = Site.objects.get_current()

@@ -29,13 +29,14 @@ class Logger:
 
 class Command(BaseCommand):
     help = "Activate all user account for subscribed students"
+    username = 'test'
     
     def handle(self, *args, **options):
         period_name = args[-2]
         log_file = args[-1]
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
-        users = User.objects.all()
+        users = User.objects.filter(username=self.username)
         period = Period.objects.get(name=period_name)
 
         for user in users:
