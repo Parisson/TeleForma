@@ -39,7 +39,7 @@ class Command(BaseCommand):
             mode = 'Presentielle'
         ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
         subject_template = 'teleforma/messages/email_inscr_sujet.txt'
-        message_template = 'teleforma/messages/email_inscription.txt'
+        message_template = 'teleforma/messages/email_inscription-new.txt'
         subject = render_to_string(subject_template, ctx_dict)
         subject = ''.join(subject.splitlines())
         message = render_to_string(message_template, ctx_dict)
