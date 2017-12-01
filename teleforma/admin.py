@@ -40,6 +40,7 @@ class UserProfileAdmin(UserAdmin):
     inlines = [ProfessorProfileInline, AuditorProfileInline]
     add_form = UserCreationForm
     form = UserChangeForm
+    list_filter = ['is_staff', 'is_superuser', 'is_active', 'date_joined']
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
