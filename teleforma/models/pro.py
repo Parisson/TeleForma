@@ -126,6 +126,14 @@ class Seminar(ClonableMixin, Displayable):
         else:
             return "E-learning - %s" % (self.title)
 
+    @property
+    def pretty_title_with_duration(self):
+        from pbshop.templatetags.tags import fancy_duration
+        pretty_title = self.pretty_title
+        if self.duration:
+            pretty_title += u" - Durée : %s" % (fancy_duration(self.duration))
+        return pretty_title
+
     def public_url(self):
         """
         Get a public fully qualified URL for the object
