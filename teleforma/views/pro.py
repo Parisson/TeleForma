@@ -119,7 +119,7 @@ class SeminarAccessMixin(object):
         context = super(SeminarAccessMixin, self).get_context_data(**kwargs)
         seminar = context.get('seminar')
         if not seminar:
-            seminar = Seminar.objects.get(pk=self.kwargs.get('id', 'pk'))
+            seminar = Seminar.objects.get(pk=self.kwargs.get('id', self.kwargs.get('pk')))
         context['seminar'] = seminar
         user = self.request.user
 

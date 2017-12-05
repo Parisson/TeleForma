@@ -106,7 +106,11 @@
     <li>{% trans "Quiz" %} : {{ progress|quiz_progress }}%
      <div id="progressbar-answer"></div>
     </li>
-
+    {% if timer %}
+    <li>
+      Votre temps de connexion : <span class="autotimer">{{ timer }}</span> sur {{ seminar.duration }}
+    </li>
+    {% endif %}
   </ul>
 
  </div>

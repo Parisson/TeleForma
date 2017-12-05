@@ -35,13 +35,18 @@ $(window).ready(function() {
 	var navHeight = pageHeight - 125;
 	$('#desk_center').css({"max-height": navHeight + 'px'});
 
+	// chronometer
 	$('.autotimer').each(function(){
 		var timer = new Timer();
-		$timer = $(this);
-		timer.start({precision: 'seconds', startValues: {seconds: 90}, target: {seconds: 120}});
-		$(this).html(timer.getTimeValues().toString());
+		$timerSpan = $(this);
+		var value = $timerSpan.text()
+		// convert text value of timer to seconds
+		var timeArray = value.split(':');
+		var seconds = parseInt(timeArray[0], 10) * 3600 + parseInt(timeArray[1], 10) * 60 + parseInt(timeArray[2], 10);
+		timer.start({precision: 'seconds', startValues: {seconds: seconds}});
+		$timerSpan.html(timer.getTimeValues().toString());
 		timer.addEventListener('secondsUpdated', function (e) {
-			$(this).html(timer.getTimeValues().toString());
+			$timerSpan.html(timer.getTimeValues().toString());
 		});
 	});
 });
