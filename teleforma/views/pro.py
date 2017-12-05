@@ -115,6 +115,20 @@ def get_seminar_delta(user, seminar):
 
 class SeminarAccessMixin(object):
 
+    def get_context_data(self, **kwargs):
+        context = super(SeminarAccessMixin, self).get_context_data(**kwargs)
+        seminar = context.get('seminar')
+        if not seminar:
+            seminar = Seminar.objects.get(pk=self.kwargs.get('id', 'pk'))
+        context['seminar'] = seminar
+        user = self.request.user
+
+        timer = get_seminar_timer(user, seminar)
+        delta_sec = get_seminar_delta(user, seminar)
+        context['delta_sec'] = delta_sec
+        context['timer'] = str(timer).split('.')[0]
+        return context
+
     def render_to_response(self, context):
         seminar = context['seminar']
         if not seminar in all_seminars(self.request)['all_seminars']:
@@ -175,10 +189,10 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
 
-        timer = get_seminar_timer(user, seminar)
-        delta_sec = get_seminar_delta(user, seminar)
-        context['delta_sec'] = delta_sec
-        context['timer'] = str(timer).split('.')[0]
+        # timer = get_seminar_timer(user, seminar)
+        # delta_sec = get_seminar_delta(user, seminar)
+        # context['delta_sec'] = delta_sec
+        # context['timer'] = str(timer).split('.')[0]
 
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
@@ -288,9 +302,9 @@ class SeminarMediaView(SeminarAccessMixin, SeminarRevisionMixin, MediaView):
     def get_context_data(self, **kwargs):
         context = super(SeminarMediaView, self).get_context_data(**kwargs)
         user = self.request.user
-        seminar = Seminar.objects.get(pk=self.kwargs['id'])
-        context['seminar'] = seminar
-        context['seminar_progress'] = seminar_progress(user, seminar)
+        # seminar = Seminar.objects.get(pk=self.kwargs['id'])
+        # context['seminar'] = seminar
+        context['seminar_progress'] = seminar_progress(user, context['seminar'])
         # set_revision(user, seminar)
         return context
 
@@ -301,13 +315,13 @@ class SeminarMediaView(SeminarAccessMixin, SeminarRevisionMixin, MediaView):
 
 class SeminarDocumentView(SeminarAccessMixin, DocumentReadView):
 
-    def get_context_data(self, **kwargs):
-        context = super(SeminarDocumentView, self).get_context_data(**kwargs)
-        user = self.request.user
-        seminar = Seminar.objects.get(pk=self.kwargs['id'])
-        context['seminar'] = seminar
-        # set_revision(user, seminar)
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(SeminarDocumentView, self).get_context_data(**kwargs)
+    #     user = self.request.user
+    #     # seminar = Seminar.objects.get(pk=self.kwargs['id'])
+    #     # context['seminar'] = seminar
+    #     # set_revision(user, seminar)
+    #     return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -316,13 +330,13 @@ class SeminarDocumentView(SeminarAccessMixin, DocumentReadView):
 
 class SeminarDocumentDownloadView(SeminarAccessMixin, DocumentDownloadView):
 
-    def get_context_data(self, **kwargs):
-        context = super(SeminarDocumentDownloadView, self).get_context_data(**kwargs)
-        user = self.request.user
-        seminar = Seminar.objects.get(pk=self.kwargs['id'])
-        context['seminar'] = seminar
-        # set_revision(user, seminar)
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(SeminarDocumentDownloadView, self).get_context_data(**kwargs)
+    #     user = self.request.user
+    #     # seminar = Seminar.objects.get(pk=self.kwargs['id'])
+    #     # context['seminar'] = seminar
+    #     # set_revision(user, seminar)
+    #     return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

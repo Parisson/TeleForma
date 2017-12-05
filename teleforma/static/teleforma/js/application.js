@@ -34,4 +34,14 @@ $(window).ready(function() {
 	var pageHeight = $(window).height();
 	var navHeight = pageHeight - 125;
 	$('#desk_center').css({"max-height": navHeight + 'px'});
+
+	$('.autotimer').each(function(){
+		var timer = new Timer();
+		$timer = $(this);
+		timer.start({precision: 'seconds', startValues: {seconds: 90}, target: {seconds: 120}});
+		$(this).html(timer.getTimeValues().toString());
+		timer.addEventListener('secondsUpdated', function (e) {
+			$(this).html(timer.getTimeValues().toString());
+		});
+	});
 });
