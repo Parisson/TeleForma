@@ -237,6 +237,11 @@ $(window).ready(function( ){
     <li>{% trans "Seminar" %} : {{ seminar_progress }}%
      <div id="progressbar-seminar"></div>
     </li>
+    {% if timer %}
+    <li>
+      {% trans "chronometer" %} : <span class="autotimer">{{ timer }}</span> sur {{ seminar.duration }}
+    </li>
+    {% endif %}
   </ul>
  </div>
 </div>

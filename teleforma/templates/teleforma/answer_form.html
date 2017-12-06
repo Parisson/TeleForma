@@ -113,7 +113,11 @@ $(document).ready(function(){
     <li>{% trans "Answer" %} : <span id="answer-progress">0</span>%
      <div id="progressbar-answer"></div>
     </li>
-
+    {% if timer %}
+    <li>
+      {% trans "chronometer" %} : <span class="autotimer">{{ timer }}</span> sur {{ seminar.duration }}
+    </li>
+    {% endif %}
   </ul>
 
  </div>
