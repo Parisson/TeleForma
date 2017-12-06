@@ -55,6 +55,10 @@ urlpatterns = patterns('',
         name="teleforma-login"),
     url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
         name="home"),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
+        name="telemeta-login"),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
+        name="telemeta-login"),
 #    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'authentication_form': AuthenticationForm}),
 
     # Telemeta
