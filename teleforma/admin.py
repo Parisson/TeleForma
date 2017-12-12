@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from longerusername.forms import UserCreationForm, UserChangeForm
+from django.contrib.contenttypes.generic import GenericInlineModelAdmin
 
 class ProfileInline(admin.StackedInline):
     model = Profile
