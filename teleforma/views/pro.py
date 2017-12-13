@@ -185,6 +185,20 @@ class SeminarView(SeminarAccessMixin, DetailView):
         user = self.request.user
 
         validated = seminar_validated(user, seminar)
+        if validated:
+            # check if testimonial exists and create it
+            testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
+            if not testimonials:
+                testimonial = Testimonial(user=user, seminar=seminar)
+                testimonial.save()
+                # text = render_to_string('teleforma/messages/seminar_validated.txt', context)
+                # subject = seminar.title + ' : ' + unicode(_('all your answers has been validated'))
+                # mess = Message(recipient=user, subject=subject[:119], body=text)
+                # mess.moderation_status = 'a'
+                # mess.save()
+                # notify_user(mess, 'acceptance')
+
+
         progress = seminar_progress(user, seminar)
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
@@ -700,9 +714,11 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
         revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user).order_by('date')
         if revisions:
             context['first_revision'] = revisions[0]
+
         testimonials = Testimonial.objects.filter(seminar=seminar, user=self.request.user)
         if testimonials:
             context['testimonial'] = testimonials[0]
+
         return context
 
     @method_decorator(login_required)

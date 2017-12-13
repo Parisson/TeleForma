@@ -549,6 +549,13 @@ class Conference(Displayable):
 
     notes           = generic.GenericRelation(Note)
 
+    suggested_seminars = models.ManyToManyField('Seminar', related_name="conference_suggested_seminars",
+                                                verbose_name=_('suggested seminars'),
+                                                blank=True, null=True)
+    suggested_conferences = models.ManyToManyField('Conference', related_name="conference_suggested_conferences",
+                                                   verbose_name=_('suggested conferences'),
+                                                   blank=True, null=True)
+
     objects = DisplayableManager()
 
     @property
@@ -627,6 +634,10 @@ class Conference(Displayable):
         """
         url = reverse('teleforma-conference-detail', kwargs={'pk':self.id})
         return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
+
+    @property
+    def suggestions(self):
+        return (list(self.suggested_seminars.all()) + list(self.suggested_conferences.all()))[:3]
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'

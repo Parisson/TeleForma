@@ -108,6 +108,13 @@ class Seminar(ClonableMixin, Displayable):
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
     date_forced     = models.DateTimeField(_('date forced'), null=True, blank=True)
 
+    suggested_seminars = models.ManyToManyField('Seminar', related_name="seminar_suggested_seminars",
+                                    verbose_name=_('suggested seminars'),
+                                    blank=True, null=True)
+    suggested_conferences = models.ManyToManyField('Conference', related_name="seminar_suggested_conferences",
+                                                verbose_name=_('suggested conferences'),
+                                                blank=True, null=True)
+
     objects = DisplayableManager()
 
     def __unicode__(self):
@@ -147,6 +154,10 @@ class Seminar(ClonableMixin, Displayable):
 
     def get_absolute_url(self):
         return reverse('seminar-view', kwargs={"pk": self.id})
+
+    @property
+    def suggestions(self):
+        return (list(self.suggested_seminars.all())+list(self.suggested_conferences.all()))[:3]
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar'
@@ -364,3 +375,6 @@ class QuizValidation(models.Model):
         db_table = app_label + '_' + 'quiz_validation'
         verbose_name = _('Quiz validation')
         ordering = ['-date_validated']
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^tinymce\.models\.HTMLField"])
