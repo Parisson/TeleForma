@@ -242,8 +242,11 @@ def validated(question, user):
         return ''
 
 @register.filter
-def quiz_validated(quiz, user):
-    validations = QuizValidation.objects.filter(quiz=quiz, user=user, validated=True)
+def quiz_validated(seminar, user):
+    quiz = seminar.quiz
+    startdate = seminar.date_added
+    enddate = seminar.expiry_date
+    validations = QuizValidation.objects.filter(quiz=quiz, user=user, validated=True,date_validated__range=[startdate, enddate])
     if validations:
         return validations[0].date_validated
     else:

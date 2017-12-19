@@ -36,20 +36,42 @@
 from teleforma.views.core import *
 
 
-def seminar_progress(user, seminar):
+def seminar_progress(user, seminar, more=False):
     """return the user progress of a seminar in percent
+    if more is True, return additionals informations
     """
 
     progress = 0
     total = 0
+    missing_steps = set()
 
-    objects = [seminar.docs_1, seminar.docs_2, seminar.medias, seminar.docs_correct]
-    for obj in objects:
+    objects = [
+        {
+            'obj': seminar.docs_1,
+            'step': '1'
+        },
+        {
+            'obj': seminar.medias,
+            'step': '2'
+        },
+        {
+            'obj': seminar.docs_2,
+            'step': '3'
+        },
+        {
+            'obj': seminar.docs_correct,
+            'step': '5'
+        }]
+    for item in objects:
+        obj = item['obj']
+        step = item['step']
         for item in obj.all():
             if item.weight:
                 total += item.weight
                 if user in item.readers.all():
                     progress += item.weight
+                else:
+                    missing_steps.add(step)
 
     questions = Question.objects.filter(seminar=seminar, status=3)
     for question in questions:
@@ -59,6 +81,8 @@ def seminar_progress(user, seminar):
                                             validated=True, treated=True)
             if answer:
                 progress += question.weight
+            else:
+                missing_steps.add('4')
 
     if seminar.quiz:
         quiz_weight = 3
@@ -66,11 +90,19 @@ def seminar_progress(user, seminar):
         total += quiz_weight
         if quiz_validations:
             progress += quiz_weight
+        else:
+            missing_steps.add('2bis')
 
     if total != 0:
-        return int(progress*100/total)
+        progress = int(progress*100/total)
     else:
-        return 0
+        progress = 0
+    if not more:
+        return progress
+    else:
+        return {'progress':progress, 'missing_steps':missing_steps}
+
+
 
 def seminar_validated(user, seminar):
     validated = []
@@ -78,7 +110,7 @@ def seminar_validated(user, seminar):
     if seminar.quiz:
         quiz_validations = QuizValidation.objects.filter(user=user, quiz=seminar.quiz, validated=True)
         if not quiz_validations:
-            return False            
+            return False
     if questions:
         for question in questions:
             answers = Answer.objects.filter(question=question, user=user,

@@ -10,13 +10,15 @@
                 {% endif %}
             </td>
             <td class="border-top"width="60%">
-            	{% if seminar.quiz|quiz_validated:user %}
-            		{% trans "validé le" %} {{ seminar.quiz|quiz_validated:user }}
+            	{% if seminar|quiz_validated:user %}
+            		{% trans "validé le" %} {{ seminar|quiz_validated:user }}
             	{% endif %}
             </td>
             <td class="border-top" width="5%" align="center">
-            	{% if seminar.quiz|quiz_validated:user %}
+            	{% if seminar|quiz_validated:user %}
             		<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
+                {% else %}
+                    <img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' not viewed yet' %}" />
             	{% endif %}
             </td>
             </tr>
