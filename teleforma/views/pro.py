@@ -197,20 +197,29 @@ class SeminarView(SeminarAccessMixin, DetailView):
                 # mess.moderation_status = 'a'
                 # mess.save()
                 # notify_user(mess, 'acceptance')
+        progress_data = seminar_progress(user, seminar, more=True)
 
-
-        progress = seminar_progress(user, seminar)
+        progress = progress_data['progress']
+        missing_steps = progress_data['missing_steps']
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
         delta_sec = context['delta_sec']
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
-        elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html':
+        elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html' and missing_steps == set('5'):
             messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
         elif progress == 100 and validated and delta_sec >= 0 and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
+        elif len(missing_steps) == 1:
+            messages.warning(self.request, _("You still need to complete step %(step)s in order to get yout testimonial.") % {'step':missing_steps.pop()})
         if progress == 100 and validated and delta_sec < 0:
-            messages.info(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you have to work at least the time required for this seminar."))
+            minutes = -delta_sec / 60
+            hours = minutes / 60
+            missing = "%d minutes" % minutes
+            if hours >= 1:
+                missing = "%dh%02d" % (hours, minutes % 60)
+            messages.warning(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you "
+                                           "still have to work at least %(time)s.") % {'time':missing})
 
         return context
 

@@ -51,7 +51,7 @@
             {% elif not media.is_published and user.is_staff %}
              <img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
-            {% if media.item.file %}
+            {% if media.item.file and user.is_staff %}
              <a href="{{ MEDIA_URL|set_host:HOST }}{{ media.item.file }}">
               <img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
              </a>

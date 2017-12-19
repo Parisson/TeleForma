@@ -23,6 +23,8 @@
             		<img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" alt="" title="{% trans "Saved" %}" />
             	{% elif question|submitted:user and question|validated:user %}
             		<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
+				{% else %}
+					<img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' not viewed yet' %}" />
             	{% endif %}
             </td>
             </tr>

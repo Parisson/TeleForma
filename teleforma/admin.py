@@ -71,7 +71,8 @@ class MediaAdmin(admin.ModelAdmin):
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['public_id', 'id']
-    filter_vertical = ['docs_description']
+    filter_vertical = ['docs_description',
+                       'suggested_seminars', 'suggested_conferences']
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
@@ -80,7 +81,8 @@ class SeminarAdmin(admin.ModelAdmin):
     inlines = [SeminarQuestionInline,]
     filter_horizontal = ['professor',]
     filter_vertical = ['docs_description', 'docs_1',
-                        'docs_2', 'docs_correct', 'medias']
+                       'docs_2', 'docs_correct', 'medias',
+                       'suggested_seminars', 'suggested_conferences']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
     list_filter = ('period', 'publish_date', 'expiry_date')

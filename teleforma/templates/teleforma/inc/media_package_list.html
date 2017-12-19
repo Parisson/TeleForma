@@ -42,12 +42,14 @@
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
             {% if user in media.readers.all %}
              <img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' viewed' %}" />
+             {% else %}
+                <img src="{{ STATIC_URL }}telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' not viewed yet' %}" />
             {% endif %}
-            {% if media.item.file %}
+            <!--{% if media.item.file %}
              <a href="{{ MEDIA_URL }}{{ media.item.file }}">
               <img src="{{ STATIC_URL }}teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
              </a>
-            {% endif %}
+            {% endif %}-->
             </td>
             </tr>
 
