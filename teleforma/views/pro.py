@@ -112,6 +112,9 @@ def get_seminar_delta(user, seminar):
     delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
     return delta.total_seconds()
 
+def export_seminar_revisions():
+    pass
+
 
 class SeminarAccessMixin(object):
 
@@ -126,7 +129,11 @@ class SeminarAccessMixin(object):
         timer = get_seminar_timer(user, seminar)
         delta_sec = get_seminar_delta(user, seminar)
         context['delta_sec'] = delta_sec
-        context['timer'] = str(timer).split('.')[0]
+        totsec = timer.total_seconds()
+        h = totsec//3600
+        m = (totsec%3600) // 60
+        sec =(totsec%3600)%60
+        context['timer'] = "%d:%d:%d" %(h,m,sec)
         return context
 
     def render_to_response(self, context):
@@ -204,6 +211,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
         delta_sec = context['delta_sec']
+
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html' and missing_steps == set('5'):
