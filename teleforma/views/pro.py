@@ -55,6 +55,8 @@ from cStringIO import StringIO
 
 from xhtml2pdf import pisa
 
+import csv
+
 from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
@@ -103,8 +105,7 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 def get_seminar_timer(user, seminar):
     t = datetime.timedelta()
     for r in SeminarRevision.objects.filter(user=user, seminar=seminar, date__gte=REVISION_DATE_FILTER):
-        if r.date_modified:
-            t += r.delta()
+        t += r.delta()
     return t
 
 def get_seminar_delta(user, seminar):
@@ -112,8 +113,24 @@ def get_seminar_delta(user, seminar):
     delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
     return delta.total_seconds()
 
-def export_seminar_revisions():
-    pass
+def export_seminar_revisions(request):
+    response = HttpResponse(content_type='text/csv')
+    filename = "releve-revision-%s"
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+    writer = csv.writer(response)
+    users = SeminarRevision.objects.values_list('user', flat=True).distinct()
+    revs = SeminarRevision.objects.all()
+    users = set(users)
+    users = list(users)
+    for user in users:
+        revisions = revs.filter(user__id=user)
+        l = []
+        for revision in revisions:
+            l.append("%s à %s" % (revision.date, revision.date_modified))
+        writer.writerow([user]+l)
+
+    return response
 
 
 class SeminarAccessMixin(object):
@@ -166,14 +183,21 @@ class SeminarRevisionMixin(object):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
+        now = datetime.datetime.now()
         if all_revisions:
             revisions = all_revisions.filter(seminar=seminar)
             if revisions:
                 r = revisions[0]
-                now = datetime.datetime.now()
                 if (now - r.date) > datetime.timedelta(seconds = 1):
                     r.date_modified = now
                     r.save()
+                    return
+        seminar_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, seminar=seminar)
+        if seminar_revisions:
+            revision = seminar_revisions.latest('date')
+            if (now - revision.date) > datetime.timedelta(seconds=1):
+                revision.date_modified = now
+                revision.save()
 
 
 class SeminarView(SeminarAccessMixin, DetailView):
@@ -211,7 +235,6 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_progress'] = progress
         context['seminar_validated'] = validated
         delta_sec = context['delta_sec']
-
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html' and missing_steps == set('5'):
