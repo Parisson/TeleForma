@@ -30,23 +30,35 @@ var rainbow = new Rainbow();
 rainbow.setSpectrum('#bb0000', '#e65911', '#f3ad17', 'green');
 
 
+function pad(num) {
+    var s = num+"";
+    while (s.length < 2) s = "0" + s;
+    return s;
+}
+
 $(window).ready(function() {
 	var pageHeight = $(window).height();
 	var navHeight = pageHeight - 125;
 	$('#desk_center').css({"max-height": navHeight + 'px'});
-
-	// chronometer
-	$('.autotimer').each(function(){
-		var timer = new Timer();
-		$timerSpan = $(this);
-		var value = $timerSpan.text()
-		// convert text value of timer to seconds
-		var timeArray = value.split(':');
-		var seconds = parseInt(timeArray[0], 10) * 3600 + parseInt(timeArray[1], 10) * 60 + parseInt(timeArray[2], 10);
-		timer.start({precision: 'seconds', startValues: {seconds: seconds}});
-		$timerSpan.html(timer.getTimeValues().toString());
-		timer.addEventListener('secondsUpdated', function (e) {
-			$timerSpan.html(timer.getTimeValues().toString());
-		});
-	});
+        launchTimer();
 });
+
+
+var launchTimer = function(){
+        // chronometer
+        $('.autotimer').each(function(){
+                window.timer = new Timer();
+                $timerSpan = $(this);
+                var value = $timerSpan.text()
+                // convert text value of timer to seconds
+                var timeArray = value.split(':');
+                var seconds = parseInt(timeArray[0], 10) * 3600 + parseInt(timeArray[1], 10) * 60 + parseInt(timeArray[2], 10);
+                window.timer.start({precision: 'seconds', startValues: {seconds: seconds}}); 
+                window.timer.addEventListener('secondsUpdated', function (e) {
+                    var timeValues = window.timer.getTimeValues();
+                    var hours = timeValues.days * 24 + timeValues.hours
+                    $timerSpan.html(pad(hours) + ':' + pad(timeValues.minutes) + ':' + pad(timeValues.seconds));
+                });
+        });
+}
+
