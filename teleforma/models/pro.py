@@ -349,7 +349,7 @@ class SeminarRevision(models.Model):
         if self.date_modified:
             return self.date_modified - self.date
         else:
-            return None
+            return datetime.datetime.now() - self.date
 
 
 class QuizValidation(models.Model):
