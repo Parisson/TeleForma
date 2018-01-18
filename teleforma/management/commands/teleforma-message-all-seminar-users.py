@@ -8,6 +8,8 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
+
+from teleforma.views.pro import get_seminar_delta
 from telemeta.models import *
 from telemeta.util.unaccent import unaccent
 from teleforma.models import *
@@ -47,8 +49,13 @@ class Command(BaseCommand):
                 for seminar in all_seminars:
                     if seminar.expiry_date:
                         delta = seminar.expiry_date - today
-                        if delta.days < days and delta.days > 0 and not seminar_validated(user, seminar):
+
+                        completed = seminar_validated(user, seminar)
+                        enough_time = get_seminar_delta(user, seminar)
+                        validated = completed and enough_time > 0
+                        if delta.days < days and delta.days > 0 and not validated:
                             seminars.append(seminar)
+
 
                 if seminars:
                     context['organization'] = seminars[0].course.department.name
@@ -57,15 +64,15 @@ class Command(BaseCommand):
                     context['last_name'] = user.last_name
                     context['site'] = Site.objects.get_current()
                     context['seminars'] = seminars
-        
+
                     text = render_to_string(self.message_template, context)
                     subject = render_to_string(self.subject_template, context)
                     # subject = '%s : %s' % (seminar.title, subject)
-
                     mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
+                    # mess = Message(sender=sender, recipient='yoanl@pilotsystems.net', subject=subject[:119], body=text)
                     mess.moderation_status = 'a'
                     mess.save()
-        
+
                     if not settings.DEBUG:
                         notify_user(mess, 'acceptance')
-                    
+                #

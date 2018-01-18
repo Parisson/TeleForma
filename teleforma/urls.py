@@ -142,6 +142,9 @@ urlpatterns = patterns('',
     url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course,
         name="teleforma-course-users-export"),
 
+    # Seminar Revisions
+    url(r'^export_seminar_revisions/$', export_seminar_revisions, name="export-seminar-revisions"),
+
 
 # CSS+Images (FIXME: for developement only)
     url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
