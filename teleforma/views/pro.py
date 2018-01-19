@@ -36,6 +36,8 @@
 from teleforma.views.core import *
 from teleforma.context_processors import *
 
+from telemeta.util.unicode import UnicodeWriter
+
 from django.utils.translation import ugettext_lazy as _
 from django.template import loader, Context, RequestContext
 from django.views.generic.base import TemplateResponseMixin
@@ -113,22 +115,53 @@ def get_seminar_delta(user, seminar):
     delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
     return delta.total_seconds()
 
+def pretty_duration(delta):
+    seconds = delta.total_seconds()
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
+    duration = "%d heures %d minutes %d secondes" % (hours, minutes, seconds)
+    return duration
+
+
 def export_seminar_revisions(request):
     response = HttpResponse(content_type='text/csv')
-    filename = "releve-revision-%s"
-    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    filename = "releve-revision"
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
 
-    writer = csv.writer(response)
-    users = SeminarRevision.objects.values_list('user', flat=True).distinct()
-    revs = SeminarRevision.objects.all()
-    users = set(users)
-    users = list(users)
-    for user in users:
-        revisions = revs.filter(user__id=user)
-        l = []
-        for revision in revisions:
-            l.append("%s à %s" % (revision.date, revision.date_modified))
-        writer.writerow([user]+l)
+    revs = SeminarRevision.objects.all().order_by('-date')
+    data = {}
+    for rev in revs:
+        seminar_id = rev.seminar.id
+        if seminar_id not in data:
+            data[seminar_id] = {'title':rev.seminar.pretty_title.encode('utf-8'), 'users':{}}
+
+        user = rev.user.email
+        if user not in data[seminar_id]['users']:
+            data[seminar_id]['users'][user] = []
+
+        if rev.date_modified:
+            data[seminar_id]['users'][user].append({'start':rev.date, 'end':rev.date_modified})
+
+    writer = UnicodeWriter(response, delimiter=";")
+    writer.writerow(["seminaire", "email", "duree total", "date debut", "date fin", "duree"])
+    for seminar in data.keys():
+        title = data[seminar]['title']
+        users = data[seminar]['users']
+        for user in users.keys():
+            l = [title, user]
+            revs = users[user]
+            duration = datetime.timedelta()
+            for rev in revs:
+                diff = rev['end'] - rev['start'] if rev['end'] else datetime.timedelta()
+                if diff.total_seconds() < 0:
+                    continue
+                l.append(str(rev['start']))
+                l.append(str(rev['end']))
+                l.append(pretty_duration(rev['end'] - rev['start']) if rev['end'] else 0)
+                duration += rev['end'] - rev['start'] if rev['end'] else datetime.timedelta()
+            l.insert(2, pretty_duration(duration))
+            writer.writerow(l)
 
     return response
 
