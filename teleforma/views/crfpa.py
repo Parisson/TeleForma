@@ -242,8 +242,8 @@ class UserXLSBook(object):
                 student = Student.objects.get(user=user)
                 if profile:
                     profile = Profile.objects.get(user=user)
-                    row.write(10, profile.address_detail)
                     row.write(11, profile.address)
+                    row.write(10, profile.address_detail)
                     row.write(12, profile.postal_code)
                     row.write(13, profile.city)
                     row.write(14, profile.telephone)
@@ -292,6 +292,7 @@ class UserXLSBook(object):
                 {'name':'ORAL 2', 'width':3000},
                 {'name':'MAIL', 'width':7500},
                 {'name':'ADRESSE', 'width':7500},
+                {'name':'ADRESSE DETAIL', 'width':7500},
                 {'name':'CP', 'width':2500},
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
