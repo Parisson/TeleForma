@@ -242,29 +242,30 @@ class UserXLSBook(object):
                 student = Student.objects.get(user=user)
                 if profile:
                     profile = Profile.objects.get(user=user)
-                    row.write(10, profile.address)
-                    row.write(11, profile.postal_code)
-                    row.write(12, profile.city)
-                    row.write(13, profile.telephone)
+                    row.write(10, profile.address_detail)
+                    row.write(11, profile.address)
+                    row.write(12, profile.postal_code)
+                    row.write(13, profile.city)
+                    row.write(14, profile.telephone)
                     if student.date_subscribed:
-                        row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
+                        row.write(15, student.date_subscribed.strftime("%d/%m/%Y"))
 
                 if student.training:
                     training = student.training
                 else:
                     training = student.trainings.all()[0]
 
-                row.write(15, training.cost)
-                row.write(16, student.total_discount)
-                row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
+                row.write(16, training.cost)
+                row.write(17, student.total_discount)
+                row.write(18, ', '.join([discount.description for discount in student.discounts.all()]))
 
-                row.write(18, student.total_payments)
-                row.write(19, student.total_fees)
-                row.write(20, student.balance)
-                row.write(21, student.total_paybacks)
+                row.write(19, student.total_payments)
+                row.write(20, student.total_fees)
+                row.write(21, student.balance)
+                row.write(22, student.total_paybacks)
 
                 payments = student.payments.all()
-                i = 22
+                i = 23
                 for month in months_choices:
                     payment = payments.filter(month=month[0])
                     if payment:
