@@ -1,6 +1,6 @@
 {% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}{% trans "Hello" %} {{ object.recipient.first_name }} {{ object.recipient.last_name }},
 
-Suite à votre inscription à la formation estivale 2017 du Pré-Barreau, nous vous invitons à initialiser votre compte sur notre plateforme e-learning interactive et multi-média.
+Suite à votre inscription à la formation du Pré-Barreau, nous vous invitons à initialiser votre compte sur notre plateforme e-learning interactive et multi-média.
 
 Pour cela, merci de cliquer sur le lien suivant puis d'indiquez votre adresse e-mail :
 
