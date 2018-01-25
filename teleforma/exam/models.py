@@ -317,7 +317,7 @@ class Script(BaseResource):
             self.corrector = User.objects.filter(is_superuser=True)[1]
 
         self.status = 3
-        self.save()
+        # self.save()
 
     def make_from_pages(self):
         command = 'convert '
@@ -347,8 +347,10 @@ class Script(BaseResource):
     def save(self, *args, **kwargs):
         if self.status == 4 and self.score:
             self.mark()
-        if self.status == 0 and self.reject_reason:
+        elif self.status == 0 and self.reject_reason:
             self.reject()
+        else:
+            self.submit()
         super(Script, self).save(*args, **kwargs)
 
     def update(self, *args, **kwargs):
@@ -373,7 +375,7 @@ class Script(BaseResource):
 
         if not self.url:
             self.url = settings.MEDIA_URL + unicode(new_rel)
-            self.save()
+            # self.save()
 
     @property
     def safe_url(self):
@@ -417,10 +419,10 @@ class Script(BaseResource):
         self.reject_reason = mess
         self.status = 0
         self.corrector = User.objects.filter(is_superuser=True)[1]
-        self.save()
+        # self.save()
 
     def submit(self):
-        # self.box_upload_done = 0
+        self.box_upload_done = 0
 
         if not self.file:
             self.auto_reject('no file')
