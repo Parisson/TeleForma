@@ -351,10 +351,6 @@ class Script(BaseResource):
             self.mark()
         if self.status == 0 and self.reject_reason:
             self.reject()
-        if not self.url:
-            self.uuid_link()
-        if not self.corrector:
-            self.submit()
         super(Script, self).save(*args, **kwargs)
 
     def update(self, *args, **kwargs):
@@ -493,13 +489,14 @@ def set_file_properties(sender, instance, **kwargs):
             instance.uuid_link()
         if not instance.corrector:
             instance.submit()
-        if hasattr(instance, 'image'):
-            if not instance.image:
-                path = cache_path + os.sep + instance.uuid + '.jpg'
-                command = 'convert ' + instance.file.path + ' ' + path
-                os.system(command)
-                instance.image = path
+        super(sender, instance).save()
+        # if hasattr(instance, 'image'):
+        #     if not instance.image:
+        #         path = cache_path + os.sep + instance.uuid + '.jpg'
+        #         command = 'convert ' + instance.file.path + ' ' + path
+        #         os.system(command)
+        #         instance.image = path
 
 
-# post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
-# post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")
+post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
+post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")
