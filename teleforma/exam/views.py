@@ -19,6 +19,7 @@ class ScriptMixinView(View):
         context = super(ScriptMixinView, self).get_context_data(**kwargs)
         self.period = Period.objects.get(id=self.kwargs['period_id'])
         context['period'] = self.period
+        context['script_service_url'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL'
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
             context['upload'] = datetime.datetime.now() <= self.period.date_exam_end
         else:
