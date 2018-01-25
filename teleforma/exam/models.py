@@ -449,7 +449,6 @@ class Script(BaseResource):
             # self.box_upload()
             if not self.corrector:
                 self.auto_set_corrector()
-                self.status = 3
 
     def mark(self):
         self.date_marked = datetime.datetime.now()

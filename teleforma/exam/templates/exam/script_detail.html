@@ -123,7 +123,7 @@
 <br /><br />
 <div class="media">
  <div class="script">
-    <iframe id="box-iframe" style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all %}http://teleforma.parisson.com/webview/teleforma.html?url={{ script.safe_url }}?username=Examinator{% else %}http://teleforma.parisson.com/webviewer/teleforma.html?url={{ script.safe_url }}?username={{ user.username }}{% endif %}">
+    <iframe id="box-iframe" style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all or user.is_superuser %}http://teleforma.parisson.com/webview/teleforma.html?url={{ script.safe_url }}?username=Examinator{% else %}http://teleforma.parisson.com/webviewer/teleforma.html?url={{ script.safe_url }}?username={{ user.username }}{% endif %}">
     </iframe>
  </div>
 </div>
