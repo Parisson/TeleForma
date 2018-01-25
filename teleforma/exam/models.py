@@ -35,7 +35,7 @@
 """
 
 from __future__ import division
-import os, uuid, time, hashlib, mimetypes, tempfile, datetime
+import os, uuid, time, hashlib, mimetypes, tempfile, datetime, urllib
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -50,14 +50,34 @@ from django.template.loader import render_to_string
 from postman.utils import email_visitor, notify_user
 from postman.models import Message
 
+
 app = 'teleforma'
 
 class MetaCore:
 
     app_label = 'exam'
 
+
 import crocodoc
 crocodoc.api_token = settings.BOX_API_TOKEN
+
+
+# import boxsdk
+# from boxsdk import OAuth2, Client
+# import StringIO
+#
+# box_client_id = settings.BOX_CLIENT_ID
+# box_client_secret = settings.BOX_CLIENT_SECRET
+# box_redirect_url = settings.BOX_REDIRECT_URL
+#
+# oauth = OAuth2(
+#     client_id=box_client_id,
+#     client_secret=box_client_secret,
+#     store_tokens='',
+# )
+#
+# box_auth_url, box_csrf_token = oauth.get_authorization_url('http://' + BOX_REDIRECT_URL)
+# box_client = Client(oauth)
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
                 (3, _('pending')),(4, _('marked')), (5, _('read')), (6, _('backup')) )
@@ -72,8 +92,8 @@ REJECT_REASON = (('unreadable', _('unreadable')),
                 ('wrong format', _('wrong format')),
                 ('unreadable file', _('unreadable file')),
                 ('no file', _('no file')),
-                ('file too large', _('file too large')),
                 ('error retrieving file', _('error retrieving file')),
+                ('file too large', _('file too large')),
                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
@@ -350,11 +370,14 @@ class Script(BaseResource):
 
         if not os.path.exists(new_abs):
             os.symlink(old_abs, new_abs)
-            # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
 
         if not self.url:
             self.url = settings.MEDIA_URL + unicode(new_rel)
             self.save()
+
+    @property
+    def safe_url(self):
+        return urllib.quote(self.url)
 
     def box_upload(self):
         sleep = 10
@@ -397,7 +420,7 @@ class Script(BaseResource):
         self.save()
 
     def submit(self):
-        self.box_upload_done = 0
+        # self.box_upload_done = 0
 
         if not self.file:
             self.auto_reject('no file')
@@ -423,7 +446,7 @@ class Script(BaseResource):
         if not self.status == 0 and self.file:
             if not self.box_uuid:
                 self.uuid_link()
-            self.box_upload()
+            # self.box_upload()
             if not self.corrector and self.box_upload_done == 1:
                 self.auto_set_corrector()
             else:
