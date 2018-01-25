@@ -296,6 +296,8 @@ class Script(BaseResource):
         return 'https://crocodoc.com/view/' + session_key
 
     def auto_set_corrector(self):
+        self.date_submitted = datetime.datetime.now()
+
         quota_list = []
         quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
@@ -349,6 +351,10 @@ class Script(BaseResource):
             self.mark()
         if self.status == 0 and self.reject_reason:
             self.reject()
+        if not self.url:
+            self.uuid_link()
+        if not self.corrector:
+            self.submit()
         super(Script, self).save(*args, **kwargs)
 
     def update(self, *args, **kwargs):
@@ -384,7 +390,6 @@ class Script(BaseResource):
         loop = 0
 
         self.box_uuid = crocodoc.document.upload(url=self.url)
-        self.date_submitted = datetime.datetime.now()
 
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
@@ -496,5 +501,5 @@ def set_file_properties(sender, instance, **kwargs):
                 instance.image = path
 
 
-post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
-post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")
+# post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
+# post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")
