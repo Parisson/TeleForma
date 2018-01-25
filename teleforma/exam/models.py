@@ -486,6 +486,8 @@ def set_file_properties(sender, instance, **kwargs):
             instance.sha1 = sha1sum_file(instance.file.path)
         if not instance.url:
             instance.uuid_link()
+        if not instance.corrector:
+            instance.submit()
         if hasattr(instance, 'image'):
             if not instance.image:
                 path = cache_path + os.sep + instance.uuid + '.jpg'
