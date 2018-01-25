@@ -347,10 +347,8 @@ class Script(BaseResource):
     def save(self, *args, **kwargs):
         if self.status == 4 and self.score:
             self.mark()
-        elif self.status == 0 and self.reject_reason:
+        if self.status == 0 and self.reject_reason:
             self.reject()
-        else:
-            self.submit()
         super(Script, self).save(*args, **kwargs)
 
     def update(self, *args, **kwargs):
@@ -375,7 +373,6 @@ class Script(BaseResource):
 
         if not self.url:
             self.url = settings.MEDIA_URL + unicode(new_rel)
-            # self.save()
 
     @property
     def safe_url(self):
@@ -446,14 +443,11 @@ class Script(BaseResource):
             return
 
         if not self.status == 0 and self.file:
-            if not self.box_uuid:
-                self.uuid_link()
+            # if not self.box_uuid:
+            #     self.uuid_link()
             # self.box_upload()
-            if not self.corrector and self.box_upload_done == 1:
+            if not self.corrector:
                 self.auto_set_corrector()
-            else:
-                if not self.corrector:
-                    self.auto_set_corrector()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
@@ -490,6 +484,8 @@ def set_file_properties(sender, instance, **kwargs):
             instance.mime_type = mimetype_file(instance.file.path)
         if not instance.sha1:
             instance.sha1 = sha1sum_file(instance.file.path)
+        if not instance.url:
+            instance.uuid_link()
         if hasattr(instance, 'image'):
             if not instance.image:
                 path = cache_path + os.sep + instance.uuid + '.jpg'
