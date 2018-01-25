@@ -449,6 +449,7 @@ class Script(BaseResource):
             # self.box_upload()
             if not self.corrector:
                 self.auto_set_corrector()
+                self.status = 3
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
@@ -496,7 +497,7 @@ def set_file_properties(sender, instance, **kwargs):
             trig_save = True
         if trig_save:
             super(sender, instance).save()
-            
+
         # if hasattr(instance, 'image'):
         #     if not instance.image:
         #         path = cache_path + os.sep + instance.uuid + '.jpg'
