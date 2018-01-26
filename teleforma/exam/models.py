@@ -35,7 +35,7 @@
 """
 
 from __future__ import division
-import os, uuid, time, hashlib, mimetypes, tempfile, datetime
+import os, uuid, time, hashlib, mimetypes, tempfile, datetime, urllib
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -50,14 +50,34 @@ from django.template.loader import render_to_string
 from postman.utils import email_visitor, notify_user
 from postman.models import Message
 
+
 app = 'teleforma'
 
 class MetaCore:
 
     app_label = 'exam'
 
+
 import crocodoc
 crocodoc.api_token = settings.BOX_API_TOKEN
+
+
+# import boxsdk
+# from boxsdk import OAuth2, Client
+# import StringIO
+#
+# box_client_id = settings.BOX_CLIENT_ID
+# box_client_secret = settings.BOX_CLIENT_SECRET
+# box_redirect_url = settings.BOX_REDIRECT_URL
+#
+# oauth = OAuth2(
+#     client_id=box_client_id,
+#     client_secret=box_client_secret,
+#     store_tokens='',
+# )
+#
+# box_auth_url, box_csrf_token = oauth.get_authorization_url('http://' + BOX_REDIRECT_URL)
+# box_client = Client(oauth)
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
                 (3, _('pending')),(4, _('marked')), (5, _('read')), (6, _('backup')) )
@@ -72,8 +92,8 @@ REJECT_REASON = (('unreadable', _('unreadable')),
                 ('wrong format', _('wrong format')),
                 ('unreadable file', _('unreadable file')),
                 ('no file', _('no file')),
-                ('file too large', _('file too large')),
                 ('error retrieving file', _('error retrieving file')),
+                ('file too large', _('file too large')),
                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
@@ -276,6 +296,8 @@ class Script(BaseResource):
         return 'https://crocodoc.com/view/' + session_key
 
     def auto_set_corrector(self):
+        self.date_submitted = datetime.datetime.now()
+
         quota_list = []
         quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
@@ -297,7 +319,7 @@ class Script(BaseResource):
             self.corrector = User.objects.filter(is_superuser=True)[1]
 
         self.status = 3
-        self.save()
+        # self.save()
 
     def make_from_pages(self):
         command = 'convert '
@@ -350,11 +372,13 @@ class Script(BaseResource):
 
         if not os.path.exists(new_abs):
             os.symlink(old_abs, new_abs)
-            # self.url = 'http://teleforma.parisson.com/media/scripts/2014/06/24/Gstreamer_monitoring_Pipleline.pdf'
 
         if not self.url:
             self.url = settings.MEDIA_URL + unicode(new_rel)
-            self.save()
+
+    @property
+    def safe_url(self):
+        return urllib.quote(self.url)
 
     def box_upload(self):
         sleep = 10
@@ -362,7 +386,6 @@ class Script(BaseResource):
         loop = 0
 
         self.box_uuid = crocodoc.document.upload(url=self.url)
-        self.date_submitted = datetime.datetime.now()
 
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
@@ -394,7 +417,7 @@ class Script(BaseResource):
         self.reject_reason = mess
         self.status = 0
         self.corrector = User.objects.filter(is_superuser=True)[1]
-        self.save()
+        # self.save()
 
     def submit(self):
         self.box_upload_done = 0
@@ -421,14 +444,11 @@ class Script(BaseResource):
             return
 
         if not self.status == 0 and self.file:
-            if not self.box_uuid:
-                self.uuid_link()
-            self.box_upload()
-            if not self.corrector and self.box_upload_done == 1:
+            # if not self.box_uuid:
+            #     self.uuid_link()
+            # self.box_upload()
+            if not self.corrector:
                 self.auto_set_corrector()
-            else:
-                if not self.corrector:
-                    self.auto_set_corrector()
 
     def mark(self):
         self.date_marked = datetime.datetime.now()
@@ -461,16 +481,28 @@ class Script(BaseResource):
 
 def set_file_properties(sender, instance, **kwargs):
     if instance.file:
+        trig_save = False
         if not instance.mime_type:
             instance.mime_type = mimetype_file(instance.file.path)
+            trig_save = True
         if not instance.sha1:
             instance.sha1 = sha1sum_file(instance.file.path)
-        if hasattr(instance, 'image'):
-            if not instance.image:
-                path = cache_path + os.sep + instance.uuid + '.jpg'
-                command = 'convert ' + instance.file.path + ' ' + path
-                os.system(command)
-                instance.image = path
+            trig_save = True
+        if not instance.url:
+            instance.uuid_link()
+            trig_save = True
+        if not instance.corrector:
+            instance.submit()
+            trig_save = True
+        if trig_save:
+            super(sender, instance).save()
+
+        # if hasattr(instance, 'image'):
+        #     if not instance.image:
+        #         path = cache_path + os.sep + instance.uuid + '.jpg'
+        #         command = 'convert ' + instance.file.path + ' ' + path
+        #         os.system(command)
+        #         instance.image = path
 
 
 post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
