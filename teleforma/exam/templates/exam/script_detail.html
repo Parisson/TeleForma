@@ -123,7 +123,7 @@
 <br /><br />
 <div class="media">
  <div class="script">
-    <iframe id="box-iframe" style="position:fixed; top:14%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all or user.is_superuser %}{{ script_service_url }}?url={{ script.safe_url }}&username=Examinator&uuid={{ script.uuid }}{% else %}{{ script_service_url }}?url={{ script.safe_url }}&username={{ user.username }}&uuid={{ script.uuid }}{% endif %}">
+    <iframe id="box-iframe" style="position:fixed; top:11%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all or user.is_superuser %}{{ script_service_url }}?url={{ script.safe_url }}&username=Examinator&uuid={{ script.uuid }}{% else %}{{ script_service_url }}?url={{ script.safe_url }}&username={{ user.username }}&uuid={{ script.uuid }}{% endif %}">
     </iframe>
  </div>
 </div>
