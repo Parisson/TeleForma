@@ -262,7 +262,7 @@ class Script(BaseResource):
 
     @property
     def title(self):
-        if self.type.name:
+        if self.type:
             title = [self.course.title, self.type.name, _("Session") + ' ' + self.session, unicode(self.date_added)]
         else:
             title = [self.course.title, _("Session") + ' ' + self.session, unicode(self.date_added)]
