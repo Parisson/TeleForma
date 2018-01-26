@@ -262,7 +262,10 @@ class Script(BaseResource):
 
     @property
     def title(self):
-        title = [self.course.title, self.type.name, _("Session") + ' ' + self.session, unicode(self.date_added)]
+        if self.type.name:
+            title = [self.course.title, self.type.name, _("Session") + ' ' + self.session, unicode(self.date_added)]
+        else:
+            title = [self.course.title, _("Session") + ' ' + self.session, unicode(self.date_added)]
         if self.author:
             title.append(unicode(self.author.first_name) + ' ' + unicode(self.author.last_name))
         return ' - '.join(title)
