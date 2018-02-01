@@ -1,4 +1,3 @@
-
 from django.forms import ModelForm
 from teleforma.models import *
 from registration.forms import RegistrationForm
@@ -21,6 +20,7 @@ class UserForm(ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email', ]
 
+
 RegistrationForm.base_fields.update(UserForm.base_fields)
 
 
@@ -38,6 +38,8 @@ class StudentForm(ModelForm):
     class Meta:
         model = Student
         exclude = ['user', 'trainings', 'options']
+
+
 
 RegistrationForm.base_fields.update(StudentForm.base_fields)
 
@@ -65,3 +67,17 @@ class StudentInline(InlineFormSet):
     can_delete = False
     fields = ['level', 'iej', 'period', 'training', 'platform_only', 'procedure',
                 'written_speciality', 'oral_1', 'promo_code']
+
+    def get_factory_kwargs(self):
+        kwargs = super(StudentInline, self).get_factory_kwargs()
+
+        def get_field_qs(field, **kwargs):
+            formfield = field.formfield(**kwargs)
+            if field.name == 'period':
+                formfield.queryset = Period.objects.filter(is_open=True)
+            return formfield
+
+        kwargs.update({
+            'formfield_callback': get_field_qs
+        })
+        return kwargs

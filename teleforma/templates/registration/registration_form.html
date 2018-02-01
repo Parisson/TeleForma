@@ -22,4 +22,46 @@
     <a href="#" class="component_icon button" id="action_green" onclick="$('#_registerForm').submit();"><img src="/static/telemeta/images/next.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Submit" %}</a>
     </form>
 </center>
+<script>
+ $(document).ready(function(){
+     id = $("#id_student-0-period").val();
+     training_id = $("#id_student-0-training").val();
+
+     if(!id){
+         $('#id_student-0-training').html('<option value="" selected="selected">---------</option>');
+     }else{
+         $.ajax({
+             url: "/update-training/"+id+"/",
+             data: { "period_id": id, "training_id": training_id},
+             dataType:"html",
+             type: "post",
+             success: function(data){
+                 $('#id_student-0-training').html(data);
+             }
+         });
+     }
+
+     $("#id_student-0-period").change(function(){
+         period_id = this.value
+         if(!period_id){
+             $('#id_student-0-training').html('<option value="" selected="selected">---------</option>')
+         }else{
+             $.ajax({
+                 url: "/update-training/"+period_id+"/",
+                 data: { "period_id": period_id },
+                 dataType:"html",
+                 type: "post",
+                 success: function(data){
+                     $('#id_student-0-training').html(data);
+                 }
+             });
+         }
+     });
+ });
+</script>
+<style>
+ select {
+     width: 222px;
+ }
+</style>
 {% endblock %}

@@ -118,6 +118,9 @@ urlpatterns = patterns('',
 
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
 
+    # Ajax update training
+    url(r'^update-training/(?P<id>.*)/$', update_training, name="update-training"),
+
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
     url(r'jsonrpc/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
