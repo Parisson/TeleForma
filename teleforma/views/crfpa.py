@@ -31,12 +31,12 @@
 # knowledge of the CeCILL license and that you accept its terms.
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
-
-
+from teleforma.models.core import Period
 from teleforma.views.core import *
 from registration.views import *
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
 
 
 def get_course_code(obj):
@@ -213,6 +213,8 @@ class UserXLSBook(object):
         self.sheet = self.book.add_sheet('Etudiants')
 
     def export_user(self, counter, user):
+        # if counter >= 419:
+        #     import pdb;pdb.set_trace()
         students = Student.objects.filter(user=user)
         if students:
             student = students[0]
@@ -221,7 +223,7 @@ class UserXLSBook(object):
                 row = self.sheet.row(counter + self.first_row)
                 row.write(0, user.last_name)
                 row.write(1, user.first_name)
-                row.write(9, user.email)
+                row.write(7, user.email)
                 row.write(2, unicode(student.iej))
 
                 codes = []
@@ -234,37 +236,41 @@ class UserXLSBook(object):
 
                 row.write(4, get_course_code(student.procedure))
                 row.write(5, get_course_code(student.written_speciality))
-                row.write(6, get_course_code(student.oral_speciality))
-                row.write(7, get_course_code(student.oral_1))
-                row.write(8, get_course_code(student.oral_2))
+                row.write(6, get_course_code(student.oral_1))
 
                 profile = Profile.objects.filter(user=user)
                 student = Student.objects.get(user=user)
                 if profile:
                     profile = Profile.objects.get(user=user)
-                    row.write(10, profile.address)
-                    row.write(11, profile.postal_code)
-                    row.write(12, profile.city)
-                    row.write(13, profile.telephone)
+                    row.write(8, profile.address)
+                    row.write(9, profile.address_detail)
+                    row.write(10, profile.postal_code)
+                    row.write(11, profile.city)
+                    row.write(12, profile.telephone)
+                    if profile.birthday:
+                        row.write(13, profile.birthday.strftime("%d/%m/%Y"))
+
+                    row.write(14, student.level)
+                    row.write(15, profile.telephone)
+
                     if student.date_subscribed:
-                        row.write(14, student.date_subscribed.strftime("%d/%m/%Y"))
+                        row.write(16, student.date_subscribed.strftime("%d/%m/%Y"))
 
                 if student.training:
                     training = student.training
                 else:
                     training = student.trainings.all()[0]
 
-                row.write(15, training.cost)
-                row.write(16, student.total_discount)
-                row.write(17, ', '.join([discount.description for discount in student.discounts.all()]))
+                row.write(17, student.total_discount)
+                row.write(18, ', '.join([discount.description for discount in student.discounts.all()]))
 
-                row.write(18, student.total_payments)
-                row.write(19, student.total_fees)
-                row.write(20, student.balance)
-                row.write(21, student.total_paybacks)
+                row.write(19, student.total_payments)
+                row.write(20, student.total_fees)
+                row.write(21, student.balance)
+                row.write(22, student.total_paybacks)
 
                 payments = student.payments.all()
-                i = 22
+                i = 23
                 for month in months_choices:
                     payment = payments.filter(month=month[0])
                     if payment:
@@ -275,8 +281,7 @@ class UserXLSBook(object):
                     i += 1
 
                 return counter + 1
-        else:
-            return counter
+        return counter
 
     def write(self):
         row = self.sheet.row(0)
@@ -286,16 +291,16 @@ class UserXLSBook(object):
                 {'name':'FORMATIONS', 'width':6000},
                 {'name':'PROC', 'width':2500},
                 {'name':'Ecrit Spe', 'width':3000},
-                {'name':'Oral Spe', 'width':3000},
                 {'name':'ORAL 1', 'width':3000},
-                {'name':'ORAL 2', 'width':3000},
                 {'name':'MAIL', 'width':7500},
                 {'name':'ADRESSE', 'width':7500},
+                {'name':'ADRESSE (suite)', 'width': 7500},
                 {'name':'CP', 'width':2500},
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
+                {'name': 'Date de naissance', 'width': 5000},
+                {'name': "Niveau d'etude", 'width': 5000},
                 {'name':"Date inscription", 'width':5000},
-                {'name':"Prix formation brut", 'width':4000},
                 {'name':"Total reductions", 'width':4000},
                 {'name':"Description reduction", 'width':4000},
                 {'name':"Total paiements", 'width':4000},
@@ -497,3 +502,15 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
+
+@csrf_exempt
+def update_training(request, id):
+    trainings = Training.objects.filter(period__id=id)
+    training_id = request.POST.get("training_id", "")
+    html = '<option value="" selected="selected">---------</option>'
+    for training in trainings:
+        if training_id == str(training.pk):
+            html+='<option value="%s" selected="selected">%s</option>' % (training.pk, training)
+        else:
+            html+='<option value="%s">%s</option>' % (training.pk, training)
+    return HttpResponse(html)
