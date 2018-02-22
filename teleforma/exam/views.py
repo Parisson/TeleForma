@@ -243,7 +243,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
 
         if self.request.user.is_staff or self.request.user.professor.all():
-            scripts = Script.objects.filter(period=self.period).exclude(score=None)
+            scripts = Script.objects.filter(period=self.period, date_added__gte=self.period.date_begin).exclude(score=None)
         else:
             scripts = self.get_queryset()
 
