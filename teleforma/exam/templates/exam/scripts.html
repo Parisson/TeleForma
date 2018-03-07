@@ -61,6 +61,40 @@
 {% endif %}
 <br />
 
+{% if profile > 0 %}
+<form method="GET">
+    <label for="corrector_select">{% trans "Corrector"%}</label>
+    <select name="corrector" id="corrector_select">
+       <option value="">---</option>
+       {% for corrector in correctors_list %}
+       <option value="{{corrector.0}}" {% if corrector.0 == corrector_selected %}selected="selected"{% endif %}>{{corrector.1}}</option>
+       {% endfor %}
+    </select>
+    <label for="course_select">{% trans "Course"%}</label>
+    <select name="course" id="course_select">
+       <option value="">---</option>
+       {% for course in courses_list %}
+       <option value="{{course.0}}" {% if course.0 == course_selected %}selected="selected"{% endif %}>{{course.1}}</option>
+       {% endfor %}
+    </select>
+    <label for="session_select">{% trans "Session"%}</label>
+    <select name="session" id="session_select">
+       <option value="">---</option>
+       {% for session in sessions_list %}
+       <option value="{{session.0}}" {% if session.0 == session_selected %}selected="selected"{% endif %}>{{session.1}}</option>
+       {% endfor %}
+    </select>
+    <label for="type_select">{% trans "Type"%}</label>
+    <select name="type" id="type_select">
+       <option value="">---</option>
+       {% for type in types_list %}
+       <option value="{{type.0}}" {% if type.0 == type_selected %}selected="selected"{% endif %}>{{type.1}}</option>
+       {% endfor %}
+    </select>
+    <input type="submit" value="Filtrer"/>
+</form>
+{% endif %}
+
  {% if object_list %}
   {% include "exam/inc/script_list.html" %}
  {% else %}
