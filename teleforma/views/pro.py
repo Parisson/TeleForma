@@ -254,6 +254,10 @@ class SeminarView(SeminarAccessMixin, DetailView):
             testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
             if not testimonials:
                 testimonial = Testimonial(user=user, seminar=seminar)
+                now = datetime.datetime.now()
+                if seminar.expiry_date < now:
+                    testimonial.date_modified = seminar.expiry_date
+
                 testimonial.save()
                 # text = render_to_string('teleforma/messages/seminar_validated.txt', context)
                 # subject = seminar.title + ' : ' + unicode(_('all your answers has been validated'))
