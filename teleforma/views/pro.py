@@ -254,6 +254,10 @@ class SeminarView(SeminarAccessMixin, DetailView):
             testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
             if not testimonials:
                 testimonial = Testimonial(user=user, seminar=seminar)
+                now = datetime.datetime.now()
+                if seminar.expiry_date < now:
+                    testimonial.date_modified = seminar.expiry_date
+
                 testimonial.save()
                 # text = render_to_string('teleforma/messages/seminar_validated.txt', context)
                 # subject = seminar.title + ' : ' + unicode(_('all your answers has been validated'))
@@ -878,10 +882,20 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
         user_id = self.request.user.id
         return User.objects.get(id=user_id)
 
+    def can_access(self):
+        user = self.get_user()
+        for items in [self.seminar.docs_1, self.seminar.medias]:
+            for item in items.all():
+                if item.weight:
+                    if user not in item.readers.all():
+                        return False
+        return True
+
     def get_context_data(self, **kwargs):
         context = super(QuizQuestionView, self).get_context_data(**kwargs)
         user = self.get_user()
         self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
+        context['can_access'] = self.can_access()
         context['seminar'] = self.seminar
         context['seminar_progress'] = seminar_progress(user, self.seminar)
         return context
@@ -898,6 +912,7 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
             'sitting': self.sitting,
             'previous': self.previous,
             'seminar': self.seminar,
+            'can_access': True
         }
 
         self.sitting.mark_quiz_complete()
@@ -914,5 +929,10 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
         if self.sitting.get_percent_correct >= self.quiz.pass_mark:
             validation = QuizValidation(user=user, quiz=self.seminar.quiz, validated=True)
             validation.save()
+        else:
+            # revert step 1 validation
+            for doc in self.seminar.docs_1.all():
+                doc.readers.remove(user)
+                doc.save()
 
         return render(self.request, 'quiz/result.html', results)
