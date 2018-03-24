@@ -241,9 +241,13 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
+        user = self.request.user
 
-        if self.request.user.is_staff or self.request.user.professor.all():
-            scripts = Script.objects.filter(period=self.period, date_added__gte=self.period.date_begin).exclude(score=None)
+        if self.request.user.is_staff:
+            QT = Q(status=4, period=period)
+            QT = Q(status=5, period=period) | QT
+            QT = Q(date_added__gte=self.period.date_begin) | QT
+            scripts = Script.objects.filter(QT).exclude(score=None)
         else:
             scripts = self.get_queryset()
 
