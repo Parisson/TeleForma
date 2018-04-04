@@ -53,6 +53,7 @@ from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
 from urlparse import urlparse
 
+from teleforma.models.core import Document
 from teleforma.views import get_courses
 from teleforma.models import *
 from teleforma.exam.models import *
@@ -148,7 +149,10 @@ def from_doc_type(contents, type):
 @register.filter
 def from_period(contents, period):
     if contents:
-        return contents.filter(period=period)
+        if type(contents[0]) == Document:
+            return contents.filter(periods__in=(period,))
+        else:
+            return contents.filter(period=period)
 
 @register.assignment_tag
 def get_all_professors():

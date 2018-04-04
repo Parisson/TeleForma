@@ -79,7 +79,7 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
         context['reject_fields'] = ['reject_reason' ]
 
         doc_type = DocumentType.objects.get(id=settings.TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID)
-        topics = Document.objects.filter(course=script.course, period=script.period,
+        topics = Document.objects.filter(course=script.course, periods__in=(script.period,),
                                             session=script.session, type=doc_type)
         topic = None
         if topics:
