@@ -12,6 +12,10 @@ from django.utils.translation import ugettext_lazy as _
 
 import numpy as np
 
+STUDENT = 0
+CORRECTOR = 1
+PROFESSOR = 2
+
 
 class ScriptMixinView(View):
 
@@ -24,8 +28,37 @@ class ScriptMixinView(View):
             context['upload'] = datetime.datetime.now() <= self.period.date_exam_end
         else:
             context['upload'] = False
+
         return context
 
+class ScriptsListMixinView(ScriptMixinView):
+
+    def get_profile(self):
+        user = self.request.user
+        professor = user.professor.all()
+        if professor:
+            return PROFESSOR
+        if user.corrector_scripts:
+            return CORRECTOR
+        return STUDENT
+
+    def get_context_data(self, **kwargs):
+        context = super(ScriptsListMixinView, self).get_context_data(**kwargs)
+        context['profile'] = self.get_profile()
+
+        if context['profile'] >= CORRECTOR:
+            correctors = User.objects.filter(corrector_scripts__in=self.get_base_queryset()).order_by('last_name').distinct()
+            context['correctors_list'] = [(str(corrector.id), corrector.get_full_name()) for corrector in correctors]
+            context['corrector_selected'] = self.request.GET.get('corrector', str(self.request.user.id))
+            context['sessions_list'] = session_choices
+            context['session_selected'] = self.request.GET.get('session')
+            types = ScriptType.objects.all()
+            context['types_list'] = [(str(type.id), type.name) for type in types]
+            context['type_selected'] = self.request.GET.get('type')
+            courses = Course.objects.filter(scripts__in=self.get_base_queryset()).distinct()
+            context['courses_list'] = [(str(course.id), course.title) for course in courses]
+            context['course_selected'] = self.request.GET.get('course')
+        return context
 
 class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 
@@ -46,7 +79,7 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
         context['reject_fields'] = ['reject_reason' ]
 
         doc_type = DocumentType.objects.get(id=settings.TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID)
-        topics = Document.objects.filter(course=script.course, period=script.period,
+        topics = Document.objects.filter(course=script.course, periods__in=(script.period,),
                                             session=script.session, type=doc_type)
         topic = None
         if topics:
@@ -73,10 +106,26 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
         return super(ScriptView, self).dispatch(*args, **kwargs)
 
 
-class ScriptsView(ScriptMixinView, ListView):
+class ScriptsView(ScriptsListMixinView, ListView):
 
     model = Script
     template_name='exam/scripts.html'
+
+    def get_form_queryset(self):
+        QT = ~Q(pk=None)
+        corrector = self.request.GET.get('corrector')
+        type = self.request.GET.get('type')
+        session = self.request.GET.get('session')
+        course = self.request.GET.get('course')
+        if type:
+            QT = Q(type__id=int(type)) & QT
+        if session:
+            QT = Q(session=session) & QT
+        if course:
+            QT = Q(course__id=int(course)) & QT
+        if corrector:
+            QT = Q(corrector__id=int(corrector)) & QT
+        return QT
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -85,20 +134,31 @@ class ScriptsView(ScriptMixinView, ListView):
 
 class ScriptsPendingView(ScriptsView):
 
+    def get_base_queryset(self):
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        QT = Q(status__in=(2, 3), period=period)
+        return Script.objects.filter(QT)
+        
+
     def get_queryset(self):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
 
-        QT = Q(status=2, author=user, period=period)
-        QT = Q(status=3, author=user, period=period) | QT
-        QT = Q(status=3, corrector=user, period=period) | QT
+        if self.request.GET.get('corrector') is not None:
+            QT = Q(status__in=(2, 3), period=period)
+        else:
+            QT = Q(status=2, author=user, period=period)
+            QT = Q(status=3, author=user, period=period) | QT
+            QT = Q(status=3, corrector=user, period=period) | QT
 
-        professor = user.professor.all()
-        if professor:
-            professor = professor[0]
-            for course in professor.courses.all():
-                QT = Q(status=2, period=period, course=course) | QT
-                QT = Q(status=3, period=period, course=course) | QT
+            professor = user.professor.all()
+            if professor:
+                professor = professor[0]
+                for course in professor.courses.all():
+                    QT = Q(status=2, period=period, course=course) | QT
+                    QT = Q(status=3, period=period, course=course) | QT
+
+        QT = self.get_form_queryset() & QT
 
         return Script.objects.filter(QT)
 
@@ -110,22 +170,31 @@ class ScriptsPendingView(ScriptsView):
 
 class ScriptsTreatedView(ScriptsView):
 
+    def get_base_queryset(self):
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        QT = Q(status__in=(4, 5), period=period)
+        return Script.objects.filter(QT)
+
     def get_queryset(self):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
 
-        QT = Q(status=4, author=user, period=period)
-        QT = Q(status=5, author=user, period=period) | QT
-        QT = Q(status=4, corrector=user, period=period) | QT
-        QT = Q(status=5, corrector=user, period=period) | QT
+        if self.request.GET.get('corrector') is not None:
+            QT = Q(status__in=(4, 5), period=period)
+        else:
+            QT = Q(status=4, author=user, period=period)
+            QT = Q(status=5, author=user, period=period) | QT
+            QT = Q(status=4, corrector=user, period=period) | QT
+            QT = Q(status=5, corrector=user, period=period) | QT
 
-        professor = user.professor.all()
-        if professor:
-            professor = professor[0]
-            for course in professor.courses.all():
-                QT = Q(status=4, period=period, course=course) | QT
-                QT = Q(status=5, period=period, course=course) | QT
+            professor = user.professor.all()
+            if professor:
+                professor = professor[0]
+                for course in professor.courses.all():
+                    QT = Q(status=4, period=period, course=course) | QT
+                    QT = Q(status=5, period=period, course=course) | QT
 
+        QT = self.get_form_queryset() & QT
         return Script.objects.filter(QT)
 
     def get_context_data(self, **kwargs):
@@ -136,18 +205,27 @@ class ScriptsTreatedView(ScriptsView):
 
 class ScriptsRejectedView(ScriptsView):
 
+    def get_base_queryset(self):
+        period = Period.objects.get(id=self.kwargs['period_id'])
+        QT = Q(status=0)
+        return Script.objects.filter(QT)
+
     def get_queryset(self):
         user = self.request.user
         period = Period.objects.get(id=self.kwargs['period_id'])
-        QT = Q(status=0, author=user)
-        QT = Q(status=0, corrector=user) | QT
+        if self.request.GET.get('corrector') is not None:
+            QT = Q(status=0)
+        else:
+            QT = Q(status=0, author=user)
+            QT = Q(status=0, corrector=user) | QT
 
-        professor = user.professor.all()
-        if professor:
-            professor = professor[0]
-            for course in professor.courses.all():
-                QT = Q(status=0, period=period, course=course) | QT
+            professor = user.professor.all()
+            if professor:
+                professor = professor[0]
+                for course in professor.courses.all():
+                    QT = Q(status=0, period=period, course=course) | QT
 
+        QT = self.get_form_queryset() & QT
         return Script.objects.filter(QT)
 
     def get_context_data(self, **kwargs):
