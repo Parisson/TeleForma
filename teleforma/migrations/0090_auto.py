@@ -20,8 +20,9 @@ class Migration(SchemaMigration):
 
         if not db.dry_run:
             for document in orm['teleforma.document'].objects.all():
-                document.periods.add(document.period)
-                document.save()
+                if document.period:
+                    document.periods.add(document.period)
+                    document.save()
 
 
 
