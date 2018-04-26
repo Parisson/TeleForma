@@ -1,5 +1,6 @@
 {% extends "telemeta/base.html" %}
 {% load teleforma_tags %}
+{% load thumbnail %}
 {% load telemeta_utils %}
 {% load i18n %}
 
@@ -73,7 +74,32 @@ $(document).ready(function(){
 
 {% block course %}
 
-<div class="desk_center">
+<div class="desk_center home">
+
+    {% autoescape off %}
+    {{ home_text }}
+    {% endautoescape %}
+
+    {% if home_video.type == 'webm' %}
+    <h3>{% if home_video.title %}{{ home_video.title }}{% else %}{{ home_video.course.title }}{% endif %}</h3>
+        <div class="video" style="width:400px">
+         <a href="{% url teleforma-media-detail period.id home_video.id %}" title="{% trans "Play" %}">
+          {% if home_video.item.related.all %}
+             {% for related in home_video.item.related.all %}
+              {% if related.title == "preview" %}
+               {% thumbnail related.file "168x96" as im %}
+                <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
+                 <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
+                </div>
+               {% endthumbnail %}
+              {% endif %}
+             {% endfor %}
+            {% else %}
+              {% trans 'Click here' %}
+            {% endif %}
+          </a>
+         </div>
+    {% endif %}
 
     {% for c in courses %}
      {% with c.course as course %}
@@ -89,14 +115,14 @@ $(document).ready(function(){
 
         {% block media %}
             {% with "Passed conferences" as title %}
-                {% include "teleforma/inc/media_list.html" %}
+                {% include "teleforma/inc/media_list.html" with show_only=1 %}
             {% endwith %}
         {% endblock %}
 
         {% comment %}
         {% block webclass %}
             {% with "Web class" as title %}
-                {% include "teleforma/inc/media_list.html" %}
+                {% include "teleforma/inc/media_list.html" with show_only=1 %}
             {% endwith %}
         {% endblock %}
         {% endcomment %}
@@ -106,7 +132,6 @@ $(document).ready(function(){
           {% include "teleforma/inc/document_list.html" %}
          {% endwith %}
         {% endblock %}
-
       </div>
      {% endfor %}
     {% endwith %}

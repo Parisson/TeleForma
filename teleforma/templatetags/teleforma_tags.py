@@ -226,6 +226,8 @@ def untreated_scripts_count(user, period):
 
 @register.simple_tag
 def treated_scripts_count(user, period):
+    if not period:
+        return ''
     Q1 = Q(status=4, author=user, period=period)
     Q2 = Q(status=4, corrector=user, period=period)
     scripts = Script.objects.filter(Q1 | Q2)

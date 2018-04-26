@@ -2180,3 +2180,11 @@ msgstr ""
 
 #~ msgid "course types"
 #~ msgstr "types de matières"
+
+
+#: templates/quiz/quiz_detail.html:16
+msgid "Start quiz"
+msgstr "Démarrer le quiz"
+
+msgid "Your answer was"
+msgstr "Votre réponse est"

@@ -159,6 +159,11 @@ class ConferenceAdmin(admin.ModelAdmin):
     list_filter = ('course', 'period', 'date_begin', 'session')
     search_fields = ['public_id', 'id', 'course__code', 'course__title', 'session']
 
+class HomeAdmin(admin.ModelAdmin):
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(HomeAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['video'].queryset = Media.objects.filter(type='webm')
+        return form
 
 admin.site.unregister(User)
 admin.site.register(Organization)
@@ -181,3 +186,4 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
+admin.site.register(Home, HomeAdmin)

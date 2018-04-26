@@ -38,6 +38,7 @@ import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
+from tinymce.models import HTMLField
 
 
 class IEJ(Model):
@@ -306,3 +307,23 @@ class Payback(models.Model):
         db_table = app_label + '_' + 'paybacks'
         verbose_name = _("Payback")
         verbose_name_plural = _("Paybacks")
+
+
+class Home(models.Model):
+
+    text = HTMLField('Texte', blank=True)
+    video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
+
+    class Meta(MetaCore):
+        verbose_name = "Page d'accueil"
+        verbose_name_plural = "Page d'accueil"
+
+    def __unicode__(self):
+        return "Page d'accueil"
+
+    def save(self, *args, **kwargs):
+        if Home.objects.exists() and not self.pk:
+            # if you'll not check for self.pk
+            # then error will also raised in update of exists model
+            raise ValidationError('There is can be only one Home instance')
+        return super(Home, self).save(*args, **kwargs)

@@ -245,7 +245,7 @@ class HomeRedirectView(View):
                 period = get_default_period(periods)
                 return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
             else:
-                HttpResponseRedirect(reverse('telemeta-admin'))
+                return HttpResponseRedirect(reverse('telemeta-admin'))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 
@@ -296,6 +296,11 @@ class CourseListView(CourseAccessMixin, ListView):
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
+        home = Home.objects.all()
+        if home:
+            home = home[0]
+            context['home_text'] = home.text
+            context['home_video'] = home.video
         return context
 
     @method_decorator(login_required)

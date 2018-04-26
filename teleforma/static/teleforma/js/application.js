@@ -25,3 +25,18 @@
  * Requires jQuery
  */
 
+$(document).ready(function(){
+     if($('.home').size()){
+         $('.course').each(function(){
+             var $course = $(this);
+             var course_url = $course.find('.course_title a').attr('href');
+             $course.find('.course_content .listing tbody').each(function(){
+                 var $tbody = $(this);
+                 if($tbody.find('tr').size()>=2) {
+                     $tbody.find('tr:not(:first)').remove();
+                     $tbody.append('<tr><td><a href="'+course_url+'">Voir la suite</a></td><td></td><td></td></tr>')
+                 }
+             });
+         })
+     }
+});

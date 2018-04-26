@@ -18,31 +18,53 @@ $(document).ready(function(){
 {% endblock courses %}
 
 {% block course %}
+
 <div class="desk_center">
+
+
+
+
+<br/><br/>
     {% for c in courses %}
      {% with c.course as course %}
       {% for type in c.types %}
+        {% if course.quiz.all or type.name != 'Quiz' %}
       <div class="course">
         <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
-        {% if not user.correctors.all or user.is_staff %}
-        {% block conference %}
-         {% include "teleforma/inc/conference_list.html" %}
-        {% endblock %}
+        {% if type.name == 'Quiz' %}
+          <div class="course_content">
+           <table class="listing" width="100%">
+            <tbody>
+               {% for quiz in course.quiz.all %}
+               <td class="border-top"><a href="{% url quiz_start_page slug=quiz.url %}">{{quiz.title}}</a></td>
+               <td class="border-top">{{quiz.description}}</td>
+               {% endfor %}
+            </tbody>
+          </table>
+         </div>
 
-        {% block media %}
-         {% include "teleforma/inc/media_list.html" %}
-        {% endblock %}
+        {% else %}
+          {% if not user.correctors.all or user.is_staff %}
+          {% block conference %}
+           {% include "teleforma/inc/conference_list.html" %}
+          {% endblock %}
+
+          {% block media %}
+           {% include "teleforma/inc/media_list.html" %}
+          {% endblock %}
+          {% endif %}
+
+          {% block document %}
+           {% with forloop.counter as type_counter %}
+            {% include "teleforma/inc/document_list.html" %}
+           {% endwith %}
+          {% endblock %}
         {% endif %}
 
-        {% block document %}
-         {% with forloop.counter as type_counter %}
-          {% include "teleforma/inc/document_list.html" %}
-         {% endwith %}
-        {% endblock %}
-
         </div>
+        {% endif %}
       {% endfor %}
      {% endwith %}
     {% endfor %}

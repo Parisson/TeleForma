@@ -57,6 +57,7 @@ from django.template.defaultfilters import slugify
 from sorl.thumbnail import default as sorl_default
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.conf import settings
+from quiz.models import Quiz
 
 app_label = 'teleforma'
 
@@ -180,6 +181,7 @@ class Course(Model):
     oral_1 = models.BooleanField(_('oral_1'))
     oral_2 = models.BooleanField(_('oral_2'))
     has_exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
+    quiz = models.ManyToManyField(Quiz, verbose_name=_('quiz'), blank=True, null=True)
 
     def __unicode__(self):
         return self.title
