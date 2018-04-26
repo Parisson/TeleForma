@@ -321,6 +321,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
         user = self.request.user
+        period = Period.objects.get(id=self.kwargs['period_id'])
 
         if self.request.user.is_staff:
             QT = Q(status=4, period=period)
