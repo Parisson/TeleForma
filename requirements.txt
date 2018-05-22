@@ -17,3 +17,5 @@ django-nvd3
 django-user-agents
 xhtml2pdf
 html5lib==0.95
+django-tinymce==1.5.4
+django-quiz

@@ -148,11 +148,16 @@ INSTALLED_APPS = (
     'timezones',
     'jqchat',
 #    'follow',
-     'googletools',
-     # 'telecaster',
-     'extra_views',
-     'captcha',
-     'django_user_agents',
+    'googletools',
+    # 'telecaster',
+    'extra_views',
+    'captcha',
+    'django_user_agents',
+    'tinymce',
+    'multichoice',
+    'true_false',
+    'essay',
+    'quiz',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -231,3 +236,12 @@ CACHES = {
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.
 USER_AGENTS_CACHE = 'default'
+
+AUTH_USER_MODEL = 'auth.User'
+
+TINYMCE_DEFAULT_CONFIG = {
+            'plugins': "table,spellchecker<Plug>PeepOpenaste,searchreplace",
+            'theme': "advanced",
+            'cleanup_on_startup': True,
+            'custom_undo_redo_levels': 10,
+}
