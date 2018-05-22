@@ -57,7 +57,7 @@
 
 				<div class="course_subtitle">
 					{% if not student %}
-					<h3><img src="/static//telemeta/images/item_title.png" width="10px" alt="" /> {{ iej }}</h3>
+					<h3><img src="/static//telemeta/images/item_title.png" width="10px" alt="" /> {% if iej %}{{ iej }}{% else %}National{% endif %}</h3>
 					{% endif %}
 				</div>
 

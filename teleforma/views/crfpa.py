@@ -37,6 +37,7 @@ from registration.views import *
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 
 def get_course_code(obj):
@@ -349,7 +350,7 @@ class AnnalsView(ListView):
             docs = Document.objects.filter(is_annal=True).order_by('-annal_year')
         elif students:
             self.student = students[0]
-            docs = Document.objects.filter(is_annal=True, iej=self.student.iej).order_by('-annal_year')
+            docs = Document.objects.filter(is_annal=True).filter(Q(iej=self.student.iej) | Q(iej=None)).order_by('-annal_year')
         if iej:
             docs = docs.filter(iej=iej)
         if course:
