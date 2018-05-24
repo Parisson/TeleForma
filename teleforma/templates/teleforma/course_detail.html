@@ -28,7 +28,6 @@ $(document).ready(function(){
     {% for c in courses %}
      {% with c.course as course %}
       {% for type in c.types %}
-        {% if course.quiz.all or type.name != 'Quiz' %}
       <div class="course">
         <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
@@ -64,7 +63,6 @@ $(document).ready(function(){
         {% endif %}
 
         </div>
-        {% endif %}
       {% endfor %}
      {% endwith %}
     {% endfor %}
