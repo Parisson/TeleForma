@@ -121,6 +121,13 @@ urlpatterns = patterns('',
     # Ajax update training
     url(r'^update-training/(?P<id>.*)/$', update_training, name="update-training"),
 
+    # News Item
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^newsitems/create', NewsItemCreate.as_view(), name='newsitem-create'),
+    url(r'^newsitems/update/(?P<pk>.*)', NewsItemUpdate.as_view(), name='newsitem-update'),
+    url(r'^newsitems/delete/(?P<pk>.*)', NewsItemDelete.as_view(), name='newsitem-delete'),
+    url(r'^newsitems/list', NewsItemList.as_view(), name='newsitem-list'),
+
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
     url(r'jsonrpc/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),

@@ -1,0 +1,13 @@
+{% extends "telemeta/base.html" %}
+
+{% block extra_javascript %}
+{{ form.media }}
+{% endblock %}
+
+{% block content %}
+<h1>Ajouter une actualité</h1>
+<form method="post" class="add_actus">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Enregistrer" />
+</form>
+{% endblock %}

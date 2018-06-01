@@ -43,6 +43,7 @@ from docutils.core import publish_parts
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
 from django import db
+from django.shortcuts import get_object_or_404
 import re
 import os
 import datetime
@@ -54,6 +55,7 @@ from django.utils.translation import ugettext_lazy as _
 from urlparse import urlparse
 
 from teleforma.models.core import Document
+from teleforma.models.crfpa import Course, NewsItem
 from teleforma.views import get_courses
 from teleforma.models import *
 from teleforma.exam.models import *
@@ -249,3 +251,31 @@ def get_training_profile(user):
                 text += unicode(training) + ' '
     return text
 
+@register.inclusion_tag('teleforma/inc/newsitems_portlet.html', takes_context=True)
+def newsitems_portlet(context, course_id, period_id):
+    request = context['request']
+    user = request.user
+    def get_data(newsitem):
+        return {
+        'id':newsitem.id,
+        'title':newsitem.title,
+        'text':newsitem.text,
+        'creator':newsitem.creator,
+        'created':newsitem.created,
+        'can_edit':newsitem.can_edit(request),
+        'can_delete':newsitem.can_delete(request),
+        }
+    
+    course = get_object_or_404(Course, id=course_id) 
+    course_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, course__id=course_id).order_by('-created')[:5]]
+    all_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False).order_by('-created')[:5]]
+    can_add = False 
+    if user.is_staff or user.professor.count():
+        can_add = True
+    return {
+            'can_add':can_add,
+            'course':course,
+            'period_id':period_id,
+            'course_newsitems':course_newsitems, 
+            'all_newsitems':all_newsitems
+           }

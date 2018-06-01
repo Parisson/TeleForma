@@ -1,5 +1,6 @@
 {% extends "teleforma/courses.html" %}
 {% load i18n %}
+{% load teleforma_tags %}
 
 {% block extra_javascript %}
 <script type="text/javascript">
@@ -32,17 +33,21 @@ $(document).ready(function(){
         <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
         </div>
 
-        {% if type.name == 'Quiz' %}
+          {% if type.name == 'Quiz' %}
           <div class="course_content">
-           <table class="listing" width="100%">
-            <tbody>
-               {% for quiz in course.quiz.all %}
-               <td class="border-top"><a href="{% url quiz_start_page slug=quiz.url %}">{{quiz.title}}</a></td>
-               <td class="border-top">{{quiz.description}}</td>
-               {% endfor %}
-            </tbody>
-          </table>
-         </div>
+              {% if course.quiz.all %}
+              <table class="listing" width="100%">
+                  <tbody>
+                  {% for quiz in course.quiz.all %}
+                  <td class="border-top"><a href="{% url quiz_start_page slug=quiz.url %}">{{quiz.title}}</a></td>
+                  <td class="border-top">{{quiz.description}}</td>
+                  {% endfor %}
+                  </tbody>
+              </table>
+              {% else %}
+              <p>Aucun quiz</p>
+              {% endif %}
+          </div>
 
         {% else %}
           {% if not user.correctors.all or user.is_staff %}
@@ -83,4 +88,7 @@ $(document).ready(function(){
  {% endif %}
 {% endif %}
 {% endif %}
+
+{% newsitems_portlet course_id=course.id period_id=period.id %}
 {% endblock chat %}
+

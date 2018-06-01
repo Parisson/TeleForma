@@ -327,3 +327,33 @@ class Home(models.Model):
             # then error will also raised in update of exists model
             raise ValidationError('There is can be only one Home instance')
         return super(Home, self).save(*args, **kwargs)
+
+
+class NewsItem(models.Model):
+
+    title = models.CharField(_('Title'), max_length=255)
+    course = models.ForeignKey(Course, related_name='newsitems', verbose_name=_('course'))
+    text = HTMLField('Texte')
+
+    created = models.DateTimeField(_('date created'), auto_now_add=True)
+    creator = models.ForeignKey(User, related_name='newsitems', verbose_name="Créateur")
+    deleted = models.BooleanField('Supprimé')
+
+    class Meta(MetaCore):
+        verbose_name = "Actualité"
+        verbose_name_plural = "Actualités"
+
+    def __unicode__(self):
+        return "NewsItem %s" % str(self.id)
+
+
+    def can_edit(self, request):
+        return request.user.is_staff or request.user.id == self.creator.id
+
+    def can_delete(self, request):
+        return request.user.is_staff or request.user.id == self.creator.id
+
+
+
+
+

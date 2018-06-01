@@ -4,7 +4,7 @@ from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from captcha.fields import CaptchaField
-
+from tinymce.widgets import TinyMCE
 
 class ConferenceForm(ModelForm):
 
@@ -81,3 +81,13 @@ class StudentInline(InlineFormSet):
             'formfield_callback': get_field_qs
         })
         return kwargs
+
+
+class NewsItemForm(ModelForm):
+    class Meta:
+        model = NewsItem
+        exclude = ['created', 'creator', 'deleted']
+        widgets = {
+            'description': TinyMCE({'cols':80, 'rows':30}),
+        }
+

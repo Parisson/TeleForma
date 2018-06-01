@@ -1,0 +1,34 @@
+{% load i18n %}
+{% load telemeta_utils %} 
+{% load teleforma_tags %}
+<div class="tabs module">
+    <h3><img src="/static/telemeta/images/actus.png" alt="actualités"/>Actualités</h3>
+    <ul>
+        <li><a href="#news_local">{{ course.title_tweeter }}</a>
+            {% if can_add %}<a href="{% url newsitem-create %}?course_id={{course.id}}&period_id={{period_id}}">+</a>{% endif %}
+        </li>
+        <li><a href="#news_global">Générales</a>
+            {% if can_add %}<a href="{% url newsitem-create %}?period_id={{period_id}}">+</a>{% endif %}
+        </li>
+    </ul>
+    <div id="news_local">
+        <section>
+            {% for newsitem in course_newsitems %} {% include "teleforma/inc/newsitem.html" %} {% endfor %}
+        </section>
+        {% if course_newsitems|length >= 5 %}
+        <footer>
+            <a href="{% url newsitem-list %}?course_id={{ course.id }}">Voir plus</a>
+        </footer>
+        {% endif %}
+    </div>
+    <div id="news_global">
+        <section>
+            {% for newsitem in all_newsitems %} {% include "teleforma/inc/newsitem.html" %} {% endfor %}
+        </section>
+        {% if all_newsitems|length >= 5 %}
+        <footer>
+            <a href="{% url newsitem-list %}">Voir plus</a>
+        </footer>
+        {% endif %}
+    </div>
+</div>

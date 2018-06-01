@@ -1,0 +1,29 @@
+{% extends "telemeta/base.html" %}
+
+{% block content %}
+<div id="actus_list">
+<h1>Actualités</h1>
+{% if object_list %}
+	{% for newsitem in object_list %}
+	    {% include "teleforma/inc/newsitem.html" %} 
+	{% endfor %}
+	{% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="{% url newsitem-list %}?page={{ page_obj.previous_page_number }}&course_id={{ course_id }}">Précédent</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{% url newsitem-list %}?page={{ page_obj.next_page_number }}&course_id={{ course_id }}">Suivant</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% else %}
+    <p>Aucune actualité.</p>
+    </div>
+{% endif %}
+{% endblock %}

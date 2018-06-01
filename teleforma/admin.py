@@ -30,6 +30,7 @@ class PeriodListFilter(SimpleListFilter):
         human-readable name for the option that will appear
         in the right sidebar.
         """
+
         return ( (period.name, period.name) for period in Period.objects.all() )
 
     def queryset(self, request, queryset):
@@ -165,6 +166,11 @@ class HomeAdmin(admin.ModelAdmin):
         form.base_fields['video'].queryset = Media.objects.filter(type='webm')
         return form
 
+class NewsItemAdmin(admin.ModelAdmin):
+    list_filter = ('deleted', 'course', 'creator')
+    list_display = ('title', 'course', 'creator', 'deleted')
+    search_fields = ['title', 'text']
+
 admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
@@ -187,3 +193,4 @@ admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
+admin.site.register(NewsItem, NewsItemAdmin)

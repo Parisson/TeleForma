@@ -38,6 +38,7 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.http import HttpResponseForbidden
 
 
 def get_course_code(obj):
@@ -513,3 +514,76 @@ def update_training(request, id):
         else:
             html+='<option value="%s">%s</option>' % (training.pk, training)
     return HttpResponse(html)
+
+
+class NewsItemMixin:
+    model = NewsItem
+    form_class = NewsItemForm
+    def get_success_url(self):
+        return reverse('teleforma-desk-period-course', 
+            kwargs={
+            'pk': self.object.course.id, 
+            'period_id': self.request.GET.get('period_id')
+            })
+
+class NewsItemCreate(NewsItemMixin, CreateView):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff and not request.user.professor.count():
+            return HttpResponseForbidden()
+        return super(NewsItemCreate, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        course_id = self.request.GET.get('course_id')
+        course = None
+        if course_id:
+            course = get_object_or_404(Course, id=course_id)
+
+        return {
+            'course':course
+        }
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(NewsItemCreate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('teleforma-desk-period-course', 
+            kwargs={
+            'pk': self.object.course.id, 
+            'period_id': self.request.GET.get('period_id')
+            })
+
+class NewsItemUpdate(NewsItemMixin, UpdateView):
+
+    def form_valid(self, form):
+        if not self.get_object().can_edit(self.request):
+            return HttpResponseForbidden()
+        return super(NewsItemUpdate, self).form_valid(form)
+
+class NewsItemDelete(NewsItemMixin, DeleteView):
+    def delete(self, request, *args, **kwargs):
+        """
+        """
+        self.object = self.get_object()
+        if not self.object.can_delete(request):
+            return HttpResponseForbidden()
+        self.object.deleted = True
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+class NewsItemList(ListView):
+
+    model = NewsItem
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(NewsItemList, self).get_context_data(**kwargs)
+        context['course_id'] = self.request.GET.get('course_id')
+        return context
+
+    def get_queryset(self):
+        query = NewsItem.objects.filter(deleted=False)
+        course_id = self.request.GET.get('course_id')
+        if course_id:
+            query = query.filter(course__id=self.request.GET.get('course_id'))
+        return query
