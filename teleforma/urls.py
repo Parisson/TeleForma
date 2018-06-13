@@ -126,7 +126,7 @@ urlpatterns = patterns('',
     url(r'^newsitems/create', NewsItemCreate.as_view(), name='newsitem-create'),
     url(r'^newsitems/update/(?P<pk>.*)', NewsItemUpdate.as_view(), name='newsitem-update'),
     url(r'^newsitems/delete/(?P<pk>.*)', NewsItemDelete.as_view(), name='newsitem-delete'),
-    url(r'^newsitems/list', NewsItemList.as_view(), name='newsitem-list'),
+    url(r'^newsitems/(?P<period_id>.*)/list', NewsItemList.as_view(), name='newsitem-list'),
 
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),

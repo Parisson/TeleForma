@@ -333,6 +333,7 @@ class NewsItem(models.Model):
 
     title = models.CharField(_('Title'), max_length=255)
     course = models.ForeignKey(Course, related_name='newsitems', verbose_name=_('course'))
+    period = models.ForeignKey('Period', related_name='newsitems', verbose_name=_('period'), blank=False, null=True)
     text = HTMLField('Texte')
 
     created = models.DateTimeField(_('date created'), auto_now_add=True)

@@ -537,9 +537,13 @@ class NewsItemCreate(NewsItemMixin, CreateView):
         course = None
         if course_id:
             course = get_object_or_404(Course, id=course_id)
-
+        period_id = self.request.GET.get('period_id')
+        period = None
+        if period_id:
+            period = get_object_or_404(Period, id=period_id)
         return {
-            'course':course
+            'course':course,
+            'period':period
         }
 
     def form_valid(self, form):
@@ -578,11 +582,12 @@ class NewsItemList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(NewsItemList, self).get_context_data(**kwargs)
-        context['course_id'] = self.request.GET.get('course_id')
+        context['course_id'] = self.request.GET.get('course_id', '')
+        context['period_id'] = self.kwargs['period_id']
         return context
 
     def get_queryset(self):
-        query = NewsItem.objects.filter(deleted=False)
+        query = NewsItem.objects.filter(deleted=False, period__id=self.kwargs['period_id'])
         course_id = self.request.GET.get('course_id')
         if course_id:
             query = query.filter(course__id=self.request.GET.get('course_id'))
