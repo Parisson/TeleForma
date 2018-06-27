@@ -30,7 +30,8 @@ class Command(BaseCommand):
                     profile.wifi_login = user.username
                     profile.wifi_pass = id_generator(8)
                     profile.save()
-                    f.write(profile.wifi_login + ',' + profile.wifi_pass + '\n')
+                f.write(user.first_name + ',' + user.last_name + ',' + 
+                     profile.wifi_login + ',' + profile.wifi_pass + '\n')
             except:
                 continue
 
