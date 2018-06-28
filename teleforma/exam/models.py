@@ -39,6 +39,7 @@ import os, uuid, time, hashlib, mimetypes, tempfile, datetime, urllib
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.db.models import Q, Max, Min
 from django.db.models.signals import post_save
 from django.conf import settings
@@ -384,7 +385,22 @@ class Script(BaseResource):
 
     @property
     def safe_url(self):
-        return urllib.quote(self.url)
+        domain = Site.objects.get_current().domain
+        url = self.url
+        url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//' + domain)
+        return urllib.quote(url)
+
+    def unquoted_url(self):
+        domain = Site.objects.get_current().domain
+        url = self.url
+        url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//' + domain)
+        return url
+
+    def has_annotations_file(self):
+        """
+        check if an annotations file exists. Then use this file, otherwise use the new db implementation
+        """
+        return os.path.exists(os.path.join(settings.WEBVIEWER_ANNOTATIONS_PATH, self.uuid+'.xfdf'))
 
     def box_upload(self):
         sleep = 10
