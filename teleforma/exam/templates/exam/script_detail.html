@@ -2,6 +2,8 @@
 {% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load i18n %}
+{% load static %}
+{% load webviewer %}
 {% load thumbnail %}
 
 {% block extra_javascript %}
@@ -9,6 +11,8 @@
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script src="/static/exam/js/exam.js"></script>
+  <!--<script src='{% static "WebViewer/lib/html5/external/jquery-3.2.1.min.js" %}'></script>-->
+  <script src='{% static "WebViewer/lib/WebViewer.min.js" %}'></script>
   <script>
     // increase the default animation speed to exaggerate the effect
   {% if script.comments %}
@@ -17,6 +21,8 @@
     });
   {% endif %}
     </script>
+
+
 {% endblock extra_javascript %}
 
 {% block content %}
@@ -123,8 +129,12 @@
 <br /><br />
 <div class="media">
  <div class="script">
+  {% if script.has_annotations_file %}
     <iframe id="box-iframe" style="position:fixed; top:12%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all or user.is_superuser %}{{ script_service_url }}?url={{ script.safe_url }}&username=Examinator&uuid={{ script.uuid }}{% else %}{{ script_service_url }}?url={{ script.safe_url }}&username={{ user.username }}&uuid={{ script.uuid }}{% endif %}">
     </iframe>
+  {% else %}
+    {% webviewer url=script.unquoted_url uuid=script.uuid %}
+  {% endif %}
  </div>
 </div>
 
