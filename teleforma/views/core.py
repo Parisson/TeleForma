@@ -479,7 +479,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
             station.stop()
         if 'telecaster' in settings.INSTALLED_APPS:
             try:
-                url = 'http://' + conference.department.domain + '/json/'
+                url = 'https://' + conference.department.domain + '/json/'
                 s = ServiceProxy(url)
                 s.teleforma.stop_conference(conference.public_id)
             except:
@@ -646,7 +646,7 @@ class ConferenceRecordView(FormView):
             raise 'Error : input must be a conference dictionnary'
 
     def push(self):
-        url = 'http://' + self.conference.department.domain + '/json/'
+        url = 'https://' + self.conference.department.domain + '/json/'
         s = ServiceProxy(url)
         s.teleforma.create_conference(self.conference.to_json_dict())
 
