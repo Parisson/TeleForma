@@ -478,7 +478,7 @@ class LiveStream(Model):
         if self.server.type == 'stream-m':
             mount_point += '/consume/' + self.slug
         else:
-            mount_point += '/' + self.slug + '.' + self.stream_type
+            mount_point += '/' + self.slug
         return mount_point
 
     @property
