@@ -38,7 +38,7 @@ class ScriptsListMixinView(ScriptMixinView):
         professor = user.professor.all()
         if professor:
             return PROFESSOR
-        if user.corrector_scripts:
+        if user.quotas.all():
             return CORRECTOR
         return STUDENT
 
