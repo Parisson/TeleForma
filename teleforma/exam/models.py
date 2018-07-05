@@ -387,17 +387,13 @@ class Script(BaseResource):
     def safe_url(self):
         domain = Site.objects.get_current().domain
         url = self.url
-        if 'pilotsystems' in domain:
-            url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//'+domain)
-        
-        url = url.replace('http://', '//')
+        url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//' + domain)
         return urllib.quote(url)
 
     def unquoted_url(self):
         domain = Site.objects.get_current().domain
         url = self.url
-        if 'pilotsystems' in domain:
-            url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//'+domain)
+        url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//' + domain)
         return url
 
     def has_annotations_file(self):
