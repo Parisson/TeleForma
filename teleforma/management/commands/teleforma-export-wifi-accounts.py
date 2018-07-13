@@ -16,12 +16,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         path = args[0]
+        period_name = args[1]
+
         f = open(path, 'w')
 
         for user in User.objects.all():
             profile = Profile.objects.filter(user=user)
-            if profile:
+            students = user.student.all()
+            if profile and students:
             	p = profile[0]
-                f.write(p.wifi_login + ',' + p.wifi_pass + '\n')
+                student = students[0]
+                if student.is_subscribed and not user.is_active and student.period == period:
+                    f.write(p.wifi_login + ',' + p.wifi_pass + '\n')
 
         f.close()
+
