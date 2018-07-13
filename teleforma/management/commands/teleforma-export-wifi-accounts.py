@@ -19,14 +19,15 @@ class Command(BaseCommand):
         period_name = args[1]
 
         f = open(path, 'w')
-
+        period = Period.objects.get(name=period_name)
+        
         for user in User.objects.all():
             profile = Profile.objects.filter(user=user)
             students = user.student.all()
             if profile and students:
             	p = profile[0]
                 student = students[0]
-                if student.is_subscribed and not user.is_active and student.period == period:
+                if student.is_subscribed and user.is_active and student.period == period:
                     f.write(p.wifi_login + ',' + p.wifi_pass + '\n')
 
         f.close()
