@@ -28,7 +28,13 @@ class Command(BaseCommand):
             	p = profile[0]
                 student = students[0]
                 if student.is_subscribed and user.is_active and student.period == period:
-                    f.write(p.wifi_login + ',' + p.wifi_pass + '\n')
-
+                    data = []
+                    data.append(user.first_name)
+                    data.append(user.last_name)
+                    data.append(p.wifi_login)
+                    data.append(p.wifi_pass)
+                    data.append('\n')
+                    s = ','.join(data)
+                    f.write(s.encode('utf8'))
         f.close()
 
