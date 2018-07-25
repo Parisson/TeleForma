@@ -718,9 +718,8 @@ class ConferenceRecordView(FormView):
                 conference.save()
 
                 for stream in conf_dict['streams']:
-                    host = stream['host']
-                    host = settings.TELECASTER_LIVE_STREAMING_SERVER
-                    port = stream['port']
+                    host = getattr(settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+                    port = getattr(settings, "TELECASTER_LIVE_STREAMING_PORT", stream['port'])
                     server_type = stream['server_type']
                     stream_type = stream['stream_type']
                     #site = Site.objects.all()[0]
