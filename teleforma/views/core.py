@@ -478,7 +478,7 @@ class MediaStreamingView(MediaView):
         media = Media.objects.get(id=self.kwargs['pk'])
         if get_access(media, courses):
             media_path = media.item.file.path
-            return serve_media(media_path, streaming=streaming)
+            return serve_media(media_path, streaming=self.streaming)
         else:
             return redirect('teleforma-media-detail', self.context['period'].id, media.id)
 
