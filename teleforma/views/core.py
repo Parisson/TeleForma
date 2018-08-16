@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2011-2013 Parisson SARL
+# Copyright (c) 2011-2018 Parisson SARL
+# Copyright (c) 2011-2018 Guillaume Pellerin
 
 # This software is a computer program whose purpose is to backup, analyse,
 # transcode and stream any audio content with its metadata over a web frontend.
@@ -45,8 +46,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
 from django.template import RequestContext, loader, Context
 from django import template
-from django.http import HttpResponse, HttpResponseRedirect
-from django.http import Http404
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.views.generic import *
 from django.views.generic.base import *
@@ -234,6 +234,39 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     if succeed:
         return content_to_response(buffer.getvalue(), filename)
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
+
+
+def serve_media(media_path, content_type="", buffering=True, streaming=False):
+    if not settings.DEBUG:
+        return nginx_media_accel(media_path, content_type=content_type,
+                                 buffering=buffering, streaming=streaming)
+    else:
+        try:
+            response = FileResponse(open(media_path, 'rb'))
+        except:    
+            response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
+        filename = os.path.basename(media_path)
+        if not streaming:
+            response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
+        return response
+
+
+def nginx_media_accel(media_path, content_type="", buffering=True, streaming=False):
+    """Send a protected media file through nginx with X-Accel-Redirect"""
+
+    response = HttpResponse()
+    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
+    filename = os.path.basename(media_path)
+    if not streaming:
+        response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+    response['Content-Type'] = content_type
+    response['X-Accel-Redirect'] = url
+
+    if not buffering:
+        response['X-Accel-Buffering'] = 'no'
+        #response['X-Accel-Limit-Rate'] = 524288
+
+    return response
 
 
 class HomeRedirectView(View):
