@@ -80,7 +80,8 @@ urlpatterns = patterns('',
 
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/embed/$', MediaViewEmbed.as_view(), name="teleforma-media-embed"),
-    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', MediaDownloadView.as_view(), name="teleforma-media-download"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/streaming/$', MediaStreamingView.as_view(), name="teleforma-media-streaming"),
 
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),

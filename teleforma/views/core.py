@@ -46,7 +46,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
 from django.template import RequestContext, loader, Context
 from django import template
-from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.views.generic import *
 from django.views.generic.base import *
@@ -237,14 +238,14 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 
 
 def serve_media(media_path, content_type="", buffering=True, streaming=False):
+    if not content_type:
+        content_type = mimetypes.guess_type(media_path)[0]
+
     if not settings.DEBUG:
         return nginx_media_accel(media_path, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
-        try:
-            response = FileResponse(open(media_path, 'rb'))
-        except:    
-            response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
+        response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
         filename = os.path.basename(media_path)
         if not streaming:
             response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
@@ -455,28 +456,6 @@ class MediaView(CourseAccessMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         return super(MediaView, self).dispatch(*args, **kwargs)
 
-    def download(self, request, pk):
-        courses = get_courses(request.user)
-        media = Media.objects.get(id=pk)
-        if get_access(media, courses):
-            path = media.item.file.path
-            filename, ext = os.path.splitext(path)
-            filename = filename.split(os.sep)[-1]
-            fsock = open(media.item.file.path, 'r')
-            view = ItemView()
-            mimetype = view.item_analyze(media.item)
-            extension = mimetypes.guess_extension(mimetype)
-            if not extension:
-                extension = ext
-            response = HttpResponse(fsock, mimetype=mimetype)
-
-            response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                             (filename.encode('utf8'), extension)
-            return response
-        else:
-            return redirect('teleforma-media-detail', self.context['period'].id, media.id)
-
-
     @jsonrpc_method('teleforma.publish_media')
     def publish(request, id):
         media = Media.objects.get(id=id)
@@ -488,6 +467,25 @@ class MediaView(CourseAccessMixin, DetailView):
         media = Media.objects.get(id=id)
         media.is_published = False
         media.save()
+
+
+class MediaStreamingView(MediaView):
+
+    streaming = True
+
+    def get(self):
+        courses = get_courses(self.request.user)
+        media = Media.objects.get(id=self.kwargs['pk'])
+        if get_access(media, courses):
+            media_path = media.item.file.path
+            return serve_media(media_path, streaming=streaming)
+        else:
+            return redirect('teleforma-media-detail', self.context['period'].id, media.id)
+
+
+class MediaDownloadView(MediaStreamingView):
+
+    streaming = False
 
 
 class MediaPendingView(ListView):
