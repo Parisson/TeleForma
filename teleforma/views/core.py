@@ -241,7 +241,7 @@ def serve_media(media_path, content_type="", buffering=True, streaming=False):
     if not content_type:
         content_type = mimetypes.guess_type(media_path)[0]
 
-    if not settings.DEBUG:
+    if settings.DEBUG:
         return nginx_media_accel(media_path, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
