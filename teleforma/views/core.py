@@ -468,17 +468,17 @@ class MediaView(CourseAccessMixin, DetailView):
         media.is_published = False
         media.save()
 
-    def streaming(self, request, pk, streaming=True):
+    def streaming(self, request, period_id, pk, streaming=True):
         courses = get_courses(request.user)
         media = Media.objects.get(id=pk)
         if get_access(media, courses):
             media_path = media.item.file.path
             return serve_media(media_path, streaming=streaming)
         else:
-            return redirect('teleforma-media-detail', self.context['period'].id, media.id)
+            return redirect('teleforma-media-detail', period_id, pk)
 
-    def download(self, request, pk):
-        return self.streaming(request, pk, streaming=False)
+    def download(self, request, period_id, pk):
+        return self.streaming(request, period_id, pk, streaming=False)
 
 
 class MediaPendingView(ListView):
