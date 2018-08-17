@@ -241,7 +241,7 @@ def serve_media(media_path, content_type="", buffering=True, streaming=False):
     if not content_type:
         content_type = mimetypes.guess_type(media_path)[0]
 
-    if settings.DEBUG:
+    if not settings.DEBUG:
         return nginx_media_accel(media_path, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
@@ -473,9 +473,9 @@ class MediaView(CourseAccessMixin, DetailView):
         media = Media.objects.get(id=pk)
         if get_access(media, courses):
             media_path = media.item.file.path
-            return serve_media(media_path, streaming=streaming)
+            return serve_media(media_path, content_type=media.mime_type, streaming=streaming)
         else:
-            return redirect('teleforma-media-detail', period_id, pk)
+            raise Http404("You don't have access to this media.")
 
     def download(self, request, period_id, pk):
         return self.streaming(request, period_id, pk, streaming=False)
