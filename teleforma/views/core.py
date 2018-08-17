@@ -468,7 +468,7 @@ class MediaView(CourseAccessMixin, DetailView):
         media.is_published = False
         media.save()
 
-    def streaming(self, request, period_id, pk, streaming=True):
+    def stream(self, request, period_id, pk, streaming=True):
         courses = get_courses(request.user)
         media = Media.objects.get(id=pk)
         if get_access(media, courses):
