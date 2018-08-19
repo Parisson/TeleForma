@@ -478,7 +478,7 @@ class MediaView(CourseAccessMixin, DetailView):
             raise Http404("You don't have access to this media.")
 
     def download(self, request, period_id, pk):
-        return self.streaming(request, period_id, pk, streaming=False)
+        return self.stream(request, period_id, pk, streaming=False)
 
 
 class MediaPendingView(ListView):
