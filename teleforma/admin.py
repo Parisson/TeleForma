@@ -120,20 +120,25 @@ class StudentAdmin(admin.ModelAdmin):
         # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
     add_to_group.short_description = "Ajouter au groupe"
 
+
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
     filter_horizontal = ['courses']
+
 
 class ProfessorAdmin(admin.ModelAdmin):
     model = Professor
     filter_horizontal = ['courses']
 
+
 class ProfileInline(admin.StackedInline):
     model = Profile
+
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfileInline, StudentInline, QuotaInline]
     search_fields = ['username', 'email']
+
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
@@ -141,9 +146,11 @@ class TrainingAdmin(admin.ModelAdmin):
                          'written_speciality', 'oral_1', 'oral_2','magistral']
     exclude = ['options']
 
+
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     ordering = ['number']
+
 
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
@@ -151,14 +158,17 @@ class DocumentAdmin(admin.ModelAdmin):
     list_filter = ('course', 'periods', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
 
+
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
+
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     list_filter = ('course', 'period', 'date_begin', 'session')
     search_fields = ['public_id', 'id', 'course__code', 'course__title', 'session']
+
 
 class HomeAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
@@ -166,10 +176,12 @@ class HomeAdmin(admin.ModelAdmin):
         form.base_fields['video'].queryset = Media.objects.filter(type='webm')
         return form
 
+
 class NewsItemAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'course', 'creator')
     list_display = ('title', 'course', 'creator', 'deleted')
     search_fields = ['title', 'text']
+
 
 admin.site.unregister(User)
 admin.site.register(Organization)
