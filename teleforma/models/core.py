@@ -141,6 +141,17 @@ class Period(Model):
     is_open = models.BooleanField(_('is open'), default=True)
     date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
 
+    # For appointment module
+    enable_appointment = models.BooleanField(_('activer la prise de rendez-vous'),
+                                             blank=True, default=False)
+    book_delay = models.IntegerField("délai minimal (en jours ouvrables) de prise de rendez-vous",
+                                     default=2)
+    cancel_delay = models.IntegerField("délai minimal (en jours ouvrables) d'annulation de rendez-vous",
+                                       default=2)
+    appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous",
+                                             blank=True)
+    appointment_slot_size = models.TextField("écart entre les créneaux d'inscription (minutes)", default=40)
+
     def __unicode__(self):
         return self.name
 

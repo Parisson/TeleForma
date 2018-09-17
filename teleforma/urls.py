@@ -103,6 +103,10 @@ urlpatterns = patterns('',
     url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
 
+    # APPOINTMENTS
+    #url(r'^desk/periods/(?P<period_id>.*)/appointments/$', Appointments.as_view(),
+    #    name="teleforma-appointments"),
+
     # Postman
     url(r'^messages/', include('postman.urls')),
 
@@ -139,5 +143,9 @@ urlpatterns = patterns('',
 
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
+
+
+
+
 
 )

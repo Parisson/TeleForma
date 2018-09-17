@@ -171,6 +171,39 @@ class NewsItemAdmin(admin.ModelAdmin):
     list_display = ('title', 'course', 'creator', 'deleted')
     search_fields = ['title', 'text']
 
+class AppointmentSlotInline(admin.TabularInline):
+    model = AppointmentSlot
+
+class AppointmentJuryInline(admin.StackedInline):
+    model = AppointmentJury
+
+class AppointmentDayInline(admin.TabularInline):
+    readonly_fields = ('get_nb_slots', 'get_nb_jury', 'changeform_link', )
+    model = AppointmentDay
+
+class AppointmentPeriodAdmin(admin.ModelAdmin):
+    list_filter = ('period',)
+    list_display = ('name', 'period', 'nb_appointments')
+
+    inlines = [ AppointmentDayInline ]
+
+class AppointmentDayAdmin(admin.ModelAdmin):
+    list_filter = ('appointment_period',)
+    list_display = ('date', 'appointment_period', 'get_nb_slots', 'get_nb_jury')
+
+    inlines = [ AppointmentSlotInline, AppointmentJuryInline ]
+
+class AppointmentSlotAdmin(admin.ModelAdmin):
+    list_filter = ('day',)
+    list_display = ('day', 'start', 'nb')
+
+class AppointmentJuryAdmin(admin.ModelAdmin):
+    list_filter = ('day',)
+    list_display = ('name', 'day')
+
+class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ('real_date', 'student', 'jury')
+
 admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
@@ -194,3 +227,10 @@ admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
+admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
+admin.site.register(AppointmentDay, AppointmentDayAdmin)
+admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
+admin.site.register(AppointmentJury, AppointmentJuryAdmin)
+admin.site.register(Appointment, AppointmentAdmin)
+
+
