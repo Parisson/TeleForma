@@ -102,6 +102,11 @@
 
     </div>
 
+    {% if msg %}
+    <div class="error">
+      {{ msg }}
+    </div>
+    {% endif %}
 
 
     {% for ap_period in ap_periods %}
