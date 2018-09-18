@@ -150,7 +150,7 @@ class Period(Model):
                                        default=2)
     appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous",
                                              blank=True)
-    appointment_slot_size = models.TextField("écart entre les créneaux d'inscription (minutes)", default=40)
+    appointment_slot_size = models.IntegerField("écart entre les créneaux d'inscription (minutes)", default=40)
 
     def __unicode__(self):
         return self.name

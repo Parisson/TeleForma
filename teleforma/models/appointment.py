@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from datetime import date
+
 from django.db.models import *
 from teleforma.models.core import *
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.core import urlresolvers
+from django.utils.functional import cached_property
 
 class AppointmentPeriod(Model):
     period = models.ForeignKey(Period, related_name='appointment_periods',
@@ -16,6 +19,12 @@ class AppointmentPeriod(Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_appointment(self, user):
+        q = Appointment.objects.filter(student=user, slot__day__appointment_period=self)
+        if q:
+            return q.get()
+        return None
 
     class Meta(MetaCore):
         db_table = app_label + '_appointment_period'
@@ -60,6 +69,37 @@ class AppointmentDay(Model):
     def period(self):
         return self.appointment_period.period
 
+    @cached_property
+    def available_jurys(self):
+        jurys = self.jurys.order_by('id').all()
+        available = []
+        for i, jury in enumerate(jurys):
+            # first jury is always available
+            if i==0:
+                available.append(jury)
+                continue
+
+            previous_jury_has_slot = False
+            has_slot_reserved = False
+            for groupslot in self.slots.all():
+                for slot in groupslot.slots:
+                    if slot['jurys'][i-1]['available']:
+                        previous_jury_has_slot = True
+                    if not slot['jurys'][i]['available']:
+                        has_slot_reserved = True
+            # show only jury who have reserved slots or if previous jury has no more slots
+            if not previous_jury_has_slot or has_slot_reserved:
+                available.append(jury)
+
+        return available
+
+    @property
+    def number_of_available_jurys(self):
+        return len(self.available_jurys)
+
+
+
+
 class AppointmentSlot(Model):
     day = models.ForeignKey(AppointmentDay,
                             related_name = 'slots',
@@ -80,12 +120,37 @@ class AppointmentSlot(Model):
     def period(self):
         return self.day.period
 
+    # @cached_property
     @property
     def slots(self):
         res = []
         size = self.period.appointment_slot_size
-        for i in range(nb):
-            res.append(self.start + datetime.timedelta(minutes = i * size))
+
+        # slots reserved per jury
+        jurys = self.day.jurys.order_by('id').all()
+        jurys_slots = []
+        for jury in jurys:
+            jurys_slots.append([ap.slot_nb for ap in self.appointments.filter(jury=jury)])
+
+
+        for i in range(self.nb):
+            # for jury in self.
+            start = datetime.datetime.combine(date.today(), self.start) + datetime.timedelta(minutes = i * size)
+            end = start + datetime.timedelta(minutes = size)
+            arrival = start - datetime.timedelta(minutes = 60)
+            slot_info = {
+                'slot_nb':i,
+                'start':start,
+                'end':end,
+                'arrival':arrival,
+            }
+            sjurys = []
+            for j, jury in enumerate(jurys):
+                sjurys.append({'id':jury.id, 'available':i not in jurys_slots[j]})
+            slot_info['jurys'] = sjurys
+            res.append(slot_info)
+
+            # res.append(self.start + datetime.timedelta(minutes = i * size))
         return res
 
 class AppointmentJury(Model):
@@ -102,6 +167,7 @@ class AppointmentJury(Model):
     class Meta(MetaCore):
         db_table = app_label + '_appointment_jury'
         verbose_name = "jury"
+
 
 class Appointment(Model):
     slot = models.ForeignKey(AppointmentSlot, related_name="appointments",
@@ -133,7 +199,8 @@ class Appointment(Model):
     def real_time(self):
         start = self.slot.start
         delta = self.slot_nb * self.period.appointment_slot_size
-        return start + datetime.timedelta(minutes = delta)
+        dt = datetime.datetime.combine(date.today(), start) + datetime.timedelta(minutes = delta)
+        return datetime.time(dt.hour,dt.minute,0)
 
     @property
     def real_date(self):
