@@ -106,6 +106,8 @@ urlpatterns = patterns('',
     # APPOINTMENTS
     url(r'^desk/periods/(?P<period_id>.*)/appointments/$', Appointments.as_view(),
        name="teleforma-appointments"),
+    url(r'^desk/periods/appointments/cancel$', cancel_appointment,
+       name="teleforma-appointment-cancel"),
 
     # Postman
     url(r'^messages/', include('postman.urls')),

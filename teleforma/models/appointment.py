@@ -196,15 +196,33 @@ class Appointment(Model):
         return self.slot.day
 
     @property
-    def real_time(self):
+    def start(self):
         start = self.slot.start
         delta = self.slot_nb * self.period.appointment_slot_size
-        dt = datetime.datetime.combine(date.today(), start) + datetime.timedelta(minutes = delta)
-        return datetime.time(dt.hour,dt.minute,0)
+        dt = datetime.datetime.combine(date.today(), start) + datetime.timedelta(minutes=delta)
+        return datetime.time(dt.hour, dt.minute, 0)
+
+    @property
+    def end(self):
+        dt = datetime.datetime.combine(date.today(), self.start) + datetime.timedelta(minutes=self.period.appointment_slot_size)
+        return datetime.time(dt.hour, dt.minute, 0)
+
+    @property
+    def arrival(self):
+        dt = datetime.datetime.combine(date.today(), self.start) - datetime.timedelta(minutes=60)
+        return datetime.time(dt.hour, dt.minute, 0)
+
+
+    # @property
+    # def real_time(self):
+    #     start = self.slot.start
+    #     delta = self.slot_nb * self.period.appointment_slot_size
+    #     dt = datetime.datetime.combine(date.today(), start) + datetime.timedelta(minutes = delta)
+    #     return datetime.time(dt.hour,dt.minute,0)
 
     @property
     def real_date(self):
-        return datetime.datetime.combine(self.day.date, self.real_time)
+        return datetime.datetime.combine(self.day.date, self.start)
 
     @property
     def real_date_human(self):

@@ -32,6 +32,19 @@
                     }
                 }
             });
+            $("#cancel-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Confirmer': function () {
+                        currentForm.submit();
+                    },
+                    "Annuler": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
 
             $('.booking_form').submit(function () {
                 currentForm = this;
@@ -54,25 +67,32 @@
                 return false;
             });
 
+            $('.cancel_form').submit(function () {
+                currentForm = this;
+                $('#cancel-confirm').dialog('open');
+                return false;
+            });
+
 
             $('[name="day-to-show"]').bind('change', updateDisplayedDays);
             updateDisplayedDays();
 
-            $('.previous_day').click(function() {
+            $('.previous_day').click(function () {
                 var $select = $(this).parent().find('select');
-                if($select.find('option:selected').prev().size()) {
-                    var $selected = $select.find('option:selected');
+                if ($select.find('option:selected').prev().size()) {
+                    var selected = $select.val();
                     $select.find('option').removeAttr('selected');
-                    $selected.prev().attr('selected', 'selected');
+                    $select.find('option[value="' + selected + '"]').prev().attr('selected', 'selected');
+                    $select.trigger('change');
                 }
             });
-            $('.next_day').click(function() {
+            $('.next_day').click(function () {
                 var $select = $(this).parent().find('select');
-                if($select.find('option:selected').next().size()) {
-                    var $selected = $select.find('option:selected');
+                if ($select.find('option:selected').next().size()) {
+                    var selected = $select.val();
                     $select.find('option').removeAttr('selected');
-                    console.log($selected)
-                    $selected.next().attr('selected', 'selected');
+                    $select.find('option[value="' + selected + '"]').next().attr('selected', 'selected');
+                    $select.trigger('change');
                 }
             });
         })
@@ -83,7 +103,17 @@
 
 {% block content %}
 
-    <div id="booking-confirm" title="Confirmez votre réservation">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+
+    <div id="booking-confirm" title="Réservation">
         <p>
             Êtes-vous sûr de vouloir réserver ce créneau ?
         </p>
@@ -98,30 +128,52 @@
         Epreuve : <strong id="start_placeholder"></strong> - <strong id="end_placeholder"></strong>
         <br/>
         Vous devrez arrivez à <strong id="arrival_placeholder"></strong>
-
-
     </div>
 
-
+    <div id="cancel-confirm" title="Annulation">
+        <p>
+            Êtes-vous sûr de vouloir annuler votre rendez-vous ?
+        </p>
+    </div>
 
     {% for ap_period in ap_periods %}
 
-        {% if ap_period.appointments %}
-            Rendez-vous pour la 1ère période : {{ ap_period.appointments }}
+        <h2>{{ ap_period.name }}</h2>
+
+        {% if ap_period.appointment %}
+            <p>
+                Vous avez réservé pour cette période le {{ ap_period.appointment.real_date|date:'d/m/Y' }}.
+                <br/>
+                <strong>{{ ap_period.appointment.jury.name }}</strong>
+                <br/>
+                {{ ap_period.appointment.jury.address|linebreaks }}
+                Heure d'arrivé : {{ ap_period.appointment.arrival|date:'H:i' }}
+                <br/>
+                Heure de début : {{ ap_period.appointment.start|date:'H:i' }}
+                <br/>
+                Heure de fin : {{ ap_period.appointment.end|date:'H:i' }}
+                <br/>
+            </p>
+            <form class="cancel_form" action="{% url teleforma-appointment-cancel %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="period_id" value="{{ period_id }}"/>
+                <input type="hidden" name="appointment_id" value="{{ ap_period.appointment.id }}"/>
+                <button type="submit">Annuler</button>
+            </form>
         {% endif %}
 
-        {% if not ap_period.appointments %}
+        {% if not ap_period.appointment %}
 
-            <p>Vous n'avez pas encore pris de rendez-vous pour la seconde période</p>
+            <p>Vous n'avez pas encore pris de rendez-vous pour cette période</p>
 
             <div class="select-day">
-{#                <a class="previous_day">Précédent</a>#}
+                <a class="previous_day">Précédent</a>
                 <select name="day-to-show">
                     {% for day in ap_period.days %}
                         <option value="{{ day.id }}">{{ day }}</option>
                     {% endfor %}
                 </select>
-{#                <a class="next_day">Suivant</a>#}
+                <a class="next_day">Suivant</a>
             </div>
 
             {% for day in ap_period.days.all %}
