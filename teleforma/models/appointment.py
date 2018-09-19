@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-from datetime import date
 
 from django.db.models import *
 from teleforma.models.core import *
@@ -17,6 +16,9 @@ class AppointmentPeriod(Model):
     nb_appointments = models.IntegerField("nombre de rendez-vous autorisé sur la période",
                                           default=1)
 
+    start = models.DateField("date de début d'inscription")
+    end = models.DateField("date de fin d'inscription")
+
     def __unicode__(self):
         return self.name
 
@@ -26,7 +28,15 @@ class AppointmentPeriod(Model):
             return q.get()
         return None
 
+    @property
+    def is_open(self):
+        """
+        Check if the period is open today
+        """
+        return self.start <= datetime.date.today() <= self.end
+
     class Meta(MetaCore):
+        ordering = ('id',)
         db_table = app_label + '_appointment_period'
         verbose_name = "période de prise de rendez-vous"
         verbose_name_plural = "périodes de prise de rendez-vous"
@@ -69,9 +79,13 @@ class AppointmentDay(Model):
     def period(self):
         return self.appointment_period.period
 
+    @property
+    def book_delay(self):
+        return self.period.book_delay
+
     @cached_property
     def available_jurys(self):
-        jurys = self.jurys.order_by('id').all()
+        jurys = self.jurys.all()
         available = []
         for i, jury in enumerate(jurys):
             # first jury is always available
@@ -97,8 +111,53 @@ class AppointmentDay(Model):
     def number_of_available_jurys(self):
         return len(self.available_jurys)
 
+    @staticmethod
+    def work_day_between(start, end):
+        """
+        Get the number of work days (excluding saturday and sunday) between
+        start and end
+        """
+
+        # If start and end days are in week-end, find the next/previous working day
+        ewd = end.weekday()
+        if ewd in (5, 6):
+            end -= datetime.timedelta(days = ewd - 4)
+
+        swd = start.weekday()
+        if swd in (5, 6):
+            start += datetime.timedelta(days = 7 - swd)
+
+        # Don't output any negative number of days
+        if end <= start:
+            return 0
+
+        delta = (end - start).days
+
+        # Handle full weeks
+        res = delta / 7 * 5
+        delta = delta % 7
+
+        # Check how many days left this week
+        weekday = start.weekday()
+        remaining = 5 - weekday
+
+        if delta < remaining:
+            res += delta
+        elif delta < remaining + 2:
+            res += remaining
+        else:
+            res += delta - 2
+
+        return res
 
 
+    def can_book_today(self):
+        """
+        Check if we can book something today due to the delay
+        """
+        delay = self.book_delay
+        today = datetime.date.today()
+        return self.work_day_between(today, self.date) >= delay
 
 class AppointmentSlot(Model):
     day = models.ForeignKey(AppointmentDay,
@@ -112,6 +171,7 @@ class AppointmentSlot(Model):
         return unicode(self.day) + ' ' + (self.start and self.start.strftime('%H:%M') or '')
 
     class Meta(MetaCore):
+        ordering = ('id',)
         db_table = app_label + '_appointment_slot'
         verbose_name = "créneau de rendez-vous"
         verbose_name_plural = "créneaux de rendez-vous"
@@ -127,7 +187,7 @@ class AppointmentSlot(Model):
         size = self.period.appointment_slot_size
 
         # slots reserved per jury
-        jurys = self.day.jurys.order_by('id').all()
+        jurys = self.day.jurys.all()
         jurys_slots = []
         for jury in jurys:
             jurys_slots.append([ap.slot_nb for ap in self.appointments.filter(jury=jury)])
@@ -135,7 +195,7 @@ class AppointmentSlot(Model):
 
         for i in range(self.nb):
             # for jury in self.
-            start = datetime.datetime.combine(date.today(), self.start) + datetime.timedelta(minutes = i * size)
+            start = datetime.datetime.combine(self.day.date, self.start) + datetime.timedelta(minutes = i * size)
             end = start + datetime.timedelta(minutes = size)
             arrival = start - datetime.timedelta(minutes = 60)
             slot_info = {
@@ -165,6 +225,7 @@ class AppointmentJury(Model):
         return self.name
 
     class Meta(MetaCore):
+        ordering = ('id',)
         db_table = app_label + '_appointment_jury'
         verbose_name = "jury"
 
@@ -186,6 +247,7 @@ class Appointment(Model):
         db_table = app_label + '_appointment'
         verbose_name = "rendez-vous"
         verbose_name_plural = "rendez-vous"
+        unique_together = ('slot', 'jury', 'slot_nb')
 
     @property
     def period(self):
@@ -199,26 +261,18 @@ class Appointment(Model):
     def start(self):
         start = self.slot.start
         delta = self.slot_nb * self.period.appointment_slot_size
-        dt = datetime.datetime.combine(date.today(), start) + datetime.timedelta(minutes=delta)
+        dt = datetime.datetime.combine(datetime.date.today(), start) + datetime.timedelta(minutes=delta)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property
     def end(self):
-        dt = datetime.datetime.combine(date.today(), self.start) + datetime.timedelta(minutes=self.period.appointment_slot_size)
+        dt = datetime.datetime.combine(datetime.date.today(), self.start) + datetime.timedelta(minutes=self.period.appointment_slot_size)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property
     def arrival(self):
-        dt = datetime.datetime.combine(date.today(), self.start) - datetime.timedelta(minutes=60)
+        dt = datetime.datetime.combine(datetime.date.today(), self.start) - datetime.timedelta(minutes=60)
         return datetime.time(dt.hour, dt.minute, 0)
-
-
-    # @property
-    # def real_time(self):
-    #     start = self.slot.start
-    #     delta = self.slot_nb * self.period.appointment_slot_size
-    #     dt = datetime.datetime.combine(date.today(), start) + datetime.timedelta(minutes = delta)
-    #     return datetime.time(dt.hour,dt.minute,0)
 
     @property
     def real_date(self):

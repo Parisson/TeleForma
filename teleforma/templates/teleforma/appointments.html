@@ -82,7 +82,7 @@
                 if ($select.find('option:selected').prev().size()) {
                     var selected = $select.val();
                     $select.find('option').removeAttr('selected');
-                    $select.find('option[value="' + selected + '"]').prev().attr('selected', 'selected');
+                    $select.find('option[value="' + selected + '"]').prev().prop('selected', true);
                     $select.trigger('change');
                 }
             });
@@ -91,7 +91,7 @@
                 if ($select.find('option:selected').next().size()) {
                     var selected = $select.val();
                     $select.find('option').removeAttr('selected');
-                    $select.find('option[value="' + selected + '"]').next().attr('selected', 'selected');
+                    $select.find('option[value="' + selected + '"]').next().prop('selected', true);
                     $select.trigger('change');
                 }
             });
