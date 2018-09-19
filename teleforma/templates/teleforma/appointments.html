@@ -154,12 +154,17 @@
                 Heure de fin : {{ ap_period.appointment.end|date:'H:i' }}
                 <br/>
             </p>
-            <form class="cancel_form" action="{% url teleforma-appointment-cancel %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="period_id" value="{{ period_id }}"/>
-                <input type="hidden" name="appointment_id" value="{{ ap_period.appointment.id }}"/>
-                <button type="submit">Annuler</button>
-            </form>
+
+            {% if ap_period.appointment.can_cancel %}
+                <form class="cancel_form" action="{% url teleforma-appointment-cancel %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="period_id" value="{{ period_id }}"/>
+                    <input type="hidden" name="appointment_id" value="{{ ap_period.appointment.id }}"/>
+                    <button type="submit">Annuler</button>
+                </form>
+            {% else %}
+                <strong>Il est trop tard pour annuler ce rendez-vous.</strong>
+            {% endif %}
         {% endif %}
 
         {% if not ap_period.appointment %}
@@ -170,82 +175,88 @@
                 <a class="previous_day">Précédent</a>
                 <select name="day-to-show">
                     {% for day in ap_period.days %}
-                        <option value="{{ day.id }}">{{ day }}</option>
+                        {% if day.can_book_today %}
+                            <option value="{{ day.id }}">{{ day }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 <a class="next_day">Suivant</a>
             </div>
 
-            {% for day in ap_period.days.all %}
-                <section data-day="{{ day.id }}" class="booking_day">
-                    <h2 class="day">{{ day }}</h2>
-                    <table border="1">
-                        <thead>
-                        <tr>
-                            <th>
-                                Heure d'arrivé
-                            </th>
-                            <th>
-                                Heure de début
-                            </th>
-                            <th>
-                                Heure de fin
-                            </th>
-                            {% for jury in day.available_jurys %}
-                                <th>
-                                    Jury {{ forloop.counter }}
-                                    <div data-jury="{{ jury.id }}">
-                                        <input type="hidden" name="jury_name" value="{{ jury.name }}"/>
-                                        <input type="hidden" name="jury_address" value="{{ jury.address }}"/>
-                                    </div>
+            {% for day in ap_period.days %}
+                {% if day.can_book_today %}
+                    <section data-day="{{ day.id }}" class="booking_day">
+                        <h2 class="day">{{ day }}</h2>
+                        <table border="1">
+                            <thead>
+                            <tr>
+                                <th style="display:none">
+                                    Heure d'arrivé
                                 </th>
-                            {% endfor %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for groupslot in day.slots.all %}
-                            {% for slot in groupslot.slots %}
-                                <tr>
-                                    <td class="arrival">
-                                        {{ slot.arrival|date:'H:i' }}
-                                    </td>
-                                    <td class="start">
-                                        {{ slot.start|date:'H:i' }}
-                                    </td>
-                                    <td class="end">
-                                        {{ slot.end|date:'H:i' }}
-                                    </td>
+                                <th>
+                                    Heure de début
+                                </th>
+                                <th style="display:none">
+                                    Heure de fin
+                                </th>
+                                {% for jury in day.available_jurys %}
+                                    <th>
+                                        Jury {{ forloop.counter }}
+                                        <div data-jury="{{ jury.id }}">
+                                            <input type="hidden" name="jury_name" value="{{ jury.name }}"/>
+                                            <input type="hidden" name="jury_address" value="{{ jury.address }}"/>
+                                        </div>
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for groupslot in day.slots.all %}
+                                {% for slot in groupslot.slots %}
+                                    <tr>
+                                        <td class="arrival" style="display:none">
+                                            {{ slot.arrival|date:'H:i' }}
+                                        </td>
+                                        <td class="start">
+                                            {{ slot.start|date:'H:i' }}
+                                        </td>
+                                        <td class="end" style="display:none">
+                                            {{ slot.end|date:'H:i' }}
+                                        </td>
 
-                                    {% for jury in slot.jurys %}
-                                        {% if forloop.counter0 < day.number_of_available_jurys %}
-                                            <td>
-                                                {% if jury.available %}
-                                                    <form class="booking_form" method="POST">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="slot_nb" value="{{ slot.slot_nb }}"/>
-                                                        <input type="hidden" name="slot" value="{{ groupslot.id }}"/>
-                                                        <input type="hidden" name="day" value="{{ day.id }}"/>
-                                                        <input type="hidden" name="jury" value="{{ jury.id }}"/>
-                                                        <button type="submit">Réserver</button>
-                                                    </form>
-                                                {% else %}
-                                                    <strong>Reservé</strong>
-                                                {% endif %}
-                                            </td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
+                                        {% for jury in slot.jurys %}
+                                            {% if forloop.counter0 < day.number_of_available_jurys %}
+                                                <td>
+                                                    {% if jury.available %}
+                                                        <form class="booking_form" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="slot_nb"
+                                                                   value="{{ slot.slot_nb }}"/>
+                                                            <input type="hidden" name="slot"
+                                                                   value="{{ groupslot.id }}"/>
+                                                            <input type="hidden" name="day" value="{{ day.id }}"/>
+                                                            <input type="hidden" name="jury" value="{{ jury.id }}"/>
+                                                            <button type="submit">Réserver</button>
+                                                        </form>
+                                                    {% else %}
+                                                        <strong>Reservé</strong>
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                {% if not forloop.last %}
+                                    <tr class="separator">
+                                        <td colspan="{{ day.number_of_available_jurys|add:3 }}">--</td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
-                            {% if not forloop.last %}
-                                <tr class="separator">
-                                    <td colspan="{{ day.number_of_available_jurys|add:3 }}">--</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
 
-                        </tbody>
-                    </table>
-                </section>
+                            </tbody>
+                        </table>
+                    </section>
+                {% endif %}
             {% endfor %}
         {% endif %}
         <br/>

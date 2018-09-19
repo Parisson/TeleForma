@@ -34,11 +34,12 @@ class Appointments(View):
         # Get info
         ap_periods = []
         for ap_period in AppointmentPeriod.objects.filter(period=period_id).order_by('id'):
-            ap_periods.append({
-                'days':ap_period.days.all(),
-                'name': ap_period.name,
-                'appointment':ap_period.get_appointment(request.user)
-            })
+            if ap_period.is_open:
+                ap_periods.append({
+                    'days':ap_period.days.all(),
+                    'name': ap_period.name,
+                    'appointment':ap_period.get_appointment(request.user)
+                })
         # for ap_period in ap_periods:
         #     appointments[ap_period.id] = ap_period.get_appointments(request.user)
         return render(request, self.template_name, {'ap_periods': ap_periods, 'period_id':period_id})

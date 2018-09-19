@@ -29,6 +29,10 @@ class AppointmentPeriod(Model):
         return None
 
     @property
+    def cancel_delay(self):
+        return self.period.cancel_delay
+
+    @property
     def is_open(self):
         """
         Check if the period is open today
@@ -153,11 +157,18 @@ class AppointmentDay(Model):
 
     def can_book_today(self):
         """
-        Check if we can book something today due to the delay
+        Check if we can book something today due to the delay and available slots
         """
         delay = self.book_delay
         today = datetime.date.today()
-        return self.work_day_between(today, self.date) >= delay
+        delay_ok = self.work_day_between(today, self.date) >= delay
+
+        available = False
+        for groupslot in self.slots.all():
+            if groupslot.has_available_slot:
+                available = True
+                break
+        return delay_ok and available
 
 class AppointmentSlot(Model):
     day = models.ForeignKey(AppointmentDay,
@@ -180,8 +191,7 @@ class AppointmentSlot(Model):
     def period(self):
         return self.day.period
 
-    # @cached_property
-    @property
+    @cached_property
     def slots(self):
         res = []
         size = self.period.appointment_slot_size
@@ -212,6 +222,15 @@ class AppointmentSlot(Model):
 
             # res.append(self.start + datetime.timedelta(minutes = i * size))
         return res
+
+    @property
+    def has_available_slot(self):
+        """ is this day has any slot available"""
+        for slot in self.slots:
+            for jury in slot['jurys']:
+                if jury['available']:
+                    return True
+        return False
 
 class AppointmentJury(Model):
     day = models.ForeignKey(AppointmentDay,
@@ -281,3 +300,8 @@ class Appointment(Model):
     @property
     def real_date_human(self):
         return self.real_date.strftime('%d/%m/%Y %H:%M')
+
+    def can_cancel(self):
+        delay = self.period.cancel_delay
+        today = datetime.date.today()
+        return AppointmentDay.work_day_between(today, self.day.date) >= delay

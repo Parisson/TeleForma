@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.admin.helpers import ActionForm
 from django import forms
-
+import csv
 
 class PeriodListFilter(SimpleListFilter):
 
@@ -203,6 +203,25 @@ class AppointmentJuryAdmin(admin.ModelAdmin):
 
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('real_date', 'student', 'jury')
+    list_filter = ('slot__day__date', 'slot__day__appointment_period')
+    actions = ['export_csv']
+
+    def export_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=rendezvous.csv'
+        writer = csv.writer(response)
+
+        writer.writerow(['date', 'creneau', 'nom', 'prenom', 'iej', 'jury'])
+        for app in queryset:
+            user = app.student
+            student = user.student.all()[0]
+
+            writer.writerow([
+                app.day, app.start, user.last_name, user.first_name, student.iej, app.jury.name
+            ])
+
+        return response
+    export_csv.short_description = "Exporter en CSV"
 
 admin.site.unregister(User)
 admin.site.register(Organization)
