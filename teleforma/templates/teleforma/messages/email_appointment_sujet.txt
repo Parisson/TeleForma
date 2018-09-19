@@ -1,0 +1,1 @@
+Validation de votre rendez-vous le {{ date|date:"d/m/Y" }}

@@ -4,14 +4,17 @@ from django.views.generic import View
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
+from django.template.loader import render_to_string
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.db import IntegrityError
+from django.core.mail import send_mail
+from django.conf import settings
 
 from teleforma.models.appointment import AppointmentPeriod, Appointment, AppointmentDay, AppointmentSlot
 
 from teleforma.views.core import get_periods
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import IntegrityError
 
 class Appointments(View):
     template_name = 'teleforma/appointments.html'
@@ -96,6 +99,7 @@ class Appointments(View):
             ap.student = user
             try:
                 ap.save()
+                self.send_ap_mail(ap)
             except IntegrityError:
                 # Duplicate appointment caught by the db
                 msg = u"Ce créneau n'est plus disponible"
@@ -110,6 +114,26 @@ class Appointments(View):
             return rights
         return self.render(request, period_id)
 
+    def send_ap_mail(self, ap):
+        """
+        Send the confirm mail to student
+        """
+        data = { 'mfrom': settings.DEFAULT_FROM_EMAIL,
+                 'mto': ap.student.email,
+                 'jury_address': ap.jury.address,
+                 'date': ap.real_date,
+                 'student': ap.student,
+                 'main_text': ap.period.appointment_mail_text }
+        data['mto'] = "gael@pilotsystems.net"
+
+        subject_template = 'teleforma/messages/email_appointment_sujet.txt'
+        message_template = 'teleforma/messages/email_appointment.txt'
+        subject = render_to_string(subject_template, data)
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(message_template, data)
+        send_mail(subject, message, data['mfrom'], [ data['mto'] ],
+                  fail_silently=False)
+        return data
 
 
 def cancel_appointment(request):
