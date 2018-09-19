@@ -212,13 +212,20 @@ class AppointmentAdmin(admin.ModelAdmin):
         writer = csv.writer(response)
 
         writer.writerow(['date', 'creneau', 'nom', 'prenom', 'iej', 'jury'])
+        def csv_encode(item):
+            if isinstance(item, unicode):
+                return item.encode('utf-8')
+            else:
+                return item
+
         for app in queryset:
             user = app.student
             student = user.student.all()[0]
 
-            writer.writerow([
-                app.day, app.start, user.last_name, user.first_name, student.iej, app.jury.name
-            ])
+            row = [ app.day, app.start, user.last_name, user.first_name, student.iej, app.jury.name ]
+            row = [ csv_encode(col) for col in row ]
+
+            writer.writerow(row)
 
         return response
     export_csv.short_description = "Exporter en CSV"
