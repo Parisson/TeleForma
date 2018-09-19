@@ -11,10 +11,29 @@
         var currentForm;
 
         function updateDisplayedDays() {
+            // show appointment table according to selected day
             $('section.booking_day').hide();
             $('section.booking_day .day').hide();
             var selectedDay = $('[name="day-to-show"]').val();
             $('section.booking_day[data-day="' + selectedDay + '"]').show();
+            updateNextPreviousButtons();
+        }
+
+        function updateNextPreviousButtons(){
+            // show or hide next and previous buttons according to selected day
+            $('[name="day-to-show"]').each(function(){
+                var selected = $(this).val();
+                var $selectedOption = $(this).find('option[value="' + selected + '"]');
+
+                // show next/previous buttons
+                $(this).next().show();
+                $(this).prev().show();
+
+                if(!$selectedOption.prev().size())
+                    $(this).prev().hide();
+                if(!$selectedOption.next().size())
+                    $(this).next().hide();
+            })
         }
 
         $(document).ready(function () {
@@ -77,6 +96,7 @@
             $('[name="day-to-show"]').bind('change', updateDisplayedDays);
             updateDisplayedDays();
 
+            // next / previous button
             $('.previous_day').click(function () {
                 var $select = $(this).parent().find('select');
                 if ($select.find('option:selected').prev().size()) {
