@@ -175,7 +175,7 @@ class AppointmentSlot(Model):
                             related_name = 'slots',
                             verbose_name = 'jour')
 
-    start = models.TimeField('heure du premier créneau')
+    start = models.TimeField("heure du premier créneau (heure d'arrivée)")
     nb = models.IntegerField('nombre de créneaux')
 
     def __unicode__(self):
@@ -204,10 +204,11 @@ class AppointmentSlot(Model):
 
 
         for i in range(self.nb):
-            # for jury in self.
-            start = datetime.datetime.combine(self.day.date, self.start) + datetime.timedelta(minutes = i * size)
+            # for jury in self
+            arrival = datetime.datetime.combine(self.day.date, self.start) + datetime.timedelta(minutes = i * size)
+            start = arrival + datetime.timedelta(minutes = 60)
             end = start + datetime.timedelta(minutes = size)
-            arrival = start - datetime.timedelta(minutes = 60)
+
             slot_info = {
                 'slot_nb':i,
                 'start':start,
@@ -278,9 +279,7 @@ class Appointment(Model):
 
     @property
     def start(self):
-        start = self.slot.start
-        delta = self.slot_nb * self.period.appointment_slot_size
-        dt = datetime.datetime.combine(datetime.date.today(), start) + datetime.timedelta(minutes=delta)
+        dt = datetime.datetime.combine(datetime.date.today(), self.arrival) + datetime.timedelta(minutes=60)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property
@@ -290,12 +289,14 @@ class Appointment(Model):
 
     @property
     def arrival(self):
-        dt = datetime.datetime.combine(datetime.date.today(), self.start) - datetime.timedelta(minutes=60)
+        start = self.slot.start
+        delta = self.slot_nb * self.period.appointment_slot_size
+        dt = datetime.datetime.combine(datetime.date.today(), start) + datetime.timedelta(minutes=delta)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property
     def real_date(self):
-        return datetime.datetime.combine(self.day.date, self.start)
+        return datetime.datetime.combine(self.day.date, self.arrival)
 
     @property
     def real_date_human(self):

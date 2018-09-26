@@ -128,8 +128,8 @@ class Appointments(View):
                  'student': ap.student,
                  'main_text': ap.period.appointment_mail_text }
         # DEBUG
-        data['mto'] = "gael@pilotsystems.net"
-        data['mto'] = "dorothee.lavalle@pre-barreau.com"
+        #data['mto'] = "gael@pilotsystems.net"
+        #data['mto'] = "dorothee.lavalle@pre-barreau.com"
 
         subject_template = 'teleforma/messages/email_appointment_sujet.txt'
         message_template = 'teleforma/messages/email_appointment.txt'
