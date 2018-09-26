@@ -297,7 +297,8 @@ class CourseListView(CourseAccessMixin, ListView):
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
-        context['hasAppointment'] = AppointmentPeriod.objects.filter(period=context['period']).count()
+        is_student = self.request.user.student.all().count()
+        context['hasAppointment'] = AppointmentPeriod.objects.filter(period=context['period']).count() and is_student
 
         home = Home.objects.all()
         if home:

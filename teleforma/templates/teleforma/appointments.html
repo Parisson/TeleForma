@@ -210,10 +210,10 @@
                         <table border="1">
                             <thead>
                             <tr>
-                                <th style="display:none">
+                                <th>
                                     Heure d'arrivé
                                 </th>
-                                <th>
+                                <th style="display:none">
                                     Heure de début
                                 </th>
                                 <th style="display:none">
@@ -234,10 +234,10 @@
                             {% for groupslot in day.slots.all %}
                                 {% for slot in groupslot.slots %}
                                     <tr>
-                                        <td class="arrival" style="display:none">
+                                        <td class="arrival">
                                             {{ slot.arrival|date:'H:i' }}
                                         </td>
-                                        <td class="start">
+                                        <td class="start" style="display:none">
                                             {{ slot.start|date:'H:i' }}
                                         </td>
                                         <td class="end" style="display:none">
