@@ -332,7 +332,12 @@ class CourseListView(CourseAccessMixin, ListView):
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
         is_student = self.request.user.student.all().count()
-        context['hasAppointment'] = AppointmentPeriod.objects.filter(period=context['period']).count() and is_student
+        appointments = AppointmentPeriod.objects.filter(period=context['period'])
+        appointments_open = False
+        for appointment in appointments:
+            if appointment.is_open:
+                appointments_open = True
+        context['hasAppointment'] = appointments_open and is_student
 
         home = Home.objects.all()
         if home:
