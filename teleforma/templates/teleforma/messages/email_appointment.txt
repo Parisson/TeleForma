@@ -1,0 +1,10 @@
+Bonjour {{ student.first_name }},
+
+Nous vous confirmons votre rendez-vous à une simulation du grand-oral
+le {{ date|date:"l d F Y à H:i" }}.
+
+Votre simulations se tiendra au
+{{ jury_address }}
+
+{{ main_text }}
+

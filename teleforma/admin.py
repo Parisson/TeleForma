@@ -13,7 +13,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.admin.helpers import ActionForm
 from django import forms
-
+import csv
 
 class PeriodListFilter(SimpleListFilter):
 
@@ -171,6 +171,65 @@ class NewsItemAdmin(admin.ModelAdmin):
     list_display = ('title', 'course', 'creator', 'deleted')
     search_fields = ['title', 'text']
 
+class AppointmentSlotInline(admin.TabularInline):
+    model = AppointmentSlot
+
+class AppointmentJuryInline(admin.StackedInline):
+    model = AppointmentJury
+
+class AppointmentDayInline(admin.TabularInline):
+    readonly_fields = ('get_nb_slots', 'get_nb_jury', 'changeform_link', )
+    model = AppointmentDay
+
+class AppointmentPeriodAdmin(admin.ModelAdmin):
+    list_filter = ('period',)
+    list_display = ('name', 'period', 'nb_appointments')
+
+    inlines = [ AppointmentDayInline ]
+
+class AppointmentDayAdmin(admin.ModelAdmin):
+    list_filter = ('appointment_period',)
+    list_display = ('date', 'appointment_period', 'get_nb_slots', 'get_nb_jury')
+
+    inlines = [ AppointmentSlotInline, AppointmentJuryInline ]
+
+class AppointmentSlotAdmin(admin.ModelAdmin):
+    list_filter = ('day',)
+    list_display = ('day', 'start', 'nb')
+
+class AppointmentJuryAdmin(admin.ModelAdmin):
+    list_filter = ('day',)
+    list_display = ('name', 'day')
+
+class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ('real_date', 'student', 'jury')
+    list_filter = ('slot__day__date', 'slot__day__appointment_period')
+    actions = ['export_csv']
+
+    def export_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=rendezvous.csv'
+        writer = csv.writer(response)
+
+        writer.writerow(['date', 'creneau', 'nom', 'prenom', 'iej', 'jury'])
+        def csv_encode(item):
+            if isinstance(item, unicode):
+                return item.encode('utf-8')
+            else:
+                return item
+
+        for app in queryset:
+            user = app.student
+            student = user.student.all()[0]
+
+            row = [ app.day, app.start, user.last_name, user.first_name, student.iej, app.jury.name ]
+            row = [ csv_encode(col) for col in row ]
+
+            writer.writerow(row)
+
+        return response
+    export_csv.short_description = "Exporter en CSV"
+
 admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
@@ -194,3 +253,10 @@ admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
+admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
+admin.site.register(AppointmentDay, AppointmentDayAdmin)
+admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
+admin.site.register(AppointmentJury, AppointmentJuryAdmin)
+admin.site.register(Appointment, AppointmentAdmin)
+
+
