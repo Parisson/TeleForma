@@ -25,8 +25,11 @@ class Appointments(View):
         student = user.student.all().count()
         if not student:
             return HttpResponse('Unauthorized', status=401)
-        periods = [ int(p.id) for p in get_periods(user) ]
-        if not int(period_id) in periods:
+        period_id = int(period_id)
+        periods = [ p for p in get_periods(user) if int(p.id) == period_id ]
+        if not periods:
+            return HttpResponse('Unauthorized', status=401)
+        if not periods[0].enable_appointment:
             return HttpResponse('Unauthorized', status=401)
         return
 
@@ -141,13 +144,15 @@ class Appointments(View):
 def cancel_appointment(request):
     period_id = request.POST['period_id']
     appointment_id = request.POST['appointment_id']
-    try:
-        app = Appointment.objects.get(id=appointment_id)
-    except Appointment.DoesNotExist:
-        pass
+
+    app = get_object_or_404(Appointment, id=appointment_id)
 
     if app.student != request.user:
         return HttpResponse('Unauthorized', status=401)
+
+    if not app.can_cancel():
+        messages.add_message(request, messages.ERROR, ' Il est trop tard pour annuler ce rendez-vous.')
+        return redirect('teleforma-appointments', period_id=period_id)
 
     app.delete()
     messages.add_message(request, messages.INFO, 'Votre réservation a été annulé.')
