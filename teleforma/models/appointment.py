@@ -39,6 +39,88 @@ class AppointmentPeriod(Model):
         """
         return self.start <= datetime.date.today() <= self.end
 
+
+    def days(self):
+        days = {}
+        delay = self.period.book_delay
+        today = datetime.date.today()
+        for slot in AppointmentSlot.objects.filter(period = self.period):
+            if slot.date not in days:
+                days['slots'] = [slot,]
+                days['available'] = False
+            else:
+                days['slots'].append(slot)
+
+            # days are available if they are within the good period and if there are remaining slots
+            if slot.has_available_slots and self.work_day_between(today, self.date) >= delay:
+                days['available'] = True
+
+        return days
+
+
+    @cached_property
+    def available_jurys(self):
+        jurys = self.jurys.all()
+        available = []
+        for i, jury in enumerate(jurys):
+            # first jury is always available
+            if i==0:
+                available.append(jury)
+                continue
+
+            previous_jury_has_slot = False
+            has_slot_reserved = False
+            for groupslot in self.slots.all():
+                for slot in groupslot.slots:
+                    if slot['jurys'][i-1]['available']:
+                        previous_jury_has_slot = True
+                    if not slot['jurys'][i]['available']:
+                        has_slot_reserved = True
+            # show only jury who have reserved slots or if previous jury has no more slots
+            if not previous_jury_has_slot or has_slot_reserved:
+                available.append(jury)
+
+        return available
+
+    @staticmethod
+    def work_day_between(start, end):
+        """
+        Get the number of work days (excluding saturday and sunday) between
+        start and end
+        """
+
+        # If start and end days are in week-end, find the next/previous working day
+        ewd = end.weekday()
+        if ewd in (5, 6):
+            end -= datetime.timedelta(days = ewd - 4)
+
+        swd = start.weekday()
+        if swd in (5, 6):
+            start += datetime.timedelta(days = 7 - swd)
+
+        # Don't output any negative number of days
+        if end <= start:
+            return 0
+
+        delta = (end - start).days
+
+        # Handle full weeks
+        res = delta / 7 * 5
+        delta = delta % 7
+
+        # Check how many days left this week
+        weekday = start.weekday()
+        remaining = 5 - weekday
+
+        if delta < remaining:
+            res += delta
+        elif delta < remaining + 2:
+            res += remaining
+        else:
+            res += delta - 2
+
+        return res
+
     class Meta(MetaCore):
         ordering = ('id',)
         db_table = app_label + '_appointment_period'
@@ -83,97 +165,22 @@ class AppointmentDay(Model):
     def period(self):
         return self.appointment_period.period
 
-    @property
-    def book_delay(self):
-        return self.period.book_delay
 
-    @cached_property
-    def available_jurys(self):
-        jurys = self.jurys.all()
-        available = []
-        for i, jury in enumerate(jurys):
-            # first jury is always available
-            if i==0:
-                available.append(jury)
-                continue
-
-            previous_jury_has_slot = False
-            has_slot_reserved = False
-            for groupslot in self.slots.all():
-                for slot in groupslot.slots:
-                    if slot['jurys'][i-1]['available']:
-                        previous_jury_has_slot = True
-                    if not slot['jurys'][i]['available']:
-                        has_slot_reserved = True
-            # show only jury who have reserved slots or if previous jury has no more slots
-            if not previous_jury_has_slot or has_slot_reserved:
-                available.append(jury)
-
-        return available
 
     @property
     def number_of_available_jurys(self):
         return len(self.available_jurys)
 
-    @staticmethod
-    def work_day_between(start, end):
-        """
-        Get the number of work days (excluding saturday and sunday) between
-        start and end
-        """
 
-        # If start and end days are in week-end, find the next/previous working day
-        ewd = end.weekday()
-        if ewd in (5, 6):
-            end -= datetime.timedelta(days = ewd - 4)
-
-        swd = start.weekday()
-        if swd in (5, 6):
-            start += datetime.timedelta(days = 7 - swd)
-
-        # Don't output any negative number of days
-        if end <= start:
-            return 0
-
-        delta = (end - start).days
-
-        # Handle full weeks
-        res = delta / 7 * 5
-        delta = delta % 7
-
-        # Check how many days left this week
-        weekday = start.weekday()
-        remaining = 5 - weekday
-
-        if delta < remaining:
-            res += delta
-        elif delta < remaining + 2:
-            res += remaining
-        else:
-            res += delta - 2
-
-        return res
-
-
-    def can_book_today(self):
-        """
-        Check if we can book something today due to the delay and available slots
-        """
-        delay = self.book_delay
-        today = datetime.date.today()
-        delay_ok = self.work_day_between(today, self.date) >= delay
-
-        available = False
-        for groupslot in self.slots.all():
-            if groupslot.has_available_slot:
-                available = True
-                break
-        return delay_ok and available
 
 class AppointmentSlot(Model):
-    day = models.ForeignKey(AppointmentDay,
-                            related_name = 'slots',
-                            verbose_name = 'jour')
+    # day = models.ForeignKey(AppointmentDay,
+    #                         related_name = 'slots',
+    #                         verbose_name = 'jour')
+    appointment_period = models.ForeignKey(AppointmentPeriod,
+                                           related_name="days",
+                                           verbose_name=u"Période de prise de rendez-vous")
+    date = models.DateField('date')
 
     start = models.TimeField("heure du premier créneau (heure d'arrivée)")
     nb = models.IntegerField('nombre de créneaux')
@@ -191,20 +198,25 @@ class AppointmentSlot(Model):
     def period(self):
         return self.day.period
 
+    # @property
+    # def slots_from_same_day(self):
+    #     slots = AppointmentSlot.objets.filter(appointment_period=self.appointment_period, date=self.date)
+
+
+
     @cached_property
     def slots(self):
         res = []
         size = self.period.appointment_slot_size
 
         # slots reserved per jury
-        jurys = self.day.jurys.all()
+        jurys = self.jurys.all()
         jurys_slots = []
         for jury in jurys:
             jurys_slots.append([ap.slot_nb for ap in self.appointments.filter(jury=jury)])
 
 
         for i in range(self.nb):
-            # for jury in self
             arrival = datetime.datetime.combine(self.day.date, self.start) + datetime.timedelta(minutes = i * size)
             start = arrival + datetime.timedelta(minutes = 60)
             end = start + datetime.timedelta(minutes = size)
@@ -215,6 +227,8 @@ class AppointmentSlot(Model):
                 'end':end,
                 'arrival':arrival,
             }
+
+            # compute if a slot is available for each jury
             sjurys = []
             for j, jury in enumerate(jurys):
                 sjurys.append({'id':jury.id, 'available':i not in jurys_slots[j]})
@@ -234,9 +248,9 @@ class AppointmentSlot(Model):
         return False
 
 class AppointmentJury(Model):
-    day = models.ForeignKey(AppointmentDay,
+    slot = models.ForeignKey(AppointmentDay,
                             related_name = 'jurys',
-                            verbose_name = 'jour')
+                            verbose_name = 'creneau')
 
     name = models.CharField(_('name'), max_length=255)
     address = models.TextField("adresse")
