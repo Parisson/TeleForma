@@ -19,7 +19,7 @@
         </section>
         {% if course_newsitems|length >= 5 %}
         <footer>
-            <a href="{% url newsitem-list %}?course_id={{ course.id }}">Voir plus</a>
+           {% comment %} <a href="{% url newsitem-list %}?course_id={{ course.id }}">Voir plus</a> {% endcomment %}
         </footer>
         {% endif %}
     </div>
