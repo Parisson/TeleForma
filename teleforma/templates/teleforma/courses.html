@@ -76,6 +76,13 @@ $(document).ready(function(){
 
 <div class="desk_center home">
 
+    {% if hasAppointment %}
+        <div class="appointment">
+            <a href="{% url teleforma-appointments period.id %}"><button>Rendez-vous individuels aux simulations du grand-oral</button></a>
+        </div>
+        <br/>
+    {% endif %}
+
     {% autoescape off %}
     {{ home_text }}
     {% endautoescape %}
