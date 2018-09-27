@@ -72,6 +72,7 @@ from jsonrpc.proxy import ServiceProxy
 
 from teleforma.models import *
 from teleforma.forms import *
+from teleforma.models.appointment import AppointmentPeriod
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
@@ -330,6 +331,14 @@ class CourseListView(CourseAccessMixin, ListView):
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
+        is_student = self.request.user.student.all().count()
+        appointments = AppointmentPeriod.objects.filter(period=context['period'])
+        appointments_open = False
+        for appointment in appointments:
+            if appointment.is_open:
+                appointments_open = True
+        context['hasAppointment'] = appointments_open and is_student
+
         home = Home.objects.all()
         if home:
             home = home[0]

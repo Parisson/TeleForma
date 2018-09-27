@@ -1,0 +1,285 @@
+{% extends "telemeta/base.html" %}
+{% load teleforma_tags %}
+{% load thumbnail %}
+{% load telemeta_utils %}
+{% load i18n %}
+
+
+{% block extra_javascript %}
+
+    <script type="text/javascript">
+        var currentForm;
+
+        function updateDisplayedDays() {
+            // show appointment table according to selected day
+            $('section.booking_day').hide();
+            $('section.booking_day .day').hide();
+            var selectedDay = $('[name="day-to-show"]').val();
+            $('section.booking_day[data-day="' + selectedDay + '"]').show();
+            updateNextPreviousButtons();
+        }
+
+        function updateNextPreviousButtons(){
+            // show or hide next and previous buttons according to selected day
+            $('[name="day-to-show"]').each(function(){
+                var selected = $(this).val();
+                var $selectedOption = $(this).find('option[value="' + selected + '"]');
+
+                // show next/previous buttons
+                $(this).next().show();
+                $(this).prev().show();
+
+                if(!$selectedOption.prev().size())
+                    $(this).prev().hide();
+                if(!$selectedOption.next().size())
+                    $(this).next().hide();
+            })
+        }
+
+        $(document).ready(function () {
+
+            $("#booking-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Confirmer': function () {
+                        currentForm.submit();
+                    },
+                    "Annuler": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $("#cancel-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Confirmer': function () {
+                        currentForm.submit();
+                    },
+                    "Annuler": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+
+            $('.booking_form').submit(function () {
+                currentForm = this;
+                var juryId = $(currentForm).find('input[name="jury"]').val();
+
+                // fill dialog with selected jury information
+                var $currentJury = $('[data-jury="' + juryId + '"]');
+                $('#jury_name_placeholder').text($currentJury.find('[name="jury_name"]').val());
+                $('#jury_address_placeholder').html($currentJury.find('[name="jury_address"]').val().replace('\n', '<br/>'));
+
+                // fill dialog with selected hours
+                $('#arrival_placeholder').text($(currentForm).parents('tr').find('.arrival').text());
+                $('#start_placeholder').text($(currentForm).parents('tr').find('.start').text());
+                $('#end_placeholder').text($(currentForm).parents('tr').find('.end').text());
+
+                // fill dialog with selected date
+                $('#date_placeholder').text($(currentForm).parents('.booking_day').find('.day').text());
+
+                $('#booking-confirm').dialog('open');
+                return false;
+            });
+
+            $('.cancel_form').submit(function () {
+                currentForm = this;
+                $('#cancel-confirm').dialog('open');
+                return false;
+            });
+
+
+            $('[name="day-to-show"]').bind('change', updateDisplayedDays);
+            updateDisplayedDays();
+
+            // next / previous button
+            $('.previous_day').click(function () {
+                var $select = $(this).parent().find('select');
+                if ($select.find('option:selected').prev().size()) {
+                    var selected = $select.val();
+                    $select.find('option').removeAttr('selected');
+                    $select.find('option[value="' + selected + '"]').prev().prop('selected', true);
+                    $select.trigger('change');
+                }
+            });
+            $('.next_day').click(function () {
+                var $select = $(this).parent().find('select');
+                if ($select.find('option:selected').next().size()) {
+                    var selected = $select.val();
+                    $select.find('option').removeAttr('selected');
+                    $select.find('option[value="' + selected + '"]').next().prop('selected', true);
+                    $select.trigger('change');
+                }
+            });
+        })
+    </script>
+
+{% endblock extra_javascript %}
+
+
+{% block content %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+
+    <div id="booking-confirm" title="Réservation">
+        <p>
+            Êtes-vous sûr de vouloir réserver ce créneau ?
+        </p>
+
+        <h2>Jury</h2>
+        <strong id="jury_name_placeholder"></strong>
+        <br/>
+        <span id="jury_address_placeholder"></span>
+        <h2>Créneau horaire</h2>
+        Date : <strong id="date_placeholder"></strong>
+        <br/>
+        Epreuve : <strong id="start_placeholder"></strong> - <strong id="end_placeholder"></strong>
+        <br/>
+        Vous devrez arrivez à <strong id="arrival_placeholder"></strong>
+    </div>
+
+    <div id="cancel-confirm" title="Annulation">
+        <p>
+            Êtes-vous sûr de vouloir annuler votre rendez-vous ?
+        </p>
+    </div>
+
+    {% for ap_period in ap_periods %}
+
+        <h2>{{ ap_period.name }}</h2>
+
+        {% if ap_period.appointment %}
+            <p>
+                Vous avez réservé pour cette période le {{ ap_period.appointment.real_date|date:'d/m/Y' }}.
+                <br/>
+                <strong>{{ ap_period.appointment.jury.name }}</strong>
+                <br/>
+                {{ ap_period.appointment.jury.address|linebreaks }}
+                Heure d'arrivé : {{ ap_period.appointment.arrival|date:'H:i' }}
+                <br/>
+                Heure de début : {{ ap_period.appointment.start|date:'H:i' }}
+                <br/>
+                Heure de fin : {{ ap_period.appointment.end|date:'H:i' }}
+                <br/>
+            </p>
+
+            {% if ap_period.appointment.can_cancel %}
+                <form class="cancel_form" action="{% url teleforma-appointment-cancel %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="period_id" value="{{ period_id }}"/>
+                    <input type="hidden" name="appointment_id" value="{{ ap_period.appointment.id }}"/>
+                    <button type="submit">Annuler</button>
+                </form>
+            {% else %}
+                <strong>Il est trop tard pour annuler ce rendez-vous.</strong>
+            {% endif %}
+        {% endif %}
+
+        {% if not ap_period.appointment %}
+
+            <p>Vous n'avez pas encore pris de rendez-vous pour cette période</p>
+
+            <div class="select-day">
+                <a class="previous_day">Précédent</a>
+                <select name="day-to-show">
+                    {% for day in ap_period.days %}
+                        {% if day.can_book_today %}
+                            <option value="{{ day.id }}">{{ day }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <a class="next_day">Suivant</a>
+            </div>
+
+            {% for day in ap_period.days %}
+                {% if day.can_book_today %}
+                    <section data-day="{{ day.id }}" class="booking_day">
+                        <h2 class="day">{{ day }}</h2>
+                        <table border="1">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Heure d'arrivé
+                                </th>
+                                <th style="display:none">
+                                    Heure de début
+                                </th>
+                                <th style="display:none">
+                                    Heure de fin
+                                </th>
+                                {% for jury in day.available_jurys %}
+                                    <th>
+                                        Jury {{ forloop.counter }}
+                                        <div data-jury="{{ jury.id }}">
+                                            <input type="hidden" name="jury_name" value="{{ jury.name }}"/>
+                                            <input type="hidden" name="jury_address" value="{{ jury.address }}"/>
+                                        </div>
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for groupslot in day.slots.all %}
+                                {% for slot in groupslot.slots %}
+                                    <tr>
+                                        <td class="arrival">
+                                            {{ slot.arrival|date:'H:i' }}
+                                        </td>
+                                        <td class="start" style="display:none">
+                                            {{ slot.start|date:'H:i' }}
+                                        </td>
+                                        <td class="end" style="display:none">
+                                            {{ slot.end|date:'H:i' }}
+                                        </td>
+
+                                        {% for jury in slot.jurys %}
+                                            {% if forloop.counter0 < day.number_of_available_jurys %}
+                                                <td>
+                                                    {% if jury.available %}
+                                                        <form class="booking_form" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="slot_nb"
+                                                                   value="{{ slot.slot_nb }}"/>
+                                                            <input type="hidden" name="slot"
+                                                                   value="{{ groupslot.id }}"/>
+                                                            <input type="hidden" name="day" value="{{ day.id }}"/>
+                                                            <input type="hidden" name="jury" value="{{ jury.id }}"/>
+                                                            <button type="submit">Réserver</button>
+                                                        </form>
+                                                    {% else %}
+                                                        <strong>Réservé</strong>
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                {% if not forloop.last %}
+                                    <tr class="separator">
+                                        <td colspan="{{ day.number_of_available_jurys|add:3 }}">--</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </section>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <br/>
+    {% endfor %}
+
+{% endblock content %}
