@@ -182,10 +182,13 @@ class AppointmentDayInline(admin.TabularInline):
     model = AppointmentDay
 
 class AppointmentPeriodAdmin(admin.ModelAdmin):
-    list_filter = ('period',)
-    list_display = ('name', 'period', 'nb_appointments')
+    list_display = ('name', 'periods_names', 'start', 'end', 'enable_appointment')
 
     inlines = [ AppointmentDayInline ]
+
+    def periods_names(self, instance):
+        return ','.join([period.name for period in instance.periods.all()])
+    periods_names.short_description = "Périodes"
 
 class AppointmentDayAdmin(admin.ModelAdmin):
     list_filter = ('appointment_period',)

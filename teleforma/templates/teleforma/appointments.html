@@ -14,8 +14,10 @@
             // show appointment table according to selected day
             $('section.booking_day').hide();
             $('section.booking_day .day').hide();
-            var selectedDay = $('[name="day-to-show"]').val();
-            $('section.booking_day[data-day="' + selectedDay + '"]').show();
+            $('[name="day-to-show"]').each(function(){
+                var selectedDay = $(this).val();
+                $(this).parents('.ap_period').find('section.booking_day[data-day="' + selectedDay + '"]').show();
+            });
             updateNextPreviousButtons();
         }
 
@@ -157,6 +159,7 @@
     </div>
 
     {% for ap_period in ap_periods %}
+        <div class="ap_period">
 
         <h2>{{ ap_period.name }}</h2>
 
@@ -279,7 +282,8 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
-        <br/>
+
+        </div>
     {% endfor %}
 
 {% endblock content %}
