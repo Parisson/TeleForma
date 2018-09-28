@@ -10,14 +10,24 @@ from django.core import urlresolvers
 from django.utils.functional import cached_property
 
 class AppointmentPeriod(Model):
-    period = models.ForeignKey(Period, related_name='appointment_periods',
-                               verbose_name = u"Période")
+    periods = models.ManyToManyField(Period, related_name='appointment_periods',
+                                    verbose_name = u"Période")
     name = models.CharField(_('name'), max_length=255)
-    nb_appointments = models.IntegerField("nombre de rendez-vous autorisé sur la période",
-                                          default=1)
+    # nb_appointments = models.IntegerField("nombre de rendez-vous autorisé sur la période",
+    #                                       default=1)
 
     start = models.DateField("date de début d'inscription")
     end = models.DateField("date de fin d'inscription")
+
+    enable_appointment = models.BooleanField(_('activer la prise de rendez-vous'),
+                                             blank=True, default=True)
+    book_delay = models.IntegerField("délai minimal (en jours ouvrables) de prise de rendez-vous",
+                                     default=2)
+    cancel_delay = models.IntegerField("délai minimal (en jours ouvrables) d'annulation de rendez-vous",
+                                       default=2)
+    appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous",
+                                             blank=True)
+    appointment_slot_size = models.IntegerField("écart entre les créneaux d'inscription (minutes)", default=40)
 
     def __unicode__(self):
         return self.name
@@ -29,15 +39,11 @@ class AppointmentPeriod(Model):
         return None
 
     @property
-    def cancel_delay(self):
-        return self.period.cancel_delay
-
-    @property
     def is_open(self):
         """
         Check if the period is open today
         """
-        return self.start <= datetime.date.today() <= self.end
+        return self.start <= datetime.date.today() <= self.end and self.enable_appointment
 
     class Meta(MetaCore):
         ordering = ('id',)
@@ -85,7 +91,7 @@ class AppointmentDay(Model):
 
     @property
     def book_delay(self):
-        return self.period.book_delay
+        return self.appointment_period.book_delay
 
     @cached_property
     def available_jurys(self):
@@ -191,10 +197,14 @@ class AppointmentSlot(Model):
     def period(self):
         return self.day.period
 
+    @property
+    def appointment_period(self):
+        return self.day.appointment_period
+
     @cached_property
     def slots(self):
         res = []
-        size = self.period.appointment_slot_size
+        size = self.appointment_period.appointment_slot_size
 
         # slots reserved per jury
         jurys = self.day.jurys.all()
@@ -271,7 +281,7 @@ class Appointment(Model):
 
     @property
     def period(self):
-        return self.slot.period
+        return self.slot.day.appointment_period
 
     @property
     def day(self):

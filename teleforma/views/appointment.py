@@ -29,8 +29,8 @@ class Appointments(View):
         periods = [ p for p in get_periods(user) if int(p.id) == period_id ]
         if not periods:
             return HttpResponse('Unauthorized', status=401)
-        if not periods[0].enable_appointment:
-            return HttpResponse('Unauthorized', status=401)
+        # if not periods[0].enable_appointment:
+        #     return HttpResponse('Unauthorized', status=401)
         return
 
     def render(self, request, period_id):
@@ -39,7 +39,7 @@ class Appointments(View):
 
         # Get info
         ap_periods = []
-        for ap_period in AppointmentPeriod.objects.filter(period=period_id).order_by('id'):
+        for ap_period in AppointmentPeriod.objects.filter(periods__id=period_id).order_by('id'):
             if ap_period.is_open:
                 ap_periods.append({
                     'days':ap_period.days.all(),
@@ -128,8 +128,8 @@ class Appointments(View):
                  'student': ap.student,
                  'main_text': ap.period.appointment_mail_text }
         # DEBUG
-        #data['mto'] = "gael@pilotsystems.net"
-        #data['mto'] = "dorothee.lavalle@pre-barreau.com"
+        # data['mto'] = "gael@pilotsystems.net"
+        # data['mto'] = "dorothee.lavalle@pre-barreau.com"
 
         subject_template = 'teleforma/messages/email_appointment_sujet.txt'
         message_template = 'teleforma/messages/email_appointment.txt'
