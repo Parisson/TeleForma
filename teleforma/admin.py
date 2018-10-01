@@ -243,7 +243,7 @@ class AppointmentAdmin(admin.ModelAdmin):
             user = app.student
             student = user.student.all()[0]
 
-            row = [ app.day, app.start, user.last_name, user.first_name, student.iej, app.jury.name ]
+            row = [ app.day.strftime('%d/%m/%Y'), app.start, user.last_name, user.first_name, student.iej, app.jury.name ]
             row = [ csv_encode(col) for col in row ]
 
             writer.writerow(row)

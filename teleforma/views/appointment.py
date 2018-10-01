@@ -124,7 +124,7 @@ class Appointments(View):
                  'student': ap.student,
                  'main_text': ap.appointment_period.appointment_mail_text }
         # DEBUG
-        data['mto'] = "yoanl@pilotsystems.net"
+        # data['mto'] = "gael@pilotsystems.net"
         # data['mto'] = "dorothee.lavalle@pre-barreau.com"
 
         subject_template = 'teleforma/messages/email_appointment_sujet.txt'
