@@ -14,8 +14,10 @@
             // show appointment table according to selected day
             $('section.booking_day').hide();
             $('section.booking_day .day').hide();
-            var selectedDay = $('[name="day-to-show"]').val();
-            $('section.booking_day[data-day="' + selectedDay + '"]').show();
+            $('[name="day-to-show"]').each(function(){
+                var selectedDay = $(this).val();
+                $(this).parents('.ap_period').find('section.booking_day[data-day="' + selectedDay + '"]').show();
+            });
             updateNextPreviousButtons();
         }
 
@@ -157,6 +159,7 @@
     </div>
 
     {% for ap_period in ap_periods %}
+        <div class="ap_period">
 
         <h2>{{ ap_period.name }}</h2>
 
@@ -195,8 +198,8 @@
                 <a class="previous_day">Précédent</a>
                 <select name="day-to-show">
                     {% for day in ap_period.days %}
-                        {% if day.can_book_today %}
-                            <option value="{{ day.id }}">{{ day }}</option>
+                        {% if day.available %}
+                            <option value="{{ day.date|date:'Y_m_d' }}">{{ day.date }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -204,22 +207,38 @@
             </div>
 
             {% for day in ap_period.days %}
-                {% if day.can_book_today %}
-                    <section data-day="{{ day.id }}" class="booking_day">
-                        <h2 class="day">{{ day }}</h2>
+                {% if day.available %}
+                    <section data-day="{{ day.date|date:'Y_m_d' }}" class="booking_day">
+                        <h2 class="day">{{ day.date }}</h2>
                         <table border="1">
-                            <thead>
-                            <tr>
-                                <th>
-                                    Heure d'arrivé
-                                </th>
-                                <th style="display:none">
-                                    Heure de début
-                                </th>
-                                <th style="display:none">
-                                    Heure de fin
-                                </th>
-                                {% for jury in day.available_jurys %}
+{#                            <thead>#}
+{#                            <tr>#}
+{#                                <th>#}
+{#                                    Heure d'arrivé#}
+{#                                </th>#}
+{#                                <th style="display:none">#}
+{#                                    Heure de début#}
+{#                                </th>#}
+{#                                <th style="display:none">#}
+{#                                    Heure de fin#}
+{#                                </th>#}
+{#                                {% for jury in day.available_jurys %}#}
+{#                                    <th>#}
+{#                                        Jury {{ forloop.counter }}#}
+{#                                        <div data-jury="{{ jury.id }}">#}
+{#                                            <input type="hidden" name="jury_name" value="{{ jury.name }}"/>#}
+{#                                            <input type="hidden" name="jury_address" value="{{ jury.address }}"/>#}
+{#                                        </div>#}
+{#                                    </th>#}
+{#                                {% endfor %}#}
+{#                            </tr>#}
+{#                            </thead>#}
+                            <tbody>
+                            {% for groupslot in day.slots %}
+
+                                <tr class="separator">
+                                    <th>Heure d'arrivé</th>
+                                    {% for jury in groupslot.get_visible_jurys %}
                                     <th>
                                         Jury {{ forloop.counter }}
                                         <div data-jury="{{ jury.id }}">
@@ -227,11 +246,9 @@
                                             <input type="hidden" name="jury_address" value="{{ jury.address }}"/>
                                         </div>
                                     </th>
-                                {% endfor %}
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for groupslot in day.slots.all %}
+                                    {% endfor %}
+                                </tr>
+
                                 {% for slot in groupslot.slots %}
                                     <tr>
                                         <td class="arrival">
@@ -245,7 +262,7 @@
                                         </td>
 
                                         {% for jury in slot.jurys %}
-                                            {% if forloop.counter0 < day.number_of_available_jurys %}
+                                            {% if forloop.counter0 < groupslot.get_nb_of_visible_jurys %}
                                                 <td>
                                                     {% if jury.available %}
                                                         <form class="booking_form" method="POST">
@@ -266,11 +283,6 @@
                                         {% endfor %}
                                     </tr>
                                 {% endfor %}
-                                {% if not forloop.last %}
-                                    <tr class="separator">
-                                        <td colspan="{{ day.number_of_available_jurys|add:3 }}">--</td>
-                                    </tr>
-                                {% endif %}
                             {% endfor %}
 
                             </tbody>
@@ -279,7 +291,8 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
-        <br/>
+
+        </div>
     {% endfor %}
 
 {% endblock content %}

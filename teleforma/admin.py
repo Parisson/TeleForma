@@ -120,20 +120,25 @@ class StudentAdmin(admin.ModelAdmin):
         # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
     add_to_group.short_description = "Ajouter au groupe"
 
+
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
     filter_horizontal = ['courses']
+
 
 class ProfessorAdmin(admin.ModelAdmin):
     model = Professor
     filter_horizontal = ['courses']
 
+
 class ProfileInline(admin.StackedInline):
     model = Profile
+
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfileInline, StudentInline, QuotaInline]
     search_fields = ['username', 'email']
+
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
@@ -141,9 +146,11 @@ class TrainingAdmin(admin.ModelAdmin):
                          'written_speciality', 'oral_1', 'oral_2','magistral']
     exclude = ['options']
 
+
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     ordering = ['number']
+
 
 class DocumentAdmin(admin.ModelAdmin):
     exclude = ['readers']
@@ -151,14 +158,17 @@ class DocumentAdmin(admin.ModelAdmin):
     list_filter = ('course', 'periods', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
 
+
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
+
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
     list_filter = ('course', 'period', 'date_begin', 'session')
     search_fields = ['public_id', 'id', 'course__code', 'course__title', 'session']
+
 
 class HomeAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
@@ -166,44 +176,55 @@ class HomeAdmin(admin.ModelAdmin):
         form.base_fields['video'].queryset = Media.objects.filter(type='webm')
         return form
 
+
 class NewsItemAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'course', 'creator')
     list_display = ('title', 'course', 'creator', 'deleted')
     search_fields = ['title', 'text']
 
+
 class AppointmentSlotInline(admin.TabularInline):
     model = AppointmentSlot
+
 
 class AppointmentJuryInline(admin.StackedInline):
     model = AppointmentJury
 
-class AppointmentDayInline(admin.TabularInline):
-    readonly_fields = ('get_nb_slots', 'get_nb_jury', 'changeform_link', )
-    model = AppointmentDay
+
+# class AppointmentDayInline(admin.TabularInline):
+#     readonly_fields = ('get_nb_slots', 'get_nb_jury', 'changeform_link', )
+#     model = AppointmentDay
+
 
 class AppointmentPeriodAdmin(admin.ModelAdmin):
-    list_filter = ('period',)
-    list_display = ('name', 'period', 'nb_appointments')
+    list_display = ('name', 'periods_names', 'start', 'end', 'enable_appointment')
 
-    inlines = [ AppointmentDayInline ]
+    # inlines = [ AppointmentDayInline ]
 
-class AppointmentDayAdmin(admin.ModelAdmin):
-    list_filter = ('appointment_period',)
-    list_display = ('date', 'appointment_period', 'get_nb_slots', 'get_nb_jury')
+    def periods_names(self, instance):
+        return ','.join([period.name for period in instance.periods.all()])
+    periods_names.short_description = "Périodes"
 
-    inlines = [ AppointmentSlotInline, AppointmentJuryInline ]
+# class AppointmentDayAdmin(admin.ModelAdmin):
+#     list_filter = ('appointment_period',)
+#     list_display = ('date', 'appointment_period', 'get_nb_slots', 'get_nb_jury')
+#
+#     inlines = [ AppointmentSlotInline, AppointmentJuryInline ]
+
 
 class AppointmentSlotAdmin(admin.ModelAdmin):
-    list_filter = ('day',)
-    list_display = ('day', 'start', 'nb')
+    list_filter = ('date',)
+    list_display = ('date', 'start', 'nb', 'get_nb_jury')
+    inlines = [AppointmentJuryInline]
 
 class AppointmentJuryAdmin(admin.ModelAdmin):
-    list_filter = ('day',)
-    list_display = ('name', 'day')
+    list_filter = ('slot',)
+    list_display = ('name', 'slot')
+
 
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('real_date', 'student', 'jury')
-    list_filter = ('slot__day__date', 'slot__day__appointment_period')
+    list_filter = ('slot__date', 'slot__appointment_period')
     actions = ['export_csv']
 
     def export_csv(self, request, queryset):
@@ -230,6 +251,7 @@ class AppointmentAdmin(admin.ModelAdmin):
         return response
     export_csv.short_description = "Exporter en CSV"
 
+
 admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
@@ -254,7 +276,7 @@ admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
-admin.site.register(AppointmentDay, AppointmentDayAdmin)
+# admin.site.register(AppointmentDay, AppointmentDayAdmin)
 admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
 admin.site.register(AppointmentJury, AppointmentJuryAdmin)
 admin.site.register(Appointment, AppointmentAdmin)
