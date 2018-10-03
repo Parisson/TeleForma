@@ -53,15 +53,14 @@ a img { border: none; }
 
 /* Min-width */
 #layout {
-    min-width: 740px;
+    min-width: 0px;
 }
 
 #content {
     /*margin-top: 1em;*/
     position: relative;
-    margin-left: 3%;
-    margin-right: 2em;
-    margin-bottom: 0em;
+	max-width:1200px;
+	margin: 0 auto;
 }
 
 #content ul, #content ul ul, #content ol {
@@ -103,22 +102,28 @@ a img { border: none; }
 }
 
 #logo_wrapper {
-    width: 2%;
-    margin: 0em auto;
+    width: 30px;
+	height: 34px;
+	margin-right: 20px;
     float: left;
 }
 
 #logo {
-    width: 2%;
+    width: 30px;
     margin:0em auto;
     padding-top: 0.6em;
     padding-bottom: 0.5em;
-    }
+}
 
 #logo a, #logo a:hover { border: none; background: transparent; }
 
 #header {
     padding: 0em;
+	background-color: #000000 ;
+    background:no-repeat url(/static/telemeta/images/tw_hd.png) 0 0;
+    background-color:#ebebeb;
+    background-repeat:repeat; 
+	border-top: .25em solid #6a0307;
 /*     background: url("/static/telemeta/images/waves.png") 100% 0% no-repeat; */
 }
 
@@ -459,13 +464,15 @@ form.login .submit {
 
 /* Main navigation bar  (borrowed from Trac) */
 #menu {
-    background-color: #000000 ;
-    background:no-repeat url(/static/telemeta/images/tw_hd.png) 0 0;
+   	background-color: transparent;
+    /*background:no-repeat url(/static/telemeta/images/tw_hd.png) 0 0;
     background-color:#ebebeb;
-    background-repeat:repeat;
+    background-repeat:repeat; */
+	border-top: 0;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
-    border-top: 1px solid #333;
-    padding-left: 5.1%;
+    padding-left: 0;
+	max-width: 1200px;
+	margin: 0 auto;
 }
 
 #menu a, #menu a:visited{
@@ -601,7 +608,7 @@ color:#FFF;
     border-top: 1px solid #FFF;
     border-bottom: 1px solid #000;
     height: 36px;
-    padding: 0em 0.5em 10px 0.5em;
+    padding: 0em 0.5em 0.5em 0.5em;
     margin-top: 1.5em;
 }
 #footer :link, #footer :visited { color: #FFF; }
@@ -1822,6 +1829,10 @@ form.add_actus #id_text_parent{
     -moz-border-radius: 8px 8px 8px 8px;
      -webkit-border-radius: 8px 8px 8px 8px;
      border-radius: 8px 8px 8px 8px;
+	 width: 100%;
+	-webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
     }
 
 
@@ -2368,3 +2379,252 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /* Overlays */
 .ui-widget-overlay { background: #aaaaaa; opacity: .3;filter:Alpha(Opacity=30); }
 .ui-widget-shadow { margin: 0px 0 0 0px; padding: 5px; background: #666666; opacity: .3;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }
+
+
+
+
+
+
+
+
+/* _____  ______  _____ _____   ____  _   _  _____ _______      ________ 
+|  __ \|  ____|/ ____|  __ \ / __ \| \ | |/ ____|_   _\ \    / /  ____|
+| |__) | |__  | (___ | |__) | |  | |  \| | (___   | |  \ \  / /| |__   
+|  _  /|  __|  \___ \|  ___/| |  | | . ` |\___ \  | |   \ \/ / |  __|  
+| | \ \| |____ ____) | |    | |__| | |\  |____) |_| |_   \  /  | |____ 
+|_|  \_\______|_____/|_|     \____/|_| \_|_____/|_____|   \/   |______|
+*/
+
+
+
+#footer table{
+	max-width: 1200px;
+	margin: 0 auto;
+}
+#footer tr td:first-child{
+	width: 220px;
+}
+
+/*les padding*/
+
+@media (max-width: 1200px) {
+	#header, #footer, #content{
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
+/**/
+
+@media (max-width: 1024px) {
+	#module-set {
+		float: none;
+		clear: left;
+		padding-right: 0em;
+		width: 100% !important;
+	}
+	#module-set .module {
+		float: none;
+		margin: 0;
+		overflow: hidden;
+		background-image: none;
+		background: #3b3b3b; /* Old browsers */
+		background: -moz-linear-gradient(top, #3b3b3b 0%, #2c2c2c 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(top, #3b3b3b 0%,#2c2c2c 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to bottom, #3b3b3b 0%,#2c2c2c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3b3b3b', endColorstr='#2c2c2c',GradientType=0 ); /* IE6-9 */
+	}
+	#module-set .module .msg input[type="submit"]{
+		width: 120px;
+		float: right;
+	}
+	
+	#module-set-left, .desk_center{
+		-webkit-box-sizing: border-box;
+     	-moz-box-sizing: border-box;
+        box-sizing: border-box;
+	}
+	
+	#module-set-left{
+		width: 30% !important;
+	}
+	
+	#module-set-left .module ul{
+		padding-left: 0.8em;
+	}
+	
+	#module-set-left .module ul li{
+		display: inline-block;
+		width: 100%;
+		position: relative;
+	}
+	
+	#module-set-left .module ul li:before{
+		position:absolute;
+		content: "■";
+		top: 3px;
+		left: -10px;
+	}
+	
+	.desk_center {
+		float: left;
+		width: 70%;
+		padding: 0em 0em 0em 1em;
+		overflow-y: auto;
+	}
+}
+
+
+
+@media (max-width: 850px) {
+	
+	input[type="text"], input[type="password"], input.textwidget {
+		padding: .5em .1em;
+	}
+
+	#menu a, #menu a:visited{
+		font-size: 12px;
+	}
+	
+	form.login:after {
+		content: ""; 
+		display: table;
+		clear: both;
+	}
+
+	
+	form.login{
+		float: none;
+	}
+	form.login label {
+		padding-top: 0.7em;
+	}
+	
+	form.login input{
+		width: calc(100% - 12em);
+	}
+	
+	
+	form.login>div{
+		float: right;
+		margin-top: 0px !important;
+	}
+	
+	#action_red{
+		display: inline-block;
+	}
+}
+
+/**/
+
+@media (max-width: 730px) {
+	#header{
+		background-image: none;
+		background: #3b3b3b; /* Old browsers */
+		background: -moz-linear-gradient(top, #3b3b3b 0%, #2c2c2c 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(top, #3b3b3b 0%,#2c2c2c 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to bottom, #3b3b3b 0%,#2c2c2c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3b3b3b', endColorstr='#2c2c2c',GradientType=0 ); /* IE6-9 */
+	}
+	#menu{
+		text-align: center;
+	}
+	#logo_wrapper{
+		margin-right: 0;
+	}
+	
+	dl.listing dd {
+		margin-left: 91px;
+		font-weight: bold;
+	}
+}
+
+
+@media (max-width: 660px) {
+	#module-set-left {
+		width: 100% !important;
+		padding: 0;
+	}
+	#module-set-left .module {
+	    margin: 0em 0em 0.5em 0em;
+	}
+	
+	#module-set-left .module ul{
+	-moz-column-count:3;
+	-webkit-column-count:3;
+	-o-column-count:3;
+	column-count:3;
+	-moz-column-gap:30px;
+	-webkit-column-gap:30px;
+	-o-column-gap:30px;
+	column-gap:30px;
+	-webkit-column-rule-width:1px;
+	-webkit-column-rule-color:#cbcefb;
+	-webkit-column-rule-style:dotted;
+	-moz-column-rule-width:1px;
+	-moz-column-rule-color:#cbcefb;
+	-moz-column-rule-style:dotted;
+	-o-column-rule-width:1px;
+	-o-column-rule-color:#cbcefb;
+	-o-column-rule-style:dotted;
+	column-rule-width:1px;
+	column-rule-color:#cbcefb;
+	column-rule-style:dotted;
+	}
+	
+	.desk_center {
+		width: 100%;
+		padding: 0em;
+	}
+}
+@media (max-width: 540px) {
+	#module-set-left .module ul{
+		-moz-column-count:2;
+		-webkit-column-count:2;
+		-o-column-count:2;
+		column-count:2;
+	}
+	#module-set-left .module ul li a{
+		font-size: 11px;
+		line-height: 14px;
+	}
+	.course_content table.listing.video {
+		table-layout: fixed;
+	}
+	.course_content table.listing.video tbody td:first-child{
+		width: 40px!important;
+		vertical-align: top !important;
+		padding-top: 1em;
+	}
+}
+@media (max-width: 440px) {
+	
+	.desk_center.home .video{
+		max-width: 100%;
+	}
+	.course_content table.listing.video tbody td:first-child{
+		width: 32%!important;
+		
+	}
+	.course_content table.listing.video tbody td{
+		display: block;
+		width: 100%;
+		padding-left: 0 !important;
+	}
+	#footer{
+		height: auto;
+		text-align: center;
+		background-image: none;
+		background: #3b3b3b; /* Old browsers */
+		background: -moz-linear-gradient(top, #3b3b3b 0%, #2c2c2c 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(top, #3b3b3b 0%,#2c2c2c 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to bottom, #3b3b3b 0%,#2c2c2c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3b3b3b', endColorstr='#2c2c2c',GradientType=0 ); /* IE6-9 */	
+	}
+	#footer tr td{
+		display: inline-block;	
+	}
+	#footer p.right{
+		text-align: center;
+	}
+}

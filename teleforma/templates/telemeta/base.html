@@ -8,9 +8,7 @@
 {% endif %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
-
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}><head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 <meta name="Viewport" content="width=device-width" />
 <meta name="Viewport" content="initial-scale=1.0" />
@@ -23,6 +21,8 @@
 <title>{%block head_title %}{% description %} - TeleForma{% endblock %}</title>
 
 {% block stylesheets %}
+
+
 <link rel="stylesheet" type="text/css" href="/static/telemeta/css/telemeta.css" />
 <link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma.css" />
 
@@ -73,14 +73,15 @@
 {% block header %}
 <div id="header">
 
+
+
+<div id="menu">
 <div id="logo_wrapper">
 <div id="logo">
 <img src="/static/teleforma/images/logo_pb.png" style="vertical-align:middle"
 alt="logo" />
 </div>
 </div>
-
-<div id="menu">
 {% block menu %}
 {# spaces between li and a elements breaks layout #}
 
