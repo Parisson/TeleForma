@@ -191,40 +191,40 @@ class AppointmentJuryInline(admin.StackedInline):
     model = AppointmentJury
 
 
-class AppointmentDayInline(admin.TabularInline):
-    readonly_fields = ('get_nb_slots', 'get_nb_jury', 'changeform_link', )
-    model = AppointmentDay
+# class AppointmentDayInline(admin.TabularInline):
+#     readonly_fields = ('get_nb_slots', 'get_nb_jury', 'changeform_link', )
+#     model = AppointmentDay
 
 
 class AppointmentPeriodAdmin(admin.ModelAdmin):
     list_display = ('name', 'periods_names', 'start', 'end', 'enable_appointment')
 
-    inlines = [ AppointmentDayInline ]
+    # inlines = [ AppointmentDayInline ]
 
     def periods_names(self, instance):
         return ','.join([period.name for period in instance.periods.all()])
     periods_names.short_description = "Périodes"
 
-class AppointmentDayAdmin(admin.ModelAdmin):
-    list_filter = ('appointment_period',)
-    list_display = ('date', 'appointment_period', 'get_nb_slots', 'get_nb_jury')
-
-    inlines = [ AppointmentSlotInline, AppointmentJuryInline ]
+# class AppointmentDayAdmin(admin.ModelAdmin):
+#     list_filter = ('appointment_period',)
+#     list_display = ('date', 'appointment_period', 'get_nb_slots', 'get_nb_jury')
+#
+#     inlines = [ AppointmentSlotInline, AppointmentJuryInline ]
 
 
 class AppointmentSlotAdmin(admin.ModelAdmin):
-    list_filter = ('day',)
-    list_display = ('day', 'start', 'nb')
-
+    list_filter = ('date',)
+    list_display = ('date', 'start', 'nb', 'get_nb_jury')
+    inlines = [AppointmentJuryInline]
 
 class AppointmentJuryAdmin(admin.ModelAdmin):
-    list_filter = ('day',)
-    list_display = ('name', 'day')
+    list_filter = ('slot',)
+    list_display = ('name', 'slot')
 
 
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('real_date', 'student', 'jury')
-    list_filter = ('slot__day__date', 'slot__day__appointment_period')
+    list_filter = ('slot__date', 'slot__appointment_period')
     actions = ['export_csv']
 
     def export_csv(self, request, queryset):
@@ -243,7 +243,7 @@ class AppointmentAdmin(admin.ModelAdmin):
             user = app.student
             student = user.student.all()[0]
 
-            row = [ app.day, app.start, user.last_name, user.first_name, student.iej, app.jury.name ]
+            row = [ app.day.strftime('%d/%m/%Y'), app.start, user.last_name, user.first_name, student.iej, app.jury.name ]
             row = [ csv_encode(col) for col in row ]
 
             writer.writerow(row)
@@ -276,7 +276,7 @@ admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
-admin.site.register(AppointmentDay, AppointmentDayAdmin)
+# admin.site.register(AppointmentDay, AppointmentDayAdmin)
 admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
 admin.site.register(AppointmentJury, AppointmentJuryAdmin)
 admin.site.register(Appointment, AppointmentAdmin)

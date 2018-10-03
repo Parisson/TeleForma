@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 from django.conf import settings
 
-from teleforma.models.appointment import AppointmentPeriod, Appointment, AppointmentDay, AppointmentSlot
+from teleforma.models.appointment import AppointmentPeriod, Appointment, AppointmentSlot
 
 from teleforma.views.core import get_periods
 
@@ -29,8 +29,6 @@ class Appointments(View):
         periods = [ p for p in get_periods(user) if int(p.id) == period_id ]
         if not periods:
             return HttpResponse('Unauthorized', status=401)
-        # if not periods[0].enable_appointment:
-        #     return HttpResponse('Unauthorized', status=401)
         return
 
     def render(self, request, period_id):
@@ -42,29 +40,29 @@ class Appointments(View):
         for ap_period in AppointmentPeriod.objects.filter(periods__id=period_id).order_by('id'):
             if ap_period.is_open:
                 ap_periods.append({
-                    'days':ap_period.days.all(),
+                    'days':ap_period.days(),
                     'name': ap_period.name,
-                    'appointment':ap_period.get_appointment(request.user)
+                    'appointment':ap_period.get_appointment(user)
                 })
         # for ap_period in ap_periods:
         #     appointments[ap_period.id] = ap_period.get_appointments(request.user)
         return render(request, self.template_name, {'ap_periods': ap_periods, 'period_id':period_id})
 
-    def check_validity(self, user, slot_id, slot_nb, jury_id, day_id):
+    def check_validity(self, user, slot_id, slot_nb, jury_id):
         """
         Check if we can register to this exact slot
         """
-        day = get_object_or_404(AppointmentDay, id = day_id)
+        slot = get_object_or_404(AppointmentSlot, id = slot_id)
 
-        # Check the period is open
-        if not day.appointment_period.is_open:
-            return u"La période d'inscription n'est pas ouverte"
-        # Check we are least delay (ie, 48h) before the date
-        if not day.can_book_today():
-            delay = day.book_delay
+        # Check the period is open and
+        if not slot.appointment_period.is_open:
+            return u"La période de prise de rendez-vous est fermé."
+        # Check  we are least delay (ie, 48h) before the date
+        if not slot.can_book_today:
+            delay = slot.appointment_period.book_delay
             return u"Vous devez réserver au moins %d jours ouvrés à l'avance" % delay
         # Check if this jury is open
-        jurys = day.available_jurys
+        jurys = slot.get_visible_jurys()
         if not jury_id in [ j.id for j in jurys ]:
             return u"Ce jury n'est pas ouvert"
         # Check if this slot is empty
@@ -76,7 +74,7 @@ class Appointments(View):
         if slot_nb >= slot.nb:
             return u"Ce créneau n'existe pas"
         # Check we don't have another appointment on this period
-        if day.appointment_period.get_appointment(user):
+        if slot.appointment_period.get_appointment(user):
             return u"Vous avez déjà un rendez-vous"
 
     def post(self, request, period_id):
@@ -89,16 +87,14 @@ class Appointments(View):
         slot_nb = int(request.POST.get('slot_nb'))
         slot_id = int(request.POST.get('slot'))
         jury_id = int(request.POST.get('jury'))
-        day_id = int(request.POST.get('day'))
 
-        msg = self.check_validity(user, slot_id, slot_nb, jury_id, day_id)
+        msg = self.check_validity(user, slot_id, slot_nb, jury_id)
 
         if not msg:
             ap = Appointment()
             ap.slot_nb = slot_nb
             ap.slot_id = slot_id
             ap.jury_id = jury_id
-            ap.day_id = day_id
             ap.student = user
             try:
                 ap.save()
@@ -126,7 +122,7 @@ class Appointments(View):
                  'jury_address': ap.jury.address,
                  'date': ap.real_date,
                  'student': ap.student,
-                 'main_text': ap.period.appointment_mail_text }
+                 'main_text': ap.appointment_period.appointment_mail_text }
         # DEBUG
         # data['mto'] = "gael@pilotsystems.net"
         # data['mto'] = "dorothee.lavalle@pre-barreau.com"
@@ -151,7 +147,7 @@ def cancel_appointment(request):
         return HttpResponse('Unauthorized', status=401)
 
     if not app.can_cancel():
-        messages.add_message(request, messages.ERROR, ' Il est trop tard pour annuler ce rendez-vous.')
+        messages.add_message(request, messages.ERROR, 'Il est trop tard pour annuler ce rendez-vous.')
         return redirect('teleforma-appointments', period_id=period_id)
 
     app.delete()
