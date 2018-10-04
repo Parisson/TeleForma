@@ -46,6 +46,7 @@ class AppointmentPeriod(Model):
         """
         return self.start <= datetime.date.today() <= self.end and self.enable_appointment
 
+    @cached_property
     def days(self):
         days = {}
         delay = self.book_delay
@@ -67,18 +68,6 @@ class AppointmentPeriod(Model):
         # print days
         return sorted(days.values(), key=lambda d:d['date'])
 
-    def nb_jurys_to_show(self, date):
-        min = 100
-        for day in self.days():
-            if day['date'] != date:
-                continue
-            for groupslot in day['slots']:
-                for slot in groupslot.slots:
-                    for i, jury in enumerate(slot['jurys']):
-                        if jury['available']:
-                            if i < min:
-                                min = i
-        return 1 + min
 
     @staticmethod
     def work_day_between(start, end):
@@ -172,13 +161,25 @@ class AppointmentSlot(Model):
         return self.jurys.count()
     get_nb_jury.short_description = "Nombre de jurys"
 
-
+    @property
     def get_visible_jurys(self):
-        return self.jurys.order_by('id')[:self.appointment_period.nb_jurys_to_show(self.date)]
+        return self.jurys.order_by('id')[:self.nb_jurys_to_show]
+
+    @property
+    def get_nb_of_visible_jurys(self):
+        return self.nb_jurys_to_show
 
     @cached_property
-    def get_nb_of_visible_jurys(self):
-        return self.appointment_period.nb_jurys_to_show(self.date)
+    def nb_jurys_to_show(self):
+        min = 100
+
+        for groupslot in AppointmentSlot.objects.filter(date=self.date).all():
+            for slot in groupslot.slots:
+                for i, jury in enumerate(slot['jurys']):
+                    if jury['available']:
+                        if i < min:
+                            min = i
+        return 1 + min
 
     @cached_property
     def slots(self):
@@ -215,7 +216,7 @@ class AppointmentSlot(Model):
         # print res
         return res
 
-    @property
+    @cached_property
     def has_available_slot(self):
         """ is this day has any slot available"""
         for slot in self.slots:
