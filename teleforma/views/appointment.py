@@ -40,7 +40,7 @@ class Appointments(View):
         for ap_period in AppointmentPeriod.objects.filter(periods__id=period_id).order_by('id'):
             if ap_period.is_open:
                 ap_periods.append({
-                    'days':ap_period.days(),
+                    'days':ap_period.days,
                     'name': ap_period.name,
                     'appointment':ap_period.get_appointment(user)
                 })
@@ -62,7 +62,7 @@ class Appointments(View):
             delay = slot.appointment_period.book_delay
             return u"Vous devez réserver au moins %d jours ouvrés à l'avance" % delay
         # Check if this jury is open
-        jurys = slot.get_visible_jurys()
+        jurys = slot.get_visible_jurys
         if not jury_id in [ j.id for j in jurys ]:
             return u"Ce jury n'est pas ouvert"
         # Check if this slot is empty
@@ -124,7 +124,7 @@ class Appointments(View):
                  'student': ap.student,
                  'main_text': ap.appointment_period.appointment_mail_text }
         # DEBUG
-        # data['mto'] = "gael@pilotsystems.net"
+        # data['mto'] = "yoanl@pilotsystems.net"
         # data['mto'] = "dorothee.lavalle@pre-barreau.com"
 
         subject_template = 'teleforma/messages/email_appointment_sujet.txt'
