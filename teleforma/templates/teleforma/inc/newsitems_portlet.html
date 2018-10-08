@@ -17,20 +17,20 @@
         <section>
             {% for newsitem in course_newsitems %} {% include "teleforma/inc/newsitem.html" %} {% endfor %}
         </section>
-        {% if course_newsitems|length >= 5 %}
-        <footer>
-            <a href="{% url newsitem-list %}?course_id={{ course.id }}">Voir plus</a>
-        </footer>
-        {% endif %}
+{#        {% if course_newsitems|length >= 5 %}#}
+{#        <footer>#}
+{#            <a href="{% url newsitem-list %}?course_id={{ course.id }}">Voir plus</a>#}
+{#        </footer>#}
+{#        {% endif %}#}
     </div>
     <div id="news_global">
         <section>
             {% for newsitem in all_newsitems %} {% include "teleforma/inc/newsitem.html" %} {% endfor %}
         </section>
-        {% if all_newsitems|length >= 5 %}
-        <footer>
-            <a href="{% url newsitem-list period_id=period_id %}">Voir plus</a>
-        </footer>
-        {% endif %}
+{#        {% if all_newsitems|length >= 5 %}#}
+{#        <footer>#}
+{#            <a href="{% url newsitem-list period_id=period_id %}">Voir plus</a>#}
+{#        </footer>#}
+{#        {% endif %}#}
     </div>
 </div>
