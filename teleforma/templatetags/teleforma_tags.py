@@ -267,8 +267,8 @@ def newsitems_portlet(context, course_id, period_id):
         }
     
     course = get_object_or_404(Course, id=course_id) 
-    course_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, course__id=course_id, period_id=period_id).order_by('-created')[:5]]
-    all_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, period_id=period_id).order_by('-created')[:5]]
+    course_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, course__id=course_id, period_id=period_id).order_by('-created')]
+    all_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, period_id=period_id).order_by('-created')]
     can_add = False 
     if user.is_staff or user.professor.count():
         can_add = True

@@ -1502,7 +1502,7 @@ input,textarea{
 
 #module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li a{
 	font-size:1.1em;
-	color: #FFF;
+	color: #333;
 	padding: 1em 0;
 	display: block;
 	box-sizing: border-box;
@@ -1521,6 +1521,7 @@ input,textarea{
 #module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li.ui-tabs-active a{
 	background-color: rgba(255, 255, 255, 0);
 	opacity: 1;
+	color: #fff;
 }
 
 #module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li.ui-tabs-active a+a:hover{
@@ -1596,6 +1597,12 @@ input,textarea{
 #module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem section{
 	font-size: 1.1em;
 	font-size: 0.9em;
+	word-wrap: break-word;
+	-webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
 }
 
 #module-set .ui-tabs.ui-widget-content footer{
