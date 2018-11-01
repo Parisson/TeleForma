@@ -46,7 +46,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
 from django.template import RequestContext, loader
 from django import template
-from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.views.generic import *
 from django.views.generic.base import *
