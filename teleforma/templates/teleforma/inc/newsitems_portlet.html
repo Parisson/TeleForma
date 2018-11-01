@@ -4,7 +4,7 @@
 {% load teleforma_tags %}
 
 <div class="tabs module">
-    <h3><img src="{% static "teleforma/images/actus.png" %}" alt="actualités"/>Actualités</h3>
+    <h3><img src="{% static 'teleforma/images/actus.png' %}" alt="actualités"/>Actualités</h3>
     <ul>
         <li><a href="#news_local">{{ course.title_tweeter }}</a>
             {% if can_add %}<a href="{% url newsitem-create %}?course_id={{course.id}}&period_id={{period_id}}">+</a>{% endif %}

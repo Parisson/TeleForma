@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="newsitem">
     <header>
         <h3>{{ newsitem.title }}</h3>
@@ -5,12 +7,13 @@
         <ul class="actions">
         	{% if newsitem.can_edit %}
         	<li>
-        		<a href="{% url newsitem-update pk=newsitem.id %}?period_id={{ period_id }}"><img src="/static/telemeta/images/pencil-edit-button.png" alt="éditer"/></a>
+        		<a href="{% url newsitem-update pk=newsitem.id %}?period_id={{ period_id }}"><img src="{% static 'teleforma/images/pencil-edit-button.png' %}" alt="éditer"/>
+</a>
         	</li>
         	{% endif %}
         	{% if newsitem.can_delete %}
         	<li>
-        		<a href="{% url newsitem-delete pk=newsitem.id %}?period_id={{ period_id }}"><img src="/static/telemeta/images/rubbish-bin-delete-button.png" alt="supprimer"/></a>
+        		<a href="{% url newsitem-delete pk=newsitem.id %}?period_id={{ period_id }}"><img src="{% static 'teleforma/images/rubbish-bin-delete-button.png' %}" alt="supprimer"/></a>
         	</li>
         	{% endif %}
         </ul>		
