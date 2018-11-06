@@ -8,7 +8,18 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.core import urlresolvers
 from django.utils.functional import cached_property
+from django.core.cache import cache
+CACHE_KEY = 'appointment'
 
+
+def timing(f):
+    def wrap(*args):
+        time1 = time.time()
+        ret = f(*args)
+        time2 = time.time()
+        print '%s function took %0.3f ms' % (f.func_name, (time2-time1)*1000.0)
+        return ret
+    return wrap
 
 class AppointmentPeriod(Model):
     periods = models.ManyToManyField(Period, related_name='appointment_periods',
@@ -47,23 +58,42 @@ class AppointmentPeriod(Model):
         return self.start <= datetime.date.today() <= self.end and self.enable_appointment
 
     @cached_property
+    @timing
     def days(self):
         days = {}
         delay = self.book_delay
         today = datetime.date.today()
 
-        for slot in AppointmentSlot.objects.filter(appointment_period=self):
-            if slot.date not in days:
-                days[slot.date] = {}
-                days[slot.date]['date'] = slot.date
-                days[slot.date]['slots'] = [slot, ]
-                days[slot.date]['available'] = False
-            else:
-                days[slot.date]['slots'].append(slot)
+        for slot in AppointmentSlot.objects.filter(appointment_period=self).order_by('start'):
+            cache_key = '%s_%s_%s' % (CACHE_KEY, self.id, slot.date)
+            dayData = cache.get(cache_key)
+            if not dayData:
+                slotData = {'instance':slot,
+                            'slots':slot.slots,
+                            'get_visible_jurys':slot.get_visible_jurys,
+                            'get_nb_of_visible_jurys':slot.get_nb_of_visible_jurys,
+                            'has_available_slot':slot.has_available_slot}
+                if slot.date not in days:
+                    days[slot.date] = {}
+                    days[slot.date]['date'] = slot.date
+                    days[slot.date]['slots'] = [slotData, ]
+                    days[slot.date]['available'] = False
+                else:
+                    days[slot.date]['slots'].append(slotData)
 
-            # days are available if they are within the good period and if there are remaining slots
-            if slot.has_available_slot and self.work_day_between(today, slot.date) >= delay:
-                days[slot.date]['available'] = True
+                # days are available if they are within the good period and if there are remaining slots
+                if slotData['has_available_slot'] and self.work_day_between(today, slot.date) >= delay:
+                    days[slot.date]['available'] = True
+                days[slot.date]['from_cache'] = False
+            else:
+                days[slot.date] = dayData
+                days[slot.date]['from_cache'] = True
+
+        for day in days:
+            if not days[day]['from_cache']:
+                cache_key = '%s_%s_%s' % (CACHE_KEY, self.id, day)
+                cache.set(cache_key, days[day], 1800)
+
 
         # print days
         return sorted(days.values(), key=lambda d:d['date'])
