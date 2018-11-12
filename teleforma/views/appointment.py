@@ -10,8 +10,9 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.cache import cache
 
-from teleforma.models.appointment import AppointmentPeriod, Appointment, AppointmentSlot
+from teleforma.models.appointment import AppointmentPeriod, Appointment, AppointmentSlot, CACHE_KEY
 
 from teleforma.views.core import get_periods
 
@@ -98,6 +99,7 @@ class Appointments(View):
             ap.student = user
             try:
                 ap.save()
+                cache.delete('%s_%s_%s' % (CACHE_KEY, ap.slot.appointment_period.id, ap.slot.date))
                 self.send_ap_mail(ap)
             except IntegrityError:
                 # Duplicate appointment caught by the db
@@ -126,6 +128,7 @@ class Appointments(View):
         # DEBUG
         # data['mto'] = "yoanl@pilotsystems.net"
         # data['mto'] = "dorothee.lavalle@pre-barreau.com"
+        # data['mto'] = "gael@pilotsystems.net"
 
         subject_template = 'teleforma/messages/email_appointment_sujet.txt'
         message_template = 'teleforma/messages/email_appointment.txt'
@@ -150,6 +153,7 @@ def cancel_appointment(request):
         messages.add_message(request, messages.ERROR, 'Il est trop tard pour annuler ce rendez-vous.')
         return redirect('teleforma-appointments', period_id=period_id)
 
+    cache.delete('%s_%s_%s' % (CACHE_KEY, app.slot.appointment_period.id, app.slot.date))
     app.delete()
     messages.add_message(request, messages.INFO, 'Votre réservation a été annulé.')
     return redirect('teleforma-appointments', period_id=period_id)

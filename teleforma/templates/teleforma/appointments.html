@@ -211,28 +211,6 @@
                     <section data-day="{{ day.date|date:'Y_m_d' }}" class="booking_day">
                         <h2 class="day">{{ day.date }}</h2>
                         <table border="1">
-{#                            <thead>#}
-{#                            <tr>#}
-{#                                <th>#}
-{#                                    Heure d'arrivé#}
-{#                                </th>#}
-{#                                <th style="display:none">#}
-{#                                    Heure de début#}
-{#                                </th>#}
-{#                                <th style="display:none">#}
-{#                                    Heure de fin#}
-{#                                </th>#}
-{#                                {% for jury in day.available_jurys %}#}
-{#                                    <th>#}
-{#                                        Jury {{ forloop.counter }}#}
-{#                                        <div data-jury="{{ jury.id }}">#}
-{#                                            <input type="hidden" name="jury_name" value="{{ jury.name }}"/>#}
-{#                                            <input type="hidden" name="jury_address" value="{{ jury.address }}"/>#}
-{#                                        </div>#}
-{#                                    </th>#}
-{#                                {% endfor %}#}
-{#                            </tr>#}
-{#                            </thead>#}
                             <tbody>
                             {% for groupslot in day.slots %}
 
@@ -270,8 +248,7 @@
                                                             <input type="hidden" name="slot_nb"
                                                                    value="{{ slot.slot_nb }}"/>
                                                             <input type="hidden" name="slot"
-                                                                   value="{{ groupslot.id }}"/>
-                                                            <input type="hidden" name="day" value="{{ day.id }}"/>
+                                                                   value="{{ groupslot.instance.id }}"/>
                                                             <input type="hidden" name="jury" value="{{ jury.id }}"/>
                                                             <button type="submit">Réserver</button>
                                                         </form>
