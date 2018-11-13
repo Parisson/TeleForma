@@ -116,6 +116,8 @@ $(document).ready(function(){
          <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
         </div>
 
+        {% if show_media %}
+        
         {% block conference %}
          {% include "teleforma/inc/conference_list.html" %}
         {% endblock %}
@@ -133,6 +135,8 @@ $(document).ready(function(){
             {% endwith %}
         {% endblock %}
         {% endcomment %}
+
+	{% endif %}
 
         {% block document %}
          {% with forloop.counter as type_counter %}

@@ -27,6 +27,7 @@
 {% endfor %}
 </table>
 
+{% if show_media %}
 <h2>{% trans "Medias"%}</h2>
 <table class="listing" width="100%">
 <tr>
@@ -57,6 +58,8 @@
 <td>{{ conference.professor.user.first_name }} {{ conference.professor.user.last_name }}</td>
 <td>{{ conference.date_begin }}</td>
 </tr>
+
+{% endif %}
 
 </table>
 

@@ -321,8 +321,10 @@ class CourseAccessMixin(PeriodAccessMixin):
         role = get_user_role(self.request.user)
         if role == "corrector":
             context['doc_types'] = DocumentType.objects.filter(for_corrector = True)
+            context['show_media'] = False
         else:
             context['doc_types'] = DocumentType.objects.all()
+            context['show_media'] = True
         return context
 
 

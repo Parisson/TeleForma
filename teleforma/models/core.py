@@ -91,10 +91,10 @@ def get_random_hash():
 def get_user_role(user):
     if user.is_superuser:
         return 'superuser'
-    elif user.student.exists():
-        return 'student'
     elif user.professor.exists():
         return 'professor'
+    elif user.student.exists():
+        return 'student'
     else:
         return 'corrector'
 
