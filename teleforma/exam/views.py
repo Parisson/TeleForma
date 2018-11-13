@@ -71,6 +71,12 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
     template_name='exam/script_detail.html'
     form_class = ScriptForm
 
+    def get_form_kwargs(self):
+        kwargs = super(ScriptView, self).get_form_kwargs()
+        script = self.get_object()
+        kwargs['period'] = script.period
+        return kwargs
+
     def get_success_url(self):
         period = Period.objects.get(id=self.kwargs['period_id'])
         return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
