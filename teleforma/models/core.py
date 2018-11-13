@@ -151,6 +151,7 @@ class Period(Model):
     is_open = models.BooleanField(_('is open'), default=True)
     date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
     nb_script = models.IntegerField(_("nombre maximal de copies"), null=True, blank=True)
+    date_close_accounts = models.DateField(_("date de fermeture des comptes étudiants"), null = True, blank = True)
 
     def __unicode__(self):
         return self.name
