@@ -24,12 +24,12 @@ class ScriptMixinView(View):
         self.period = Period.objects.get(id=self.kwargs['period_id'])
         context['period'] = self.period
         context['script_service_url'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL')
+        self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
             upload = datetime.datetime.now() <= self.period.date_exam_end
-            if self.period.nb_script:
-                if Script.objects.filter(period = self.period,
-                                         author = self.request.user).count() >= self.period.nb_script:
-                    upload = False
+            if Script.objects.filter(period = self.period,
+                                     author = self.request.user).count() >= self.nb_script:
+                upload = False
             context['upload'] = upload
         else:
             context['upload'] = False
@@ -55,6 +55,7 @@ class ScriptsListMixinView(ScriptMixinView):
             correctors = User.objects.filter(corrector_scripts__in=self.get_base_queryset()).order_by('last_name').distinct()
             context['correctors_list'] = [(str(corrector.id), corrector.get_full_name()) for corrector in correctors]
             context['corrector_selected'] = self.request.GET.get('corrector', str(self.request.user.id))
+            session_choices = get_n_choices(self.nb_script + 1)
             context['sessions_list'] = session_choices
             context['session_selected'] = self.request.GET.get('session')
             types = ScriptType.objects.all()
@@ -63,6 +64,7 @@ class ScriptsListMixinView(ScriptMixinView):
             courses = Course.objects.filter(scripts__in=self.get_base_queryset()).distinct()
             context['courses_list'] = [(str(course.id), course.title) for course in courses]
             context['course_selected'] = self.request.GET.get('course')
+            context['platform_only'] = self.request.GET.get('platform_only')
         return context
 
 class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
@@ -128,6 +130,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
         type = self.request.GET.get('type')
         session = self.request.GET.get('session')
         course = self.request.GET.get('course')
+        platform_only = self.request.GET.get('platform_only')
         if type:
             QT = Q(type__id=int(type)) & QT
         if session:
@@ -136,6 +139,8 @@ class ScriptsView(ScriptsListMixinView, ListView):
             QT = Q(course__id=int(course)) & QT
         if corrector:
             QT = Q(corrector__id=int(corrector)) & QT
+        if platform_only:
+            QT = Q(author__student__platform_only = int(platform_only)) & QT
         return QT
 
     @method_decorator(login_required)

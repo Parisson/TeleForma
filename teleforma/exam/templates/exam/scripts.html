@@ -91,6 +91,13 @@
        <option value="{{type.0}}" {% if type.0 == type_selected %}selected="selected"{% endif %}>{{type.1}}</option>
        {% endfor %}
     </select>
+    <br />
+    <label for="platform_only_select">{% trans "E-learning uniquement"%}</label>
+    <select name="platform_only" id="platform_only_select">
+       <option value="">---</option>
+       <option value="1" {% if platform_only == '1' %}selected="selected"{% endif %}>Oui</option>
+       <option value="0" {% if platform_only == '0' %}selected="selected"{% endif %}>Non</option>
+    </select>
     <input type="submit" value="Filtrer"/>
 </form>
 {% endif %}
