@@ -88,6 +88,16 @@ def get_random_hash():
     hash = random.getrandbits(128)
     return "%032x" % hash
 
+def get_user_role(user):
+    if user.is_superuser:
+        return 'superuser'
+    elif user.student.exists():
+        return 'student'
+    elif user.professor.exists():
+        return 'professor'
+    else:
+        return 'corrector'
+
 class MetaCore:
     app_label = app_label
 
@@ -140,6 +150,7 @@ class Period(Model):
     message_local = models.TextField(_('message pour presentielle'), blank=True)
     is_open = models.BooleanField(_('is open'), default=True)
     date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
+    nb_script = models.IntegerField(_("nombre maximal de copies"), null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -529,6 +540,9 @@ class DocumentType(Model):
     name            = models.CharField(_('name'), max_length=255)
     description     = models.CharField(_('description'), max_length=255, blank=True)
     number          = models.IntegerField(_('number'), blank=True, null=True)
+    for_corrector   = models.BooleanField('autorisé aux correcteurs',
+                                          blank = True, null = False,
+                                          default = False)
 
     def __unicode__(self):
         return self.name

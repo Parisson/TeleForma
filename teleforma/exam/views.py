@@ -25,7 +25,12 @@ class ScriptMixinView(View):
         context['period'] = self.period
         context['script_service_url'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL')
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
-            context['upload'] = datetime.datetime.now() <= self.period.date_exam_end
+            upload = datetime.datetime.now() <= self.period.date_exam_end
+            if self.period.nb_script:
+                if Script.objects.filter(period = self.period,
+                                         author = self.request.user).count() >= self.period.nb_script:
+                    upload = False
+            context['upload'] = upload
         else:
             context['upload'] = False
 
@@ -242,16 +247,14 @@ class ScriptCreateView(ScriptMixinView, CreateView):
     form_class = ScriptForm
 
     def get_success_url(self):
-        period = Period.objects.get(id=self.kwargs['period_id'])
-        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
+        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':self.period.id})
 
     def form_valid(self, form):
-        period = Period.objects.get(id=self.kwargs['period_id'])
         scripts = Script.objects.filter(course=form.cleaned_data['course'], session=form.cleaned_data['session'],
-                                        type=form.cleaned_data['type'], author=self.request.user, period=period).exclude(status=0)
+                                        type=form.cleaned_data['type'], author=self.request.user, period=self.period).exclude(status=0)
         if scripts:
             messages.error(self.request, _("Error: you have already submitted a script for this session, the same course and the same type!"))
-            return redirect('teleforma-exam-script-create', self.kwargs['period_id'])
+            return redirect('teleforma-exam-script-create', self.period.id)
         else:
             form.instance.author = self.request.user
             messages.info(self.request, _("You have successfully submitted your script. It will be processed in the next hours."))
@@ -261,7 +264,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
         messages.info(self.request, _("There was a problem with your submission. Please try again, later if possible."))
         return super(ScriptCreateView, self).form_invalid(form)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):    
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
         course_pk_list = [c['course'].id for c in get_courses(self.request.user) if c['course'].has_exam_scripts]
@@ -270,7 +273,14 @@ class ScriptCreateView(ScriptMixinView, CreateView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        self.period = Period.objects.get(id=kwargs['period_id'])
         return super(ScriptCreateView, self).dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(ScriptCreateView, self).get_form_kwargs()
+        kwargs['period'] = self.period
+        return kwargs
+
 
 
 class ScriptUpdateView(UpdateView):
@@ -427,10 +437,8 @@ class ScoreCreateView(ScriptCreateView):
         return reverse_lazy('teleforma-exam-scripts-scores-all', kwargs={'period_id':period.id})
 
     def get_context_data(self, **kwargs):
-        context = super(ScriptCreateView, self).get_context_data(**kwargs)
+        context = super(ScoreCreateView, self).get_context_data(**kwargs)
         context['create_fields'] = ['course', 'session', 'type', 'score' ]
-        course_pk_list = [c['course'].id for c in get_courses(self.request.user)]
-        context['form'].fields['course'].queryset = Course.objects.filter(pk__in=course_pk_list)
         return context
 
     @method_decorator(login_required)

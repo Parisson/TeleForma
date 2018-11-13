@@ -245,8 +245,7 @@ class Script(BaseResource):
     course = models.ForeignKey(Course, related_name="scripts", verbose_name=_('course'), null=True, on_delete=models.SET_NULL)
     period = models.ForeignKey(Period, related_name='scripts', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    session = models.CharField(_('session'), choices=session_choices,
-                                      max_length=16, default="1")
+    session = models.CharField(_('session'), max_length=16, default="1")
     type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
     corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)

@@ -39,7 +39,7 @@ from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
 from tinymce.models import HTMLField
-
+from  django.db.models import signals
 
 class IEJ(Model):
 
@@ -171,6 +171,8 @@ class Student(Model):
     confirmation_sent = models.BooleanField(_('confirmation sent'))
     level = models.CharField(_('studying level'), blank=True, max_length=100)
 
+    balance = models.FloatField(_('balance de paiement'), help_text='€', blank=True, null=True)
+    
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -210,10 +212,13 @@ class Student(Model):
         for payback in self.paybacks.all():
             amount -= payback.value
         return amount
-
-    @property
-    def balance(self):
-        return  round(self.total_payments - self.total_fees, 2)
+        
+    def update_balance(self):
+        old = self.balance
+        new = round(self.total_payments - self.total_fees, 2)
+        if old != new:
+            self.balance = new
+            self.save()
 
     def get_absolute_url(self):
         return reverse_lazy('teleforma-profile-detail', kwargs={'username':self.user.username})
@@ -224,6 +229,14 @@ class Student(Model):
         verbose_name_plural = _('Students')
         ordering = ['user__last_name', '-date_subscribed']
 
+def update_balance_signal(sender, instance, *args, **kwargs):
+    if sender is Student:
+        instance.update_balance()
+    elif sender in (Discount, OptionalFee, Payment):
+        instance.student.update_balance()
+        
+signals.post_save.connect(update_balance_signal)
+signals.post_delete.connect(update_balance_signal)
 
 class Profile(models.Model):
     "User profile extension"
@@ -353,8 +366,6 @@ class NewsItem(models.Model):
 
     def can_delete(self, request):
         return request.user.is_staff or request.user.id == self.creator.id
-
-
 
 
 

@@ -71,6 +71,41 @@ class StudentGroupAdmin(admin.ModelAdmin):
     model = StudentGroup
     filter_horizontal = ['students']
 
+class BalanceFilter(admin.SimpleListFilter):
+    title = _(u'balance')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'balance'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return [ ('ltz', u'négative'),
+                 ('eqz', u'zéro'),
+                 ('gtz', u'positive') ]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.date()`.
+        """
+        value = self.value()
+        if value == 'ltz':
+            return queryset.filter(balance__lt = 0)
+        elif value == 'eqz':    
+            return queryset.filter(balance = 0)
+        elif value == 'gtz':    
+            return queryset.filter(balance__gt = 0)
+        else:
+            return queryset
+
+
 class StudentAdmin(admin.ModelAdmin):
 
     model = Student
@@ -80,9 +115,10 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
                     'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
-                    'oral_1', 'oral_2']
+                    'oral_1', 'oral_2', BalanceFilter ]
     list_display = ['student_name', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
+    readonly_fields = [ 'balance' ]
     actions = ['export_xls', 'write_message', 'add_to_group']
     action_form = StudentGroupForm
 
@@ -158,11 +194,45 @@ class DocumentAdmin(admin.ModelAdmin):
     list_filter = ('course', 'periods', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
 
+class ConferenceDateBeginFilter(admin.SimpleListFilter):
+    title = _(u'date de début')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'date_begin'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        conferences = Conference.objects.all()
+        dates = [ c.date_begin.date() for c in conferences if c.date_begin ]
+        dates = set(dates)
+        res = [ ( d.strftime('%Y%m%d'), d.strftime('%d/%m/%Y')) for d in dates ]
+        return sorted(res)[::-1]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.date()`.
+        """
+        value = self.value()
+        if value:
+            date = datetime.date(int(value[:4]), int(value[4:6]), int(value[6:]))
+            rng = (datetime.datetime.combine(date, datetime.time.min),
+                   datetime.datetime.combine(date, datetime.time.max))
+            return queryset.filter(conference__date_begin__range = rng)
+        else:
+            return queryset
 
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
-
+    list_filter = (ConferenceDateBeginFilter, )
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
