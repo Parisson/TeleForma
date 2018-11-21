@@ -324,22 +324,24 @@ class Payback(models.Model):
 
 class Home(models.Model):
 
+    title = models.CharField(_('Title'), max_length=255,
+                             default="Page d'accueil")
     text = HTMLField('Texte', blank=True)
     video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
+    modified_at = models.DateTimeField(u'Date de modification', auto_now=True,
+                                       default=datetime.datetime.now)
+    periods = models.ManyToManyField('Period', related_name="home_texts",
+                                     verbose_name=u'Périodes associées',
+                                     blank=True, null=True)
+    enabled = models.BooleanField(u'Activé', default=True)
 
     class Meta(MetaCore):
         verbose_name = "Page d'accueil"
         verbose_name_plural = "Page d'accueil"
 
     def __unicode__(self):
-        return "Page d'accueil"
+        return self.title
 
-    def save(self, *args, **kwargs):
-        if Home.objects.exists() and not self.pk:
-            # if you'll not check for self.pk
-            # then error will also raised in update of exists model
-            raise ValidationError('There is can be only one Home instance')
-        return super(Home, self).save(*args, **kwargs)
 
 
 class NewsItem(models.Model):
