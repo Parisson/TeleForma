@@ -195,6 +195,10 @@ class Course(Model):
     has_exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
     quiz = models.ManyToManyField(Quiz, verbose_name=_('quiz'), blank=True, null=True)
 
+    periods = models.ManyToManyField('Period', related_name="courses",
+                                     verbose_name=u'Périodes associées',
+                                     blank=True, null=True)
+
     def __unicode__(self):
         return self.title
 
@@ -224,6 +228,13 @@ class Course(Model):
             self.number = int(data['number'])
         self.save()
 
+    def is_for_period(self, period):
+        """
+        Check if it's available for given period
+        """
+        periods = [ p['id'] for p in self.periods.values('id') ]
+        return not periods or period.id in periods
+        
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')

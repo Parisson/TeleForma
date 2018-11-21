@@ -339,6 +339,13 @@ class Home(models.Model):
         verbose_name = "Page d'accueil"
         verbose_name_plural = "Page d'accueil"
 
+    def is_for_period(self, period):
+        """
+        Check if it's available for given period
+        """
+        periods = [ p['id'] for p in self.periods.values('id') ]
+        return not periods or period.id in periods
+
     def __unicode__(self):
         return self.title
 

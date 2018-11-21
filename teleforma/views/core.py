@@ -348,8 +348,7 @@ class CourseListView(CourseAccessMixin, ListView):
 
         homes = Home.objects.filter(enabled = True).order_by('-modified_at')
         for home in homes:
-            periods = [ p['id'] for p in home.periods.values('id') ]
-            if not periods or context['period'].id in periods:
+            if home.is_for_period(context['period']):
                 context['home_text'] = home.text
                 context['home_video'] = home.video
                 break

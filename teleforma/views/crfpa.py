@@ -116,6 +116,9 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
     if num_order:
         courses = sorted(courses, key=lambda k: k['number'])
 
+    if period:
+        courses = [ c for c in courses if c['course'].is_for_period(period) ]
+        
     return courses
 
 
