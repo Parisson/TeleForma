@@ -186,31 +186,36 @@ class Student(Model):
             amount += self.subscription_fees
         if self.application_fees:
             amount += self.default_application_fees
-        for optional_fee in self.optional_fees.all():
-            amount += optional_fee.value
-        for discount in self.discounts.all():
-            amount -= discount.value
+        amount += self.total_optional_fees
+        amount += self.total_discount
         return amount
 
     @property
+    def total_optional_fees(self):
+        amount = 0
+        for optional_fee in self.optional_fees.values('value'):
+            amount += optional_fee['value']
+        return amount
+    
+    @property
     def total_payments(self):
         amount = 0
-        for payment in self.payments.all():
-            amount += payment.value
+        for payment in self.payments.values('value'):
+            amount += payment['value']
         return amount
 
     @property
     def total_discount(self):
         amount = 0
-        for discount in self.discounts.all():
-            amount -= discount.value
+        for discount in self.discounts.values('value'):
+            amount -= discount['value']
         return amount
 
     @property
     def total_paybacks(self):
         amount = 0
-        for payback in self.paybacks.all():
-            amount -= payback.value
+        for payback in self.paybacks.values('value'):
+            amount -= payback['value']
         return amount
         
     def update_balance(self):
