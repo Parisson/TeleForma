@@ -293,10 +293,11 @@ class ScriptsScoreAllView(ScriptsTreatedView):
             'chartdata': chartdata,
             'chartcontainer': chartcontainer,
             'extra': {
-            'x_is_date': False,
-            'x_axis_format': '',
-            'tag_script_js': True,
-            'jquery_on_ready': False,}
+                'x_is_date': False,
+                'x_axis_format': '',
+                'chart_attr': { 'reduceXTicks': 0 },
+                'tag_script_js': True,
+                'jquery_on_ready': False,}
             }
         return data
 
