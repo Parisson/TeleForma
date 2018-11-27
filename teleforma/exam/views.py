@@ -179,6 +179,7 @@ class ScriptsPendingView(ScriptsView):
         qs = super(ScriptsPendingView, self).get_queryset()
         
         if self.request.GET.get('corrector') is None:
+            user = self.request.user
             # Exclude status=3 but not author=user
             qs = qs.filter(~Q(status=3) | Q(author=user))
 
@@ -293,10 +294,11 @@ class ScriptsScoreAllView(ScriptsTreatedView):
             'chartdata': chartdata,
             'chartcontainer': chartcontainer,
             'extra': {
-            'x_is_date': False,
-            'x_axis_format': '',
-            'tag_script_js': True,
-            'jquery_on_ready': False,}
+                'x_is_date': False,
+                'x_axis_format': '',
+                'chart_attr': { 'reduceXTicks': 0 },
+                'tag_script_js': True,
+                'jquery_on_ready': False,}
             }
         return data
 
