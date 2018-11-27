@@ -194,6 +194,8 @@ class Course(Model):
     oral_2 = models.BooleanField(_('oral_2'))
     has_exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
     quiz = models.ManyToManyField(Quiz, verbose_name=_('quiz'), blank=True, null=True)
+    # last professor which received a student message on automatic mode
+    last_professor_sent = models.ForeignKey('Professor', blank=True, null=True)
 
     def __unicode__(self):
         return self.title
