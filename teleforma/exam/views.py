@@ -180,8 +180,8 @@ class ScriptsPendingView(ScriptsView):
         
         if self.request.GET.get('corrector') is None:
             user = self.request.user
-            # Exclude status=3 but not author=user
-            qs = qs.filter(~Q(status=3) | Q(author=user))
+            # Exclude status=2 but not author=user
+            qs = qs.filter(~Q(status=2) | Q(author=user))
 
         return qs
 

@@ -216,27 +216,25 @@ def published(doc):
     if doc:
         return doc.filter(is_published=True)
 
-@register.simple_tag
-def untreated_scripts_count(user, period):
-    Q1 = Q(status=3, author=user, period=period)
-    Q2 = Q(status=3, corrector=user, period=period)
-    scripts = Script.objects.filter(Q1 | Q2)
+def scripts_count(user, period, statuses):
+    if not period:
+        return ''
+    Q1 = Q(author=user)
+    Q2 = Q(corrector=user)
+    scripts = Script.objects.filter(Q1 | Q2).filter(status__in = statuses,
+                                                    period = period)
     if scripts:
         return ' (' + str(len(scripts)) + ')'
     else:
         return ''
+    
+@register.simple_tag
+def untreated_scripts_count(user, period):
+    return scripts_count(user, period, (3,))
 
 @register.simple_tag
 def treated_scripts_count(user, period):
-    if not period:
-        return ''
-    Q1 = Q(status=4, author=user, period=period)
-    Q2 = Q(status=4, corrector=user, period=period)
-    scripts = Script.objects.filter(Q1 | Q2)
-    if scripts:
-        return ' (' + str(len(scripts)) + ')'
-    else:
-        return ''
+    return scripts_count(user, period, (4,))
 
 @register.simple_tag
 def get_training_profile(user):
