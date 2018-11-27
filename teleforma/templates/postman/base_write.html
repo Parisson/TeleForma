@@ -4,71 +4,166 @@
 
 {% block content %}
 
-<script type="text/javascript">
-function update_admin_recipient() {
-	$("#_adminSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
-}
 
-function update_professor_recipient() {
-	$("#_professorSelect").click(function () {
-      var htmlStr = $(this).val();
-      $("#id_recipients").val(htmlStr);
-    });
-}
+    <div id="postman" class="desk_messages">
+        <h1>{% block pm_write_title %}{% endblock %}</h1>
 
-</script>
+        {% if user.student.all or user.is_staff or user.quotas.all %}
+            <div style="padding-top: 0.5em;">
 
-<div id="postman" class="desk_messages">
-<h1>{% block pm_write_title %}{% endblock %}</h1>
+                {% trans "Vous pouvez ici échanger des messages avec les professeurs et les administrateurs." %}
+                <br/>
+                {% trans "Pour les questions concernant l'organisation des cours, le planning, les documents de cours ou les copies, adressez-vous à <b>Admin-CRFPA</b>." %}
+                <br/>
+                {% trans "Pour les questions concernant uniquement l'accès à la plateforme et aux médias vidéo ou audio, lire d'abord" %}
+                <a href="{% url teleforma-help %}">la page
+                    d'aide</a> {% trans "puis adressez-vous à <b>Support technique</b>." %}
+                <br/><br/>
 
-{% if user.student.all or user.is_staff or user.quotas.all %}
-<div style="padding-top: 0.5em;">
+            </div>
+        {% endif %}
+        <div class="write_content">
 
-{% trans "Vous pouvez ici échanger des messages avec les professeurs et les administrateurs." %}
-<br/>
-{% trans "Pour les questions concernant l'organisation des cours, le planning, les documents de cours ou les copies, adressez-vous à <b>Admin-CRFPA</b>." %}
-<br/>
-{% trans "Pour les questions concernant uniquement l'accès à la plateforme et aux médias vidéo ou audio, lire d'abord" %} <a href="{% url teleforma-help %}">la page d'aide</a> {% trans "puis adressez-vous à <b>Support technique</b>." %}
-<br/><br/>
+            <form id="_messageForm" action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}"
+                  method="post">{% csrf_token %}
 
-<select id="_adminSelect" name="admins" onchange="update_admin_recipient();">
-<option value="">{% trans "to an administrator" %}</option>
-{% get_all_admins as admins %}
-{% for a in admins %}
-<option value="{{ a.username }}">{{a.first_name}} {{a.last_name}}</option>
-{% endfor %}
-</select>
 
-<select id="_professorSelect" name="professors" onchange="update_professor_recipient();">
-<option value="">{% trans "to a professor" %}</option>
-{% get_all_professors as professors %}
-{% for p in professors %}
-<option value="{{ p.user.username }}">{{p.user.last_name}} {{p.user.first_name}}</option>
-{% endfor %}
-</select>
+                {{ form.errors.recipients }}
+                <input type="radio" id="recipient_category-admin" name="recipient_category" value="admin" {% if request.POST.recipient_category == 'admin' %}checked="checked"{% endif %}/><label
+                    for="recipient_category-admin">A un administrateur</label>
+                <input type="radio" id="recipient_category-prof" name="recipient_category" value="prof" {% if request.POST.recipient_category == 'prof' %}checked="checked"{% endif %}/><label
+                    for="recipient_category-prof">A un professeur</label>
 
-</div>
-{% endif %}
 
-<div class="write_content">
-<form id="_messageForm" action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" method="post">{% csrf_token %}
-<table>
-{% block pm_write_recipient %}{% endblock %}
-{{ form.as_table }}
-</table>
-</form>
-<a href="#" class="component_icon button icon_next" id="send_button">{% trans "Send" %}</a>
-</div>
-</div>
+                <div id="category-admin">
+                    <select id="_adminSelect" name="admins">
+                        <option value="">{% trans "to an administrator" %}</option>
+                        {% get_all_admins as admins %}
+                        {% for a in admins %}
+                            <option value="{{ a.username }}" {% if request.POST.admins == a.username %}selected{% endif %}>{{ a.first_name }} {{ a.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-<script type="text/javascript">
-document.getElementById("id_subject").focus();
-$('#send_button').click(function() {
-  $('#_messageForm').submit();
-});
-</script>
+
+                <div id="category-prof">
+
+                    <select id="_courseSelect" name="course">
+                        <option value="">Matière</option>
+                        {% get_all_courses as courses %}
+                        {% for c in courses %}
+                            <option value="{{ c.id }}" {% if request.POST.course == c.id|stringformat:"i" %}selected{% endif %}>{{ c.title }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select id="_professorSelect" name="professors">
+                        <option value="auto">N'importe quel professeur</option>
+                        {% get_all_professors_with_courses as professors %}
+                        {% for p in professors %}
+                            <option value="{{ p.username }}"
+                                    data-courses="{{ p.courses }}" {% if request.POST.professors == p.username %}selected{% endif %}>{{ p.name }} {{ p.courses }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+              <table>
+                {% block pm_write_recipient %}{% endblock %}
+                {% for field in form.visible_fields %}
+                    {% if field.name != 'course' %}
+                  <tr>
+                    <th>{{ field.label_tag }}</th>
+                    <td>
+                      {{ field.errors }}
+                      {{ field }}
+                      {{ field.help_text }}
+                    </td>
+                  </tr>
+                    {% endif %}
+                {% endfor %}
+              </table>
+            </form>
+            <a href="#" class="component_icon button icon_next" id="send_button">{% trans "Send" %}</a>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        function update_admin_recipient() {
+            $("#_adminSelect").click(function () {
+                var htmlStr = $(this).val();
+                $("#id_recipients").val(htmlStr);
+            });
+        }
+
+        function update_professor_recipient() {
+            $("#_professorSelect").click(function () {
+                var htmlStr = $(this).val();
+                $("#id_recipients").val(htmlStr);
+            });
+        }
+
+
+        function update_desk_messages(event) {
+
+            // reset values
+            if(event){
+                $target = $(event.target);
+                if($target.attr('id') === 'recipient_category-prof' || $target.attr('id') === 'recipient_category-admin') {
+                    $('#_professorSelect').val('');
+                    $('#_courseSelect').val('');
+                    $('#_adminSelect').val('');
+                }
+
+                if($target.attr('id') === '_courseSelect')
+                    $('#_professorSelect').val('');
+            }
+
+            // show or hide field depending on what is selected
+            var recipientCategory = $('[name="recipient_category"]:checked').val();
+            $("#id_recipients").val('');
+            $('#category-admin').hide();
+            $('#category-prof').hide();
+            if (recipientCategory == 'admin')
+                $('#category-admin').show();
+            else if (recipientCategory == 'prof')
+                $('#category-prof').show();
+
+            var course = parseInt($('[name="course"]').val(), 10);
+            if(!course)
+                $('#_professorSelect').hide();
+            else
+                $('#_professorSelect').show();
+
+            $('#_professorSelect option').hide();
+            $('#_professorSelect option:first').show();
+            $('#_professorSelect option').each(function(){
+                var $option = $(this);
+                var courses = $option.data('courses')
+                if(courses && courses.indexOf(course) >= 0)
+                    $option.show();
+            });
+
+            // fill the hidden field
+            if($('#_professorSelect').val() && $('#_courseSelect').val())
+                $("#id_recipients").val($('#_professorSelect').val());
+            if($('#_adminSelect').val())
+                $("#id_recipients").val($('#_adminSelect').val());
+        }
+
+        // hide recipients fields
+        $('#id_recipients').parent().parent().hide();
+        {#$('#id_course').parent().parent().hide();#}
+
+        $('[name="recipient_category"]').bind('change', update_desk_messages);
+        $('[name="course"]').bind('change', update_desk_messages);
+        $('#_professorSelect, #_adminSelect').bind('change', update_desk_messages);
+        update_desk_messages();
+
+        document.getElementById("id_subject").focus();
+        $('#send_button').click(function () {
+            $('#_messageForm').submit();
+        });
+    </script>
 
 {% endblock %}

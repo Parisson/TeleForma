@@ -1,9 +1,14 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField
+from postman.forms import WriteForm as PostmanWriteForm
+
+from teleforma.fields import BasicCommaSeparatedUserField
 from teleforma.models import *
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from captcha.fields import CaptchaField
+
+from teleforma.models.core import Course
 from tinymce.widgets import TinyMCE
 
 class ConferenceForm(ModelForm):
@@ -91,3 +96,15 @@ class NewsItemForm(ModelForm):
             'description': TinyMCE({'cols':80, 'rows':30}),
         }
 
+
+
+class WriteForm(PostmanWriteForm):
+    recipients = BasicCommaSeparatedUserField(label=(_("Recipients"), _("Recipient")), help_text='')
+    course = ModelChoiceField(queryset=Course.objects.all())
+
+    class Meta(PostmanWriteForm.Meta):
+        fields = ('course', 'recipients', 'subject', 'body')
+
+    def clean_recipients(self):
+        """Check no filter prohibit the exchange."""
+        recipients = self.cleaned_data['recipients']

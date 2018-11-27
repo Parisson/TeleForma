@@ -3,16 +3,16 @@
 {% load teleforma_tags %}
 {% load i18n %}
 {% load static %}
-{% load webviewer %}
+{% load pdfannotator %}
 {% load thumbnail %}
 
 {% block extra_javascript %}
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+{#  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">#}
+{#  <script src="//code.jquery.com/jquery-1.10.2.js"></script>#}
+{#  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>#}
   <script src="/static/exam/js/exam.js"></script>
-  <!--<script src='{% static "WebViewer/lib/html5/external/jquery-3.2.1.min.js" %}'></script>-->
-  <script src='{% static "WebViewer/lib/WebViewer.min.js" %}'></script>
+{#  <!--<script src='{% static "WebViewer/lib/html5/external/jquery-3.2.1.min.js" %}'></script>-->#}
+{#  <script src='{% static "WebViewer/lib/WebViewer.min.js" %}'></script>#}
   <script>
     // increase the default animation speed to exaggerate the effect
   {% if script.comments %}
@@ -25,10 +25,26 @@
 
 {% endblock extra_javascript %}
 
+{% block extra_stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{% static "pdfannotator/toolbar.css" %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static "pdfannotator/pdf_viewer.css" %}"/>
+  <style type="text/css">
+    body {
+      background-color: #eee;
+      font-family: sans-serif;
+      margin: 0;
+    }
+
+    
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+{% endblock %}
+
 {% block content %}
 
 {% block course %}
-<div class="course">
+<div class="course viewer">
 
 <div class="course_title">
 
@@ -129,12 +145,12 @@
 <br /><br />
 <div class="media">
  <div class="script">
-  {% if script.has_annotations_file %}
-    <iframe id="box-iframe" style="position:fixed; top:12%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all or user.is_superuser %}{{ script_service_url }}?url={{ script.safe_url }}&username=Examinator&uuid={{ script.uuid }}{% else %}{{ script_service_url }}?url={{ script.safe_url }}&username={{ user.username }}&uuid={{ script.uuid }}{% endif %}">
-    </iframe>
-  {% else %}
-    {% webviewer url=script.unquoted_url uuid=script.uuid %}
-  {% endif %}
+{#  {% if script.has_annotations_file %}#}
+{#    <iframe id="box-iframe" style="position:fixed; top:12%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all or user.is_superuser %}{{ script_service_url }}?url={{ script.safe_url }}&username=Examinator&uuid={{ script.uuid }}{% else %}{{ script_service_url }}?url={{ script.safe_url }}&username={{ user.username }}&uuid={{ script.uuid }}{% endif %}">#}
+{#    </iframe>#}
+{#  {% else %}#}
+    {% pdfannotator url=script.unquoted_url uuid=script.uuid %}
+{#  {% endif %}#}
  </div>
 </div>
 

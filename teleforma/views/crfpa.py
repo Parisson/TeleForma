@@ -33,8 +33,11 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 from teleforma.models.core import Period
 from teleforma.views.core import *
+from teleforma.forms import WriteForm
 from registration.views import *
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from postman.views import WriteView as PostmanWriteView
+from postman.forms import AnonymousWriteForm
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
@@ -592,3 +595,46 @@ class NewsItemList(ListView):
         if course_id:
             query = query.filter(course__id=self.request.GET.get('course_id'))
         return query
+
+
+class WriteView(PostmanWriteView):
+    """
+    Display a form to compose a message.
+
+    Optional URLconf name-based argument:
+        ``recipients``: a colon-separated list of usernames
+    Optional attributes:
+        ``form_classes``: a 2-tuple of form classes
+        ``autocomplete_channels``: a channel name or a 2-tuple of names
+        ``template_name``: the name of the template to use
+        + those of ComposeMixin
+
+    """
+    form_classes = (WriteForm, AnonymousWriteForm)
+
+    # def get_initial(self):
+    #     initial = super(WriteView, self).get_initial()
+    #     if self.request.method == 'GET':
+    #         initial.update(self.request.GET.items())  # allow optional initializations by query string
+    #         recipients = self.kwargs.get('recipients')
+    #         if recipients:
+    #             # order_by() is not mandatory, but: a) it doesn't hurt; b) it eases the test suite
+    #             # and anyway the original ordering cannot be respected.
+    #             user_model = get_user_model()
+    #             usernames = list(user_model.objects.values_list(user_model.USERNAME_FIELD, flat=True).filter(
+    #                 is_active=True,
+    #                 **{'{0}__in'.format(user_model.USERNAME_FIELD): [r.strip() for r in recipients.split(':') if r and not r.isspace()]}
+    #             ).order_by(user_model.USERNAME_FIELD))
+    #             if usernames:
+    #                 initial['recipients'] = ', '.join(usernames)
+    #     return initial
+
+    # def get_form_kwargs(self):
+    #     import pdb;pdb.set_trace()
+    #     kwargs = super(WriteView, self).get_form_kwargs()
+    #     if isinstance(self.autocomplete_channels, tuple) and len(self.autocomplete_channels) == 2:
+    #         channel = self.autocomplete_channels[self.request.user.is_anonymous()]
+    #     else:
+    #         channel = self.autocomplete_channels
+    #     kwargs['channel'] = channel
+    #     return kwargs
