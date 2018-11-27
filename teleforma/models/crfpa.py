@@ -186,31 +186,36 @@ class Student(Model):
             amount += self.subscription_fees
         if self.application_fees:
             amount += self.default_application_fees
-        for optional_fee in self.optional_fees.all():
-            amount += optional_fee.value
-        for discount in self.discounts.all():
-            amount -= discount.value
+        amount += self.total_optional_fees
+        amount += self.total_discount
         return amount
 
     @property
+    def total_optional_fees(self):
+        amount = 0
+        for optional_fee in self.optional_fees.values('value'):
+            amount += optional_fee['value']
+        return amount
+    
+    @property
     def total_payments(self):
         amount = 0
-        for payment in self.payments.all():
-            amount += payment.value
+        for payment in self.payments.values('value'):
+            amount += payment['value']
         return amount
 
     @property
     def total_discount(self):
         amount = 0
-        for discount in self.discounts.all():
-            amount -= discount.value
+        for discount in self.discounts.values('value'):
+            amount -= discount['value']
         return amount
 
     @property
     def total_paybacks(self):
         amount = 0
-        for payback in self.paybacks.all():
-            amount -= payback.value
+        for payback in self.paybacks.values('value'):
+            amount -= payback['value']
         return amount
         
     def update_balance(self):
@@ -324,22 +329,31 @@ class Payback(models.Model):
 
 class Home(models.Model):
 
+    title = models.CharField(_('Title'), max_length=255,
+                             default="Page d'accueil")
     text = HTMLField('Texte', blank=True)
     video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
+    modified_at = models.DateTimeField(u'Date de modification', auto_now=True,
+                                       default=datetime.datetime.now)
+    periods = models.ManyToManyField('Period', related_name="home_texts",
+                                     verbose_name=u'Périodes associées',
+                                     blank=True, null=True)
+    enabled = models.BooleanField(u'Activé', default=True)
 
     class Meta(MetaCore):
         verbose_name = "Page d'accueil"
         verbose_name_plural = "Page d'accueil"
 
-    def __unicode__(self):
-        return "Page d'accueil"
+    def is_for_period(self, period):
+        """
+        Check if it's available for given period
+        """
+        periods = [ p['id'] for p in self.periods.values('id') ]
+        return not periods or period.id in periods
 
-    def save(self, *args, **kwargs):
-        if Home.objects.exists() and not self.pk:
-            # if you'll not check for self.pk
-            # then error will also raised in update of exists model
-            raise ValidationError('There is can be only one Home instance')
-        return super(Home, self).save(*args, **kwargs)
+    def __unicode__(self):
+        return self.title
+
 
 
 class NewsItem(models.Model):

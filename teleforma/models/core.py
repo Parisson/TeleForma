@@ -151,7 +151,7 @@ class Period(Model):
     is_open = models.BooleanField(_('is open'), default=True)
     date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
     nb_script = models.IntegerField(_("nombre maximal de copies"), null=True, blank=True)
-    date_close_accounts = models.DateField(_("date de fermeture des comptes étudiants"), null = True, blank = True)
+    date_close_accounts = models.DateField("date de fermeture des comptes étudiants", null = True, blank = True)
 
     def __unicode__(self):
         return self.name
@@ -197,6 +197,10 @@ class Course(Model):
     # last professor which received a student message on automatic mode
     last_professor_sent = models.ForeignKey('Professor', blank=True, null=True)
 
+    periods = models.ManyToManyField('Period', related_name="courses",
+                                     verbose_name=u'Périodes associées',
+                                     blank=True, null=True)
+
     def __unicode__(self):
         return self.title
 
@@ -226,6 +230,13 @@ class Course(Model):
             self.number = int(data['number'])
         self.save()
 
+    def is_for_period(self, period):
+        """
+        Check if it's available for given period
+        """
+        periods = [ p['id'] for p in self.periods.values('id') ]
+        return not periods or period.id in periods
+        
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')

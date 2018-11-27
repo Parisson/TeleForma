@@ -139,8 +139,7 @@ class StudentAdmin(admin.ModelAdmin):
         return response
 
     def export_xls(self, request, queryset):
-        users = [student.user for student in queryset]
-        book = UserXLSBook(users)
+        book = UserXLSBook(students = queryset)
         book.write()
         response = HttpResponse(mimetype="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
@@ -241,6 +240,10 @@ class ConferenceAdmin(admin.ModelAdmin):
 
 
 class HomeAdmin(admin.ModelAdmin):
+    list_filter = ('enabled',)
+    search_fields = [ 'periods__name', 'title', 'text' ]
+    list_display = ('title', 'enabled', 'modified_at')
+    readonly_fields = ('modified_at',)
     def get_form(self, request, obj=None, **kwargs):
         form = super(HomeAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['video'].queryset = Media.objects.filter(type='webm')

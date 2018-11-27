@@ -24,12 +24,12 @@ class ScriptMixinView(View):
         self.period = Period.objects.get(id=self.kwargs['period_id'])
         context['period'] = self.period
         context['script_service_url'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL')
+        self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
             upload = datetime.datetime.now() <= self.period.date_exam_end
-            if self.period.nb_script:
-                if Script.objects.filter(period = self.period,
-                                         author = self.request.user).count() >= self.period.nb_script:
-                    upload = False
+            if Script.objects.filter(period = self.period,
+                                     author = self.request.user).count() >= self.nb_script:
+                upload = False
             context['upload'] = upload
         else:
             context['upload'] = False
@@ -55,6 +55,7 @@ class ScriptsListMixinView(ScriptMixinView):
             correctors = User.objects.filter(corrector_scripts__in=self.get_base_queryset()).order_by('last_name').distinct()
             context['correctors_list'] = [(str(corrector.id), corrector.get_full_name()) for corrector in correctors]
             context['corrector_selected'] = self.request.GET.get('corrector', str(self.request.user.id))
+            session_choices = get_n_choices(self.nb_script + 1)
             context['sessions_list'] = session_choices
             context['session_selected'] = self.request.GET.get('session')
             types = ScriptType.objects.all()
@@ -63,6 +64,7 @@ class ScriptsListMixinView(ScriptMixinView):
             courses = Course.objects.filter(scripts__in=self.get_base_queryset()).distinct()
             context['courses_list'] = [(str(course.id), course.title) for course in courses]
             context['course_selected'] = self.request.GET.get('course')
+            context['platform_only'] = self.request.GET.get('platform_only')
         return context
 
 class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
@@ -121,6 +123,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
 
     model = Script
     template_name='exam/scripts.html'
+    status_filter = None
 
     def get_form_queryset(self):
         QT = ~Q(pk=None)
@@ -128,15 +131,40 @@ class ScriptsView(ScriptsListMixinView, ListView):
         type = self.request.GET.get('type')
         session = self.request.GET.get('session')
         course = self.request.GET.get('course')
+        platform_only = self.request.GET.get('platform_only')
         if type:
-            QT = Q(type__id=int(type)) & QT
+            QT &= Q(type__id=int(type))
         if session:
-            QT = Q(session=session) & QT
+            QT &= Q(session=session)
         if course:
-            QT = Q(course__id=int(course)) & QT
+            QT &= Q(course__id=int(course))
         if corrector:
-            QT = Q(corrector__id=int(corrector)) & QT
+            QT &= Q(corrector__id=int(corrector))
+        if platform_only:
+            QT &= Q(author__student__platform_only = int(platform_only))
         return QT
+ 
+    def get_base_queryset(self):
+        QT = self.get_form_queryset() & Q(period_id=self.kwargs['period_id'])
+        if self.status_filter:
+            QT &= Q(status__in=self.status_filter)
+        return Script.objects.filter(QT)
+
+    def get_queryset(self):
+        user = self.request.user
+        base_qs = self.get_base_queryset()
+
+        if self.request.GET.get('corrector') is None:
+            QT = Q(author=user) | Q(corrector=user)
+
+            professor = user.professor.all()
+            if professor:
+                professor = professor[0]
+                courses_id = [ c['id'] for c in professor.courses.values('id') ]
+                QT |= Q(course_id__in=courses_id)
+
+            base_qs = base_qs.filter(QT)
+        return base_qs
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -145,33 +173,16 @@ class ScriptsView(ScriptsListMixinView, ListView):
 
 class ScriptsPendingView(ScriptsView):
 
-    def get_base_queryset(self):
-        period = Period.objects.get(id=self.kwargs['period_id'])
-        QT = Q(status__in=(2, 3), period=period)
-        return Script.objects.filter(QT)
-
+    status_filter = (2, 3)
 
     def get_queryset(self):
-        user = self.request.user
-        period = Period.objects.get(id=self.kwargs['period_id'])
+        qs = super(ScriptsPendingView, self).get_queryset()
+        
+        if self.request.GET.get('corrector') is None:
+            # Exclude status=3 but not author=user
+            qs = qs.filter(~Q(status=3) | Q(author=user))
 
-        if self.request.GET.get('corrector') is not None:
-            QT = Q(status__in=(2, 3), period=period)
-        else:
-            QT = Q(status=2, author=user, period=period)
-            QT = Q(status=3, author=user, period=period) | QT
-            QT = Q(status=3, corrector=user, period=period) | QT
-
-            professor = user.professor.all()
-            if professor:
-                professor = professor[0]
-                for course in professor.courses.all():
-                    QT = Q(status=2, period=period, course=course) | QT
-                    QT = Q(status=3, period=period, course=course) | QT
-
-        QT = self.get_form_queryset() & QT
-
-        return Script.objects.filter(QT)
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsPendingView, self).get_context_data(**kwargs)
@@ -181,33 +192,8 @@ class ScriptsPendingView(ScriptsView):
 
 class ScriptsTreatedView(ScriptsView):
 
-    def get_base_queryset(self):
-        period = Period.objects.get(id=self.kwargs['period_id'])
-        QT = Q(status__in=(4, 5), period=period)
-        return Script.objects.filter(QT)
-
-    def get_queryset(self):
-        user = self.request.user
-        period = Period.objects.get(id=self.kwargs['period_id'])
-
-        if self.request.GET.get('corrector') is not None:
-            QT = Q(status__in=(4, 5), period=period)
-        else:
-            QT = Q(status=4, author=user, period=period)
-            QT = Q(status=5, author=user, period=period) | QT
-            QT = Q(status=4, corrector=user, period=period) | QT
-            QT = Q(status=5, corrector=user, period=period) | QT
-
-            professor = user.professor.all()
-            if professor:
-                professor = professor[0]
-                for course in professor.courses.all():
-                    QT = Q(status=4, period=period, course=course) | QT
-                    QT = Q(status=5, period=period, course=course) | QT
-
-        QT = self.get_form_queryset() & QT
-        return Script.objects.filter(QT)
-
+    status_filter = (4, 5 ,7)
+    
     def get_context_data(self, **kwargs):
         context = super(ScriptsTreatedView, self).get_context_data(**kwargs)
         period = Period.objects.get(id=self.kwargs['period_id'])
@@ -216,29 +202,7 @@ class ScriptsTreatedView(ScriptsView):
 
 
 class ScriptsRejectedView(ScriptsView):
-
-    def get_base_queryset(self):
-        period = Period.objects.get(id=self.kwargs['period_id'])
-        QT = Q(status=0)
-        return Script.objects.filter(QT)
-
-    def get_queryset(self):
-        user = self.request.user
-        period = Period.objects.get(id=self.kwargs['period_id'])
-        if self.request.GET.get('corrector') is not None:
-            QT = Q(status=0)
-        else:
-            QT = Q(status=0, author=user)
-            QT = Q(status=0, corrector=user) | QT
-
-            professor = user.professor.all()
-            if professor:
-                professor = professor[0]
-                for course in professor.courses.all():
-                    QT = Q(status=0, period=period, course=course) | QT
-
-        QT = self.get_form_queryset() & QT
-        return Script.objects.filter(QT)
+    status_filter = (0,)
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsRejectedView, self).get_context_data(**kwargs)
@@ -307,6 +271,8 @@ class QuotasView(ListView):
 
 class ScriptsScoreAllView(ScriptsTreatedView):
 
+    perso_name = 'Moyenne personnelle'
+    
     template_name='exam/scores.html'
 
     def score_data_setup(self, x, y):
@@ -337,100 +303,63 @@ class ScriptsScoreAllView(ScriptsTreatedView):
     def get_context_data(self, **kwargs):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
         user = self.request.user
-        period = Period.objects.get(id=self.kwargs['period_id'])
+        period_id = self.kwargs['period_id']
+        
+        if 'course_id' in self.kwargs:
+            course = Course.objects.get(id=self.kwargs['course_id'])
+        else:
+            course = None
 
-        if self.request.user.is_staff:
-            QT = Q(status=4, period=period)
-            QT = Q(status=5, period=period) | QT
-            QT = Q(date_added__gte=self.period.date_begin) | QT
+        is_staff = user.is_staff
+        staff_or_teacher = is_staff or user.professor.exists()
+
+        QT = Q(period_id=period_id, status__in = self.status_filter)
+        all_scripts = Script.objects.filter(QT).exclude(score=None)
+
+        if is_staff:
+            QT |= Q(date_added__gte=self.period.date_begin)
             scripts = Script.objects.filter(QT).exclude(score=None)
         else:
             scripts = self.get_queryset()
 
-        sessions = []
+        if course:
+            scripts = scripts.filter(course=course)
+            all_scripts = all_scripts.filter(course=course)
+            
+        sessions = set()
         scores = []
 
-        for script in scripts:
-            if not script.session in sessions:
-                sessions.append(script.session)
-        sessions = map(str, sorted(map(int, sessions)))
+        for script in scripts.values('session'):
+            sessions.add(script['session'])
+        sessions = sorted(sessions, key = lambda v: int(v))
         sessions_x = {'x': sessions}
 
-        if not (self.request.user.is_staff or self.request.user.professor.all()):
-            data = []
-            for session in sessions:
-                data.append(np.mean([float(script.score) for script in scripts.filter(session=session) if script.score]))
-            scores.append({'name': 'Moyenne personnelle' + ' (' + str(len(sessions)) + ')', 'data': data})
-
-        data = []
-        counter = 0
-        for session in sessions:
-            scripts = Script.objects.filter(session=session, period=self.period).exclude(score=None)
-            counter += scripts.count()
-            data.append(np.mean([s.score for s in scripts if script.score]))
-        scores.append({'name': 'Moyenne generale'  + ' (' + str(counter) + ')', 'data': data})
+        def by_session(scripts):
+            res = { s: [] for s in sessions }
+            for script in scripts.values('score', 'session'):
+                if script['session'] in res:
+                    res[script['session']].append(script['score'])
+            return [ np.mean(res[s]) for s in sessions ]
+        
+        if not staff_or_teacher:
+            scores.append({'name': self.perso_name,
+                           'data': by_session(scripts)})
+            
+        scores.append({'name': 'Moyenne generale',
+                       'data': by_session(all_scripts)})
 
         for script_type in ScriptType.objects.all():
-            data = []
-            counter = 0
-            for session in sessions:
-                scripts = Script.objects.filter(session=session, period=self.period, type=script_type).exclude(score=None)
-                data.append(np.mean([s.score for s in scripts if script.score]))
-                counter += scripts.count()
-            scores.append({'name': 'Moyenne ' + script_type.name + ' (' + str(counter) + ')', 'data': data})
+            scripts = all_scripts.filter(type=script_type)
+            scores.append({'name': 'Moyenne ' + script_type.name, 
+                           'data': by_session(scripts)})
 
         context['data'] = self.score_data_setup(sessions_x, scores)
-        context['course'] = ugettext('all courses')
+        context['course'] = course and course.title or ugettext('all courses')
         return context
 
 
 class ScriptsScoreCourseView(ScriptsScoreAllView):
-
-    def get_context_data(self, **kwargs):
-        context = super(ScriptsScoreCourseView, self).get_context_data(**kwargs)
-        course = Course.objects.get(id=self.kwargs['course_id'])
-        period = Period.objects.get(id=self.kwargs['period_id'])
-
-        if self.request.user.is_staff or self.request.user.professor.all():
-            scripts = Script.objects.all().filter(course=course, period=self.period).exclude(score=None)
-        else:
-            scripts = self.get_queryset().filter(course=course)
-
-        sessions = []
-        scores = []
-
-        for script in scripts:
-            if not script.session in sessions:
-                sessions.append(script.session)
-        sessions = sorted(sessions)
-        sessions_x = {'x': sessions}
-
-        if not (self.request.user.is_staff or self.request.user.professor.all()):
-            data = []
-            for session in sessions:
-                data.append(np.mean([float(script.score) for script in scripts.filter(session=session) if script.score]))
-            scores.append({'name':'Note personnelle' , 'data': data})
-
-        data = []
-        counter = 0
-        for session in sessions:
-            scripts = Script.objects.filter(session=session, course=course, period=self.period).exclude(score=None)
-            counter += scripts.count()
-            data.append(np.mean([s.score for s in scripts if script.score]))
-        scores.append({'name':'Moyenne generale' + ' (' + str(counter) + ')', 'data': data})
-
-        for script_type in ScriptType.objects.all():
-            data = []
-            counter = 0
-            for session in sessions:
-                scripts = Script.objects.filter(session=session, type=script_type, course=course, period=self.period).exclude(score=None)
-                counter += scripts.count()
-                data.append(np.mean([s.score for s in scripts if script.score]))
-            scores.append({'name': 'Moyenne ' + script_type.name + ' (' + str(counter) + ')', 'data': data})
-
-        context['data'] = self.score_data_setup(sessions_x, scores)
-        context['course'] = course.title
-        return context
+    perso_name = 'Note personnelle'
 
 
 class ScoreCreateView(ScriptCreateView):

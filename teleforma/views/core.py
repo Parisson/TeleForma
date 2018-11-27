@@ -346,11 +346,12 @@ class CourseListView(CourseAccessMixin, ListView):
                 appointments_open = True
         context['hasAppointment'] = appointments_open and is_student
 
-        home = Home.objects.all()
-        if home:
-            home = home[0]
-            context['home_text'] = home.text
-            context['home_video'] = home.video
+        homes = Home.objects.filter(enabled = True).order_by('-modified_at')
+        for home in homes:
+            if home.is_for_period(context['period']):
+                context['home_text'] = home.text
+                context['home_video'] = home.video
+                break
         return context
 
     @method_decorator(login_required)
