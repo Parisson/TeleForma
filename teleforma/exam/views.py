@@ -179,6 +179,7 @@ class ScriptsPendingView(ScriptsView):
         qs = super(ScriptsPendingView, self).get_queryset()
         
         if self.request.GET.get('corrector') is None:
+            user = self.request.user
             # Exclude status=3 but not author=user
             qs = qs.filter(~Q(status=3) | Q(author=user))
 
