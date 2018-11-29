@@ -164,26 +164,24 @@ class Quota(models.Model):
             title = ' - '.join([title, unicode(self.date_end)])
         return title
 
-    @property
-    def all_script_count(self):
-        q = self.corrector.corrector_scripts.filter(Q(status=3) | Q(status=4) | Q(status=5))
+    def script_count(self, statuses):
+        q = self.corrector.corrector_scripts.filter(status__in = statuses)
         q = q.filter(course=self.course)
         q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
         return q.count()
+        
+
+    @property
+    def all_script_count(self):
+        return self.script_count(statuses = (3,4,5))
 
     @property
     def pending_script_count(self):
-        q = self.corrector.corrector_scripts.filter(Q(status=3))
-        q = q.filter(course=self.course)
-        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
-        return q.count()
+        return self.script_count(statuses = (3,))
 
     @property
     def marked_script_count(self):
-        q = self.corrector.corrector_scripts.filter(Q(status=4) | Q(status=5))
-        q = q.filter(course=self.course)
-        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
-        return q.count()
+        return self.script_count(statuses = (4,5))
 
     @property
     def level(self):
@@ -306,15 +304,15 @@ class Script(BaseResource):
         self.date_submitted = datetime.datetime.now()
 
         quota_list = []
-        quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
+        all_quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
-                                            script_type=self.type,
+                                            session=self.session,
                                             period=self.period)
+        
+        quotas = all_quotas.filter(script_type=self.type)
         if not quotas:
-            quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
-                                            date_end__gte=self.date_submitted,
-                                            script_type=None,
-                                            period=self.period)
+            quotas = all_quotas.filter(script_type=None)
+            
         if quotas:
             for quota in quotas:
                 if quota.value:
