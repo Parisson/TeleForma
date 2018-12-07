@@ -88,6 +88,10 @@ WEIGHT_CHOICES = get_nint_choices(30)
 
 GENDER_CHOICES = (('Mr', _('Mr.')), ('Mrs', _('Mrs.')))
 
+TRUE_FALSE_CHOICES = (
+    (True, 'Oui'),
+    (False, 'Non')
+)
 
 class MetaCore:
     app_label = app_label
