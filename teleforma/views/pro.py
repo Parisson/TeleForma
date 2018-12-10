@@ -315,6 +315,11 @@ class SeminarsView(ListView):
     def get_queryset(self):
         return all_seminars(self.request, date_order=True)['all_seminars'][:10]
 
+    def get_context_data(self, **kwargs):
+        context = super(SeminarsView, self).get_context_data(**kwargs)
+        context['conferences'] = all_conferences(self.request)
+        return context
+
 
 class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
 
@@ -499,7 +504,7 @@ class AnswersView(ListView):
             a = _('answer')
             v = _('validated')
             subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
-        
+
         mess = Message(sender=sender, recipient=user, subject=subject[:511], body=text)
         mess.moderation_status = 'a'
         mess.save()
