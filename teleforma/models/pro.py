@@ -304,6 +304,7 @@ class Auditor(models.Model):
     language        = models.CharField(_('Language'), max_length=255, blank=True)
     telephone       = models.CharField(_('Telephone'), max_length=255, blank=True)
     fax             = models.CharField(_('Fax'), max_length=255, blank=True)
+    fifpl           = models.BooleanField(_('FIFPL'), default=True)
     expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = models.BooleanField(_('Password initialized'))
 

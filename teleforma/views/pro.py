@@ -266,7 +266,6 @@ class SeminarView(SeminarAccessMixin, DetailView):
                 # mess.save()
                 # notify_user(mess, 'acceptance')
         progress_data = seminar_progress(user, seminar, more=True)
-
         progress = progress_data['progress']
         missing_steps = progress_data['missing_steps']
         context['seminar_progress'] = progress
@@ -315,6 +314,11 @@ class SeminarsView(ListView):
 
     def get_queryset(self):
         return all_seminars(self.request, date_order=True)['all_seminars'][:10]
+
+    def get_context_data(self, **kwargs):
+        context = super(SeminarsView, self).get_context_data(**kwargs)
+        context['conferences'] = all_conferences(self.request)
+        return context
 
 
 class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
@@ -501,7 +505,7 @@ class AnswersView(ListView):
             v = _('validated')
             subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
 
-        mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
+        mess = Message(sender=sender, recipient=user, subject=subject[:511], body=text)
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')

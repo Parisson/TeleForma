@@ -165,6 +165,10 @@ class Command(BaseCommand):
                     course = Course.objects.get(code=course_code)
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
+                    #ss = Seminar.objects.filter(course=course,
+                    #                        rank=seminar_rank, period=period)
+                    #print([s.id for s in ss])
+
                     seminar, c = Seminar.objects.get_or_create(course=course,
                                             rank=seminar_rank, period=period)
                     if c:

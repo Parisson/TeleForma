@@ -183,6 +183,40 @@ def all_seminars(request, progress_order=False, date_order=False):
     return {'all_seminars': seminars}
 
 
+def all_conferences(request, progress_order=False, date_order=False):
+    conferences = []
+    now = datetime.datetime.now()
+
+    if isinstance(request, User):
+        user = request
+    else:
+        user = request.user
+
+    if not user.is_authenticated():
+        return {}
+
+    professor = user.professor.all()
+    auditor = user.auditor.all()
+
+    if professor:
+        conferences = []
+        professor = user.professor.get()
+        courses = professor.courses.all()
+
+        for course in courses:
+            for conference in course.conference.filter(expiry_date__gte=now):
+                conferences.append(conference)
+
+    elif auditor and not (user.is_staff or user.is_superuser):
+        auditor = user.auditor.get()
+        conferences = auditor.conferences.filter(status=2, expiry_date__gte=now)
+
+    elif user.is_staff or user.is_superuser:
+        conferences = Conference.objects.filter(Q(expiry_date__gte=now) | Q(expiry_date=None))
+
+    return conferences
+
+
 def total_progress(request):
     """return the user progress of all seminars in percent"""
 
