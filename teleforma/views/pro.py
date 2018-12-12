@@ -278,7 +278,12 @@ class SeminarView(SeminarAccessMixin, DetailView):
         elif progress == 100 and validated and delta_sec >= 0 and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
         elif len(missing_steps) == 1:
-            messages.warning(self.request, _("You still need to complete step %(step)s in order to get yout testimonial.") % {'step':missing_steps.pop()})
+            print missing_steps
+            if missing_steps == set('4'):
+                messages.warning(self.request,
+                                 _("Yours submissions have been submitted. They will be processed within 48 hours."))
+            else:
+                messages.warning(self.request, _("You still need to complete step %(step)s in order to get yout testimonial.") % {'step':missing_steps.pop()})
         if progress == 100 and validated and delta_sec < 0:
             minutes = -delta_sec / 60
             hours = minutes / 60
@@ -832,6 +837,16 @@ class TestimonialListView(ListView):
                     t.append(testimonial)
         return t
 
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialListView, self).get_context_data(**kwargs)
+        auditor = self.request.user.auditor.all()
+        if auditor:
+            show_fifpl = auditor[0].fifpl and not auditor[0].block_fifpl
+        else:
+            show_fifpl = True
+        context['show_fifpl'] = show_fifpl
+        return context
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TestimonialListView, self).dispatch(*args, **kwargs)
@@ -866,6 +881,8 @@ class TestimonialPaybackView(TestimonialView):
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
                                                    validated=True).order_by('question__rank')
+        user_timer = get_seminar_timer(self.request.user, seminar)
+        context['user_timer'] = user_timer.days * 24 + user_timer.seconds / 3600
         return context
 
     @method_decorator(login_required)

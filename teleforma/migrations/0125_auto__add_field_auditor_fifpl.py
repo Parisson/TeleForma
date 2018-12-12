@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Auditor.fifpl'
         db.add_column('teleforma_auditor', 'fifpl',
-                      self.gf('django.db.models.fields.BooleanField')(default=True),
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
 
@@ -172,7 +172,7 @@ class Migration(SchemaMigration):
             'country': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'expiration_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'fax': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'fifpl': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'fifpl': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '8', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'init_password': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),

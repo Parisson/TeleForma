@@ -178,7 +178,7 @@ def all_seminars(request, progress_order=False, date_order=False):
         course = Course.objects.filter(code='demo')
         if course:
             course = course[0]
-            seminars = Seminar.objects.filter(course=course)
+            seminars = Seminar.objects.filter(course=course, status=2)
 
     return {'all_seminars': seminars}
 

@@ -18,11 +18,11 @@
 
 <style>
  @page {
-  background-image: url({{ STATIC_URL }}teleforma/images/attestation_fifpl.png);
+  background-image: url({{ STATIC_URL }}teleforma/images/attestation_fifpl_v2.png);
 
   @frame user {
   -pdf-frame-content: user;
-    top: 394px;
+    top: 397px;
     left: 260px;
   }
 
@@ -32,34 +32,74 @@
     left: 75px;
   }
 
-  @frame dates {
-  -pdf-frame-content: dates;
-    top: 569px;
-    left: 263px;
+  @frame date_start_d {
+  -pdf-frame-content: date_start_d;
+    top: 542px;
+    left: 110px;
   }
 
-  @frame hours {
-  -pdf-frame-content: hours;
-    top: 649px;
-    left: 308px;
+ @frame date_start_m {
+  -pdf-frame-content: date_start_m;
+    top: 542px;
+    left: 160px;
+  }
+ @frame date_start_y {
+  -pdf-frame-content: date_start_y;
+    top: 542px;
+    left: 210px;
+  }
+
+  @frame date_end_d {
+  -pdf-frame-content: date_end_d;
+    top: 542px;
+    left: 290px;
+  }
+
+ @frame date_end_m {
+  -pdf-frame-content: date_end_m;
+    top: 542px;
+    left: 340px;
+  }
+ @frame date_end_y {
+  -pdf-frame-content: date_end_y;
+    top: 542px;
+    left: 390px;
+  }
+
+  @frame user-hours {
+  -pdf-frame-content: user-hours;
+    top: 576px;
+    left: 390px;
+  }
+
+  @frame seminar-hours {
+  -pdf-frame-content: seminar-hours;
+    top: 630px;
+    left: 390px;
   }
 
   @frame price-ht {
   -pdf-frame-content: price-ht;
-    top: 729px;
+    top: 719px;
     left: 377px;
   }
 
   @frame price-ttc {
   -pdf-frame-content: price-ttc;
-    top: 729px;
-    left: 477px;
+    top: 719px;
+    left: 540px;
+  }
+
+  @frame date-validated {
+  -pdf-frame-content: date-validated;
+    top: 650px;
+    left: 300px;
   }
 
   @frame date-now {
   -pdf-frame-content: date-now;
-    top: 805px;
-    left: 267px;
+    top: 796px;
+    left: 330px;
   }
 
 }
@@ -86,15 +126,36 @@
 </div>
 
 
-<div id="dates">
-  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'j F Y' }}{% else %}{{ first_revision.date|date:'j F Y' }}{% endif %} {% trans "until" %} {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
+
+<div id="date_start_d">
+  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'j' }}{% else %}{{ first_revision.date|date:'j' }}{% endif %}
+</div>
+<div id="date_start_m">
+  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'m' }}{% else %}{{ first_revision.date|date:'m' }}{% endif %}
+</div>
+<div id="date_start_y">
+  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'Y' }}{% else %}{{ first_revision.date|date:'Y' }}{% endif %}
+</div>
+
+<div id="date_end_d">
+    {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j' }}{% else %}{{ testimonial.date_added|date:'j' }}{% endif %}
+</div>
+<div id="date_end_m">
+    {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'m' }}{% else %}{{ testimonial.date_added|date:'m' }}{% endif %}
+</div>
+<div id="date_end_y">
+    {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'Y' }}{% else %}{{ testimonial.date_added|date:'Y' }}{% endif %}
 </div>
 
 
-<div id="hours">
-  {{ seminar.duration|hours }} {% trans "hours" %}
+
+<div id="user-hours">
+  {{ user_timer|hours }}
 </div>
 
+<div id="seminar-hours">
+  {{ seminar.duration|hours }}
+</div>
 
 <div id="price-ht">
   {{ seminar.price|integer }}
@@ -109,6 +170,9 @@
   {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
 </div>
 
+<div id="date-validated">
+  {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'j F Y' }}{% else %}{{ testimonial.date_added|date:'j F Y' }}{% endif %}
+</div>
 
 </div>
 </div>
