@@ -18,6 +18,7 @@ class ScriptForm(ModelForm):
         nb = period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         self.fields['session'] = forms.ChoiceField(choices = get_n_choices(nb + 1),
                                                    validators = [ validate_session(nb) ])
+        self.fields['file'].required = True
 
     class Meta:
         model = Script
@@ -28,4 +29,7 @@ class ScriptForm(ModelForm):
 
 
 class ScoreForm(ScriptForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        super(ScoreForm, self).__init__(*args, **kwargs)
+        self.fields['file'].required = False
+        self.fields['score'].required = True

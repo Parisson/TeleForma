@@ -48,7 +48,19 @@
         {% if not field.html_name in create_fields %}
             <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
         {% else %}
-            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        <td>
+          {{ field.label_tag }}:
+        </td>
+        <td>
+          {{ field }}
+        </td>
+        <td>
+          {% for error in field.errors %}
+          <div class="error">
+            {{ error|escape }}
+          </div>
+          {% endfor %}          
+        </td>
         {% endif %}
         </tr>
        {% endfor %}

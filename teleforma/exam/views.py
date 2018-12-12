@@ -19,6 +19,12 @@ PROFESSOR = 2
 
 class ScriptMixinView(View):
 
+    def get_course_pk_list(self):
+        """
+        Get the list of pk of courses current user is allowed to access
+        """
+        return [c['course'].id for c in get_courses(self.request.user) if c['course'].has_exam_scripts]
+        
     def get_context_data(self, **kwargs):
         context = super(ScriptMixinView, self).get_context_data(**kwargs)
         self.period = Period.objects.get(id=self.kwargs['period_id'])
@@ -27,8 +33,10 @@ class ScriptMixinView(View):
         self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
             upload = datetime.datetime.now() <= self.period.date_exam_end
-            if Script.objects.filter(period = self.period,
-                                     author = self.request.user).count() >= self.nb_script:
+            cur_scripts = Script.objects.filter(period = self.period,
+                                                author = self.request.user).count()
+            allowed_scripts = self.nb_script * len(self.get_course_pk_list())
+            if cur_scripts >= allowed_scripts:
                 upload = False
             context['upload'] = upload
         else:
@@ -238,7 +246,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
     def get_context_data(self, **kwargs):    
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
-        course_pk_list = [c['course'].id for c in get_courses(self.request.user) if c['course'].has_exam_scripts]
+        course_pk_list = self.get_course_pk_list()
         context['form'].fields['course'].queryset = Course.objects.filter(pk__in=course_pk_list)
         return context
 
@@ -367,7 +375,7 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
 class ScoreCreateView(ScriptCreateView):
 
     template_name='exam/score_form.html'
-    form_class = ScriptForm
+    form_class = ScoreForm
 
     def get_success_url(self):
         period = Period.objects.get(id=self.kwargs['period_id'])
