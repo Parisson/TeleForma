@@ -88,6 +88,10 @@ WEIGHT_CHOICES = get_nint_choices(30)
 
 GENDER_CHOICES = (('Mr', _('Mr.')), ('Mrs', _('Mrs.')))
 
+TRUE_FALSE_CHOICES = (
+    (True, 'Oui'),
+    (False, 'Non')
+)
 
 class MetaCore:
     app_label = app_label
@@ -320,14 +324,14 @@ class LiveStream(Model):
     @property
     def slug(self):
         slug = '-'.join([self.conference.course.department.slug,
-                         self.conference.course.slug,
+                         self.conference.course.code,
                          self.conference.course_type.name.lower()])
         return slug
 
     @property
     def mount_point(self):
         if self.server.type == 'stream-m':
-            return  'consume/' + self.slug
+            return self.server.type +'/consume/' + self.slug
         else:
             return self.slug + '.' + self.stream_type
 
@@ -341,11 +345,12 @@ class LiveStream(Model):
 
     @property
     def url(self):
-        return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
+        url = 'https://' + self.server.host + ':' + str(self.server.port) + '/' + self.mount_point
+        return url
 
     def __unicode__(self):
         if self.conference:
-            return self.conference.description
+            return self.conference.title
         else:
             return self.slug
 

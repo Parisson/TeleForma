@@ -266,7 +266,6 @@ class SeminarView(SeminarAccessMixin, DetailView):
                 # mess.save()
                 # notify_user(mess, 'acceptance')
         progress_data = seminar_progress(user, seminar, more=True)
-
         progress = progress_data['progress']
         missing_steps = progress_data['missing_steps']
         context['seminar_progress'] = progress
@@ -279,7 +278,12 @@ class SeminarView(SeminarAccessMixin, DetailView):
         elif progress == 100 and validated and delta_sec >= 0 and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
         elif len(missing_steps) == 1:
-            messages.warning(self.request, _("You still need to complete step %(step)s in order to get yout testimonial.") % {'step':missing_steps.pop()})
+            print missing_steps
+            if missing_steps == set('4'):
+                messages.warning(self.request,
+                                 _("Yours submissions have been submitted. They will be processed within 48 hours."))
+            else:
+                messages.warning(self.request, _("You still need to complete step %(step)s in order to get yout testimonial.") % {'step':missing_steps.pop()})
         if progress == 100 and validated and delta_sec < 0:
             minutes = -delta_sec / 60
             hours = minutes / 60
@@ -315,6 +319,11 @@ class SeminarsView(ListView):
 
     def get_queryset(self):
         return all_seminars(self.request, date_order=True)['all_seminars'][:10]
+
+    def get_context_data(self, **kwargs):
+        context = super(SeminarsView, self).get_context_data(**kwargs)
+        context['conferences'] = all_conferences(self.request)
+        return context
 
 
 class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
@@ -501,7 +510,7 @@ class AnswersView(ListView):
             v = _('validated')
             subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
 
-        mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
+        mess = Message(sender=sender, recipient=user, subject=subject[:511], body=text)
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance')
@@ -833,6 +842,16 @@ class TestimonialListView(ListView):
                     t.append(testimonial)
         return t
 
+    def get_context_data(self, **kwargs):
+        context = super(TestimonialListView, self).get_context_data(**kwargs)
+        auditor = self.request.user.auditor.all()
+        if auditor:
+            show_fifpl = auditor[0].fifpl and not auditor[0].block_fifpl
+        else:
+            show_fifpl = True
+        context['show_fifpl'] = show_fifpl
+        return context
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TestimonialListView, self).dispatch(*args, **kwargs)
@@ -867,6 +886,8 @@ class TestimonialPaybackView(TestimonialView):
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
                                                    validated=True).order_by('question__rank')
+        user_timer = get_seminar_timer(self.request.user, seminar)
+        context['user_timer'] = user_timer.days * 24 + user_timer.seconds / 3600
         return context
 
     @method_decorator(login_required)

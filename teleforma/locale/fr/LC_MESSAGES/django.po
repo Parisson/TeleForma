@@ -2113,11 +2113,13 @@ msgid ""
 "Your connexion time is not sufficient. In order to get your testimonial, you "
 "still have to work at least %(time)s."
 msgstr ""
-"Afin d'obtenir votre attestation vous devez consacrer au moins %(time)s, soit le temps validé "
-"pour ce séminaire à l'accomplissement de votre formation."
+"Votre temps de connexion est insuffisant. Afin d'obtenir votre attestation, vous devez encore consacrer %(time)s, à la réalisation de votre formation."
 
 msgid "You still need to complete step %(step)s in order to get yout testimonial."
 msgstr "Vous devez encore terminer l'étape %(step)s avant de valider votre formation."
+
+msgid "Yours submissions have been submitted. They will be processed within 48 hours."
+msgstr "Vos consultations ont bien été soumises. Elles seront traitées dans un délai de 48h ouvrées maximum."
 
 #: views/pro.py:255
 msgid "You have successfully saved your answer."

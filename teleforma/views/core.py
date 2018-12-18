@@ -456,6 +456,7 @@ class ConferenceView(DetailView):
             context['access_error'] = access_error
             context['message'] = contact_message
         context['periods'] = get_periods(self.request.user)
+        context['conferences'] = all_conferences(self.request)
         return context
 
     @jsonrpc_method('teleforma.stop_conference')
