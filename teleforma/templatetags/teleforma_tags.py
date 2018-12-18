@@ -152,7 +152,7 @@ def get_all_professors_with_courses():
         if name:
             professors.append({
                 'username':professor.user.username,
-                'name':professor.user.last_name + professor.user.first_name,
+                'name':professor.user.last_name + " " + professor.user.first_name,
                 'courses':json.dumps([course.id for course in professor.courses.all()])
             })
     return professors

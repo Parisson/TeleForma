@@ -35,7 +35,7 @@ class BasicCommaSeparatedUserField(PostmanBasicCommaSeparatedUserField):
         errors = []
 
         if unknown_names == set(['auto']):
-            return unknown_names
+            return 'auto'
 
         if unknown_names:
             errors.append(self.error_messages['unknown'].format(users=', '.join(unknown_names)))

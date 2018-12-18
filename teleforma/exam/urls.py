@@ -52,6 +52,9 @@ urlpatterns = patterns('',
     url(r'^scores/periods/(?P<period_id>.*)/all/$', ScriptsScoreAllView.as_view(), name="teleforma-exam-scripts-scores-all"),
     url(r'^scores/periods/(?P<period_id>.*)/courses/(?P<course_id>.*)/$', ScriptsScoreCourseView.as_view(), name="teleforma-exam-scripts-scores-course"),
     url(r'^scores/periods/(?P<period_id>.*)/create/$', ScoreCreateView.as_view(), name="teleforma-exam-scores-create"),
+
+    url(r'^scripts/get-correctors/$', get_correctors, name="teleforma-exam-get-correctors"),
     # url(r'^exam/periods/(?P<period_id>.*)/quotas/$', QuotasView.as_view(), name="teleforma-exam-quotas"),
+
 
 )

@@ -121,7 +121,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     if period:
         courses = [ c for c in courses if c['course'].is_for_period(period) ]
-        
+
     return courses
 
 
@@ -226,7 +226,7 @@ class UserXLSBook(object):
             self.students = []
 
         self.course_map = { c['id']: c['code'] for c in Course.objects.values('id', 'code') }
-            
+
         self.sheet = self.book.add_sheet('Etudiants')
 
     def get_course_code(self, c_id):
@@ -234,7 +234,7 @@ class UserXLSBook(object):
         Like get_course_code global but through the cache
         """
         return self.course_map.get(c_id, None) or ''
-        
+
     def export_user(self, counter, student):
         # if counter >= 419:
         #     import pdb;pdb.set_trace()
@@ -297,7 +297,7 @@ class UserXLSBook(object):
                 if month in payment_per_month:
                     payment_per_month[month] += value
             row.write(18, total_payments)
-            
+
             row.write(19, student.total_fees)
             row.write(20, student.balance)
             row.write(21, student.total_paybacks)
@@ -547,9 +547,9 @@ class NewsItemMixin:
     model = NewsItem
     form_class = NewsItemForm
     def get_success_url(self):
-        return reverse('teleforma-desk-period-course', 
+        return reverse('teleforma-desk-period-course',
             kwargs={
-            'pk': self.object.course.id, 
+            'pk': self.object.course.id,
             'period_id': self.request.GET.get('period_id')
             })
 
@@ -578,9 +578,9 @@ class NewsItemCreate(NewsItemMixin, CreateView):
         return super(NewsItemCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('teleforma-desk-period-course', 
+        return reverse('teleforma-desk-period-course',
             kwargs={
-            'pk': self.object.course.id, 
+            'pk': self.object.course.id,
             'period_id': self.request.GET.get('period_id')
             })
 
@@ -635,30 +635,4 @@ class WriteView(PostmanWriteView):
 
     """
     form_classes = (WriteForm, AnonymousWriteForm)
-
-    # def get_initial(self):
-    #     initial = super(WriteView, self).get_initial()
-    #     if self.request.method == 'GET':
-    #         initial.update(self.request.GET.items())  # allow optional initializations by query string
-    #         recipients = self.kwargs.get('recipients')
-    #         if recipients:
-    #             # order_by() is not mandatory, but: a) it doesn't hurt; b) it eases the test suite
-    #             # and anyway the original ordering cannot be respected.
-    #             user_model = get_user_model()
-    #             usernames = list(user_model.objects.values_list(user_model.USERNAME_FIELD, flat=True).filter(
-    #                 is_active=True,
-    #                 **{'{0}__in'.format(user_model.USERNAME_FIELD): [r.strip() for r in recipients.split(':') if r and not r.isspace()]}
-    #             ).order_by(user_model.USERNAME_FIELD))
-    #             if usernames:
-    #                 initial['recipients'] = ', '.join(usernames)
-    #     return initial
-
-    # def get_form_kwargs(self):
-    #     import pdb;pdb.set_trace()
-    #     kwargs = super(WriteView, self).get_form_kwargs()
-    #     if isinstance(self.autocomplete_channels, tuple) and len(self.autocomplete_channels) == 2:
-    #         channel = self.autocomplete_channels[self.request.user.is_anonymous()]
-    #     else:
-    #         channel = self.autocomplete_channels
-    #     kwargs['channel'] = channel
-    #     return kwargs
+    success_url = "postman_sent"

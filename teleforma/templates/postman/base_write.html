@@ -61,7 +61,7 @@
                         {% get_all_professors_with_courses as professors %}
                         {% for p in professors %}
                             <option value="{{ p.username }}"
-                                    data-courses="{{ p.courses }}" {% if request.POST.professors == p.username %}selected{% endif %}>{{ p.name }} {{ p.courses }}</option>
+                                    data-courses="{{ p.courses }}" {% if request.POST.professors == p.username %}selected{% endif %}>{{ p.name }}</option>
                         {% endfor %}
                     </select>
                 </div>

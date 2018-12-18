@@ -41,6 +41,9 @@ class ScriptAdmin(admin.ModelAdmin):
     list_display = ['title', 'author_name', 'file_size', 'status']
     actions = ['force_resubmit',]
 
+    class Media:
+        js = ("exam/js/admin.js",)
+
     def author_name(self, instance):
         return instance.author.username
 

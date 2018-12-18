@@ -9,7 +9,7 @@ from teleforma.views.core import *
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
-
+import json
 import numpy as np
 
 STUDENT = 0
@@ -381,3 +381,14 @@ class ScoreCreateView(ScriptCreateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ScoreCreateView, self).dispatch(*args, **kwargs)
+
+
+def get_correctors(request):
+    period = request.GET.get('period')
+    course = request.GET.get('course')
+
+    correctors = []
+    for corrector in User.objects.filter(quotas__period__id = period, quotas__course__id = course).order_by('last_name').distinct():
+        correctors.append({'label': '%s %s' % (corrector.last_name, corrector.first_name), 'value':corrector.id})
+    dump = json.dumps(correctors)
+    return HttpResponse(dump, content_type='application/json')

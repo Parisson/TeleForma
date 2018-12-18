@@ -201,10 +201,6 @@ class Course(Model):
                                      verbose_name=u'Périodes associées',
                                      blank=True, null=True)
 
-    periods = models.ManyToManyField('Period', related_name="courses",
-                                     verbose_name=u'Périodes associées',
-                                     blank=True, null=True)
-
     def __unicode__(self):
         return self.title
 
