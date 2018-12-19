@@ -29,7 +29,7 @@
 {% block answers %}
 
 <div class="course_title">
-{% trans "New score" %}
+  Saisie en masse de notes
 </div>
 <br />
 
@@ -40,12 +40,6 @@
         {% endfor %}
     </div>
 {% endif %}
-
-
-<div>Ce formulaire vous permet d'enregistrer la note d'une copie papier <b>déjà corrigée hors de la plateforme e-learning</b>.</div>
-<div>Pour soumettre une nouvelle copie d'épreuve scannée à la correction en ligne, merci d'utiliser <a href="{% url teleforma-exam-script-create period.id %}">ce formulaire</a>.</div>
-<br/>
-<div>Veuillez indiquer <b>tous les champs</b> du formulaire suivant :</div>
 
 <div class="course_content" id="media_infos" style="font-size: 115%;">
     <form method="post" id="_ScriptForm" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
@@ -73,6 +67,34 @@
         {% endif %}
         </tr>
        {% endfor %}
+       </table>
+
+       <table>
+         <thead>
+           <tr>
+             <th>Étudiant</th>
+             <th>Note</th>
+           </tr>
+         </thead>
+         <tbody>
+           {% for row in rows %}
+           <tr>
+             <td>
+               <input name="{{ row.student_name }}" value="{{ row.student_value }}" />
+             </td>
+             <td>
+               <input name="{{ row.score_name }}" value="{{ row.score_value }}" />
+             </td>
+             {% if row.error %}
+             <td>
+               <div class="error">
+                 {{ row.error }}
+               </div>
+             </td>
+             {% endif %}
+           </tr>
+           {% endfor %}
+         </tbody>
        </table>
     </form>
     {% if upload %}

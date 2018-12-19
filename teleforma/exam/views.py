@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 import json
 import numpy as np
+from django.contrib.auth.decorators import permission_required
 
 STUDENT = 0
 CORRECTOR = 1
@@ -41,6 +42,8 @@ class ScriptMixinView(View):
             context['upload'] = upload
         else:
             context['upload'] = False
+
+        context['admin'] = self.request.user.is_superuser
 
         return context
 
@@ -240,7 +243,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
         return super(ScriptCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
-        messages.info(self.request, _("There was a problem with your submission. Please try again, later if possible."))
+        messages.error(self.request, _("There was a problem with your submission. Please try again, later if possible."))
         return super(ScriptCreateView, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):    
@@ -377,6 +380,10 @@ class ScoreCreateView(ScriptCreateView):
     template_name='exam/score_form.html'
     form_class = ScoreForm
 
+    def form_invalid(self, form):
+        messages.error(self.request, "Il y une erreur sur ce formulaire, veuillez le corriger.")
+        return super(ScriptCreateView, self).form_invalid(form)
+
     def get_success_url(self):
         period = Period.objects.get(id=self.kwargs['period_id'])
         return reverse_lazy('teleforma-exam-scripts-scores-all', kwargs={'period_id':period.id})
@@ -400,3 +407,83 @@ def get_correctors(request):
         correctors.append({'label': '%s %s' % (corrector.last_name, corrector.first_name), 'value':corrector.id})
     dump = json.dumps(correctors)
     return HttpResponse(dump, content_type='application/json')
+
+class MassScoreCreateView(ScoreCreateView):
+
+    template_name='exam/mass_score_form.html'
+    form_class = MassScoreForm
+
+    def get_allowed_students(self, course_id, session):
+        """
+        Get allowed students for given course and session
+        """
+        students = Student.objects.filter(period = self.period)
+
+        # Exclude students who already have a script for this session
+        scripts = Script.objects.filter(period = self.period,
+                                        session = session,
+                                        course_id = course_id).values('author_id')
+        scripts = set([s['author_id'] for s in scripts])
+        
+        students = students.exclude(user_id__in = scripts)            
+
+        res = []
+        for student in students:
+           user = student.user
+           # FIXME : Filter those who access the course, but that's very slow,
+           # so I disable it for now - we'll see if we can do that faster later    
+           # courses = get_courses(user)
+           # if course_id in [ c['course'].id for c in courses ]:
+           res.append({ 'id': user.id,
+                        'name': str(user) })
+        
+        return res
+
+    def form_valid(self, form):
+        course = form.cleaned_data['course']
+        session = form.cleaned_data['session']
+        sc_type = form.cleaned_data['type']
+
+        allowed_students = self.get_allowed_students(course.id,
+                                                     session)
+        allowed_students = set([ str(s['id']) for s in allowed_students ])
+        done = set()
+        nb_errors = 0
+        nb_ok = 0
+
+        for student, score in form.cleaned_data['scores']:
+            if student in done:
+                nb_errors += 1
+                continue
+            if not student in allowed_students:
+                nb_errors += 1
+                continue
+            nb_ok += 1
+            done.add(student)
+            obj = Script(course = course,
+                         period = self.period,
+                         session = session,
+                         author_id = student,
+                         type = sc_type,
+                         score = score,                                 
+                         status = 7)
+            obj.save()
+
+        messages.info(self.request, "%d notes créées, %d en erreur (copie déjà existante, ...)" % (nb_ok, nb_errors))
+
+        return redirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super(MassScoreCreateView, self).get_context_data(**kwargs)
+        context['create_fields'] = ['course', 'session', 'type' ]
+        context['rows'] = [ { 'student_name': 'student%d' % i,
+                              'score_name': 'score%d' % i } for i in range(20) ]
+        for row in context['rows']:
+            row['student_value'] = self.request.POST.get(row['student_name'], '')
+            row['score_value'] = self.request.POST.get(row['score_name'], '')
+            row['error'] = context['form'].table_errors.get(row['student_name'], None)
+        return context
+
+    @method_decorator(permission_required('is_superuser'))
+    def dispatch(self, *args, **kwargs):
+        return super(ScoreCreateView, self).dispatch(*args, **kwargs)
