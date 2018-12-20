@@ -3,27 +3,59 @@
 {% load teleforma_tags %}
 {% load i18n %}
 {% load thumbnail %}
+{% load static %}
 
+{% block extra_stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% static "exam/css/select2.min.css" %}"/>
+{% endblock %}
 {% block extra_javascript %}
-{% if upload %}
-  <script>
-    $(document).ready(function(){
-        $('#loading').hide();
-    });
+    <script src="{% static "exam/js/jquery-2.1.0.js" %}"></script>
+    <script src="{% static "exam/js/select2.min.js" %}"></script>
+    <script src="{% static "exam/js/select2-fr.js" %}"></script>
 
-    $(function() {
-        $('#submit_button').unbind('click').click(function() {
-            $(window).unbind('beforeunload');
-            // b2.unbind('click');
-            $('#id_status').val("5");
-            $('#id_period').val("{{ period.id }}");
-            $(this).hide();
-            $('#loading').show();
-            $('#_ScriptForm').submit();
+    <script>
+        $(document).ready(function () {
+            $('#loading').hide();
+            checkStudentDisplay();
+            $('[name="course"],[name="session"],[name="type"]').on('change', checkStudentDisplay);
+
+            $('select.student').select2({
+                width: '300px',
+                minimumInputLength: 2,
+                ajax: {
+                    url: '/scripts/get-mass-students',
+                    data: function (term, page) {
+                        return {
+                            q: term, // search term
+                            course_id: $('[name="course"]').val(),
+                            session: $('[name="session"]').val(),
+                            period: '{{ period.id }}', //Get your value from other elements using Query, for example.
+                            page_limit: 10
+                        };
+                    }
+                }
+            });
         });
-    });
+
+        function checkStudentDisplay(){
+            if($('[name="course"]').val() && $('[name="session"]').val() && $('[name="type"]').val())
+                $('#students').show();
+            else
+                $('#students').hide();
+        }
+
+        $(function () {
+            $('#submit_button').unbind('click').click(function () {
+                $(window).unbind('beforeunload');
+                // b2.unbind('click');
+                $('#id_status').val("5");
+                $('#id_period').val("{{ period.id }}");
+                $(this).hide();
+                $('#loading').show();
+                $('#_ScriptForm').submit();
+            });
+        });
     </script>
-{% endif %}
 {% endblock extra_javascript %}
 
 {% block answers %}
@@ -69,7 +101,7 @@
        {% endfor %}
        </table>
 
-       <table>
+       <table id="students">
          <thead>
            <tr>
              <th>Étudiant</th>
@@ -80,7 +112,12 @@
            {% for row in rows %}
            <tr>
              <td>
-               <input name="{{ row.student_name }}" value="{{ row.student_value }}" />
+                <select class="student" name="{{ row.student_name }}">
+                    {% if row.student_value %}
+                    <option value="{{ row.student_value }}" selected>{{ row.student_label }}</option>
+                    {% endif %}
+                </select>
+{#               <input name="{{ row.student_name }}" value="{{ row.student_value }}" />#}
              </td>
              <td>
                <input name="{{ row.score_name }}" value="{{ row.score_value }}" />
@@ -97,13 +134,9 @@
          </tbody>
        </table>
     </form>
-    {% if upload %}
     <br />
-    <center>
     <a href="#" id="submit_button" class="component_icon button icon_next">{% trans "Submit" %}</a>
     <img id="loading" src="/static/teleforma/images/loading.gif" style="vertical-align:middle" alt="loading" />
-    </center>
-    {% endif %}
     <br /><br />
 
 </div>

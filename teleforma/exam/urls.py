@@ -55,6 +55,7 @@ urlpatterns = patterns('',
     url(r'^scores/periods/(?P<period_id>.*)/mass_create/$', MassScoreCreateView.as_view(), name="teleforma-exam-scores-mass-create"),
 
     url(r'^scripts/get-correctors/$', get_correctors, name="teleforma-exam-get-correctors"),
+    url(r'^scripts/get-mass-students/$', get_mass_students, name="teleforma-exam-get-mass-students"),
     # url(r'^exam/periods/(?P<period_id>.*)/quotas/$', QuotasView.as_view(), name="teleforma-exam-quotas"),
 
 

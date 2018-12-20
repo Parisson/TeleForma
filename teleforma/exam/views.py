@@ -11,7 +11,9 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 import json
 import numpy as np
+
 from django.contrib.auth.decorators import permission_required
+from django.db.models import Q
 
 STUDENT = 0
 CORRECTOR = 1
@@ -479,7 +481,13 @@ class MassScoreCreateView(ScoreCreateView):
         context['rows'] = [ { 'student_name': 'student%d' % i,
                               'score_name': 'score%d' % i } for i in range(20) ]
         for row in context['rows']:
+            student = self.request.POST.get(row['student_name'], '')
+            label = ""
+            if student:
+                user = User.objects.get(pk=student)
+                label = "%s %s - %s" % (user.last_name, user.first_name, user.username)
             row['student_value'] = self.request.POST.get(row['student_name'], '')
+            row['student_label'] = label
             row['score_value'] = self.request.POST.get(row['score_name'], '')
             row['error'] = context['form'].table_errors.get(row['student_name'], None)
         return context
@@ -487,3 +495,36 @@ class MassScoreCreateView(ScoreCreateView):
     @method_decorator(permission_required('is_superuser'))
     def dispatch(self, *args, **kwargs):
         return super(ScoreCreateView, self).dispatch(*args, **kwargs)
+
+
+def get_mass_students(request):
+    """
+    Get allowed students for given course and session
+    """
+    period = request.GET.get('period')
+    session = request.GET.get('session')
+    course_id = request.GET.get('course_id')
+    q = request.GET.get('q[term]')
+    # import pdb;pdb.set_trace()
+    students = Student.objects.filter(period = period).filter(Q(user__username__icontains=q) | Q(user__last_name__icontains=q) | Q(user__first_name__icontains=q))
+
+    # Exclude students who already have a script for this session
+    scripts = Script.objects.filter(period = period,
+                                    session = session,
+                                    course_id = course_id).values('author_id')
+    scripts = set([s['author_id'] for s in scripts])
+
+    students = students.exclude(user_id__in = scripts)
+
+    res = []
+    for student in students:
+       user = student.user
+       # FIXME : Filter those who access the course, but that's very slow,
+       # so I disable it for now - we'll see if we can do that faster later
+       # courses = get_courses(user)
+       # if course_id in [ c['course'].id for c in courses ]:
+       res.append({ 'id': user.id,
+                    'text': "%s %s - %s" % (user.last_name, user.first_name, user.username) })
+
+    data = {'results':res, 'pagination':{'more':False}}
+    return HttpResponse(json.dumps(data), content_type='application/json')
