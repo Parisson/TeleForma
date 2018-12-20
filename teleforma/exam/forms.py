@@ -33,3 +33,34 @@ class ScoreForm(ScriptForm):
         super(ScoreForm, self).__init__(*args, **kwargs)
         self.fields['file'].required = False
         self.fields['score'].required = True
+
+class MassScoreForm(ScoreForm):
+    def __init__(self, *args, **kwargs):
+        super(MassScoreForm, self).__init__(*args, **kwargs)
+        self.table_errors = {}
+        self.fields['score'].required = False
+
+    def clean(self):
+        cleaned_data = super(MassScoreForm, self).clean()
+
+        errors = {}
+        valid = []
+        
+        for key in self.data.keys():
+            if key.startswith('student'):
+                student = self.data[key]
+                if student:
+                    score = self.data[key.replace('student', 'score')]
+                    try:
+                        score = int(score)
+                    except ValueError:
+                        errors[key] = u"Note invalide"
+                        continue
+                    valid.append((student, score))
+
+        cleaned_data['scores'] = valid
+        self.table_errors = errors
+
+        if errors:
+            raise forms.ValidationError("Certaines notes sont invalides")
+        return cleaned_data
