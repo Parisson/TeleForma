@@ -26,12 +26,17 @@ class ScriptMixinView(View):
         """
         Get the list of pk of courses current user is allowed to access
         """
-        return [c['course'].id for c in get_courses(self.request.user) if c['course'].has_exam_scripts]
+        courses = [ c['course'] for c in get_courses(self.request.user) ]
+        courses = [ c for c in courses if c.has_exam_scripts ]
+        courses = [ c for c in courses if c.is_for_period(self.period) ]
+        return [ c.id for c in courses ]
         
     def get_context_data(self, **kwargs):
         context = super(ScriptMixinView, self).get_context_data(**kwargs)
         self.period = Period.objects.get(id=self.kwargs['period_id'])
         context['period'] = self.period
+        course_pk_list = self.get_course_pk_list()
+        context['courses'] = Course.objects.filter(pk__in=course_pk_list)
         context['script_service_url'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL')
         self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
@@ -251,8 +256,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
     def get_context_data(self, **kwargs):    
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         context['create_fields'] = ['course', 'session', 'type', 'file' ]
-        course_pk_list = self.get_course_pk_list()
-        context['form'].fields['course'].queryset = Course.objects.filter(pk__in=course_pk_list)
+        context['form'].fields['course'].queryset = context['courses']
         return context
 
     @method_decorator(login_required)
