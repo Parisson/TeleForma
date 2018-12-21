@@ -278,8 +278,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         elif progress == 100 and validated and delta_sec >= 0 and self.template_name == 'teleforma/seminar_detail.html':
             messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
         elif len(missing_steps) == 1:
-            print missing_steps
-            if missing_steps == set('4'):
+            if missing_steps == set(['4.5']):
                 messages.warning(self.request,
                                  _("Yours submissions have been submitted. They will be processed within 48 hours."))
             else:
