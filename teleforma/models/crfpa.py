@@ -172,6 +172,9 @@ class Student(Model):
     level = models.CharField(_('studying level'), blank=True, max_length=100)
 
     balance = models.FloatField(_('balance de paiement'), help_text='€', blank=True, null=True)
+
+    fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
+                                    default=False)
     
     def __unicode__(self):
         try:

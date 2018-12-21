@@ -115,7 +115,7 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
                     'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
-                    'oral_1', 'oral_2', BalanceFilter ]
+                    'oral_1', 'oral_2', 'fascicule', BalanceFilter ]
     list_display = ['student_name', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance']
     readonly_fields = [ 'balance' ]

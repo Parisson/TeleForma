@@ -302,7 +302,10 @@ class UserXLSBook(object):
             row.write(20, student.balance)
             row.write(21, student.total_paybacks)
 
-            i = 22
+            row.write(22, student.fascicule)
+                
+            
+            i = 23
             for month in months_choices:
                 row.write(i, payment_per_month[month[0]])
                 i += 1
@@ -334,6 +337,7 @@ class UserXLSBook(object):
                 {'name':"Prix formation net", 'width':4000},
                 {'name':"Balance", 'width':4000},
                 {'name':"Total remboursement", 'width':4000},
+                {'name':"Envoi des fascicules", 'width':3500},
                 ]
 
         for month in months_choices:
