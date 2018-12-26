@@ -74,15 +74,23 @@ def seminar_progress(user, seminar, more=False):
                     missing_steps.add(step)
 
     questions = Question.objects.filter(seminar=seminar, status=3)
+    missing_step4 = None
     for question in questions:
         if question.weight:
             total += question.weight
-            answer = Answer.objects.filter(question=question, status=3, user=user,
-                                            validated=True, treated=True)
+            answer = Answer.objects.filter(question=question, status=3, user=user)
             if answer:
+                answer = answer[0]
+            if answer and answer.validated and answer.treated:
                 progress += question.weight
             else:
-                missing_steps.add('4')
+                # import pdb;pdb.set_trace()
+                if answer and not answer.treated and not missing_step4 == '4':
+                    missing_step4 = '4.5'
+                else:
+                    missing_step4 = '4'
+    if missing_step4:
+        missing_steps.add(missing_step4)
 
     if seminar.quiz:
         quiz_weight = 3
