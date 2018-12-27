@@ -102,7 +102,7 @@ class NewsItemForm(ModelForm):
 
 class WriteForm(PostmanWriteForm):
     recipients = BasicCommaSeparatedUserField(label=(_("Recipients"), _("Recipient")), help_text='')
-    course = ModelChoiceField(queryset=Course.objects.all())
+    course = ModelChoiceField(queryset=Course.objects.all(), required=False)
 
     class Meta(PostmanWriteForm.Meta):
         fields = ('course', 'recipients', 'subject', 'body')

@@ -37,7 +37,6 @@
 
                 <div id="category-admin">
                     <select id="_adminSelect" name="admins">
-                        <option value="">{% trans "to an administrator" %}</option>
                         {% get_all_admins as admins %}
                         {% for a in admins %}
                             <option value="{{ a.username }}" {% if request.POST.admins == a.username %}selected{% endif %}>{{ a.first_name }} {{ a.last_name }}</option>
@@ -143,7 +142,6 @@
                 if(courses && courses.indexOf(course) >= 0)
                     $option.show();
             });
-
             // fill the hidden field
             if($('#_professorSelect').val() && $('#_courseSelect').val())
                 $("#id_recipients").val($('#_professorSelect').val());
