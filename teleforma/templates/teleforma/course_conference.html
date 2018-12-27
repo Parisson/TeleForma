@@ -42,11 +42,6 @@
 </div>
 
 <div class="media">
-{% if access_error %}
-  <p>{{ access_error }}</p>
-  <p>{{ message }}</p>
-
-{% else %}
 
 {% for livestream in livestreams %}
 {% if "webm" == livestream.stream_type %}
@@ -59,7 +54,6 @@
 {% endif %}
 {% endfor %}
 
-{% endif %}
 </div>
 
 {% block general_info %}
