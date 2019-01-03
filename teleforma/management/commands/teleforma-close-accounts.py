@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         today = datetime.date.today()
-        for period in Period.objects.filter(date_close_accounts__gte = today):
+        for period in Period.objects.filter(date_close_accounts__lte = today):
             for student in period.student.filter(user__is_active = True):
                 print "Closing %s %s" % (student, student.user_id)
                 student.user.is_active = False
