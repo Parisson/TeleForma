@@ -53,7 +53,7 @@ class Command(BaseCommand):
                         completed = seminar_validated(user, seminar)
                         enough_time = get_seminar_delta(user, seminar)
                         validated = completed and enough_time > 0
-                        if delta.days < days and delta.days > 0 and not validated:
+                        if delta.days < days and delta.days >= 0 and not validated:
                             seminars.append(seminar)
 
 

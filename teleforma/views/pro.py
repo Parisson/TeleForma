@@ -115,55 +115,6 @@ def get_seminar_delta(user, seminar):
     delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
     return delta.total_seconds()
 
-def pretty_duration(delta):
-    seconds = delta.total_seconds()
-    hours = seconds // 3600
-    minutes = (seconds % 3600) // 60
-    seconds = seconds % 60
-    duration = "%d heures %d minutes %d secondes" % (hours, minutes, seconds)
-    return duration
-
-
-def export_seminar_revisions(request):
-    response = HttpResponse(content_type='text/csv')
-    filename = "releve-revision"
-    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
-
-    revs = SeminarRevision.objects.all().order_by('-date')
-    data = {}
-    for rev in revs:
-        seminar_id = rev.seminar.id
-        if seminar_id not in data:
-            data[seminar_id] = {'title':rev.seminar.pretty_title.encode('utf-8'), 'users':{}}
-
-        user = rev.user.email
-        if user not in data[seminar_id]['users']:
-            data[seminar_id]['users'][user] = []
-
-        if rev.date_modified:
-            data[seminar_id]['users'][user].append({'start':rev.date, 'end':rev.date_modified})
-
-    writer = UnicodeWriter(response, delimiter=";")
-    writer.writerow(["seminaire", "email", "duree total", "date debut", "date fin", "duree"])
-    for seminar in data.keys():
-        title = data[seminar]['title']
-        users = data[seminar]['users']
-        for user in users.keys():
-            l = [title, user]
-            revs = users[user]
-            duration = datetime.timedelta()
-            for rev in revs:
-                diff = rev['end'] - rev['start'] if rev['end'] else datetime.timedelta()
-                if diff.total_seconds() < 0:
-                    continue
-                l.append(str(rev['start']))
-                l.append(str(rev['end']))
-                l.append(pretty_duration(rev['end'] - rev['start']) if rev['end'] else 0)
-                duration += rev['end'] - rev['start'] if rev['end'] else datetime.timedelta()
-            l.insert(2, pretty_duration(duration))
-            writer.writerow(l)
-
-    return response
 
 
 class SeminarAccessMixin(object):
@@ -874,6 +825,7 @@ class TestimonialKnowledgeView(TestimonialView):
         return super(TestimonialKnowledgeView, self).dispatch(*args, **kwargs)
 
 
+# FIFPL
 class TestimonialPaybackView(TestimonialView):
 
     template_name = 'teleforma/seminar_testimonial_payback.html'
@@ -885,8 +837,8 @@ class TestimonialPaybackView(TestimonialView):
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
                                                    validated=True).order_by('question__rank')
-        user_timer = get_seminar_timer(self.request.user, seminar)
-        context['user_timer'] = user_timer.days * 24 + user_timer.seconds / 3600
+        # user_timer = get_seminar_timer(self.request.user, seminar)
+        # context['user_timer'] = user_timer.days * 24 + user_timer.seconds / 3600
         return context
 
     @method_decorator(login_required)

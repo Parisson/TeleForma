@@ -63,10 +63,6 @@
             {% if has_add_permission %}
               <div class="object-tools">
                 {% block object-tools-items %}
-                <a href="{% url 'export-seminar-revisions' %}" class="btn">
-                    <i class="icon-circle-arrow-down icon-black"></i>&nbsp;
-                    Exporter le relevé des temps de connexion
-                  </a>
                   <a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}" class="btn btn-success">
                     <i class="icon-plus-sign icon-white"></i>&nbsp;
                     {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
