@@ -33,23 +33,8 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 from django import template
-from django.utils.http import urlquote
-from django.core.urlresolvers import reverse
-from django.utils import html
-from django import template
-from django.utils.text import capfirst
-from django.utils.translation import ungettext
-from docutils.core import publish_parts
-from django.utils.encoding import smart_str, force_unicode
-from django.utils.safestring import mark_safe
-from django import db
 from django.shortcuts import get_object_or_404
-import re
-import os
-import datetime
-from django.conf import settings
-from django.template.defaultfilters import stringfilter
-import django.utils.timezone as timezone
+import json
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
 from urlparse import urlparse
@@ -57,7 +42,6 @@ from urlparse import urlparse
 from teleforma.models.core import Document
 from teleforma.models.crfpa import Course, NewsItem
 from teleforma.views import get_courses
-from teleforma.models import *
 from teleforma.exam.models import *
 
 register = template.Library()
@@ -161,6 +145,21 @@ def get_all_professors():
     return Professor.objects.all()
 
 @register.assignment_tag
+def get_all_professors_with_courses():
+    professors = []
+    for professor in Professor.objects.order_by('user__last_name').all():
+        name = professor.user.last_name + professor.user.first_name
+        if name:
+            professors.append({
+                'username':professor.user.username,
+                'name':professor.user.last_name + " " + professor.user.first_name,
+                'courses':json.dumps([course.id for course in professor.courses.all()])
+            })
+    return professors
+
+
+
+@register.assignment_tag
 def get_all_admins():
     return User.objects.filter(is_superuser=True).order_by('last_name')
 
@@ -216,27 +215,25 @@ def published(doc):
     if doc:
         return doc.filter(is_published=True)
 
-@register.simple_tag
-def untreated_scripts_count(user, period):
-    Q1 = Q(status=3, author=user, period=period)
-    Q2 = Q(status=3, corrector=user, period=period)
-    scripts = Script.objects.filter(Q1 | Q2)
+def scripts_count(user, period, statuses):
+    if not period:
+        return ''
+    Q1 = Q(author=user)
+    Q2 = Q(corrector=user)
+    scripts = Script.objects.filter(Q1 | Q2).filter(status__in = statuses,
+                                                    period = period)
     if scripts:
         return ' (' + str(len(scripts)) + ')'
     else:
         return ''
+    
+@register.simple_tag
+def untreated_scripts_count(user, period):
+    return scripts_count(user, period, (3,))
 
 @register.simple_tag
 def treated_scripts_count(user, period):
-    if not period:
-        return ''
-    Q1 = Q(status=4, author=user, period=period)
-    Q2 = Q(status=4, corrector=user, period=period)
-    scripts = Script.objects.filter(Q1 | Q2)
-    if scripts:
-        return ' (' + str(len(scripts)) + ')'
-    else:
-        return ''
+    return scripts_count(user, period, (4,))
 
 @register.simple_tag
 def get_training_profile(user):

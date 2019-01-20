@@ -317,6 +317,14 @@ class CourseAccessMixin(PeriodAccessMixin):
     def get_context_data(self, **kwargs):
         context = super(CourseAccessMixin, self).get_context_data(**kwargs)
         context['all_courses'] = get_courses(self.request.user, num_order=True, period=self.period)
+        # If we are a corrector but not a professor, limit object types
+        role = get_user_role(self.request.user)
+        if role == "corrector":
+            context['doc_types'] = DocumentType.objects.filter(for_corrector = True)
+            context['show_media'] = False
+        else:
+            context['doc_types'] = DocumentType.objects.all()
+            context['show_media'] = True
         return context
 
 
@@ -328,7 +336,6 @@ class CourseListView(CourseAccessMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         context['room'] = get_room(name='site', period=context['period'].name)
-        context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
         is_student = self.request.user.student.all().count()
@@ -339,11 +346,12 @@ class CourseListView(CourseAccessMixin, ListView):
                 appointments_open = True
         context['hasAppointment'] = appointments_open and is_student
 
-        home = Home.objects.all()
-        if home:
-            home = home[0]
-            context['home_text'] = home.text
-            context['home_video'] = home.video
+        homes = Home.objects.filter(enabled = True).order_by('-modified_at')
+        for home in homes:
+            if home.is_for_period(context['period']):
+                context['home_text'] = home.text
+                context['home_video'] = home.video
+                break
         return context
 
     @method_decorator(login_required)
@@ -400,7 +408,6 @@ class CourseView(CourseAccessMixin, DetailView):
         context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
-        context['doc_types'] = DocumentType.objects.all()
         return context
 
     @method_decorator(login_required)

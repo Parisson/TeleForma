@@ -2418,7 +2418,100 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 
 
+/*#layout {
+	min-height: 100vh;
+}
 
+#layout #content{
+	min-height: calc(100vh - 151px);
+	margin-top: 41px;
+}*/
+
+#layout .viewer{
+	min-height: calc(100vh - 141px);
+	margin-top: 11px;
+}
+#layout .pdfViewer .canvasWrapper {
+      box-shadow: 0 0 3px #bbb;
+}
+.pdfViewer .page {
+      margin-bottom: 10px;
+}
+
+#layout .annotationLayer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+#layout .viewer #content-wrapper {
+      position: absolute;
+      top: 85px;
+      left: 0;
+      right: 250px;
+      bottom: 0;
+      overflow: auto;
+      height: calc(100% - 80px);
+	  width: calc(100% - 250px);
+    }
+
+#layout .viewer #comment-wrapper {
+      position: absolute;
+      top: 85px;
+      right: 0;
+      bottom: 0;
+      overflow: auto;
+      width: 250px;
+      background: #eaeaea;
+      border-left: 1px solid #d0d0d0;
+    }
+#layout #comment-wrapper h4 {
+      margin: 10px;
+    }
+#layout #comment-wrapper .comment-list {
+      font-size: 12px;
+      position: absolute;
+      top: 38px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+#layout #comment-wrapper .comment-list-item {
+      border-bottom: 1px solid #d0d0d0;
+      padding: 10px;
+	  cursor: pointer;
+    }
+#layout #comment-wrapper .comment-list-item.selected {
+	background-color: rgba(0, 191, 255, 0.5);
+}
+#layout #comment-wrapper .comment-list-item.selected:hover {
+	background-color: rgba(0, 191, 255, 0.3);
+}
+
+#layout #comment-wrapper .comment-list-item:hover {
+	background-color: #dfdfdf;
+}
+#layout #comment-wrapper .comment-list-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0px;
+      overflow: auto;
+    }
+#layout #comment-wrapper .comment-list-form {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px;
+    }
+#layout #comment-wrapper .comment-list-form input {
+      padding: 5px;
+      width: 100%;
+    }
 
 
 /* _____  ______  _____ _____   ____  _   _  _____ _______      ________ 

@@ -1,4 +1,12 @@
 
+function disableComment(){
+    if(PDFAnnotate) {
+        PDFAnnotate.UI.disablePoint();
+        var tooltype = 'cursor';
+        PDFAnnotate.setActiveToolbarItem(tooltype, document.querySelector('.toolbar button[data-tooltype="' + tooltype + '"]'));
+    }
+}
+
 $(document).ready(function(){
 
     $( "#dialog_mark" ).dialog({
@@ -30,22 +38,26 @@ $(document).ready(function(){
     });
 
     $( "#opener_mark" ).click(function() {
+        disableComment();
         $( "#dialog_mark" ).dialog({ width: 500 });
         $( "#dialog_mark" ).dialog( "open");
         return false;
     });
 
     $( "#opener_reject" ).click(function() {
+        disableComment();
         $( "#dialog_reject" ).dialog( "open");
         return false;
     });
 
     $( "#opener_comments" ).click(function() {
+        disableComment();
         $( "#dialog_comments" ).dialog( "open");
         return false;
     });
 
     $( "#opener_print" ).click(function() {
+        disableComment();
         $( "#dialog_print" ).dialog({ width: 800 });
         $( "#dialog_print" ).dialog( "open");
         return false;

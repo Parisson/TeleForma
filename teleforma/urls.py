@@ -111,7 +111,9 @@ urlpatterns = patterns('',
        name="teleforma-appointment-cancel"),
 
     # Postman
+    url(r'^messages/write/(?:(?P<recipients>[^/#]+)/)?$', WriteView.as_view(), name='postman_write'),
     url(r'^messages/', include('postman.urls')),
+
 
     # Users
     url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/list/$',

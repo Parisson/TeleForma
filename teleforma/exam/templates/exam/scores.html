@@ -20,13 +20,9 @@
     <h3><a href="{% url teleforma-home %}"><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
     <div style="background: white;">
     <ul>
-    {% with user|user_courses as courses %}
-     {% for c in courses %}
-       {% with c.course as course %}
+     {% for course in courses %}
        <li><a href="{% url teleforma-exam-scripts-scores-course period.id course.id %}">{{ course.title}} {{ course.type }}</a></li>
-       {% endwith %}
      {% endfor %}
-    {% endwith %}
     </ul>
     </div>
     </div>
@@ -35,6 +31,11 @@
 {% if upload %}
 <div class="module_action">
 <a href="{% url teleforma-exam-scores-create period.id %}" class="component_icon button" id="action_green">{% trans "New score" %}</a>
+</div>
+{% endif %}
+{% if admin %}
+<div class="module_action">
+<a href="{% url teleforma-exam-scores-mass-create period.id %}" class="component_icon button" id="action_green">Saisie en masse de notes</a>
 </div>
 {% endif %}
 {% endblock module-action %}

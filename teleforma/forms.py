@@ -1,10 +1,17 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField
+from postman.forms import WriteForm as PostmanWriteForm
+
+from teleforma.fields import BasicCommaSeparatedUserField
 from teleforma.models import *
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from captcha.fields import CaptchaField
+
+from teleforma.models.core import Course, Professor
 from tinymce.widgets import TinyMCE
+from itertools import cycle
+
 
 class ConferenceForm(ModelForm):
 
@@ -91,3 +98,35 @@ class NewsItemForm(ModelForm):
             'description': TinyMCE({'cols':80, 'rows':30}),
         }
 
+
+
+class WriteForm(PostmanWriteForm):
+    recipients = BasicCommaSeparatedUserField(label=(_("Recipients"), _("Recipient")), help_text='')
+    course = ModelChoiceField(queryset=Course.objects.all(), required=False)
+
+    class Meta(PostmanWriteForm.Meta):
+        fields = ('course', 'recipients', 'subject', 'body')
+
+    def clean_recipients(self):
+        """compute recipient if 'auto' is set"""
+        recipients = self.cleaned_data['recipients']
+        course = self.cleaned_data.get('course')
+        if recipients == 'auto':
+            professors = Professor.objects.filter(courses__in=[course]).order_by('user__last_name').all()
+            if course.last_professor_sent:
+                try:
+                    index = list(professors).index(course.last_professor_sent)
+                except ValueError:
+                    index = 0
+
+                if index < len(professors)-1:
+                    professor = professors[index+1]
+                else:
+                    professor = professors[0]
+            else:
+                professor = professors[0]
+            course.last_professor_sent = professor
+            course.save()
+            recipients = [professor.user,]
+
+        return recipients

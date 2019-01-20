@@ -88,6 +88,16 @@ def get_random_hash():
     hash = random.getrandbits(128)
     return "%032x" % hash
 
+def get_user_role(user):
+    if user.is_superuser:
+        return 'superuser'
+    elif user.professor.exists():
+        return 'professor'
+    elif user.student.exists():
+        return 'student'
+    else:
+        return 'corrector'
+
 class MetaCore:
     app_label = app_label
 
@@ -140,6 +150,8 @@ class Period(Model):
     message_local = models.TextField(_('message pour presentielle'), blank=True)
     is_open = models.BooleanField(_('is open'), default=True)
     date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
+    nb_script = models.IntegerField(_("nombre maximal de copies"), null=True, blank=True)
+    date_close_accounts = models.DateField("date de fermeture des comptes étudiants", null = True, blank = True)
 
     def __unicode__(self):
         return self.name
@@ -182,6 +194,12 @@ class Course(Model):
     oral_2 = models.BooleanField(_('oral_2'))
     has_exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
     quiz = models.ManyToManyField(Quiz, verbose_name=_('quiz'), blank=True, null=True)
+    # last professor which received a student message on automatic mode
+    last_professor_sent = models.ForeignKey('Professor', blank=True, null=True)
+
+    periods = models.ManyToManyField('Period', related_name="courses",
+                                     verbose_name=u'Périodes associées',
+                                     blank=True, null=True)
 
     def __unicode__(self):
         return self.title
@@ -212,6 +230,13 @@ class Course(Model):
             self.number = int(data['number'])
         self.save()
 
+    def is_for_period(self, period):
+        """
+        Check if it's available for given period
+        """
+        periods = [ p['id'] for p in self.periods.values('id') ]
+        return not periods or period.id in periods
+        
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
@@ -529,6 +554,9 @@ class DocumentType(Model):
     name            = models.CharField(_('name'), max_length=255)
     description     = models.CharField(_('description'), max_length=255, blank=True)
     number          = models.IntegerField(_('number'), blank=True, null=True)
+    for_corrector   = models.BooleanField('autorisé aux correcteurs',
+                                          blank = True, null = False,
+                                          default = False)
 
     def __unicode__(self):
         return self.name

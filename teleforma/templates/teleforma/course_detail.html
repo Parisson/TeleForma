@@ -50,7 +50,7 @@ $(document).ready(function(){
           </div>
 
         {% else %}
-          {% if not user.correctors.all or user.is_staff %}
+          {% if show_media %}
           {% block conference %}
            {% include "teleforma/inc/conference_list.html" %}
           {% endblock %}

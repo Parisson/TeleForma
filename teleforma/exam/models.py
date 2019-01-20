@@ -81,7 +81,8 @@ crocodoc.api_token = settings.BOX_API_TOKEN
 # box_client = Client(oauth)
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
-                (3, _('pending')),(4, _('marked')), (5, _('read')), (6, _('backup')) )
+                 (3, _('pending')),(4, _('marked')), (5, _('read')),
+                 (6, _('backup')), (7, _('stat')) )
 
 REJECT_REASON = (('unreadable', _('unreadable')),
                 ('bad orientation', _('bad orientation')),
@@ -163,26 +164,24 @@ class Quota(models.Model):
             title = ' - '.join([title, unicode(self.date_end)])
         return title
 
-    @property
-    def all_script_count(self):
-        q = self.corrector.corrector_scripts.filter(Q(status=3) | Q(status=4) | Q(status=5))
+    def script_count(self, statuses):
+        q = self.corrector.corrector_scripts.filter(status__in = statuses)
         q = q.filter(course=self.course)
         q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
         return q.count()
+        
+
+    @property
+    def all_script_count(self):
+        return self.script_count(statuses = (3,4,5))
 
     @property
     def pending_script_count(self):
-        q = self.corrector.corrector_scripts.filter(Q(status=3))
-        q = q.filter(course=self.course)
-        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
-        return q.count()
+        return self.script_count(statuses = (3,))
 
     @property
     def marked_script_count(self):
-        q = self.corrector.corrector_scripts.filter(Q(status=4) | Q(status=5))
-        q = q.filter(course=self.course)
-        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
-        return q.count()
+        return self.script_count(statuses = (4,5))
 
     @property
     def level(self):
@@ -245,8 +244,7 @@ class Script(BaseResource):
     course = models.ForeignKey(Course, related_name="scripts", verbose_name=_('course'), null=True, on_delete=models.SET_NULL)
     period = models.ForeignKey(Period, related_name='scripts', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    session = models.CharField(_('session'), choices=session_choices,
-                                      max_length=16, default="1")
+    session = models.CharField(_('session'), max_length=16, default="1")
     type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
     corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -306,15 +304,15 @@ class Script(BaseResource):
         self.date_submitted = datetime.datetime.now()
 
         quota_list = []
-        quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
+        all_quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
                                             date_end__gte=self.date_submitted,
-                                            script_type=self.type,
+                                            session=self.session,
                                             period=self.period)
+        
+        quotas = all_quotas.filter(script_type=self.type)
         if not quotas:
-            quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
-                                            date_end__gte=self.date_submitted,
-                                            script_type=None,
-                                            period=self.period)
+            quotas = all_quotas.filter(script_type=None)
+            
         if quotas:
             for quota in quotas:
                 if quota.value:
@@ -354,9 +352,11 @@ class Script(BaseResource):
         self.save()
 
     def save(self, *args, **kwargs):
-        if self.status == 4 and self.score:
+        if not self.file and self.score:
+            self.status = 7
+        elif self.status == 4 and self.score:
             self.mark()
-        if self.status == 0 and self.reject_reason:
+        elif self.status == 0 and self.reject_reason:
             self.reject()
         super(Script, self).save(*args, **kwargs)
 

@@ -39,7 +39,7 @@ from django.utils.translation import ugettext_lazy as _
 from telemeta.models.core import *
 from teleforma.models.core import *
 from tinymce.models import HTMLField
-
+from  django.db.models import signals
 
 class IEJ(Model):
 
@@ -171,6 +171,11 @@ class Student(Model):
     confirmation_sent = models.BooleanField(_('confirmation sent'))
     level = models.CharField(_('studying level'), blank=True, max_length=100)
 
+    balance = models.FloatField(_('balance de paiement'), help_text='€', blank=True, null=True)
+
+    fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
+                                    default=False)
+    
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -184,36 +189,44 @@ class Student(Model):
             amount += self.subscription_fees
         if self.application_fees:
             amount += self.default_application_fees
-        for optional_fee in self.optional_fees.all():
-            amount += optional_fee.value
-        for discount in self.discounts.all():
-            amount -= discount.value
+        amount += self.total_optional_fees
+        amount += self.total_discount
         return amount
 
     @property
+    def total_optional_fees(self):
+        amount = 0
+        for optional_fee in self.optional_fees.values('value'):
+            amount += optional_fee['value']
+        return amount
+    
+    @property
     def total_payments(self):
         amount = 0
-        for payment in self.payments.all():
-            amount += payment.value
+        for payment in self.payments.values('value'):
+            amount += payment['value']
         return amount
 
     @property
     def total_discount(self):
         amount = 0
-        for discount in self.discounts.all():
-            amount -= discount.value
+        for discount in self.discounts.values('value'):
+            amount -= discount['value']
         return amount
 
     @property
     def total_paybacks(self):
         amount = 0
-        for payback in self.paybacks.all():
-            amount -= payback.value
+        for payback in self.paybacks.values('value'):
+            amount -= payback['value']
         return amount
-
-    @property
-    def balance(self):
-        return  round(self.total_payments - self.total_fees, 2)
+        
+    def update_balance(self):
+        old = self.balance
+        new = round(self.total_payments - self.total_fees, 2)
+        if old != new:
+            self.balance = new
+            self.save()
 
     def get_absolute_url(self):
         return reverse_lazy('teleforma-profile-detail', kwargs={'username':self.user.username})
@@ -224,6 +237,14 @@ class Student(Model):
         verbose_name_plural = _('Students')
         ordering = ['user__last_name', '-date_subscribed']
 
+def update_balance_signal(sender, instance, *args, **kwargs):
+    if sender is Student:
+        instance.update_balance()
+    elif sender in (Discount, OptionalFee, Payment):
+        instance.student.update_balance()
+        
+signals.post_save.connect(update_balance_signal)
+signals.post_delete.connect(update_balance_signal)
 
 class Profile(models.Model):
     "User profile extension"
@@ -311,22 +332,31 @@ class Payback(models.Model):
 
 class Home(models.Model):
 
+    title = models.CharField(_('Title'), max_length=255,
+                             default="Page d'accueil")
     text = HTMLField('Texte', blank=True)
     video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
+    modified_at = models.DateTimeField(u'Date de modification', auto_now=True,
+                                       default=datetime.datetime.now)
+    periods = models.ManyToManyField('Period', related_name="home_texts",
+                                     verbose_name=u'Périodes associées',
+                                     blank=True, null=True)
+    enabled = models.BooleanField(u'Activé', default=True)
 
     class Meta(MetaCore):
         verbose_name = "Page d'accueil"
         verbose_name_plural = "Page d'accueil"
 
-    def __unicode__(self):
-        return "Page d'accueil"
+    def is_for_period(self, period):
+        """
+        Check if it's available for given period
+        """
+        periods = [ p['id'] for p in self.periods.values('id') ]
+        return not periods or period.id in periods
 
-    def save(self, *args, **kwargs):
-        if Home.objects.exists() and not self.pk:
-            # if you'll not check for self.pk
-            # then error will also raised in update of exists model
-            raise ValidationError('There is can be only one Home instance')
-        return super(Home, self).save(*args, **kwargs)
+    def __unicode__(self):
+        return self.title
+
 
 
 class NewsItem(models.Model):
@@ -353,8 +383,6 @@ class NewsItem(models.Model):
 
     def can_delete(self, request):
         return request.user.is_staff or request.user.id == self.creator.id
-
-
 
 
 
