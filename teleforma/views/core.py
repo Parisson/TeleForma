@@ -121,7 +121,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
         name = 'site'
 
     if settings.TELEFORMA_PERIOD_TWEETER and period:
-        name = name + '-' + period 
+        name = name + '-' + period
 
     if settings.TELEFORMA_GLOBAL_TWEETER:
         rooms = jqchat.models.Room.objects.filter(name=name[:20])
@@ -246,7 +246,7 @@ class CourseListView(CourseAccessMixin, ListView):
         organization = Organization.objects.get(name=organization_name)
         departments = Department.objects.filter(organization=organization)
         for department in departments:
-            url = 'http://' + department.domain + '/json/'
+            url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_course_list(organization_name, department.name)
             if remote_list['result']:
@@ -257,7 +257,7 @@ class CourseListView(CourseAccessMixin, ListView):
                     else:
                         course = course[0]
                     course.from_dict(course_dict)
-                
+
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)
@@ -500,7 +500,7 @@ class ConferenceListView(View):
     def pull(request):
         departments = Department.objects.all()
         for department in departments:
-            url = 'http://' + department.domain + '/json/'
+            url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_conference_list()
             for conf_dict in remote_list['result']:
@@ -513,7 +513,7 @@ class ConferenceListView(View):
         from teleforma.models import Organization, Department
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name, organization=organization)
-        url = 'http://' + department.domain + '/json/'
+        url = 'https://' + department.domain + '/json/'
         s = ServiceProxy(url)
         remote_list = s.teleforma.get_conference_list()['result']
         remote_ids = [conf['id'] for conf in remote_list]
@@ -530,7 +530,7 @@ def live_message(conference):
                            content_type=content_type,
                            id=conference.course.id)
         text = _("A new live conference has started : ")
-        text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
+        text += 'https://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
                        kwargs={'period_id': conference.period.id, 'pk': conference.id})
         message = Message.objects.create_message(user, room, text)
 
@@ -665,7 +665,7 @@ class ProfessorListView(View):
         professors_new = []
 
         for department in departments:
-            url = 'http://' + department.domain + '/json/'
+            url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_professor_list()
             for professor_dict in remote_list['result']:
@@ -712,7 +712,7 @@ class SourcesStatusView(ListView):
     @jsonrpc_method('telecaster.get_source_status')
     def get_source_status(request, public_id):
         source = Source.objects.get(public_id=public_id)
-        url = 'http://' + source.ip + '/json/'
+        url = 'https://' + source.ip + '/json/'
         service = ServiceProxy(url)
         status = s.teleforma.get_server_status()
         return status
@@ -720,7 +720,7 @@ class SourcesStatusView(ListView):
     @jsonrpc_method('telecaster.get_source_station_status')
     def get_source_station_status(request, public_id):
         source = Source.objects.get(public_id=public_id)
-        url = 'http://' + source.ip + '/json/'
+        url = 'https://' + source.ip + '/json/'
         service = ServiceProxy(url)
         station = s.teleforma.get_station_status()
         return station
