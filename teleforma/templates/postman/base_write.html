@@ -143,9 +143,9 @@
                     $option.show();
             });
             // fill the hidden field
-            if($('#_professorSelect').val() && $('#_courseSelect').val())
+            if($('#_professorSelect').val() && $('#_courseSelect').val() && recipientCategory === 'prof')
                 $("#id_recipients").val($('#_professorSelect').val());
-            if($('#_adminSelect').val())
+            if($('#_adminSelect').val() && recipientCategory === 'admin')
                 $("#id_recipients").val($('#_adminSelect').val());
         }
 
