@@ -147,10 +147,15 @@
                 $("#id_recipients").val($('#_professorSelect').val());
             if($('#_adminSelect').val() && recipientCategory === 'admin')
                 $("#id_recipients").val($('#_adminSelect').val());
+
+            if($("#id_recipients").val()==='auto')
+                $('#id_recipients').parent().parent().hide();
+            else
+                $('#id_recipients').parent().parent().show();
         }
 
         // hide recipients fields
-        $('#id_recipients').parent().parent().hide();
+
         {#$('#id_course').parent().parent().hide();#}
 
         $('[name="recipient_category"]').bind('change', update_desk_messages);
