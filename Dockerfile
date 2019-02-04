@@ -40,11 +40,12 @@ ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
+RUN pip install cython
 COPY requirements.txt /srv
 RUN pip install -r requirements.txt
 
-COPY requirements-dev.txt /srv
-RUN pip install -r requirements-dev.txt --src /srv/lib
+#COPY requirements-dev.txt /srv
+#RUN pip install -r requirements-dev.txt --src /srv/lib
 
 WORKDIR /srv/app
 

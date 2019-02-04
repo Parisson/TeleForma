@@ -3,3 +3,8 @@ netcat
 vim
 locales
 python-yaml
+libshout3-dev
+librtmp-dev
+liblo-dev
+libcurl4-openssl-dev
+cython
