@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   var:
@@ -43,7 +43,6 @@ services:
       - var
     links:
       - app
-
 
 volumes:
     var:
