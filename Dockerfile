@@ -41,7 +41,9 @@ ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
 RUN pip install cython
-COPY requirements.txt /srv
+RUN mkdir -p /srv/lib/teleforma
+COPY . /srv/lib/teleforma
+WORKDIR /srv/lib/teleforma
 RUN pip install -r requirements.txt
 
 #COPY requirements-dev.txt /srv
