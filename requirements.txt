@@ -8,7 +8,6 @@ django-extensions==0.9
 django-notes
 django-timezones==0.2
 django-jqchat
-crocodoc
 django-registration==0.8
 django-extra-views==0.6.5
 django-simple-captcha
@@ -19,3 +18,4 @@ xhtml2pdf
 html5lib==0.95
 django-tinymce==1.5.4
 django-quiz
+deefuzzer
