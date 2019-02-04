@@ -57,7 +57,7 @@
         {% if script.score %}
         <a id="score" href="#" class="component_icon button icon_ok"> {% trans "Score" %} : {{ script.score|floatformat }}/20</a>
         <a id="opener_comments" href="#" class="component_icon button icon_ok"> {% trans "Comments" %}</a>
-        <a id="opener_print" href="#" class="component_icon button icon_download"> {% trans "Imprimer" %}</a>
+{#        <a id="opener_print" href="#" class="component_icon button icon_download"> {% trans "Imprimer" %}</a>#}
         {% elif script.status == 0 %}
         <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
         {% else %}

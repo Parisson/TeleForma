@@ -91,19 +91,19 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
                                types=s_courses[course])
 
         synthesis_note = training.synthesis_note
-        if synthesis_note:
+        if synthesis_note.count():
             courses = format_courses(courses,
                             queryset=Course.objects.filter(synthesis_note=True),
                             types=synthesis_note)
 
         obligation = training.obligation
-        if obligation:
+        if obligation.count():
             courses = format_courses(courses,
                             queryset=Course.objects.filter(obligation=True),
                             types=obligation)
 
         magistral = training.magistral
-        if magistral:
+        if magistral.count():
             courses = format_courses(courses,
                             queryset=Course.objects.filter(magistral=True),
                             types=magistral)
