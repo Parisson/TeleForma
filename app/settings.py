@@ -8,6 +8,10 @@ import environ
 
 sys.dont_write_bytecode = True
 
+env = environ.Env(DEBUG=(bool, False),
+                  CELERY_ALWAYS_EAGER=(bool, False),
+                  )
+
 # Django settings for server project.
 DEBUG = env('DEBUG')  # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
