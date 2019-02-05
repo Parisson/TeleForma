@@ -4,6 +4,7 @@
 import os
 import sys
 from django.core.urlresolvers import reverse_lazy
+import environ
 
 sys.dont_write_bytecode = True
 
