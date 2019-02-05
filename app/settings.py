@@ -7,24 +7,26 @@ from django.core.urlresolvers import reverse_lazy
 
 sys.dont_write_bytecode = True
 
-DEBUG = True
+# Django settings for server project.
+DEBUG = env('DEBUG')  # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
+
+ALLOWED_HOSTS = ['*']
 
 ADMINS = (
     ('Guillaume Pellerin', 'webmaster@parisson.com'),
-    ('Lists', 'lists@parisson.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'teleforma',                      # Or path to database file if using sqlite3.
-        'USER': 'teleforma',                      # Not used with sqlite3.
-        'PASSWORD': 'HMYsrZLEtYeBrvER',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': env('ENGINE'),  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'USER': env('MYSQL_USER'),      # Not used with sqlite3.
+        'PASSWORD': env('MYSQL_PASSWORD'),  # Not used with sqlite3.
+        'NAME': env('MYSQL_DATABASE'),
+        'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',   # Set to empty string for default. Not used with sqlite3.
     }
 }
 

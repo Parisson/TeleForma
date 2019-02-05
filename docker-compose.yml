@@ -39,6 +39,8 @@ services:
       - db
       - borker
       - search
+    env_file:
+      - env/debug.env
 
   web:
     image: nginx
