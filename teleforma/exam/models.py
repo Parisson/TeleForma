@@ -59,10 +59,6 @@ class MetaCore:
     app_label = 'exam'
 
 
-import crocodoc
-crocodoc.api_token = settings.BOX_API_TOKEN
-
-
 # import boxsdk
 # from boxsdk import OAuth2, Client
 # import StringIO
@@ -169,7 +165,7 @@ class Quota(models.Model):
         q = q.filter(course=self.course)
         q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
         return q.count()
-        
+
 
     @property
     def all_script_count(self):
@@ -284,22 +280,6 @@ class Script(BaseResource):
         verbose_name_plural = _('Scripts')
         ordering = ['date_added']
 
-    @property
-    def box_admin_url(self):
-        user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
-        session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user,
-                                filter='all', admin=True, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='invisible')
-        return 'https://crocodoc.com/view/' + session_key
-
-    @property
-    def box_user_url(self):
-        user = {'id': 3, 'name': 'TeleForma'}
-        session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
-                                filter='all', admin=False, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='invisible')
-        return 'https://crocodoc.com/view/' + session_key
-
     def auto_set_corrector(self):
         self.date_submitted = datetime.datetime.now()
 
@@ -308,11 +288,11 @@ class Script(BaseResource):
                                             date_end__gte=self.date_submitted,
                                             session=self.session,
                                             period=self.period)
-        
+
         quotas = all_quotas.filter(script_type=self.type)
         if not quotas:
             quotas = all_quotas.filter(script_type=None)
-            
+
         if quotas:
             for quota in quotas:
                 if quota.value:
@@ -401,39 +381,6 @@ class Script(BaseResource):
         check if an annotations file exists. Then use this file, otherwise use the new db implementation
         """
         return os.path.exists(os.path.join(settings.WEBVIEWER_ANNOTATIONS_PATH, self.uuid+'.xfdf'))
-
-    def box_upload(self):
-        sleep = 10
-        max_loop = 12
-        loop = 0
-
-        self.box_uuid = crocodoc.document.upload(url=self.url)
-
-        while True:
-            statuses = crocodoc.document.status([self.box_uuid,])
-            if (len(statuses) != 0):
-                if (statuses[0].get('error') == None):
-                    if statuses[0]['status'] == 'DONE':
-                        self.box_upload_done = 1
-                        self.save()
-                        break
-                    else:
-                        loop += 1
-                        time.sleep(sleep)
-                        if loop > max_loop:
-                            break
-                else:
-                    print 'File upload failed :('
-                    print '  Error Message: ' + statuses[0]['error']
-                    if 'too large' in statuses[0]['error']:
-                        self.auto_reject('file too large')
-                    elif 'retrieving file' in statuses[0]['error']:
-                        self.auto_reject('error retrieving file')
-                    break
-            else:
-                print 'failed :('
-                print '  Statuses were not returned.'
-                break
 
     def auto_reject(self, mess):
         self.reject_reason = mess

@@ -18,4 +18,5 @@ xhtml2pdf==0.2.3
 markdown<2.5
 django-tinymce==1.5.4
 deefuzzer
+xlwt
 -e .
