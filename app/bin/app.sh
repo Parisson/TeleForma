@@ -11,8 +11,8 @@ log='/var/log/uwsgi/app.log'
 
 # uwsgi params
 port=8000
-processes=8
-threads=8
+processes=2
+threads=2
 uid='www-data'
 gid='www-data'
 

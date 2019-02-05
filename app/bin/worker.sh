@@ -4,7 +4,7 @@
 app='/srv/app'
 manage=$app'/manage.py'
 wsgi=$app'/wsgi.py'
-concurrency=12
+concurrency=2
 
 # stating apps
 # pip uninstall -y south

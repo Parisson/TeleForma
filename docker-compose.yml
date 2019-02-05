@@ -27,7 +27,7 @@ services:
 
   app:
     build: .
-    command: /bin/sh deploy/start_app.sh
+    command: /bin/bash bin/app.sh
     volumes:
       - ./app/:/srv/app
       - ./teleforma/:/srv/lib/teleforma/teleforma
@@ -44,6 +44,7 @@ services:
 
   worker:
     build: .
+    command: /bin/bash bin/worker.sh
     volumes_from:
       - app
       - var
