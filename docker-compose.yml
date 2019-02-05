@@ -11,11 +11,8 @@ services:
 
   db:
     image: mariadb:10
-    environment:
-      - MYSQL_ROOT_PASSWORD=mysecretpassword
-      - MYSQL_DATABASE=teleforma
-      - MYSQL_USER=teleforma
-      - MYSQL_PASSWORD=admin
+    env_file:
+    - env/debug.env
     volumes:
       - ./var/lib/mysql/:/var/lib/mysql
 
