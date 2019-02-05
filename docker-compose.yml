@@ -42,6 +42,18 @@ services:
     env_file:
       - env/debug.env
 
+  worker:
+    build: .
+    volumes_from:
+      - app
+      - var
+    env_file:
+      - env/debug.env
+    command: /bin/bash bin/worker.sh
+    links:
+      - broker
+      - db
+
   web:
     image: nginx
     ports:
