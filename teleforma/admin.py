@@ -65,7 +65,7 @@ class StudentInline(admin.StackedInline):
     extra = 1
 
 class StudentGroupForm(ActionForm):
-    group_name = forms.CharField(_('Group'), required=False)
+    group_name = forms.CharField(_('Group'), required=False, max_length=256)
 
 class StudentGroupAdmin(admin.ModelAdmin):
     model = StudentGroup
@@ -98,9 +98,9 @@ class BalanceFilter(admin.SimpleListFilter):
         value = self.value()
         if value == 'ltz':
             return queryset.filter(balance__lt = 0)
-        elif value == 'eqz':    
+        elif value == 'eqz':
             return queryset.filter(balance = 0)
-        elif value == 'gtz':    
+        elif value == 'gtz':
             return queryset.filter(balance__gt = 0)
         else:
             return queryset
