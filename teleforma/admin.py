@@ -64,8 +64,9 @@ class StudentInline(admin.StackedInline):
     model = Student
     extra = 1
 
-class StudentGroupForm(ActionForm):
-    group_name = forms.CharField(_('Group'), required=False, max_length=256)
+#TODO fix max_length
+# class StudentGroupForm(ActionForm):
+#     group_name = forms.CharField(_('Group'), required=False)
 
 class StudentGroupAdmin(admin.ModelAdmin):
     model = StudentGroup
@@ -120,7 +121,7 @@ class StudentAdmin(admin.ModelAdmin):
                     'total_payments', 'total_fees', 'balance']
     readonly_fields = [ 'balance' ]
     actions = ['export_xls', 'write_message', 'add_to_group']
-    action_form = StudentGroupForm
+    # action_form = StudentGroupForm
 
     def get_trainings(self, instance):
         return ' - '.join([unicode(training) for training in instance.trainings.all()])
