@@ -37,7 +37,7 @@ services:
       - "8000:8000"
     links:
       - db
-      - borker
+      - broker
       - search
     env_file:
       - env/debug.env
