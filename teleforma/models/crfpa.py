@@ -336,8 +336,7 @@ class Home(models.Model):
                              default="Page d'accueil")
     text = HTMLField('Texte', blank=True)
     video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
-    modified_at = models.DateTimeField(u'Date de modification', auto_now=True,
-                                       default=datetime.datetime.now)
+    modified_at = models.DateTimeField(u'Date de modification', auto_now=True)
     periods = models.ManyToManyField('Period', related_name="home_texts",
                                      verbose_name=u'Périodes associées',
                                      blank=True, null=True)
