@@ -179,7 +179,7 @@
             </p>
 
             {% if ap_period.appointment.can_cancel %}
-                <form class="cancel_form" action="{% url teleforma-appointment-cancel %}" method="POST">
+                <form class="cancel_form" action="{% url 'teleforma-appointment-cancel' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="period_id" value="{{ period_id }}"/>
                     <input type="hidden" name="appointment_id" value="{{ ap_period.appointment.id }}"/>

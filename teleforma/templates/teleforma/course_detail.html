@@ -5,7 +5,7 @@
 {% block extra_javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    InitChatWindow("{% url 'jqchat_ajax' room.id %}", null);
     });
 </script>
 {% endblock extra_javascript %}
@@ -13,7 +13,7 @@ $(document).ready(function(){
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}
@@ -39,7 +39,7 @@ $(document).ready(function(){
               <table class="listing" width="100%">
                   <tbody>
                   {% for quiz in course.quiz.all %}
-                  <td class="border-top"><a href="{% url quiz_start_page slug=quiz.url %}">{{quiz.title}}</a></td>
+                  <td class="border-top"><a href="{% url 'quiz_start_page' slug=quiz.url %}">{{quiz.title}}</a></td>
                   <td class="border-top">{{quiz.description}}</td>
                   {% endfor %}
                   </tbody>

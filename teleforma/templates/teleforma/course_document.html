@@ -7,7 +7,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    InitChatWindow("{% url 'jqchat_ajax' room.id %}", null);
     });
 </script>
 
@@ -23,7 +23,7 @@ $(document).ready(function(){
 //
 // Fetch the PDF document from the URL using promices
 //
-PDFJS.getDocument('{% url teleforma-document-download document.id %}').then(function(pdf) {
+PDFJS.getDocument('{% url 'teleforma-document-download' document.id %}').then(function(pdf) {
   // Using promise to fetch the page
   pdf.getPage(1).then(function(page) {
     var scale = 1.5;

@@ -14,7 +14,7 @@
           {% if media.type == 'webm' %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-            <a href="{% url teleforma-media-detail period.id media.id %}" title="{% trans "Play" %}">
+            <a href="{% url 'teleforma-media-detail' period.id media.id %}" title="{% trans "Play" %}">
             {% if media.item.related.all %}
              {% for related in media.item.related.all %}
               {% if related.title == "preview" %}
@@ -36,7 +36,7 @@
                     <dt>{% trans "Title" %}</dt><dd>{{ media.conference.course.title }}</dd>
                     <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
                     {% if media.conference.professor %}
-                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url 'telemeta-profile-detail' media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
                     {% endif %}
                     <dt>{% trans "Begin" %}</dt><dd>{{ media.conference.date_begin }}</dd>
                     {% if media.conference.comment %}
@@ -53,7 +53,7 @@
             {% endif %}
             {% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
                 {% if not "video" in media.mime_type or perms.telemeta.can_play_all_items or request.user_agent.os.family == 'iOS' %}
-                    <a href="{% url teleforma-media-download period.id media.id %}">
+                    <a href="{% url 'teleforma-media-download' period.id media.id %}">
                         <img src="/static/teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
                     </a>
                 {% endif %}

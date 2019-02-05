@@ -37,7 +37,7 @@
 </tr>
 {% for media in course.media.all %}
 <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
-<td><a href="{% url telemeta-item-detail media.item.public_id %}">{{ media.item.title }}</a></td>
+<td><a href="{% url 'telemeta-item-detail' media.item.public_id %}">{{ media.item.title }}</a></td>
 <td>{{ media.item.description }}</td>
 <td>{{ media.date_added }}</td>
 </tr>

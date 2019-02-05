@@ -8,7 +8,7 @@
 {% block extra_javascript %}
 <script type="text/javascript">
 $(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
+    InitChatWindow("{% url 'jqchat_ajax' room.id %}", null);
     });
 </script>
 {% endblock extra_javascript %}
@@ -27,7 +27,7 @@ $(document).ready(function(){
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}
@@ -40,13 +40,13 @@ $(document).ready(function(){
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module_action">
-<a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
+<a href="{% url 'teleforma-conference-record' %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
 </div>
 {% endif %}
 
 {% if user.is_staff %}
 <div class="module_action">
-<a href="{% url teleforma-desk-period-pending period.id %}" class="component_icon button" id="action_red">{% trans "Pending" %}</a>
+<a href="{% url 'teleforma-desk-period-pending' period.id %}" class="component_icon button" id="action_red">{% trans "Pending" %}</a>
 </div>
 {% endif %}
 
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
     {% if hasAppointment %}
         <div class="appointment">
-            <a href="{% url teleforma-appointments period.id %}"><button>Rendez-vous individuels aux simulations du grand-oral</button></a>
+            <a href="{% url 'teleforma-appointments' period.id %}"><button>Rendez-vous individuels aux simulations du grand-oral</button></a>
         </div>
         <br/>
     {% endif %}
@@ -90,7 +90,7 @@ $(document).ready(function(){
     {% if home_video.type == 'webm' %}
     <h3>{% if home_video.title %}{{ home_video.title }}{% else %}{{ home_video.course.title }}{% endif %}</h3>
         <div class="video" style="width:400px">
-         <a href="{% url teleforma-media-detail period.id home_video.id %}" title="{% trans "Play" %}">
+         <a href="{% url 'teleforma-media-detail' period.id home_video.id %}" title="{% trans "Play" %}">
           {% if home_video.item.related.all %}
              {% for related in home_video.item.related.all %}
               {% if related.title == "preview" %}
@@ -113,7 +113,7 @@ $(document).ready(function(){
       {% for type in c.types %}
       <div class="course">
         <div class="course_title">
-         <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
+         <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
         </div>
 
         {% if show_media %}
