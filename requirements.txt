@@ -8,7 +8,7 @@ django-notes
 django-timezones==0.2
 django-jqchat
 django-registration==0.8
-django-extra-views==0.10.0
+django-extra-views==0.11.0
 django-simple-captcha
 django-suit
 django-nvd3
@@ -18,3 +18,4 @@ xhtml2pdf==0.2.3
 markdown<2.5
 django-tinymce==1.5.4
 deefuzzer
+-e .
