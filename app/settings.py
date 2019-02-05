@@ -159,6 +159,84 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "teleforma.context_processors.periods",
 )
 
+BROKER_URL = env('BROKER_URL')
+CELERY_IMPORTS = ("timeside.server.tasks",)
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['application/json']
+
+from worker import app
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        #'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'ENGINE': 'telemeta.util.backend.CustomElasticEngine',
+        'URL': env('HAYSTACK_URL'),
+        'INDEX_NAME': env('HAYSTACK_INDEX_NAME'),
+        'INLUDE_SPELLING': True,
+        'EXCLUDED_INDEXES': ['telemeta.search_indexes.LocationIndex',
+                             'telemeta.search_indexes.LocationAliasIndex',
+                             'telemeta.search_indexes.InstrumentIndex',
+                             'telemeta.search_indexes.InstrumentAliasIndex'
+                             ]
+    },
+    'autocomplete': {
+        # 'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'ENGINE': 'telemeta.util.backend.CustomElasticEngine',
+        'URL': env('HAYSTACK_URL'),
+        'INDEX_NAME': env('HAYSTACK_INDEX_NAME_AUTOCOMPLETE'),
+        'INLUDE_SPELLING': True,
+        'EXCLUDED_INDEXES': ['telemeta.search_indexes.MediaItemIndex',
+                             'telemeta.search_indexes.MediaCollectionIndex',
+                             'telemeta.search_indexes.MediaCorpusIndex',
+                             'telemeta.search_indexes.MediaFondsIndex'
+                             ]
+    },
+}
+
+HAYSTACK_ROUTERS = ['telemeta.util.search_router.AutoRouter', 'haystack.routers.DefaultRouter']
+# HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'telemeta.util.search_signals.RealTimeCustomSignal'
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 50
+
+BOWER_COMPONENTS_ROOT = '/srv/bower/'
+BOWER_PATH = '/usr/local/bin/bower'
+BOWER_INSTALLED_APPS = (
+    'jquery#2.2.4',
+    'jquery-migrate#~1.2.1',
+    'underscore#1.8.3',
+    'bootstrap#3.3.7',
+    'bootstrap-select#1.5.4',
+    'font-awesome#4.4.0',
+    'angular#1.2.26',
+    'angular-bootstrap-select#0.0.5',
+    'angular-resource#1.2.26',
+    'raphael#2.2.7',
+    'soundmanager#V2.97a.20150601',
+    'jquery-ui#1.11.4',
+    'tablesorter',
+    'video.js',
+    'sass-bootstrap-glyphicons',
+    # 'https://github.com/Parisson/loaders.git',
+    # 'https://github.com/Parisson/ui.git',
+)
+
+NOTEBOOK_DIR = MEDIA_ROOT + 'notebooks'
+if not os.path.exists(NOTEBOOK_DIR):
+    os.makedirs(NOTEBOOK_DIR)
+
+NOTEBOOK_ARGUMENTS = [
+    '--ip=0.0.0.0', # reach notebooks from outside
+    '--port=8888',  # std port
+    '--no-browser', # don't start browser on start
+    '--allow-root',
+    '--notebook-dir', NOTEBOOK_DIR
+]
+
+SILENCED_SYSTEM_CHECKS = ['fields.W342',]
+
+
 TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
 TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
 TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
@@ -214,4 +292,5 @@ TELEFORMA_PERIOD_TWEETER = True
 
 JQCHAT_DISPLAY_COUNT = 50
 JQCHAT_DISPLAY_TIME  = 48
+
 

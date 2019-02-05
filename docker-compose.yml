@@ -19,6 +19,12 @@ services:
     volumes:
       - ./var/lib/mysql/:/var/lib/mysql
 
+  broker:
+    image: redis:5
+
+  search:
+    image: elasticsearch:1.7
+
   app:
     build: .
     command: /bin/sh deploy/start_app.sh
@@ -31,6 +37,8 @@ services:
       - "8000:8000"
     links:
       - db
+      - borker
+      - search
 
   web:
     image: nginx
