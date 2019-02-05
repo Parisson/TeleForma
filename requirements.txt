@@ -4,7 +4,6 @@ telemeta==1.7.1
 django-pagination==1.0.7
 django-postman==3.6.2
 django-extensions==2.1.0
-django-notes
 django-timezones==0.2
 django-jqchat
 django-registration==0.8
