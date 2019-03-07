@@ -236,7 +236,7 @@ class Course(Model):
         """
         periods = [ p['id'] for p in self.periods.values('id') ]
         return not periods or period.id in periods
-        
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
@@ -499,7 +499,7 @@ class LiveStream(Model):
 
     @property
     def mount_point(self):
-        mount_point = self.server.type
+        # mount_point = self.server.type
         if self.server.type == 'stream-m':
             mount_point += '/consume/' + self.slug
         else:
