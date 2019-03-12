@@ -517,7 +517,7 @@ class LiveStream(Model):
 
     @property
     def url(self):
-        return '//' + self.server.host + ':' + self.server.port + '/' + self.mount_point
+        return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
 
     def __unicode__(self):
         if self.conference:
