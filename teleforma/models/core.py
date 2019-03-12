@@ -500,6 +500,7 @@ class LiveStream(Model):
     @property
     def mount_point(self):
         # mount_point = self.server.type
+        mount_point = ''
         if self.server.type == 'stream-m':
             mount_point += '/consume/' + self.slug
         else:
