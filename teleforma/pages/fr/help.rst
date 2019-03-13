@@ -33,7 +33,6 @@ Sur les smartphones et tablettes, nous proposons différentes solutions selon le
 
    procéder comme sour Iphone / Ipad avec un lecteur compatible et si possible ouvert comme VLC
 
-
 FAQ
 ====
 
@@ -46,6 +45,19 @@ Si des coupures de streaming ont lieu lors de la lecture en direct ou en différ
 
 Notez que les téléchargement des fichiers audio sont disponibles pour tous les utilisateurs.
 
+BUG Live vidéo Semestrielle 2019
+---------------------------------
+
+Suite à des instabilités de streaming, les paramètres de la plateforme ont été corrigés. Néanmoins, votre navigateur peut contenir encore d'anciennes données en cache.
+Deux solutions :
+
+* A court terme, depuis Chrome ou FireFox, connectez-vous à la plateforme avec une "Nouvelle fenêtre de navigation privée" disponible depuis le menu du navigateur.
+* A long terme, videz votre cache de navigateur (voir les documentations depuis Google), puis :
+
+  * sur Chrome : dans un nouvel onglet entrez "chrome://net-internals/#hsts" puis dans le champ "Domain" du paragraphe "Delete domain curity policies", entrer "stream.parisson.com" puis cliquer sur "delete"
+  * sur Firefox : dans les préférences, menu "Sécurité et vie privée", cliquer sur "Effacer l'historique", sélectionner "tout" puis toutes les options, et cliquer sur "Effacer maintenant".
+
+Ceci devrait résoudre la majorités des cas rencontrés ces derniers jours. Sinon, merci de contacter "Admin-tech" depuis la messagerie privée.
 
 Comment puis-je télécharger un fichier audio ?
 ----------------------------------------------
@@ -62,8 +74,6 @@ J'ai perdu mon mot de passe, que dois-je faire ?
 -------------------------------------------------------------------------------
 
 Vous pouvez à tout moment réinitialiser votre mot de passe personnel depuis l'accueil du site en cliquant sur "mot de passe oublié".
-
-
 |
 
 Support
