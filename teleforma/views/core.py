@@ -567,7 +567,11 @@ class ConferenceRecordView(FormView):
         status = Status()
         status.get_hosts()
 
-        stations = settings.TELECASTER_CONF
+        if conference.streaming:
+            stations = settings.TELECASTER_CONF
+        else:
+            stations = settings.TELECASTER_CONF_NO_STREAMING
+
         for station in stations:
             type = station['type']
             conf = station['conf']
@@ -589,16 +593,16 @@ class ConferenceRecordView(FormView):
                     self.snapshot('http://localhost:8080/snapshot/monitor', station.output_dir)
                 except:
                     pass
+        if conference.streaming:
+            try:
+                live_message(self.conference)
+            except:
+                pass
 
-        try:
-            live_message(self.conference)
-        except:
-            pass
-
-        try:
-            self.push()
-        except:
-            pass
+            try:
+                self.push()
+            except:
+                pass
 
         return super(ConferenceRecordView, self).form_valid(form)
 

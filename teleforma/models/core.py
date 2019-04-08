@@ -265,7 +265,7 @@ class Conference(Model):
     date_end        = DateTimeField(_('end date'), null=True, blank=True)
     readers         = ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
-
+    streaming       = models.BooleanField(_('streaming'), default=True)
     notes = generic.GenericRelation(Note)
 
     @property
