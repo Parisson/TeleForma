@@ -307,7 +307,7 @@ class Room(Model):
         verbose_name = _('room')
 
 
-class Conference(Model):
+class Conference(models.Model):
 
     public_id       = models.CharField(_('public_id'), max_length=255, blank=True)
     department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
@@ -390,6 +390,7 @@ class Conference(Model):
                 'period': self.period.name if self.period else 'None',
                 'session': self.session if self.session else 'None',
                 'comment': self.comment if self.comment else 'None',
+                'streaming': self.streaming if self.streaming else 'False',
                 'streams': [],
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
