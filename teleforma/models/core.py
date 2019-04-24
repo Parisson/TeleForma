@@ -328,6 +328,7 @@ class Conference(Model):
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    streaming       = models.BooleanField(_('streaming'), default=True)
     web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
                              blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -412,6 +413,7 @@ class Conference(Model):
         self.public_id = data['id']
         self.course, c = Course.objects.get_or_create(code=data['course_code'])
         self.course_type, c = CourseType.objects.get_or_create(name=data['course_type'])
+        self.streaming = data['streaming']
 
         organization, c = Organization.objects.get_or_create(name=data['organization'])
 
