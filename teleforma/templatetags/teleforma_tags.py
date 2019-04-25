@@ -183,6 +183,17 @@ def get_telecaster():
 def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
 
+@register.assignment_tag
+def show_chat(user):
+    """ everybody should see the chat panel, except the correctors """
+    professor = user.professor.all()
+    if user.is_superuser or professor:
+        return True
+    if user.quotas.all():
+        return False
+    return True
+
+
 @register.filter
 def get_audio_id(media):
     if media.conference:

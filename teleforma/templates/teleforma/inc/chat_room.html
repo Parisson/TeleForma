@@ -2,17 +2,22 @@
 {% load telemeta_utils %}
 {% load teleforma_tags %}
 
-<div class="module">
-        <h3><img src="/static/telemeta/images/vox_wh.png" %}" alt="rss" style="vertical-align:middle" />{% trans title %}</h3>
+{% show_chat user as display_chat %}
+{% if display_chat %}
+
+    <div class="module">
+        <h3><img src="/static/telemeta/images/vox_wh.png" %}" alt="rss" style="vertical-align:middle"
+            />{% trans title %}</h3>
         <div style="background: transparent;">
-        <div id="chatwindow"><span id="loading">Loading...</span></div>
-        <form id="chatform">{% csrf_token %}
-        <label for="msg"></label>
-        <div class="msg">
-        <input type="text" id="msg" size="28" />
-        <input type="submit" value="{% trans "Send" %}" />
+            <div id="chatwindow"><span id="loading">Loading...</span></div>
+            <form id="chatform">{% csrf_token %}
+                <label for="msg"></label>
+                <div class="msg">
+                    <input type="text" id="msg" size="28"/>
+                    <input type="submit" value="{% trans "Send" %}"/>
+                </div>
+            </form>
+            <!--         <script type="text/javascript">document.getElementById("msg").focus();</script> -->
         </div>
-        </form>
-<!--         <script type="text/javascript">document.getElementById("msg").focus();</script> -->
-        </div>
-</div>
+    </div>
+{% endif %}
