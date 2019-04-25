@@ -129,7 +129,8 @@ def from_course_type(contents, type):
 
 @register.filter
 def streaming_only(contents):
-    return contents.filter(streaming=True)
+    if contents:
+        return contents.filter(streaming=True)
 
 @register.filter
 def from_doc_type(contents, type):
