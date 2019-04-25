@@ -74,7 +74,7 @@
 
       {% if user.is_staff or user.is_superuser or usr == user %}
       <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
-      <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }} {{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
+          <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }}{% if usr.profile.get.address_detail %}, {% endif %}</span>{{ usr.profile.get.address_detail }}{% if usr.profile.get.postal_code or usr.profile.get.city %}, {% endif %}{{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
       <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
       <dt>{% trans "WiFi login" %}</dt><dd>{{ usr.profile.get.wifi_login }}</dd>
       <dt>{% trans "WiFi password" %}</dt><dd>{{ usr.profile.get.wifi_pass }}</dd>
