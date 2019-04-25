@@ -599,10 +599,10 @@ class ConferenceRecordView(FormView):
             except:
                 pass
 
-            try:
-                self.push()
-            except:
-                pass
+        try:
+            self.push()
+        except:
+            pass
 
         return super(ConferenceRecordView, self).form_valid(form)
 

@@ -322,6 +322,7 @@ class Conference(Model):
                 'streams': [],
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
+                'streaming': 'True' if self.streaming else 'False',
                  }
 
         if self.room:
