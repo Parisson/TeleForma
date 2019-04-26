@@ -128,6 +128,11 @@ def from_course_type(contents, type):
         return contents.filter(course_type=type)
 
 @register.filter
+def streaming_only(contents):
+    if contents:
+        return contents.filter(streaming=True)
+
+@register.filter
 def from_doc_type(contents, type):
     if contents:
         return contents.filter(type=type)
@@ -237,7 +242,7 @@ def scripts_count(user, period, statuses):
         return ' (' + str(len(scripts)) + ')'
     else:
         return ''
-    
+
 @register.simple_tag
 def untreated_scripts_count(user, period):
     return scripts_count(user, period, (3,))
@@ -273,17 +278,17 @@ def newsitems_portlet(context, course_id, period_id):
         'can_edit':newsitem.can_edit(request),
         'can_delete':newsitem.can_delete(request),
         }
-    
-    course = get_object_or_404(Course, id=course_id) 
+
+    course = get_object_or_404(Course, id=course_id)
     course_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, course__id=course_id, period_id=period_id).order_by('-created')]
     all_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, period_id=period_id).order_by('-created')]
-    can_add = False 
+    can_add = False
     if user.is_staff or user.professor.count():
         can_add = True
     return {
             'can_add':can_add,
             'course':course,
             'period_id':period_id,
-            'course_newsitems':course_newsitems, 
+            'course_newsitems':course_newsitems,
             'all_newsitems':all_newsitems
            }
