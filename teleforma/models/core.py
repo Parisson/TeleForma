@@ -415,10 +415,11 @@ class Conference(models.Model):
         self.course, c = Course.objects.get_or_create(code=data['course_code'])
         self.course_type, c = CourseType.objects.get_or_create(name=data['course_type'])
 
-        if data['streaming'] == 'False':
-            self.streaming = False
-        else:
-            self.streaming = True
+        if 'streaming' in data:
+            if data['streaming'] == 'False':
+                self.streaming = False
+            else:
+                self.streaming = True
 
         organization, c = Organization.objects.get_or_create(name=data['organization'])
 
