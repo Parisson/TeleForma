@@ -223,7 +223,7 @@ class Student(Model):
         
     def update_balance(self):
         old = self.balance
-        new = round(self.total_payments - self.total_fees, 2)
+        new = round(self.total_payments - self.total_fees + self.total_paybacks, 2)
         if old != new:
             self.balance = new
             self.save()
@@ -240,7 +240,7 @@ class Student(Model):
 def update_balance_signal(sender, instance, *args, **kwargs):
     if sender is Student:
         instance.update_balance()
-    elif sender in (Discount, OptionalFee, Payment):
+    elif sender in (Discount, OptionalFee, Payment, Payback):
         instance.student.update_balance()
         
 signals.post_save.connect(update_balance_signal)
