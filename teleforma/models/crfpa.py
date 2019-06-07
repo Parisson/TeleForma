@@ -135,6 +135,7 @@ class Student(Model):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
+    # deprecated, replaced by trainings field
     training = models.ForeignKey('Training', related_name='student_training', verbose_name=_('training'),
                                       blank=True, null=True, limit_choices_to={'available': True})
     procedure = models.ForeignKey('Course', related_name="procedure_students",
