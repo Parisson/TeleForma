@@ -167,6 +167,8 @@ class Quota(models.Model):
     def script_count(self, statuses):
         q = self.corrector.corrector_scripts.filter(status__in = statuses)
         q = q.filter(course=self.course)
+        q = q.filter(period=self.period)
+        q = q.filter(session=self.session)
         q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
         return q.count()
         
