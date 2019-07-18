@@ -278,7 +278,10 @@ class HomeRedirectView(View):
             periods = get_periods(request.user)
             if periods:
                 period = get_default_period(periods)
-                return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+                if period in periods:
+                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+                else:
+                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
             else:
                 return HttpResponseRedirect(reverse('telemeta-admin'))
         else:
