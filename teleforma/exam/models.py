@@ -303,6 +303,7 @@ class Script(BaseResource):
         return 'https://crocodoc.com/view/' + session_key
 
     def auto_set_corrector(self):
+
         self.date_submitted = datetime.datetime.now()
 
         quota_list = []
@@ -410,7 +411,7 @@ class Script(BaseResource):
         loop = 0
 
         self.box_uuid = crocodoc.document.upload(url=self.url)
-
+        
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
             if (len(statuses) != 0):
@@ -441,6 +442,7 @@ class Script(BaseResource):
         self.reject_reason = mess
         self.status = 0
         self.corrector = User.objects.filter(is_superuser=True)[1]
+        self.reject()
         # self.save()
 
     def submit(self):
