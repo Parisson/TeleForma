@@ -135,6 +135,7 @@ class Student(Model):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
+    # deprecated, replaced by trainings field
     training = models.ForeignKey('Training', related_name='student_training', verbose_name=_('training'),
                                       blank=True, null=True, limit_choices_to={'available': True})
     procedure = models.ForeignKey('Course', related_name="procedure_students",
@@ -223,7 +224,7 @@ class Student(Model):
         
     def update_balance(self):
         old = self.balance
-        new = round(self.total_payments - self.total_fees, 2)
+        new = round(self.total_payments - self.total_fees + self.total_paybacks, 2)
         if old != new:
             self.balance = new
             self.save()
@@ -240,7 +241,7 @@ class Student(Model):
 def update_balance_signal(sender, instance, *args, **kwargs):
     if sender is Student:
         instance.update_balance()
-    elif sender in (Discount, OptionalFee, Payment):
+    elif sender in (Discount, OptionalFee, Payment, Payback):
         instance.student.update_balance()
         
 signals.post_save.connect(update_balance_signal)

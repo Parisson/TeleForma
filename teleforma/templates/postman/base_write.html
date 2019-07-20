@@ -56,7 +56,7 @@
                     </select>
 
                     <select id="_professorSelect" name="professors">
-                        <option value="auto">N'importe quel professeur</option>
+                        <option value="">Choisir un professeur</option>
                         {% get_all_professors_with_courses as professors %}
                         {% for p in professors %}
                             <option value="{{ p.username }}"
@@ -148,10 +148,6 @@
             if($('#_adminSelect').val() && recipientCategory === 'admin')
                 $("#id_recipients").val($('#_adminSelect').val());
 
-            if($("#id_recipients").val()==='auto')
-                $('#id_recipients').parent().parent().hide();
-            else
-                $('#id_recipients').parent().parent().show();
         }
 
         // hide recipients fields

@@ -63,6 +63,7 @@
 
 {% if profile > 0 %}
 <form method="GET">
+    {% if profile > 1 %}
     <label for="corrector_select">{% trans "Corrector"%}</label>
     <select name="corrector" id="corrector_select">
        <option value="">---</option>
@@ -70,6 +71,7 @@
        <option value="{{corrector.0}}" {% if corrector.0 == corrector_selected %}selected="selected"{% endif %}>{{corrector.1}}</option>
        {% endfor %}
     </select>
+    {% endif %}
     <label for="course_select">{% trans "Course"%}</label>
     <select name="course" id="course_select">
        <option value="">---</option>

@@ -107,9 +107,8 @@ class BalanceFilter(admin.SimpleListFilter):
 
 
 class StudentAdmin(admin.ModelAdmin):
-
     model = Student
-    exclude = ['options']
+    exclude = ['options', 'training']
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
@@ -145,6 +144,7 @@ class StudentAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         book.book.save(response)
         return response
+
     export_xls.short_description = "Export vers XLS"
 
     def add_to_group(self, request, queryset):

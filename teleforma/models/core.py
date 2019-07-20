@@ -236,7 +236,7 @@ class Course(Model):
         """
         periods = [ p['id'] for p in self.periods.values('id') ]
         return not periods or period.id in periods
-        
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course'
         verbose_name = _('course')
@@ -307,7 +307,7 @@ class Room(Model):
         verbose_name = _('room')
 
 
-class Conference(Model):
+class Conference(models.Model):
 
     public_id       = models.CharField(_('public_id'), max_length=255, blank=True)
     department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
@@ -328,6 +328,7 @@ class Conference(Model):
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                         blank=True, null=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    streaming       = models.BooleanField(_('streaming'), default=True)
     web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
                              blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -389,6 +390,7 @@ class Conference(Model):
                 'period': self.period.name if self.period else 'None',
                 'session': self.session if self.session else 'None',
                 'comment': self.comment if self.comment else 'None',
+                'streaming': self.streaming if self.streaming else 'False',
                 'streams': [],
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
@@ -412,6 +414,12 @@ class Conference(Model):
         self.public_id = data['id']
         self.course, c = Course.objects.get_or_create(code=data['course_code'])
         self.course_type, c = CourseType.objects.get_or_create(name=data['course_type'])
+
+        if 'streaming' in data:
+            if data['streaming'] == 'False':
+                self.streaming = False
+            else:
+                self.streaming = True
 
         organization, c = Organization.objects.get_or_create(name=data['organization'])
 
@@ -499,11 +507,12 @@ class LiveStream(Model):
 
     @property
     def mount_point(self):
-        mount_point = self.server.type
+        # mount_point = self.server.type + '/'
+        mount_point = ''
         if self.server.type == 'stream-m':
-            mount_point += '/consume/' + self.slug
+            mount_point += 'consume/' + self.slug
         else:
-            mount_point += '/' + self.slug
+            mount_point += self.slug
         return mount_point
 
     @property
@@ -516,7 +525,7 @@ class LiveStream(Model):
 
     @property
     def url(self):
-        return '//' + self.server.host + ':' + self.server.port + '/' + self.mount_point
+        return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
 
     def __unicode__(self):
         if self.conference:

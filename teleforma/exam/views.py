@@ -59,6 +59,8 @@ class ScriptsListMixinView(ScriptMixinView):
     def get_profile(self):
         user = self.request.user
         professor = user.professor.all()
+        if user.is_superuser:
+            return PROFESSOR
         if professor:
             return PROFESSOR
         if user.quotas.all():

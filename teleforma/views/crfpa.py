@@ -273,7 +273,10 @@ class UserXLSBook(object):
                 row.write(11, profile.city)
                 row.write(12, profile.telephone)
                 if profile.birthday:
-                    row.write(13, profile.birthday.strftime("%d/%m/%Y"))
+                    try:
+                        row.write(13, profile.birthday.strftime("%d/%m/%Y"))
+                    except ValueError:
+                        row.write(13, 'erreur')
 
                 row.write(14, student.level)
 
@@ -302,10 +305,11 @@ class UserXLSBook(object):
             row.write(20, student.balance)
             row.write(21, student.total_paybacks)
 
-            row.write(22, student.fascicule)
+            row.write(22, student.subscription_fees)
+            row.write(23, student.fascicule)
                 
             
-            i = 23
+            i = 24
             for month in months_choices:
                 row.write(i, payment_per_month[month[0]])
                 i += 1
@@ -337,6 +341,7 @@ class UserXLSBook(object):
                 {'name':"Prix formation net", 'width':4000},
                 {'name':"Balance", 'width':4000},
                 {'name':"Total remboursement", 'width':4000},
+                {'name': "Frais d'inscription", 'width': 4000},
                 {'name':"Envoi des fascicules", 'width':3500},
                 ]
 
