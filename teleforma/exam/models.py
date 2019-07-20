@@ -173,8 +173,7 @@ class Quota(models.Model):
             q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
             return q.count()
         else:
-            return None
-
+            return 0
 
     @property
     def all_script_count(self):
