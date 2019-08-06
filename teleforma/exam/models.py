@@ -168,6 +168,8 @@ class Quota(models.Model):
         if self.corrector:
             q = self.corrector.corrector_scripts.filter(status__in = statuses)
             q = q.filter(course=self.course)
+            q = q.filter(period=self.period)
+            q = q.filter(session=self.session)
             # Careful, MySQL considers '2019-07-28 11:42:00" to not be >= "2019-07-28"
             start = self.date_start
             end = self.date_end + datetime.timedelta(days = 1)
