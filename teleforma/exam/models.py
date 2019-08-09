@@ -165,13 +165,18 @@ class Quota(models.Model):
         return title
 
     def script_count(self, statuses):
-        q = self.corrector.corrector_scripts.filter(status__in = statuses)
-        q = q.filter(course=self.course)
-        q = q.filter(period=self.period)
-        q = q.filter(session=self.session)
-        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
-        return q.count()
-        
+        if self.corrector:
+            q = self.corrector.corrector_scripts.filter(status__in = statuses)
+            q = q.filter(course=self.course)
+            q = q.filter(period=self.period)
+            q = q.filter(session=self.session)
+            # Careful, MySQL considers '2019-07-28 11:42:00" to not be >= "2019-07-28"
+            start = self.date_start
+            end = self.date_end + datetime.timedelta(days = 1)
+            q = q.filter(date_submitted__gte=start).filter(date_submitted__lte=end)
+            return q.count()
+        else:
+            return 0
 
     @property
     def all_script_count(self):
@@ -311,11 +316,11 @@ class Script(BaseResource):
                                             date_end__gte=self.date_submitted,
                                             session=self.session,
                                             period=self.period)
-        
+
         quotas = all_quotas.filter(script_type=self.type)
         if not quotas:
             quotas = all_quotas.filter(script_type=None)
-            
+
         if quotas:
             for quota in quotas:
                 if quota.value:
