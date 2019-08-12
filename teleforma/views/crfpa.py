@@ -66,10 +66,11 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
                                   types=CourseType.objects.all())
 
     elif quotas and not user.is_staff:
-        queryset = Course.objects.all()
+        corrector_courses = set()
         for quota in quotas:
-            queryset = queryset.filter(quotas=quota)
-        courses = format_courses(courses, queryset=queryset,
+            corrector_courses.add(quota.course)
+        for course in corrector_courses:
+            courses = format_courses(courses, course=course,
                     types=CourseType.objects.all())
 
     elif student:
