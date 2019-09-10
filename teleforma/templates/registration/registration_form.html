@@ -3,65 +3,102 @@
 {% load telemeta_utils %}
 {% load teleforma_tags %}
 
-{% block title %}<center>{% trans "Pre-registration" %} - {% description %}</center>{% endblock %}
+{% block title %}
+    <center>{% trans "Pre-registration" %} - {% description %}</center>{% endblock %}
 
 {% block content %}
-<center>
-    <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}
-    <h2><span class="error">Tous les champs sont requis</span></h2>
-    <table>
-        {{ form }}
-        {% for formset in inlines %}
-          {{ formset.management_form }}
-          {% for form in formset %}
-           {{ form }}
-          {% endfor %}
-        {% endfor %}
-    </table>
-    <br><br>
-    <a href="#" class="component_icon button" id="action_green" onclick="$('#_registerForm').submit();"><img src="/static/telemeta/images/next.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Submit" %}</a>
-    </form>
-</center>
-<script>
- $(document).ready(function(){
-     id = $("#id_student-0-period").val();
-     training_id = $("#id_student-0-training").val();
+    <center>
+        <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data"
+              data-ajax="false">{% csrf_token %}
 
-     if(!id){
-         $('#id_student-0-training').html('<option value="" selected="selected">---------</option>');
-     }else{
-         $.ajax({
-             url: "/update-training/"+id+"/",
-             data: { "period_id": id, "training_id": training_id},
-             dataType:"html",
-             type: "post",
-             success: function(data){
-                 $('#id_student-0-training').html(data);
-             }
-         });
-     }
+            {{ introduction|safe }}
 
-     $("#id_student-0-period").change(function(){
-         period_id = this.value
-         if(!period_id){
-             $('#id_student-0-training').html('<option value="" selected="selected">---------</option>')
-         }else{
-             $.ajax({
-                 url: "/update-training/"+period_id+"/",
-                 data: { "period_id": period_id },
-                 dataType:"html",
-                 type: "post",
-                 success: function(data){
-                     $('#id_student-0-training').html(data);
-                 }
-             });
-         }
-     });
- });
-</script>
-<style>
- select {
-     width: 222px;
- }
-</style>
+            <h2><span class="error">Tous les champs sont requis</span></h2>
+            <table>
+
+                {% for field in form.visible_fields %}
+                    {% if field.name != 'accept' %}
+                    <tr>
+                        <th>{{ field.label_tag }}</th>
+                        <td>
+                            {{ field.errors }}
+                            {{ field }}
+                            <br/>
+                            <span class="helptext">
+                            {{ field.help_text }}
+                        </span>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                {% for formset in inlines %}
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        {{ form }}
+                    {% endfor %}
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                    {% if field.name == 'accept' %}
+                    <tr>
+                        <th>J'accepte les <a href="http://crfpa.pre-barreau.com/tarifs/conditions-generales-dinscription">conditions générales d'inscription</a></th>
+                        <td>
+                            {{ field.errors }}
+                            {{ field }}
+                            <br/>
+                            <span class="helptext">
+                            {{ field.help_text }}
+                        </span>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+            <br><br>
+            <a href="#" class="component_icon button" id="action_green" onclick="$('#_registerForm').submit();"><img
+                    src="/static/telemeta/images/next.png" alt=""
+                    style="vertical-align:middle"/>&nbsp;{% trans "Submit" %}</a>
+        </form>
+    </center>
+    <script>
+        $(document).ready(function () {
+            id = $("#id_student-0-period").val();
+            training_id = $("#id_student-0-training").val();
+
+            if (!id) {
+                $('#id_student-0-training').html('<option value="" selected="selected">---------</option>');
+            } else {
+                $.ajax({
+                    url: "/update-training/" + id + "/",
+                    data: {"period_id": id, "training_id": training_id},
+                    dataType: "html",
+                    type: "post",
+                    success: function (data) {
+                        $('#id_student-0-training').html(data);
+                    }
+                });
+            }
+
+            $("#id_student-0-period").change(function () {
+                period_id = this.value
+                if (!period_id) {
+                    $('#id_student-0-training').html('<option value="" selected="selected">---------</option>')
+                } else {
+                    $.ajax({
+                        url: "/update-training/" + period_id + "/",
+                        data: {"period_id": period_id},
+                        dataType: "html",
+                        type: "post",
+                        success: function (data) {
+                            $('#id_student-0-training').html(data);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <style>
+        select {
+            width: 222px;
+        }
+    </style>
 {% endblock %}

@@ -1,7 +1,8 @@
-from django.forms import ModelForm, ModelChoiceField
+from teleforma.models import *
+from django.forms import ModelForm, ModelChoiceField, BooleanField
 from postman.forms import WriteForm as PostmanWriteForm
 from postman.fields import BasicCommaSeparatedUserField
-from teleforma.models import *
+
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
@@ -21,10 +22,11 @@ class ConferenceForm(ModelForm):
 class UserForm(ModelForm):
 
     captcha = CaptchaField()
+    accept = BooleanField()
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', ]
+        fields = ['first_name', 'last_name', 'email', 'accept']
 
 
 RegistrationForm.base_fields.update(UserForm.base_fields)
@@ -44,7 +46,6 @@ class StudentForm(ModelForm):
     class Meta:
         model = Student
         exclude = ['user', 'trainings', 'options']
-
 
 
 RegistrationForm.base_fields.update(StudentForm.base_fields)
@@ -71,8 +72,9 @@ class StudentInline(InlineFormSet):
 
     model = Student
     can_delete = False
-    fields = ['level', 'iej', 'period', 'training', 'platform_only', 'procedure',
+    fields = ['portrait', 'level', 'iej', 'period', 'training', 'platform_only', 'procedure',
                 'written_speciality', 'oral_1', 'promo_code']
+
 
     def get_factory_kwargs(self):
         kwargs = super(StudentInline, self).get_factory_kwargs()
@@ -81,6 +83,8 @@ class StudentInline(InlineFormSet):
             formfield = field.formfield(**kwargs)
             if field.name == 'period':
                 formfield.queryset = Period.objects.filter(is_open=True)
+            elif field.name == 'portrait':
+                formfield.widget.attrs.update(accept="image/*;capture=camera")
             return formfield
 
         kwargs.update({

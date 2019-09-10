@@ -131,6 +131,7 @@ class Student(Model):
     "A student profile"
 
     user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
+    portrait = models.ImageField(max_length=500, upload_to='portraits/', blank=False, null=True)
     iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
@@ -176,7 +177,8 @@ class Student(Model):
 
     fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
                                     default=False)
-    
+
+
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -358,7 +360,25 @@ class Home(models.Model):
     def __unicode__(self):
         return self.title
 
+class Parameters(models.Model):
+    """ used to store various unique parameters """
 
+    inscription_text = HTMLField("Texte d'inscription", blank=True)
+
+    class Meta(MetaCore):
+        verbose_name = "Paramètres"
+        verbose_name_plural = "Paramètres"
+
+    def save(self, *args, **kwargs):
+        self.__class__.objects.exclude(id=self.id).delete()
+        super(Parameters, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        try:
+            return cls.objects.get()
+        except cls.DoesNotExist:
+            return cls()
 
 class NewsItem(models.Model):
 

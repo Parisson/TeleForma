@@ -249,6 +249,8 @@ class HomeAdmin(admin.ModelAdmin):
         form.base_fields['video'].queryset = Media.objects.filter(type='webm')
         return form
 
+class ParametersAdmin(admin.ModelAdmin):
+    pass
 
 class NewsItemAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'course', 'creator')
@@ -347,6 +349,7 @@ admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
+admin.site.register(Parameters, ParametersAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
 # admin.site.register(AppointmentDay, AppointmentDayAdmin)

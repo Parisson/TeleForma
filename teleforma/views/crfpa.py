@@ -31,6 +31,7 @@
 # knowledge of the CeCILL license and that you accept its terms.
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
+from teleforma.models.crfpa import Parameters
 from teleforma.models.core import Period
 from teleforma.views.core import *
 from teleforma.forms import WriteForm
@@ -461,6 +462,13 @@ class UserAddView(CreateWithInlinesView):
     form_class = UserForm
     inlines = [ProfileInline, StudentInline]
 
+    def get_context_data(self, **kwargs):
+        context = super(UserAddView, self).get_context_data(**kwargs)
+        parameters = Parameters.load()
+        context['introduction'] = parameters.inscription_text
+        return context
+
+
     def forms_valid(self, form, inlines):
         messages.info(self.request, _("You have successfully register your account."))
         first_name = form.cleaned_data['first_name']
@@ -514,7 +522,6 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
         if not student.oral_2:
             student.oral_2 = Course.objects.get(code='X')
         student.save()
-
         profile = user.profile.all()[0]
         if profile.city:
             profile.city = profile.city.upper()

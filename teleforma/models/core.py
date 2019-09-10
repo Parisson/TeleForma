@@ -152,6 +152,8 @@ class Period(Model):
     date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
     nb_script = models.IntegerField(_("nombre maximal de copies"), null=True, blank=True)
     date_close_accounts = models.DateField("date de fermeture des comptes étudiants", null = True, blank = True)
+    date_inscription_start = models.DateField("date d'ouverture des inscriptions", null = True, blank = True)
+    date_inscription_end = models.DateField("date de fermeture des inscriptions", null=True, blank=True)
 
     def __unicode__(self):
         return self.name
