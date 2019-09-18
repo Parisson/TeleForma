@@ -131,7 +131,7 @@ class Student(Model):
     "A student profile"
 
     user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
-    portrait = models.ImageField(max_length=500, upload_to='portraits/', blank=False, null=True)
+    portrait = models.ImageField(max_length=500, upload_to='portraits/', blank=True, null=True)
     iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),

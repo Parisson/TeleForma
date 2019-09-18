@@ -43,7 +43,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.http import HttpResponseForbidden
-
+from django.forms.formsets import all_valid
+from django.core.exceptions import ValidationError
 
 def get_course_code(obj):
     if obj:
@@ -76,6 +77,8 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     elif student:
         student = user.student.get()
+        if not student.trainings.all():
+            return []
         for training in student.trainings.all():
             if training.period == period:
                 break
@@ -205,7 +208,10 @@ class UserLoginView(View):
         user = User.objects.get(id=id)
         backend = get_backends()[0]
         user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+        old_last_login = user.last_login
         login(self.request, user)
+        user.last_login = old_last_login
+        user.save()
         return redirect('teleforma-home')
 
     @method_decorator(permission_required('is_staff'))
@@ -251,8 +257,9 @@ class UserXLSBook(object):
             row = self.sheet.row(counter + self.first_row)
             row.write(0, user.last_name)
             row.write(1, user.first_name)
-            row.write(7, user.email)
-            row.write(2, unicode(student.iej))
+            row.write(2, student.portrait and student.portrait.url or '')
+            row.write(8, user.email)
+            row.write(3, unicode(student.iej))
 
             codes = []
             for training in student.trainings.values('code'):
@@ -260,38 +267,38 @@ class UserXLSBook(object):
                     codes.append('I - ' + training['code'])
                 else:
                     codes.append(training['code'])
-            row.write(3, unicode(' '.join(codes)))
+            row.write(4, unicode(' '.join(codes)))
 
-            row.write(4, self.get_course_code(student.procedure_id))
-            row.write(5, self.get_course_code(student.written_speciality_id))
-            row.write(6, self.get_course_code(student.oral_1_id))
+            row.write(5, self.get_course_code(student.procedure_id))
+            row.write(6, self.get_course_code(student.written_speciality_id))
+            row.write(7, self.get_course_code(student.oral_1_id))
 
             profile = Profile.objects.filter(user=user)
             if profile:
                 profile = profile[0]
-                row.write(8, profile.address)
-                row.write(9, profile.address_detail)
-                row.write(10, profile.postal_code)
-                row.write(11, profile.city)
-                row.write(12, profile.telephone)
+                row.write(9, profile.address)
+                row.write(10, profile.address_detail)
+                row.write(11, profile.postal_code)
+                row.write(12, profile.city)
+                row.write(13, profile.telephone)
                 if profile.birthday:
                     try:
-                        row.write(13, profile.birthday.strftime("%d/%m/%Y"))
+                        row.write(14, profile.birthday.strftime("%d/%m/%Y"))
                     except ValueError:
-                        row.write(13, 'erreur')
+                        row.write(14, 'erreur')
 
-                row.write(14, student.level)
+                row.write(15, student.level)
 
                 if student.date_subscribed:
-                    row.write(15, student.date_subscribed.strftime("%d/%m/%Y"))
+                    row.write(16, student.date_subscribed.strftime("%d/%m/%Y"))
 
             total_discount = 0
             descriptions = []
             for discount in student.discounts.values('value', 'description'):
                 total_discount -= discount['value']
                 descriptions.append(discount['description'])
-            row.write(16, total_discount)
-            row.write(17, ', '.join(descriptions))
+            row.write(17, total_discount)
+            row.write(18, ', '.join(descriptions))
 
             total_payments = 0
             payment_per_month = { month[0]: 0 for month in months_choices }
@@ -301,17 +308,17 @@ class UserXLSBook(object):
                 total_payments += value
                 if month in payment_per_month:
                     payment_per_month[month] += value
-            row.write(18, total_payments)
+            row.write(19, total_payments)
 
-            row.write(19, student.total_fees)
-            row.write(20, student.balance)
-            row.write(21, student.total_paybacks)
+            row.write(20, student.total_fees)
+            row.write(21, student.balance)
+            row.write(22, student.total_paybacks)
 
-            row.write(22, student.subscription_fees)
-            row.write(23, student.fascicule)
+            row.write(23, student.subscription_fees)
+            row.write(24, student.fascicule)
                 
             
-            i = 24
+            i = 25
             for month in months_choices:
                 row.write(i, payment_per_month[month[0]])
                 i += 1
@@ -323,6 +330,7 @@ class UserXLSBook(object):
         row = self.sheet.row(0)
         cols = [{'name':'NOM', 'width':5000},
                 {'name':'PRENOM', 'width':5000},
+                {'name': 'PHOTO', 'width': 7500},
                 {'name':'IEJ', 'width':2500},
                 {'name':'FORMATIONS', 'width':6000},
                 {'name':'PROC', 'width':2500},
@@ -445,22 +453,12 @@ class AnnalsCourseView(AnnalsView):
         return self.get_docs(course=self.course)
 
 
-def get_unique_username(first_name, last_name):
-    username = slugify(first_name)[0] + '.' + slugify(last_name)
-    username = username[:30]
-    i = 1
-    while User.objects.filter(username=username[:30]):
-        username = slugify(first_name)[:i] + '.' + slugify(last_name)
-        i += 1
-    return username[:30]
-
-
-class UserAddView(CreateWithInlinesView):
+class UserAddView(CreateView):
 
     model = User
     template_name = 'registration/registration_form.html'
     form_class = UserForm
-    inlines = [ProfileInline, StudentInline]
+    # inlines = [ProfileInline, StudentInline]
 
     def get_context_data(self, **kwargs):
         context = super(UserAddView, self).get_context_data(**kwargs)
@@ -468,24 +466,46 @@ class UserAddView(CreateWithInlinesView):
         context['introduction'] = parameters.inscription_text
         return context
 
+    #
+    # def post(self, request, *args, **kwargs):
+    #     """
+    #     Handles POST requests, instantiating a form and formset instances with the passed
+    #     POST variables and then checked for validity.
+    #     """
+    #     self.object = None
+    #     form_class = self.get_form_class()
+    #     form = self.get_form(form_class)
+    #
+    #     if form.is_valid():
+    #         self.object = form.save(commit=False)
+    #         form_validated = True
+    #     else:
+    #         form_validated = False
+    #
+    #     inlines = self.construct_inlines()
+    #     import pdb;pdb.set_trace()
+    #     if all_valid(inlines) and form_validated:
+    #         return self.forms_valid(form, inlines)
+    #     return self.forms_invalid(form, inlines)
 
-    def forms_valid(self, form, inlines):
-        messages.info(self.request, _("You have successfully register your account."))
-        first_name = form.cleaned_data['first_name']
-        last_name = form.cleaned_data['last_name']
-        username = get_unique_username(first_name, last_name)
-        self.username = username
-        user = form.save()
-        user.username = username
-        user.last_name = last_name.upper()
-        user.first_name = first_name.capitalize()
-        user.is_active = False
-        user.save()
-        # period = inlines[1].cleaned_data['period']
-        return super(UserAddView, self).forms_valid(form, inlines)
+    # def form_valid(self, form):
+    #     # messages.info(self.request, _("You have successfully register your account."))
+    #     # first_name = form.cleaned_data['first_name']
+    #     # last_name = form.cleaned_data['last_name']
+    #     # username = get_unique_username(first_name, last_name)
+    #     # self.username = username
+    #     # user = form.save()
+    #     # user.username = username
+    #     # user.last_name = last_name.upper()
+    #     # user.first_name = first_name.capitalize()
+    #     # user.is_active = False
+    #     # user.save()
+    #     # period = inlines[1].cleaned_data['period']
+    #     # import pdb;pdb.set_trace()
+    #     return super(UserAddView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('teleforma-register-complete', kwargs={'username':self.username})
+        return reverse_lazy('teleforma-register-complete', kwargs={'username':self.object.username})
 
 
 class UserCompleteView(TemplateView):

@@ -31,12 +31,6 @@
                     </tr>
                     {% endif %}
                 {% endfor %}
-                {% for formset in inlines %}
-                    {{ formset.management_form }}
-                    {% for form in formset %}
-                        {{ form }}
-                    {% endfor %}
-                {% endfor %}
                 {% for field in form.visible_fields %}
                     {% if field.name == 'accept' %}
                     <tr>
