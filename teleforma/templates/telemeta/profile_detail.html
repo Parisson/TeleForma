@@ -55,8 +55,11 @@
    <div class="course_content">
 
    <div class="infos" style="width: 55%">
+     {% if usr.student.get.portrait %}
+     <img style="float:right" src="{{ usr.student.get.portrait.url }}" />
+     {% endif %}
      <dl class="listing">
-      <img src="{{ usr.portrait.url }}" />
+
       <dt>{% trans "First Name" %}</dt><dd>{{ usr.first_name }}</dd>
       <dt>{% trans "Last Name" %}</dt><dd>{{ usr.last_name }}</dd>
       <dt>{% trans "Username" %}</dt><dd>{{ usr.username }}</dd>
