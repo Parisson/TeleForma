@@ -302,7 +302,10 @@ class UserXLSBook(object):
 
             total_payments = 0
             payment_per_month = { month[0]: 0 for month in months_choices }
-            for payment in student.payments.values('month', 'value'):
+            for payment in student.payments.values('month', 'value',
+                                                   'type', 'online_paid'):
+                if payment['type'] == 'online' and not payment['online_paid']:
+                    continue
                 value = payment['value']
                 month = payment['month']
                 total_payments += value
@@ -673,3 +676,4 @@ class WriteView(PostmanWriteView):
     """
     form_classes = (WriteForm, AnonymousWriteForm)
     success_url = "postman_sent"
+

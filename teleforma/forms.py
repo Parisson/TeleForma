@@ -6,7 +6,7 @@ from models.core import Period, CourseType
 from models.crfpa import IEJ, Training
 from teleforma.models import *
 from django.forms import ModelForm, ModelChoiceField, ModelMultipleChoiceField, BooleanField, ImageField, CharField, \
-    DateField, FileInput
+    DateField, FileInput, ChoiceField
 from postman.forms import WriteForm as PostmanWriteForm
 from postman.fields import BasicCommaSeparatedUserField
 
@@ -88,6 +88,10 @@ class UserForm(ModelForm):
                               queryset=Course.objects.filter(oral_1=True),
                               required=False)
     promo_code = CharField(label=_('promo code'), max_length=100, required=False)
+    payment_schedule = ChoiceField(label=_(u'échéancier de paiement'),
+                                 choices=payment_schedule_choices,
+                                 required=True)
+    
     # no model
     captcha = CaptchaField()
     accept = BooleanField()

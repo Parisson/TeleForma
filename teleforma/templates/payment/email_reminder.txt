@@ -1,0 +1,11 @@
+{% url teleforma-payment-start payment.pk as payment_url %}
+Bonjour,
+
+Une échéance de paiement de {{ payment.value }} € est arrivée sur
+{{ site.name }}.
+
+Veuillez vous rendre sur l'URL suivante pour effectuer le règlement :
+https://{{ site.domain }}{{ payment_url }}
+
+Cordialement,
+L'équipe {{ site.name }}

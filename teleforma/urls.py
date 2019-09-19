@@ -148,8 +148,14 @@ urlpatterns = patterns('',
 
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
+                       
 
-
+    # Payment
+    url(r'^payment/(?P<pk>.*)/start/$', PaymentStartView.as_view(),
+        name="teleforma-payment-start"),
+    url(r'^payment/(?P<pk>.*)/validate/$', PaymentValidateView.as_view(),
+        name="teleforma-payment-validate"),
+                       
 
 
 
