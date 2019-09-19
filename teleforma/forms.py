@@ -106,7 +106,7 @@ class UserForm(ModelForm):
             return image
         width, height = get_image_dimensions(image)
         ratio = float(height) / float(width)
-        if ratio > 1.5 or ratio < 1:
+        if ratio > 2.5 or ratio < 1:
             raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
         NEW_HEIGHT = 256
         NEW_WIDTH = 200
