@@ -6,7 +6,8 @@ from models.core import Period, CourseType
 from models.crfpa import IEJ, Training
 from teleforma.models import *
 from django.forms import ModelForm, ModelChoiceField, ModelMultipleChoiceField, BooleanField, ImageField, CharField, \
-    DateField, FileInput
+    DateField, FileInput, ChoiceField
+from django.forms.extras.widgets import SelectDateWidget
 from postman.forms import WriteForm as PostmanWriteForm
 from postman.fields import BasicCommaSeparatedUserField
 
@@ -21,6 +22,11 @@ from itertools import cycle
 from django.core.files.images import get_image_dimensions
 from PIL import Image
 
+LEVEL_CHOICES = [
+    ('', '---------'),
+    ('M1', 'M1'),
+    ('M2', 'M2'),
+]
 
 def get_unique_username(first_name, last_name):
     username = slugify(first_name)[0] + '.' + slugify(last_name)
@@ -58,35 +64,30 @@ class UserForm(ModelForm):
     city = CharField(label=_('City'), max_length=255)
     country = CharField(label=_('Country'), max_length=255)
     telephone = CharField(label=_('Telephone'), max_length=255)
-    birthday = DateField(label=_('birthday'), help_text="jj/mm/aaaa")
+    birthday = DateField(label=_('birthday'), help_text="Au format jj/mm/aaaa")
     # student
     portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}),
                           help_text="Veuillez utiliser une photo au format d'identité.")
+    level = ChoiceField(label=_('studying level'), choices=LEVEL_CHOICES)
     iej = ModelChoiceField(label='IEJ',
-                           queryset=IEJ.objects.all(),
-                           required=False)
+                           queryset=IEJ.objects.all())
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
                                                              date_inscription_start__lte=datetime.datetime.now(),
-                                                             date_inscription_end__gte=datetime.datetime.now()),
-                              required=False)
+                                                             date_inscription_end__gte=datetime.datetime.now()))
     trainings = ModelMultipleChoiceField(label='Formations',
-                                         queryset=Training.objects.filter(available=True),
-                                         required=False)
+                                         queryset=Training.objects.filter(available=True))
     platform_only = BooleanField(label=_('e-learning platform only'),
                                  required=False)
     procedure = ModelChoiceField(label=_('procedure'),
                                  help_text="Matière de procédure",
-                                 queryset=Course.objects.filter(procedure=True),
-                                 required=False)
+                                 queryset=Course.objects.filter(procedure=True))
     written_speciality = ModelChoiceField(label=_('written speciality'),
                                           queryset=Course.objects.filter(written_speciality=True),
-                                          help_text="Matière juridique de spécialité",
-                                          required=False)
+                                          help_text="Matière juridique de spécialité")
     oral_1 = ModelChoiceField(label=_('oral de langue (option)'),
                               help_text="Matière d’oral de langue (en option)",
-                              queryset=Course.objects.filter(oral_1=True),
-                              required=False)
+                              queryset=Course.objects.filter(oral_1=True))
     promo_code = CharField(label=_('promo code'), max_length=100, required=False)
     # no model
     captcha = CaptchaField()
@@ -143,6 +144,7 @@ class UserForm(ModelForm):
             profile.save()
         student = Student(user=user,
                           portrait=data['portrait'],
+                          level=data.get('level'),
                           iej=data.get('iej'),
                           period=data.get('period'),
                           platform_only=data.get('platform_only'),

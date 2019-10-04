@@ -3,6 +3,24 @@
 {% load telemeta_utils %}
 {% load teleforma_tags %}
 
+{% block extra_javascript %}
+    <script src="/static/teleforma/js/datepicker-fr.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("[name='birthday']").datepicker({
+                dateFormat:'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+0"
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block extra_stylesheets %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
 {% block title %}
     <center>{% trans "Pre-registration" %} - {% description %}</center>{% endblock %}
 
@@ -18,32 +36,34 @@
 
                 {% for field in form.visible_fields %}
                     {% if field.name != 'accept' %}
-                    <tr>
-                        <th>{{ field.label_tag }}</th>
-                        <td>
-                            {{ field.errors }}
-                            {{ field }}
-                            <br/>
-                            <span class="helptext">
+                        <tr>
+                            <th>{{ field.label_tag }}</th>
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                                <br/>
+                                <span class="helptext">
                             {{ field.help_text }}
                         </span>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     {% endif %}
                 {% endfor %}
                 {% for field in form.visible_fields %}
                     {% if field.name == 'accept' %}
-                    <tr>
-                        <th>J'accepte les <a href="http://crfpa.pre-barreau.com/tarifs/conditions-generales-dinscription">conditions générales d'inscription</a></th>
-                        <td>
-                            {{ field.errors }}
-                            {{ field }}
-                            <br/>
-                            <span class="helptext">
+                        <tr>
+                            <th>J'accepte les <a
+                                    href="http://crfpa.pre-barreau.com/tarifs/conditions-generales-dinscription">conditions
+                                générales d'inscription</a></th>
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                                <br/>
+                                <span class="helptext">
                             {{ field.help_text }}
                         </span>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     {% endif %}
                 {% endfor %}
             </table>
