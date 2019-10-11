@@ -163,6 +163,28 @@ def get_all_professors_with_courses():
     return professors
 
 
+@register.assignment_tag
+def get_all_correctors_with_courses():
+    correctors = {}
+
+    for quota in Quota.objects.all():
+        if not quota.corrector:
+            continue
+        if quota.corrector not in correctors:
+            correctors[quota.corrector] = set()
+        correctors[quota.corrector].add(quota.course.id)
+
+    result = []
+    for corrector in correctors.keys():
+        name = corrector.last_name + corrector.first_name
+        if name:
+            result.append({
+                'username':corrector.username,
+                'name':corrector.last_name + " " + corrector.first_name,
+                'courses':json.dumps(list(correctors[corrector]))
+            })
+    return result
+
 
 @register.assignment_tag
 def get_all_admins():
