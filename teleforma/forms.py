@@ -162,7 +162,7 @@ class UserForm(ModelForm):
                           training=data.get('training')
                           )
         student.save()
-        # student.trainings.add(*data.get('trainings', []))
+        student.trainings.add(data.get('training', None))
         return user
 
 

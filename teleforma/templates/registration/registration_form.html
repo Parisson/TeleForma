@@ -74,42 +74,32 @@
         </form>
     </center>
     <script>
-        $(document).ready(function () {
-            var id = $("#id_period").val();
-            var training_id = $("#id_training").val();
 
-            if (!id) {
+        var trainingId;
+
+        function updateTrainings(){
+            // filter trainings according to period
+            var periodId = $("#id_period").val();
+            var platformOnly = $("#id_platform_only").val();
+            if (!periodId || !platformOnly) {
                 $('#id_training').html('<option value="" selected="selected">---------</option>');
             } else {
                 $.ajax({
-                    url: "/update-training/" + id + "/",
-                    data: {"period_id": id, "training_id": training_id},
+                    url: "/update-training/" + periodId + "/",
+                    data: {"period_id": periodId, "training_id": trainingId, "platform_only":platformOnly},
                     dataType: "html",
                     type: "post",
                     success: function (data) {
-                        $('#id_student').html(data);
+                        $('#id_training').html(data);
                     }
                 });
             }
+        }
+        $(document).ready(function () {
+            trainingId =  $("#id_training").val();
+            updateTrainings();
+            $("#id_period,  #id_platform_only").change(updateTrainings);
 
-            $("#id_period").change(function () {
-                period_id = this.value
-                if (!period_id) {
-                    $('#id_training').html('<option value="" selected="selected">---------</option>')
-                } else {
-                    $.ajax({
-                        url: "/update-training/" + period_id + "/",
-                        data: {"period_id": period_id},
-                        dataType: "html",
-                        type: "post",
-                        success: function (data) {
-                            $('#id_training').html(data);
-                        }
-                    });
-                }
-            });
-
-            // filter trainings according to
         });
     </script>
     <style>

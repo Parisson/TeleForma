@@ -569,8 +569,10 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
 
 @csrf_exempt
 def update_training(request, id):
-    trainings = Training.objects.filter(period__id=id)
+    platform_only = request.POST.get('platform_only', "") == 'True' and True or False
+    trainings = Training.objects.filter(period__id=id, platform_only=platform_only)
     training_id = request.POST.get("training_id", "")
+
     html = '<option value="" selected="selected">---------</option>'
     for training in trainings:
         if training_id == str(training.pk):
