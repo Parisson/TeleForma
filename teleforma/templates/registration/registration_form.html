@@ -75,11 +75,11 @@
     </center>
     <script>
         $(document).ready(function () {
-            id = $("#id_student-0-period").val();
-            training_id = $("#id_student-0-training").val();
+            var id = $("#id_period").val();
+            var training_id = $("#id_training").val();
 
             if (!id) {
-                $('#id_student-0-training').html('<option value="" selected="selected">---------</option>');
+                $('#id_training').html('<option value="" selected="selected">---------</option>');
             } else {
                 $.ajax({
                     url: "/update-training/" + id + "/",
@@ -87,15 +87,15 @@
                     dataType: "html",
                     type: "post",
                     success: function (data) {
-                        $('#id_student-0-training').html(data);
+                        $('#id_student').html(data);
                     }
                 });
             }
 
-            $("#id_student-0-period").change(function () {
+            $("#id_period").change(function () {
                 period_id = this.value
                 if (!period_id) {
-                    $('#id_student-0-training').html('<option value="" selected="selected">---------</option>')
+                    $('#id_training').html('<option value="" selected="selected">---------</option>')
                 } else {
                     $.ajax({
                         url: "/update-training/" + period_id + "/",
@@ -103,11 +103,13 @@
                         dataType: "html",
                         type: "post",
                         success: function (data) {
-                            $('#id_student-0-training').html(data);
+                            $('#id_training').html(data);
                         }
                     });
                 }
             });
+
+            // filter trainings according to
         });
     </script>
     <style>

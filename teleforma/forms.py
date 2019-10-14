@@ -27,6 +27,12 @@ LEVEL_CHOICES = [
     ('M1', 'M1'),
     ('M2', 'M2'),
 ]
+TRUE_FALSE_CHOICES = (
+    ('', '---------'),
+    (True, 'Oui'),
+    (False, 'Non')
+)
+
 
 def get_unique_username(first_name, last_name):
     username = slugify(first_name)[0] + '.' + slugify(last_name)
@@ -66,19 +72,20 @@ class UserForm(ModelForm):
     telephone = CharField(label=_('Telephone'), max_length=255)
     birthday = DateField(label=_('birthday'), help_text="Au format jj/mm/aaaa")
     # student
-    portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}),
+    portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=False,
                           help_text="Veuillez utiliser une photo au format d'identité.")
     level = ChoiceField(label=_('studying level'), choices=LEVEL_CHOICES)
     iej = ModelChoiceField(label='IEJ',
                            queryset=IEJ.objects.all())
+    platform_only = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                      label=_('e-learning platform only'),
+                                      widget=forms.Select())
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
                                                              date_inscription_start__lte=datetime.datetime.now(),
                                                              date_inscription_end__gte=datetime.datetime.now()))
-    trainings = ModelMultipleChoiceField(label='Formations',
-                                         queryset=Training.objects.filter(available=True))
-    platform_only = BooleanField(label=_('e-learning platform only'),
-                                 required=False)
+    training = ModelChoiceField(label='Formation',
+                                queryset=Training.objects.filter(available=True))
     procedure = ModelChoiceField(label=_('procedure'),
                                  help_text="Matière de procédure",
                                  queryset=Course.objects.filter(procedure=True))
@@ -101,14 +108,14 @@ class UserForm(ModelForm):
         image = self.cleaned_data['portrait']
         if not image:
             return image
-        width, height = get_image_dimensions(image)
-        ratio = float(height) / float(width)
-        if ratio > 2.5 or ratio < 1:
-            raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
-        NEW_HEIGHT = 256
-        NEW_WIDTH = 200
-        if width < NEW_WIDTH or height < NEW_HEIGHT:
-            raise ValidationError({'portrait': "L'image doit faire au moins %sx%spx" % (NEW_WIDTH, NEW_HEIGHT)})
+        #width, height = get_image_dimensions(image)
+        #ratio = float(height) / float(width)
+        #if ratio > 2.5 or ratio < 1:
+        #    raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
+        NEW_HEIGHT = 230
+        NEW_WIDTH = 180
+        #if width < NEW_WIDTH or height < NEW_HEIGHT:
+        #    raise ValidationError({'portrait': "L'image est trop petite. Elle doit faire au moins %spx de large et %spx de hauteur." % (NEW_WIDTH, NEW_HEIGHT)})
 
         # resize image
         img = Image.open(image.file)
@@ -151,10 +158,11 @@ class UserForm(ModelForm):
                           procedure=data.get('procedure'),
                           written_speciality=data.get('written_speciality'),
                           oral_1=data.get('oral_1'),
-                          promo_code=data.get('promo_code')
+                          promo_code=data.get('promo_code'),
+                          training=data.get('training')
                           )
         student.save()
-        student.trainings.add(*data.get('trainings', []))
+        # student.trainings.add(*data.get('trainings', []))
         return user
 
 
