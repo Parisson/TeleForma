@@ -34,6 +34,7 @@ a:hover {
     text-decoration: underline;
 }
 
+
 a img { border: none; }
 
 .rst-content h1 {
@@ -1979,6 +1980,7 @@ form.add_actus #id_text_parent{
     font-size: 1.2em;
 }
 
+
 .register {
     width: 80%;
     font-size: 1.1em;
@@ -1996,6 +1998,260 @@ form.add_actus #id_text_parent{
     color: #BB0000;
 }
 
+#_registerForm{
+    margin: 1em auto 4em auto;
+    padding: 3em 5em;
+}
+#_registerForm, #_registerForm *{
+    box-sizing: border-box;
+}
+#_registerForm:after {
+    content: ""; 
+    display: table;
+    clear: both;
+}
+
+#_registerForm h1{
+    background-color: #000;
+    display: block;
+    width: 100%;
+    padding: 18px 20px;
+    color: #FFF;
+    text-transform: uppercase;
+    margin: 0;
+}
+#_registerForm h2{
+    background-color: #F2F2F2;
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    color: #000;
+    text-transform: uppercase;
+    margin: 0;
+}
+#_registerForm h2 img{
+    width: 22px;
+    height: auto;
+    margin-right: 10px;
+    position: relative;
+    top: 2px;
+}
+#_registerForm h2 img.votreformation{
+    width: 15px;
+    height: auto;
+    margin-right: 17px;
+}
+
+#_registerForm fieldset{
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 30px 0 50px 0;
+}
+
+#_registerForm .column {
+-webkit-column-count: 2;
+-moz-column-count: 2;
+column-count: 2;
+-webkit-column-gap: 40px;
+-moz-column-gap: 40px;
+column-gap: 40px;
+-webkit-column-rule: 0;
+-moz-column-rule: 0;
+column-rule: 0;
+}
+#_registerForm fieldset .info_champs{
+    margin: 0 0 00px 0;
+    overflow: hidden;
+    padding: 15px 0;
+    position: relative;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid-column;
+    word-wrap: break-word;
+}
+#_registerForm fieldset label{
+    display: inline-block;
+    min-width: 190px;
+}
+#_registerForm fieldset input[type="text"]{
+    width: calc(100% - 190px);
+    margin: 0;
+    float: right;
+}
+#_registerForm fieldset #id_portrait{
+    margin-left: 10px;
+}
+
+
+#_registerForm fieldset select{
+    margin: 0;
+    float: right;
+    width: calc(100% - 200px);
+}
+#_registerForm fieldset span.required{
+    color: red;
+}
+#_registerForm fieldset span.error{
+    color: red;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 10px;
+}
+#_registerForm fieldset span.error ul{
+     padding: 0;
+     margin: 0;
+}
+
+#_registerForm fieldset .helptext{
+    font-style: italic;
+    color: #CCC; 
+    font-size: 10px;
+    line-height: 12px;
+    position: absolute;
+    left: 190px;
+    top: -2px;
+}
+#_registerForm fieldset.form_select .helptext{
+    left: 200px;
+
+}
+#_registerForm .error{
+    background: transparent;
+    color: red;
+    font-style: italic;
+    font-size: 12px;
+}
+
+#_registerForm .submit-panel{
+    width: calc(50% - 20px);
+    float: right;
+    background-color: #F2F2F2;
+}
+#_registerForm .submit-panel div{
+    padding: 15px 15px 25px 15px;
+}
+
+#_registerForm .submit-panel label{
+    font-size: 12px;
+}
+#_registerForm .submit-panel label[for="id_accept"]{
+    font-weight: bold;
+}
+#_registerForm .submit-panel input[type="text"]{
+    width: 90px;
+}
+#_registerForm .submit-panel .captcha{
+    position: relative;
+    top: 13px;
+}
+#_registerForm .submit-panel .component_icon{
+    background-color: #000;
+    color: #FFF;
+    display: inline-block;
+    border-radius: 0;
+    border: 0;
+    padding: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+}
+#_registerForm .submit-panel .component_icon:hover{
+    border: 0 !important;
+}
+
+@media (max-width: 1286px) {
+    #_registerForm fieldset #id_portrait{
+        margin-left: 0;
+        display: block;
+    }
+    #_registerForm fieldset label[for="id_portrait"]{
+       position: relative; 
+       top: -15px; 
+    }
+}
+@media (max-width: 1245px) {
+    #_registerForm .submit-panel label[for="id_accept"]{
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    #_registerForm .submit-panel span{
+        display: block;
+    }
+
+    #_registerForm fieldset label {
+         max-width: 190px;
+    }
+    #_registerForm fieldset select{
+        width: calc(100% - 190px);
+    }
+    #_registerForm fieldset.form_select .helptext{
+        left: 190px;
+    }
+    #_registerForm {
+        padding: 3em 1em;
+        width: 100%;
+    }
+    #_registerForm .column{
+        border: 0;
+        background: transparent;
+        -moz-column-count: 2;
+        -webkit-column-count:2;
+        column-count:2;
+        -moz-column-gap: 20px;
+        -webkit-column-gap:20px;
+        column-gap:20px;
+        padding: 0;
+        margin: 30px 0 50px 0;
+    }
+}
+@media (max-width: 1200px) {
+    #_registerForm fieldset{
+        margin: 10px 0 10px 0;
+    }
+    
+}
+@media (max-width: 835px) {
+    
+    #_registerForm .column{
+        border: 0;
+        background: transparent;
+        -moz-column-count: 1;
+        -webkit-column-count: 1;
+        column-count:1;
+        -moz-column-gap: 0px;
+        -webkit-column-gap:0px;
+        column-gap:0px;
+       
+    }
+     #_registerForm fieldset #id_portrait{
+        margin-left: 10px;
+        display: inline-block;
+    }
+    #_registerForm fieldset label[for="id_portrait"]{
+       position: relative; 
+       top: 0px; 
+    }
+    #_registerForm .submit-panel{
+        width: 100%;
+        float: none;
+        margin-top: 10px;
+    }
+    #_registerForm .submit-panel span{
+        display: inline;
+    }
+    #_registerForm fieldset{
+        margin: 0;
+    }
+}
+@media (max-width: 535px) {
+    #_registerForm fieldset #id_portrait{margin-left: 0;}
+    #_registerForm .submit-panel input[type="text"] {
+        width: 60px;
+    }
+}
 
 .select-day{
 	margin-bottom: 15px;

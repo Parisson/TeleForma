@@ -13,7 +13,7 @@ from postman.fields import BasicCommaSeparatedUserField
 
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 from captcha.fields import CaptchaField
 
 from teleforma.models.core import Course, Professor
@@ -70,15 +70,15 @@ class UserForm(ModelForm):
     city = CharField(label=_('City'), max_length=255)
     country = CharField(label=_('Country'), max_length=255)
     telephone = CharField(label=_('Telephone'), max_length=255)
-    birthday = DateField(label=_('birthday'), help_text="Au format jj/mm/aaaa")
+    birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
     # student
     portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=False,
                           help_text="Veuillez utiliser une photo au format d'identité.")
-    level = ChoiceField(label=_('studying level'), choices=LEVEL_CHOICES)
+    level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
     iej = ModelChoiceField(label='IEJ',
                            queryset=IEJ.objects.all())
     platform_only = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
-                                      label=_('e-learning platform only'),
+                                      label='E-learning uniquement',
                                       widget=forms.Select())
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
@@ -86,16 +86,16 @@ class UserForm(ModelForm):
                                                              date_inscription_end__gte=datetime.datetime.now()))
     training = ModelChoiceField(label='Formation',
                                 queryset=Training.objects.filter(available=True))
-    procedure = ModelChoiceField(label=_('procedure'),
+    procedure = ModelChoiceField(label=_('Procedure'),
                                  help_text="Matière de procédure",
                                  queryset=Course.objects.filter(procedure=True))
-    written_speciality = ModelChoiceField(label=_('written speciality'),
+    written_speciality = ModelChoiceField(label='Specialité écrite',
                                           queryset=Course.objects.filter(written_speciality=True),
                                           help_text="Matière juridique de spécialité")
-    oral_1 = ModelChoiceField(label=_('oral de langue (option)'),
+    oral_1 = ModelChoiceField(label=_('Oral de langue (option)'),
                               help_text="Matière d’oral de langue (en option)",
                               queryset=Course.objects.filter(oral_1=True))
-    promo_code = CharField(label=_('promo code'), max_length=100, required=False)
+    promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
     # no model
     captcha = CaptchaField()
     accept = BooleanField()
@@ -103,6 +103,15 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
+        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
+        self.training_fields = ['level', 'iej', 'platform_only', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
 
     def clean_portrait(self):
         image = self.cleaned_data['portrait']
@@ -149,12 +158,13 @@ class UserForm(ModelForm):
                           )
         if commit:
             profile.save()
+        platform_only = data.get('platform_only') == 'True' and True or False
         student = Student(user=user,
                           portrait=data['portrait'],
                           level=data.get('level'),
                           iej=data.get('iej'),
                           period=data.get('period'),
-                          platform_only=data.get('platform_only'),
+                          platform_only=platform_only,
                           procedure=data.get('procedure'),
                           written_speciality=data.get('written_speciality'),
                           oral_1=data.get('oral_1'),
