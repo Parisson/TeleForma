@@ -30,7 +30,7 @@ class Command(BaseCommand):
     help = """Copy some seminars and their content thanks to their expiry date year"""
     args = ['site_domain from_year to_year log_file']
     language_code = 'fr_FR'
-    more = ['deontologie_1', 'deontologie_2', 'commercial_2', 'Contrats_4', 'PAC_5']
+    less = ['Societes_3', 'Travail_8', 'DSS_7', 'PI_2']
     site = Site.objects.get_current()
 
     def handle(self, *args, **kwargs):
@@ -44,14 +44,11 @@ class Command(BaseCommand):
 
         to_period, c = Period.objects.get_or_create(name=str(to_year))
         from_period, c = Period.objects.get_or_create(name=str(from_year))
-        expiry_date = datetime.datetime(from_year, 12, 31)
+        expiry_date_limit = datetime.datetime(to_year, 12, 31)
 
         for seminar in Seminar.objects.all():
             if seminar.expiry_date:
-                if seminar.expiry_date.date() == expiry_date.date() \
-                  or (seminar.period == from_period and seminar.code in self.more):
-                    seminar.period = from_period
-                    seminar.save()
+                if seminar.period == from_period and not seminar.code in self.less:
                     clone = seminar.clone()
                     clone.publish_date = seminar.publish_date.replace(year=to_year)
                     clone.expiry_date = seminar.expiry_date.replace(year=to_year)
