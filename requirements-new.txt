@@ -1,6 +1,6 @@
 setuptools
 uwsgi
-django==1.6.11
+django==1.11.23
 telemeta
 south
 django-pagination
