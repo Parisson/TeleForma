@@ -123,6 +123,13 @@ def yes_no(bool):
         return _('No')
 
 @register.filter
+def get_item(dictionary, key):
+    try:
+        return dictionary.get(key)
+    except AttributeError:
+        return dictionary[key]
+
+@register.filter
 def from_course_type(contents, type):
     if contents:
         return contents.filter(course_type=type)

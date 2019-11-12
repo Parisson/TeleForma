@@ -3,96 +3,155 @@
 {% load telemeta_utils %}
 {% load teleforma_tags %}
 
+{% block extra_javascript %}
+<script src="/static/teleforma/js/datepicker-fr.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("[name='birthday']").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0"
+        });
+    });
+</script>
+{% endblock %}
+
+{% block extra_stylesheets %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
 {% block title %}
-    <center>{% trans "Pre-registration" %} - {% description %}</center>{% endblock %}
+{% endblock %}
 
 {% block content %}
-    <center>
-        <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data"
-              data-ajax="false">{% csrf_token %}
 
-            {{ introduction|safe }}
 
-            <h2><span class="error">Tous les champs sont requis</span></h2>
-            <table>
+<form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">
+    {% csrf_token %}
 
-                {% for field in form.visible_fields %}
-                    {% if field.name != 'accept' %}
-                    <tr>
-                        <th>{{ field.label_tag }}</th>
-                        <td>
-                            {{ field.errors }}
-                            {{ field }}
-                            <br/>
-                            <span class="helptext">
-                            {{ field.help_text }}
-                        </span>
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-                {% for field in form.visible_fields %}
-                    {% if field.name == 'accept' %}
-                    <tr>
-                        <th>J'accepte les <a href="http://crfpa.pre-barreau.com/tarifs/conditions-generales-dinscription">conditions générales d'inscription</a></th>
-                        <td>
-                            {{ field.errors }}
-                            {{ field }}
-                            <br/>
-                            <span class="helptext">
-                            {{ field.help_text }}
-                        </span>
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-            </table>
-            <br><br>
-            <a href="#" class="component_icon button" id="action_green" onclick="$('#_registerForm').submit();"><img
-                    src="/static/telemeta/images/next.png" alt=""
-                    style="vertical-align:middle"/>&nbsp;{% trans "Submit" %}</a>
-        </form>
-    </center>
-    <script>
-        $(document).ready(function () {
-            id = $("#id_student-0-period").val();
-            training_id = $("#id_student-0-training").val();
+    <h1>{% trans "Pre-registration" %} - {% description %}</h1>
 
-            if (!id) {
-                $('#id_student-0-training').html('<option value="" selected="selected">---------</option>');
-            } else {
-                $.ajax({
-                    url: "/update-training/" + id + "/",
-                    data: {"period_id": id, "training_id": training_id},
-                    dataType: "html",
-                    type: "post",
-                    success: function (data) {
-                        $('#id_student-0-training').html(data);
-                    }
-                });
-            }
+    {{ introduction|safe }}
 
-            $("#id_student-0-period").change(function () {
-                period_id = this.value
-                if (!period_id) {
-                    $('#id_student-0-training').html('<option value="" selected="selected">---------</option>')
-                } else {
-                    $.ajax({
-                        url: "/update-training/" + period_id + "/",
-                        data: {"period_id": period_id},
-                        dataType: "html",
-                        type: "post",
-                        success: function (data) {
-                            $('#id_student-0-training').html(data);
-                        }
-                    });
+    <h2><img src="{{ STATIC_URL }}teleforma/images/crfpa_coordonnees.svg"
+            onerror="this.onerror=null; this.src='{{ STATIC_URL }}teleforma/images/crfpa_coordonnees.png'"
+            alt="vos coordonnées" title="vos coordonnées" />
+
+
+        Vos coordonnées</h2>
+
+    <fieldset>
+        <div class="column">
+            {% for fieldname in form.user_fields %}
+
+            {% with field=form|get_item:fieldname %}
+            <div class="info_champs">
+                <label for="id_{{ field.name }}">
+                    {{ field.label }} {% if field.field.required %}<span class="required">*</span>{% endif %}
+                </label>
+                <span class="helptext">
+                    {{ field.help_text }}
+                </span>
+                <span class="error">
+                    {{ field.errors }}
+                </span>
+                {{ field }}
+            </div>
+
+            {% endwith %}
+            {% endfor %}
+        </div>
+    </fieldset>
+
+    <h2><img src="{{ STATIC_URL }}teleforma/images/crfpa_formation.svg"
+            onerror="this.onerror=null; this.src='{{ STATIC_URL }}teleforma/images/crfpa_formation.png'"
+            alt="votre formation" title="votre formation" class="votreformation" />Votre formation</h2>
+    <fieldset class="form_select">
+        <div class="column"> {% for fieldname in form.training_fields %}
+            {% with field=form|get_item:fieldname %}
+            <div class="info_champs">
+                <label for="id_{{ field.name }}">
+                    {{ field.label }} {% if field.field.required %}<span class="required">*</span>{% endif %}
+                </label>
+                <span class="helptext">
+                    {{ field.help_text }}
+                </span>
+                <span class="error">
+                    {{ field.errors }}
+                </span>
+                {{ field }}
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+    </fieldset>
+    <span class="error">* Champs obligatoires</span>
+
+    <div class="submit-panel">
+        <div>
+            <span class="error">
+                {{ form.accept.errors }}
+            </span>
+            {{ form.accept }}
+            <span class="error">
+            </span>
+            <label for="id_accept">J'accepte les <a
+                    href="http://crfpa.pre-barreau.com/tarifs/conditions-generales-dinscription">conditions générales
+                    d'inscription</a></label>
+            <br />
+            <span class="error">
+                {{ form.promo_code.errors }}
+            </span>
+            <label for="id_promo_code">{{ form.promo_code.label }}</label>
+            {{ form.promo_code }}
+            <span>
+                <span class="error">
+                    {{ form.captcha.errors }}
+                </span>
+                <label for="id_captcha_1">{{ form.captcha.label }}*</label>
+                {{ form.captcha }}</span>
+        </div>
+        <a href="#" class="component_icon button" onclick="$('#_registerForm').submit();">{% trans "Submit" %}</a>
+    </div>
+
+</form>
+<script>
+    var trainingId;
+
+    function updateTrainings() {
+        // filter trainings according to period
+        var periodId = $("#id_period").val();
+        var platformOnly = $("#id_platform_only").val();
+        if (!periodId || !platformOnly) {
+            $('#id_training').html('<option value="" selected="selected">---------</option>');
+        } else {
+            $.ajax({
+                url: "/update-training/" + periodId + "/",
+                data: {
+                    "period_id": periodId,
+                    "training_id": trainingId,
+                    "platform_only": platformOnly
+                },
+                dataType: "html",
+                type: "post",
+                success: function (data) {
+                    $('#id_training').html(data);
                 }
             });
-        });
-    </script>
-    <style>
-        select {
-            width: 222px;
         }
-    </style>
+    }
+
+    $(document).ready(function () {
+        trainingId = $("#id_training").val();
+        updateTrainings();
+        $("#id_period,  #id_platform_only").change(updateTrainings);
+
+    });
+</script>
+<style>
+    select {
+        width: 222px;
+    }
+</style>
 {% endblock %}
