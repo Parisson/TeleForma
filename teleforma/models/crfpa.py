@@ -109,6 +109,7 @@ class Training(Model):
                                         blank=True, null=True)
     cost = models.FloatField(_('cost'), blank=True, null=True)
     available = models.BooleanField(_('available'))
+    platform_only = models.BooleanField(_('e-learning platform only'))
 
     def __unicode__(self):
         if self.name and self.period:
@@ -209,7 +210,7 @@ class Student(Model):
         for optional_fee in self.optional_fees.values('value'):
             amount += optional_fee['value']
         return amount
-    
+
     @property
     def total_payments(self):
         amount = 0
@@ -231,7 +232,7 @@ class Student(Model):
         for payback in self.paybacks.values('value'):
             amount -= payback['value']
         return amount
-        
+
     def update_balance(self):
         old = self.balance
         new = round(self.total_payments - self.total_fees + self.total_paybacks, 2)
@@ -253,7 +254,7 @@ def update_balance_signal(sender, instance, *args, **kwargs):
         instance.update_balance()
     elif sender in (Discount, OptionalFee, Payment, Payback):
         instance.student.update_balance()
-        
+
 signals.post_save.connect(update_balance_signal)
 signals.post_delete.connect(update_balance_signal)
 
