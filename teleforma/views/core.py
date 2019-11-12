@@ -46,7 +46,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
 from django.template import RequestContext, loader
 from django import template
-from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.views.generic import *
 from django.views.generic.base import *
@@ -176,7 +176,8 @@ def serve_media(media_path, content_type="", buffering=True, streaming=False):
                                  buffering=buffering, streaming=streaming)
     else:
         try:
-            response = FileResponse(open(media_path, 'rb'))
+            pass
+            #response = FileResponse(open(media_path, 'rb'))
         except:    
             response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
         filename = os.path.basename(media_path)

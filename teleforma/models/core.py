@@ -418,11 +418,11 @@ class LiveStream(Model):
 
     @property
     def mount_point(self):
-        mount_point = self.server.type
+        mount_point = ''
         if self.server.type == 'stream-m':
-            mount_point += '/consume/' + self.slug
+            mount_point += 'consume/' + self.slug
         else:
-            mount_point += '/' + self.slug + '.' + self.stream_type
+            mount_point += self.slug + '.' + self.stream_type
         return mount_point
 
     @property
@@ -435,7 +435,7 @@ class LiveStream(Model):
 
     @property
     def url(self):
-        return '//' + self.server.host + ':' + self.server.port + '/' + self.mount_point
+        return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
 
     def __unicode__(self):
         if self.conference:
