@@ -35,10 +35,10 @@ class Command(BaseCommand):
         site = Site.objects.get_current()
         if student.platform_only:
             mode = 'E-learning'
-            message = period.message_platform
+            message = student.period.message_platform
         else:
             mode = 'Presentielle'
-            message = period.message_local
+            message = student.period.message_local
 
         ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
         subject_template = 'teleforma/messages/email_inscr_sujet.txt'
