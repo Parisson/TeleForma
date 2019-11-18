@@ -307,7 +307,7 @@ class Payment(models.Model):
         db_table = app_label + '_' + 'payments'
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
-        ordering = ['month']
+        ordering = ['scheduled', 'month']
 
 
 class Discount(models.Model):

@@ -1,0 +1,24 @@
+<div id="payment_summary">
+  <h2>Votre échéancier de paiement</h2>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Échéance</th>
+        <th>Montant</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in payments %}
+      <tr>
+        <td>{{ payment.scheduled }}</td>
+        <td>{{ payment.value }}</td>
+        <td class="{{ payment.sclass }}">{{ payment.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+

@@ -75,10 +75,10 @@ streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', '
 mimetypes.add_type('video/webm','.webm')
 payment_choices = [
     ('online', u'en ligne'),
-    ('check', _('check')),
-    ('tranfer', _('transfer')),
-    ('credit card', _('credit card')),
-    ('money', _('money')),
+    ('check', u'par chèque'),
+    ('tranfer', u'par virement'),
+    ('credit card', u'par carte'),
+    ('money', u'en liquide'),
     ('other', u"autre"),
 ]
 

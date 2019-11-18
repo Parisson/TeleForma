@@ -96,7 +96,8 @@ class UserForm(ModelForm):
                               help_text="Matière d’oral de langue (en option)",
                               queryset=Course.objects.filter(oral_1=True))
     promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
-    payment_schedule = ChoiceField(label=_(u'échéancier de paiement'),
+
+    payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
                                  choices=payment_schedule_choices,
                                  required=True)
     

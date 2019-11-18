@@ -153,10 +153,15 @@ urlpatterns = patterns('',
     # Payment
     url(r'^payment/(?P<pk>.*)/start/$', PaymentStartView.as_view(),
         name="teleforma-payment-start"),
-    url(r'^payment/(?P<pk>.*)/validate/$', PaymentValidateView.as_view(),
-        name="teleforma-payment-validate"),
-                       
 
+    url(r'^payment/bank_auto/(?P<merchant_id>.*)',
+        bank_auto, name='teleforma-bank-auto'),
+    url(r'^payment/bank_success/(?P<merchant_id>.*)',
+        bank_success, name='teleforma-bank-success'),
+    url(r'^payment/bank_cancel/(?P<merchant_id>.*)',
+        bank_cancel, name='teleforma-bank-cancel'),
 
+    url(r'^echec-de-paiement',
+        bank_fail, name='teleforma-bank-fail'),
 
 )
