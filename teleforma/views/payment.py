@@ -10,6 +10,8 @@ from django.http import HttpResponseForbidden
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.conf import settings
 from django.contrib.sites.models import get_current_site
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 import commands
 
@@ -99,7 +101,7 @@ class PaymentStartView(DetailView):
 def bank_auto(request, merchant_id):
     """
     Bank automatic callback
-    """
+    """    
     res = call_scherlocks('response', { 'message': request.POST['DATA'] },
                           merchant_id = merchant_id)
     order_id = res[24];
@@ -107,9 +109,27 @@ def bank_auto(request, merchant_id):
     if check_payment_info(res) and payment.type == 'online' and not payment.online_paid:
         payment.online_paid = True
         payment.save()
-        return HttpResponse('OK - Validated')
+        tmpl_name = 'payment_ok'
+        res = 'OK - Validated'
     else:
-        return HttpResponse('OK - Cancelled')
+        tmpl_name = 'payment_failed'
+        res = 'OK - Cancelled'
+
+    user = payment.student.user
+    data = { 'mfrom': settings.DEFAULT_FROM_EMAIL,
+             'mto': user.email,
+             'student': user,
+             'amount': payment.value, }
+        
+    subject_template = 'payment/email_%s_subject.txt' % tmpl_name
+    message_template = 'payment/email_%s.txt' % tmpl_name
+    subject = render_to_string(subject_template, data)
+    subject = ''.join(subject.splitlines())
+    message = render_to_string(message_template, data)
+    send_mail(subject, message, data['mfrom'], [ data['mto'] ],
+              fail_silently=True)
+    
+    return HttpResponse(res)
 
 @csrf_exempt
 def bank_success(request, merchant_id):

@@ -13,13 +13,13 @@ def payment_summary(context, payment):
     today = date.today()
     for obj in objs:
         if obj.type == 'online':
-            if obj.id == payment.id:
-                status = 'en cours'
-                sclass = "pending"
-            elif obj.online_paid:
+            if obj.online_paid:
                 status = 'payé'
                 sclass = "paid" 
-            elif obj.scheduled >= today:
+            elif obj.id == payment.id:
+                status = 'en cours'
+                sclass = "pending"
+            elif obj.scheduled > today:
                 status = 'à payer ultérieurement'
                 sclass = "topay_later"
             else:

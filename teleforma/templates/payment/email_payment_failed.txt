@@ -1,0 +1,9 @@
+Bonjour {{ student.first_name }},
+
+Vous avez essayé de payer en ligne une échéance de {{ amount }} €.
+
+La transaction n'a pas pu aboutir. Nous vous conseillons de ré-essayer
+ultérieurement ou de nous contacter.
+
+Cordialement,
+L'équipe Pré-Barreau
