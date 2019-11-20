@@ -149,11 +149,20 @@
         }
     }
 
+    function updateFascicule() {
+        var platformOnly = $("[name='platform_only']").val() === 'True' ? true : false;
+        if(platformOnly)
+            $("[name='fascicule']").parent().show();
+        else
+            $("[name='fascicule']").parent().hide();
+    }
+
     $(document).ready(function () {
         trainingId = $("#id_training").val();
         updateTrainings();
         $("#id_period,  #id_platform_only").change(updateTrainings);
-
+        updateFascicule();
+        $("[name='platform_only']").change(updateFascicule);
     });
 </script>
 <style>
