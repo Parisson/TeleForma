@@ -11,10 +11,10 @@
     </thead>
     <tbody>
       {% for payment in payments %}
-      <tr>
+      <tr class="{{ payment.sclass }}">
         <td>{{ payment.scheduled }}</td>
         <td>{{ payment.value }}</td>
-        <td class="{{ payment.sclass }}">{{ payment.status }}</td>
+        <td>{{ payment.status }}</td>
       </tr>
       {% endfor %}
     </tbody>

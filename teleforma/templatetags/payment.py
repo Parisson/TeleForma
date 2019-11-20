@@ -29,6 +29,7 @@ def payment_summary(context, payment):
             status = obj.get_type_display()
             sclass = "offline"
         payments.append({ 'scheduled': obj.scheduled or obj.date_created.date(),
+                          'sclass': sclass,
                           'value': obj.value,
                           'status': status })
     payments.sort(key = lambda p: p['scheduled'])
