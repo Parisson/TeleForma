@@ -549,7 +549,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            fsock = open(document.file.path, 'r')
+            fsock = open(document.file.path.encode('utf8'), 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)
             response = HttpResponse(fsock, mimetype=mimetype)
@@ -563,7 +563,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            fsock = open(document.file.path, 'r')
+            fsock = open(document.file.path.encode('utf8'), 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)
             response = HttpResponse(fsock, mimetype=mimetype)
