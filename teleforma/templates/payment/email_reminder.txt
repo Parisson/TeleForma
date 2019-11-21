@@ -1,11 +1,14 @@
 {% url teleforma-payment-start payment.pk as payment_url %}
 Bonjour,
 
-Une échéance de paiement de {{ payment.value }} € est arrivée sur
-{{ site.name }}.
+A ce jour, nous restons dans l’attente de votre échéance de paiement
+de {{ payment.value }} € relative à vos frais d’inscription à notre
+formation {{ period }}.
 
-Veuillez vous rendre sur l'URL suivante pour effectuer le règlement :
+Merci de bien vouloir procéder à votre règlement dans les meilleurs
+délais en cliquant sur l'URL suivante :
+
 https://{{ site.domain }}{{ payment_url }}
 
 Cordialement,
-L'équipe {{ site.name }}
+L’équipe du Pré-Barreau
