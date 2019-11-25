@@ -23,7 +23,7 @@ def call_scherlocks(what, data, merchant_id):
     Perform a Scherlock's call, with parameters in data
     what is either 'request' or 'response', the program to call
     """
-    log.debug('call_scherlocks %r %r' % (what, data))
+    log.info('call_scherlocks %r %r' % (what, data))
     requestbin = os.path.join(settings.PAYMENT_SHERLOCKS_PATH, 'bin/static', what)
     params = dict(data)
     params['pathfile'] = os.path.join(settings.PAYMENT_SHERLOCKS_PATH,
@@ -31,8 +31,6 @@ def call_scherlocks(what, data, merchant_id):
     params = ' '.join([ '%s=%s' % (k,v) for k,v in params.items() ])
     cmdline = requestbin + ' ' + params
 
-    print cmdline
-    
     status, out = commands.getstatusoutput(cmdline)
     if status:
         raise OSError, "error calling %s" % cmdline
@@ -45,10 +43,10 @@ def check_payment_info(data):
     """
     Check that the payment info are valid
     """
-    response_code = data[8];
-    cvv_response_code = data[14];
+    response_code = data[8]
+    cvv_response_code = data[14]
 
-    log.debug('check_payment_info %s %s' % (response_code, cvv_response_code))
+    log.info('check_payment_info %s %s' % (response_code, cvv_response_code))
 
     return response_code == '00' 
 
@@ -104,14 +102,16 @@ def bank_auto(request, merchant_id):
     """    
     res = call_scherlocks('response', { 'message': request.POST['DATA'] },
                           merchant_id = merchant_id)
-    order_id = res[24];
+    order_id = res[24]
     payment = Payment.objects.get(pk = order_id)
     if check_payment_info(res) and payment.type == 'online' and not payment.online_paid:
         payment.online_paid = True
         payment.save()
+        log.info('bank_auto validating order_id %s' % (order_id))
         tmpl_name = 'payment_ok'
         res = 'OK - Validated'
     else:
+        log.info('bank_auto failing order_id %s' % (order_id))
         tmpl_name = 'payment_failed'
         res = 'OK - Cancelled'
 
