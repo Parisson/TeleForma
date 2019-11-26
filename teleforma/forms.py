@@ -96,6 +96,16 @@ class UserForm(ModelForm):
                               help_text="Matière d’oral de langue (en option)",
                               queryset=Course.objects.filter(oral_1=True))
     promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
+
+    payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
+                                 choices=payment_schedule_choices,
+                                 required=True)
+
+    fascicule = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                  label='Envoi des fascicules',
+                                  required=False,
+                                  widget=forms.Select())
+    
     # no model
     captcha = CaptchaField()
     accept = BooleanField()
@@ -111,7 +121,7 @@ class UserForm(ModelForm):
         self.fields['last_name'].required = True
         self.fields['email'].required = True
         self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
-        self.training_fields = ['level', 'iej', 'platform_only', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
+        self.training_fields = ['level', 'iej', 'platform_only', 'fascicule', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
 
     def clean_portrait(self):
         image = self.cleaned_data['portrait']
@@ -169,7 +179,9 @@ class UserForm(ModelForm):
                           written_speciality=data.get('written_speciality'),
                           oral_1=data.get('oral_1'),
                           promo_code=data.get('promo_code'),
-                          training=data.get('training')
+                          training=data.get('training'),
+                          payment_schedule=data.get('payment_schedule'),
+                          fascicule=data.get('fascicule'),
                           )
         student.save()
         student.trainings.add(data.get('training', None))

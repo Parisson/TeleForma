@@ -179,6 +179,14 @@ class Student(Model):
     fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
                                     default=False)
 
+    payment_type = models.CharField(_('type de paiement'), choices=payment_choices,
+                                    max_length=64, blank=True, null=True,
+                                    default='online')
+    payment_schedule = models.CharField(_(u'échéancier de paiement'),
+                                        choices=payment_schedule_choices,
+                                        max_length=64, blank=True, null=True,
+                                        default='split')
+    
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -206,8 +214,9 @@ class Student(Model):
     @property
     def total_payments(self):
         amount = 0
-        for payment in self.payments.values('value'):
-            amount += payment['value']
+        for payment in self.payments.values('value', 'type', 'online_paid'):
+            if payment['type'] != 'online' or payment['online_paid']:
+                amount += payment['value']
         return amount
 
     @property
@@ -281,17 +290,24 @@ class Payment(models.Model):
 
     student = models.ForeignKey(Student, related_name='payments', verbose_name=_('student'))
     value = models.FloatField(_('amount'), help_text='€')
-    month = models.IntegerField(_('month'), choices=months_choices, default=1)
-    collected = models.BooleanField(_('collected'))
-    type = models.CharField(_('payment type'), choices=payment_choices, max_length=64)
+    month = models.IntegerField(_('month'), choices=months_choices, default=1,
+                                blank=True, null=True)
+    type = models.CharField(_('payment type'), choices=payment_choices,
+                            max_length=64, default='online')
     date_created = models.DateTimeField(_('date created'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True)
 
+    scheduled = models.DateField(u"date d'échéance", blank=True, null=True)
+    online_paid = models.BooleanField(u"payé",
+                                      help_text=u"paiement en ligne uniquement",
+                                      blank=True)
+
+    
     class Meta(MetaCore):
         db_table = app_label + '_' + 'payments'
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
-        ordering = ['month']
+        ordering = ['scheduled', 'month']
 
 
 class Discount(models.Model):

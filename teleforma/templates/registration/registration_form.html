@@ -89,6 +89,13 @@
     <span class="error">* Champs obligatoires</span>
 
     <div class="submit-panel">
+        <div> 
+            <span class="error">
+                {{ form.payment_schedule.errors }}
+            </span>
+            <label for="id_payment_schedule">{{ form.payment_schedule.label }}</label>
+            {{ form.payment_schedule }}
+        </div>
         <div>
             <span class="error">
                 {{ form.accept.errors }}
@@ -142,11 +149,20 @@
         }
     }
 
+    function updateFascicule() {
+        var platformOnly = $("[name='platform_only']").val() === 'True' ? true : false;
+        if(platformOnly)
+            $("[name='fascicule']").parent().show();
+        else
+            $("[name='fascicule']").parent().hide();
+    }
+
     $(document).ready(function () {
         trainingId = $("#id_training").val();
         updateTrainings();
         $("#id_period,  #id_platform_only").change(updateTrainings);
-
+        updateFascicule();
+        $("[name='platform_only']").change(updateFascicule);
     });
 </script>
 <style>

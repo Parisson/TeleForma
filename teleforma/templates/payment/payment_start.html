@@ -1,0 +1,15 @@
+{% extends "registration/registration_base.html" %}
+{% load payment %}
+{% block title %}Paiement en ligne{% endblock %}
+{% block content %}
+<p>
+  Vous êtes sur le point de payer une échéance de {{ payment.value }} €.
+</p>
+
+{% payment_summary payment %}
+
+    {% autoescape off %}
+    {{ sherlock_info }}
+    {% endautoescape %}
+
+{% endblock %}

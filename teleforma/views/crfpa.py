@@ -302,7 +302,10 @@ class UserXLSBook(object):
 
             total_payments = 0
             payment_per_month = { month[0]: 0 for month in months_choices }
-            for payment in student.payments.values('month', 'value'):
+            for payment in student.payments.values('month', 'value',
+                                                   'type', 'online_paid'):
+                if payment['type'] == 'online' and not payment['online_paid']:
+                    continue
                 value = payment['value']
                 month = payment['month']
                 total_payments += value
@@ -516,6 +519,9 @@ class UserCompleteView(TemplateView):
         context = super(UserCompleteView, self).get_context_data(**kwargs)
         # context['register_doc_print'] = Document.objects.get(id=settings.TELEFORMA_REGISTER_DEFAULT_DOC_ID)
         context['username'] = kwargs['username']
+        user = User.objects.get(username=kwargs['username'])
+        student = user.student.all()[0]
+        context['period'] = student.period
         return context
 
 
@@ -675,3 +681,4 @@ class WriteView(PostmanWriteView):
     """
     form_classes = (WriteForm, AnonymousWriteForm)
     success_url = "postman_sent"
+

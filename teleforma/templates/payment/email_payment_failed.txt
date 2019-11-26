@@ -1,0 +1,10 @@
+Bonjour {{ student.first_name }},
+
+Votre transaction de {{ amount }} € sur le site Pre-Barreau n'a pu aboutir.
+
+Nous vous conseillons de ré-essayer ultérieurement et si le problème
+persiste de nous recontacter au 01 56 81 00 22 ou par mail
+crfpa@pre-barreau.com .
+
+Cordialement,
+L'équipe du Pré-Barreau

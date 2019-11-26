@@ -73,7 +73,19 @@ session_choices = get_n_choices(settings.TELEFORMA_EXAM_MAX_SESSIONS+1)
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
 mimetypes.add_type('video/webm','.webm')
-payment_choices = [('check', _('check')), ('tranfer', _('transfer')), ('credit card', _('credit card')), ('money', _('money'))]
+payment_choices = [
+    ('online', u'en ligne'),
+    ('check', u'par chèque'),
+    ('tranfer', u'par virement'),
+    ('credit card', u'par carte'),
+    ('money', u'en liquide'),
+    ('other', u"autre"),
+]
+
+payment_schedule_choices = [
+    ('split', u'en plusieurs fois'),
+    ('once', u'en une seule fois'),
+]
 
 STATUS_CHOICES = (
         (0, _('Hidden')),
