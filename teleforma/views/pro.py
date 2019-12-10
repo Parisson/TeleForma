@@ -62,7 +62,7 @@ import csv
 from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
-
+from pbcart.models import Cart
 from quiz.views import QuizTake
 
 REVISION_DATE_FILTER = datetime.datetime(2015,2,2)
@@ -834,6 +834,14 @@ class TestimonialPaybackView(TestimonialView):
     def get_context_data(self, **kwargs):
         context = super(TestimonialPaybackView, self).get_context_data(**kwargs)
         seminar = context['seminar']
+        context['price'] = seminar.price
+        # recompute price if use has used a promo code
+        for cart in Cart.objects.filter(user=self.request.user, status=Cart.STATE_PAYMENT_ACCEPTED):
+            if cart.has_item(seminar):
+                if cart.promo_code and seminar in cart.promo_code.seminars.all():
+                    context['price'] = seminar.price - (seminar.price * cart.promo_code.reduction / 100.0)
+                    break
+        
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
                                                    validated=True).order_by('question__rank')
