@@ -218,7 +218,7 @@ class Command(BaseCommand):
                                 logger.logger.info(r_path)
                             elif extension[1:] == 'kdenlive':
                                 related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
-                                markers = related.parse_markers(from_first_marker=True)
+                                markers = related.parse_markers(from_first_marker=False)
                                 if markers:
                                     for marker in markers:
                                         if float(marker['time']) != 0:
