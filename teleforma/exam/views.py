@@ -42,7 +42,8 @@ class ScriptMixinView(View):
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
             upload = datetime.datetime.now() <= self.period.date_exam_end
             cur_scripts = Script.objects.filter(period = self.period,
-                                                author = self.request.user).count()
+                                                author = self.request.user)\
+                                        .exclude(status=0).count()
             allowed_scripts = self.nb_script * len(self.get_course_pk_list())
             if cur_scripts >= allowed_scripts:
                 upload = False
@@ -59,6 +60,8 @@ class ScriptsListMixinView(ScriptMixinView):
     def get_profile(self):
         user = self.request.user
         professor = user.professor.all()
+        if user.is_superuser:
+            return PROFESSOR
         if professor:
             return PROFESSOR
         if user.quotas.all():

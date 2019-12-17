@@ -47,8 +47,6 @@
 <a href="#" class="component_icon button icon_save" onclick="f=document.getElementById('_messageForm'); f.action='{% url 'postman_archive' %}'; f.submit(); return false;">{% trans "Archive" %}</a>
 {% endif %}
 {% endblock %}
-
-{% if reply_to_pk %}<a class="component_icon button icon_next" href="{% url 'postman_reply' reply_to_pk %}?next={{ next_url|urlencode }}">{% trans "Reply" %}</a>{% endif %}
 </form>
 {% if reply_to_pk %}<hr />
 <h2>{% trans 'Reply' %}</h2>

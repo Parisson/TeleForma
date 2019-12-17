@@ -278,7 +278,10 @@ class HomeRedirectView(View):
             periods = get_periods(request.user)
             if periods:
                 period = get_default_period(periods)
-                return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+                if period in periods:
+                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+                else:
+                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
             else:
                 return HttpResponseRedirect(reverse('telemeta-admin'))
         else:
@@ -546,7 +549,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            fsock = open(document.file.path, 'r')
+            fsock = open(document.file.path.encode('utf8'), 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)
             response = HttpResponse(fsock, mimetype=mimetype)
@@ -560,7 +563,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            fsock = open(document.file.path, 'r')
+            fsock = open(document.file.path.encode('utf8'), 'r')
             mimetype = mimetypes.guess_type(document.file.path)[0]
             extension = mimetypes.guess_extension(mimetype)
             response = HttpResponse(fsock, mimetype=mimetype)
@@ -757,24 +760,28 @@ class ConferenceRecordView(FormView):
                 conference.from_json_dict(conf_dict)
                 conference.save()
 
-                for stream in conf_dict['streams']:
-                    host = getattr(settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
-                    port = getattr(settings, "TELECASTER_LIVE_STREAMING_PORT", stream['port'])
-                    server_type = stream['server_type']
-                    stream_type = stream['stream_type']
-                    #site = Site.objects.all()[0]
-                    server, c = StreamingServer.objects.get_or_create(host=host,
-                                                                      port=port,
-                                                                      type=server_type)
-                    stream = LiveStream(conference=conference, server=server,
-                                        stream_type=stream_type, streaming=True)
-                    stream.save()
+                if conference.streaming:
+                    for stream in conf_dict['streams']:
+                        host = getattr(settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+                        server_type = stream['server_type']
+                        stream_type = stream['stream_type']
+                        if server_type == 'icecast':
+                            port = getattr(settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", stream['port'])
+                        elif server_type == 'stream-m':
+                            port = getattr(settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", stream['port'])
+                        #site = Site.objects.all()[0]
+                        server, c = StreamingServer.objects.get_or_create(host=host,
+                                                                        port=port,
+                                                                        type=server_type)
+                        stream = LiveStream(conference=conference, server=server,
+                                            stream_type=stream_type, streaming=True)
+                        stream.save()
 
-                if not conference.web_class_group:
-                    try:
-                        live_message(conference)
-                    except:
-                        pass
+                    if not conference.web_class_group:
+                        try:
+                            live_message(conference)
+                        except:
+                            pass
         else:
             raise 'Error : input must be a conference dictionnary'
 

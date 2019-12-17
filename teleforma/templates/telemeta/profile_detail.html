@@ -55,7 +55,11 @@
    <div class="course_content">
 
    <div class="infos" style="width: 55%">
+     {% if usr.student.get.portrait %}
+     <img style="float:right" src="{{ usr.student.get.portrait.url }}" />
+     {% endif %}
      <dl class="listing">
+
       <dt>{% trans "First Name" %}</dt><dd>{{ usr.first_name }}</dd>
       <dt>{% trans "Last Name" %}</dt><dd>{{ usr.last_name }}</dd>
       <dt>{% trans "Username" %}</dt><dd>{{ usr.username }}</dd>
@@ -74,7 +78,7 @@
 
       {% if user.is_staff or user.is_superuser or usr == user %}
       <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
-      <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }} {{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
+          <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }}{% if usr.profile.get.address_detail %}, {% endif %}</span>{{ usr.profile.get.address_detail }}{% if usr.profile.get.postal_code or usr.profile.get.city %}, {% endif %}{{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
       <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
       <dt>{% trans "WiFi login" %}</dt><dd>{{ usr.profile.get.wifi_login }}</dd>
       <dt>{% trans "WiFi password" %}</dt><dd>{{ usr.profile.get.wifi_pass }}</dd>

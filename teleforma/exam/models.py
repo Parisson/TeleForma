@@ -161,11 +161,18 @@ class Quota(models.Model):
         return title
 
     def script_count(self, statuses):
-        q = self.corrector.corrector_scripts.filter(status__in = statuses)
-        q = q.filter(course=self.course)
-        q = q.filter(date_submitted__gte=self.date_start).filter(date_submitted__lte=self.date_end)
-        return q.count()
-
+        if self.corrector:
+            q = self.corrector.corrector_scripts.filter(status__in = statuses)
+            q = q.filter(course=self.course)
+            q = q.filter(period=self.period)
+            q = q.filter(session=self.session)
+            # Careful, MySQL considers '2019-07-28 11:42:00" to not be >= "2019-07-28"
+            start = self.date_start
+            end = self.date_end + datetime.timedelta(days = 1)
+            q = q.filter(date_submitted__gte=start).filter(date_submitted__lte=end)
+            return q.count()
+        else:
+            return 0
 
     @property
     def all_script_count(self):
@@ -281,6 +288,7 @@ class Script(BaseResource):
         ordering = ['date_added']
 
     def auto_set_corrector(self):
+
         self.date_submitted = datetime.datetime.now()
 
         quota_list = []
@@ -382,10 +390,44 @@ class Script(BaseResource):
         """
         return os.path.exists(os.path.join(settings.WEBVIEWER_ANNOTATIONS_PATH, self.uuid+'.xfdf'))
 
+    def box_upload(self):
+        sleep = 10
+        max_loop = 12
+        loop = 0
+
+        self.box_uuid = crocodoc.document.upload(url=self.url)
+
+        while True:
+            statuses = crocodoc.document.status([self.box_uuid,])
+            if (len(statuses) != 0):
+                if (statuses[0].get('error') == None):
+                    if statuses[0]['status'] == 'DONE':
+                        self.box_upload_done = 1
+                        self.save()
+                        break
+                    else:
+                        loop += 1
+                        time.sleep(sleep)
+                        if loop > max_loop:
+                            break
+                else:
+                    print 'File upload failed :('
+                    print '  Error Message: ' + statuses[0]['error']
+                    if 'too large' in statuses[0]['error']:
+                        self.auto_reject('file too large')
+                    elif 'retrieving file' in statuses[0]['error']:
+                        self.auto_reject('error retrieving file')
+                    break
+            else:
+                print 'failed :('
+                print '  Statuses were not returned.'
+                break
+
     def auto_reject(self, mess):
         self.reject_reason = mess
         self.status = 0
         self.corrector = User.objects.filter(is_superuser=True)[1]
+        self.reject()
         # self.save()
 
     def submit(self):

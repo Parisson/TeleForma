@@ -109,6 +109,7 @@ class Training(Model):
                                         blank=True, null=True)
     cost = models.FloatField(_('cost'), blank=True, null=True)
     available = models.BooleanField(_('available'))
+    platform_only = models.BooleanField(_('e-learning platform only'))
 
     def __unicode__(self):
         if self.name and self.period:
@@ -131,10 +132,12 @@ class Student(Model):
     "A student profile"
 
     user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
+    portrait = models.ImageField(max_length=500, upload_to='portraits/', blank=True, null=True)
     iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
                                       blank=True, null=True)
+    # deprecated, replaced by trainings field
     training = models.ForeignKey('Training', related_name='student_training', verbose_name=_('training'),
                                       blank=True, null=True, limit_choices_to={'available': True})
     procedure = models.ForeignKey('Course', related_name="procedure_students",
@@ -175,6 +178,14 @@ class Student(Model):
 
     fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
                                     default=False)
+
+    payment_type = models.CharField(_('type de paiement'), choices=payment_choices,
+                                    max_length=64, blank=True, null=True,
+                                    default='online')
+    payment_schedule = models.CharField(_(u'échéancier de paiement'),
+                                        choices=payment_schedule_choices,
+                                        max_length=64, blank=True, null=True,
+                                        default='split')
     
     def __unicode__(self):
         try:
@@ -199,12 +210,13 @@ class Student(Model):
         for optional_fee in self.optional_fees.values('value'):
             amount += optional_fee['value']
         return amount
-    
+
     @property
     def total_payments(self):
         amount = 0
-        for payment in self.payments.values('value'):
-            amount += payment['value']
+        for payment in self.payments.values('value', 'type', 'online_paid'):
+            if payment['type'] != 'online' or payment['online_paid']:
+                amount += payment['value']
         return amount
 
     @property
@@ -220,10 +232,10 @@ class Student(Model):
         for payback in self.paybacks.values('value'):
             amount -= payback['value']
         return amount
-        
+
     def update_balance(self):
         old = self.balance
-        new = round(self.total_payments - self.total_fees, 2)
+        new = round(self.total_payments - self.total_fees + self.total_paybacks, 2)
         if old != new:
             self.balance = new
             self.save()
@@ -240,9 +252,9 @@ class Student(Model):
 def update_balance_signal(sender, instance, *args, **kwargs):
     if sender is Student:
         instance.update_balance()
-    elif sender in (Discount, OptionalFee, Payment):
+    elif sender in (Discount, OptionalFee, Payment, Payback):
         instance.student.update_balance()
-        
+
 signals.post_save.connect(update_balance_signal)
 signals.post_delete.connect(update_balance_signal)
 
@@ -278,17 +290,24 @@ class Payment(models.Model):
 
     student = models.ForeignKey(Student, related_name='payments', verbose_name=_('student'))
     value = models.FloatField(_('amount'), help_text='€')
-    month = models.IntegerField(_('month'), choices=months_choices, default=1)
-    collected = models.BooleanField(_('collected'))
-    type = models.CharField(_('payment type'), choices=payment_choices, max_length=64)
+    month = models.IntegerField(_('month'), choices=months_choices, default=1,
+                                blank=True, null=True)
+    type = models.CharField(_('payment type'), choices=payment_choices,
+                            max_length=64, default='online')
     date_created = models.DateTimeField(_('date created'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True)
 
+    scheduled = models.DateField(u"date d'échéance", blank=True, null=True)
+    online_paid = models.BooleanField(u"payé",
+                                      help_text=u"paiement en ligne uniquement",
+                                      blank=True)
+
+    
     class Meta(MetaCore):
         db_table = app_label + '_' + 'payments'
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
-        ordering = ['month']
+        ordering = ['scheduled', 'month']
 
 
 class Discount(models.Model):
@@ -356,7 +375,25 @@ class Home(models.Model):
     def __unicode__(self):
         return self.title
 
+class Parameters(models.Model):
+    """ used to store various unique parameters """
 
+    inscription_text = HTMLField("Texte d'inscription", blank=True)
+
+    class Meta(MetaCore):
+        verbose_name = "Paramètres"
+        verbose_name_plural = "Paramètres"
+
+    def save(self, *args, **kwargs):
+        self.__class__.objects.exclude(id=self.id).delete()
+        super(Parameters, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        try:
+            return cls.objects.get()
+        except cls.DoesNotExist:
+            return cls()
 
 class NewsItem(models.Model):
 

@@ -29,8 +29,6 @@ class Command(BaseCommand):
                 student = students[0]
                 if student.is_subscribed and user.is_active and student.period == period:
                     data = []
-                    data.append(user.first_name)
-                    data.append(user.last_name)
                     data.append(p.wifi_login)
                     data.append(p.wifi_pass)
                     data.append('\n')

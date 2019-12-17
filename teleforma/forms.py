@@ -1,93 +1,257 @@
-from django.forms import ModelForm, ModelChoiceField
-from postman.forms import WriteForm as PostmanWriteForm
+# -*- coding: utf-8 -*-
+from StringIO import StringIO
 
-from teleforma.fields import BasicCommaSeparatedUserField
+from django.core.files.uploadedfile import SimpleUploadedFile
+from models.core import Period, CourseType
+from models.crfpa import IEJ, Training
 from teleforma.models import *
+from django.forms import ModelForm, ModelChoiceField, ModelMultipleChoiceField, BooleanField, ImageField, CharField, \
+    DateField, FileInput, ChoiceField
+from django.forms.extras.widgets import SelectDateWidget
+from postman.forms import WriteForm as PostmanWriteForm
+from postman.fields import BasicCommaSeparatedUserField
+
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 from captcha.fields import CaptchaField
 
 from teleforma.models.core import Course, Professor
 from tinymce.widgets import TinyMCE
 from itertools import cycle
+from django.core.files.images import get_image_dimensions
+from PIL import Image
+
+LEVEL_CHOICES = [
+    ('', '---------'),
+    ('M1', 'M1'),
+    ('M2', 'M2'),
+]
+TRUE_FALSE_CHOICES = (
+    ('', '---------'),
+    (True, 'Oui'),
+    (False, 'Non')
+)
+
+
+def get_unique_username(first_name, last_name):
+    username = slugify(first_name)[0] + '.' + slugify(last_name)
+    username = username[:30]
+    i = 1
+    while User.objects.filter(username=username[:30]):
+        username = slugify(first_name)[:i] + '.' + slugify(last_name)
+        if i > len(slugify(first_name)):
+            username += str(i)
+        i += 1
+    return username[:30]
 
 
 class ConferenceForm(ModelForm):
-
     class Meta:
         model = Conference
 
 
-class UserForm(ModelForm):
+#
+# class RegistrationForm(ModelForm):
+#     captcha = CaptchaField()
+#     accept = BooleanField()
+#
+#
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name', 'email', 'accept']
 
+
+class UserForm(ModelForm):
+    # profile
+    address = CharField(label=_('Address'), max_length=255)
+    address_detail = CharField(label=_('Address detail'), max_length=255, required=False)
+    postal_code = CharField(label=_('Postal code'), max_length=255)
+    city = CharField(label=_('City'), max_length=255)
+    country = CharField(label=_('Country'), max_length=255)
+    telephone = CharField(label=_('Telephone'), max_length=255)
+    birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
+    # student
+    portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=False,
+                          help_text="Veuillez utiliser une photo au format d'identité.")
+    level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
+    iej = ModelChoiceField(label='IEJ',
+                           queryset=IEJ.objects.all())
+    platform_only = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                      label='E-learning uniquement',
+                                      widget=forms.Select())
+    period = ModelChoiceField(label='Période',
+                              queryset=Period.objects.filter(is_open=True,
+                                                             date_inscription_start__lte=datetime.datetime.now(),
+                                                             date_inscription_end__gte=datetime.datetime.now()))
+    training = ModelChoiceField(label='Formation',
+                                queryset=Training.objects.filter(available=True))
+    procedure = ModelChoiceField(label=_('Procedure'),
+                                 help_text="Matière de procédure",
+                                 queryset=Course.objects.filter(procedure=True))
+    written_speciality = ModelChoiceField(label='Specialité écrite',
+                                          queryset=Course.objects.filter(written_speciality=True),
+                                          help_text="Matière juridique de spécialité")
+    oral_1 = ModelChoiceField(label=_('Oral de langue (option)'),
+                              help_text="Matière d’oral de langue (en option)",
+                              queryset=Course.objects.filter(oral_1=True))
+    promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
+
+    payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
+                                 choices=payment_schedule_choices,
+                                 required=True)
+
+    fascicule = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                  label='Envoi des fascicules',
+                                  required=False,
+                                  widget=forms.Select())
+    
+    # no model
     captcha = CaptchaField()
+    accept = BooleanField()
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', ]
+        fields = ['first_name', 'last_name', 'email']
 
 
-RegistrationForm.base_fields.update(UserForm.base_fields)
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
+        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
+        self.training_fields = ['level', 'iej', 'platform_only', 'fascicule', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
+
+    def clean_portrait(self):
+        image = self.cleaned_data['portrait']
+        if not image:
+            return image
+        #width, height = get_image_dimensions(image)
+        #ratio = float(height) / float(width)
+        #if ratio > 2.5 or ratio < 1:
+        #    raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
+        NEW_HEIGHT = 230
+        NEW_WIDTH = 180
+        #if width < NEW_WIDTH or height < NEW_HEIGHT:
+        #    raise ValidationError({'portrait': "L'image est trop petite. Elle doit faire au moins %spx de large et %spx de hauteur." % (NEW_WIDTH, NEW_HEIGHT)})
+
+        # resize image
+        img = Image.open(image.file)
+        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+
+        temp = StringIO()
+        new_image.save(temp, 'jpeg')
+        temp.seek(0)
+        return SimpleUploadedFile('temp', temp.read())
+
+    def save(self, commit=True):
+
+        data = self.cleaned_data
+        user = super(UserForm, self).save(commit=False)
+        username = get_unique_username(data['first_name'], data['last_name'])
+        self.username = username
+        user.username = username
+        user.last_name = data['last_name'].upper()
+        user.first_name = data['first_name'].capitalize()
+        user.is_active = False
+        if commit:
+            user.save()
+        profile = Profile(user=user,
+                          address=data['address'],
+                          address_detail=data.get('address_detail'),
+                          postal_code=data['postal_code'],
+                          city=data['city'],
+                          country=data['country'],
+                          telephone=data['telephone'],
+                          birthday=data['birthday']
+                          )
+        if commit:
+            profile.save()
+        platform_only = data.get('platform_only') == 'True' and True or False
+        student = Student(user=user,
+                          portrait=data['portrait'],
+                          level=data.get('level'),
+                          iej=data.get('iej'),
+                          period=data.get('period'),
+                          platform_only=platform_only,
+                          procedure=data.get('procedure'),
+                          written_speciality=data.get('written_speciality'),
+                          oral_1=data.get('oral_1'),
+                          promo_code=data.get('promo_code'),
+                          training=data.get('training'),
+                          payment_schedule=data.get('payment_schedule'),
+                          fascicule=data.get('fascicule'),
+                          )
+        student.save()
+        student.trainings.add(data.get('training', None))
+        return user
 
 
-class ProfileForm(ModelForm):
-    class Meta:
-        model = Profile
-        exclude = ['user', 'wifi_login', 'wifi_pass', 'language', 'expiration_date',
-                    'init_password', ]
-
-RegistrationForm.base_fields.update(ProfileForm.base_fields)
-
-
-class StudentForm(ModelForm):
-
-    class Meta:
-        model = Student
-        exclude = ['user', 'trainings', 'options']
-
-
-
-RegistrationForm.base_fields.update(StudentForm.base_fields)
-
-
-class CustomRegistrationForm(RegistrationForm):
-
-    def save(self, profile_callback=None):
-        user = super(CustomRegistrationForm, self).save(profile_callback=None)
-        profile, c = Profile.objects.get_or_create(user=user, \
-            address=self.cleaned_data['address'], \
-            telephone=self.cleaned_data['telephone'])
+# RegistrationForm.base_fields.update(UserForm.base_fields)
+#
+#
+# class ProfileForm(ModelForm):
+#     class Meta:
+#         model = Profile
+#         exclude = ['user', 'wifi_login', 'wifi_pass', 'language', 'expiration_date',
+#                     'init_password', ]
+#
+# RegistrationForm.base_fields.update(ProfileForm.base_fields)
+#
+#
+# class StudentForm(ModelForm):
+#
+#     class Meta:
+#         model = Student
+#         exclude = ['user', 'trainings', 'options']
+#
 
 
-class ProfileInline(InlineFormSet):
-
-    model = Profile
-    can_delete = False
-    exclude = ['wifi_login', 'wifi_pass', 'language', 'expiration_date',
-                    'init_password']
-
-
-class StudentInline(InlineFormSet):
-
-    model = Student
-    can_delete = False
-    fields = ['level', 'iej', 'period', 'training', 'platform_only', 'procedure',
-                'written_speciality', 'oral_1', 'promo_code']
-
-    def get_factory_kwargs(self):
-        kwargs = super(StudentInline, self).get_factory_kwargs()
-
-        def get_field_qs(field, **kwargs):
-            formfield = field.formfield(**kwargs)
-            if field.name == 'period':
-                formfield.queryset = Period.objects.filter(is_open=True)
-            return formfield
-
-        kwargs.update({
-            'formfield_callback': get_field_qs
-        })
-        return kwargs
+#
+# RegistrationForm.base_fields.update(StudentForm.base_fields)
+#
+#
+# class CustomRegistrationForm(RegistrationForm):
+#
+#     def save(self, profile_callback=None):
+#         user = super(CustomRegistrationForm, self).save(profile_callback=None)
+#         profile, c = Profile.objects.get_or_create(user=user, \
+#             address=self.cleaned_data['address'], \
+#             telephone=self.cleaned_data['telephone'])
+#
+#
+# class ProfileInline(InlineFormSet):
+#
+#     model = Profile
+#     can_delete = False
+#     exclude = ['wifi_login', 'wifi_pass', 'language', 'expiration_date',
+#                     'init_password']
+#
+#
+# class StudentInline(InlineFormSet):
+#
+#     model = Student
+#     can_delete = False
+#     fields = ['portrait', 'level', 'iej', 'period', 'training', 'platform_only', 'procedure',
+#                 'written_speciality', 'oral_1', 'promo_code']
+#
+#     def get_factory_kwargs(self):
+#         kwargs = super(StudentInline, self).get_factory_kwargs()
+#
+#         def get_field_qs(field, **kwargs):
+#             formfield = field.formfield(**kwargs)
+#             if field.name == 'period':
+#                 formfield.queryset = Period.objects.filter(is_open=True)
+#             elif field.name == 'portrait':
+#                 formfield.widget.attrs.update(accept="image/*;capture=camera")
+#                 # formfield.widget.required = True
+#             return formfield
+#
+#         kwargs.update({
+#             'formfield_callback': get_field_qs
+#         })
+#         return kwargs
 
 
 class NewsItemForm(ModelForm):
@@ -95,9 +259,8 @@ class NewsItemForm(ModelForm):
         model = NewsItem
         exclude = ['created', 'creator', 'deleted']
         widgets = {
-            'description': TinyMCE({'cols':80, 'rows':30}),
+            'description': TinyMCE({'cols': 80, 'rows': 30}),
         }
-
 
 
 class WriteForm(PostmanWriteForm):
@@ -111,22 +274,4 @@ class WriteForm(PostmanWriteForm):
         """compute recipient if 'auto' is set"""
         recipients = self.cleaned_data['recipients']
         course = self.cleaned_data.get('course')
-        if recipients == 'auto':
-            professors = Professor.objects.filter(courses__in=[course]).order_by('user__last_name').all()
-            if course.last_professor_sent:
-                try:
-                    index = list(professors).index(course.last_professor_sent)
-                except ValueError:
-                    index = 0
-
-                if index < len(professors)-1:
-                    professor = professors[index+1]
-                else:
-                    professor = professors[0]
-            else:
-                professor = professors[0]
-            course.last_professor_sent = professor
-            course.save()
-            recipients = [professor.user,]
-
         return recipients

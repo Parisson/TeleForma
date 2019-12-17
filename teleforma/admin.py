@@ -108,9 +108,8 @@ class BalanceFilter(admin.SimpleListFilter):
 
 
 class StudentAdmin(admin.ModelAdmin):
-
     model = Student
-    exclude = ['options']
+    exclude = ['options', 'training']
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
@@ -146,6 +145,7 @@ class StudentAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         book.book.save(response)
         return response
+
     export_xls.short_description = "Export vers XLS"
 
     def add_to_group(self, request, queryset):
@@ -250,6 +250,8 @@ class HomeAdmin(admin.ModelAdmin):
         form.base_fields['video'].queryset = Media.objects.filter(type='webm')
         return form
 
+class ParametersAdmin(admin.ModelAdmin):
+    pass
 
 class NewsItemAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'course', 'creator')
@@ -306,7 +308,7 @@ class AppointmentAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename=rendezvous.csv'
         writer = csv.writer(response)
 
-        writer.writerow(['date', 'creneau', 'nom', 'prenom', 'iej', 'jury'])
+        writer.writerow(['date', 'creneau', 'nom', 'prenom', 'email', 'iej', 'jury'])
         def csv_encode(item):
             if isinstance(item, unicode):
                 return item.encode('utf-8')
@@ -317,7 +319,7 @@ class AppointmentAdmin(admin.ModelAdmin):
             user = app.student
             student = user.student.all()[0]
 
-            row = [ app.day.strftime('%d/%m/%Y'), app.start, user.last_name, user.first_name, student.iej, app.jury.name ]
+            row = [ app.day.strftime('%d/%m/%Y'), app.start, user.last_name, user.first_name, user.email, student.iej, app.jury.name ]
             row = [ csv_encode(col) for col in row ]
 
             writer.writerow(row)
@@ -348,6 +350,7 @@ admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
+admin.site.register(Parameters, ParametersAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
 # admin.site.register(AppointmentDay, AppointmentDayAdmin)

@@ -148,9 +148,20 @@ urlpatterns = patterns('',
 
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
+                       
 
+    # Payment
+    url(r'^payment/(?P<pk>.*)/start/$', PaymentStartView.as_view(),
+        name="teleforma-payment-start"),
 
+    url(r'^payment/bank_auto/(?P<merchant_id>.*)',
+        bank_auto, name='teleforma-bank-auto'),
+    url(r'^payment/bank_success/(?P<merchant_id>.*)',
+        bank_success, name='teleforma-bank-success'),
+    url(r'^payment/bank_cancel/(?P<merchant_id>.*)',
+        bank_cancel, name='teleforma-bank-cancel'),
 
-
+    url(r'^echec-de-paiement',
+        bank_fail, name='teleforma-bank-fail'),
 
 )

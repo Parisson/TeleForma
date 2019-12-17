@@ -9,10 +9,10 @@ from django.template.defaultfilters import filesizeformat
 
 class QuotaAdmin(admin.ModelAdmin):
     model= Quota
-    list_display = ['corrector_name', 'course', 'script_type', 'date_start', 'date_end',
+    list_display = ['corrector_name', 'course', 'period', 'session', 'script_type', 'date_start', 'date_end',
                     'pending_script_count', 'marked_script_count',
                     'all_script_count', 'value', 'level']
-    list_filter = ['course__title']
+    list_filter = ['course__title', 'period', 'session']
     search_fields = ['corrector__username', 'corrector__last_name']
 
     def corrector_name(self, instance):

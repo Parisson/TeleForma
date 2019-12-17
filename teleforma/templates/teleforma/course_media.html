@@ -97,7 +97,8 @@ $(document).ready(function(){
 {% if "video" in media.mime_type %}
 <div class="video">
     <video id="my_video_1" class="video-js vjs-default-skin" width="864" height="480" controls preload="auto" data-setup='{}' {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}{% thumbnail related.file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}{% endfor %}{% endif %}>
-        <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" />
+        {% comment %} <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" /> {% endcomment %}
+        <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
     </video>
 </div>
 
@@ -121,7 +122,8 @@ $(document).ready(function(){
 </div>
 <div class="audio">
     <audio controls preload="auto">
-        <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" />
+        {% comment %} <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" /> {% endcomment %}
+        <source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
     </audio>
 </div>
 {% endif %}

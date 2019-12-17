@@ -1,7 +1,7 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-{% with course.conference.all|from_course_type:type as conferences %}
+{% with course.conference.all|from_course_type:type|streaming_only as conferences %}
 {% if conferences|from_period:period %}
 <div class="course_content content_video">
 <div class="course_subtitle">
