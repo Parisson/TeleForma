@@ -186,6 +186,7 @@ class Student(Model):
                                         choices=payment_schedule_choices,
                                         max_length=64, blank=True, null=True,
                                         default='split')
+    comment = models.TextField(_('commentaire'), blank=True, null=True)
     
     def __unicode__(self):
         try:
