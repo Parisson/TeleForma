@@ -301,16 +301,20 @@ class UserXLSBook(object):
             row.write(18, ', '.join(descriptions))
 
             total_payments = 0
-            payment_per_month = { month[0]: 0 for month in months_choices }
+            payment_per_month = { month[0]: {'amount':0, 'type':set()} for month in months_choices }
             for payment in student.payments.values('month', 'value',
                                                    'type', 'online_paid'):
                 if payment['type'] == 'online' and not payment['online_paid']:
                     continue
                 value = payment['value']
                 month = payment['month']
+                ptype = payment['type']
+                ptype_label = next((payment_choice[1] for payment_choice in payment_choices if payment_choice[0] == ptype), ['none'])
                 total_payments += value
                 if month in payment_per_month:
-                    payment_per_month[month] += value
+                    payment_per_month[month]['amount'] += value
+                    payment_per_month[month]['type'].add(ptype_label)
+                
             row.write(19, total_payments)
 
             row.write(20, student.total_fees)
@@ -323,8 +327,9 @@ class UserXLSBook(object):
             
             i = 25
             for month in months_choices:
-                row.write(i, payment_per_month[month[0]])
-                i += 1
+                row.write(i, payment_per_month[month[0]]['amount'])
+                row.write(i+1, ','.join(payment_per_month[month[0]]['type']))
+                i += 2
 
             return counter + 1
         return counter
@@ -360,6 +365,7 @@ class UserXLSBook(object):
 
         for month in months_choices:
             cols.append({'name': 'Paiement ' + slugify(month[1]), 'width': 4000})
+            cols.append({'name': 'Type paiement ' + slugify(month[1]), 'width': 4000})
 
         i = 0
         for col in cols:
