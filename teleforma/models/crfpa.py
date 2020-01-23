@@ -275,10 +275,44 @@ class Profile(models.Model):
     wifi_login = models.CharField(_('WiFi login'), max_length=255, blank=True)
     wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
     birthday = models.DateField(_('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
-
+    birthday_place =  models.CharField('Lieu de naissance', max_length=255, blank=True, null=True)
+    ss_number = models.CharField('Sécurité sociale',
+                                 max_length=15, blank=True, null=True)
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
         verbose_name = _('profile')
+
+
+
+PAY_STATUS_CHOICES = [
+    ('honoraires', 'Honoraires'),
+    ('salarie', 'Salarié'),
+]
+class Corrector(Model):
+    "A corrector profile, only used for registration for the moment"
+
+    user = models.ForeignKey(User, related_name='corrector', verbose_name=_('user'), unique=True)
+    period = models.ForeignKey('Period', related_name='corrector', verbose_name=_('period'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
+    pay_status = models.CharField('Statut', choices=PAY_STATUS_CHOICES,
+                                    max_length=64, blank=True, null=True,
+                                    default='honoraire')
+    
+    date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
+    
+    
+    def __unicode__(self):
+        try:
+            return self.user.last_name + ' ' + self.user.first_name
+        except:
+            return ''
+
+    
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'corrector'
+        verbose_name = _('Correcteur')
+        verbose_name_plural = _('Correcteurs')
+        ordering = ['user__last_name', '-date_registered']
 
 
 months_choices = []

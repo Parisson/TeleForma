@@ -30,7 +30,9 @@
 <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">
     {% csrf_token %}
 
-    <h1>{% trans "Pre-registration" %} - {% description %}</h1>
+    <h1>{% if mode_corrector %}Pré-inscription des correcteurs - PRÉ-BARREAU -
+        CRFPA{% else %}{% trans "Pre-registration" %} -
+        {% description %}{% endif %}</h1>
 
     {{ introduction|safe }}
 
@@ -66,7 +68,8 @@
 
     <h2><img src="{{ STATIC_URL }}teleforma/images/crfpa_formation.svg"
             onerror="this.onerror=null; this.src='{{ STATIC_URL }}teleforma/images/crfpa_formation.png'"
-            alt="votre formation" title="votre formation" class="votreformation" />Votre formation</h2>
+            alt="votre formation" title="votre formation" class="votreformation"
+            />{% if mode_corrector %}Statut{% else %}Votre formation{% endif %} </h2>
     <fieldset class="form_select">
         <div class="column"> {% for fieldname in form.training_fields %}
             {% with field=form|get_item:fieldname %}

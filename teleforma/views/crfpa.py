@@ -391,6 +391,74 @@ class UsersExportView(UsersView):
         return response
 
 
+class CorrectorXLSBook(object):
+
+    first_row = 2
+
+    def __init__(self, correctors):
+        self.book = Workbook()
+        self.correctors = correctors
+        self.sheet = self.book.add_sheet('Correcteurs')
+
+    def export_user(self, counter, corrector):
+        # if counter >= 419:
+        #     import pdb;pdb.set_trace()
+        user = corrector.user
+        row = self.sheet.row(counter + self.first_row)
+        row.write(0, user.last_name)
+        row.write(1, user.first_name)
+        row.write(2, user.email)
+
+        profile = Profile.objects.filter(user=user)
+        if profile:
+            profile = profile[0]
+            row.write(3, profile.address)
+            row.write(4, profile.address_detail)
+            row.write(5, profile.postal_code)
+            row.write(6, profile.city)
+            row.write(7, profile.telephone)
+            if profile.birthday:
+                try:
+                    row.write(8, profile.birthday.strftime("%d/%m/%Y"))
+                except ValueError:
+                    row.write(8, 'erreur')
+
+            if corrector.date_registered:
+                row.write(9, corrector.date_registered.strftime("%d/%m/%Y"))
+            else:
+                row.write(9, "")
+            row.write(10, str(corrector.period))
+            row.write(11, corrector.pay_status)
+                
+        return counter + 1
+
+    def write(self):
+        row = self.sheet.row(0)
+        cols = [{'name':'NOM', 'width':5000},
+                {'name':'PRENOM', 'width':5000},
+                {'name':'MAIL', 'width':7500},
+                {'name':'ADRESSE', 'width':7500},
+                {'name':'ADRESSE (suite)', 'width': 7500},
+                {'name':'CP', 'width':2500},
+                {'name':'VILLE', 'width':5000},
+                {'name':'TEL', 'width':5000},
+                {'name': 'Date de naissance', 'width': 5000},
+                {'name':"Date inscription", 'width':5000},
+                {'name':"Periode", 'width':5000},
+                {'name':"Statut", 'width':5000},
+                ]
+        
+        i = 0
+        for col in cols:
+            row.write(i, col['name'])
+            self.sheet.col(i).width = col['width']
+            i += 1
+            
+        counter = 0
+        for corrector in self.correctors:
+            counter = self.export_user(counter, corrector)
+
+
 class AnnalsView(ListView):
 
     model = Document
@@ -475,47 +543,8 @@ class UserAddView(CreateView):
         context['introduction'] = parameters.inscription_text
         return context
 
-    #
-    # def post(self, request, *args, **kwargs):
-    #     """
-    #     Handles POST requests, instantiating a form and formset instances with the passed
-    #     POST variables and then checked for validity.
-    #     """
-    #     self.object = None
-    #     form_class = self.get_form_class()
-    #     form = self.get_form(form_class)
-    #
-    #     if form.is_valid():
-    #         self.object = form.save(commit=False)
-    #         form_validated = True
-    #     else:
-    #         form_validated = False
-    #
-    #     inlines = self.construct_inlines()
-    #     import pdb;pdb.set_trace()
-    #     if all_valid(inlines) and form_validated:
-    #         return self.forms_valid(form, inlines)
-    #     return self.forms_invalid(form, inlines)
-
-    # def form_valid(self, form):
-    #     # messages.info(self.request, _("You have successfully register your account."))
-    #     # first_name = form.cleaned_data['first_name']
-    #     # last_name = form.cleaned_data['last_name']
-    #     # username = get_unique_username(first_name, last_name)
-    #     # self.username = username
-    #     # user = form.save()
-    #     # user.username = username
-    #     # user.last_name = last_name.upper()
-    #     # user.first_name = first_name.capitalize()
-    #     # user.is_active = False
-    #     # user.save()
-    #     # period = inlines[1].cleaned_data['period']
-    #     # import pdb;pdb.set_trace()
-    #     return super(UserAddView, self).form_valid(form)
-
     def get_success_url(self):
         return reverse_lazy('teleforma-register-complete', kwargs={'username':self.object.username})
-
 
 class UserCompleteView(TemplateView):
 
@@ -578,6 +607,125 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
+
+    
+class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
+
+    template_name = 'registration/registration_pdf.html'
+    pdf_template_name = template_name
+
+    def is_pdf(self):
+        return True
+
+    def get_context_data(self, **kwargs):
+        context = super(RegistrationPDFView, self).get_context_data(**kwargs)
+        user = User.objects.get(username=kwargs['username'])
+
+        # some form fixes
+        student = user.student.all()[0]
+        if student.training and not student.trainings.all():
+            student.trainings.add(student.training)
+        if not student.training and student.trainings.all():
+            student.training = student.trainings.all()[0]
+        if not student.oral_1:
+            student.oral_1 = Course.objects.get(code='X')
+        if not student.oral_2:
+            student.oral_2 = Course.objects.get(code='X')
+        student.save()            
+        profile = user.profile.all()[0]
+        if profile.city:
+            profile.city = profile.city.upper()
+        if profile.country:
+            profile.country = profile.country.upper()
+        profile.save()
+
+        context['student'] = student
+        return context
+
+class CorrectorRegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
+
+    template_name = 'registration/registration_corrector_pdf.html'
+    pdf_template_name = template_name
+
+    def is_pdf(self):
+        return True
+
+    def get_context_data(self, **kwargs):
+        context = super(CorrectorRegistrationPDFView, self).get_context_data(**kwargs)
+        user = User.objects.get(username=kwargs['username'])
+
+        # some form fixes
+        corrector = user.corrector.all()[0]
+        profile = user.profile.all()[0]
+        if profile.city:
+            profile.city = profile.city.upper()
+        if profile.country:
+            profile.country = profile.country.upper()
+        profile.save()
+
+        context['corrector'] = corrector
+        context['profile'] = profile
+        return context
+    
+class RegistrationPDFViewDownload(RegistrationPDFView):
+
+    pdf_filename = 'registration.pdf'
+
+    def get_pdf_filename(self):
+        super(RegistrationPDFViewDownload, self).get_pdf_filename()
+        user = User.objects.get(username=self.kwargs['username'])
+        # user = self.get_object()
+        student = user.student.all()[0]
+        prefix = unicode(_('Registration'))
+        filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
+        filename += '.pdf'
+        return filename.encode('utf-8')
+
+class CorrectorRegistrationPDFViewDownload(RegistrationPDFView):
+
+    pdf_filename = 'registration.pdf'
+
+    def get_pdf_filename(self):
+        super(RegistrationPDFViewDownload, self).get_pdf_filename()
+        user = User.objects.get(username=self.kwargs['username'])
+        # user = self.get_object()
+        corrector = user.corrector.all()[0]
+        prefix = unicode(_('Registration'))
+        filename = '_'.join([prefix, corrector.user.first_name, corrector.user.last_name])
+        filename += '.pdf'
+        return filename.encode('utf-8')
+    
+
+class CorrectorAddView(CreateView):
+
+    model = User
+    template_name = 'registration/registration_form.html'
+    form_class = CorrectorForm
+    # inlines = [ProfileInline, StudentInline]
+
+    def get_context_data(self, **kwargs):
+        context = super(CorrectorAddView, self).get_context_data(**kwargs)
+        parameters = Parameters.load()
+        # context['introduction'] = parameters.inscription_text
+        context['mode_corrector'] = True
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('teleforma-corrector-register-complete', kwargs={'username':self.object.username})
+    
+class CorrectorCompleteView(TemplateView):
+
+    template_name = 'registration/registration_corrector_complete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CorrectorCompleteView, self).get_context_data(**kwargs)
+        # context['register_doc_print'] = Document.objects.get(id=settings.TELEFORMA_REGISTER_DEFAULT_DOC_ID)
+        context['username'] = kwargs['username']
+        user = User.objects.get(username=kwargs['username'])
+        corrector = user.corrector.all()[0]
+        context['period'] = corrector.period
+        return context
+
 
 @csrf_exempt
 def update_training(request, id):
