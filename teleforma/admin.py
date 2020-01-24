@@ -116,8 +116,8 @@ class StudentAdmin(admin.ModelAdmin):
                     'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
                     'oral_1', 'oral_2', 'fascicule', BalanceFilter ]
     list_display = ['student_name', 'get_trainings', 'platform_only',
-                    'total_payments', 'total_fees', 'balance']
-    readonly_fields = [ 'balance' ]
+                    'total_payments', 'total_fees', 'balance', 'balance_intermediary']
+    readonly_fields = [ 'balance', 'balance_intermediary' ]
     actions = ['export_xls', 'write_message', 'add_to_group']
     action_form = StudentGroupForm
 

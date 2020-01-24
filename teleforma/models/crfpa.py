@@ -175,6 +175,7 @@ class Student(Model):
     level = models.CharField(_('studying level'), blank=True, max_length=100)
 
     balance = models.FloatField(_('balance de paiement'), help_text='€', blank=True, null=True)
+    balance_intermediary = models.FloatField('balance de paiement intermédiaire', help_text='€', blank=True, null=True)
 
     fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
                                     default=False)
@@ -219,6 +220,13 @@ class Student(Model):
             if payment['type'] != 'online' or payment['online_paid']:
                 amount += payment['value']
         return amount
+    
+    @property
+    def total_payments_all(self):
+        amount = 0
+        for payment in self.payments.values('value', 'type', 'online_paid'):
+            amount += payment['value']
+        return amount
 
     @property
     def total_discount(self):
@@ -237,8 +245,16 @@ class Student(Model):
     def update_balance(self):
         old = self.balance
         new = round(self.total_payments - self.total_fees + self.total_paybacks, 2)
+        save = False
         if old != new:
             self.balance = new
+            save = True
+        old_int = self.balance_intermediary
+        new_int = round(self.total_payments_all - self.total_fees + self.total_paybacks, 2)
+        if old_int != new_int:
+            self.balance_intermediary = new_int
+            save = True
+        if save:
             self.save()
 
     def get_absolute_url(self):
