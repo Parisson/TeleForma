@@ -169,6 +169,16 @@ class UserForm(ModelForm):
         if commit:
             profile.save()
         platform_only = data.get('platform_only') == 'True' and True or False
+        fascicule = data.get('fascicule') == 'True' and True or False
+        training = data.get('training')
+        subscription_fees = 0
+        if platform_only:
+            if fascicule:
+                subscription_fees = training.cost_elearning_fascicle
+            else:
+                subscription_fees = training.cost_elearning_nofascicle
+        else:
+            subscription_fees = training.cost
         student = Student(user=user,
                           portrait=data['portrait'],
                           level=data.get('level'),
@@ -179,9 +189,10 @@ class UserForm(ModelForm):
                           written_speciality=data.get('written_speciality'),
                           oral_1=data.get('oral_1'),
                           promo_code=data.get('promo_code'),
-                          training=data.get('training'),
+                          training=training,
                           payment_schedule=data.get('payment_schedule'),
-                          fascicule=data.get('fascicule'),
+                          fascicule=fascicule,
+                          subscription_fees=subscription_fees
                           )
         student.save()
         student.trainings.add(data.get('training', None))

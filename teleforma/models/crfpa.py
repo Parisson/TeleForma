@@ -108,6 +108,8 @@ class Training(Model):
                                         verbose_name=_('magistral'),
                                         blank=True, null=True)
     cost = models.FloatField(_('cost'), blank=True, null=True)
+    cost_elearning_fascicle = models.FloatField(_('e-learning cost with fascicle'), blank=True, null=True)
+    cost_elearning_nofascicle = models.FloatField(_('e-learning cost without fascicle'), blank=True, null=True)
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
 
@@ -164,7 +166,7 @@ class Student(Model):
     period = models.ForeignKey('Period', related_name='student', verbose_name=_('period'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     platform_only   = models.BooleanField(_('e-learning platform only'))
-    application_fees = models.BooleanField(_('application fees'), blank=True)
+    application_fees = models.BooleanField(_('application fees'), blank=True, default=True)
     default_application_fees = 40
     subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
     promo_code = models.CharField(_('promo code'), blank=True, max_length=100)
