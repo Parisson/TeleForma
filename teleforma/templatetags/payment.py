@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.inclusion_tag('payment/payment_summary.html',
                         takes_context=True)
-def payment_summary(context, payment):
+def payment_summary(context, payment, with_pending=True):
     objs = Payment.objects.filter(student = payment.student)
     payments = []
     today = date.today()
@@ -16,7 +16,7 @@ def payment_summary(context, payment):
             if obj.online_paid:
                 status = 'payé'
                 sclass = "paid" 
-            elif obj.id == payment.id:
+            elif obj.id == payment.id and with_pending:
                 status = 'en cours'
                 sclass = "pending"
             elif obj.scheduled > today:
