@@ -152,6 +152,9 @@ class SeminarRevisionMixin(object):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
+        now = datetime.datetime.now()
+        if seminar.expiry_date < now:
+            return
         if all_revisions:
             if not all_revisions[0].seminar == seminar:
                 revisions = all_revisions.filter(seminar=seminar)
@@ -168,6 +171,8 @@ class SeminarRevisionMixin(object):
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
         now = datetime.datetime.now()
+        if seminar.expiry_date < now:
+            now = seminar.expiry_date
         if all_revisions:
             revisions = all_revisions.filter(seminar=seminar)
             if revisions:
@@ -179,6 +184,7 @@ class SeminarRevisionMixin(object):
         seminar_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, seminar=seminar)
         if seminar_revisions:
             revision = seminar_revisions.latest('date')
+
             if (now - revision.date) > datetime.timedelta(seconds=1):
                 revision.date_modified = now
                 revision.save()
