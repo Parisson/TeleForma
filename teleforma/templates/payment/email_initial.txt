@@ -1,0 +1,11 @@
+{% url teleforma-payment-start payment.pk as payment_url %}
+Bonjour,
+
+Suite à votre inscription à la formation {{ period }}, une échéance de
+{{ payment.value }} € est arrivée.
+
+Pour effectuer votre paiement, veuillez cliquer sur l’URL suivante :
+https://{{ site.domain }}{{ payment_url }}
+
+Cordialement,
+L’équipe du Pré-Barreau

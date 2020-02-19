@@ -3,7 +3,7 @@ from StringIO import StringIO
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from models.core import Period, CourseType
-from models.crfpa import IEJ, Training
+from models.crfpa import IEJ, Training, PAY_STATUS_CHOICES
 from teleforma.models import *
 from django.forms import ModelForm, ModelChoiceField, ModelMultipleChoiceField, BooleanField, ImageField, CharField, \
     DateField, FileInput, ChoiceField
@@ -96,6 +96,16 @@ class UserForm(ModelForm):
                               help_text="Matière d’oral de langue (en option)",
                               queryset=Course.objects.filter(oral_1=True))
     promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
+
+    payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
+                                 choices=payment_schedule_choices,
+                                 required=True)
+
+    fascicule = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                  label='Envoi postal des fascicules',
+                                  required=False,
+                                  widget=forms.Select())
+    
     # no model
     captcha = CaptchaField()
     accept = BooleanField()
@@ -111,7 +121,7 @@ class UserForm(ModelForm):
         self.fields['last_name'].required = True
         self.fields['email'].required = True
         self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
-        self.training_fields = ['level', 'iej', 'platform_only', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
+        self.training_fields = ['level', 'iej', 'platform_only', 'fascicule', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
 
     def clean_portrait(self):
         image = self.cleaned_data['portrait']
@@ -159,6 +169,16 @@ class UserForm(ModelForm):
         if commit:
             profile.save()
         platform_only = data.get('platform_only') == 'True' and True or False
+        fascicule = data.get('fascicule') == 'True' and True or False
+        training = data.get('training')
+        subscription_fees = 0
+        if platform_only:
+            if fascicule:
+                subscription_fees = training.cost_elearning_fascicle
+            else:
+                subscription_fees = training.cost_elearning_nofascicle
+        else:
+            subscription_fees = training.cost
         student = Student(user=user,
                           portrait=data['portrait'],
                           level=data.get('level'),
@@ -169,77 +189,83 @@ class UserForm(ModelForm):
                           written_speciality=data.get('written_speciality'),
                           oral_1=data.get('oral_1'),
                           promo_code=data.get('promo_code'),
-                          training=data.get('training')
+                          training=training,
+                          payment_schedule=data.get('payment_schedule'),
+                          fascicule=fascicule,
+                          subscription_fees=subscription_fees
                           )
         student.save()
         student.trainings.add(data.get('training', None))
         return user
 
+class CorrectorForm(ModelForm):
+    # profile
+    address = CharField(label=_('Address'), max_length=255)
+    address_detail = CharField(label=_('Address detail'), max_length=255, required=False)
+    postal_code = CharField(label=_('Postal code'), max_length=255)
+    city = CharField(label=_('City'), max_length=255)
+    country = CharField(label=_('Country'), max_length=255)
+    telephone = CharField(label=_('Telephone'), max_length=255)
+    birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
+    birthday_place =  CharField(label='Lieu de naissance', max_length=255)
+    ss_number = CharField(label='N° de sécurité sociale',
+                                 max_length=15)
+    # corrector
+    period = ModelChoiceField(label='Période',
+                              queryset=Period.objects.filter(is_open=True,
+                                                             date_inscription_start__lte=datetime.datetime.now(),
+                                                             date_inscription_end__gte=datetime.datetime.now()))
+    pay_status = forms.ChoiceField(choices = PAY_STATUS_CHOICES,
+                                      label='Statut',
+                                      widget=forms.Select())
+    # no model
+    captcha = CaptchaField()
+    accept = BooleanField()
 
-# RegistrationForm.base_fields.update(UserForm.base_fields)
-#
-#
-# class ProfileForm(ModelForm):
-#     class Meta:
-#         model = Profile
-#         exclude = ['user', 'wifi_login', 'wifi_pass', 'language', 'expiration_date',
-#                     'init_password', ]
-#
-# RegistrationForm.base_fields.update(ProfileForm.base_fields)
-#
-#
-# class StudentForm(ModelForm):
-#
-#     class Meta:
-#         model = Student
-#         exclude = ['user', 'trainings', 'options']
-#
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
 
 
-#
-# RegistrationForm.base_fields.update(StudentForm.base_fields)
-#
-#
-# class CustomRegistrationForm(RegistrationForm):
-#
-#     def save(self, profile_callback=None):
-#         user = super(CustomRegistrationForm, self).save(profile_callback=None)
-#         profile, c = Profile.objects.get_or_create(user=user, \
-#             address=self.cleaned_data['address'], \
-#             telephone=self.cleaned_data['telephone'])
-#
-#
-# class ProfileInline(InlineFormSet):
-#
-#     model = Profile
-#     can_delete = False
-#     exclude = ['wifi_login', 'wifi_pass', 'language', 'expiration_date',
-#                     'init_password']
-#
-#
-# class StudentInline(InlineFormSet):
-#
-#     model = Student
-#     can_delete = False
-#     fields = ['portrait', 'level', 'iej', 'period', 'training', 'platform_only', 'procedure',
-#                 'written_speciality', 'oral_1', 'promo_code']
-#
-#     def get_factory_kwargs(self):
-#         kwargs = super(StudentInline, self).get_factory_kwargs()
-#
-#         def get_field_qs(field, **kwargs):
-#             formfield = field.formfield(**kwargs)
-#             if field.name == 'period':
-#                 formfield.queryset = Period.objects.filter(is_open=True)
-#             elif field.name == 'portrait':
-#                 formfield.widget.attrs.update(accept="image/*;capture=camera")
-#                 # formfield.widget.required = True
-#             return formfield
-#
-#         kwargs.update({
-#             'formfield_callback': get_field_qs
-#         })
-#         return kwargs
+    def __init__(self, *args, **kwargs):
+        super(CorrectorForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
+        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'birthday_place', 'ss_number']
+        self.training_fields = ['period', 'pay_status']
+
+    def save(self, commit=True):
+
+        data = self.cleaned_data
+        user = super(CorrectorForm, self).save(commit=False)
+        username = get_unique_username(data['first_name'], data['last_name'])
+        self.username = username
+        user.username = username
+        user.last_name = data['last_name'].upper()
+        user.first_name = data['first_name'].capitalize()
+        user.is_active = False
+        if commit:
+            user.save()
+        profile = Profile(user=user,
+                          address=data['address'],
+                          address_detail=data.get('address_detail'),
+                          postal_code=data['postal_code'],
+                          city=data['city'],
+                          country=data['country'],
+                          telephone=data['telephone'],
+                          birthday=data['birthday'],
+                          birthday_place=data['birthday_place'],
+                          ss_number=data['ss_number'],
+                          )
+        if commit:
+            profile.save()
+        corector = Corrector(user=user,
+                          period=data.get('period'),
+                          pay_status=data.get('pay_status'),
+                          )
+        corector.save()
+        return user
 
 
 class NewsItemForm(ModelForm):

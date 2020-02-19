@@ -82,7 +82,7 @@
                         {% get_all_correctors_with_courses as correctors %}
                         {% for p in correctors %}
                             <option value="{{ p.username }}"
-                                    data-courses="{{ p.courses }}" {% if request.POST.correctors == p.username %}selected{% endif %}>{{ p.name }}</option>
+                                    data-courses="{{ p.courses }}" {% if request.POST.correctors == p.username %}selected{% endif %}>#{{ p.id }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -205,6 +205,7 @@
         // hide recipients fields
 
         {#$('#id_course').parent().parent().hide();#}
+        $("#id_recipients").parent().parent().hide();
 
         $('[name="recipient_category"]').bind('change', update_desk_messages);
         $('[name="course"], [name="corrector_course"]').bind('change', update_desk_messages);

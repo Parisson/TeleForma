@@ -3259,3 +3259,48 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 	
 }
 
+#payment_summary{
+	background-color: #FFF;
+	-moz-border-radius: 8px 0px 8px 8px;
+	-webkit-border-radius: 8px 0px 8px 8px;
+	border-radius: 8px 0px 8px 8px;
+	padding: 2em;
+	margin: 0.8em 0;
+	border: 1px solid #dfdfdf;
+}
+#payment_summary h2{
+	margin-top: 0;
+	margin-bottom: 30px;
+}
+#payment_summary table{
+	text-align: left;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+#payment_summary table tr th,
+#payment_summary table tr td{
+	padding: 8px 40px 8px 0;
+	border-bottom: 1px solid #dfdfdf;
+	
+}
+#payment_summary table tr td:last-child{
+	font-weight: bold;
+	color: #4f628a;
+}
+
+#payment_summary table tr.topay td:last-child{
+	color: red;
+}
+#payment_summary table tr.paid td:last-child{
+	color: #92b220;
+}
+#payment_summary table tr.pending td:last-child{
+	color: #f3ad17;
+}
+#payment_summary table tr.pending{
+	font-weight: bold;
+}
+
+
+
+

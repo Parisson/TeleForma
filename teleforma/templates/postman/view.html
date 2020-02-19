@@ -15,14 +15,18 @@
 <div class="pm_message{% if message.is_pending %} pm_pending{% endif %}{% if message.is_rejected %} pm_rejected{% endif %}{% if message.sender == user and message.sender_archived or message.recipient == user and message.recipient_archived %} pm_archived{% endif %}{% if message.sender == user and message.sender_deleted_at or message.recipient == user and message.recipient_deleted_at %} pm_deleted{% endif %}{% if message.recipient == user and not message.read_at %} pm_unread{% endif %}">
  <div class="pm_header">
   {% if message.obfuscated_sender %}
+    {% if not message.obfuscated_sender|startswith:'#' %}
 	  <a href="{% url telemeta-profile-detail message.obfuscated_sender %}" title="{% get_training_profile message.sender %}">
+    {% endif %}
 	  <span class="pm_sender">{{ message.obfuscated_sender|or_me:user }}</span>
-	  </a>&raquo;
+	  {% if not message.obfuscated_sender|startswith:'#' %}</a>{% endif %}&raquo;
   {% endif %}
   {% if message.obfuscated_recipient %}
+    {% if not message.obfuscated_recipient|startswith:'#' %}
 	  <a href="{% url telemeta-profile-detail message.obfuscated_recipient %}" title="{% get_training_profile message.recipient %}">
+    {% endif %}
 	  <span class="pm_recipient">{{ message.obfuscated_recipient|or_me:user }}</span>
-	  </a> |
+	  {% if not message.obfuscated_recipient|startswith:'#' %}</a>{% endif %} |
   {% endif %}
   <span class="pm_date">{{ message.sent_at|date:"DATETIME_FORMAT"}}</span> |
   <span class="pm_subject">{{ message.subject }}</span>

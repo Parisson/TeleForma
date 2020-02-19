@@ -108,6 +108,8 @@ class Training(Model):
                                         verbose_name=_('magistral'),
                                         blank=True, null=True)
     cost = models.FloatField(_('cost'), blank=True, null=True)
+    cost_elearning_fascicle = models.FloatField(_('e-learning cost with fascicle'), blank=True, null=True)
+    cost_elearning_nofascicle = models.FloatField(_('e-learning cost without fascicle'), blank=True, null=True)
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
 
@@ -164,7 +166,7 @@ class Student(Model):
     period = models.ForeignKey('Period', related_name='student', verbose_name=_('period'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     platform_only   = models.BooleanField(_('e-learning platform only'))
-    application_fees = models.BooleanField(_('application fees'), blank=True)
+    application_fees = models.BooleanField(_('application fees'), blank=True, default=True)
     default_application_fees = 40
     subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
     promo_code = models.CharField(_('promo code'), blank=True, max_length=100)
@@ -175,10 +177,20 @@ class Student(Model):
     level = models.CharField(_('studying level'), blank=True, max_length=100)
 
     balance = models.FloatField(_('balance de paiement'), help_text='€', blank=True, null=True)
+    balance_intermediary = models.FloatField('balance de paiement intermédiaire', help_text='€', blank=True, null=True)
 
     fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
                                     default=False)
 
+    payment_type = models.CharField(_('type de paiement'), choices=payment_choices,
+                                    max_length=64, blank=True, null=True,
+                                    default='online')
+    payment_schedule = models.CharField(_(u'échéancier de paiement'),
+                                        choices=payment_schedule_choices,
+                                        max_length=64, blank=True, null=True,
+                                        default='split')
+    comment = models.TextField(_('commentaire'), blank=True, null=True)
+    
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -206,7 +218,15 @@ class Student(Model):
     @property
     def total_payments(self):
         amount = 0
-        for payment in self.payments.values('value'):
+        for payment in self.payments.values('value', 'type', 'online_paid'):
+            if payment['type'] != 'online' or payment['online_paid']:
+                amount += payment['value']
+        return amount
+    
+    @property
+    def total_payments_all(self):
+        amount = 0
+        for payment in self.payments.values('value', 'type', 'online_paid'):
             amount += payment['value']
         return amount
 
@@ -227,8 +247,16 @@ class Student(Model):
     def update_balance(self):
         old = self.balance
         new = round(self.total_payments - self.total_fees + self.total_paybacks, 2)
+        save = False
         if old != new:
             self.balance = new
+            save = True
+        old_int = self.balance_intermediary
+        new_int = round(self.total_payments_all - self.total_fees + self.total_paybacks, 2)
+        if old_int != new_int:
+            self.balance_intermediary = new_int
+            save = True
+        if save:
             self.save()
 
     def get_absolute_url(self):
@@ -265,10 +293,44 @@ class Profile(models.Model):
     wifi_login = models.CharField(_('WiFi login'), max_length=255, blank=True)
     wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
     birthday = models.DateField(_('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
-
+    birthday_place =  models.CharField('Lieu de naissance', max_length=255, blank=True, null=True)
+    ss_number = models.CharField('Sécurité sociale',
+                                 max_length=15, blank=True, null=True)
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
         verbose_name = _('profile')
+
+
+
+PAY_STATUS_CHOICES = [
+    ('honoraires', 'Honoraires'),
+    ('salarie', 'Salarié'),
+]
+class Corrector(Model):
+    "A corrector profile, only used for registration for the moment"
+
+    user = models.ForeignKey(User, related_name='corrector', verbose_name=_('user'), unique=True)
+    period = models.ForeignKey('Period', related_name='corrector', verbose_name=_('period'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
+    pay_status = models.CharField('Statut', choices=PAY_STATUS_CHOICES,
+                                    max_length=64, blank=True, null=True,
+                                    default='honoraire')
+    
+    date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
+    
+    
+    def __unicode__(self):
+        try:
+            return self.user.last_name + ' ' + self.user.first_name
+        except:
+            return ''
+
+    
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'corrector'
+        verbose_name = _('Correcteur')
+        verbose_name_plural = _('Correcteurs')
+        ordering = ['user__last_name', '-date_registered']
 
 
 months_choices = []
@@ -281,17 +343,24 @@ class Payment(models.Model):
 
     student = models.ForeignKey(Student, related_name='payments', verbose_name=_('student'))
     value = models.FloatField(_('amount'), help_text='€')
-    month = models.IntegerField(_('month'), choices=months_choices, default=1)
-    collected = models.BooleanField(_('collected'))
-    type = models.CharField(_('payment type'), choices=payment_choices, max_length=64)
+    month = models.IntegerField(_('month'), choices=months_choices, default=1,
+                                blank=True, null=True)
+    type = models.CharField(_('payment type'), choices=payment_choices,
+                            max_length=64, default='online')
     date_created = models.DateTimeField(_('date created'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True)
 
+    scheduled = models.DateField(u"date d'échéance", blank=True, null=True)
+    online_paid = models.BooleanField(u"payé",
+                                      help_text=u"paiement en ligne uniquement",
+                                      blank=True)
+
+    
     class Meta(MetaCore):
         db_table = app_label + '_' + 'payments'
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
-        ordering = ['month']
+        ordering = ['scheduled', 'month']
 
 
 class Discount(models.Model):

@@ -31,7 +31,9 @@
      <td>{% if script.author.username %}<a href="{% url teleforma-profile-detail script.author.username %}">{{ script.author.first_name }}</a>{% endif %}</td>
      <td>{{ script.date_added }}</td>
      <td>{% if script.date_marked %}{{ script.date_marked }}{% endif %}</td>
-     <td>{% if script.corrector %}{{ script.corrector }}{% endif %}</td>
+     <td>
+       {% if script.corrector %}{% if profile > 0 %}{{ script.corrector }}{% else %}#{{ script.corrector.id }}{% endif %}{% endif%}
+     </td>
      <td>{% if script.score %}{{ script.score|floatformat }}{% endif %}</td>
     </tr>
     {% endfor %}

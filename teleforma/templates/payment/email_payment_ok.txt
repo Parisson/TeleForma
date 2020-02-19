@@ -1,0 +1,7 @@
+Bonjour {{ student.first_name }},
+
+Vous venez de payer en ligne une échéance de {{ amount }} € et nous
+vous en remercions.
+
+Cordialement,
+L'équipe Pré-Barreau

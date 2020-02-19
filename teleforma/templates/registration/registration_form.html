@@ -30,7 +30,9 @@
 <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">
     {% csrf_token %}
 
-    <h1>{% trans "Pre-registration" %} - {% description %}</h1>
+    <h1>{% if mode_corrector %}Pré-inscription des correcteurs - PRÉ-BARREAU -
+        CRFPA{% else %}{% trans "Pre-registration" %} -
+        {% description %}{% endif %}</h1>
 
     {{ introduction|safe }}
 
@@ -66,7 +68,8 @@
 
     <h2><img src="{{ STATIC_URL }}teleforma/images/crfpa_formation.svg"
             onerror="this.onerror=null; this.src='{{ STATIC_URL }}teleforma/images/crfpa_formation.png'"
-            alt="votre formation" title="votre formation" class="votreformation" />Votre formation</h2>
+            alt="votre formation" title="votre formation" class="votreformation"
+            />{% if mode_corrector %}Statut{% else %}Votre formation{% endif %} </h2>
     <fieldset class="form_select">
         <div class="column"> {% for fieldname in form.training_fields %}
             {% with field=form|get_item:fieldname %}
@@ -89,6 +92,13 @@
     <span class="error">* Champs obligatoires</span>
 
     <div class="submit-panel">
+        <div> 
+            <span class="error">
+                {{ form.payment_schedule.errors }}
+            </span>
+            <label for="id_payment_schedule">{{ form.payment_schedule.label }}</label>
+            {{ form.payment_schedule }}
+        </div>
         <div>
             <span class="error">
                 {{ form.accept.errors }}
@@ -142,11 +152,20 @@
         }
     }
 
+    function updateFascicule() {
+        var platformOnly = $("[name='platform_only']").val() === 'True' ? true : false;
+        if(platformOnly)
+            $("[name='fascicule']").parent().show();
+        else
+            $("[name='fascicule']").parent().hide();
+    }
+
     $(document).ready(function () {
         trainingId = $("#id_training").val();
         updateTrainings();
         $("#id_period,  #id_platform_only").change(updateTrainings);
-
+        updateFascicule();
+        $("[name='platform_only']").change(updateFascicule);
     });
 </script>
 <style>
