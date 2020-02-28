@@ -330,7 +330,6 @@ class Auditor(models.Model):
         verbose_name = _('Auditor')
         ordering = ['user__last_name']
 
-
 class SeminarRevision(models.Model):
 
     seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'))

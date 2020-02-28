@@ -320,6 +320,7 @@ class MediaView(DetailView):
             media.set_mime_type()
         if not self.request.user in media.readers.all():
             media.readers.add(self.request.user)
+        context['HOST'] = self.request.META.get('HOST')
         context['media'] = media
         context['mime_type'] = media.mime_type
         context['course'] = media.course

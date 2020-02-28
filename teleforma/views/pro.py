@@ -35,6 +35,7 @@
 
 from teleforma.views.core import *
 from teleforma.context_processors import *
+from django.core.exceptions import PermissionDenied
 
 from telemeta.util.unicode import UnicodeWriter
 
@@ -300,6 +301,10 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
 
         self.question = Question.objects.get(pk=self.kwargs['pk'])
         self.user = self.get_user()
+
+        if self.question.seminar.conference in self.user.auditor.get().conferences.all():
+            raise PermissionDenied
+        
         answers = Answer.objects.filter(user=self.user,
                                         question=self.question).order_by('-date_submitted')
         if answers:
