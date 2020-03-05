@@ -107,13 +107,22 @@ class Seminar(ClonableMixin, Displayable):
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
     date_forced     = models.DateTimeField(_('date forced'), null=True, blank=True)
-
     suggested_seminars = models.ManyToManyField('Seminar', related_name="seminar_suggested_seminars",
                                     verbose_name=_('suggested seminars'),
                                     blank=True, null=True)
     suggested_conferences = models.ManyToManyField('Conference', related_name="seminar_suggested_conferences",
                                                 verbose_name=_('suggested conferences'),
                                                 blank=True, null=True)
+    additional_info           = tinymce.models.HTMLField(_('additional info'), null=True, blank=True)
+    banner_image = models.ImageField(verbose_name=_("banner image"),
+                                    upload_to="conferences",
+                                    null=True,
+                                    blank=True)
+    vignette_image = models.ImageField(verbose_name=_("vignette Image"),
+                                     upload_to="conferences",
+                                     null=True,
+                                     blank=True)
+
 
     objects = DisplayableManager()
 

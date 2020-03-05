@@ -252,6 +252,10 @@ class Professor(Model):
                                         verbose_name=_('courses'),
                                         blank=True, null=True)
     title           = CharField(_('title'), max_length=255)
+    portrait = models.ImageField(verbose_name=_("portrait"),
+                                    upload_to="professors",
+                                    null=True,
+                                    blank=True)
 
 
     def __unicode__(self):
@@ -560,6 +564,17 @@ class Conference(Displayable):
     suggested_conferences = models.ManyToManyField('Conference', related_name="conference_suggested_conferences",
                                                    verbose_name=_('suggested conferences'),
                                                    blank=True, null=True)
+    additional_info = tinymce.models.HTMLField(_('additional info'),
+                                               null=True,
+                                               blank=True)
+    banner_image = models.ImageField(verbose_name=_("banner image"),
+                                    upload_to="seminars",
+                                    null=True,
+                                    blank=True)
+    vignette_image = models.ImageField(verbose_name=_("vignette Image"),
+                                     upload_to="seminars",
+                                     null=True,
+                                     blank=True)
 
     objects = DisplayableManager()
 
@@ -759,5 +774,3 @@ class NamePage(object):
             return self.start_letter
         else:
             return '%c-%c' % (self.start_letter, self.end_letter)
-
-
