@@ -23,34 +23,37 @@
   {% include "teleforma/inc/document_step.html" %}
 {% endwith %}
 
-{% with seminar.question as questions %}
+  {% if not seminar.conference in user.auditor.get.conferences.all %}
+
+  {% with seminar.question as questions %}
   <div class="course_subtitle">
     <h4><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 4</h4>
   </div>
   {% include "teleforma/inc/question_step.html" %}
-{% endwith %}
+  {% endwith %}
 
 
-{% if seminar_progress == 100 %}
-{% with seminar.docs_correct as docs %}
-   <div class="course_subtitle">
+  {% if seminar_progress == 100 %}
+  {% with seminar.docs_correct as docs %}
+  <div class="course_subtitle">
     <h4><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 5</h4>
   </div>
   {% include "teleforma/inc/document_step.html" %}
-{% endwith %}
+  {% endwith %}
 
-{% with seminar.form as form %}
+  {% with seminar.form as form %}
   <div class="course_subtitle">
     <h4><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 :</h4>
   </div>
   {% include "teleforma/inc/evaluation_form.html" %}
-{% endwith %}
-{% endif %}
+  {% endwith %}
+  {% endif %}
 
-{% if seminar|validated:user %}
+  {% if seminar|validated:user %}
   <div class="course_subtitle">
     <h4><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7</h4>
   </div>
   {% include "teleforma/inc/testimonial_step.html" %}
-{% endif %}
+  {% endif %}
 
+  {% endif %}

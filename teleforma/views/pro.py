@@ -35,6 +35,7 @@
 
 from teleforma.views.core import *
 from teleforma.context_processors import *
+from django.core.exceptions import PermissionDenied
 
 from telemeta.util.unicode import UnicodeWriter
 
@@ -62,7 +63,7 @@ import csv
 from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
-
+from pbcart.models import Cart
 from quiz.views import QuizTake
 
 REVISION_DATE_FILTER = datetime.datetime(2015,2,2)
@@ -152,6 +153,9 @@ class SeminarRevisionMixin(object):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
+        now = datetime.datetime.now()
+        if seminar.expiry_date < now:
+            return
         if all_revisions:
             if not all_revisions[0].seminar == seminar:
                 revisions = all_revisions.filter(seminar=seminar)
@@ -168,6 +172,8 @@ class SeminarRevisionMixin(object):
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
         now = datetime.datetime.now()
+        if seminar.expiry_date < now:
+            now = seminar.expiry_date
         if all_revisions:
             revisions = all_revisions.filter(seminar=seminar)
             if revisions:
@@ -179,6 +185,7 @@ class SeminarRevisionMixin(object):
         seminar_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, seminar=seminar)
         if seminar_revisions:
             revision = seminar_revisions.latest('date')
+
             if (now - revision.date) > datetime.timedelta(seconds=1):
                 revision.date_modified = now
                 revision.save()
@@ -294,6 +301,10 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
 
         self.question = Question.objects.get(pk=self.kwargs['pk'])
         self.user = self.get_user()
+
+        if self.question.seminar.conference in self.user.auditor.get().conferences.all():
+            raise PermissionDenied
+        
         answers = Answer.objects.filter(user=self.user,
                                         question=self.question).order_by('-date_submitted')
         if answers:
@@ -834,6 +845,14 @@ class TestimonialPaybackView(TestimonialView):
     def get_context_data(self, **kwargs):
         context = super(TestimonialPaybackView, self).get_context_data(**kwargs)
         seminar = context['seminar']
+        context['price'] = seminar.price
+        # recompute price if use has used a promo code
+        for cart in Cart.objects.filter(user=self.request.user, status=Cart.STATE_PAYMENT_ACCEPTED):
+            if cart.has_item(seminar):
+                if cart.promo_code and seminar in cart.promo_code.seminars.all():
+                    context['price'] = seminar.price - (seminar.price * cart.promo_code.reduction / 100.0)
+                    break
+        
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
                                                    validated=True).order_by('question__rank')
