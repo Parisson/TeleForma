@@ -315,6 +315,7 @@ class Auditor(models.Model):
     fax             = models.CharField(_('Fax'), max_length=255, blank=True)
     fifpl           = models.BooleanField(_('FIFPL'), default=False)
     block_fifpl     = models.BooleanField(_('Block FIFPL'), default=False)
+    block_testimonials  = models.BooleanField(_('Block attestations'), default=False)
     expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = models.BooleanField(_('Password initialized'))
 

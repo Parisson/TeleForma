@@ -45,7 +45,7 @@
 <div class="course_title">{% trans "Testimonials" %}</div>
 <br />
 
-{% if object_list %}
+{% if object_list and show_testimonials %}
 
 {% autopaginate object_list %}
 {% paginate %}
@@ -83,9 +83,12 @@
   </div>
  {% endfor %}
 
- {% else %}
+ {% elif show_testimonials %}
     <p class="help">{% trans "No testimonial" %}</p>
+ {% else %}
+    <p class="help">Les attestations sont bloquées pendant la période d'essai gratuite.</p>
  {% endif %}
+ 
 </div>
 {% endblock %}
 

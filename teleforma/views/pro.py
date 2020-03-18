@@ -808,9 +808,12 @@ class TestimonialListView(ListView):
         auditor = self.request.user.auditor.all()
         if auditor:
             show_fifpl = auditor[0].fifpl and not auditor[0].block_fifpl
+            show_testimonials = not auditor[0].block_testimonials
         else:
             show_fifpl = True
+            show_testimonials = True
         context['show_fifpl'] = show_fifpl
+        context['show_testimonials'] = show_testimonials
         return context
 
     @method_decorator(login_required)
