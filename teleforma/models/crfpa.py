@@ -112,7 +112,8 @@ class Training(Model):
     cost_elearning_nofascicle = models.FloatField(_('e-learning cost without fascicle'), blank=True, null=True)
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
-
+    duration = models.IntegerField(u"Durée en heures", default=0)
+    
     def __unicode__(self):
         if self.name and self.period:
             return ' - '.join([self.name, self.period.name])
@@ -190,6 +191,9 @@ class Student(Model):
                                         max_length=64, blank=True, null=True,
                                         default='split')
     comment = models.TextField(_('commentaire'), blank=True, null=True)
+
+    receipt_id = models.IntegerField('numéro de facture', blank=True, null=True,
+                                     unique=True)
     
     def __unicode__(self):
         try:

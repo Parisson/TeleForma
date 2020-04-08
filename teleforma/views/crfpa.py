@@ -31,6 +31,7 @@
 # knowledge of the CeCILL license and that you accept its terms.
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
+from django.core.exceptions import ValidationError, PermissionDenied
 from teleforma.models.crfpa import Parameters
 from teleforma.models.core import Period
 from teleforma.views.core import *
@@ -43,9 +44,11 @@ from postman.forms import AnonymousWriteForm
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.db.models import Max
 from django.http import HttpResponseForbidden
 from django.forms.formsets import all_valid
 from django.core.exceptions import ValidationError
+from django.contrib.sites.models import Site
 
 def get_course_code(obj):
     if obj:
@@ -583,7 +586,7 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
             student.oral_1 = Course.objects.get(code='X')
         if not student.oral_2:
             student.oral_2 = Course.objects.get(code='X')
-        student.save()
+        student.save()            
         profile = user.profile.all()[0]
         if profile.city:
             profile.city = profile.city.upper()
@@ -593,7 +596,6 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
 
         context['student'] = student
         return context
-
 
 class RegistrationPDFViewDownload(RegistrationPDFView):
 
@@ -610,39 +612,120 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         return filename.encode('utf-8')
 
     
-class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
+class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
 
-    template_name = 'registration/registration_pdf.html'
+    template_name = 'receipt/receipt_pdf.html'
     pdf_template_name = template_name
+
+    def get_context_data(self, **kwargs):
+        context = super(ReceiptPDFView, self).get_context_data(**kwargs)
+        user = User.objects.get(username=kwargs['username'])
+
+        cur_user = self.request.user
+        if not cur_user.is_authenticated():
+            raise PermissionDenied
+        if cur_user.pk != user.pk and not cur_user.is_superuser:
+            raise PermissionDenied
+
+        context['site'] = Site.objects.get_current()
+        
+        student = user.student.all()[0]
+
+        if not student.training and student.trainings.all():
+            student.training = student.trainings.all()[0]
+        training = student.training
+        period = training.period
+        student.save()            
+        profile = user.profile.all()[0]
+
+        context['student'] = student
+        context['profile'] = profile
+
+        receipt_id = student.receipt_id
+        if receipt_id is None:
+            last = Student.objects.aggregate(Max('receipt_id'))
+            last = last['receipt_id__max']
+            if not last:
+                last = 0
+            receipt_id = last + 1
+            student.receipt_id = receipt_id
+            student.save()
+
+        period_name = period.name.split()
+        period_name = period_name[0].upper()
+        context['receipt_id'] = "%s_%04d_%05d" % (period_name,
+                                                  period.date_begin.year,
+                                                  receipt_id)
+        self.receipt_id = context['receipt_id']
+
+        # Added items to pay
+        items = []
+        if student.application_fees:
+            substract = student.default_application_fees
+            items.append({ 'label': "<b>Frais de dossier</b>",
+                           'unit_price': substract,
+                           'amount': 1,
+                           'discount': None, },)
+        else:
+            substract = 0
+
+        label = u"<b>Préparation à l'examen du CRFPA</b><br/>"
+        label += u"<b>%s &mdash; %s</b><br />" % (period, training.name)
+        label += u"<i>%d heures de formation du %s au %s</i>" % (training.duration,
+                                                                period.date_begin.strftime('%d/%m/%Y'),
+                                                                period.date_end.strftime('%d/%m/%Y'),)
+                                                                
+            
+        items.append({ 'label': label,
+                       'unit_price': student.total_fees - substract - student.total_discount,
+                       'amount': 1,
+                       'discount': student.total_discount, }, )
+        for item in items:
+            item['total'] = item['unit_price'] * item['amount']
+            if item['discount']:
+                item['total'] += item['discount']
+
+        # Add payments
+        payments = Payment.objects.filter(student = student)
+        receipt_last = receipt_date = student.date_subscribed.date()
+        for payment in payments:
+            date = payment.scheduled or payment.date_modified.date()
+            receipt_last = max(date, receipt_last)
+            if payment.type == "online" and not payment.online_paid:
+                continue
+            receipt_date = max(date, receipt_date)
+            date = date.strftime('%d/%m/%Y')
+            kind = payment.get_type_display()
+            items.append({ 'label': '<b>Paiement %s du %s</b>' % (kind, date),
+                           'unit_price': None,
+                           'amount': None,
+                           'discount': None,
+                           'total': -payment.value })
+
+        context['receipt_date'] = receipt_date.strftime('%d/%m/%Y')
+        context['receipt_last'] = receipt_last.strftime('%d/%m/%Y')
+
+        context['receipt_items'] = items
+        context['receipt_total'] = sum([ i['total'] for i in items ])
+        return context
+    
+class ReceiptPDFViewDownload(ReceiptPDFView):
+
+    pdf_filename = 'facture.pdf'
 
     def is_pdf(self):
         return True
 
-    def get_context_data(self, **kwargs):
-        context = super(RegistrationPDFView, self).get_context_data(**kwargs)
-        user = User.objects.get(username=kwargs['username'])
-
-        # some form fixes
+    def get_pdf_filename(self):
+        super(ReceiptPDFViewDownload, self).get_pdf_filename()
+        user = User.objects.get(username=self.kwargs['username'])
         student = user.student.all()[0]
-        if student.training and not student.trainings.all():
-            student.trainings.add(student.training)
-        if not student.training and student.trainings.all():
-            student.training = student.trainings.all()[0]
-        if not student.oral_1:
-            student.oral_1 = Course.objects.get(code='X')
-        if not student.oral_2:
-            student.oral_2 = Course.objects.get(code='X')
-        student.save()            
-        profile = user.profile.all()[0]
-        if profile.city:
-            profile.city = profile.city.upper()
-        if profile.country:
-            profile.country = profile.country.upper()
-        profile.save()
+        prefix = "crfpa_facture"
+        filename = '_'.join([prefix, self.receipt_id, student.user.first_name, student.user.last_name])
+        filename += '.pdf'
+        return filename.encode('utf-8')
 
-        context['student'] = student
-        return context
-
+    
 class CorrectorRegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
 
     template_name = 'registration/registration_corrector_pdf.html'
