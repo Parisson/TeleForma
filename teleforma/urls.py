@@ -59,7 +59,7 @@ urlpatterns = patterns('',
     url(r'^accounts/register/(?P<username>.*)/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
     url(r'^accounts/register/(?P<username>.*)/download/$', RegistrationPDFViewDownload.as_view(), name="teleforma-registration-download"),
     url(r'^accounts/register/(?P<username>.*)/view/$', RegistrationPDFView.as_view(), name="teleforma-registration-view"),
-        
+                       
     url(r'^correctors/register/$', CorrectorAddView.as_view(), name="teleforma-corrector-register"),
     url(r'^correctors/register/(?P<username>.*)/complete/$', CorrectorCompleteView.as_view(), name="teleforma-corrector-register-complete"),
     url(r'^correctors/register/(?P<username>.*)/download/$', CorrectorRegistrationPDFViewDownload.as_view(), name="teleforma-corrector-registration-download"),
@@ -171,4 +171,7 @@ urlpatterns = patterns('',
     url(r'^echec-de-paiement',
         bank_fail, name='teleforma-bank-fail'),
 
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/receipt/download/$', ReceiptPDFViewDownload.as_view(), name="teleforma-receipt-download"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/receipt/view/$', ReceiptPDFView.as_view(), name="teleforma-receipt-view"),
+                       
 )

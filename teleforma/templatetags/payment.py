@@ -8,7 +8,8 @@ register = template.Library()
 @register.inclusion_tag('payment/payment_summary.html',
                         takes_context=True)
 def payment_summary(context, payment, with_pending=True):
-    objs = Payment.objects.filter(student = payment.student)
+    student = payment.student
+    objs = Payment.objects.filter(student = student)
     payments = []
     today = date.today()
     for obj in objs:
@@ -34,4 +35,24 @@ def payment_summary(context, payment, with_pending=True):
                           'status': status })
     payments.sort(key = lambda p: p['scheduled'])
    
-    return { "payments": payments }
+    return { "payments": payments,
+             "student": student,
+             "user": student.user }
+
+@register.filter
+def payment_format_amount(value):
+    if value is None:
+        return ""
+    value = '%.2f' % float(value)
+    unit, decimal = value.split('.')    
+    res = ''
+    if unit.startswith('-'):
+        prefix = '-'
+        unit = unit[1:]
+    else:
+        prefix = ''
+    while len(unit) > 3:
+        res = res + ' ' + unit[-3:]
+        unit = unit[:-3]
+    res = prefix + unit + res
+    return '%s,%s' % (res, decimal)
