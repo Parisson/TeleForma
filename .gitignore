@@ -25,3 +25,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# overload only on pilotsystems server
+teleforma/static/admin/js/jquery.js
