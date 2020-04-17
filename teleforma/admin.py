@@ -7,6 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from longerusername.forms import UserCreationForm, UserChangeForm
 from django.contrib.contenttypes.generic import GenericInlineModelAdmin
 from django.http import HttpResponse
+import time
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -45,6 +46,79 @@ class UserProfileAdmin(UserAdmin):
     form = UserChangeForm
     list_filter = ['is_staff', 'is_superuser', 'is_active', 'date_joined']
 
+    actions = ['export_user_profiles']
+
+    def export_user_profiles(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        filename = "export-utilisateurs-%s" % time.strftime('%Y-%m-%d')
+        response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+        
+        users = []
+        for user in queryset.order_by('email'):
+            auditor = list(user.auditor.all())
+            auditor = auditor and auditor[0] or None
+            if user.is_superuser:
+                account_type = "admin"
+            elif auditor:
+                account_type = "auditeur"
+            elif user.professor:
+                account_type = "professeur"
+            else:
+                account_type = "autre"
+            conferences = []
+            seminars = []
+            if auditor:
+                for conf in auditor.conferences.all().order_by('pk'):
+                    conferences.append('%s (%s)' % (conf, conf.pk))
+                for sem in auditor.seminars.all().order_by('pk'):
+                    seminars.append('%s (%s)' % (sem, sem.pk))
+            l = [ user.email,
+                  user.first_name,
+                  user.last_name,
+                  auditor and auditor.address or '',
+                  auditor and auditor.postal_code or '',
+                  auditor and auditor.city or '',
+                  auditor and auditor.country,
+                  account_type,
+                  user.date_joined.strftime('%d/%m/%Y'),
+                  user.last_login.strftime('%d/%m/%Y'),
+            ]
+            users.append({ 'data': l,
+                           'seminars': seminars,
+                           'conferences': conferences })
+
+        maxconf = max([ len(u['conferences']) for u in users ] + [ 1 ])
+        maxsem = max([ len(u['seminars']) for u in users ] + [ 1 ])
+        
+        writer = UnicodeWriter(response, delimiter=";")
+        titlerow = ["email",
+                         "prénom",
+                         "nom",
+                         "adresse",
+                         "code postal",
+                         "ville",
+                         "pays",
+                         "type de compte",
+                         "date de création",
+                         "date de dernière connexion", ]
+        for i in range(maxconf):
+            titlerow.append('conférence %d' % (i+1))
+        for i in range(maxsem):
+            titlerow.append('séminaire %d' % (i+1))
+        writer.writerow(titlerow)
+        for user in users:
+            l = user['data']
+            nbconf = len(user['conferences'])
+            nbsem = len(user['seminars'])
+            for i in range(maxconf):                
+                l.append(user['conferences'][i] if i < nbconf else '')
+            for i in range(maxsem):                
+                l.append(user['seminars'][i] if i < nbsem else '')
+            writer.writerow(l)
+        return response
+
+    export_user_profiles.short_description = "Exporter les utilisateurs"
+    
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
