@@ -185,6 +185,9 @@ class ScriptsView(ScriptsListMixinView, ListView):
                 QT |= Q(course_id__in=courses_id)
 
             base_qs = base_qs.filter(QT)
+
+        if self.get_profile() == STUDENT:
+            base_qs = base_qs.order_by('-date_submitted')
         return base_qs
 
     @method_decorator(login_required)
