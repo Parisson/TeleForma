@@ -62,10 +62,13 @@ from mezzanine.core.models import Displayable
 from mezzanine.core.managers import DisplayableManager
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import date
-
+from bigbluebutton_api_python import BigBlueButton
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 app_label = 'teleforma'
 
+bbb = BigBlueButton(settings.BBB_SERVER, settings.BBB_SECRET)
 
 def get_n_choices(n):
     return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]
@@ -523,7 +526,54 @@ class Media(MediaBase):
         ordering = ['rank']
 
 
-class Conference(Displayable):
+class WebclassMixin(Model):
+    webclass                        = models.BooleanField(_('Web class'), default=False)
+    webclass_max_participants       = models.IntegerField(_('Web class : nombre maxium de participants'), blank=True, null=True)
+    webclass_id                     = models.CharField('Web class : id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255)
+    webclass_password               = models.CharField('Web class : password du modérateur (généré automatiquement)', blank=True, null=True, max_length=255)
+
+    class Meta(MetaCore):
+        abstract = True
+
+    def create_webclass_room(self):
+        """ """
+        if not self.webclass_id:
+            meeting_id = self.slug + "-" + self.period
+            # TODO : generate password
+            password = 'pw'
+            params = {
+                'moderatorPW':password,
+                # 'maxParticipants':self.webclass_max_participants + 1,
+                # 'welcome':"Bienvenue sur la conférence \"%s\"." % (str(self.title),),
+                'record':True,
+                'autoStartRecording':True,
+                'muteOnStart':True,
+                'allowModsToUnmuteUsers':True,
+                'guestPolicy':'ALWAYS_DENY'
+            }
+            
+            try:
+                result = bbb.create_meeting(self.slug+'2', params=params)
+            except BigBlueButton.BBBException:
+                raise
+
+            meeting_id = result['xml']['meetingID'].decode()
+            self.webclass_id = meeting_id
+            self.webclass_password = password
+
+    
+    def join_webclass(self, username):
+        """ """
+        print(bbb.get_join_meeting_url('user','fake2', 'pw'))
+
+    def get_webclass_info(self):
+        """ """
+        info = bbb.get_meeting_info(self.webclass_id)
+        import pdb;pdb.set_trace()
+
+
+
+class Conference(Displayable, WebclassMixin):
 
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     public_id       = models.CharField(_('public id'), max_length=255, blank=True)
@@ -538,6 +588,7 @@ class Conference(Displayable):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     session         = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
+    
     concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
     level           = models.CharField(_('level'), max_length=255, blank=True)
     location        = WeakForeignKey(Location, related_name='location', verbose_name=_('location'))
@@ -665,7 +716,10 @@ class Conference(Displayable):
         ordering = ['-date_begin']
 
 
-
+@receiver(pre_save, sender=Conference)
+def create_webclass_room(sender, **kwargs):
+    instance = kwargs['instance']
+    instance.create_webclass_room()
 
 class NamePaginator(object):
     """Pagination for string-based objects"""
