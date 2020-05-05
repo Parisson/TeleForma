@@ -536,11 +536,10 @@ class WebclassMixin(Model):
         abstract = True
 
     def create_webclass_room(self):
-        """ """
-        if not self.webclass_id:
-            meeting_id = self.slug + "-" + self.period
-            # TODO : generate password
-            password = 'pw'
+        """ create a BBB room and generate meeting id and moderator password """
+        if not self.webclass_id and self.webclass:
+            meeting_id = self.slug + "-" + str(self.period)
+            password = User.objects.make_random_password()
             params = {
                 'moderatorPW':password,
                 # 'maxParticipants':self.webclass_max_participants + 1,
@@ -553,7 +552,7 @@ class WebclassMixin(Model):
             }
             
             try:
-                result = bbb.create_meeting(self.slug+'2', params=params)
+                result = bbb.create_meeting(meeting_id, params=params)
             except BigBlueButton.BBBException:
                 raise
 
@@ -562,14 +561,24 @@ class WebclassMixin(Model):
             self.webclass_password = password
 
     
-    def join_webclass(self, username):
-        """ """
-        print(bbb.get_join_meeting_url('user','fake2', 'pw'))
+    def get_join_webclass_url(self, request):
+        """ 
+        Get url to BBB meeting.
+        If user are professor or staff, provide the url with the moderator password
+        """
+        username = request.user.get_full_name()
+        is_professor = len(request.user.professor.all()) >= 1
+        is_staff = request.user.is_staff
+        password = (is_professor or is_staff) and self.webclass_password or ""
+        return bbb.get_join_meeting_url(username, self.webclass_id, password)
 
-    def get_webclass_info(self):
-        """ """
-        info = bbb.get_meeting_info(self.webclass_id)
-        import pdb;pdb.set_trace()
+    def is_webclass_running(self):
+        """ Is webclass currently running ? """
+        return bbb.is_meeting_running(self.webclass_id).get_field('running').decode() == 'true' or False
+
+    # def get_webclass_info(self):
+    #     """ """
+    #     return bbb.get_meeting_info(self.webclass_id)
 
 
 

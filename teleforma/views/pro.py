@@ -168,6 +168,7 @@ class SeminarRevisionMixin(object):
 
     @jsonrpc_method('teleforma.seminar_unload')
     def seminar_unload(request, id, username):
+        import pdb;pdb.set_trace()
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)

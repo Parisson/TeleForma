@@ -446,30 +446,33 @@ class ConferenceView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
         conference = self.get_object()
-        if conference.webclass:
-            webclass_info = conference.get_webclass_info() 
-            context.update(webclass_info)
+        if conference.webclass: 
+            context['is_webclass_running'] = conference.is_webclass_running() 
+            context['webclass_url'] = conference.get_join_webclass_url(self.request)
+            context['show_record'] = True
+            context['seminar'] = conference.seminar.all()[0]
             
         else:
-            all_courses = get_courses(self.request.user)
-            context['all_courses'] = all_courses
-            context['course'] = conference.course
-            context['type'] = conference.course_type
-            context['notes'] = conference.notes.all().filter(author=self.request.user)
             content_type = ContentType.objects.get(app_label="teleforma", model="conference")
-            if settings.TELEFORMA_GLOBAL_TWEETER:
-                context['room'] = get_room(name='site')
-            else:
-                context['room'] = get_room(name=conference.course.title, content_type=content_type,
-                                    id=conference.id)
             context['livestreams'] = conference.livestream.all()
             context['host'] = get_host(self.request)
             access = get_course_access(conference, all_courses)
             if not access:
                 context['access_error'] = access_error
                 context['message'] = contact_message
-            context['periods'] = get_periods(self.request.user)
-            context['conferences'] = all_conferences(self.request)
+
+        all_courses = get_courses(self.request.user)
+        context['all_courses'] = all_courses
+        context['notes'] = conference.notes.all().filter(author=self.request.user)
+        context['type'] = conference.course_type
+        context['course'] = conference.course
+        context['periods'] = get_periods(self.request.user)
+        context['conferences'] = all_conferences(self.request)
+        if settings.TELEFORMA_GLOBAL_TWEETER:
+            context['room'] = get_room(name='site')
+        else:
+            context['room'] = get_room(name=conference.course.title, content_type=content_type,
+                                       id=conference.id)
         return context
 
     @jsonrpc_method('teleforma.stop_conference')

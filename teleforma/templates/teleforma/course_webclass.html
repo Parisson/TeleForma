@@ -3,6 +3,27 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
+
+{% block infra_javascript %}
+
+<script type="text/javascript">
+{% if show_record %}
+$(document).ready(function(){
+    json(['{{seminar.id}}','{{user.username}}'],'teleforma.seminar_load', function(){return null;});
+});
+
+$(window).ready(function(){
+    $(window).bind('beforeunload', function(){
+        console.log('unload')
+        json_sync(['{{seminar.id}}','{{user.username}}'],'teleforma.seminar_unload',function(){return null;});
+    });
+});
+{% endif %}
+</script>
+
+{% endblock infra_javascript %}
+
+
 {% block module-action %}
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
@@ -33,27 +54,16 @@
 <div class="course_media">
 
 <div class="course_title">
-    <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-audio conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
-    </div>
-
-<a href="{% url teleforma-course-detail course.id %}" style="color: #000;">{{ course.title }}</a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
-
+    <a href="{% url teleforma-course-detail course.id %}" style="color: #000;">
+    {{ course.title }}
+    </a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
 </div>
+
+
+Rejoindre la webclasse : <a href="{{ webclass_url }}">webclass_url</a>
 
 <div class="media">
-
-{% for livestream in livestreams %}
-{% if "webm" == livestream.stream_type %}
-<div class="video">
-<video width="640" height="360" controls autoplay preload="auto">
-<!-- Hello Chrome and Firefox (and Opera?) -->
-<source src="{{ livestream.url }}" type="video/webm" />
-</video>
-</div>
-{% endif %}
-{% endfor %}
-
+<!-- include iframe -->
 </div>
 
 {% block general_info %}
@@ -68,11 +78,11 @@
 {% endif %}
 {% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
-{% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end|yes_no }}</dd>{% endif %}
-<dt>{% trans "Live" %}</dt><dd>{% trans "Yes" %}</dd>
-{% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %}
+{% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end }}</dd>{% endif %}
+<dt>{% trans "Live" %}</dt><dd>{% if is_webclass_running %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</dd>
+{% comment %} {% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %} {% endcomment %}
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Conference ID" %}</dt><dd>{{ conference.public_id }}</dd>
+<dt>{% trans "Conference ID" %}</dt><dd>{{ conference.webclass_id }}</dd>
 {% endif %}
 
 </dl>
