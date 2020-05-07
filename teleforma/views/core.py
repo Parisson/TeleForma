@@ -34,6 +34,7 @@
 
 import mimetypes
 import datetime
+from datetime import timedelta
 import random
 import urllib
 import urllib2
@@ -446,23 +447,39 @@ class ConferenceView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
         conference = self.get_object()
-        if conference.webclass: 
+        if conference.webclass:
             context['is_webclass_running'] = conference.is_webclass_running() 
-            context['webclass_url'] = conference.get_join_webclass_url(self.request)
             context['show_record'] = True
             context['seminar'] = conference.seminar.all()[0]
-            
+            context['record'] = None
+            webclass_status = ""
+
+            now = datetime.datetime.now()
+            if conference.date_begin - timedelta(hours=1) > now:
+                # conference not yet started
+                webclass_status = "future"
+            elif conference.date_end < now:
+                # conference expired
+                webclass_status = "past"
+                context['record'] = conference.get_record()
+            elif conference.date_begin - timedelta(hours=1) < now < conference.date_begin:
+                # conference can be joined
+                webclass_status = "almost"
+            else:
+                webclass_status = "ingoing"
+            context['webclass_status'] = webclass_status
         else:
             content_type = ContentType.objects.get(app_label="teleforma", model="conference")
             context['livestreams'] = conference.livestream.all()
             context['host'] = get_host(self.request)
+            all_courses = get_courses(self.request.user)
+            context['all_courses'] = all_courses
             access = get_course_access(conference, all_courses)
             if not access:
                 context['access_error'] = access_error
                 context['message'] = contact_message
 
-        all_courses = get_courses(self.request.user)
-        context['all_courses'] = all_courses
+        
         context['notes'] = conference.notes.all().filter(author=self.request.user)
         context['type'] = conference.course_type
         context['course'] = conference.course
@@ -497,6 +514,29 @@ class ConferenceView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
+
+
+def join_webclass(request, pk):
+    conference = Conference.objects.get(pk=int(pk))
+    user = request.user
+    authorized = False
+
+    # staff or professor ?
+    is_professor = len(user.professor.all()) >= 1
+    is_staff = user.is_staff or user.is_superuser
+    if is_professor or is_staff:
+        authorized = True
+
+    # student registered ?
+    if not authorized:
+        auditor = user.auditor.get()
+        if auditor in conference.auditor.all():
+            authorized = True
+
+    if authorized:
+        return redirect(conference.get_join_webclass_url(user))
+    else:
+        return HttpResponse('Unauthorized', status=401)
 
 
 class ConferenceRecordView(FormView):

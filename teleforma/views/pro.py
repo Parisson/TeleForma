@@ -58,6 +58,8 @@ from cStringIO import StringIO
 
 from xhtml2pdf import pisa
 
+import time
+import json
 import csv
 
 from forms_builder.forms.forms import FormForForm
@@ -65,6 +67,7 @@ from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
 from pbcart.models import Cart
 from quiz.views import QuizTake
+from django.views.decorators.csrf import csrf_exempt
 
 REVISION_DATE_FILTER = datetime.datetime(2015,2,2)
 
@@ -146,10 +149,12 @@ class SeminarAccessMixin(object):
         return super(SeminarAccessMixin, self).render_to_response(context)
 
 
+
+    
 class SeminarRevisionMixin(object):
 
-    @jsonrpc_method('teleforma.seminar_load')
-    def seminar_load(request, id, username):
+    @staticmethod
+    def seminar_do_load(request, id, username):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
@@ -166,9 +171,12 @@ class SeminarRevisionMixin(object):
             r = SeminarRevision(seminar=seminar, user=user)
             r.save()
 
-    @jsonrpc_method('teleforma.seminar_unload')
-    def seminar_unload(request, id, username):
-        import pdb;pdb.set_trace()
+    @jsonrpc_method('teleforma.seminar_load')
+    def seminar_load(request, id, username):
+        return SeminarRevisionMixin.seminar_do_load(request, id, username)
+    
+    @staticmethod
+    def seminar_do_unload(request, id, username):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
         all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
@@ -191,6 +199,9 @@ class SeminarRevisionMixin(object):
                 revision.date_modified = now
                 revision.save()
 
+    @jsonrpc_method('teleforma.seminar_unload')
+    def seminar_unload(request, id, username):
+        return SeminarRevisionMixin.seminar_do_unload(request, id, username)
 
 class SeminarView(SeminarAccessMixin, DetailView):
 
@@ -931,3 +942,48 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
                 doc.save()
 
         return render(self.request, 'quiz/result.html', results)
+
+def process_webclass_bbb_webhook(request, event):
+    meeting = event["attributes"]["meeting"]["external-meeting-id"]
+    user = event["attributes"]["user"]["external-user-id"]
+    conf = Conference.objects.get(webclass_id = meeting)
+    user = User.objects.get(username = user)
+    seminar = Seminar.objects.get(conference = conf)
+
+    mixin = SeminarRevisionMixin()
+
+    if event["id"] == "user-joined":
+        print("JOIN", seminar, conf, user)
+        mixin.seminar_do_load(request, seminar.pk, user.username)
+        print("JOIN DONE", seminar, conf, user)
+    else:
+        print("LEAVE", seminar, conf, user)            
+        mixin.seminar_do_unload(request, seminar.pk, user.username)
+        print("LEAVE DONE", seminar, conf, user)            
+    
+@csrf_exempt
+def webclass_bbb_webhook(request):
+    """
+    Hook for the Big Blue Button webhooks
+    """
+    if not settings.BBB_USE_WEBHOOKS:
+        return HttpResponse("Web hooks disabled")
+    
+    if request.method != "POST":
+        raise PermissionDenied
+
+    event = json.loads(request.POST['event'])
+    event = event[0]["data"]
+    if event["type"] != "event":
+        raise PermissionDenied
+    print(event["id"])
+    if event["id"] not in ('user-joined', 'user-left'):
+        return HttpResponse("ok")
+
+    try:
+        process_webclass_bbb_webhook(request, event)
+    except Exception as e:
+        logger.exception("Error processing event %s from BBB for %s on %s" % (event["id"], user.username, seminar.pk))
+    
+    return HttpResponse("ok")
+    

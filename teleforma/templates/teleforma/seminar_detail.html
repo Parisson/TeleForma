@@ -55,21 +55,12 @@ var seminarUtils = {
                 });
          },
         {% endif %}
-
-        load : function(id, username){
-            json([id, username],'teleforma.seminar_load', function(){return null;});
-         },
-
-        unload : function(id, username){
-            json_sync([id, username],'teleforma.seminar_unload',function(){return null;});
-         },
         }
 
 var f = seminarUtils;
-
-$(document).ready(function( ){
-      f.load('{{seminar.id}}','{{user.username}}');
-    });
+$(document).ready(function(){
+    onLoadSeminar('{{seminar.id}}','{{user.username}}')
+});
 
 $(window).ready(function( ){
   {% if user.is_staff %}
@@ -85,10 +76,11 @@ $(window).ready(function( ){
             }
         });
   {% endif %}
-      $(window).bind('beforeunload', function(){
-            f.unload('{{seminar.id}}','{{user.username}}');
-          });
+    $(window).bind('beforeunload', function(){
+        console.log('unload')
+        onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
     });
+});
 
 </script>
 

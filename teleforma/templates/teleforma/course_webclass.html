@@ -9,13 +9,13 @@
 <script type="text/javascript">
 {% if show_record %}
 $(document).ready(function(){
-    json(['{{seminar.id}}','{{user.username}}'],'teleforma.seminar_load', function(){return null;});
+    onLoadSeminar('{{seminar.id}}','{{user.username}}')
 });
 
 $(window).ready(function(){
     $(window).bind('beforeunload', function(){
         console.log('unload')
-        json_sync(['{{seminar.id}}','{{user.username}}'],'teleforma.seminar_unload',function(){return null;});
+        onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
     });
 });
 {% endif %}
@@ -60,11 +60,31 @@ $(window).ready(function(){
 </div>
 
 
-Rejoindre la webclasse : <a href="{{ webclass_url }}">webclass_url</a>
 
-<div class="media">
-<!-- include iframe -->
-</div>
+
+
+{% if webclass_status == 'past' %}
+    {% if record %}
+        <p>La conférence est terminée, vous pouvez la revoir ci-dessous.
+        <div class="media">
+        <iframe src="{{record.url}}" width="100%" height="500"></iframe>
+        </div>
+    {% else %}
+        <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.
+    {% endif %}
+{% elif webclass_status == 'ingoing' %}
+    <p>La conférence est en cours.</p>
+    <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence</a>
+{% elif webclass_status == 'almost' %}
+    <p>La conférence va bientôt démarrer. </p>
+    <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence</a>
+{% elif webclass_status == 'future' %}
+    <p>La conférence est prévue pour le {{ conference.date_begin }}. Revenez ici à ce moment là pour pouvoir la rejoindre.</p>
+{% endif %}
+
+
+<p>DEBUG : <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence</a></p>
+
 
 {% block general_info %}
 <div class="course_content" id="media_infos">
