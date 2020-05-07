@@ -546,23 +546,6 @@ class WebclassMixin(Model):
             self.webclass_id = meeting_id
             self.webclass_password = password
 
-<<<<<<< HEAD
-    @property
-    def participant_slot_available(self):
-        """
-        is there any slot available for another participants
-        """
-        if self.webclass and self.webclass_max_participants:
-            auditors = self.auditor.count()
-            return auditors < self.webclass_max_participants
-        return True
-    
-    def join_webclass(self):
-        """ """
-
-    def get_webclass_info(self):
-        """ """
-=======
 
     def create_webclass_room(self):
         """ create a BBB room and generate meeting id and moderator password """
@@ -645,8 +628,16 @@ class WebclassMixin(Model):
             return None
         return longest_record
 
-
->>>>>>> fdfea86b7089c1634487e00b3ca8465c8f9ff762
+    @property
+    def participant_slot_available(self):
+        """
+        is there any slot available for another participants
+        """
+        if self.webclass and self.webclass_max_participants:
+            auditors = self.auditor.count()
+            return auditors < self.webclass_max_participants
+        return True
+    
 
 
 class Conference(Displayable, WebclassMixin):
