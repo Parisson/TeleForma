@@ -62,13 +62,14 @@ from mezzanine.core.models import Displayable
 from mezzanine.core.managers import DisplayableManager
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import date
-from bigbluebutton_api_python import BigBlueButton
+from bigbluebutton_api_python.exception import BBBException
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
+from teleforma.bbb_utils import bbb, register_web_hook
+
 app_label = 'teleforma'
 
-bbb = BigBlueButton(settings.BBB_SERVER, settings.BBB_SECRET)
 
 def get_n_choices(n):
     return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]
@@ -535,32 +536,17 @@ class WebclassMixin(Model):
     class Meta(MetaCore):
         abstract = True
 
-    def create_webclass_room(self):
-        """ """
-        if not self.webclass_id:
+    def prepare_webclass(self):
+        """
+        generate room id and moderator password 
+        """
+        if not self.webclass_id and self.webclass:
             meeting_id = self.slug + "-" + self.period
-            # TODO : generate password
-            password = 'pw'
-            params = {
-                'moderatorPW':password,
-                # 'maxParticipants':self.webclass_max_participants + 1,
-                # 'welcome':"Bienvenue sur la conférence \"%s\"." % (str(self.title),),
-                'record':True,
-                'autoStartRecording':True,
-                'muteOnStart':True,
-                'allowModsToUnmuteUsers':True,
-                'guestPolicy':'ALWAYS_DENY'
-            }
-            
-            try:
-                result = bbb.create_meeting(self.slug+'2', params=params)
-            except BigBlueButton.BBBException:
-                raise
-
-            meeting_id = result['xml']['meetingID'].decode()
+            password = User.objects.make_random_password()
             self.webclass_id = meeting_id
             self.webclass_password = password
 
+<<<<<<< HEAD
     @property
     def participant_slot_available(self):
         """
@@ -576,6 +562,91 @@ class WebclassMixin(Model):
 
     def get_webclass_info(self):
         """ """
+=======
+
+    def create_webclass_room(self):
+        """ create a BBB room and generate meeting id and moderator password """
+        if self.webclass_id and self.webclass:
+            try:
+                # check if meeting already exists
+                self.get_webclass_info()
+            except BBBException:
+                params = {
+                    'moderatorPW':self.webclass_password,
+                    'attendeePW':'pwattendee',
+                    # 'maxParticipants':self.webclass_max_participants + 1,
+                    'welcome':"Bienvenue sur la conférence \"%s\"." % (str(self.title),),
+                    'record':True,
+                    # 'autoStartRecording':True,
+                    'muteOnStart':True,
+                    'allowModsToUnmuteUsers':True,
+                    # 'guestPolicy':'ALWAYS_ACCEPT'
+                }
+             
+                try:
+                    result = bbb.create_meeting(self.webclass_id, params=params)
+                    register_web_hook()
+                except BBBException as e:
+                    print(e)
+                    raise
+            
+    
+    def get_join_webclass_url(self, user):
+        """ 
+        Get url to BBB meeting.
+        If user are professor or staff, provide the url with the moderator password
+        """
+        self.create_webclass_room()
+        username = user.get_full_name()
+        is_professor = len(user.professor.all()) >= 1
+        is_staff = user.is_staff or user.is_superuser
+        password = 'pwattendee'
+        if is_professor or is_staff:
+            password = self.webclass_password
+        params = {'userID': user.username}
+        print(bbb.get_join_meeting_url(username, self.webclass_id, password, params))
+        return bbb.get_join_meeting_url(username, self.webclass_id, password, params)
+
+    def is_webclass_running(self):
+        """ Is webclass currently running ? """
+        # print(self.get_webclass_info())
+        return bbb.is_meeting_running(self.webclass_id).get_field('running').decode() == 'true' or False
+
+    def get_webclass_info(self):
+        """ """
+        print(self.webclass_id)
+        print(bbb.get_meeting_info(self.webclass_id))
+        return bbb.get_meeting_info(self.webclass_id)
+
+    def get_record(self):
+        """ get longest published record for the current conference """
+        all_records = []
+        for recording in bbb.get_recordings(self.webclass_id).get_field('recordings')['recording']:
+            recording.prettyprint()
+            url = recording.get('playback', {}).get('format', {}).get('url')
+            if url:
+                url = url.decode()
+            data = {
+                'start': int(recording['startTime'].decode()),
+                'end': int(recording['endTime'].decode()),
+                'url': url,
+                'state': recording['state'].decode(),
+            }
+            data['duration'] = data['end'] - data['start']
+            all_records.append(data)
+
+        print('all_records')
+        print(all_records)
+        if not all_records:
+            return None
+        all_records = sorted(all_records, key=lambda record:-record['duration'])
+        longest_record = all_records[0]
+        if not longest_record['url'] or longest_record['state'] != 'published':
+            return None
+        return longest_record
+
+
+>>>>>>> fdfea86b7089c1634487e00b3ca8465c8f9ff762
 
 
 class Conference(Displayable, WebclassMixin):
@@ -724,7 +795,7 @@ class Conference(Displayable, WebclassMixin):
 @receiver(pre_save, sender=Conference)
 def create_webclass_room(sender, **kwargs):
     instance = kwargs['instance']
-    instance.create_webclass_room()
+    instance.prepare_webclass()
 
 class NamePaginator(object):
     """Pagination for string-based objects"""

@@ -96,6 +96,10 @@ urlpatterns = patterns('',
         name="teleforma-conference-audio"),
     url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
         name="teleforma-conference-record"),
+    url(r'^desk/conferences/(?P<pk>.*)/join/$',
+        join_webclass,
+        name="teleforma-conference-join"),
+    
 
     # Questions
     url(r'^desk/seminars/(?P<id>.*)/questions/(?P<pk>.*)/$', AnswerView.as_view(),
@@ -166,4 +170,8 @@ urlpatterns = patterns('',
 
     url(r'^desk/test/(?P<pk>.*)/$', AnswerDetailViewTest.as_view(), name="test"),
 
+    # Webclass hook
+    url(r'^webclass_bbb_webhook/', webclass_bbb_webhook,
+        name="webclass_bbb_webhook"),
+                       
 )
