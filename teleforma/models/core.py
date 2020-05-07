@@ -561,16 +561,21 @@ class WebclassMixin(Model):
             self.webclass_id = meeting_id
             self.webclass_password = password
 
+    @property
+    def participant_slot_available(self):
+        """
+        is there any slot available for another participants
+        """
+        if self.webclass and self.webclass_max_participants:
+            auditors = self.auditor.count()
+            return auditors < self.webclass_max_participants
+        return True
     
-    def join_webclass(self, username):
+    def join_webclass(self):
         """ """
-        print(bbb.get_join_meeting_url('user','fake2', 'pw'))
 
     def get_webclass_info(self):
         """ """
-        info = bbb.get_meeting_info(self.webclass_id)
-        import pdb;pdb.set_trace()
-
 
 
 class Conference(Displayable, WebclassMixin):
