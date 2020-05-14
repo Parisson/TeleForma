@@ -7,14 +7,13 @@
 {% block infra_javascript %}
 
 <script type="text/javascript">
-{% if show_record %}
+{% if webclass_status == 'past' %}
 $(document).ready(function(){
     onLoadSeminar('{{seminar.id}}','{{user.username}}')
 });
 
 $(window).ready(function(){
     $(window).bind('beforeunload', function(){
-        console.log('unload')
         onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
     });
 });
@@ -25,29 +24,6 @@ $(window).ready(function(){
 
 
 {% block module-action %}
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
-<script type="text/javascript">
-    var conferenceUtils = {
-        stop : function(id){
-            json([id],'teleforma.stop_conference',function(){
-                location.href = '{% url teleforma-conference-record %}';
-                }
-                );
-        }}
-
-    jQuery(window).ready(function(){
-        var a = jQuery('#action_red');
-        var f = conferenceUtils;
-        a.unbind('click').click(function(){
-            f.stop('{{conference.public_id}}');return false;});
-        });
-</script>
-
-<div class="module_action">
-<a href="#" class="component_icon button" id="action_red">{% trans "S T O P" %}</a>
-</div>
-{% endif %}
 {% endblock module-action %}
 
 {% block course %}
@@ -59,7 +35,9 @@ $(window).ready(function(){
     </a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
 </div>
 
-
+{% if not seminar %}
+<p class="warning">Attention, aucun séminaire n'est associé à cette conférence.</p>
+{% endif %}
 
 
 
@@ -83,8 +61,16 @@ $(window).ready(function(){
 {% endif %}
 
 
-<p>DEBUG : <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence</a></p>
 
+<h3>Liens de test</h3>
+<p>
+Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence en tant que <strong>{{ request.user.username }}</strong></a>
+</p>
+<ul>
+{% for i in range %}
+<li>{{i}} : <a href="{% url teleforma-conference-join conference.id %}?username=test{{i}}">Cliquez ici pour rejoindre la conférence en tant que <strong>test{{i}}</strong></a></li>
+{% endfor %}
+</ul>
 
 {% block general_info %}
 <div class="course_content" id="media_infos">

@@ -43,6 +43,7 @@ import string
 import datetime
 import mimetypes
 import copy
+from unidecode import unidecode
 
 from django.conf import settings
 from django.db.models import *
@@ -541,7 +542,8 @@ class WebclassMixin(Model):
         generate room id and moderator password 
         """
         if not self.webclass_id and self.webclass:
-            meeting_id = self.slug + "-" + self.period
+            # not sure why, but the slug contains accent
+            meeting_id = unidecode(self.slug) + "-" + str(self.period)
             password = User.objects.make_random_password()
             self.webclass_id = meeting_id
             self.webclass_password = password
@@ -558,7 +560,7 @@ class WebclassMixin(Model):
                     'moderatorPW':self.webclass_password,
                     'attendeePW':'pwattendee',
                     # 'maxParticipants':self.webclass_max_participants + 1,
-                    'welcome':"Bienvenue sur la conférence \"%s\"." % (str(self.title),),
+                    'welcome':"Bienvenue sur la conférence \"%s\"." % (self.title.encode('utf-8'),),
                     'record':True,
                     # 'autoStartRecording':True,
                     'muteOnStart':True,
@@ -574,7 +576,7 @@ class WebclassMixin(Model):
                     raise
             
     
-    def get_join_webclass_url(self, user):
+    def get_join_webclass_url(self, user, username=None):
         """ 
         Get url to BBB meeting.
         If user are professor or staff, provide the url with the moderator password
@@ -588,6 +590,17 @@ class WebclassMixin(Model):
             password = self.webclass_password
         params = {'userID': user.username}
         print(bbb.get_join_meeting_url(username, self.webclass_id, password, params))
+        return bbb.get_join_meeting_url(username, self.webclass_id, password, params)
+
+    def get_fake_join_webclass_url(self, username):
+        """ 
+        Fake join url for testing purpose
+        Get url to BBB meeting.
+        If user are professor or staff, provide the url with the moderator password
+        """
+        self.create_webclass_room()
+        password = 'pwattendee'
+        params = {'userID': username}
         return bbb.get_join_meeting_url(username, self.webclass_id, password, params)
 
     def is_webclass_running(self):
@@ -604,7 +617,11 @@ class WebclassMixin(Model):
     def get_record(self):
         """ get longest published record for the current conference """
         all_records = []
-        for recording in bbb.get_recordings(self.webclass_id).get_field('recordings')['recording']:
+        recordings = []
+        recordings_xml = bbb.get_recordings(self.webclass_id).get_field('recordings')
+        if hasattr(recordings_xml, 'get'):
+            recordings = recordings_xml['recording']
+        for recording in recordings:
             recording.prettyprint()
             url = recording.get('playback', {}).get('format', {}).get('url')
             if url:
@@ -623,6 +640,7 @@ class WebclassMixin(Model):
         if not all_records:
             return None
         all_records = sorted(all_records, key=lambda record:-record['duration'])
+
         longest_record = all_records[0]
         if not longest_record['url'] or longest_record['state'] != 'published':
             return None
@@ -638,7 +656,9 @@ class WebclassMixin(Model):
             return auditors < self.webclass_max_participants
         return True
     
-
+    # def clean(self):
+    #     if self.start_date > self.end_date::
+    #         raise ValidationError("Dates are incorrect")
 
 class Conference(Displayable, WebclassMixin):
 

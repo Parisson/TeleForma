@@ -72,3 +72,5 @@ class Command(BaseCommand):
                                          date = start,
                                          date_modified = end)
                     sr.save()
+                    sr.date = start
+                    sr.save()

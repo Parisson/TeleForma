@@ -450,8 +450,13 @@ class ConferenceView(DetailView):
         if conference.webclass:
             context['is_webclass_running'] = conference.is_webclass_running() 
             context['show_record'] = True
-            context['seminar'] = conference.seminar.all()[0]
+            try:
+                context['seminar'] = conference.seminar.all()[0]
+            except IndexError :
+                context['seminar'] = None
             context['record'] = None
+            # debug -> test links
+            context['range'] = range(0,15)
             webclass_status = ""
 
             now = datetime.datetime.now()
@@ -518,6 +523,10 @@ class ConferenceView(DetailView):
 
 def join_webclass(request, pk):
     conference = Conference.objects.get(pk=int(pk))
+    # fake debug links
+    username = request.GET.get('username')
+    if username:
+        return redirect(conference.get_fake_join_webclass_url(username))
     user = request.user
     authorized = False
 
