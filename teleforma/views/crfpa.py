@@ -50,6 +50,8 @@ from django.forms.formsets import all_valid
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
 
+ORAL_OPTION_PRICE = 250
+
 def get_course_code(obj):
     if obj:
         return unicode(obj.code)
@@ -674,12 +676,19 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         label += u"<i>%d heures de formation du %s au %s</i>" % (training.duration,
                                                                 period.date_begin.strftime('%d/%m/%Y'),
                                                                 period.date_end.strftime('%d/%m/%Y'),)
-                                                                
-            
+
+        if student.oral_1:
+            substract += ORAL_OPTION_PRICE            
+        
         items.append({ 'label': label,
                        'unit_price': student.total_fees - substract - student.total_discount,
                        'amount': 1,
                        'discount': student.total_discount, }, )
+        if student.oral_1:
+            items.append({ 'label': "<b>Option langue</b>",
+                           'unit_price': ORAL_OPTION_PRICE,
+                           'amount': 1,
+                           'discount': 0, }, )
         for item in items:
             item['total'] = item['unit_price'] * item['amount']
             if item['discount']:
