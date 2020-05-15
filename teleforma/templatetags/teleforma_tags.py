@@ -196,6 +196,7 @@ def get_all_correctors_with_courses():
                 'name':corrector.last_name + " " + corrector.first_name,
                 'courses':json.dumps(list(correctors[corrector]))
             })
+    result = sorted(result, key=lambda corrector:int(corrector['id']))
     return result
 
 
