@@ -684,7 +684,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
                        'unit_price': student.total_fees - substract - student.total_discount,
                        'amount': 1,
                        'discount': student.total_discount, }, )
-        if student.oral_1:
+        if student.oral_1 and student.oral_1.title != 'Aucune':
             items.append({ 'label': "<b>Option langue</b>",
                            'unit_price': ORAL_OPTION_PRICE,
                            'amount': 1,
