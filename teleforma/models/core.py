@@ -530,6 +530,7 @@ class Media(MediaBase):
 class WebclassMixin(Model):
     webclass                        = models.BooleanField(_('Web class'), default=False)
     webclass_max_participants       = models.IntegerField(_('Web class : nombre maxium de participants'), blank=True, null=True)
+    webclass_hours_complementary    = DurationField('Web class : heures de validation des acquis')
     webclass_id                     = models.CharField('Web class : id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255)
     webclass_password               = models.CharField('Web class : password du modérateur (généré automatiquement)', blank=True, null=True, max_length=255)
 
@@ -541,7 +542,7 @@ class WebclassMixin(Model):
         generate room id and moderator password 
         """
         if not self.webclass_id and self.webclass:
-            meeting_id = self.slug + "-" + self.period
+            meeting_id = self.slug + "-" + str(self.period)
             password = User.objects.make_random_password()
             self.webclass_id = meeting_id
             self.webclass_password = password
