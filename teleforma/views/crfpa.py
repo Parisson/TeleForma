@@ -677,14 +677,16 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
                                                                 period.date_begin.strftime('%d/%m/%Y'),
                                                                 period.date_end.strftime('%d/%m/%Y'),)
 
-        if student.oral_1:
+        oral_1 = student.oral_1 and student.oral_1.title != 'Aucune'
+        
+        if oral_1:
             substract += ORAL_OPTION_PRICE            
         
         items.append({ 'label': label,
                        'unit_price': student.total_fees - substract - student.total_discount,
                        'amount': 1,
                        'discount': student.total_discount, }, )
-        if student.oral_1 and student.oral_1.title != 'Aucune':
+        if oral_1:
             items.append({ 'label': "<b>Option langue</b>",
                            'unit_price': ORAL_OPTION_PRICE,
                            'amount': 1,
