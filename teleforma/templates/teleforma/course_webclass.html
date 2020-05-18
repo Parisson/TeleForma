@@ -4,25 +4,6 @@
 {% load i18n %}
 
 
-{% block infra_javascript %}
-
-<script type="text/javascript">
-{% if webclass_status == 'past' %}
-$(document).ready(function(){
-    onLoadSeminar('{{seminar.id}}','{{user.username}}')
-});
-
-$(window).ready(function(){
-    $(window).bind('beforeunload', function(){
-        onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
-    });
-});
-{% endif %}
-</script>
-
-{% endblock infra_javascript %}
-
-
 {% block module-action %}
 {% endblock module-action %}
 
@@ -39,23 +20,24 @@ $(window).ready(function(){
 <p class="warning">Attention, aucun séminaire n'est associé à cette conférence.</p>
 {% endif %}
 
+<br/><br/>
 
 
 {% if webclass_status == 'past' %}
     {% if record %}
         <p>La conférence est terminée, vous pouvez la revoir ci-dessous.
         <div class="media">
-        <iframe src="{{record.url}}" width="100%" height="500"></iframe>
+        <a href="{% url teleforma-conference-webclass-record conference.id%}">Voir l'enregistrement</a>
         </div>
     {% else %}
         <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.
     {% endif %}
 {% elif webclass_status == 'ingoing' %}
     <p>La conférence est en cours.</p>
-    <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence</a>
+    <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence</a>
 {% elif webclass_status == 'almost' %}
     <p>La conférence va bientôt démarrer. </p>
-    <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence</a>
+    <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence</a>
 {% elif webclass_status == 'future' %}
     <p>La conférence est prévue pour le {{ conference.date_begin }}. Revenez ici à ce moment là pour pouvoir la rejoindre.</p>
 {% endif %}
@@ -64,11 +46,11 @@ $(window).ready(function(){
 
 <h3>Liens de test</h3>
 <p>
-Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}">Cliquez ici pour rejoindre la conférence en tant que <strong>{{ request.user.username }}</strong></a>
+Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>{{ request.user.username }}</strong></a>
 </p>
 <ul>
 {% for i in range %}
-<li>{{i}} : <a href="{% url teleforma-conference-join conference.id %}?username=test{{i}}">Cliquez ici pour rejoindre la conférence en tant que <strong>test{{i}}</strong></a></li>
+<li><a href="{% url teleforma-conference-join conference.id %}?username=test{{i}}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>test{{i}}</strong></a></li>
 {% endfor %}
 </ul>
 

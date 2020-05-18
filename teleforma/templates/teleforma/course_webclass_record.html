@@ -1,0 +1,30 @@
+{% extends "teleforma/base.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+
+{% block infra_javascript %}
+
+<script type="text/javascript">
+{% if show_record %}
+$(document).ready(function(){
+    onLoadSeminar('{{seminar.id}}','{{user.username}}')
+});
+
+$(window).ready(function(){
+    $(window).bind('beforeunload', function(){
+        onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
+    });
+});
+{% endif %}
+</script>
+
+{% endblock infra_javascript %}
+
+
+
+{% block content %}
+<iframe src="{{record.url}}" width="100%" height="1000"></iframe>
+{% endblock content %}
+

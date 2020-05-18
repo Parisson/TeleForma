@@ -435,10 +435,11 @@ class DocumentReadView(DocumentView):
 class ConferenceView(DetailView):
 
     model = Conference
-    # template_name='teleforma/course_conference.html'
 
-    def get_template_names(self):
+    def get_template_names(self, *args, **kwargs):
         conference = self.get_object()
+        if self.template_name:
+            return [self.template_name]
         if conference.webclass:
             return ['teleforma/course_webclass.html']
         else:
@@ -449,6 +450,7 @@ class ConferenceView(DetailView):
         conference = self.get_object()
         if conference.webclass:
             context['is_webclass_running'] = conference.is_webclass_running() 
+            
             context['show_record'] = True
             try:
                 context['seminar'] = conference.seminar.all()[0]

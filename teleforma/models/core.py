@@ -635,8 +635,6 @@ class WebclassMixin(Model):
             data['duration'] = data['end'] - data['start']
             all_records.append(data)
 
-        print('all_records')
-        print(all_records)
         if not all_records:
             return None
         all_records = sorted(all_records, key=lambda record:-record['duration'])
