@@ -67,9 +67,10 @@ var seminarUtils = {
 
 var f = seminarUtils;
 
-$(document).ready(function( ){
-      f.load('{{seminar.id}}','{{user.username}}');
-    });
+var f = seminarUtils;
+$(document).ready(function(){
+    onLoadSeminar('{{seminar.id}}','{{user.username}}')
+});
 
 $(window).ready(function( ){
   {% if user.is_staff %}
@@ -85,10 +86,10 @@ $(window).ready(function( ){
             }
         });
   {% endif %}
-      $(window).bind('beforeunload', function(){
-            f.unload('{{seminar.id}}','{{user.username}}');
-          });
+    $(window).bind('beforeunload', function(){
+        onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
     });
+});
 
 </script>
 
