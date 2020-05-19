@@ -77,7 +77,6 @@ $(window).ready(function( ){
         });
   {% endif %}
     $(window).bind('beforeunload', function(){
-        console.log('unload')
         onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
     });
 });
