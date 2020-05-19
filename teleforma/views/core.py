@@ -474,6 +474,7 @@ class ConferenceView(DetailView):
                 webclass_status = "almost"
             else:
                 webclass_status = "ingoing"
+            context['record'] = conference.get_record()
             context['webclass_status'] = webclass_status
         else:
             content_type = ContentType.objects.get(app_label="teleforma", model="conference")

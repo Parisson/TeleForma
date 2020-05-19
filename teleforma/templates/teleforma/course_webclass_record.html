@@ -6,6 +6,18 @@
 
 {% block infra_javascript %}
 
+<style>
+iframe {
+    position: fixed;
+    background: #000;
+    border: none;
+    top: 40px; right: 0;
+    bottom: 100px; left: 0;
+    width: 100%;
+    height: 90%;
+}
+</style>
+
 <script type="text/javascript">
 {% if show_record %}
 $(document).ready(function(){
@@ -25,6 +37,6 @@ $(window).ready(function(){
 
 
 {% block content %}
-<iframe src="{{record.url}}" width="100%" height="1000"></iframe>
+<iframe src="{{record.url}}" width="100%"></iframe>
 {% endblock content %}
 

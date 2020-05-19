@@ -139,6 +139,7 @@ class SeminarAccessMixin(object):
         m = (totsec%3600) // 60
         sec =(totsec%3600)%60
         context['timer'] = "%d:%d:%d" %(h,m,sec)
+        context['conferences'] = all_conferences(self.request)
         return context
 
     def render_to_response(self, context):
@@ -314,7 +315,8 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
         self.question = Question.objects.get(pk=self.kwargs['pk'])
         self.user = self.get_user()
 
-        if self.question.seminar.conference in self.user.auditor.get().conferences.all():
+        conference = self.question.seminar.conference
+        if conference in self.user.auditor.get().conferences.all() and not conference.webclass:
             raise PermissionDenied
         
         answers = Answer.objects.filter(user=self.user,

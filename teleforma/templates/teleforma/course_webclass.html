@@ -16,7 +16,7 @@
     </a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
 </div>
 
-{% if not seminar %}
+{% if not seminar and user.is_superuser %}
 <p class="warning">Attention, aucun séminaire n'est associé à cette conférence.</p>
 {% endif %}
 
@@ -26,24 +26,23 @@
 {% if webclass_status == 'past' %}
     {% if record %}
         <p>La conférence est terminée, vous pouvez la revoir ci-dessous.
-        <div class="media">
-        <a href="{% url teleforma-conference-webclass-record conference.id%}">Voir l'enregistrement</a>
-        </div>
+        <a href="{% url teleforma-conference-webclass-record conference.id%}" class="conference-big-button component_icon button icon_next">Voir l'enregistrement</a>
     {% else %}
         <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.
     {% endif %}
 {% elif webclass_status == 'ingoing' %}
     <p>La conférence est en cours.</p>
-    <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence</a>
+    <a href="{% url teleforma-conference-join conference.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
 {% elif webclass_status == 'almost' %}
     <p>La conférence va bientôt démarrer. </p>
-    <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence</a>
+    <a href="{% url teleforma-conference-join conference.id %}" target="_blank" class="conference-big-buttoncomponent_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
 {% elif webclass_status == 'future' %}
     <p>La conférence est prévue pour le {{ conference.date_begin }}. Revenez ici à ce moment là pour pouvoir la rejoindre.</p>
 {% endif %}
 
 
-
+{% if user.is_superuser %}
+<div style="border:1px solid grey">
 <h3>Liens de test</h3>
 <p>
 Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>{{ request.user.username }}</strong></a>
@@ -53,6 +52,9 @@ Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}
 <li><a href="{% url teleforma-conference-join conference.id %}?username=test{{i}}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>test{{i}}</strong></a></li>
 {% endfor %}
 </ul>
+</div>
+{% endif %}
+
 
 {% block general_info %}
 <div class="course_content" id="media_infos">

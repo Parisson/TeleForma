@@ -66,6 +66,7 @@ from django.template.defaultfilters import date
 from bigbluebutton_api_python.exception import BBBException
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from jxmlease import XMLListNode, XMLDictNode
 
 from teleforma.bbb_utils import bbb, register_web_hook
 
@@ -621,6 +622,8 @@ class WebclassMixin(Model):
         recordings_xml = bbb.get_recordings(self.webclass_id).get_field('recordings')
         if hasattr(recordings_xml, 'get'):
             recordings = recordings_xml['recording']
+        if type(recordings) is XMLDictNode:
+            recordings = [recordings]
         for recording in recordings:
             recording.prettyprint()
             url = recording.get('playback', {}).get('format', {}).get('url')

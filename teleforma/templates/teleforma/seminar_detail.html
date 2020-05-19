@@ -166,7 +166,7 @@ $(window).ready(function( ){
        </div>
       {% endwith %}
 
-   {% if not seminar.conference in user.auditor.get.conferences.all %}
+   {% if seminar.conference.webclass or not seminar.conference in user.auditor.get.conferences.all %}
 
      {% with seminar.question as questions %}
        <div class="course_content">
