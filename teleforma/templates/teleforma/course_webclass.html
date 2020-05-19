@@ -12,8 +12,8 @@
 
 <div class="course_title">
     <a href="{% url teleforma-course-detail course.id %}" style="color: #000;">
-    {{ course.title }}
-    </a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
+    Webconférence - {{ conference.title }}
+    </a>
 </div>
 
 {% if not seminar and user.is_superuser %}
@@ -61,15 +61,16 @@ Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}
 <dl class="listing">
 
 {% if conference.professor %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
-<dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
+<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ conference.course.title }}{% if conference.course_type != None %} - {{ conference.course_type }}{% endif %}</a></dd>
+<dt>Niveau</dt><dd>{{ conference.level }}</dd>
 <dt>{% trans "Professor" %}</dt>
     <dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
 {% endif %}
 {% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
 {% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end }}</dd>{% endif %}
-<dt>{% trans "Live" %}</dt><dd>{% if is_webclass_running %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</dd>
+{% comment %} <dt>{% trans "Live" %}</dt><dd>{% if is_webclass_running %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</dd> {% endcomment %}
+<dt>{% trans "Live" %}</dt><dd>{% trans "Yes" %}</dd>
 {% comment %} {% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %} {% endcomment %}
 {% if user.is_staff or user.is_superuser %}
 <dt>{% trans "Conference ID" %}</dt><dd>{{ conference.webclass_id }}</dd>
