@@ -54,6 +54,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
+from django.contrib.sites.models import Site
 from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
@@ -539,6 +540,10 @@ class WebclassMixin(Model):
     class Meta(MetaCore):
         abstract = True
 
+    @property
+    def weight(self):
+        return 50
+
     def prepare_webclass(self):
         """
         generate room id and moderator password 
@@ -551,25 +556,32 @@ class WebclassMixin(Model):
             self.webclass_password = password
 
 
-    def create_webclass_room(self):
+    def create_webclass_room(self, request):
         """ create a BBB room and generate meeting id and moderator password """
         if self.webclass_id and self.webclass:
             try:
                 # check if meeting already exists
                 self.get_webclass_info()
             except BBBException:
+                year = datetime.datetime.now().year
+                # site_url = 'https://' + request.get_host()
                 params = {
                     'moderatorPW':self.webclass_password,
                     'attendeePW':'pwattendee',
                     # 'maxParticipants':self.webclass_max_participants + 1,
-                    'welcome':"Bienvenue sur la conférence \"%s\"." % (self.title.encode('utf-8'),),
+                    'welcome':"Pro-Barreau : Bienvenue sur la conférence \"%s\"." % (self.title.encode('utf-8'),),
                     'record':True,
                     # 'autoStartRecording':True,
                     'muteOnStart':True,
                     'allowModsToUnmuteUsers':True,
+                    'logo':'https://www.pro-barreau.com/static/img/logo_probarreau.png',
+                    'copyright': "© %d Pro-Barreau" % year,
                     # 'guestPolicy':'ALWAYS_ACCEPT'
+                    'bannerText': "Pro-Barreau",
+                    'bannerColor': "#003768",
+                    # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
                 }
-             
+                print params
                 try:
                     result = bbb.create_meeting(self.webclass_id, params=params)
                     register_web_hook()
@@ -578,12 +590,12 @@ class WebclassMixin(Model):
                     raise
             
     
-    def get_join_webclass_url(self, user, username=None):
+    def get_join_webclass_url(self, request, user, username=None):
         """ 
         Get url to BBB meeting.
         If user are professor or staff, provide the url with the moderator password
         """
-        self.create_webclass_room()
+        self.create_webclass_room(request)
         username = user.get_full_name()
         is_professor = len(user.professor.all()) >= 1
         is_staff = user.is_staff or user.is_superuser
@@ -591,7 +603,6 @@ class WebclassMixin(Model):
         if is_professor or is_staff:
             password = self.webclass_password
         params = {'userID': user.username}
-        print(bbb.get_join_meeting_url(username, self.webclass_id, password, params))
         return bbb.get_join_meeting_url(username, self.webclass_id, password, params)
 
     def get_fake_join_webclass_url(self, username):
@@ -658,6 +669,14 @@ class WebclassMixin(Model):
             return auditors < self.webclass_max_participants
         return True
     
+    @property
+    def webclass_duration(self):
+        if self.webclass_hours_complementary:
+            seconds = self.duration.as_seconds() - self.webclass_hours_complementary.as_seconds()
+        else:
+            seconds = self.duration.as_seconds()
+        return datetime.timedelta(seconds=seconds)
+
     # def clean(self):
     #     if self.start_date > self.end_date::
     #         raise ValidationError("Dates are incorrect")
@@ -798,6 +817,12 @@ class Conference(Displayable, WebclassMixin):
     @property
     def suggestions(self):
         return (list(self.suggested_seminars.all()) + list(self.suggested_conferences.all()))[:3]
+
+    def set_as_read(self, user):
+        """ set as read for user """
+        if user not in self.readers.all():
+            self.readers.add(user)
+            self.save()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'

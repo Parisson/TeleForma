@@ -25,31 +25,34 @@
 
 {% if webclass_status == 'past' %}
     {% if record %}
-        <p>La conférence est terminée, vous pouvez la revoir ci-dessous.
+        <p>La conférence est terminée, vous pouvez la revoir ci-dessous.</p>
         <a href="{% url teleforma-conference-webclass-record conference.id%}" class="conference-big-button component_icon button icon_next">Voir l'enregistrement</a>
     {% else %}
-        <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.
+        <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.</p>
     {% endif %}
 {% elif webclass_status == 'ingoing' %}
     <p>La conférence est en cours.</p>
     <a href="{% url teleforma-conference-join conference.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
 {% elif webclass_status == 'almost' %}
-    <p>La conférence va bientôt démarrer. </p>
-    <a href="{% url teleforma-conference-join conference.id %}" target="_blank" class="conference-big-buttoncomponent_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
+    <p>Le salon « Pro-Barreau Live » est accessible.</p>
+    <a href="{% url teleforma-conference-join conference.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
 {% elif webclass_status == 'future' %}
-    <p>La conférence est prévue pour le {{ conference.date_begin }}. Revenez ici à ce moment là pour pouvoir la rejoindre.</p>
+    <p>
+        Votre Webconférence débutera le <strong>{{ conference.date_begin|date:"d/m/Y" }} à {{ conference.date_begin|time:"H\hi" }}</strong>. 
+        Vous pourrez accéder au salon « Pro-Barreau Live » dès {{ begin_minus_1_hour|time:"H\hi" }} en cliquant sur le lien qui apparaitra ci-dessous.
+    </p>
 {% endif %}
 
 
 {% if user.is_superuser %}
 <div style="border:1px solid grey">
-<h3>Liens de test</h3>
+<h3>Liens d'invitation</h3>
 <p>
-Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>{{ request.user.username }}</strong></a>
+Se connecter en tant qu'admin : <a href="{% url teleforma-conference-join conference.id %}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>{{ request.user.username }}</strong></a>
 </p>
 <ul>
 {% for i in range %}
-<li><a href="{% url teleforma-conference-join conference.id %}?username=test{{i}}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>test{{i}}</strong></a></li>
+<li><a href="{% url teleforma-conference-join conference.id %}?username=utilisateur{{i}}" target="_blank">Cliquez ici pour rejoindre la conférence en tant que <strong>utilisateur{{i}}</strong></a></li>
 {% endfor %}
 </ul>
 </div>
@@ -70,6 +73,7 @@ Utilisateur courant : <a href="{% url teleforma-conference-join conference.id %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
 {% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end }}</dd>{% endif %}
 {% comment %} <dt>{% trans "Live" %}</dt><dd>{% if is_webclass_running %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</dd> {% endcomment %}
+<dt>{% trans "Duration" %}</dt><dd>{{ conference.webclass_duration|hours }} {% trans "hours" %}</dd>
 <dt>{% trans "Live" %}</dt><dd>{% trans "Yes" %}</dd>
 {% comment %} {% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %} {% endcomment %}
 {% if user.is_staff or user.is_superuser %}

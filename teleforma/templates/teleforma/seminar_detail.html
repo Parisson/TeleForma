@@ -138,14 +138,27 @@ $(window).ready(function( ){
        </div>
       {% endwith %}
 
-      {% with seminar.medias as medias %}
-       <div class="course_content">
-        <div class="course_subtitle">
-          <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 : {% if medias.all.count > 1 %}{% trans "view these conferences" %}{% else %}{% trans "view this conference" %}{% endif %}</h3>
+      {% if seminar.conference.webclass %} 
+        {% with seminar.conference as webclass %}
+        <div class="course_content">
+          <div class="course_subtitle">
+            <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 : {% trans "view this conference" %}</h3>
+          </div>
+          {% include "teleforma/inc/webclass.html" %}
         </div>
-        {% include "teleforma/inc/media_package_list.html" %}
-       </div>
-      {% endwith %}
+        {% endwith %}
+      {% else %}
+        {% with seminar.medias as medias %}
+        <div class="course_content">
+          <div class="course_subtitle">
+            <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 : {% if medias.all.count > 1 %}{% trans "view these conferences" %}{% else %}{% trans "view this conference" %}{% endif %}</h3>
+          </div>
+          {% include "teleforma/inc/media_package_list.html" %}
+        </div>
+        {% endwith %}
+      {% endif %}
+
+
 
       {% if seminar.quiz %}
       <div class="course_content">

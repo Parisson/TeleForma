@@ -67,6 +67,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
+from django.core.urlresolvers import resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
@@ -462,20 +463,28 @@ class ConferenceView(DetailView):
             webclass_status = ""
 
             now = datetime.datetime.now()
-            if conference.date_begin - timedelta(hours=1) > now:
+
+            begin_minus_1_hour = conference.date_begin - timedelta(hours=1)
+            if now < begin_minus_1_hour:
                 # conference not yet started
                 webclass_status = "future"
-            elif conference.date_end < now:
+            elif conference.date_end + timedelta(hours=1) < now:
                 # conference expired
                 webclass_status = "past"
                 context['record'] = conference.get_record()
-            elif conference.date_begin - timedelta(hours=1) < now < conference.date_begin:
+            elif begin_minus_1_hour < now < conference.date_begin:
                 # conference can be joined
                 webclass_status = "almost"
             else:
                 webclass_status = "ingoing"
+            context['begin_minus_1_hour'] = begin_minus_1_hour
             context['record'] = conference.get_record()
             context['webclass_status'] = webclass_status
+
+            # set conf as read when user navigate to the record page
+            if resolve(self.request.path).url_name == "teleforma-conference-webclass-record":
+                conference.set_as_read(self.request.user)
+            
         else:
             content_type = ContentType.objects.get(app_label="teleforma", model="conference")
             context['livestreams'] = conference.livestream.all()
@@ -529,7 +538,7 @@ def join_webclass(request, pk):
     # fake debug links
     username = request.GET.get('username')
     if username:
-        return redirect(conference.get_fake_join_webclass_url(username))
+        return redirect(conference.get_fake_join_webclass_url(request, username))
     user = request.user
     authorized = False
 
@@ -546,7 +555,8 @@ def join_webclass(request, pk):
             authorized = True
 
     if authorized:
-        return redirect(conference.get_join_webclass_url(user))
+        conference.set_as_read(user)
+        return redirect(conference.get_join_webclass_url(request, user))
     else:
         return HttpResponse('Unauthorized', status=401)
 
