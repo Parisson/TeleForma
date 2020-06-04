@@ -73,6 +73,7 @@ from jsonrpc.proxy import ServiceProxy
 from teleforma.models import *
 from teleforma.forms import *
 from teleforma.models.appointment import AppointmentPeriod
+from teleforma.webclass.models import Webclass, WebclassSlot
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
@@ -398,7 +399,7 @@ class CourseView(CourseAccessMixin, DetailView):
 
     model = Course
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         course = self.get_object()
         courses = []
@@ -411,6 +412,23 @@ class CourseView(CourseAccessMixin, DetailView):
         context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
+        
+        # webclass
+        webclass = None
+        webclass_slot = None
+        student = self.request.user.student.all()
+        if student:
+            student = student[0]
+        
+        if student:
+            try:
+                webclass = Webclass.objects.get(period=self.period, course=course, iej=student.iej)
+            except Webclass.DoesNotExist:
+                pass
+            if webclass:
+                webclass_slot = webclass.get_slot(self.request.user)
+        context['webclass'] = webclass
+        context['webclass_slot'] = webclass_slot
         return context
 
     @method_decorator(login_required)
@@ -469,6 +487,7 @@ class MediaView(CourseAccessMixin, DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
+
         return context
 
     @method_decorator(login_required)

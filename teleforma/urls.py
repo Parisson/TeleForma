@@ -156,6 +156,8 @@ urlpatterns = patterns('',
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
                        
+    # WEBCLASS
+    url(r'^', include('teleforma.webclass.urls')),
 
     # Payment
     url(r'^payment/(?P<pk>.*)/start/$', PaymentStartView.as_view(),

@@ -22,7 +22,11 @@ $(document).ready(function(){
 
 <div class="desk_center">
 
-
+<section id="webclass-registering">
+  {% if webclass and not webclass_slot %}
+  Vous n'êtes pas inscrit à la webconférence de cette matière. <a href="{% url teleforma-webclass-appointments webclass.id %}">Cliquez-ici pour choisir un créneau horaire</a>.
+  {% endif %}
+</section>
 
 
 <br/><br/>
@@ -69,6 +73,15 @@ $(document).ready(function(){
 
         </div>
       {% endfor %}
+      
+      <div class="course">
+        <div class="course_title">{{ course.title }} - Webclass{% if course.description %} - {{ course.description }}{% endif %}
+        </div>
+        {% block webclass %}
+        TEST
+          {% include "webclass/inc/webclass_list.html" %}
+        {% endblock %}
+      </div>
      {% endwith %}
     {% endfor %}
 </div>

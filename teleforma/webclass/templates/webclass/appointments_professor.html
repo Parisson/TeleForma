@@ -1,0 +1,27 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% block head_title %}Calendrier des Webclass{% endblock %}
+
+{% block title %}
+Calendrier des Webclass
+{% endblock %}
+
+
+{% block infra_javascript %}
+{% endblock infra_javascript %}
+
+{% block content %}
+<div>
+    {% for slot in slots %}
+    <div class="webclass-appointment" style="margin-bottom:10px">
+        <span><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span> : {{slot.participants.count}} participant{{slot.participants.count|pluralize}}
+        <a href="{% url teleforma-webclass-join slot.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Rejoindre la conférence</a>
+    </div>
+    {% empty %}
+    <p>Aucune webclasse programmée.</p>
+    {% endfor %}
+</div>
+{% endblock content %}

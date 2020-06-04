@@ -1,0 +1,65 @@
+{% extends "telemeta/base.html" %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+
+{% block extra_javascript %}
+
+    <script type="text/javascript">
+        var currentForm;
+
+        $(document).ready(function () {
+
+            $("#booking-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Confirmer': function () {
+                        currentForm.submit();
+                    },
+                    "Annuler": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+
+            $('.booking_form').submit(function () {
+                currentForm = this;
+                // fill dialog with selected date
+                $('#date_placeholder').text($(currentForm).find('.booking_date').text());
+
+                $('#booking-confirm').dialog('open');
+                return false;
+            });
+
+
+        })
+    </script>
+
+{% endblock extra_javascript %}
+
+
+{% block content %}
+
+    <div id="booking-confirm" title="Réservation">
+        <p>
+            Êtes-vous sûr de vouloir réserver ce créneau ? Vous ne pourrez plus modifier votre choix.
+        </p>
+
+        <h2>Créneau horaire</h2>
+        <strong id="date_placeholder"></strong>
+    </div>
+
+    
+    {% for slot in slots %}
+        <form class="booking_form" method="POST">
+            <span class="booking_date">{{slot.day}} de {{slot.start_hour|date:"H\hi"}}}} à {{slot.end_hour|date:"H\hi"}}}}</span>
+            {% csrf_token %}
+            <input type="hidden" name="slot_id" value="{{slot.id}}" />
+            <input type="submit" value="Sélectionner" />
+        </form>
+    {% endfor %}
+        
+
+{% endblock content %}

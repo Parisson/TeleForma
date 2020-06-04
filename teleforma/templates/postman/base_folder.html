@@ -24,13 +24,13 @@
 {% autopaginate pm_messages %}{% paginate %}
 </div>
 
-{% if messages %}
+{% comment %} {% if messages %}
     <div class="messages">
         {% for message in messages %}
           <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
         {% endfor %}
     </div>
-{% endif %}
+{% endif %} {% endcomment %}
 
 <form id="_messageForm" action="{% block pm_form_action %}{% endblock %}" method="post">{% csrf_token %}
 <table id="pm_messages" class="listing" >
