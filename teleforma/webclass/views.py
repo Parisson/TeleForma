@@ -38,9 +38,10 @@ class WebclassAppointment(View):
     def check_rights(self, user, webclass):
         if not user.is_authenticated():
             return HttpResponseRedirect(reverse('teleforma-login'))
-        student = user.student.all().count()
+        student = user.student.all()[:1]
         if not student:
             return HttpResponse('Unauthorized', status=401)
+        student = student[0]
         # check period
         period_id = webclass.period.id
         periods = [ p for p in get_periods(user) if int(p.id) == period_id ]
@@ -84,7 +85,8 @@ class WebclassAppointment(View):
         if not slot.participant_slot_available:
             return u"Ce créneau n'est plus disponible."
 
-        # # Check we don't have another appointment on this period
+        # Check we don't have another appointment on this period
+        webclass = slot.webclass        
         if webclass.get_slot(user):
             return u"Vous êtes déjà inscrit."
 

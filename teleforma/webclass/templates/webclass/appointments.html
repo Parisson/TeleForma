@@ -54,7 +54,7 @@
     
     {% for slot in slots %}
         <form class="booking_form" method="POST">
-            <span class="booking_date">{{slot.day}} de {{slot.start_hour|date:"H\hi"}}}} à {{slot.end_hour|date:"H\hi"}}}}</span>
+            <span class="booking_date">{{slot.day}} de {{slot.start_hour|date:"H\hi"}} à {{slot.end_hour|date:"H\hi"}}</span>
             {% csrf_token %}
             <input type="hidden" name="slot_id" value="{{slot.id}}" />
             <input type="submit" value="Sélectionner" />
