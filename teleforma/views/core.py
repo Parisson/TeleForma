@@ -73,7 +73,7 @@ from jsonrpc.proxy import ServiceProxy
 from teleforma.models import *
 from teleforma.forms import *
 from teleforma.models.appointment import AppointmentPeriod
-from teleforma.webclass.models import Webclass, WebclassSlot
+from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
@@ -429,6 +429,8 @@ class CourseView(CourseAccessMixin, DetailView):
                 webclass_slot = webclass.get_slot(self.request.user)
         context['webclass'] = webclass
         context['webclass_slot'] = webclass_slot
+
+        print(WebclassRecord.get_records(context['period'], course))
         return context
 
     @method_decorator(login_required)

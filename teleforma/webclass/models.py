@@ -30,36 +30,62 @@ DAYS_CHOICES = [(i, _(calendar.day_name[i])) for i in range(7)]
 class MetaCore:
     app_label = 'webclass'
 
-def get_all_records():
-    all_records = []
-    recordings = []
-    recordings_xml = self.bbb.get_recordings(self.room_id).get_field('recordings')
-    if hasattr(recordings_xml, 'get'):
-        recordings = recordings_xml['recording']
-    if type(recordings) is XMLDictNode:
-        recordings = [recordings]
-    for recording in recordings:
-        recording.prettyprint()
-        url = recording.get('playback', {}).get('format', {}).get('url')
-        if url:
-            url = url.decode()
-        data = {
-            'start': int(recording['startTime'].decode()),
-            'end': int(recording['endTime'].decode()),
-            'url': url,
-            'state': recording['state'].decode(),
-        }
-        data['duration'] = data['end'] - data['start']
-        all_records.append(data)
 
+def get_records_from_bbb(**kwargs):
+    """get records info from bbb xml"""
+    records = []
+    for server in BBBServer.objects.all():
+        recordings_xml = server.get_instance().get_recordings(**kwargs).get_field('recordings')
+        if hasattr(recordings_xml, 'get'):
+            recordings = recordings_xml['recording']
+        if type(recordings) is XMLDictNode:
+            recordings = [recordings]
+        for recording in recordings:
+            recording.prettyprint()
+            url = recording.get('playback', {}).get('format', {}).get('url')
+            if url:
+                url = url.decode()
+            if not recording['metadata'].get('periodid'):
+                continue
+            start = int(recording['startTime'].decode()[:-3])
+            end = int(recording['endTime'].decode()[:-3])
+            data = {
+                'id': recording['recordID'].decode(),
+                'start': start,
+                'start_date': datetime.datetime.fromtimestamp(start),
+                'end': end,
+                'end_date': datetime.datetime.fromtimestamp(end),
+                'url': url,
+                'state': recording['state'].decode(),
+                'period_id': int(recording['metadata'].get('periodid').decode()),
+                'course_id': int(recording['metadata'].get('courseid').decode()),
+                'slot_id': int(recording['metadata'].get('slotid').decode()),
+            }
+            data['duration'] = data['end'] - data['start']
+            records.append(data)
+    return records
+
+def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
+    """ get all records, filtered """
+    # if not rooms:
+    #     rooms = ';'.join([slot.room_id for slot in self.slots.all()])
+    # print(rooms)
+    meta = {}
+    if period_id:
+        meta['periodid'] = period_id
+    if course_id:
+        meta['courseid'] = period_id
+    meta['origin'] = 'crfpa'
+    
+    all_records = get_records_from_bbb(meta=meta)
+    # vocabulary = [('Aucun', 'none')]
     if not all_records:
         return []
     
-    all_records = sorted(all_records, key=lambda record:-record['duration'])
-    vocabulary = []
-    for record in all_records:
-        vocabulary.append((record['url'], record['duration']))
-    return longest_record
+    all_records = sorted(all_records, key=lambda record:-record['start'])
+    # for record in all_records:
+    #     vocabulary.append((record['url'], record['start']))
+    return all_records
 
 
 
@@ -77,6 +103,7 @@ class BBBServer(models.Model):
     
     def __unicode__(self):
         return "Serveur %d" % self.id
+
 
 class Webclass(models.Model):
     
@@ -104,6 +131,7 @@ class Webclass(models.Model):
             return WebclassSlot.objects.get(webclass=self, participants=user)
         except WebclassSlot.DoesNotExist:
             return None
+
 
 
 class WebclassSlot(models.Model):
@@ -183,9 +211,17 @@ class WebclassSlot(models.Model):
                     'bannerColor': "#003768",
                     # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
                 }
+                meta = {
+                        'origin':'crfpa',
+                        'periodid': webclass.period.id,
+                        'courseid': webclass.course.id,
+                        'webclassid': webclass.id,
+                        'slotid': self.id,
+                        'professor': self.professor.last_name,
+                    }
                 print params
                 try:
-                    result = self.bbb.create_meeting(self.room_id, params=params)
+                    result = self.bbb.create_meeting(self.room_id, params=params, meta=meta)
                 except BBBException as e:
                     print(e)
                     raise
@@ -308,8 +344,8 @@ class WebclassRecord(models.Model):
     
     period                  = models.ForeignKey('teleforma.Period', verbose_name=_('period'))
     course                  = models.ForeignKey('teleforma.Course', related_name='webclass_records', verbose_name=_('course'))
-    url                     = models.CharField("Enregistrement BBB", max_length=255)
-    created                 = models.DateTimeField("Date de la conférence")
+    record_id                     = models.CharField("Enregistrement BBB", max_length=255)
+    created                 = models.DateTimeField("Date de la conférence", auto_now_add=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass_record'
@@ -318,3 +354,16 @@ class WebclassRecord(models.Model):
 
     def __unicode__(self):
         return "Enregistrement webclass %d" % self.id
+
+
+    @staticmethod
+    def get_records(period, course):
+        records = []
+        for record in WebclassRecord.objects.filter(period=period, course=course):
+            records.append(record.record_id)
+
+        records = get_records_from_bbb(recording_id=','.join(records))
+        print(records)
+        return records
+
+

@@ -22,7 +22,7 @@ class WebclassAdmin(admin.ModelAdmin):
 
 class WebclassRecordAdmin(admin.ModelAdmin):
     list_filter = ('course', 'period')
-    list_display = ('course', 'period')
+    list_display = ('course', 'period', 'created')
     search_fields = ['id', 'course__code', 'course__title']
 
     # def get_form(self, request, obj=None, **kwargs):

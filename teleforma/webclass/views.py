@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.views.generic import View, TemplateView
+from django.views.generic import View, TemplateView, FormView
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
@@ -13,6 +13,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from teleforma.webclass.models import Webclass, WebclassSlot
+from teleforma.webclass.forms import WebclassRecordsForm
 
 from teleforma.views.core import get_periods, get_courses
 
@@ -140,6 +141,20 @@ class WebclassAppointment(View):
     #               fail_silently=False)
     #     return data
 
+
+class WebclassRecordsFormView(FormView):
+    template_name = 'webclass/records_form.html'
+    form_class = WebclassRecordsForm
+    success_url = '/admin/django/webclass/webclassrecord'
+
+    def get_form_kwargs(self):
+        kwargs = super(WebclassRecordsFormView, self).get_form_kwargs()
+        kwargs['period_id'] = int(self.kwargs['period_id'])
+        return kwargs
+
+    def form_valid(self, form):
+        form.save_records()
+        return super(WebclassRecordsFormView, self).form_valid(form)
 
 
 def join_webclass(request, pk):

@@ -13,8 +13,8 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('period', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['teleforma.Period'])),
             ('course', self.gf('django.db.models.fields.related.ForeignKey')(related_name='webclass_records', to=orm['teleforma.Course'])),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('created', self.gf('django.db.models.fields.DateTimeField')()),
+            ('record_id', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
         db.send_create_signal('webclass', ['WebclassRecord'])
 
@@ -174,10 +174,10 @@ class Migration(SchemaMigration):
         'webclass.webclassrecord': {
             'Meta': {'object_name': 'WebclassRecord', 'db_table': "'teleforma_webclass_record'"},
             'course': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'webclass_records'", 'to': "orm['teleforma.Course']"}),
-            'created': ('django.db.models.fields.DateTimeField', [], {}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'period': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['teleforma.Period']"}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'record_id': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'webclass.webclassslot': {
             'Meta': {'object_name': 'WebclassSlot', 'db_table': "'teleforma_webclass_slot'"},
