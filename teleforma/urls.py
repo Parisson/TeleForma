@@ -94,8 +94,15 @@ urlpatterns = patterns('',
     url(r'^desk/conferences/(?P<pk>.*)/audio/$',
         ConferenceView.as_view(template_name="teleforma/course_conference_audio.html"),
         name="teleforma-conference-audio"),
+    url(r'^desk/conferences/(?P<pk>.*)/webclass-record/$',
+        ConferenceView.as_view(template_name="teleforma/course_webclass_record.html"),
+        name="teleforma-conference-webclass-record"),          
     url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
         name="teleforma-conference-record"),
+    url(r'^desk/conferences/(?P<pk>.*)/join/$',
+        join_webclass,
+        name="teleforma-conference-join"),
+    
 
     # Questions
     url(r'^desk/seminars/(?P<id>.*)/questions/(?P<pk>.*)/$', AnswerView.as_view(),
@@ -166,4 +173,8 @@ urlpatterns = patterns('',
 
     url(r'^desk/test/(?P<pk>.*)/$', AnswerDetailViewTest.as_view(), name="test"),
 
+    # Webclass hook
+    url(r'^webclass_bbb_webhook/', webclass_bbb_webhook,
+        name="webclass_bbb_webhook"),
+                       
 )

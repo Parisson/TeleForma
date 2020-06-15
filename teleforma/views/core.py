@@ -34,6 +34,7 @@
 
 import mimetypes
 import datetime
+from datetime import timedelta
 import random
 import urllib
 import urllib2
@@ -66,6 +67,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
+from django.core.urlresolvers import resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
@@ -434,30 +436,77 @@ class DocumentReadView(DocumentView):
 class ConferenceView(DetailView):
 
     model = Conference
-    template_name='teleforma/course_conference.html'
+
+    def get_template_names(self, *args, **kwargs):
+        conference = self.get_object()
+        if self.template_name:
+            return [self.template_name]
+        if conference.webclass:
+            return ['teleforma/course_webclass.html']
+        else:
+            return ['teleforma/course_conference.html']
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
-        all_courses = get_courses(self.request.user)
-        context['all_courses'] = all_courses
         conference = self.get_object()
-        context['course'] = conference.course
-        context['type'] = conference.course_type
+        if conference.webclass:
+            context['is_webclass_running'] = conference.is_webclass_running() 
+            
+            context['show_record'] = True
+            try:
+                context['seminar'] = conference.seminar.all()[0]
+            except IndexError :
+                context['seminar'] = None
+            context['record'] = None
+            # debug -> test links
+            context['range'] = range(0,15)
+            webclass_status = ""
+
+            now = datetime.datetime.now()
+
+            begin_minus_1_hour = conference.date_begin - timedelta(hours=1)
+            if now < begin_minus_1_hour:
+                # conference not yet started
+                webclass_status = "future"
+            elif conference.date_end + timedelta(hours=1) < now:
+                # conference expired
+                webclass_status = "past"
+                context['record'] = conference.get_record()
+            elif begin_minus_1_hour < now < conference.date_begin:
+                # conference can be joined
+                webclass_status = "almost"
+            else:
+                webclass_status = "ingoing"
+            context['begin_minus_1_hour'] = begin_minus_1_hour
+            context['record'] = conference.get_record()
+            context['webclass_status'] = webclass_status
+
+            # set conf as read when user navigate to the record page
+            if resolve(self.request.path).url_name == "teleforma-conference-webclass-record":
+                conference.set_as_read(self.request.user)
+            
+        else:
+            content_type = ContentType.objects.get(app_label="teleforma", model="conference")
+            context['livestreams'] = conference.livestream.all()
+            context['host'] = get_host(self.request)
+            all_courses = get_courses(self.request.user)
+            context['all_courses'] = all_courses
+            access = get_course_access(conference, all_courses)
+            if not access:
+                context['access_error'] = access_error
+                context['message'] = contact_message
+
+        
         context['notes'] = conference.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="conference")
+        context['type'] = conference.course_type
+        context['course'] = conference.course
+        context['periods'] = get_periods(self.request.user)
+        context['conferences'] = all_conferences(self.request)
         if settings.TELEFORMA_GLOBAL_TWEETER:
             context['room'] = get_room(name='site')
         else:
             context['room'] = get_room(name=conference.course.title, content_type=content_type,
-                                   id=conference.id)
-        context['livestreams'] = conference.livestream.all()
-        context['host'] = get_host(self.request)
-        access = get_course_access(conference, all_courses)
-        if not access:
-            context['access_error'] = access_error
-            context['message'] = contact_message
-        context['periods'] = get_periods(self.request.user)
-        context['conferences'] = all_conferences(self.request)
+                                       id=conference.id)
         return context
 
     @jsonrpc_method('teleforma.stop_conference')
@@ -482,6 +531,34 @@ class ConferenceView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
+
+
+def join_webclass(request, pk):
+    conference = Conference.objects.get(pk=int(pk))
+    # fake debug links
+    username = request.GET.get('username')
+    if username:
+        return redirect(conference.get_fake_join_webclass_url(request, username))
+    user = request.user
+    authorized = False
+
+    # staff or professor ?
+    is_professor = len(user.professor.all()) >= 1
+    is_staff = user.is_staff or user.is_superuser
+    if is_professor or is_staff:
+        authorized = True
+
+    # student registered ?
+    if not authorized:
+        auditor = user.auditor.get()
+        if auditor in conference.auditor.all():
+            authorized = True
+
+    if authorized:
+        conference.set_as_read(user)
+        return redirect(conference.get_join_webclass_url(request, user))
+    else:
+        return HttpResponse('Unauthorized', status=401)
 
 
 class ConferenceRecordView(FormView):

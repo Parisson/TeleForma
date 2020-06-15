@@ -62,10 +62,15 @@ def seminar_progress(user, seminar, more=False):
             'obj': seminar.docs_correct,
             'step': '5'
         }]
+    if seminar.conference and seminar.conference.webclass:
+        objects[2]['obj'] = seminar.conference
     for item in objects:
         obj = item['obj']
         step = item['step']
-        for item in obj.all():
+        items = [obj]
+        if hasattr(obj, 'all'):
+            items = obj.all()
+        for item in items:
             if item.weight:
                 total += item.weight
                 if user in item.readers.all():
