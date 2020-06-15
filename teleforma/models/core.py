@@ -581,7 +581,6 @@ class WebclassMixin(Model):
                     'bannerColor': "#003768",
                     # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
                 }
-                print params
                 try:
                     result = bbb.create_meeting(self.webclass_id, params=params)
                     register_web_hook()
@@ -623,8 +622,6 @@ class WebclassMixin(Model):
 
     def get_webclass_info(self):
         """ """
-        print(self.webclass_id)
-        print(bbb.get_meeting_info(self.webclass_id))
         return bbb.get_meeting_info(self.webclass_id)
 
     def get_record(self):
@@ -637,7 +634,6 @@ class WebclassMixin(Model):
         if type(recordings) is XMLDictNode:
             recordings = [recordings]
         for recording in recordings:
-            recording.prettyprint()
             url = recording.get('playback', {}).get('format', {}).get('url')
             if url:
                 url = url.decode()
