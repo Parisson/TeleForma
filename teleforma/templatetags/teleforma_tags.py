@@ -317,6 +317,28 @@ def fancy_duration(duration):
         minutes = str(minutes)
     time +=  minutes + 'mn'
     return time
+    
+@register.filter
+def fancy_seconds(seconds):
+    time = ''
+    hours = int(seconds / 3600)
+    minutes_int = (seconds % 3600) / 60
+    if hours:
+        if minutes_int:
+            time += str(hours) + 'h'
+        else:
+            time += str(hours) + ' heures'
+    if minutes_int<10:
+        minutes = '0' + str(minutes_int)
+    else:
+        minutes = str(minutes_int)
+    if minutes_int == 0 and hours:
+        pass
+    elif not hours:
+        time = minutes + ' minutes'
+    else:
+        time += minutes
+    return time
 
 @register.simple_tag
 def untreated_answer_count():
