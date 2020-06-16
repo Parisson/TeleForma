@@ -91,7 +91,7 @@
             {% comment %} <dt>{% trans "Live" %}</dt>
             <dd>{% if is_webclass_running %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</dd> {% endcomment %}
             <dt>{% trans "Duration" %}</dt>
-            <dd>{{ conference.webclass_duration.seconds|fancy_seconds }}</dd>
+            <dd>{{ conference.webclass_duration|fancy_seconds }}</dd>
             <dt>{% trans "Live" %}</dt>
             <dd>{% trans "Yes" %}</dd>
             {% comment %} {% if conference.room %}<dt>{% trans "Room" %}</dt>

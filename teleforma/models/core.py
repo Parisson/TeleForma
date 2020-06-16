@@ -667,11 +667,10 @@ class WebclassMixin(Model):
     
     @property
     def webclass_duration(self):
+        """ in seconds """
         if self.webclass_hours_complementary:
-            seconds = self.duration.as_seconds() - self.webclass_hours_complementary.as_seconds()
-        else:
-            seconds = self.duration.as_seconds()
-        return datetime.timedelta(seconds=seconds)
+            return (self.duration.as_seconds() - self.webclass_hours_complementary.as_seconds())
+        return self.duration.as_seconds()
 
     # def clean(self):
     #     if self.start_date > self.end_date::
