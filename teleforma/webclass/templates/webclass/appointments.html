@@ -51,15 +51,48 @@
         <strong id="date_placeholder"></strong>
     </div>
 
-    
-    {% for slot in slots %}
-        <form class="booking_form" method="POST">
-            <span class="booking_date">{{slot.day}} de {{slot.start_hour|date:"H\hi"}} à {{slot.end_hour|date:"H\hi"}}</span>
-            {% csrf_token %}
-            <input type="hidden" name="slot_id" value="{{slot.id}}" />
-            <input type="submit" value="Sélectionner" />
-        </form>
-    {% endfor %}
+
+    <h1>Inscription à la Webclasse "{{webclass.course.title}}"</h1>
+    <br/><br/>
+
+    <table class="webclass-appointment listing" width="100%">
+        <thead>
+            <tr>
+                <th>Horaire</th>
+                <th>Professeur</th>
+                <th>Places restantes</th>
+                <th>Inscription</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for slot in slots %}
+            <tr>
+                <td>
+                <span class="booking_date"><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
+                </td>
+                <td>
+                {{slot.professor}}
+                </td>
+                <td>
+                {{slot.remaining_participant_slot}}
+                </td>
+
+                <td>
+                    <form class="booking_form" method="POST">
+                        <span class="booking_date" style="display:none"><strong>{{slot.day}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
+                        {% csrf_token %}
+                        <input type="hidden" name="slot_id" value="{{slot.id}}" />
+                        {% if slot.participant_slot_available %}
+                            <input type="submit" value="Sélectionner" />
+                        {% else %}
+                            <span style="color:red">Complet</span>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
         
 
 {% endblock content %}

@@ -342,7 +342,8 @@ class CourseListView(CourseAccessMixin, ListView):
         context['room'] = get_room(name='site', period=context['period'].name)
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
-        is_student = self.request.user.student.all().count()
+        user = self.request.user
+        is_student = user.student.all().count()
         appointments = AppointmentPeriod.objects.filter(periods=context['period'])
         appointments_open = False
         for appointment in appointments:
@@ -356,6 +357,23 @@ class CourseListView(CourseAccessMixin, ListView):
                 context['home_text'] = home.text
                 context['home_video'] = home.video
                 break
+               
+        if is_student:
+            student = user.student.all()[0]
+            slots = []
+            to_subscribe = []
+            student_courses = [course['course'] for course in get_courses(user)]
+            for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
+                # if webclass.course not in student_courses:
+                #     continue
+                slot = webclass.get_slot(user)
+                if slot and slot.status in ('almost', 'ingoing'):
+                    slots.append(slot)
+                if not slot:
+                    to_subscribe.append(webclass)
+            context['webclass_slots'] = slots
+            context['webclass_to_subscribe'] = to_subscribe
+        
         return context
 
     @method_decorator(login_required)
@@ -422,15 +440,19 @@ class CourseView(CourseAccessMixin, DetailView):
         
         if student:
             try:
-                webclass = Webclass.objects.get(period=self.period, course=course, iej=student.iej)
-            except Webclass.DoesNotExist:
+                webclass = Webclass.published.filter(period=self.period, course=course, iej=student.iej)[0]
+            except IndexError:
                 pass
             if webclass:
                 webclass_slot = webclass.get_slot(self.request.user)
         context['webclass'] = webclass
         context['webclass_slot'] = webclass_slot
 
-        print(WebclassRecord.get_records(context['period'], course))
+        try:
+            context['webclass_records'] = WebclassRecord.get_records(context['period'], course)
+        except Exception, e:
+            print(e)
+            context['webclass_error'] = True
         return context
 
     @method_decorator(login_required)

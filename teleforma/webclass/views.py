@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.views.generic import View, TemplateView, FormView
+from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.template.loader import render_to_string
@@ -28,7 +30,7 @@ class WebclassProfessorAppointments(TemplateView):
         user = self.request.user
         if not user.professor:
             return HttpResponse('Unauthorized', status=401)
-        context['slots'] = WebclassSlot.objects.filter(professor=user.professor.get(), webclass__status=3).order_by('day', 'start_hour')
+        context['slots'] = WebclassSlot.published.filter(professor=user.professor.get(), webclass__status=3).order_by('day', 'start_hour')
         print(context['slots'])
         return context
 
@@ -62,18 +64,7 @@ class WebclassAppointment(View):
         user = request.user
         student = user.student.all()[0]
         
-        # Get info
-        slots = []
-        for slot in webclass.slots.order_by('day', 'start_hour'):
-            slots.append({
-                'id': slot.id,
-                'day': slot.get_day_display(),
-                'start_hour':slot.start_hour,
-                'end_hour': slot.end_hour,
-                'professor': slot.professor,
-                'available': slot.participant_slot_available
-            })
-        return render(request, self.template_name, {'slots': slots})
+        return render(request, self.template_name, {'slots': webclass.slots.order_by('day', 'start_hour'), 'webclass': webclass})
 
     def check_slot_validity(self, user, slot):
         """
@@ -98,7 +89,7 @@ class WebclassAppointment(View):
 
         user = request.user
         slot_id = int(request.POST.get('slot_id'))
-        slot = WebclassSlot.objects.get(pk=slot_id)
+        slot = WebclassSlot.published.get(pk=slot_id)
 
         msg = self.check_slot_validity(user, slot)
 
@@ -143,6 +134,15 @@ class WebclassAppointment(View):
     #               fail_silently=False)
     #     return data
 
+class WebclassRecordView(TemplateView):
+    template_name = 'webclass/record.html'
+
+    def get_context_data(self, **kwargs):
+        """ """
+        context = super(WebclassRecordView, self).get_context_data(**kwargs)
+        context['record_url'] = self.request.GET.get('url')
+        return context
+
 
 class WebclassRecordsFormView(FormView):
     template_name = 'webclass/records_form.html'
@@ -157,10 +157,14 @@ class WebclassRecordsFormView(FormView):
     def form_valid(self, form):
         form.save_records()
         return super(WebclassRecordsFormView, self).form_valid(form)
-
+        
+    @method_decorator(permission_required('is_superuser'))
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(WebclassRecordsFormView, self).dispatch(*args, **kwargs)
 
 def join_webclass(request, pk):
-    webclass_slot = WebclassSlot.objects.get(pk=int(pk))
+    webclass_slot = WebclassSlot.published.get(pk=int(pk))
     # webclass = webclass_slot.webclass
     # fake debug links
     # username = request.GET.get('username')

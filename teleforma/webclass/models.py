@@ -8,7 +8,6 @@ from unidecode import unidecode
 from django.db.models import *
 from telemeta.models import *
 from teleforma.fields import *
-from teleforma.models.core import STATUS_CHOICES
 import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import translation
@@ -25,6 +24,10 @@ app_label = 'teleforma'
 DAYS_CHOICES = [(i, _(calendar.day_name[i])) for i in range(7)]
 # BBB_SERVER = "https://bbb.parisson.com/bigbluebutton/"
 # BBB_SECRET = "uOzkrTnWly1jusr0PYcrlwhvKhZG1ZYDOrSvxgP70"
+STATUS_CHOICES = (
+        (2, _('Draft')),
+        (3, _('Public')),
+    )
 
 
 class MetaCore:
@@ -35,9 +38,10 @@ def get_records_from_bbb(**kwargs):
     """get records info from bbb xml"""
     records = []
     for server in BBBServer.objects.all():
-        recordings_xml = server.get_instance().get_recordings(**kwargs).get_field('recordings')
-        if hasattr(recordings_xml, 'get'):
-            recordings = recordings_xml['recording']
+        recordings = server.get_instance().get_recordings(**kwargs).get_field('recordings')
+        # import pdb;pdb.set_trace()
+        if hasattr(recordings, 'get'):
+            recordings = recordings['recording']
         if type(recordings) is XMLDictNode:
             recordings = [recordings]
         for recording in recordings:
@@ -45,21 +49,25 @@ def get_records_from_bbb(**kwargs):
             url = recording.get('playback', {}).get('format', {}).get('url')
             if url:
                 url = url.decode()
+            else:
+                continue
             if not recording['metadata'].get('periodid'):
                 continue
             start = int(recording['startTime'].decode()[:-3])
             end = int(recording['endTime'].decode()[:-3])
             data = {
                 'id': recording['recordID'].decode(),
+                'server_id': server.id,
                 'start': start,
                 'start_date': datetime.datetime.fromtimestamp(start),
                 'end': end,
                 'end_date': datetime.datetime.fromtimestamp(end),
                 'url': url,
+                'preview': recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])[0].decode(),
                 'state': recording['state'].decode(),
                 'period_id': int(recording['metadata'].get('periodid').decode()),
                 'course_id': int(recording['metadata'].get('courseid').decode()),
-                'slot_id': int(recording['metadata'].get('slotid').decode()),
+                'slot': WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
             }
             data['duration'] = data['end'] - data['start']
             records.append(data)
@@ -104,6 +112,9 @@ class BBBServer(models.Model):
     def __unicode__(self):
         return "Serveur %d" % self.id
 
+class PublishedManager(models.Manager):
+    def get_query_set(self):
+        return super(PublishedManager, self).get_query_set().filter(status=3)
 
 class Webclass(models.Model):
     
@@ -112,10 +123,12 @@ class Webclass(models.Model):
     course                  = models.ForeignKey('teleforma.Course', related_name='webclass', verbose_name=_('course'))
     iej                     = models.ManyToManyField('teleforma.IEJ', related_name='webclass', verbose_name=_('iej'), blank=True, null=True)
     bbb_server              = models.ForeignKey('BBBServer', related_name='webclass', verbose_name='Serveur BBB')
-    duration                = DurationField('Durée de la conférence')
-    max_participants        = models.IntegerField('Nombre maxium de participants par créneau', blank=True, null=True)
+    duration                = DurationField('Durée de la conférence', default="00:30:00")
+    max_participants        = models.IntegerField('Nombre maxium de participants par créneau', blank=True, null=True, default=80)
     status                  = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
+    published = PublishedManager()
+    objects = models.Manager()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass'
@@ -128,11 +141,13 @@ class Webclass(models.Model):
     def get_slot(self, user):
         """ return webclass slot or None if user is not subscribed """
         try:
-            return WebclassSlot.objects.get(webclass=self, participants=user)
+            return WebclassSlot.published.get(webclass=self, participants=user)
         except WebclassSlot.DoesNotExist:
             return None
 
-
+class SlotPublishedManager(models.Manager):
+    def get_query_set(self):
+        return super(SlotPublishedManager, self).get_query_set().filter(webclass__status=3)
 
 class WebclassSlot(models.Model):
     """ Webclass slot """
@@ -146,6 +161,9 @@ class WebclassSlot(models.Model):
     room_id         = models.CharField('id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255)
     room_password   = models.CharField('password du modérateur (généré automatiquement)', blank=True, null=True, max_length=255)
 
+    published = SlotPublishedManager()
+    objects = models.Manager()
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass_slot'
         verbose_name = _('webclass slot')
@@ -153,13 +171,21 @@ class WebclassSlot(models.Model):
     def __unicode__(self):
         return "Webclass slot : " + str(self.id)
 
+
+    @property
+    def remaining_participant_slot(self):
+        """
+        get remaining participant slot 
+        """
+        nb_participants = self.participants.count()
+        return self.webclass.max_participants - nb_participants
+
     @property
     def participant_slot_available(self):
         """
         is there any slot available for another participants
         """
-        nb_participants = self.participants.count()
-        return nb_participants < self.webclass.max_participants
+        return self.remaining_participant_slot > 0
 
     @property
     def end_hour(self):
@@ -204,7 +230,7 @@ class WebclassSlot(models.Model):
                     # 'autoStartRecording':True,
                     'muteOnStart':True,
                     'allowModsToUnmuteUsers':True,
-                    'logo':'https://e-learning.crfpa.pre-barreau.com/static/teleforma/images/logo_pb.png',
+                    # 'logo':'https://e-learning.crfpa.pre-barreau.com/static/teleforma/images/logo_pb.png',
                     'copyright': "© %d Pré-Barreau" % year,
                     # 'guestPolicy':'ALWAYS_ACCEPT'
                     'bannerText': "Pré-Barreau",
@@ -217,7 +243,7 @@ class WebclassSlot(models.Model):
                         'courseid': webclass.course.id,
                         'webclassid': webclass.id,
                         'slotid': self.id,
-                        'professor': self.professor.last_name,
+                        'professor': self.professor.user.username,
                     }
                 print params
                 try:
@@ -344,7 +370,9 @@ class WebclassRecord(models.Model):
     
     period                  = models.ForeignKey('teleforma.Period', verbose_name=_('period'))
     course                  = models.ForeignKey('teleforma.Course', related_name='webclass_records', verbose_name=_('course'))
-    record_id                     = models.CharField("Enregistrement BBB", max_length=255)
+    record_id               = models.CharField("Enregistrement BBB", max_length=255)
+    # not used for now, but may be handy if we need to optimize performance
+    bbb_server              = models.ForeignKey('BBBServer', related_name='webclass_records', verbose_name='Serveur BBB')
     created                 = models.DateTimeField("Date de la conférence", auto_now_add=True)
 
     class Meta(MetaCore):
@@ -355,15 +383,13 @@ class WebclassRecord(models.Model):
     def __unicode__(self):
         return "Enregistrement webclass %d" % self.id
 
-
     @staticmethod
     def get_records(period, course):
-        records = []
+        record_ids = set()
         for record in WebclassRecord.objects.filter(period=period, course=course):
-            records.append(record.record_id)
-
-        records = get_records_from_bbb(recording_id=','.join(records))
+            record_ids.add(record.record_id)
+        if not record_ids:
+            return []
+        records = get_records_from_bbb(recording_id=','.join(record_ids))
         print(records)
         return records
-
-

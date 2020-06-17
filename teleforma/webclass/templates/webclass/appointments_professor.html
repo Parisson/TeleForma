@@ -14,14 +14,46 @@ Calendrier des Webclass
 {% endblock infra_javascript %}
 
 {% block content %}
-<div>
+<table class="webclass-appointment listing" width="100%">
+    <thead>
+    <tr>
+        <th>Horaire</th>
+        <th>Période</th>
+        <th>Cours</th>
+        {% comment %} <th>IEJ</th> {% endcomment %}
+        <th>Participants</th>
+        <th>Salon</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for slot in slots %}
-    <div class="webclass-appointment" style="margin-bottom:10px">
-        <span><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span> : {{slot.participants.count}} participant{{slot.participants.count|pluralize}}
-        <a href="{% url teleforma-webclass-join slot.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Rejoindre la conférence</a>
-    </div>
+    <tr>
+        <td>
+            <span><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
+        </td>
+        <td>
+        {{slot.webclass.period.name}}
+        </td>
+        <td>
+        {{slot.webclass.course.title}}
+        </td>
+        {% comment %} <td>
+        {% for iej in slot.webclass.iej.all %}
+        {{iej.name}}
+        {% endfor %}
+        </td> {% endcomment %}
+        <td>
+         {{slot.participants.count}}
+        </td>
+        <td>
+            <a href="{% url teleforma-webclass-join slot.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Rejoindre la conférence</a>
+        </td>
+    </tr>
     {% empty %}
-    <p>Aucune webclasse programmée.</p>
+    <tr>
+    <td colspan="5">Aucune webclasse programmée.</td>
+    </tr>
     {% endfor %}
-</div>
+    </tbody>
+</table>
 {% endblock content %}

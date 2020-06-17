@@ -3,7 +3,7 @@
 from datetime import datetime
 from django.forms import Form, ModelChoiceField, ChoiceField
 from teleforma.models.core import Course, Period
-from teleforma.webclass.models import get_records, WebclassSlot, WebclassRecord
+from teleforma.webclass.models import get_records, WebclassSlot, WebclassRecord, BBBServer
 from django.core.exceptions import ValidationError
 
 class WebclassRecordsForm(Form):
@@ -22,10 +22,10 @@ class WebclassRecordsForm(Form):
         courses = Course.objects.all()
         all_records = self.get_records_by_course()
         for course in courses:
-            webclass = course.webclass.count()
-            if course.webclass.count():
+            webclasses = course.webclass.filter(period=self.period).all()
+            if webclasses:
                 rooms = []
-                for webclass in course.webclass.all():
+                for webclass in webclasses:
                     for slot in webclass.slots.all():
                         rooms.append(slot.room_id)
 
@@ -34,10 +34,9 @@ class WebclassRecordsForm(Form):
 
                 vocabulary = [('none', 'Aucun')]
                 for record in records:
-                    print(record)
-                    webclass_slot = WebclassSlot.objects.get(pk=record['slot_id'])
+                    webclass_slot = WebclassSlot.objects.get(pk=record['slot'].id)
                     label = u"%s à %s - %s" % (record['start_date'].strftime('%d/%m/%Y %H:%M'), record['end_date'].strftime('%H:%M'), webclass_slot.professor.user.last_name)
-                    vocabulary.append((record['id'], label))
+                    vocabulary.append((str(record['id']) + ";" + str(record['server_id']), label))
                 self.fields[field_name] = ChoiceField(label=course.title,  choices=vocabulary, required=False)
     
     def get_records_by_course(self):
@@ -50,7 +49,9 @@ class WebclassRecordsForm(Form):
     def save_records(self):
         for key, value in self.data.items():
             if key.startswith('course') and value != 'none':
+                record_id, server_id = value.split(';')
                 course_id = key.replace('course_', '')
                 course = Course.objects.get(pk=course_id)
-                record = WebclassRecord(course=course, period=self.period, record_id=value)
+                server = BBBServer.objects.get(pk=server_id)
+                record = WebclassRecord(course=course, period=self.period, record_id=record_id, bbb_server=server)
                 record.save()

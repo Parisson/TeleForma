@@ -21,7 +21,7 @@ class Command(BaseCommand):
         dow = now.weekday()
         begin = now + datetime.timedelta(minutes=WARN_DELAY_MIN)
         end = now + datetime.timedelta(minutes=WARN_DELAY_MAX)
-        slots = WebclassSlot.objects.filter(day = dow,
+        slots = WebclassSlot.published.filter(day = dow,
                                             start_hour__gte = begin.time(),
                                             start_hour__lt = end.time())
         site = Site.objects.all()[0]
