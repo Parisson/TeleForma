@@ -1,0 +1,59 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% block head_title %}Calendrier des Webclass{% endblock %}
+
+{% block title %}
+Calendrier des Webclass
+{% endblock %}
+
+
+{% block infra_javascript %}
+{% endblock infra_javascript %}
+
+{% block content %}
+<table class="webclass-appointment listing" width="100%">
+    <thead>
+    <tr>
+        <th>Horaire</th>
+        <th>Période</th>
+        <th>Cours</th>
+        {% comment %} <th>IEJ</th> {% endcomment %}
+        <th>Participants</th>
+        <th>Salon</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for slot in slots %}
+    <tr>
+        <td>
+            <span><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
+        </td>
+        <td>
+        {{slot.webclass.period.name}}
+        </td>
+        <td>
+        {{slot.webclass.course.title}}
+        </td>
+        {% comment %} <td>
+        {% for iej in slot.webclass.iej.all %}
+        {{iej.name}}
+        {% endfor %}
+        </td> {% endcomment %}
+        <td>
+         {{slot.participants.count}}
+        </td>
+        <td>
+            <a href="{% url teleforma-webclass-join slot.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Rejoindre la conférence</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+    <td colspan="5">Aucune webclasse programmée.</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

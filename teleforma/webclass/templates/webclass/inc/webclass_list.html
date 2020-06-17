@@ -1,0 +1,73 @@
+{% load teleforma_tags %}
+{% load i18n %}
+
+{% if webclass_slot or webclass_records %}
+<div class="course_content content_video">
+    <div class="course_subtitle">
+        <h3><img src="/static/telemeta/images/item_title.png" width="10px" alt="" /> Webclasse live</h3>
+    </div>
+    <table class="listing" width="100%">
+        <tbody>
+            {% if webclass_slot %}
+            <tr>
+                <td colspan="2">
+                    <p>Vous êtes inscrit pour les webclasses du
+                        <strong>{{webclass_slot.get_day_display}} de
+                            {{webclass_slot.start_hour|date:"H\hi"}} à
+                            {{webclass_slot.end_hour|date:"H\hi"}}</strong>
+                        avec le professeur <strong>{{webclass_slot.professor.user.last_name}}</strong>.</p>
+
+                    {% if webclass_slot.status == 'past' %}
+                    <p>
+                        La webclasse est terminée.
+                    </p>
+                    {% elif webclass_slot.status == 'ingoing' %}
+                    <p>
+                        La webclasse est en cours.
+                        <a href="{% url teleforma-webclass-join webclass_slot.id %}" target="_blank"
+                            class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la
+                            conférence</a>
+                    </p>
+                    {% elif webclass_slot.status == 'almost' %}
+                    <p>
+                        La webclasse est accessible mais elle n'a pas encore démarré.
+                        <a href="{% url teleforma-webclass-join webclass_slot.id %}" target="_blank"
+                            class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la
+                            conférence</a>
+                    </p>
+                    {% endif %}
+                    {% if webclass_error %}<p>Impossible d'afficher la liste des webclasse : le serveur a rencontré une
+                        erreur, veuillez réessayer plus tard.</p>
+                    {% endif %}
+
+                </td>
+            </tr>
+            {% endif %}
+            {% for record in webclass_records %}
+            <tr>
+                <td {% if forloop.first %}class="border-top" {% endif %} style="width:200px">
+                    <a href="{% url teleforma-webclass-record %}?url={{record.url}}" title="{% trans "View" %}">
+                        <img src="{{ record.preview }}" style="width:176px" alt="{% trans 'Click here' %}" />
+                        <div>Cliquez-ici</div>
+                    </a>
+                </td>
+                <td {% if forloop.first %}class="border-top" {% endif %} style="padding-left: 1em;">
+                    <div>
+                        <dl class="listing" style="font-size: 1.2em;">
+                            <dt>{% trans "Professor" %}</dt>
+                            <dd><a href="{% url telemeta-profile-detail record.slot.professor.user.username %}"
+                                    target="_blank">{{ record.slot.professor }}</a></dd>
+                            <dt>{% trans "Begin" %}</dt>
+                            <dd>{{ record.start_date }}</dd>
+                        </dl>
+                    </div>
+                </td>
+                <div style="padding-left: 1em;">
+
+                </div>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}

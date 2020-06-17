@@ -73,6 +73,7 @@ from jsonrpc.proxy import ServiceProxy
 from teleforma.models import *
 from teleforma.forms import *
 from teleforma.models.appointment import AppointmentPeriod
+from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
@@ -341,7 +342,8 @@ class CourseListView(CourseAccessMixin, ListView):
         context['room'] = get_room(name='site', period=context['period'].name)
         context['list_view'] = True
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
-        is_student = self.request.user.student.all().count()
+        user = self.request.user
+        is_student = user.student.all().count()
         appointments = AppointmentPeriod.objects.filter(periods=context['period'])
         appointments_open = False
         for appointment in appointments:
@@ -355,6 +357,23 @@ class CourseListView(CourseAccessMixin, ListView):
                 context['home_text'] = home.text
                 context['home_video'] = home.video
                 break
+               
+        if is_student:
+            student = user.student.all()[0]
+            slots = []
+            to_subscribe = []
+            student_courses = [course['course'] for course in get_courses(user)]
+            for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
+                # if webclass.course not in student_courses:
+                #     continue
+                slot = webclass.get_slot(user)
+                if slot and slot.status in ('almost', 'ingoing'):
+                    slots.append(slot)
+                if not slot:
+                    to_subscribe.append(webclass)
+            context['webclass_slots'] = slots
+            context['webclass_to_subscribe'] = to_subscribe
+        
         return context
 
     @method_decorator(login_required)
@@ -398,7 +417,7 @@ class CourseView(CourseAccessMixin, DetailView):
 
     model = Course
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         course = self.get_object()
         courses = []
@@ -411,6 +430,29 @@ class CourseView(CourseAccessMixin, DetailView):
         context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
+        
+        # webclass
+        webclass = None
+        webclass_slot = None
+        student = self.request.user.student.all()
+        if student:
+            student = student[0]
+        
+        if student:
+            try:
+                webclass = Webclass.published.filter(period=self.period, course=course, iej=student.iej)[0]
+            except IndexError:
+                pass
+            if webclass:
+                webclass_slot = webclass.get_slot(self.request.user)
+        context['webclass'] = webclass
+        context['webclass_slot'] = webclass_slot
+
+        try:
+            context['webclass_records'] = WebclassRecord.get_records(context['period'], course)
+        except Exception, e:
+            print(e)
+            context['webclass_error'] = True
         return context
 
     @method_decorator(login_required)
@@ -469,6 +511,7 @@ class MediaView(CourseAccessMixin, DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
+
         return context
 
     @method_decorator(login_required)
