@@ -131,6 +131,10 @@ alt="logo" />
     </li>
   {% endif %}
 
+  {% if user.professor.count %}
+    <li><a href="{% url teleforma-webclass-professor %}" class="yellow">Webclass</a></li>
+  {% endif %}
+
   {% if periods|length == 1 %}
       <li><a href="{% url teleforma-exam-scripts-scores-all periods.0.id %}" class="green">&nbsp;{% trans "Scores" %}</a></li>
   {% else %}
@@ -187,6 +191,15 @@ alt="logo" />
     {% block postman_menu %}
     {% endblock postman_menu %}
 
+    
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
     {% block content %}
     {% endblock %}
 
