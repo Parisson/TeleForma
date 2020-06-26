@@ -45,20 +45,17 @@ class ProfileView(object):
     """Provide Collections web UI methods"""
 
     @method_decorator(login_required)
-    def profile_detail(self, request, username, template='telemeta/profile_detail.html'):
+    def profile_detail(self, request, username, template='teleforma/profile_detail.html'):
         user = User.objects.get(username=username)
         try:
             profile = user.get_profile()
         except:
             profile = None
-        playlists = get_playlists(request, user)
-        user_revisions = get_revisions(25, user)
 
-        return render(request, template, {'profile' : profile, 'usr': user, 'playlists': playlists,
-                                          'user_revisions': user_revisions})
+        return render(request, template, {'profile' : profile, 'usr': user})
 
     @method_decorator(login_required)
-    def profile_edit(self, request, username, template='telemeta/profile_edit.html'):
+    def profile_edit(self, request, username, template='teleforma/profile_edit.html'):
         if request.user.is_superuser:
             user_hidden_fields = ['profile-user', 'user-password', 'user-last_login', 'user-date_joined']
         else:
@@ -72,7 +69,7 @@ class ProfileView(object):
             title = ugettext('User profile') + ' : ' + username + ' : ' + mess
             description = ugettext('Please login or contact the website administator to get a private access.')
             messages.error(request, title)
-            return render(request, 'telemeta/messages.html', {'description' : description})
+            return render(request, 'teleforma/messages.html', {'description' : description})
 
         try:
             profile = user.get_profile()
@@ -85,7 +82,7 @@ class ProfileView(object):
             if user_form.is_valid() and profile_form.is_valid():
                 user_form.save()
                 profile_form.save()
-                return redirect('telemeta-desk-profile', username)
+                return redirect('teleforma-desk-profile', username)
         else:
             user_form = UserChangeForm(instance=user, prefix='user')
             profile_form = UserProfileForm(instance=profile, prefix='profile')
