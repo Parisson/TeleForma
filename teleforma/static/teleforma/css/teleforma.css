@@ -126,7 +126,6 @@ margin-bottom: 0em;
     background-color:#ebebeb;
     background-repeat:repeat; 
 	border-top: .25em solid #6a0307;
-/*     background: url("/static/telemeta/images/waves.png") 100% 0% no-repeat; */
 }
 
 #content_header, #header{
@@ -191,7 +190,6 @@ margin-bottom: 0em;
 
 #collection_player {
     background: transparent;
-    /*     background-image: url(/static/telemeta/images/grid_bg_2.png); */
 }
 
 #collection_player .title {
@@ -481,9 +479,6 @@ form.login .submit {
 /* Main navigation bar  (borrowed from Trac) */
 #menu {
    	background-color: transparent;
-    /*background:no-repeat url(/static/telemeta/images/tw_hd.png) 0 0;
-    background-color:#ebebeb;
-    background-repeat:repeat; */
 	border-top: 0;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
     padding-left: 0;

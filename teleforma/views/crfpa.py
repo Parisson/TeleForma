@@ -139,7 +139,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 class UsersView(ListView):
 
     model = User
-    template_name='telemeta/users.html'
+    template_name='teleforma/users.html'
     context_object_name = 'users'
     training = None
     iej = None
@@ -935,14 +935,12 @@ class CRFPAProfileView(ProfileView):
     """Provide Collections web UI methods"""
 
     @method_decorator(login_required)
-    def profile_detail(self, request, username, template='telemeta/profile_detail.html'):
+    def profile_detail(self, request, username, template='teleforma/profile_detail.html'):
         user = User.objects.get(username=username)
         try:
             profile = user.get_profile()
         except:
             profile = None
-        playlists = get_playlists(request, user)
-        user_revisions = get_revisions(25, user)
         student = user.student.all()
         payment = None
         if student and (user.username == request.user.username or request.user.is_superuser):
@@ -951,5 +949,4 @@ class CRFPAProfileView(ProfileView):
             if payment:
                 payment = payment[0]
 
-        return render(request, template, {'profile' : profile, 'usr': user, 'playlists': playlists, 'payment':payment,
-                                          'user_revisions': user_revisions})
+        return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})

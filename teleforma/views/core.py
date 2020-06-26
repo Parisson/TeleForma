@@ -283,7 +283,7 @@ class HomeRedirectView(View):
                 else:
                     return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
             else:
-                return HttpResponseRedirect(reverse('telemeta-admin'))
+                return HttpResponseRedirect(reverse('teleforma-admin'))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 

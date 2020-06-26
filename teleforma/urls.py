@@ -53,7 +53,7 @@ urlpatterns = patterns('',
     # login / logout
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
         name="teleforma-login"),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
         name="auth_login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', name="teleforma-logout"),
 
@@ -73,6 +73,17 @@ urlpatterns = patterns('',
     url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail, name="teleforma-profile-detail"),
     url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/profile/edit/$', profile_view.profile_edit, name="teleforma-profile-edit"),
     
+    # Registration
+    url(r'^accounts/password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'registration/password_change_form.html'}, name="teleforma-password-change"),
+    url(r'^accounts/password_change_done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'registration/password_change_done.html'}, name="teleforma-password-change-done"),
+
+    url(r'^accounts/password_reset/$', 'django.contrib.auth.views.password_reset', {'template_name': 'registration/password_reset_form.html', 'email_template_name': 'registration/password_reset_email.html'}, name="teleforma-password-reset"),
+    url(r'^accounts/password_reset_done/$', 'django.contrib.auth.views.password_reset_done', {'template_name': 'registration/password_reset_done.html'}, name="teleforma-password-reset-done"),
+    url(r'^accounts/password_reset_confirm/(?P<uidb36>[A-Za-z0-9._-]+)/(?P<token>[A-Za-z0-9._-]+)/$', 'django.contrib.auth.views.password_reset_confirm', {'template_name': 'registration/password_reset_confirm.html'}, name="teleforma-password-reset-confirm"),
+    url(r'^accounts/password_reset_complete/$', 'django.contrib.auth.views.password_reset_complete', {'template_name': 'registration/password_reset_complete.html'}, name="teleforma-password-reset-complete"),
+    url(r'^accounts/password_reset_complete/$', 'django.contrib.auth.views.password_reset_complete', {'template_name': 'registration/password_reset_complete.html'}, name="teleforma-password-reset-complete"),
+
+
     url(r'^captcha/', include('captcha.urls')),
 
     # Help
