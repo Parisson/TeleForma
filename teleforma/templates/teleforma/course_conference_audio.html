@@ -1,5 +1,4 @@
 {% extends "teleforma/course_media.html" %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load i18n %}
 
@@ -64,7 +63,7 @@
 <div class="course_content" id="media_infos">
 <dl class="listing">
 <dt>{% trans "Title" %}</dt><dd>{{ conference.course.title }}</dd>
-<dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
+<dt>{% trans "Professor" %}</dt><dd><a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
 <dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>
 <dt>{% trans "Begin" %}</dt><dd>{{ conference.date_begin }}</dd>

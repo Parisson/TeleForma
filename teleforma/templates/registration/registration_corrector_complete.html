@@ -1,6 +1,5 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 
 {% block title %}<center>{% trans "Registration" %} - {% description %}</center>{% endblock %}
@@ -21,7 +20,7 @@ Service inscription<br>
 75006 Paris
 <br><br><br>
 
-<a href="{% url teleforma-corrector-registration-view username %}" class="component_icon button" id="action_green" target="_blank"><img src="/static/telemeta/images/download.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+<a href="{% url teleforma-corrector-registration-view username %}" class="component_icon button" id="action_green" target="_blank"><img src="/static/teleforma/images/download.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
 <br><br><br>
 
 Une fois votre dossier reçu et confirmé par nos services, vous recevrez un mail vous invitant à procéder au règlement des arrhes par carte bancaire. <b>Votre inscription ne sera validée qu’au terme de cette ultime étape.</b>

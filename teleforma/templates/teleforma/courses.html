@@ -1,7 +1,6 @@
-{% extends "telemeta/base.html" %}
+{% extends "teleforma/base.html" %}
 {% load teleforma_tags %}
 {% load thumbnail %}
-{% load telemeta_utils %}
 {% load i18n %}
 
 
@@ -21,7 +20,7 @@
   {% block modules %}
   <div class="module">
 
-    <h3><img src="/static/telemeta/images/module_playlist.png" alt="playlists"
+    <h3><img src="/static/teleforma/images/module_playlist.png" alt="playlists"
         style="vertical-align:middle" />{{ period }}</h3>
     <div style="background: white;">
       <ul>
@@ -56,19 +55,7 @@
   {% endblock module-action %}
 
   {% block notes %}
-  <!--<div class="module">
-<h3><img src="/static/telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
-<div style="background: white;">
-<ul>
-{% for note in notes %}
-<li>{{ note.content }}</li>
-{% endfor %}
-</ul>
-</div>
-</div>
-<div class="module_action">
-<a href="#" class="component_icon button" id="action_violet">{% trans "New note" %}</a>
-</div>-->
+
   {% endblock notes %}
 
   {% endblock modules %}

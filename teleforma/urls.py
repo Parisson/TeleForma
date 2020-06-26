@@ -39,7 +39,6 @@ from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
 from teleforma.models import *
 from teleforma.views import *
-from telemeta.views import *
 from teleforma.forms import *
 from registration.views import *
 from jsonrpc import jsonrpc_site
@@ -51,9 +50,13 @@ media = MediaView()
 
 urlpatterns = patterns('',
 
-    # login
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    # login / logout
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
         name="teleforma-login"),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+        name="auth_login"),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name="teleforma-logout"),
+
     # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
     url(r'^accounts/register/$', UserAddView.as_view(), name="teleforma-register"),
     url(r'^accounts/register/(?P<username>.*)/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
@@ -67,8 +70,8 @@ urlpatterns = patterns('',
 
     url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
-    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail, name="telemeta-profile-detail"),
-    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/edit/$', profile_view.profile_edit, name="telemeta-profile-edit"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail, name="teleforma-profile-detail"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/profile/edit/$', profile_view.profile_edit, name="teleforma-profile-edit"),
     
     url(r'^captcha/', include('captcha.urls')),
 
@@ -77,9 +80,6 @@ urlpatterns = patterns('',
 
     # Home
     url(r'^$', HomeRedirectView.as_view(), name="teleforma-home"),
-
-    # Telemeta
-    url(r'^', include('telemeta.urls')),
 
     # Desk
     url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),

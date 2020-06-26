@@ -36,7 +36,7 @@ from teleforma.models.crfpa import Parameters
 from teleforma.models.core import Period
 from teleforma.views.core import *
 from teleforma.forms import WriteForm
-from telemeta.views import ProfileView
+from teleforma.views.profile import ProfileView
 from registration.views import *
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from postman.views import WriteView as PostmanWriteView

@@ -1,6 +1,5 @@
-{% extends "telemeta/base.html" %}
+{% extends "teleforma/base.html" %}
 {% load i18n %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 
 {% block head_title %}{% trans "Annals" %} - {{ iej }}{% endblock %}
@@ -12,7 +11,7 @@
 <div id="module-set-left" style="width: 20%">
 
 <div class="module">
-<h3><a href="{% url teleforma-home %}"><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+<h3><a href="{% url teleforma-home %}"><img src="/static/teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
@@ -28,7 +27,7 @@
 
 {% if user.is_superuser %}
 	<div class="module">
-	<h3><img src="/static/telemeta/images/module_world.png" alt="IEJ" style="vertical-align:middle" /> {% trans "IEJ" %}</h3>
+	<h3><img src="/static/teleforma/images/module_world.png" alt="IEJ" style="vertical-align:middle" /> {% trans "IEJ" %}</h3>
 	<div style="background: white;">
 		<ul>
 		{% block iej %}
@@ -57,7 +56,7 @@
 
 				<div class="course_subtitle">
 					{% if not student %}
-					<h3><img src="/static//telemeta/images/item_title.png" width="10px" alt="" /> {% if iej %}{{ iej }}{% else %}National{% endif %}</h3>
+					<h3><img src="/static/teleforma/images/item_title.png" width="10px" alt="" /> {% if iej %}{{ iej }}{% else %}National{% endif %}</h3>
 					{% endif %}
 				</div>
 

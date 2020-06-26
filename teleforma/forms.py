@@ -17,6 +17,7 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 from captcha.fields import CaptchaField
 
 from teleforma.models.core import Course, Professor
+from teleforma.models.profile import UserProfile
 from tinymce.widgets import TinyMCE
 from itertools import cycle
 from django.core.files.images import get_image_dimensions
@@ -60,6 +61,11 @@ class ConferenceForm(ModelForm):
 #     class Meta:
 #         model = User
 #         fields = ['first_name', 'last_name', 'email', 'accept']
+
+
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = UserProfile
 
 
 class UserForm(ModelForm):

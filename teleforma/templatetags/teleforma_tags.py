@@ -328,3 +328,18 @@ def newsitems_portlet(context, course_id, period_id):
             'course_newsitems':course_newsitems,
             'all_newsitems':all_newsitems
            }
+
+
+##### FROM TELEMETA #####
+
+@register.simple_tag
+def description():
+    return settings.TELEFORMA_DESCRIPTION
+
+@register.simple_tag
+def organization():
+    return settings.TELEFORMA_ORGANIZATION
+
+@register.simple_tag
+def current_year():
+    return datetime.datetime.now().strftime("%Y")

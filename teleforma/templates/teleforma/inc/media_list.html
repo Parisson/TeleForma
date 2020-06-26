@@ -5,7 +5,7 @@
 {% if course.media.all|from_course_type:type|from_period:period %}
 <div class="course_content content_video">
 <div class="course_subtitle">
-    <h3><img src="/static/telemeta/images/item_title.png" width="10px" alt="" /> {% trans title %}</h3>
+    <h3><img src="/static/teleforma/images/item_title.png" width="10px" alt="" /> {% trans title %}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
@@ -39,7 +39,7 @@
                     <dt>{% trans "Title" %}</dt><dd>{{ media.conference.course.title }}</dd>
                     <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
                     {% if media.conference.professor %}
-                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url telemeta-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
                     {% endif %}
                     <dt>{% trans "Begin" %}</dt><dd>{{ media.conference.date_begin }}</dd>
                     {% if media.conference.comment %}
@@ -50,9 +50,9 @@
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
             {% if media.is_published and user.is_staff %}
-             <img src="/static/telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
+             <img src="/static/teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
             {% elif not media.is_published and user.is_staff %}
-             <img src="/static/telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
+             <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
             {% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
                 {% if not "video" in media.mime_type or perms.telemeta.can_play_all_items or request.user_agent.os.family == 'iOS' %}

@@ -44,7 +44,6 @@ import datetime
 import mimetypes
 
 from django.db.models import *
-from telemeta.models import *
 from teleforma.fields import *
 import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
@@ -58,6 +57,9 @@ from sorl.thumbnail import default as sorl_default
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.conf import settings
 from quiz.models import Quiz
+
+# TODO notelemeta : delete after data migration
+# from telemeta.models.media import MediaItem
 
 app_label = 'teleforma'
 
@@ -73,6 +75,10 @@ session_choices = get_n_choices(settings.TELEFORMA_EXAM_MAX_SESSIONS+1)
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
 streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
 mimetypes.add_type('video/webm','.webm')
+
+ITEM_TRANSODING_STATUS = ((0, _('broken')), (1, _('pending')), (2, _('processing')),
+                         (3, _('done')), (5, _('ready')))
+
 payment_choices = [
     ('online', u'en ligne'),
     ('check', u'par chèque'),
@@ -678,8 +684,45 @@ class DocumentSimple(MediaBase):
         ordering = ['-date_added']
 
 
+
+class MediaTranscoded(Model):
+    "Item file transcoded"
+
+    element_type = 'transcoded item'
+
+    item            = models.ForeignKey('Media', related_name="transcoded", verbose_name=_('item'))
+    mimetype        = models.CharField(_('mime_type'), max_length=255, blank=True)
+    date_added      = DateTimeField(_('date'), auto_now_add=True)
+    status          = models.IntegerField(_('status'), choices=ITEM_TRANSODING_STATUS, default=1)
+    file            = models.FileField(_('file'), upload_to='items/%Y/%m/%d', max_length=1024, blank=True)
+
+    @property
+    def mime_type(self):
+        if not self.mimetype:
+            if self.file:
+                if os.path.exists(self.file.path):
+                    self.mimetype = mimetypes.guess_type(self.file.path)[0]
+                    self.save()
+                    return self.mimetype
+                else:
+                    return 'none'
+            else:
+                return 'none'
+        else:
+            return self.mimetype
+
+    def __unicode__(self):
+        if self.item.title:
+            return self.item.title + ' - ' + self.mime_type
+        else:
+            return self.item.public_id + ' - ' + self.mime_type
+
+    class Meta(MetaCore):
+        db_table = app_label + '_media_transcoded'
+
+
 class Media(MediaBase):
-    "Describe a media resource linked to a conference and a telemeta item"
+    "Describe a media resource linked to a conference"
 
     element_type = 'media'
 
@@ -691,11 +734,13 @@ class Media(MediaBase):
                                  blank=True, null=True)
     period          = models.ForeignKey('Period', related_name='media', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    item            = models.ForeignKey(MediaItem, related_name='media',
-                                 verbose_name='item', blank=True, null=True)
+    # item            = models.ForeignKey(MediaItem, related_name='media',            #  TODO notelemeta : delete after data migration
+    #                              verbose_name='item', blank=True, null=True)
     type            = models.CharField(_('type'), choices=streaming_choices, max_length=32)
     readers         = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
+    file            = models.FileField(_('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
+    poster_file     = models.FileField(_('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
 
     def set_mime_type(self):
         if self.item.file:
