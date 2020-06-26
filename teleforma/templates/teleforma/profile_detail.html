@@ -1,6 +1,5 @@
-{% extends "telemeta/base.html" %}
+{% extends "teleforma/base.html" %}
 {% load i18n %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 
 {% block head_title %}{% trans "User Profile" %} : {{ usr.username }}{% endblock %}
@@ -13,7 +12,7 @@
   {% block modules %}
 
     <div class="module">
-    <h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His seminars" %}{% else %}{% trans "My seminars" %}{% endif %}</a></h3>
+    <h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His seminars" %}{% else %}{% trans "My seminars" %}{% endif %}</a></h3>
     <div style="background: white;">
     {% block courses %}
     {% with usr|user_seminars as seminars %}
@@ -44,7 +43,7 @@
 
     <div id="password" style="float: right;">
     {% if user.is_authenticated and user.username == usr.username %}
-    <a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Change password" %}</a>
+    <a href="{% url teleforma-password-change %}" class="component_icon button icon_login">{% trans "Change password" %}</a>
     {% elif user.is_staff %}
         <a href="{% url teleforma-user-login usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
     {%  endif %}
@@ -105,7 +104,6 @@
 
 
 <div class="buttons">
-<!--<a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Password reset" %}</a>-->
 </div>
 
 </div>

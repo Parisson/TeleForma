@@ -141,10 +141,14 @@ class DocumentAdmin(admin.ModelAdmin):
     search_fields = ['title', 'course__title', 'course__code']
     list_filter = ('period', 'date_added')
 
+class MediaTranscodedInline(admin.TabularInline):
+    model = MediaTranscoded
+
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = ('period', 'date_added')
+    inlines = [MediaTranscodedInline]
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']

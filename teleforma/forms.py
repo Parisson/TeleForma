@@ -1,21 +1,23 @@
 
 from django.forms import ModelForm, HiddenInput
 from teleforma.models import *
-from django.forms.models import inlineformset_factory
+from django.forms import ModelForm
+from django.utils.translation import ugettext_lazy as _
 
+from teleforma.models.profile import UserProfile
 
 class ConferenceForm(ModelForm):
-
     class Meta:
         model = Conference
 
-
 class QuestionForm(ModelForm):
-
     class Meta:
         model = Question
         # exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
 
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = UserProfile
 
 class AnswerForm(ModelForm):
 

@@ -10,7 +10,7 @@ body {
     color: #333;
     background: #FFF;
     margin: 0em;
-    background:no-repeat url(/static/telemeta/images/bg_yt.png) 0 0;
+    background:no-repeat url(/static/teleforma/images/bg_yt.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat
 }
@@ -177,6 +177,11 @@ textarea {
 
 #header {
     padding: 0em;
+	background-color: #000000 ;
+    background:no-repeat url(/static/teleforma/images/tw_hd.png) 0 0;
+    background-color:#ebebeb;
+    background-repeat:repeat; 
+	border-top: .25em solid #6a0307;
 /*     background: url("/static/telemeta/images/waves.png") 100% 0% no-repeat; */
 }
 
@@ -331,8 +336,6 @@ input[type=button], input[type=submit], input[type=reset] {
     -moz-border-radius: 8px 0px 8px 8px;
      -webkit-border-radius: 8px 0px 8px 8px;
      border-radius: 8px 0px 8px 8px;
-    }
-
 }
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
     background: #8D8C94;
@@ -650,7 +653,7 @@ color:#FFF;
 /* Footer (borrowed from Trac) */
 #footer {
     background: #000000;
-    background:no-repeat url(/static/telemeta/images/tw_hd.png) 0 0;
+    background:no-repeat url(/static/teleforma/images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
     clear: both;
@@ -826,7 +829,7 @@ dl.dublincore dd.caption {
     color: #000000 !important;
     text-decoration: none;
     margin: 0;
-    background: transparent url(/static/telemeta/css/more.png) no-repeat left top;
+    background: transparent url(/static/teleforma/images/more.png) no-repeat left top;
     background-position: 0 -16px;
     padding-bottom: 2px;
     padding-left: 16px;
@@ -938,8 +941,8 @@ table.listing th.asc a, table.listing th.desc a {
     background-position: 100% 50%;
     background-repeat: no-repeat;
 }
-table.listing th.asc a { background-image: url(/static/telemeta/images/asc.png) }
-table.listing th.desc a { background-image: url(/static/telemeta/images/desc.png) }
+table.listing th.asc a { background-image: url(/static/teleforma/images/asc.png) }
+table.listing th.desc a { background-image: url(/static/teleforma/images/desc.png) }
 table.listing tbody td, table.listing tbody th {
     padding: .33em .5em;
     vertical-align: top;
@@ -1123,7 +1126,7 @@ a.image-link {
     padding:2px;
 }
 .markerdiv .ts-marker{
-    background-image: url('/static/telemeta/images/marker_tiny.png'); text-align: center; min-width:3ex;
+    background-image: url('/static/teleforma/images/marker_tiny.png'); text-align: center; min-width:3ex;
 }
 .markerdiv .ts-marker, .markerdiv .markersdivOffset, .markerdiv .markersdivTitle, .markerdiv .markersdivAddPlaylist, .markerdiv .markersdivEdit{margin-right:.8ex;}
 .markerdiv div a, .markerdiv div a:visited, .markerdiv div a:hover{
@@ -1138,9 +1141,9 @@ a.image-link {
 .markerdiv .ts-marker, .markerdiv .ts-marker:hover, .markerdiv .ts-marker:visited{
     font-family: monospace; background: #e65911;color: #FFF;padding-left: .3ex; padding-right:.3ex;
 }
-.markersdivDelete{    background-image: url('/static/telemeta/images/del_marker.png');width:15px;height:2ex;background-repeat: no-repeat;}
+.markersdivDelete{    background-image: url('/static/teleforma/images/del_marker.png');width:15px;height:2ex;background-repeat: no-repeat;}
 /*backfround-repeat is redundant with .markerDiv a,.. defined above but this way .markersDivDelete is re-usable in other context (eg popupdiv*/
-.markersdivAddPlaylist{    background-image: url('/static/telemeta/images/add_playlist_marker.png');width:13px;height:2ex; }
+.markersdivAddPlaylist{    background-image: url('/static/teleforma/images/add_playlist_marker.png');width:13px;height:2ex; }
 .markersdivTitle{    font-weight:bold;}
 .markersdivEdit, .markersdivEdit:hover, .markersdivEdit:visited{
     line-height: normal;
@@ -1150,7 +1153,7 @@ a.image-link {
     font-size: 65%;
     border:2px solid #666;
     background-color: #fff;
-    background-image: url('/static/telemeta/images/edit_marker.png');
+    background-image: url('/static/teleforma/images/edit_marker.png');
     -moz-border-radius: 1ex; -webkit-border-radius: 1ex; border-radius: 1ex;
 }
 .markersdivSave, .markersdivSave:hover, .markersdivSave:visited{
@@ -1160,7 +1163,7 @@ a.image-link {
     padding:.7ex; padding-left: 20px;
     background-position: 5px center;
     -moz-border-radius: 1ex;-webkit-border-radius: 1ex;border-radius: 1ex;
-    background-image: url('/static/telemeta/images/ok.png');
+    background-image: url('/static/teleforma/images/ok.png');
 }
 .markerdiv{
     border: 1px solid #aaaaaa;
@@ -1260,52 +1263,52 @@ a.image-link {
 }
 
 .icon_edit{
-    background-image: url('/static/telemeta/images/edit_page.png');
+    background-image: url('/static/teleforma/images/edit_page.png');
 }
 .icon_copy{
-    background-image: url('/static/telemeta/images/copy_page.png');
+    background-image: url('/static/teleforma/images/copy_page.png');
 }
 .icon_previous{
-    background-image: url('/static/telemeta/images/previous.png');
+    background-image: url('/static/teleforma/images/previous.png');
 }
 .icon_next{
-    background-image: url('/static/telemeta/images/next.png');
+    background-image: url('/static/teleforma/images/next.png');
 }
 .icon_dublin_core{
-    background-image: url('/static/telemeta/images/dublin_core.png');
+    background-image: url('/static/teleforma/images/dublin_core.png');
 }
 .icon_cancel{
-    background-image: url('/static/telemeta/images/cancel.png');
+    background-image: url('/static/teleforma/images/cancel.png');
 }
 .icon_save{
-    background-image: url('/static/telemeta/images/save.png');
+    background-image: url('/static/teleforma/images/save.png');
 }
 .icon_add{
-    background-image: url('/static/telemeta/images/add.png');
+    background-image: url('/static/teleforma/images/add.png');
 }
 .icon_add_to_playlist{
-    background-image: url('/static/telemeta/images/add_to_playlist.png');
+    background-image: url('/static/teleforma/images/add_to_playlist.png');
 }
 .icon_login{
-    background-image: url('/static/telemeta/images/password.png');
+    background-image: url('/static/teleforma/images/password.png');
 }
 .icon_search{
-    background-image: url('/static/telemeta/images/find.png');
+    background-image: url('/static/teleforma/images/find.png');
 }
 .icon_ok{
-    background-image: url('/static/telemeta/images/ok.png');
+    background-image: url('/static/teleforma/images/ok.png');
 }
 .icon_csv{
-    background-image: url('/static/telemeta/images/csv.png');
+    background-image: url('/static/teleforma/images/csv.png');
 }
 .icon_playlist{
-    background-image: url('/static/telemeta/images/playlist.png');
+    background-image: url('/static/teleforma/images/playlist.png');
 }
 .icon_filter{
-    background-image: url('/static/telemeta/images/filter.png');
+    background-image: url('/static/teleforma/images/filter.png');
 }
 .icon_delete{
-    background-image: url('/static/telemeta/images/delete.png');
+    background-image: url('/static/teleforma/images/delete.png');
 }
 .icon_download{
     background-image: url('/static/teleforma/images/download_media.png');
@@ -1314,10 +1317,10 @@ a.image-link {
     background-image: url('/static/teleforma/images/tool-animator.png');
 }
 .icon_speaker{
-    background-image: url('/static/telemeta/images/text-speak.png');
+    background-image: url('/static/teleforma/images/text-speak.png');
 }
 .icon_rss,.icon_rss:hover{
-    background: url('/static/telemeta/images/feed-icon-14x14.png') no-repeat;
+    background: url('/static/teleforma/images/feed-icon-14x14.png') no-repeat;
     background-position: 0ex .8ex;
     padding:.0ex 0ex .8ex .7ex;
     text-decoration: none;
@@ -1406,7 +1409,7 @@ input,textarea{
 
 #module-set .module {
     border: 1px solid #000;
-    background: repeat url(/static/telemeta/images/tw_hd.png) 0 0;
+    background: repeat url(/static/teleforma/images/tw_hd.png) 0 0;
     padding: 0.2em;
     margin: 2em 1em 0em 0em;
     -moz-border-radius: 8px 0px 11px 11px;
@@ -1440,7 +1443,7 @@ input,textarea{
 
 #module-set-left .module {
         border: 1px solid #000;
-        background: repeat url(/static/telemeta/images/tw_hd.png) 0 0;
+        background: repeat url(/static/teleforma/images/tw_hd.png) 0 0;
         padding: 0.2em;
         margin: 0em 0em 1.5em 0em;
         -moz-border-radius: 8px 0px 11px 11px;
@@ -1489,7 +1492,183 @@ input,textarea{
 
 #module-set-left .module a {
     display:inline-block;
-    }
+}
+
+#module-set .ui-tabs.ui-widget-content{
+	margin-top: 15px;
+}
+#module-set .ui-tabs.ui-widget-content h3{
+	vertical-align: middle;
+	display: inline-block;
+}
+#module-set .ui-tabs.ui-widget-content h3 img{
+	vertical-align: middle;
+}
+
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav{
+	padding: 0;
+	margin: 0;
+}
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav:after {
+	content: ""; 
+	display: table;
+	clear: both;
+}
+
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li{
+	display: inline-block;
+	width: 50%;
+	text-align: center;
+	padding: 0;
+	box-sizing: border-box;
+	margin-top: 3px;
+	float:left;
+}
+
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li a{
+	font-size:1.1em;
+	color: #333;
+	padding: 1em 0;
+	display: block;
+	box-sizing: border-box;
+	float:left;
+	width: 80%;
+	background-color: rgba(255, 255, 255, .2);
+	border-left: 1px solid #000;
+	border-right: 1px solid #666;
+	opacity: 0.5;
+}
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li a:hover{
+	background-color: rgba(255, 255, 255, .1);
+	opacity: 1;
+}
+
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li.ui-tabs-active a{
+	background-color: rgba(255, 255, 255, 0);
+	opacity: 1;
+	color: #fff;
+}
+
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li.ui-tabs-active a+a:hover{
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+#module-set .ui-tabs.ui-widget-content ul.ui-tabs-nav li a+a{
+	width: 20%;
+}
+#module-set .ui-tabs.ui-widget-content .ui-widget-content{
+	background-color: #FFF;
+	color: #000;
+}
+
+
+
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem{
+	padding: 10px 5px;
+	border-bottom: 1px solid #CCC;
+	margin-bottom: 10px;
+	border-radius: 0;
+}
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem:first-child{
+	padding-top: 20px;
+}
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem:last-child{
+	border-bottom: 0;
+	margin-bottom: 0;
+	padding-bottom: 20px;
+}
+
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem header p{
+	font-size: 0.8125em;
+	margin: 5px 0;
+	line-height: 1.3em;
+}
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem header h3{
+	color: #355ea2;
+	display: block;
+	font-size: 1.05em;
+	display: inline-block;
+	width: 85%;
+	margin: 0;
+}
+
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem header ul.actions{
+	padding: 0;
+	text-align: right;
+	display: inline-block;
+	width: 15%;
+	margin: 0;
+	float: right;
+	position: relative;
+	top: 2px;
+}
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem header ul.actions li{
+	list-style-type: none;
+	display: inline-block;
+	padding: 0;
+	font-size: 1.3em;
+	margin-right: 5px;
+}
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem header ul.actions li+li{
+	margin-right: 0px;
+}
+
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem header ul.actions li img{
+	border-radius: 0;
+	width: 12px;
+	height: 12px;
+}
+
+#module-set .ui-tabs.ui-widget-content .ui-widget-content .newsitem section{
+	font-size: 1.1em;
+	font-size: 0.9em;
+	word-wrap: break-word;
+	-webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
+}
+
+#module-set .ui-tabs.ui-widget-content footer{
+	text-align: center;
+	padding: 10px 0;
+	background: repeat url(/static/teleforma/images/tw_hd.png) 0 0;
+}
+
+#module-set .ui-tabs.ui-widget-content footer a{
+	display: inline-block;
+	width: 100%;
+	color: #FFF;
+}
+
+#module-set .ui-tabs.ui-widget-content footer a:hover{
+	text-decoration: underline;
+}
+
+form.add_actus p:after{
+	content: ""; 
+	display: table;
+	clear: both;
+}
+
+form.add_actus label{
+	display: inline-block;
+	font: 1em Verdana, sans-serif;
+    line-height: 1.3em;
+    color: #333;
+	font-weight: bold;
+	min-width: 105px;
+}
+
+form.add_actus label[for="id_text"]{
+	float: left;
+}
+form.add_actus #id_text_parent{
+	float: left;
+	margin-left: 7px;
+}
+
 
 
 .desk_center {
@@ -1538,7 +1717,7 @@ input,textarea{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
-    background:no-repeat url(/static/telemeta/images/bg_yt.png) 0 0;
+    background:no-repeat url(/static/teleforma/images/bg_yt.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
    }

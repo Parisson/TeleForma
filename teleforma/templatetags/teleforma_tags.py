@@ -376,3 +376,16 @@ def quiz_progress(progress):
         return int(progress[0]*100.0/progress[1])
     else:
         return 100
+
+### FROM TELEMETA
+@register.simple_tag
+def description():
+    return settings.TELEFORMA_DESCRIPTION
+
+@register.simple_tag
+def organization():
+    return settings.TELEFORMA_ORGANIZATION
+
+@register.simple_tag
+def current_year():
+    return datetime.datetime.now().strftime("%Y")

@@ -1,0 +1,28 @@
+{% extends "teleforma/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="home-content">
+<div id="module-set">
+
+{% block modules %}
+
+{% with "Last changes" as title %}
+{% include "teleforma/inc/module_revisions.html" %}
+{% endwith %}
+
+{{ block.super }}
+
+{% endblock %}
+
+</div>
+
+<div class="home-description">
+<img class="align-left" src="/static/teleforma/images/vox.png" alt="vox" style="vertical-align:middle;" />
+{{ page_content|render_flatpage }}
+</div>
+
+<a href="{% url teleforma-login %}" class="component_icon button" id="action_red">{% trans "Connexion" %}</a>
+
+</div>
+{% endblock %}

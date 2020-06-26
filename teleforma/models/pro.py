@@ -38,7 +38,6 @@ import os
 from django.conf import settings
 import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
-from telemeta.models.core import *
 from teleforma.models.core import *
 from forms_builder.forms.models import Form
 from mezzanine.core.managers import DisplayableManager

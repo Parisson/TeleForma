@@ -38,7 +38,8 @@ from django.views.generic import *
 from django.views.generic.base import *
 from teleforma.models import *
 from teleforma.views import *
-from telemeta.views import *
+from teleforma.forms import *
+from registration.views import *
 import forms_builder.forms.urls
 from jsonrpc import jsonrpc_site
 from longerusername.forms import AuthenticationForm
@@ -54,10 +55,8 @@ urlpatterns = patterns('',
     url(r'^$', SeminarsView.as_view(), name="home"),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
         name="teleforma-login"),
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
-        name="telemeta-login"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
-        name="telemeta-login"),
+        name="teleforma-login"),
 #    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'authentication_form': AuthenticationForm}),
 
     # Telemeta
