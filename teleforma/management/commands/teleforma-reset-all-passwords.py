@@ -5,8 +5,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.template.defaultfilters import slugify
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import codecs
@@ -18,7 +16,7 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     from_email = 'webmaster@parisson.com'
 
-    def reset_password_email(self, email, template='telemeta/registration/password_reset_email.html'):
+    def reset_password_email(self, email, template='teleforma/registration/password_reset_email.html'):
         form = PasswordResetForm({'email': email})
         opts = {'from_email':self.from_email, 'email_template_name':template,
                          'token_generator': default_token_generator }

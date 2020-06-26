@@ -112,7 +112,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
 class UsersView(ListView):
 
     model = User
-    template_name='telemeta/users.html'
+    template_name='teleforma/users.html'
     context_object_name = 'users'
     #paginate_by = 12
 
@@ -302,3 +302,19 @@ class UsersXLSExport(object):
         self.users = User.objects.filter(student__training__courses__in=course)
         return self.export(request)
 
+    @method_decorator(login_required)
+    def profile_detail(self, request, username, template='teleforma/profile_detail.html'):
+        user = User.objects.get(username=username)
+        try:
+            profile = user.get_profile()
+        except:
+            profile = None
+        student = user.student.all()
+        payment = None
+        if student and (user.username == request.user.username or request.user.is_superuser):
+            student = user.student.get()
+            payment = student.payments.order_by('-id').all()
+            if payment:
+                payment = payment[0]
+
+        return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})

@@ -182,7 +182,6 @@ textarea {
     background-color:#ebebeb;
     background-repeat:repeat; 
 	border-top: .25em solid #6a0307;
-/*     background: url("/static/telemeta/images/waves.png") 100% 0% no-repeat; */
 }
 
 #content_header, #header{
@@ -247,7 +246,6 @@ textarea {
 
 #collection_player {
     background: transparent;
-    /*     background-image: url(/static/telemeta/images/grid_bg_2.png); */
 }
 
 #collection_player .title {
