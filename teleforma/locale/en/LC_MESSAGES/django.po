@@ -691,7 +691,7 @@ msgstr "procédure"
 #: models/core.py:206
 #, fuzzy
 msgid "written_speciality"
-msgstr "spécialité écrit"
+msgstr "Spécialité écrit"
 
 #: models/core.py:207
 #, fuzzy
@@ -967,7 +967,49 @@ msgstr ""
 msgid "oral 2 (option)"
 msgstr ""
 
-#: models/crfpa.py:182
+#: models/crfpa.py:162
+#, fuzzy
+#| msgid "platform only"
+msgid "e-learning platform only"
+msgstr "Plateforme seulement"
+
+#: models/crfpa.py:163
+msgid "application fees"
+msgstr "frais de dossier"
+
+#: models/crfpa.py:165
+msgid "subscription fees"
+msgstr "frais d'inscription"
+
+#: models/crfpa.py:166
+msgid "promo code"
+msgstr ""
+
+#: models/crfpa.py:167
+#, fuzzy
+#| msgid "Registration"
+msgid "registration date"
+msgstr "Inscription"
+
+#: models/crfpa.py:168
+msgid "subscription date"
+msgstr "date d'inscription"
+
+#: models/crfpa.py:169
+msgid "subscribed"
+msgstr "inscrit"
+
+#: models/crfpa.py:170
+msgid "confirmation sent"
+msgstr "confirmation envoyée"
+
+#: models/crfpa.py:171
+#, fuzzy
+#| msgid "streaming server"
+msgid "studying level"
+msgstr "serveur de diffusion"
+
+#: models/crfpa.py:222
 msgid "Student"
 msgstr "Etudiant"
 

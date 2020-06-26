@@ -1,5 +1,5 @@
-{% extends "telemeta/base.html" %}
-{% load telemeta_utils %}
+{% extends "teleforma/base.html" %}
+{% load teleforma_tags %}
 {% load i18n %}
 
 {% block extra_javascript %}
@@ -25,19 +25,19 @@
 
     {% block module_searches %}
     {% with searches as searches and "My searches" as title %}
-    {% include "telemeta/inc/module_searches.html" %}
+    {% include "teleforma/inc/module_searches.html" %}
     {% endwith %}
     {% endblock %}
 
     {% block module_user_revisions %}
     {% with user_revisions as revisions and "My last changes" as title %}
-    {% include "telemeta/inc/module_user_revisions.html" %}
+    {% include "teleforma/inc/module_user_revisions.html" %}
     {% endwith %}
     {% endblock %}
 
     {% block module_all_revisions %}
     {% with revisions as revisions and "All last changes" as title %}
-    {% include "telemeta/inc/module_revisions.html" %}
+    {% include "teleforma/inc/module_revisions.html" %}
     {% endwith %}
     {% endblock %}
 
@@ -107,7 +107,7 @@
             </td>
             <td align="center" style="vertical-align:middle">
                 {% if resource.element.file or resource.element.has_mediafile %}
-                <img src="/static/telemeta/images/ok.png" alt="yes" style="vertical-align:middle" /></a>
+                <img src="/static/teleforma/images/ok.png" alt="yes" style="vertical-align:middle" /></a>
                 {% endif %}
             </td>
             <td style="vertical-align:middle">

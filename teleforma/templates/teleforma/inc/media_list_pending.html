@@ -5,7 +5,7 @@
 {% if course.media.all|from_course_type:type|from_periods:period %}
 <div class="course_content content_video">
 <div class="course_subtitle">
-    <h3><img src="/static/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Passed conferences"%}</h3>
+    <h3><img src="/static/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Passed conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
@@ -48,9 +48,9 @@
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
             {% if media.is_published and user.is_staff %}
-             <img src="/static/telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
+             <img src="/static/teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
             {% elif not media.is_published and user.is_staff %}
-             <img src="/static/telemeta/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
+             <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
             {% if media.item.file %}
              <a href="{{ MEDIA_URL }}{{ media.item.file }}">

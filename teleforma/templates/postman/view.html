@@ -16,14 +16,14 @@
  <div class="pm_header">
   {% if message.obfuscated_sender %}
     {% if not message.obfuscated_sender|startswith:'#' %}
-	  <a href="{% url telemeta-profile-detail message.obfuscated_sender %}" title="{% get_training_profile message.sender %}">
+	  <a href="{% url teleforma-profile-detail message.obfuscated_sender %}" title="{% get_training_profile message.sender %}">
     {% endif %}
 	  <span class="pm_sender">{{ message.obfuscated_sender|or_me:user }}</span>
 	  {% if not message.obfuscated_sender|startswith:'#' %}</a>{% endif %}&raquo;
   {% endif %}
   {% if message.obfuscated_recipient %}
     {% if not message.obfuscated_recipient|startswith:'#' %}
-	  <a href="{% url telemeta-profile-detail message.obfuscated_recipient %}" title="{% get_training_profile message.recipient %}">
+	  <a href="{% url teleforma-profile-detail message.obfuscated_recipient %}" title="{% get_training_profile message.recipient %}">
     {% endif %}
 	  <span class="pm_recipient">{{ message.obfuscated_recipient|or_me:user }}</span>
 	  {% if not message.obfuscated_recipient|startswith:'#' %}</a>{% endif %} |

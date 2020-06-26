@@ -38,7 +38,7 @@ class Command(BaseCommand):
             mode = 'E-learning'
         else:
             mode = 'Presentielle'
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
+        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'student': student, 'mode': mode}
         subject_template = 'teleforma/messages/email_inscr_sujet.txt'
         message_template = 'teleforma/messages/email_inscription-new.txt'
         subject = render_to_string(subject_template, ctx_dict)

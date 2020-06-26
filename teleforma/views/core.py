@@ -73,7 +73,6 @@ from teleforma.forms import *
 from teleforma.models.appointment import AppointmentPeriod
 from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
 from teleforma.decorators import access_required
-from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
 

@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
     def init_password_email(self, user):
         site = Site.objects.get_current()
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'usr': user}
+        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'usr': user}
         subject = render_to_string(self.subject_template, ctx_dict)
         subject = ''.join(subject.splitlines())
         message = render_to_string(self.message_template, ctx_dict)

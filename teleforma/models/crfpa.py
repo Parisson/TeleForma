@@ -36,7 +36,6 @@
 
 import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
-from telemeta.models.core import *
 from teleforma.models.core import *
 from tinymce.models import HTMLField
 from  django.db.models import signals
