@@ -577,6 +577,11 @@ class Media(MediaBase):
         self.set_mime_type()
 
 
+    def poster_url(self, geometry='640'):
+        url = ''
+        if self.poster_file:
+            url = sorl_default.backend.get_thumbnail(self.poster_file, geometry).url
+        return url
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'

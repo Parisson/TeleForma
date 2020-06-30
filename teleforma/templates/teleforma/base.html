@@ -47,7 +47,7 @@
   <script src="/static/teleforma/js/messi.min.js" type="text/javascript"></script>
   <script src="/static/teleforma/js/rainbowvis.js" type="text/javascript"></script>
   <script src="/static/jqchat/jqchat.js" type="text/javascript"></script>
-  <!-- <script src="/static/telemeta/js/locale.js" type="text/javascript"></script> -->
+  <script src="/static/teleforma/js/locale.js" type="text/javascript"></script>
   <script src="/static/teleforma/js/application.js" type="text/javascript"></script>
 
   {% if user.is_authenticated %}
@@ -237,7 +237,7 @@
           <td>
             <p class="right">
               Copyright &copy; {% current_year %} {% organization %} |
-              TODO : missing link <!-- <a href="{ url telemeta-flatpage "legal_notices" }">{% trans "Legal notices" %}</a> -->
+              <a href="{% url teleforma-flatpage "legal_notices" %}">{% trans "Legal notices" %}</a>
             </p>
           </td>
         </tr>

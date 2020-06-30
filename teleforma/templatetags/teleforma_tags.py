@@ -51,6 +51,12 @@ from django.conf import settings
 from django.template.defaultfilters import stringfilter
 import django.utils.timezone as timezone
 from django.utils.translation import ugettext_lazy as _
+from urlparse import urlparse
+from docutils.core import publish_parts
+from django.utils.encoding import smart_str, force_unicode
+from django.utils.safestring import mark_safe
+
+from teleforma.models.crfpa import Course
 from teleforma.views import get_courses
 from teleforma.context_processors import *
 from urlparse import urlparse
@@ -389,3 +395,32 @@ def organization():
 @register.simple_tag
 def current_year():
     return datetime.datetime.now().strftime("%Y")
+
+@register.filter
+def render_flatpage(content):
+    parsed = ""
+    path = getattr(content, 'path', '')
+    if isinstance(content, basestring):
+        content = content.split("\n")
+
+    for line in content:
+        match = re.match('^(\.\. *(?:_[^:]*:|(?:\|\w+\|)? *image::) *)([^ ]+) *$', line)
+        if match:
+            directive, urlname = match.groups()
+            line = directive
+            try:
+                i = urlname.index('telemeta-')
+            except ValueError:
+                i = -1
+            if i == 0:
+                line += reverse(urlname)
+            elif urlname[:1] != '/':
+                line += reverse('telemeta-flatpage', args=[path + '/../' + urlname])
+            else:
+                line += urlname
+
+        parsed += line + "\n"
+
+    parts = publish_parts(source=smart_str(parsed), writer_name="html4css1", settings_overrides={})
+    return mark_safe('<div class="rst-content">\n' + force_unicode(parts["html_body"]) + '</div>')
+render_flatpage.is_safe = True

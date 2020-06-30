@@ -1675,6 +1675,9 @@ msgstr "date de modification"
 #: templates/teleforma/inc/seminar_description.html:21
 msgid "preview"
 msgstr ""
+#: templates/telemeta/base.html:159
+msgid "Sign out"
+msgstr "Se déconnecter"
 
 #: templates/teleforma/inc/seminar_description.html:21
 msgid "play"
@@ -1923,11 +1926,11 @@ msgstr ""
 
 #: templates/telemeta/login.html:29
 msgid "Password forgotten"
-msgstr ""
+msgstr "Mot de passe oublié ?"
 
 #: templates/telemeta/login.html:30
 msgid "Sign in"
-msgstr ""
+msgstr "Connexion"
 
 #: templates/telemeta/profile_detail.html:6
 #, fuzzy
@@ -1998,16 +2001,21 @@ msgid "Email"
 msgstr ""
 
 #: templates/telemeta/profile_detail.html:85
+#: templates/telemeta/profile_detail.html:80
+msgid "WiFi password"
+msgstr "Mot de passe WiFi"
+
+#: templates/telemeta/profile_detail.html:84
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
 #: templates/telemeta/profile_detail.html:86
 msgid "Last login"
-msgstr ""
+msgstr "Dernière connexion"
 
 #: templates/telemeta/profile_detail.html:97
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
 #: templates/telemeta/profile_detail.html:108
 msgid "Password reset"
@@ -2020,7 +2028,7 @@ msgstr ""
 
 #: templates/telemeta/search_criteria.html:69
 msgid "Search"
-msgstr ""
+msgstr "Recherche"
 
 #: templates/telemeta/search_criteria.html:113
 msgid "Year of recording"

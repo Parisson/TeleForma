@@ -49,14 +49,16 @@ user_export = UsersXLSExport()
 profile_view = ProfileView()
 document = SeminarDocumentView()
 media = MediaView()
+home_view = HomeView()
+media_transcoded = MediaTranscodedView
 
 urlpatterns = patterns('',
-#    url(r'^$', HomeView.as_view(), name='teleforma-home'),
-    url(r'^$', SeminarsView.as_view(), name="home"),
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
+
+    # login / logout
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
+        name="telemeta-login"),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
         name="teleforma-login"),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
-        name="auth_login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', name="teleforma-logout"),
 
     url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
