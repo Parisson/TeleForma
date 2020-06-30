@@ -413,28 +413,31 @@ class CorrectorXLSBook(object):
         row = self.sheet.row(counter + self.first_row)
         row.write(0, user.last_name)
         row.write(1, user.first_name)
-        row.write(2, user.email)
+        row.write(2, user.username)
+        row.write(3, user.email)
 
         profile = Profile.objects.filter(user=user)
         if profile:
             profile = profile[0]
-            row.write(3, profile.address)
-            row.write(4, profile.address_detail)
-            row.write(5, profile.postal_code)
-            row.write(6, profile.city)
-            row.write(7, profile.telephone)
+            row.write(4, profile.address)
+            row.write(5, profile.address_detail)
+            row.write(6, profile.postal_code)
+            row.write(7, profile.city)
+            row.write(8, profile.telephone)
             if profile.birthday:
                 try:
-                    row.write(8, profile.birthday.strftime("%d/%m/%Y"))
+                    row.write(9, profile.birthday.strftime("%d/%m/%Y"))
                 except ValueError:
-                    row.write(8, 'erreur')
+                    row.write(9, 'erreur')
+            row.write(10, profile.birthday_place)
+            row.write(11, profile.ss_number)
 
             if corrector.date_registered:
-                row.write(9, corrector.date_registered.strftime("%d/%m/%Y"))
+                row.write(12, corrector.date_registered.strftime("%d/%m/%Y"))
             else:
-                row.write(9, "")
-            row.write(10, str(corrector.period))
-            row.write(11, corrector.pay_status)
+                row.write(12, "")
+            row.write(13, str(corrector.period))
+            row.write(14, corrector.pay_status)
                 
         return counter + 1
 
@@ -442,6 +445,7 @@ class CorrectorXLSBook(object):
         row = self.sheet.row(0)
         cols = [{'name':'NOM', 'width':5000},
                 {'name':'PRENOM', 'width':5000},
+                {'name':'ID', 'width':5000},
                 {'name':'MAIL', 'width':7500},
                 {'name':'ADRESSE', 'width':7500},
                 {'name':'ADRESSE (suite)', 'width': 7500},
@@ -449,6 +453,8 @@ class CorrectorXLSBook(object):
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
                 {'name': 'Date de naissance', 'width': 5000},
+                {'name': 'Lieu de naissance', 'width': 5000},
+                {'name': 'Numero SS', 'width': 5000},
                 {'name':"Date inscription", 'width':5000},
                 {'name':"Periode", 'width':5000},
                 {'name':"Statut", 'width':5000},

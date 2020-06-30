@@ -162,6 +162,7 @@ class CorrectorAdmin(admin.ModelAdmin):
     list_display = ['__unicode__', 'period', 'pay_status',
                     'date_registered']
     actions = ['export_xls']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'user__email']
 
     def export_xls(self, request, queryset):
         book = CorrectorXLSBook(correctors = queryset)
