@@ -623,8 +623,6 @@ color:#FFF;
 }
 #footer :link, #footer :visited { color: #FFF; }
 #footer hr { display: none }
-#footer #telemeta_powered { border: 0; float: left }
-#footer #telemeta_powered:hover { background: transparent }
 #footer p { margin: 0; }
 #footer p.left {
     float: left;

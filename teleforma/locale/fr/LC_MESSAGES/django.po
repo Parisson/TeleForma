@@ -2217,7 +2217,7 @@ msgstr ""
 
 #: templates/telemeta/base.html:171 templates/telemeta/base.html.py:176
 msgid "Sign out"
-msgstr ""
+msgstr "Se déconnecter"
 
 #: templates/telemeta/base.html:226
 msgid "Powered by"
@@ -2266,11 +2266,11 @@ msgstr ""
 
 #: templates/telemeta/login.html:29
 msgid "Password forgotten"
-msgstr ""
+msgstr "Mot de passe oublié ?"
 
 #: templates/telemeta/login.html:30
 msgid "Sign in"
-msgstr ""
+msgstr "Connexion"
 
 #: templates/telemeta/profile_detail.html:7
 msgid "User Profile"
@@ -2331,7 +2331,7 @@ msgstr ""
 
 #: templates/telemeta/profile_detail.html:85
 msgid "WiFi password"
-msgstr ""
+msgstr "Mot de passe WiFi"
 
 #: templates/telemeta/profile_detail.html:89
 msgid "Expiration date"
@@ -2339,11 +2339,11 @@ msgstr "Date d'expiration"
 
 #: templates/telemeta/profile_detail.html:90
 msgid "Last login"
-msgstr ""
+msgstr "Dernière connexion"
 
 #: templates/telemeta/profile_detail.html:101
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
 #: templates/telemeta/search_criteria.html:5
 #: templates/telemeta/search_criteria.html:76
@@ -2352,7 +2352,7 @@ msgstr ""
 
 #: templates/telemeta/search_criteria.html:69
 msgid "Search"
-msgstr ""
+msgstr "Recherche"
 
 #: templates/telemeta/search_criteria.html:113
 msgid "Year of recording"

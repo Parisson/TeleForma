@@ -16,10 +16,10 @@
 
 
 {% block layout %}
-{% if media.item.file and media.is_published or user.is_superuser or user.is_staff %}
+{% if media.file and media.is_published or user.is_superuser or user.is_staff %}
 <div class="video">
-<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}' {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}{% thumbnail related.file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}{% endfor %}{% endif %}>
-<source src="{{ MEDIA_URL }}{{ media.item.file }}" type="{{ media.mime_type }}" />
+<video id="my_video_1" class="video-js vjs-default-skin" width="640" height="360" controls preload="auto" data-setup='{}' {% if media.poster_file %}{% thumbnail media.poster_file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}>
+<source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
 </video>
 </div>
 {% endif %}

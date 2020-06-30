@@ -17,7 +17,7 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 from captcha.fields import CaptchaField
 
 from teleforma.models.core import Course, Professor
-from teleforma.models.profile import UserProfile
+from teleforma.models.crfpa import Profile as UserProfile
 from tinymce.widgets import TinyMCE
 from itertools import cycle
 from django.core.files.images import get_image_dimensions

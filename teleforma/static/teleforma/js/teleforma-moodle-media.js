@@ -23,7 +23,7 @@
  */
 
 /**
- * Class for telemeta global functions.
+ * Class for teleforma global functions.
  * Note that the dollar sign is a reserved keyword in some browsers
  * (see http://davidwalsh.name/dollar-functions)
  * which might be in conflict with jQuery dollar sign.
