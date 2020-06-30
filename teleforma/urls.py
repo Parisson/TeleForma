@@ -47,14 +47,16 @@ htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 profile_view = CRFPAProfileView()
 document = DocumentView()
 media = MediaView()
+home_view = HomeView()
+media_transcoded = MediaTranscodedView
 
 urlpatterns = patterns('',
 
     # login / logout
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
+        name="telemeta-login"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
         name="teleforma-login"),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
-        name="auth_login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', name="teleforma-logout"),
 
     # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
@@ -92,6 +94,9 @@ urlpatterns = patterns('',
     # Home
     url(r'^$', HomeRedirectView.as_view(), name="teleforma-home"),
 
+    # Flat pages
+    url(r'^pages/(?P<path>.*)$', home_view.render_flatpage, name="teleforma-flatpage"),
+
     # Desk
     url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/$', CourseListView.as_view(), name="teleforma-desk-period-list"),
@@ -99,6 +104,10 @@ urlpatterns = patterns('',
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
         name="teleforma-desk-period-course"),
 
+
+    url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/detail/$', MediaTranscodedView.as_view(), name="teleforma-media-transcoded"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/download/$', media_transcoded.download, name="teleforma-media-transcoded-download"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/stream/$', media_transcoded.stream, name="teleforma-media-transcoded-stream"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/embed/$', MediaViewEmbed.as_view(), name="teleforma-media-embed"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),

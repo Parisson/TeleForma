@@ -69,7 +69,7 @@ $(document).ready(function(){
  */
 
 /**
- * Class for telemeta global functions.
+ * Class for teleforma global functions.
  * Note that the dollar sign is a reserved keyword in some browsers
  * (see http://davidwalsh.name/dollar-functions)
  * which might be in conflict with jQuery dollar sign.
@@ -104,7 +104,7 @@ function foldInfoBlocks() {
 }
 
 /**
- * Global telemeta function which sets the current selected menu according to the current url
+ * Global teleforma function which sets the current selected menu according to the current url
  */
 function setSelectedMenu(){
     var $J = jQuery;

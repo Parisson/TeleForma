@@ -17,50 +17,13 @@ $(document).ready(function(){
     });
 </script>
 
-{% if user.is_staff %}
-<script type="text/javascript">
-    var mediaUtils = {
-        publish : function(id){
-            var p = jQuery('#publish');
-            json([id],'teleforma.publish_media',function(){
-                p.removeClass('icon_delete').addClass('icon_ok')
-                p.html('{% trans " published" %}')
-                });
-         },
-        unpublish : function(id){
-            var p = jQuery('#publish');
-            json([id],'teleforma.unpublish_media',function(){
-                p.removeClass('icon_ok').addClass('icon_delete')
-                p.html('{% trans " rejected" %}')
-                });
-         }
-        }
-
-    jQuery(window).ready(function(){
-        var p = jQuery('#publish');
-        var f = mediaUtils;
-        p.unbind('click').click(function() {
-            if (p.hasClass('icon_ok')){
-                f.unpublish('{{media.id}}');
-                return false;
-                }
-            if (p.hasClass('icon_delete')) {
-                f.publish('{{media.id}}');
-                return false;
-                }
-            }
-            );
-        });
-</script>
-{% endif %}
-
 {% endblock extra_javascript %}
 
 {% block module-action %}
-{% if media.file and media.is_published or user.is_superuser or user.is_staff %}
+{% if media_transcoded.file and media.is_published or user.is_superuser or user.is_staff %}
  {% if not "video" in media.mime_type or request.user_agent.os.family == 'iOS' %}
   <div class="module_action">
-   <a href="{% url teleforma-media-download period.id media.id %}" class="component_icon button" id="action_red"><img src="/static/teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+   <a href="{% url teleforma-media-transcoded-download period.id media.id %}" class="component_icon button" id="action_red"><img src="/static/teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
   </div>
  {% endif %}
 {% endif %}
@@ -71,14 +34,11 @@ $(document).ready(function(){
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        {% if "video" in media.mime_type %}
+        {% if "video" in media_transcoded.mime_type %}
         <a href="{% url teleforma-media-transcoded period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
         {% endif %}
-        {% if "audio" in media.mime_type %}
+        {% if "audio" in media_transcoded.mime_type %}
         <a href="{% url teleforma-media-detail period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
-        {% endif %}
-        {% if user.is_staff %}
-        <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
 
@@ -93,14 +53,16 @@ $(document).ready(function(){
 {% else %}
 <div class="media">
 
-{% if "video" in media.mime_type %}
+    
+{% if "video" in media_transcoded.mime_type %}
 <div class="video">
     <video id="my_video_1" class="video-js vjs-default-skin" width="864" height="480" controls preload="auto" data-setup='{}' {% if media.poster_file %}{% thumbnail media.poster_file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}>
-        <source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
+        <source src="{{ MEDIA_URL }}{{ media.media_transcoded }}" type="{{ media.mime_type }}" />
     </video>
 </div>
 
-{% elif "audio" in media.mime_type %}
+{% elif "audio" in media_transcoded.mime_type %}
+
 
 <div style="margin-top:1em;">
 {% if media.poster_file %}
@@ -116,7 +78,7 @@ $(document).ready(function(){
 </div>
 <div class="audio">
     <audio controls preload="auto">
-        <source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
+        <source src="{{ MEDIA_URL }}{{ media.media_transcoded }}" type="{{ media.mime_type }}" />
     </audio>
 </div>
 {% endif %}

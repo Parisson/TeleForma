@@ -15,16 +15,12 @@
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
             <a href="{% url teleforma-media-detail period.id media.id %}" title="{% trans "Play" %}">
-            {% if media.item.related.all %}
-             {% for related in media.item.related.all %}
-              {% if related.title == "preview" %}
-               {% thumbnail related.file "168x96" as im %}
+            {% if media.poster_file %}
+               {% thumbnail media.poster_file "168x96" as im %}
                 <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
                  <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
                {% endthumbnail %}
-              {% endif %}
-             {% endfor %}
             {% else %}
               {% trans 'Click here' %}
             {% endif %}
@@ -51,8 +47,8 @@
             {% elif not media.is_published and user.is_staff %}
              <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
-            {% if media.item.file %}
-             <a href="{{ MEDIA_URL }}{{ media.item.file }}">
+            {% if media.file %}
+             <a href="{{ MEDIA_URL }}{{ media.file }}">
               <img src="/static/teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
              </a>
             {% endif %}

@@ -768,9 +768,8 @@ class Media(MediaBase):
 
     def poster_url(self, geometry='640'):
         url = ''
-        for related in self.item.related.all():
-            if 'preview' in related.title:
-                url = sorl_default.backend.get_thumbnail(related.file, geometry).url
+        if self.poster_file:
+            url = sorl_default.backend.get_thumbnail(self.poster_file, geometry).url
         return url
 
     class Meta(MetaCore):
