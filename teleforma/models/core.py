@@ -744,7 +744,7 @@ class Media(MediaBase):
 
     def set_mime_type(self):
         if self.item.file:
-            mime_type = mimetypes.guess_type(self.item.file.path)[0]
+            mime_type = mimetypes.guess_type(self.file.path)[0]
             if mime_type == 'audio/mpeg':
                 self.mime_type = 'audio/mp3'
             else:
@@ -757,7 +757,7 @@ class Media(MediaBase):
         elif self.course:
             return self.course.title + ' ' + self.course_type.name
         else:
-            return self.item.file
+            return self.file
 
     def save(self, **kwargs):
         super(Media, self).save(**kwargs)
