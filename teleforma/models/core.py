@@ -539,7 +539,7 @@ class Media(MediaBase):
 
     def set_mime_type(self):
         if self.item.file:
-            mime_type = mimetypes.guess_type(self.item.file.path)[0]
+            mime_type = mimetypes.guess_type(self.file.path)[0]
             if mime_type == 'audio/mpeg':
                 self.mime_type = 'audio/mp3'
             else:
@@ -560,7 +560,7 @@ class Media(MediaBase):
         if self.item.title:
             strings.append(self.item.title)
         else:
-            strings.append(os.path.basename(self.item.file.path))
+            strings.append(os.path.basename(self.file.path))
         if self.rank:
             strings.append(str(self.rank))
 
