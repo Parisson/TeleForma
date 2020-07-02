@@ -246,7 +246,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
 
     def form_valid(self, form):
         scripts = Script.objects.filter(course=form.cleaned_data['course'], session=form.cleaned_data['session'],
-                                        type=form.cleaned_data['type'], author=self.request.user, period=self.period).exclude(status=0)
+                                        author=self.request.user, period=self.period).exclude(status=0)
         if scripts:
             messages.error(self.request, _("Error: you have already submitted a script for this session, the same course and the same type!"))
             return redirect('teleforma-exam-script-create', self.period.id)
@@ -261,7 +261,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
 
     def get_context_data(self, **kwargs):    
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
-        context['create_fields'] = ['course', 'session', 'type', 'file' ]
+        context['create_fields'] = ['course', 'session', 'file' ]
         context['form'].fields['course'].queryset = context['courses']
         return context
 
@@ -515,7 +515,6 @@ def get_mass_students(request):
     session = request.GET.get('session')
     course_id = request.GET.get('course_id')
     q = request.GET.get('q[term]')
-    # import pdb;pdb.set_trace()
     students = Student.objects.filter(period = period).filter(Q(user__username__icontains=q) | Q(user__last_name__icontains=q) | Q(user__first_name__icontains=q))
 
     # Exclude students who already have a script for this session
