@@ -317,9 +317,12 @@ class Script(BaseResource):
                                             session=self.session,
                                             period=self.period)
 
-        quotas = all_quotas.filter(script_type=self.type)
-        if not quotas:
-            quotas = all_quotas.filter(script_type=None)
+        ## Commented to not filter by type anymore
+        # quotas = all_quotas.filter(script_type=self.type)
+        # if not quotas:
+        #     quotas = all_quotas.filter(script_type=None)
+
+        quotas = all_quotas
 
         if quotas:
             for quota in quotas:
@@ -416,7 +419,7 @@ class Script(BaseResource):
         loop = 0
 
         self.box_uuid = crocodoc.document.upload(url=self.url)
-        
+
         while True:
             statuses = crocodoc.document.status([self.box_uuid,])
             if (len(statuses) != 0):
