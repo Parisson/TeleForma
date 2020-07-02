@@ -87,9 +87,10 @@
   {% endif %}
 
   <div class="block">
-    {% autoescape off %}
-    {{ home_text }}
-    {% endautoescape %}
+    <h2>{{ home_title }}</h2>
+    <p>
+    {{ home_text|linebreaksbr }}
+    </p>
   </div>
 
   {% if home_video.type == 'webm' %}

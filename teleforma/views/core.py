@@ -354,6 +354,7 @@ class CourseListView(CourseAccessMixin, ListView):
         homes = Home.objects.filter(enabled = True).order_by('-modified_at')
         for home in homes:
             if home.is_for_period(context['period']):
+                context['home_title'] = home.visible_title
                 context['home_text'] = home.text
                 context['home_video'] = home.video
                 break
