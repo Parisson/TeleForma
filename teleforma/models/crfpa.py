@@ -298,6 +298,7 @@ class Profile(models.Model):
     wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
     birthday = models.DateField(_('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
     birthday_place =  models.CharField('Lieu de naissance', max_length=255, blank=True, null=True)
+    nationality = models.CharField('Nationalité', max_length=255, null=True, blank=True)
     ss_number = models.CharField('Sécurité sociale',
                                  max_length=15, blank=True, null=True)
     class Meta(MetaCore):
@@ -408,9 +409,10 @@ class Payback(models.Model):
 
 class Home(models.Model):
 
-    title = models.CharField(_('Title'), max_length=255,
+    title = models.CharField('Title (interne)', max_length=255,
                              default="Page d'accueil")
-    text = HTMLField('Texte', blank=True)
+    visible_title = models.CharField(_('Title'), max_length=255, null=True, blank=True)
+    text = models.TextField('Texte', blank=True)
     video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
     modified_at = models.DateTimeField(u'Date de modification', auto_now=True,
                                        default=datetime.datetime.now)

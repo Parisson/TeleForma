@@ -208,6 +208,7 @@ class CorrectorForm(ModelForm):
     telephone = CharField(label=_('Telephone'), max_length=255)
     birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
     birthday_place =  CharField(label='Lieu de naissance', max_length=255)
+    nationality =  CharField(label='Nationalité', max_length=255)
     ss_number = CharField(label='N° de sécurité sociale',
                                  max_length=15)
     # corrector
@@ -232,7 +233,7 @@ class CorrectorForm(ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['email'].required = True
-        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'birthday_place', 'ss_number']
+        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'birthday_place', 'nationality', 'ss_number']
         self.training_fields = ['period', 'pay_status']
 
     def save(self, commit=True):
@@ -257,6 +258,7 @@ class CorrectorForm(ModelForm):
                           birthday=data['birthday'],
                           birthday_place=data['birthday_place'],
                           ss_number=data['ss_number'],
+                          nationality=data['nationality']
                           )
         if commit:
             profile.save()

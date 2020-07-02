@@ -430,14 +430,15 @@ class CorrectorXLSBook(object):
                 except ValueError:
                     row.write(9, 'erreur')
             row.write(10, profile.birthday_place)
-            row.write(11, profile.ss_number)
+            row.write(11, profile.nationality)
+            row.write(12, profile.ss_number)
 
             if corrector.date_registered:
-                row.write(12, corrector.date_registered.strftime("%d/%m/%Y"))
+                row.write(13, corrector.date_registered.strftime("%d/%m/%Y"))
             else:
-                row.write(12, "")
-            row.write(13, str(corrector.period))
-            row.write(14, corrector.pay_status)
+                row.write(13, "")
+            row.write(14, str(corrector.period))
+            row.write(15, corrector.pay_status)
                 
         return counter + 1
 
@@ -452,12 +453,13 @@ class CorrectorXLSBook(object):
                 {'name':'CP', 'width':2500},
                 {'name':'VILLE', 'width':5000},
                 {'name':'TEL', 'width':5000},
-                {'name': 'Date de naissance', 'width': 5000},
-                {'name': 'Lieu de naissance', 'width': 5000},
-                {'name': 'Numero SS', 'width': 5000},
-                {'name':"Date inscription", 'width':5000},
-                {'name':"Periode", 'width':5000},
-                {'name':"Statut", 'width':5000},
+                {'name': 'DATE DE NAISSANCE', 'width': 5000},
+                {'name': 'LIEU DE NAISSANCE', 'width': 5000},
+                {'name': 'NATIONALITE', 'width': 5000},
+                {'name': 'NUMERO SS', 'width': 5000},
+                {'name':"DATE D'INSCRIPTION", 'width':5000},
+                {'name':"PERIODE", 'width':5000},
+                {'name':"STATUT", 'width':5000},
                 ]
         
         i = 0
