@@ -79,7 +79,7 @@
 
                 <td>
                     <form class="booking_form" method="POST">
-                        <span class="booking_date" style="display:none"><strong>{{slot.day}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
+                        <span class="booking_date" style="display:none"><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
                         {% csrf_token %}
                         <input type="hidden" name="slot_id" value="{{slot.id}}" />
                         {% if slot.participant_slot_available %}
