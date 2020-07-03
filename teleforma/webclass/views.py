@@ -163,6 +163,8 @@ class WebclassRecordsFormView(FormView):
     def dispatch(self, *args, **kwargs):
         return super(WebclassRecordsFormView, self).dispatch(*args, **kwargs)
 
+
+@login_required
 def join_webclass(request, pk):
     webclass_slot = WebclassSlot.published.get(pk=int(pk))
     # webclass = webclass_slot.webclass
