@@ -207,7 +207,7 @@ class BaseResource(models.Model):
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
     uuid = models.CharField(_('UUID'), blank=True, max_length=512)
-    mime_type = models.CharField(_('MIME type'), max_length=128, blank=True)
+    mime_type = models.CharField(_('MIME type'), max_length=128, blank=True, null=True)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
 
     class Meta(MetaCore):
