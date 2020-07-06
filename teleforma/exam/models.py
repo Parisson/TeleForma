@@ -517,8 +517,10 @@ def set_file_properties(sender, instance, **kwargs):
     if instance.file:
         trig_save = False
         if not instance.mime_type:
-            instance.mime_type = mimetype_file(instance.file.path)
-            trig_save = True
+            mime_type = mimetype_file(instance.file.path)
+            if mime_type:
+                instance.mime_type = mimetype_file(instance.file.path)
+                trig_save = True
         if not instance.sha1:
             instance.sha1 = sha1sum_file(instance.file.path)
             trig_save = True
