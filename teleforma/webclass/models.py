@@ -51,8 +51,7 @@ def get_records_from_bbb(**kwargs):
                 url = url.decode()
             else:
                 continue
-            if not recording['metadata'].get('periodid'):
-                continue
+                
             start = int(recording['startTime'].decode()[:-3])
             end = int(recording['endTime'].decode()[:-3])
             data = {
@@ -65,10 +64,14 @@ def get_records_from_bbb(**kwargs):
                 'url': url,
                 'preview': recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])[0].decode(),
                 'state': recording['state'].decode(),
-                'period_id': int(recording['metadata'].get('periodid').decode()),
-                'course_id': int(recording['metadata'].get('courseid').decode()),
-                'slot': WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
             }
+            if recording['metadata'].get('periodid'):
+                data.update({
+                    'period_id': int(recording['metadata'].get('periodid').decode()),
+                    'course_id': int(recording['metadata'].get('courseid').decode()),
+                    'slot': WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
+                })
+
             data['duration'] = data['end'] - data['start']
             records.append(data)
     return records
