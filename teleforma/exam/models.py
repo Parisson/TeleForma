@@ -369,6 +369,9 @@ class Script(BaseResource):
             self.mark()
         elif self.status == 0 and self.reject_reason:
             self.reject()
+        #HOTFIX
+        if not self.mime_type:
+            self.mime_type = 'application/pdf'
         super(Script, self).save(*args, **kwargs)
 
     def update(self, *args, **kwargs):
@@ -521,6 +524,9 @@ def set_file_properties(sender, instance, **kwargs):
             if mime_type:
                 instance.mime_type = mimetype_file(instance.file.path)
                 trig_save = True
+            #HOTFIX
+            else:
+                instance.mime_type = 'application/pdf'
         if not instance.sha1:
             instance.sha1 = sha1sum_file(instance.file.path)
             trig_save = True
