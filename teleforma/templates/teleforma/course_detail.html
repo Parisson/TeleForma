@@ -22,73 +22,90 @@ $(document).ready(function(){
 
 <div class="desk_center">
 
+  {% if webclass and not webclass_slot %}
+  <div class="block important">
+    <p>
+      <strong>Vous n'êtes pas inscrit à la webclass de cette matière. </strong><a
+        href="{% url teleforma-webclass-appointments webclass.id %}"
+        class="conference-big-button component_icon button icon_next">Cliquez-ici pour choisir un créneau horaire</a>
+    </p>
+  </div>
+  {% endif %}
 
 
+  <br /><br />
+  {% for c in courses %}
+  {% with c.course as course %}
+  {% for type in c.types %}
+  <div class="course">
+    <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} -
+      {{ course.description }}{% endif %}
+    </div>
 
-<br/><br/>
-    {% for c in courses %}
-     {% with c.course as course %}
-      {% for type in c.types %}
-      <div class="course">
-        <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}
-        </div>
+    {% if type.name == 'Quiz' %}
+    <div class="course_content">
+      {% if course.quiz.all %}
+      <table class="listing" width="100%">
+        <tbody>
+          {% for quiz in course.quiz.all %}
+          <td class="border-top"><a href="{% url 'quiz_start_page' slug=quiz.url %}">{{quiz.title}}</a></td>
+          <td class="border-top">{{quiz.description}}</td>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>Aucun quiz</p>
+      {% endif %}
+    </div>
 
-          {% if type.name == 'Quiz' %}
-          <div class="course_content">
-              {% if course.quiz.all %}
-              <table class="listing" width="100%">
-                  <tbody>
-                  {% for quiz in course.quiz.all %}
-                  <td class="border-top"><a href="{% url 'quiz_start_page' slug=quiz.url %}">{{quiz.title}}</a></td>
-                  <td class="border-top">{{quiz.description}}</td>
-                  {% endfor %}
-                  </tbody>
-              </table>
-              {% else %}
-              <p>Aucun quiz</p>
-              {% endif %}
-          </div>
+    {% else %}
+    {% if show_media %}
+    {% block conference %}
+    {% include "teleforma/inc/conference_list.html" %}
+    {% endblock %}
 
-        {% else %}
-          {% if show_media %}
-          {% block conference %}
-           {% include "teleforma/inc/conference_list.html" %}
-          {% endblock %}
+    {% block media %}
+    {% include "teleforma/inc/media_list.html" %}
+    {% endblock %}
+    {% endif %}
 
-          {% block media %}
-           {% include "teleforma/inc/media_list.html" %}
-          {% endblock %}
-          {% endif %}
+    {% block document %}
+    {% with forloop.counter as type_counter %}
+    {% include "teleforma/inc/document_list.html" %}
+    {% endwith %}
+    {% endblock %}
+    {% endif %}
 
-          {% block document %}
-           {% with forloop.counter as type_counter %}
-            {% include "teleforma/inc/document_list.html" %}
-           {% endwith %}
-          {% endblock %}
-        {% endif %}
+  </div>
+  {% endfor %}
 
-        </div>
-      {% endfor %}
-     {% endwith %}
-    {% endfor %}
+  <div class="course">
+    <div class="course_title">{{ course.title }} - Webclass{% if course.description %} -
+      {{ course.description }}{% endif %}
+    </div>
+    {% block webclass %}
+    {% include "webclass/inc/webclass_list.html" %}
+    {% endblock %}
+  </div>
+  {% endwith %}
+  {% endfor %}
 </div>
 {% endblock course %}
 
 {% block chat %}
 {% if course.title_tweeter %}
 {% if room %}
- {% if 'site' in room.name %}
-  {% with "General tweeter" as title %}
-   {% include "teleforma/inc/chat_room.html" %}
-  {% endwith %}
- {% else %}
-  {% with "Tweeter"|add:" "|add:course.title_tweeter as title %}
-   {% include "teleforma/inc/chat_room.html" %}
-  {% endwith %}
- {% endif %}
+{% if 'site' in room.name %}
+{% with "General tweeter" as title %}
+{% include "teleforma/inc/chat_room.html" %}
+{% endwith %}
+{% else %}
+{% with "Tweeter"|add:" "|add:course.title_tweeter as title %}
+{% include "teleforma/inc/chat_room.html" %}
+{% endwith %}
+{% endif %}
 {% endif %}
 {% endif %}
 
 {% newsitems_portlet course_id=course.id period_id=period.id %}
 {% endblock chat %}
-

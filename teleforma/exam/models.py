@@ -203,7 +203,7 @@ class BaseResource(models.Model):
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
     uuid = models.CharField(_('UUID'), blank=True, max_length=512)
-    mime_type = models.CharField(_('MIME type'), max_length=128, blank=True)
+    mime_type = models.CharField(_('MIME type'), max_length=128, blank=True, null=True)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
 
     class Meta(MetaCore):
@@ -248,7 +248,7 @@ class Script(BaseResource):
     period = models.ForeignKey(Period, related_name='scripts', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
     session = models.CharField(_('session'), max_length=16, default="1")
-    type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, on_delete=models.SET_NULL)
+    type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, blank=True, on_delete=models.SET_NULL)
     author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
     corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
     file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', max_length=1024, blank=True)
@@ -297,9 +297,12 @@ class Script(BaseResource):
                                             session=self.session,
                                             period=self.period)
 
-        quotas = all_quotas.filter(script_type=self.type)
-        if not quotas:
-            quotas = all_quotas.filter(script_type=None)
+        ## Commented to not filter by type anymore
+        # quotas = all_quotas.filter(script_type=self.type)
+        # if not quotas:
+        #     quotas = all_quotas.filter(script_type=None)
+
+        quotas = all_quotas
 
         if quotas:
             for quota in quotas:
@@ -494,8 +497,10 @@ def set_file_properties(sender, instance, **kwargs):
     if instance.file:
         trig_save = False
         if not instance.mime_type:
-            instance.mime_type = mimetype_file(instance.file.path)
-            trig_save = True
+            mime_type = mimetype_file(instance.file.path)
+            if mime_type:
+                instance.mime_type = mimetype_file(instance.file.path)
+                trig_save = True
         if not instance.sha1:
             instance.sha1 = sha1sum_file(instance.file.path)
             trig_save = True

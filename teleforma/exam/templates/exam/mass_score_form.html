@@ -65,13 +65,13 @@
 </div>
 <br />
 
-{% if messages %}
+{% comment %} {% if messages %}
     <div class="messages">
         {% for message in messages %}
           <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
         {% endfor %}
     </div>
-{% endif %}
+{% endif %} {% endcomment %}
 
 <div class="course_content" id="media_infos" style="font-size: 115%;">
     <form method="post" id="_ScriptForm" action="" enctype="multipart/form-data" data-ajax="false">{% csrf_token %}

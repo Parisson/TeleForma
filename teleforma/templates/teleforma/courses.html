@@ -13,47 +13,49 @@ $(document).ready(function(){
 </script>
 {% endblock extra_javascript %}
 
-
 {% block content %}
 
 <div id="module-set-left" style="width: 18%">
 
-{% block modules %}
-<div class="module">
+  {% block modules %}
+  <div class="module">
 
-<h3><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{{ period }}</h3>
-<div style="background: white;">
-<ul>
-{% block courses %}
-{% for c in all_courses %}
-  {% with c.course as course %}
-   <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
-  {% endwith %}
- {% endfor %}
-{% endblock courses %}
-</ul>
-</div>
+    <h3><img src="/static/telemeta/images/module_playlist.png" alt="playlists"
+        style="vertical-align:middle" />{{ period }}</h3>
+    <div style="background: white;">
+      <ul>
+        {% block courses %}
+        {% for c in all_courses %}
+        {% with c.course as course %}
+        <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
+        {% endwith %}
+        {% endfor %}
+        {% endblock courses %}
+      </ul>
+    </div>
 
-</div>
+  </div>
 
-{% block module-action %}
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
-<div class="module_action">
-<a href="{% url 'teleforma-conference-record' %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
-</div>
-{% endif %}
+  {% block module-action %}
+  {% get_telecaster as telecaster %}
+  {%  if telecaster %}
+  <div class="module_action">
+    <a href="{% url 'teleforma-conference-record' %}" class="component_icon button"
+      id="action_red">{% trans "New conference" %}</a>
+  </div>
+  {% endif %}
 
-{% if user.is_staff %}
-<div class="module_action">
-<a href="{% url 'teleforma-desk-period-pending' period.id %}" class="component_icon button" id="action_red">{% trans "Pending" %}</a>
-</div>
-{% endif %}
+  {% if user.is_staff %}
+  <div class="module_action">
+    <a href="{% url 'teleforma-desk-period-pending' period.id %}" class="component_icon button"
+      id="action_red">{% trans "Pending" %}</a>
+  </div>
+  {% endif %}
 
-{% endblock module-action %}
+  {% endblock module-action %}
 
-{% block notes %}
-<!--<div class="module">
+  {% block notes %}
+  <!--<div class="module">
 <h3><img src="/static/telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
 <div style="background: white;">
 <ul>
@@ -66,9 +68,9 @@ $(document).ready(function(){
 <div class="module_action">
 <a href="#" class="component_icon button" id="action_violet">{% trans "New note" %}</a>
 </div>-->
-{% endblock notes %}
+  {% endblock notes %}
 
-{% endblock modules %}
+  {% endblock modules %}
 </div>
 
 
@@ -76,101 +78,155 @@ $(document).ready(function(){
 
 <div class="desk_center home">
 
-    {% if hasAppointment %}
-        <div class="appointment">
-            <a href="{% url 'teleforma-appointments' period.id %}"><button>Rendez-vous individuels aux simulations du grand-oral</button></a>
+  {% if hasAppointment %}
+  <div class="appointment">
+    <a href="{% url 'teleforma-appointments' period.id %}"><button>Rendez-vous individuels aux simulations du
+        grand-oral</button></a>
+  </div>
+  <br />
+  {% endif %}
+
+  <div class="block">
+    <h2>{{ home_title }}</h2>
+    <p>
+    {{ home_text|linebreaksbr }}
+    </p>
+  </div>
+
+  {% if home_video.type == 'webm' %}
+  <div class="block">
+
+    <div class="course_subtitle">
+      <h3>{% if home_video.title %}{{ home_video.title }}{% else %}{{ home_video.course.title }}{% endif %}</h3>
+    </div>
+
+    <div class="video" style="width:400px">
+      <a href="{% url 'teleforma-media-detail' period.id home_video.id %}" title="{% trans "Play" %}">
+        {% if home_video.item.related.all %}
+        {% for related in home_video.item.related.all %}
+        {% if related.title == "preview" %}
+        {% thumbnail related.file "168x96" as im %}
+        <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
+          <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
         </div>
-        <br/>
-    {% endif %}
+        {% endthumbnail %}
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        {% trans 'Click here' %}
+        {% endif %}
+      </a>
+    </div>
+  </div>
+  {% endif %}
 
-    {% autoescape off %}
-    {{ home_text }}
-    {% endautoescape %}
+  {% if webclass_slots or webclass_to_subscribe %}
+  <div class="course_title">
+    Webclasse
+  </div>
+  <div class="block important">
+    <table class="listing" style="width:100%">
+      <tbody>
 
-    {% if home_video.type == 'webm' %}
-    <h3>{% if home_video.title %}{{ home_video.title }}{% else %}{{ home_video.course.title }}{% endif %}</h3>
-        <div class="video" style="width:400px">
-         <a href="{% url 'teleforma-media-detail' period.id home_video.id %}" title="{% trans "Play" %}">
-          {% if home_video.item.related.all %}
-             {% for related in home_video.item.related.all %}
-              {% if related.title == "preview" %}
-               {% thumbnail related.file "168x96" as im %}
-                <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
-                 <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
-                </div>
-               {% endthumbnail %}
+        {% for slot in webclass_slots %}
+        <tr>
+          <td>
+            <p>
+              {% if slot.status == 'ingoing' %}
+              La webclasse <strong>"{{slot.webclass.course.title}}"</strong> est en cours.
+              {% elif slot.status == 'almost' %}
+              La webclasse <strong>"{{slot.webclass.course.title}}"</strong> va démarrer bientôt.
               {% endif %}
-             {% endfor %}
-            {% else %}
-              {% trans 'Click here' %}
-            {% endif %}
-          </a>
-         </div>
+              <a href="{% url 'teleforma-webclass-join' slot.id %}" target="_blank"
+                class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la
+                webclasse</a>
+            </p>
+          </td>
+        </tr>
+        {% endfor %}
+        {% for webclass in webclass_to_subscribe %}
+        <tr>
+          <td>
+            <p>
+              <strong>Vous n'êtes pas inscrit à la webclasse "{{webclass.course.title}}".</strong> <a
+                class="conference-big-button component_icon button icon_next"
+                href="{% url 'teleforma-webclass-appointments' webclass.id %}">Cliquez-ici pour choisir un créneau
+                horaire</a>
+            </p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+
+  {% for c in courses %}
+  {% with c.course as course %}
+  {% for type in c.types %}
+  <div class="course">
+    <div class="course_title">
+      <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} -
+        {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
+    </div>
+
+    {% if show_media %}
+
+    {% block conference %}
+    {% include "teleforma/inc/conference_list.html" %}
+    {% endblock %}
+
+    {% block media %}
+    {% with "Passed conferences" as title %}
+    {% include "teleforma/inc/media_list.html" with show_only=1 %}
+    {% endwith %}
+    {% endblock %}
+
+    {% comment %}
+    {% block webclass %}
+    {% with "Web class" as title %}
+    {% include "teleforma/inc/media_list.html" with show_only=1 %}
+    {% endwith %}
+    {% endblock %}
+    {% endcomment %}
+
     {% endif %}
 
-    {% for c in courses %}
-     {% with c.course as course %}
-      {% for type in c.types %}
-      <div class="course">
-        <div class="course_title">
-         <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
-        </div>
-
-        {% if show_media %}
-        
-        {% block conference %}
-         {% include "teleforma/inc/conference_list.html" %}
-        {% endblock %}
-
-        {% block media %}
-            {% with "Passed conferences" as title %}
-                {% include "teleforma/inc/media_list.html" with show_only=1 %}
-            {% endwith %}
-        {% endblock %}
-
-        {% comment %}
-        {% block webclass %}
-            {% with "Web class" as title %}
-                {% include "teleforma/inc/media_list.html" with show_only=1 %}
-            {% endwith %}
-        {% endblock %}
-        {% endcomment %}
-
-	{% endif %}
-
-        {% block document %}
-         {% with forloop.counter as type_counter %}
-          {% include "teleforma/inc/document_list.html" %}
-         {% endwith %}
-        {% endblock %}
-      </div>
-     {% endfor %}
+    {% block document %}
+    {% with forloop.counter as type_counter %}
+    {% include "teleforma/inc/document_list.html" %}
     {% endwith %}
-   {% endfor %}
+    {% endblock %}
+  </div>
+  {% endfor %}
+  {% endwith %}
+  {% endfor %}
 </div>
 {% endblock course %}
 
 
 <div id="module-set" style="width: 22%">
 
-{% block status %}
-{% get_telecaster as telecaster %}
-{%  if telecaster %}
-<div class="module">
-  <h3><img src="/static/teleforma/images/status.png" alt="status" style="vertical-align:middle" /> {% trans "Status" %}</h3>
-  <div id="server_status_table_wrapper" class="status"></div>
-</div>
-<script type="text/javascript">server_status_callback();</script>
-{% endif %}
-{% endblock status %}
+  {% block status %}
+  {% get_telecaster as telecaster %}
+  {%  if telecaster %}
+  <div class="module">
+    <h3><img src="/static/teleforma/images/status.png" alt="status" style="vertical-align:middle" />
+      {% trans "Status" %}</h3>
+    <div id="server_status_table_wrapper" class="status"></div>
+  </div>
+  <script type="text/javascript">server_status_callback();</script>
+  {% endif %}
+  {% endblock status %}
 
-{% block chat %}
-{% if room %}
-{% with "General tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% endif %}
-{% endblock chat %}
+  {% block chat %}
+  {% if room %}
+  {% with "General tweeter" as title %}
+  {% include "teleforma/inc/chat_room.html" %}
+  {% endwith %}
+  {% endif %}
+  {% endblock chat %}
 
 </div>
 

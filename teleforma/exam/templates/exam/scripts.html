@@ -52,13 +52,13 @@
 {% block answers %}
 <div class="course_title">{{ title }}</div>
 
-{% if messages %}
+{% comment %} {% if messages %}
     <div class="messages">
         {% for message in messages %}
           <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
         {% endfor %}
     </div>
-{% endif %}
+{% endif %} {% endcomment %}
 <br />
 
 {% if profile > 0 %}

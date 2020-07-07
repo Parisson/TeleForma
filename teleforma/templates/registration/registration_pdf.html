@@ -5,87 +5,145 @@
 
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}"
+    {% if LANGUAGE_BIDI %}dir="rtl" {% endif %}>
 
 <head>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
-<title>{%block head_title %}{% description %} - {% trans "Registration" %}{% endblock %}</title>
+    <title>{%block head_title %}{% description %} - {% trans "Registration" %}{% endblock %}</title>
 
-{% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma_pdf.css" />
-{% endblock %}
+    {% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma_pdf.css" />
+    {% endblock %}
 
-{% block extra_stylesheets %}{% endblock %}
+    {% block extra_stylesheets %}{% endblock %}
 
 </head>
 
 <body>
-{% block layout %}
-{% with student.user.profile.all.0 as profile %}
+    {% block layout %}
+    {% with student.user.profile.all.0 as profile %}
 
-<div id="layout">
+    <div id="layout">
 
-<div id="header">
-    <span style="color: yellow; font-weight: bold;">&gt;</span> Le Pré-Barreau - Préparation au CRFPA
-</div>
+        <div id="header">
+            <span style="color: yellow; font-weight: bold;">&gt;</span> Le Pré-Barreau - Préparation au CRFPA
+        </div>
 
-<div id="content">
-   <center>
-   <h1>{% trans "Training registration" %} - {% trans "Training" %} {{ student.period }}</h1>
-   <h1>du {{ student.period.date_begin }} au {{ student.period.date_end }}</h1>
-   </center>
-   <table class="table1">
-      <tr><td class="bold">{% trans "First name" %} : </td><td>{{ student.user.first_name }}</td></tr>
-      <tr><td class="bold">{% trans "Last name" %} : </td><td>{{ student.user.last_name|upper }}</td></tr>
-      <tr><td class="bold">{% trans "Address" %} : </td><td>{{ profile.address }} {{ profile.postal_code }} {{ profile.city }}, {{ profile.country }}</td></tr>
-      <tr><td class="bold">{% trans "Telephone" %} : </td><td>{{ profile.telephone }}</td></tr>
-      <tr><td class="bold">{% trans "E-mail" %} : </td><td>{{ student.user.email }}</td></tr>
-      <tr><td class="bold">{% trans "Username" %} : </td><td>{{ student.user.username }}</td></tr>
-      <tr><td class="bold">{% trans "Birthday" %} : </td><td>{{ profile.birthday }}</td></tr>
+        <div id="content">
+            <center>
+                <h1>{% trans "Training registration" %} - {% trans "Training" %} {{ student.period }}</h1>
+                <h1>du {{ student.period.date_begin }} au {{ student.period.date_end }}</h1>
+            </center>
+            <table class="table1">
+                <tr>
+                    <td class="bold">{% trans "First name" %} : </td>
+                    <td>{{ student.user.first_name }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Last name" %} : </td>
+                    <td>{{ student.user.last_name|upper }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Address" %} : </td>
+                    <td>{{ profile.address }} {{ profile.postal_code }} {{ profile.city }}, {{ profile.country }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Telephone" %} : </td>
+                    <td>{{ profile.telephone }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "E-mail" %} : </td>
+                    <td>{{ student.user.email }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Username" %} : </td>
+                    <td>{{ student.user.username }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Birthday" %} : </td>
+                    <td>{{ profile.birthday }}</td>
+                </tr>
 
-      <tr><td class="bold">{% trans "Studying level" %} : </td><td>{{ student.level }}</td></tr>
-      <tr><td class="bold">{% trans "IEJ" %} : </td><td>{{ student.iej.name }}</td></tr>
-      <tr><td class="bold">{% trans "Training" %} : </td><td>{{ student.training.name }}</td></tr>
-      <tr><td class="bold">{% trans "Training type" %} : </td><td>{% if student.platform_only %}E-learning seulement{% else %}Présentielle{% endif %}</td></tr>
-      <tr><td class="bold">{% trans "Matière de procédure" %} : </td><td>{{ student.procedure }}</td></tr>
-      <tr><td class="bold">{% trans "Matière juridique de spécialité" %} : </td><td>{{ student.written_speciality }}</td></tr>
-      {# <tr><td class="bold">{% trans "Matière d'oral de spécialité" %} : </td><td>{{ student.oral_speciality }}</td></tr>#}
-      <tr><td class="bold">{% trans "Matière d'oral de langue" %} : </td><td>{{ student.oral_1 }}</td></tr>
-      {# <tr><td class="bold">{% trans "Matière d'oral technique oral_2" %} : </td><td>{{ student.oral_2 }}</td></tr>#}
+                <tr>
+                    <td class="bold">{% trans "Studying level" %} : </td>
+                    <td>{{ student.level }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "IEJ" %} : </td>
+                    <td>{{ student.iej.name }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Training" %} : </td>
+                    <td>{{ student.training.name }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Training type" %} : </td>
+                    <td>{% if student.platform_only %}E-learning seulement{% else %}Présentielle{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Envoi postal des fascicules" %} : </td>
+                    <td>{% if student.fascicule %}Oui{% else %}Non{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Matière de procédure" %} : </td>
+                    <td>{{ student.procedure }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "Matière juridique de spécialité" %} : </td>
+                    <td>{{ student.written_speciality }}</td>
+                </tr>
+                {# <tr><td class="bold">{% trans "Matière d'oral de spécialité" %} : </td><td>{{ student.oral_speciality }}</td></tr>#}
+                <tr>
+                    <td class="bold">{% trans "Matière d'oral de langue" %} : </td>
+                    <td>{{ student.oral_1 }}</td>
+                </tr>
 
-      <tr><td class="bold">{% trans "Registration date" %} : </td><td>{{ student.date_registered}}</td></tr>
-      <tr><td class="bold">{% trans "PROMO code" %} : </td><td>{{ student.promo_code}}</td></tr>
+                {# <tr><td class="bold">{% trans "Matière d'oral technique oral_2" %} : </td><td>{{ student.oral_2 }}</td></tr>#}
 
-    </table>
+                <tr>
+                    <td class="bold">{% trans "Registration date" %} : </td>
+                    <td>{{ student.date_registered}}</td>
+                </tr>
+                <tr>
+                    <td class="bold">{% trans "PROMO code" %} : </td>
+                    <td>{{ student.promo_code}}</td>
+                </tr>
 
-    <h3>Je certifie avoir pris connaissance des conditions générales d’inscription et du règlement intérieur.</h3>
+            </table>
 
-    <table class="table2">
-      <tr><td>Envoyer à :<br><br>
-          LE PRE-BARREAU<br>
-          Service inscription<br>
-          3, rue de Nesle<br>
-          75006 Paris
-      </td>
-      <td>
-          <h3>A ...................................., le .......................................</h3>
-          <br>
-          <h3>Signature</h3>
-      </td></tr>
-    </table>
+            <h3>Je certifie avoir pris connaissance des conditions générales d’inscription et du règlement intérieur.
+            </h3>
 
-</div>
+            <table class="table2">
+                <tr>
+                    <td>Envoyer à :<br><br>
+                        LE PRE-BARREAU<br>
+                        Service inscription<br>
+                        3, rue de Nesle<br>
+                        75006 Paris
+                    </td>
+                    <td>
+                        <h3>A ...................................., le .......................................</h3>
+                        <br>
+                        <h3>Signature</h3>
+                    </td>
+                </tr>
+            </table>
 
-{% block footer %}
-<div id="footer">
-    Copyright &copy; {% current_year %} Pré-Barreau
- </div>
-{% endblock %}
+        </div>
 
-</div>
-{% endwith %}
-{% endblock layout %}
+        {% block footer %}
+        <div id="footer">
+            Copyright &copy; {% current_year %} Pré-Barreau
+        </div>
+        {% endblock %}
+
+    </div>
+    {% endwith %}
+    {% endblock layout %}
 
 </body>
+
 </html>

@@ -23,11 +23,14 @@
                  <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
                {% endthumbnail %}
+              {% else %}
+               {% trans 'Click here' %}
               {% endif %}
              {% endfor %}
             {% else %}
-              {% trans 'Click here' %}
+              <div>{% trans 'Click here' %}</div>
             {% endif %}
+            <div>{% trans 'Click here' %}</div>
             </a>
             </td>
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">

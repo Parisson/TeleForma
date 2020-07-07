@@ -36,6 +36,11 @@
                 <input type="radio" id="recipient_category-corrector" name="recipient_category" value="corrector" {% if request.POST.recipient_category == 'corrector' %}checked="checked"{% endif %}/><label
                     for="recipient_category-corrector">A un correcteur</label>
 
+                {% if not user.student.all %}
+                    <input type="radio" id="recipient_category-other" name="recipient_category" value="other" {% if request.POST.recipient_category == 'other' %}checked="checked"{% endif %}/><label
+                        for="recipient_category-other">A un étudiant</label>
+                {% endif %}
+
 
                 <div id="category-admin">
                     <select id="_adminSelect" name="admins">
@@ -82,7 +87,7 @@
                         {% get_all_correctors_with_courses as correctors %}
                         {% for p in correctors %}
                             <option value="{{ p.username }}"
-                                    data-courses="{{ p.courses }}" {% if request.POST.correctors == p.username %}selected{% endif %}>{{ p.name }}</option>
+                                    data-courses="{{ p.courses }}" {% if request.POST.correctors == p.username %}selected{% endif %}>#{{ p.id }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -155,12 +160,15 @@
             $('#category-admin').hide();
             $('#category-prof').hide();
             $('#category-corrector').hide();
+            $("#id_recipients").parent().parent().hide();
             if (recipientCategory == 'admin')
                 $('#category-admin').show();
             else if (recipientCategory == 'prof')
                 $('#category-prof').show();
             else if (recipientCategory == 'corrector')
                 $('#category-corrector').show();
+            else if (recipientCategory == 'other')
+                $("#id_recipients").parent().parent().show();
 
             var course = parseInt($('[name="course"]').val(), 10);
             if(!course)
@@ -169,7 +177,6 @@
                 $('#_professorSelect').show();
 
             var correctorCourse = parseInt($('[name="corrector_course"]').val(), 10);
-            console.log(correctorCourse)
             if(!correctorCourse)
                 $('#_correctorSelect').hide();
             else

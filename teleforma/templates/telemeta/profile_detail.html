@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load telemeta_utils %}
 {% load teleforma_tags %}
+{% load payment %}
 
 {% block head_title %}{% trans "User Profile" %} : {{ usr.username }}{% endblock %}
 
@@ -103,8 +104,11 @@
       {%  endif %}
      </dl>
     </div>
-
   </div>
+
+  {% if payment %}
+    {% payment_summary payment with_pending=False %}
+  {% endif %}
 
 <div class="buttons">
 <!--<a href="{% url 'telemeta-password-change' %}" class="component_icon button icon_login">{% trans "Password reset" %}</a>-->

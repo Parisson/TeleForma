@@ -45,7 +45,7 @@ from registration.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
-profile_view = ProfileView()
+profile_view = CRFPAProfileView()
 document = DocumentView()
 media = MediaView()
 
@@ -59,7 +59,17 @@ urlpatterns = patterns('',
     url(r'^accounts/register/(?P<username>.*)/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
     url(r'^accounts/register/(?P<username>.*)/download/$', RegistrationPDFViewDownload.as_view(), name="teleforma-registration-download"),
     url(r'^accounts/register/(?P<username>.*)/view/$', RegistrationPDFView.as_view(), name="teleforma-registration-view"),
+                       
+    url(r'^correctors/register/$', CorrectorAddView.as_view(), name="teleforma-corrector-register"),
+    url(r'^correctors/register/(?P<username>.*)/complete/$', CorrectorCompleteView.as_view(), name="teleforma-corrector-register-complete"),
+    url(r'^correctors/register/(?P<username>.*)/download/$', CorrectorRegistrationPDFViewDownload.as_view(), name="teleforma-corrector-registration-download"),
+    url(r'^correctors/register/(?P<username>.*)/view/$', CorrectorRegistrationPDFView.as_view(), name="teleforma-corrector-registration-view"),
 
+    url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
+                               name="teleforma-profile-detail"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail, name="telemeta-profile-detail"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/edit/$', profile_view.profile_edit, name="telemeta-profile-edit"),
+    
     url(r'^captcha/', include('captcha.urls')),
 
     # Help
@@ -122,9 +132,6 @@ urlpatterns = patterns('',
     url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/export/$',
         UsersExportView.as_view(), name="teleforma-users-export"),
 
-    url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
-                               name="teleforma-profile-detail"),
-
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
 
     # Ajax update training
@@ -149,6 +156,8 @@ urlpatterns = patterns('',
     # EXAM
     url(r'^', include('teleforma.exam.urls')),
                        
+    # WEBCLASS
+    url(r'^', include('teleforma.webclass.urls')),
 
     # Payment
     url(r'^payment/(?P<pk>.*)/start/$', PaymentStartView.as_view(),
@@ -164,4 +173,7 @@ urlpatterns = patterns('',
     url(r'^echec-de-paiement',
         bank_fail, name='teleforma-bank-fail'),
 
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/receipt/download/$', ReceiptPDFViewDownload.as_view(), name="teleforma-receipt-download"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/receipt/view/$', ReceiptPDFView.as_view(), name="teleforma-receipt-view"),
+                       
 )

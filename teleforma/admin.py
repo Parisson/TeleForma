@@ -117,8 +117,8 @@ class StudentAdmin(admin.ModelAdmin):
                     'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
                     'oral_1', 'oral_2', 'fascicule', BalanceFilter ]
     list_display = ['student_name', 'get_trainings', 'platform_only',
-                    'total_payments', 'total_fees', 'balance']
-    readonly_fields = [ 'balance' ]
+                    'total_payments', 'total_fees', 'balance', 'balance_intermediary']
+    readonly_fields = [ 'balance', 'balance_intermediary' ]
     actions = ['export_xls', 'write_message', 'add_to_group']
     # action_form = StudentGroupForm
 
@@ -156,6 +156,24 @@ class StudentAdmin(admin.ModelAdmin):
         # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
     add_to_group.short_description = "Ajouter au groupe"
 
+
+class CorrectorAdmin(admin.ModelAdmin):
+    model = Corrector
+    list_filter = ['user__is_active', 'period']
+    list_display = ['__unicode__', 'period', 'pay_status',
+                    'date_registered']
+    actions = ['export_xls']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'user__email']
+
+    def export_xls(self, request, queryset):
+        book = CorrectorXLSBook(correctors = queryset)
+        book.write()
+        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response['Content-Disposition'] = 'attachment; filename=correcteurs.xls'
+        book.book.save(response)
+        return response
+
+    export_xls.short_description = "Export vers XLS"
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
@@ -346,6 +364,7 @@ admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Student, StudentAdmin)
+admin.site.register(Corrector, CorrectorAdmin)
 admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)

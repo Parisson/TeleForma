@@ -8,7 +8,7 @@ from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import os
-import timeside
+#import timeside
 
 
 class Logger:
@@ -41,13 +41,15 @@ class Command(BaseCommand):
             item.delete()
 
     def get_duration(self, file):
-        decoder = timeside.decoder.FileDecoder(file)
-        decoder.setup()
+        #TODO: avoid timeside
+        #decoder = timeside.decoder.FileDecoder(file)
+        #decoder.setup()
         # time.sleep(0.5)
-        value = str(datetime.timedelta(0,decoder.input_duration))
-        t = value.split(':')
-        t[2] = t[2].split('.')[0]
-        return ':'.join(t)
+        #value = str(datetime.timedelta(0,decoder.input_duration))
+        #t = value.split(':')
+        #t[2] = t[2].split('.')[0]
+        #return ':'.join(t)
+        return
 
 
     def handle(self, *args, **options):

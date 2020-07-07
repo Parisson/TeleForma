@@ -1,5 +1,11 @@
+{% load payment %}
+
 <div id="payment_summary">
   <h2>Votre échéancier de paiement</h2>
+
+  <p>
+    <a href="{% url teleforma-receipt-download username=user.username %}" class="component_icon button">Télécharger la facture</a>
+  </p>
   
   <table>
     <thead>
@@ -13,7 +19,7 @@
       {% for payment in payments %}
       <tr class="{{ payment.sclass }}">
         <td>{{ payment.scheduled }}</td>
-        <td>{{ payment.value }}</td>
+        <td>{{ payment.value|payment_format_amount }}</td>
         <td>{{ payment.status }}</td>
       </tr>
       {% endfor %}

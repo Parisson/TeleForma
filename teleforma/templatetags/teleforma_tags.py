@@ -70,6 +70,11 @@ def parse_urls(text):
             output += block
     return output
 
+@register.filter('startswith')
+def startswith(text, starts):
+    if isinstance(text, basestring):
+        return text.startswith(starts)
+    return False
 
 @register.tag
 def value_from_settings(parser, token):
@@ -186,10 +191,12 @@ def get_all_correctors_with_courses():
         name = corrector.last_name + corrector.first_name
         if name:
             result.append({
+                'id': corrector.id,
                 'username':corrector.username,
                 'name':corrector.last_name + " " + corrector.first_name,
                 'courses':json.dumps(list(correctors[corrector]))
             })
+    result = sorted(result, key=lambda corrector:int(corrector['id']))
     return result
 
 

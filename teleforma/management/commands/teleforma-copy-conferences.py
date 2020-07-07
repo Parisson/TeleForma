@@ -29,7 +29,7 @@ class Command(BaseCommand):
     help = "Copy conferences from one period to another"
     courses = ['OB','PAC','PC','PP','DA','Civil','Fiscal','Affaires','DIE','Penal','Social']
     period_1_name = u'Semestrielle'
-    period_2_name = u'Pré-Estivale'
+    period_2_name = u'Pré-estivale'
     course_type = 'Cours'
 
     def handle(self, *args, **options):
