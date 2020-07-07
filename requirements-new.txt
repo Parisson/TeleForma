@@ -1,7 +1,6 @@
 setuptools
 uwsgi
 django==1.6.11
-telemeta
 south
 django-pagination
 django-postman

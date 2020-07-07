@@ -4,7 +4,7 @@
 {% if webclass_slot or webclass_records %}
 <div class="course_content content_video">
     <div class="course_subtitle">
-        <h3><img src="/static/telemeta/images/item_title.png" width="10px" alt="" /> Webclasse live</h3>
+        <h3><img src="/static/teleforma/images/item_title.png" width="10px" alt="" /> Webclasse live</h3>
     </div>
     <table class="listing" width="100%">
         <tbody>
@@ -54,11 +54,9 @@
                 <td {% if forloop.first %}class="border-top" {% endif %} style="padding-left: 1em;">
                     <div>
                         <dl class="listing" style="font-size: 1.2em;">
-                            {% if record.slot %}
-                                <dt>{% trans "Professor" %}</dt>
-                                <dd><a href="{% url telemeta-profile-detail record.slot.professor.user.username %}"
-                                        target="_blank">{{ record.slot.professor }}</a></dd>
-                            {% endif %}
+                            <dt>{% trans "Professor" %}</dt>
+                            <dd><a href="{% url teleforma-profile-detail record.slot.professor.user.username %}"
+                                    target="_blank">{{ record.slot.professor }}</a></dd>
                             <dt>{% trans "Begin" %}</dt>
                             <dd>{{ record.start_date }}</dd>
                         </dl>

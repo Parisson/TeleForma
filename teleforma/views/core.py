@@ -74,7 +74,7 @@ from teleforma.models import *
 from teleforma.forms import *
 from teleforma.models.appointment import AppointmentPeriod
 from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
-from telemeta.views import *
+import pages
 import jqchat.models
 from xlwt import Workbook
 
@@ -284,7 +284,7 @@ class HomeRedirectView(View):
                 else:
                     return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
             else:
-                return HttpResponseRedirect(reverse('telemeta-admin'))
+                return HttpResponseRedirect(reverse('teleforma-admin'))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 
@@ -465,10 +465,10 @@ class CourseView(CourseAccessMixin, DetailView):
         course = Course.objects.get(code=id)
         media_list = []
         for media in course.media.all():
-            if media.is_published and media.item.file and media.conference and 'video' in media.mime_type:
-                urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
-                for transcoded in media.item.transcoded.all():
-                    urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
+            if media.is_published and media.file and media.conference and 'video' in media.mime_type:
+                urls = [ {'url': settings.MEDIA_URL + unicode(media.file), 'mime_type': media.mime_type} ]
+                for transcoded in media.transcoded.all():
+                    urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': transcoded.mime_type})
                 media_list.append({'session': media.conference.session, 'urls': urls, 'poster': media.poster_url()})
         return media_list
 
@@ -495,7 +495,6 @@ class MediaView(CourseAccessMixin, DetailView):
             media.set_mime_type()
         context['mime_type'] = media.mime_type
         context['course'] = media.course
-        context['item'] = media.item
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
@@ -535,7 +534,57 @@ class MediaView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         media = Media.objects.get(id=pk)
         if get_access(media, courses):
-            media_path = media.item.file.path
+            media_path = media.file.path
+            return serve_media(media_path, content_type=media.mime_type, streaming=streaming)
+        else:
+            raise Http404("You don't have access to this media.")
+
+    def download(self, request, period_id, pk):
+        return self.stream(request, period_id, pk, streaming=False)
+
+class MediaTranscodedView(CourseAccessMixin, DetailView):
+
+    model = MediaTranscoded
+    template_name='teleforma/course_media_transcoded.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MediaTranscodedView, self).get_context_data(**kwargs)
+        media_transcoded = self.get_object()
+        media = media_transcoded.item
+        if not media_transcoded.mime_type:
+            media_transcoded.set_mime_type()
+        context['media'] = media
+        context['media_transcoded'] = media_transcoded
+        context['mime_type'] = media_transcoded.mime_type
+        context['course'] = media.course
+        context['type'] = media.course_type
+        # context['notes'] = media.notes.all().filter(author=self.request.user)
+        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+
+        room_name = media.course.code
+        if media.conference.web_class_group:
+            room_name += '_' + media.conference.public_id
+
+        context['room'] = get_room(name=room_name,period=context['period'].name,
+                                   content_type=content_type,
+                                   id=media.course.id)
+
+        access = get_access(media, context['all_courses'])
+        if not access:
+            context['access_error'] = access_error
+            context['message'] = contact_message
+
+        return context
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(MediaTranscodedView, self).dispatch(*args, **kwargs)
+
+    def stream(self, request, period_id, pk, streaming=True):
+        courses = get_courses(request.user)
+        media = MediaTranscoded.objects.get(id=pk)
+        if get_access(media, courses):
+            media_path = media.file.path
             return serve_media(media_path, content_type=media.mime_type, streaming=streaming)
         else:
             raise Http404("You don't have access to this media.")

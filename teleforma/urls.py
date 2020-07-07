@@ -39,7 +39,6 @@ from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
 from teleforma.models import *
 from teleforma.views import *
-from telemeta.views import *
 from teleforma.forms import *
 from registration.views import *
 from jsonrpc import jsonrpc_site
@@ -48,12 +47,18 @@ htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 profile_view = CRFPAProfileView()
 document = DocumentView()
 media = MediaView()
+home_view = HomeView()
+media_transcoded = MediaTranscodedView
 
 urlpatterns = patterns('',
 
-    # login
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    # login / logout
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
+        name="telemeta-login"),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
         name="teleforma-login"),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name="teleforma-logout"),
+
     # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
     url(r'^accounts/register/$', UserAddView.as_view(), name="teleforma-register"),
     url(r'^accounts/register/(?P<username>.*)/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
@@ -67,9 +72,20 @@ urlpatterns = patterns('',
 
     url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
-    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail, name="telemeta-profile-detail"),
-    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/edit/$', profile_view.profile_edit, name="telemeta-profile-edit"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail, name="teleforma-profile-detail"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/profile/edit/$', profile_view.profile_edit, name="teleforma-profile-edit"),
     
+    # Registration
+    url(r'^accounts/password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'registration/password_change_form.html'}, name="teleforma-password-change"),
+    url(r'^accounts/password_change_done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'registration/password_change_done.html'}, name="teleforma-password-change-done"),
+
+    url(r'^accounts/password_reset/$', 'django.contrib.auth.views.password_reset', {'template_name': 'registration/password_reset_form.html', 'email_template_name': 'registration/password_reset_email.html'}, name="teleforma-password-reset"),
+    url(r'^accounts/password_reset_done/$', 'django.contrib.auth.views.password_reset_done', {'template_name': 'registration/password_reset_done.html'}, name="teleforma-password-reset-done"),
+    url(r'^accounts/password_reset_confirm/(?P<uidb36>[A-Za-z0-9._-]+)/(?P<token>[A-Za-z0-9._-]+)/$', 'django.contrib.auth.views.password_reset_confirm', {'template_name': 'registration/password_reset_confirm.html'}, name="teleforma-password-reset-confirm"),
+    url(r'^accounts/password_reset_complete/$', 'django.contrib.auth.views.password_reset_complete', {'template_name': 'registration/password_reset_complete.html'}, name="teleforma-password-reset-complete"),
+    url(r'^accounts/password_reset_complete/$', 'django.contrib.auth.views.password_reset_complete', {'template_name': 'registration/password_reset_complete.html'}, name="teleforma-password-reset-complete"),
+
+
     url(r'^captcha/', include('captcha.urls')),
 
     # Help
@@ -78,8 +94,8 @@ urlpatterns = patterns('',
     # Home
     url(r'^$', HomeRedirectView.as_view(), name="teleforma-home"),
 
-    # Telemeta
-    url(r'^', include('telemeta.urls')),
+    # Flat pages
+    url(r'^pages/(?P<path>.*)$', home_view.render_flatpage, name="teleforma-flatpage"),
 
     # Desk
     url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
@@ -88,6 +104,10 @@ urlpatterns = patterns('',
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
         name="teleforma-desk-period-course"),
 
+
+    url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/detail/$', MediaTranscodedView.as_view(), name="teleforma-media-transcoded"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/download/$', media_transcoded.download, name="teleforma-media-transcoded-download"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/stream/$', media_transcoded.stream, name="teleforma-media-transcoded-stream"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/embed/$', MediaViewEmbed.as_view(), name="teleforma-media-embed"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),

@@ -1,4 +1,4 @@
-{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}Bonjour,
+{% load i18n %}{% load teleforma_tags %}{% autoescape off %}Bonjour,
 
 Votre copie soumise le {{ script.date_added }} en {{ script.course }} pour la séance {{ script.session }} a été rejetée par erreur.
 

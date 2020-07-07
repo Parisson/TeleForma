@@ -1,10 +1,10 @@
-{% extends "telemeta/base.html" %}
-{% load telemeta_utils %}
+{% extends "teleforma/base.html" %}
+{% load teleforma_tags %}
 {% load i18n %}
 
 {% block extra_javascript %}
-<script src="/static/telemeta/js/popupdiv-min.js" type="text/javascript"></script>
-<script src="/static/telemeta/js/playlist.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/popupdiv-min.js" type="text/javascript"></script>
+<script src="/static/teleforma/js/playlist.js" type="text/javascript"></script>
 <script>
     jQuery(window).ready(function(){
         var p = playlistUtils;
@@ -25,19 +25,19 @@
 
     {% block module_searches %}
     {% with searches as searches and "My searches" as title %}
-    {% include "telemeta/inc/module_searches.html" %}
+    {% include "teleforma/inc/module_searches.html" %}
     {% endwith %}
     {% endblock %}
 
     {% block module_user_revisions %}
     {% with user_revisions as revisions and "My last changes" as title %}
-    {% include "telemeta/inc/module_user_revisions.html" %}
+    {% include "teleforma/inc/module_user_revisions.html" %}
     {% endwith %}
     {% endblock %}
 
     {% block module_all_revisions %}
     {% with revisions as revisions and "All last changes" as title %}
-    {% include "telemeta/inc/module_revisions.html" %}
+    {% include "teleforma/inc/module_revisions.html" %}
     {% endwith %}
     {% endblock %}
 
@@ -53,8 +53,8 @@
             <td style="border-bottom:1px solid #6A0307;color:#6A0307;font-size: 100%">{{ playlist.playlist.title }}</td>
             <td style="width:86ex; padding-right: 0; border-bottom:1px solid #6A0307; text-align:right">
             <a href="#" id="{{playlist.playlist.public_id}}" onclick="playlistUtils.showEdit(this, this.id); return false;" class="component_icon button icon_edit">{% trans "Edit" %}</a>
-                <a href="{% url 'telemeta-playlist-csv-export' playlist.playlist.public_id 'collections' %}" class="component_icon button icon_csv">CSV Collections</a>
-                <a href="{% url 'telemeta-playlist-csv-export' playlist.playlist.public_id 'items' %}" class="component_icon button icon_csv">CSV Items</a>
+                <a href="{% url teleforma-playlist-csv-export playlist.playlist.public_id 'collections' %}" class="component_icon button icon_csv">CSV Collections</a>
+                <a href="{% url teleforma-playlist-csv-export playlist.playlist.public_id 'items' %}" class="component_icon button icon_csv">CSV Items</a>
                 <a href="#" id="{{playlist.playlist.public_id}}" onclick="if(confirm(gettrans('delete the playlist permanently?'))){playlistUtils.remove(this.id);};return false;" class="component_icon button icon_cancel">{% trans "Delete" %}</a>
             </td>
         </tr>
@@ -78,16 +78,16 @@
         <tr {% if not forloop.counter0|divisibleby:"2" %}class="odd"{% endif %}>
             <td>
                 {% if resource.type == "item" and not resource.element == None %}
-                <a href="{% url 'telemeta-item-detail' resource.element.public_id %}">{{ resource.element }}</a>
+                <a href="{% url teleforma-item-detail resource.element.public_id %}">{{ resource.element }}</a>
                 {% endif %}
                 {% if resource.type == "collection" and not resource.element == None %}
-                <a href="{% url 'telemeta-collection-detail' resource.element.public_id %}">{% if resource.element.title %}{{ resource.element.title }}{% else %}{{ resource.element }}{% endif %}</a>
+                <a href="{% url teleforma-collection-detail resource.element.public_id %}">{% if resource.element.title %}{{ resource.element.title }}{% else %}{{ resource.element }}{% endif %}</a>
                 {% endif %}
                 {% if resource.type == "marker" and not resource.element == None  %}
-                <a href="{% url 'telemeta-item-detail-marker' resource.element.public_id %}">{{ resource.element }}</a>
+                <a href="{% url teleforma-item-detail-marker resource.element.public_id %}">{{ resource.element }}</a>
                 {% endif %}
                 {% if resource.type == "corpus" or resource.type == "fonds" %}
-                <a href="{% url 'telemeta-resource-detail' resource.type resource.element.public_id %}">{{ resource.element.title }}</a>
+                <a href="{% url teleforma-resource-detail resource.type resource.element.public_id %}">{{ resource.element.title }}</a>
                 {% endif %}
                 {% if resource.element == None %}{% trans "deleted" %}{% endif %}
             </td>
@@ -107,7 +107,7 @@
             </td>
             <td align="center" style="vertical-align:middle">
                 {% if resource.element.file or resource.element.has_mediafile %}
-                <img src="/static/telemeta/images/ok.png" alt="yes" style="vertical-align:middle" /></a>
+                <img src="/static/teleforma/images/ok.png" alt="yes" style="vertical-align:middle" /></a>
                 {% endif %}
             </td>
             <td style="vertical-align:middle">

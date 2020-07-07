@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.utils import translation
-from telemeta.models import *
 from teleforma.models import *
 import logging
 import datetime
@@ -28,7 +27,7 @@ class Command(BaseCommand):
 
     def email(self, student, kind, payment):
         site = Site.objects.get_current()
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'payment': payment, 'period': student.period }
+        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'student': student, 'payment': payment, 'period': student.period }
         subject_template = 'payment/email_%s_subject.txt' % kind
         message_template = 'payment/email_%s.txt' % kind
         subject = render_to_string(subject_template, ctx_dict)

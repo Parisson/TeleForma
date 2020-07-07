@@ -6,7 +6,7 @@ import calendar
 from unidecode import unidecode
 
 from django.db.models import *
-from telemeta.models import *
+from django.contrib.auth.models import User
 from teleforma.fields import *
 import django.db.models as models
 from django.utils.translation import ugettext_lazy as _

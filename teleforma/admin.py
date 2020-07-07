@@ -247,10 +247,15 @@ class ConferenceDateBeginFilter(admin.SimpleListFilter):
         else:
             return queryset
 
+class MediaTranscodedInline(admin.TabularInline):
+    model = MediaTranscoded
+
 class MediaAdmin(admin.ModelAdmin):
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
+    inlines = [MediaTranscodedInline]
+
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']

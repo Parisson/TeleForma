@@ -1,21 +1,22 @@
-setuptools<=39.1.0
-django==1.8.*
-telemeta==1.7.1
-django-pagination==1.0.7
-django-postman==3.6.2
-django-extensions==2.1.0
+setuptools
+django==1.4.19
+telemeta==1.4.6
+south   # a supprimer
+django-pagination==1.0.7    # a supprimer
+django-postman==3.2.0
+django-extensions==0.9
+django-notes    # a supprimer
 django-timezones==0.2
 django-jqchat
+crocodoc    # a supprimer
 django-registration==0.8
-django-extra-views==0.11.0
-django-simple-captcha
-django-suit
+django-extra-views==0.6.5   # a supprimer
+django-simple-captcha   # a maj
+django-suit     # a maj
 django-nvd3
 django-user-agents
 html5lib>=1.0
 xhtml2pdf==0.2.3
 markdown<2.5
 django-tinymce==1.5.4
-deefuzzer
-xlwt
--e .
+django-quiz # a supprimer

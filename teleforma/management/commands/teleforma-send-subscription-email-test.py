@@ -8,8 +8,6 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 from postman import *
@@ -38,7 +36,7 @@ class Command(BaseCommand):
             mode = 'E-learning'
         else:
             mode = 'Presentielle'
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
+        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'student': student, 'mode': mode}
         subject_template = 'teleforma/messages/email_inscr_sujet.txt'
         message_template = 'teleforma/messages/email_inscription-new.txt'
         subject = render_to_string(subject_template, ctx_dict)
