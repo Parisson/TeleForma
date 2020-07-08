@@ -52,7 +52,7 @@ def payment_format_amount(value):
     else:
         prefix = ''
     while len(unit) > 3:
-        res = res + ' ' + unit[-3:]
+        res = res + ' ' + unit[-3:]
         unit = unit[:-3]
     res = prefix + unit + res
     return '%s,%s' % (res, decimal)
