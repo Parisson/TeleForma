@@ -86,6 +86,7 @@ class ScriptsListMixinView(ScriptMixinView):
             context['courses_list'] = [(str(course.id), course.title) for course in courses]
             context['course_selected'] = self.request.GET.get('course')
             context['platform_only'] = self.request.GET.get('platform_only')
+            context['student_name'] = self.request.GET.get('student_name') or ''
         return context
 
 class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
@@ -153,6 +154,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
         session = self.request.GET.get('session')
         course = self.request.GET.get('course')
         platform_only = self.request.GET.get('platform_only')
+        student_name = self.request.GET.get('student_name')
         if type:
             QT &= Q(type__id=int(type))
         if session:
@@ -163,6 +165,10 @@ class ScriptsView(ScriptsListMixinView, ListView):
             QT &= Q(corrector__id=int(corrector))
         if platform_only:
             QT &= Q(author__student__platform_only = int(platform_only))
+        if student_name:
+            QT &= Q(author__student__user__first_name__icontains=student_name) | Q(author__student__user__last_name__icontains=student_name) | Q(author__student__user__email=student_name) | Q(author__student__user__username=student_name)
+            
+
         return QT
 
     def get_base_queryset(self):
