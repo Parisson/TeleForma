@@ -56,8 +56,7 @@
                         <dl class="listing" style="font-size: 1.2em;">
                             {% if record.slot %}
                                 <dt>{% trans "Professor" %}</dt>
-                                <dd><a href="{% url telemeta-profile-detail record.slot.professor.user.username %}"
-                                        target="_blank">{{ record.slot.professor }}</a></dd>
+                                <dd>{{ record.slot.professor }}</dd>
                             {% endif %}
                             <dt>{% trans "Begin" %}</dt>
                             <dd>{{ record.start_date }}</dd>
