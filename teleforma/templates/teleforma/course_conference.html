@@ -48,7 +48,7 @@
     {% for livestream in livestreams %}
         {% if "webm" == livestream.stream_type %}
             <div class="video">
-                <video width="864" height="480" controls preload="auto">
+                <video width="100%" height="auto" controls>
                     <source src="{{ livestream.url|get_host:host }}" type="video/webm" />
                 </video>
             </div>
