@@ -73,6 +73,7 @@ def get_records_from_bbb(**kwargs):
 
             data['duration'] = data['end'] - data['start']
             records.append(data)
+    records = sorted(records, key=lambda r:r['start'])
     return records
 
 def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
