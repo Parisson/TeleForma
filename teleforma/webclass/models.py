@@ -50,7 +50,7 @@ def get_records_from_bbb(**kwargs):
                 url = url.decode()
             else:
                 continue
-                
+
             start = int(recording['startTime'].decode()[:-3])
             end = int(recording['endTime'].decode()[:-3])
             data = {
@@ -87,12 +87,12 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
     if course_id:
         meta['courseid'] = period_id
     meta['origin'] = 'crfpa'
-    
+
     all_records = get_records_from_bbb(meta=meta)
     # vocabulary = [('Aucun', 'none')]
     if not all_records:
         return []
-    
+
     all_records = sorted(all_records, key=lambda record:-record['start'])
     # for record in all_records:
     #     vocabulary.append((record['url'], record['start']))
@@ -108,10 +108,10 @@ class BBBServer(models.Model):
         db_table = app_label + '_' + 'bbb_server'
         verbose_name = _('BBB server')
         verbose_name_plural = _('BBB servers')
-    
+
     def get_instance(self):
         return BigBlueButton(self.url, self.api_key)
-    
+
     def __unicode__(self):
         return "Serveur %d" % self.id
 
@@ -120,7 +120,7 @@ class PublishedManager(models.Manager):
         return super(PublishedManager, self).get_query_set().filter(status=3).exclude(end_date__lt=date.today())
 
 class Webclass(models.Model):
-    
+
     department              = models.ForeignKey('teleforma.Department', related_name='webclass', verbose_name=_('department'), on_delete=models.SET_NULL, blank=True, null=True)
     period                  = models.ForeignKey('teleforma.Period', related_name='webclass', verbose_name=_('period'), on_delete=models.SET_NULL, blank=True, null=True)
     course                  = models.ForeignKey('teleforma.Course', related_name='webclass', verbose_name=_('course'))
@@ -179,7 +179,7 @@ class WebclassSlot(models.Model):
     @property
     def remaining_participant_slot(self):
         """
-        get remaining participant slot 
+        get remaining participant slot
         """
         nb_participants = self.participants.count()
         return self.webclass.max_participants - nb_participants
@@ -205,7 +205,7 @@ class WebclassSlot(models.Model):
 
     def prepare_webclass(self):
         """
-        generate room id and moderator password 
+        generate room id and moderator password
         """
         if not self.room_id:
             # not sure why, but the slug contains accent
@@ -255,10 +255,10 @@ class WebclassSlot(models.Model):
                 except BBBException as e:
                     print(e)
                     raise
-            
-    
+
+
     def get_join_webclass_url(self, request, user, username=None):
-        """ 
+        """
         Get url to BBB meeting.
         If user are professor or staff, provide the url with the moderator password
         """
@@ -273,7 +273,7 @@ class WebclassSlot(models.Model):
         return self.bbb.get_join_meeting_url(username, self.room_id, password, params)
 
     def get_fake_join_webclass_url(self, username):
-        """ 
+        """
         Fake join url for testing purpose
         Get url to BBB meeting.
         If user are professor or staff, provide the url with the moderator password
@@ -284,8 +284,8 @@ class WebclassSlot(models.Model):
         return self.bbb.get_join_meeting_url(username, self.room_id, password, params)
 
     def next_webclass_date(self):
-        """ 
-        get the next webclass date for this slot 
+        """
+        get the next webclass date for this slot
         (or today webclass if this is the current day)
         """
         now = datetime.datetime.now()
@@ -300,12 +300,15 @@ class WebclassSlot(models.Model):
 
     @property
     def status(self):
-        """ is webclass running, about to start, or finished ? 
+        """ is webclass running, about to start, or finished ?
         state : future, past, almost, ingoing
         """
         now = datetime.datetime.now()
         next_webclass_date_begin = self.next_webclass_date()
-        next_webclass_date_end = next_webclass_date_begin + timedelta(seconds=self.webclass.duration.as_seconds())
+        if next_webclass_date_begin:
+            next_webclass_date_end = next_webclass_date_begin + timedelta(seconds=self.webclass.duration.as_seconds())
+        else:
+            return "none"
         begin_minus_1_hour = next_webclass_date_begin - timedelta(hours=1)
 
         if not next_webclass_date_begin:
@@ -375,7 +378,7 @@ def create_webclass_room(sender, **kwargs):
 
 
 class WebclassRecord(models.Model):
-    
+
     period                  = models.ForeignKey('teleforma.Period', verbose_name=_('period'))
     course                  = models.ForeignKey('teleforma.Course', related_name='webclass_records', verbose_name=_('course'))
     record_id               = models.CharField("Enregistrement BBB", max_length=255)
