@@ -72,7 +72,7 @@ class UserForm(ModelForm):
     telephone = CharField(label=_('Telephone'), max_length=255)
     birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
     # student
-    portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=False,
+    portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=True,
                           help_text="Veuillez utiliser une photo au format d'identité.")
     level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
     iej = ModelChoiceField(label='IEJ',
