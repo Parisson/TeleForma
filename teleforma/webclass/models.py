@@ -44,7 +44,7 @@ def get_records_from_bbb(**kwargs):
         if type(recordings) is XMLDictNode:
             recordings = [recordings]
         for recording in recordings:
-            recording.prettyprint()
+            # recording.prettyprint()
             url = recording.get('playback', {}).get('format', {}).get('url')
             if url:
                 url = url.decode()
@@ -333,8 +333,6 @@ class WebclassSlot(models.Model):
 
     def get_webclass_info(self):
         """ """
-        print(self.room_id)
-        print(self.bbb.get_meeting_info(self.room_id))
         return self.bbb.get_meeting_info(self.room_id)
 
     # def get_record(self):
@@ -402,5 +400,4 @@ class WebclassRecord(models.Model):
         if not record_ids:
             return []
         records = get_records_from_bbb(recording_id=','.join(record_ids))
-        print(records)
         return records
