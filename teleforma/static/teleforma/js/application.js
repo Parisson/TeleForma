@@ -44,8 +44,14 @@ $(document).ready(function(){
      // add a "read more" button after first video and hide others vidéos by default
      $('.course_content.content_video table.listing').each(function(){
         var $this = $(this);
+
+        // do nothing if not enough videos
+        var numberOfVideos = $this.find('tr').length
+        if(numberOfVideos <= 2)
+            return
+
         $this.find('tr:not(:first)').hide();
-        // debugger;
+        
         var colspan = $(this).find('tr:first td').length
         var buttonRow = $('<tr><td class="show_more_videos" colspan="'+colspan+'"></td></tr>')
         var button = $('<a class="component_icon button icon_next">Voir les vidéos plus anciennes</a>').bind('click', function(){
