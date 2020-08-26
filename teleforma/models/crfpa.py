@@ -301,6 +301,9 @@ class Profile(models.Model):
     nationality = models.CharField('Nationalité', max_length=255, null=True, blank=True)
     ss_number = models.CharField('Sécurité sociale',
                                  max_length=15, blank=True, null=True)
+    siret = models.CharField('Siret',
+                             max_length=13, blank=True, null=True)
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
         verbose_name = _('profile')
@@ -317,6 +320,7 @@ class Corrector(Model):
     user = models.ForeignKey(User, related_name='corrector', verbose_name=_('user'), unique=True)
     period = models.ForeignKey('Period', related_name='corrector', verbose_name=_('period'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
+    courses = models.ManyToManyField("Course", verbose_name=_("Course"), blank=True, null=True)
     pay_status = models.CharField('Statut', choices=PAY_STATUS_CHOICES,
                                     max_length=64, blank=True, null=True,
                                     default='honoraire')

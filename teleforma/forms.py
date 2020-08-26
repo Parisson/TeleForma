@@ -211,6 +211,8 @@ class CorrectorForm(ModelForm):
     nationality =  CharField(label='Nationalité', max_length=255)
     ss_number = CharField(label='N° de sécurité sociale',
                                  max_length=15)
+    siret = CharField(label='N° SIRET',
+                      max_length=13, required=False)
     # corrector
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
@@ -219,9 +221,12 @@ class CorrectorForm(ModelForm):
     pay_status = forms.ChoiceField(choices = PAY_STATUS_CHOICES,
                                       label='Statut',
                                       widget=forms.Select())
+    courses = ModelMultipleChoiceField(label='Matière',
+        queryset=Course.objects.all().exclude(title="Aucune").order_by('title'),
+        widget=forms.CheckboxSelectMultiple())
     # no model
     captcha = CaptchaField()
-    accept = BooleanField()
+    # accept = BooleanField()
 
     class Meta:
         model = User
@@ -233,8 +238,13 @@ class CorrectorForm(ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['email'].required = True
-        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'birthday_place', 'nationality', 'ss_number']
-        self.training_fields = ['period', 'pay_status']
+        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'birthday_place', 'nationality', 'ss_number', 'siret']
+        self.training_fields = ['courses', 'period', 'pay_status']
+
+    def clean_siret(self):
+        if self.data['pay_status'] == 'honoraires' and not self.cleaned_data['siret'].strip():
+            raise ValidationError("Le SIRET est obligatoire si vous choississez le statut honoraires")
+        return self.data['siret']
 
     def save(self, commit=True):
 
@@ -258,15 +268,17 @@ class CorrectorForm(ModelForm):
                           birthday=data['birthday'],
                           birthday_place=data['birthday_place'],
                           ss_number=data['ss_number'],
+                          siret=data['siret'],
                           nationality=data['nationality']
                           )
         if commit:
             profile.save()
-        corector = Corrector(user=user,
+        corrector = Corrector(user=user,
                           period=data.get('period'),
                           pay_status=data.get('pay_status'),
                           )
-        corector.save()
+        corrector.save()
+        corrector.courses = data.get('courses')
         return user
 
 

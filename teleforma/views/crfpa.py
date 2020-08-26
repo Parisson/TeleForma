@@ -432,13 +432,15 @@ class CorrectorXLSBook(object):
             row.write(10, profile.birthday_place)
             row.write(11, profile.nationality)
             row.write(12, profile.ss_number)
+            row.write(13, profile.siret)
 
             if corrector.date_registered:
-                row.write(13, corrector.date_registered.strftime("%d/%m/%Y"))
+                row.write(14, corrector.date_registered.strftime("%d/%m/%Y"))
             else:
-                row.write(13, "")
-            row.write(14, str(corrector.period))
-            row.write(15, corrector.pay_status)
+                row.write(14, "")
+            row.write(15, str(corrector.period))
+            row.write(16, corrector.pay_status)
+            row.write(17, (', ').join([course.title for course in corrector.courses.all()]))
                 
         return counter + 1
 
@@ -457,9 +459,11 @@ class CorrectorXLSBook(object):
                 {'name': 'LIEU DE NAISSANCE', 'width': 5000},
                 {'name': 'NATIONALITE', 'width': 5000},
                 {'name': 'NUMERO SS', 'width': 5000},
+                {'name':"SIRET", 'width':5000},
                 {'name':"DATE D'INSCRIPTION", 'width':5000},
                 {'name':"PERIODE", 'width':5000},
                 {'name':"STATUT", 'width':5000},
+                {'name':"MATIERES", 'width':30000},
                 ]
         
         i = 0
