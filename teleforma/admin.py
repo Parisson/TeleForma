@@ -306,8 +306,8 @@ class AppointmentPeriodAdmin(admin.ModelAdmin):
 
 
 class AppointmentSlotAdmin(admin.ModelAdmin):
-    list_filter = ('date',)
-    list_display = ('date', 'start', 'nb', 'get_nb_jury')
+    list_filter = ('date', 'appointment_period')
+    list_display = ('date', 'appointment_period', 'mode', 'start', 'nb', 'get_nb_jury')
     inlines = [AppointmentJuryInline]
 
 class AppointmentJuryAdmin(admin.ModelAdmin):
