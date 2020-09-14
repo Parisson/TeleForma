@@ -347,7 +347,8 @@ class CourseListView(CourseAccessMixin, ListView):
         # appointments_open = False
         appointments = []
         if is_student:
-            for appointment in  AppointmentPeriod.objects.filter(periods=context['period']):
+            available_courses = [course['course'] for course in context['all_courses']]
+            for appointment in  AppointmentPeriod.objects.filter(periods=context['period'], course__in=available_courses):
                 if appointment.is_open:
                     found = False
                     for existing in appointments:

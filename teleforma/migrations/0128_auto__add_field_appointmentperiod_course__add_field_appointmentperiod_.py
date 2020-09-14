@@ -8,15 +8,45 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'AppointmentPeriod.course'
+        db.add_column('teleforma_appointment_period', 'course',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=19, to=orm['teleforma.Course'], null=True, on_delete=models.SET_NULL, blank=True),
+                      keep_default=False)
+
+        # Adding field 'AppointmentPeriod.appointment_mail_text_distance'
+        db.add_column('teleforma_appointment_period', 'appointment_mail_text_distance',
+                      self.gf('django.db.models.fields.TextField')(null=True, blank=True),
+                      keep_default=False)
+
         # Adding field 'AppointmentPeriod.bbb_room'
         db.add_column('teleforma_appointment_period', 'bbb_room',
                       self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True),
                       keep_default=False)
 
 
+        # Changing field 'AppointmentPeriod.appointment_mail_text'
+        db.alter_column('teleforma_appointment_period', 'appointment_mail_text', self.gf('django.db.models.fields.TextField')(null=True))
+        # Adding field 'AppointmentSlot.mode'
+        db.add_column('teleforma_appointment_slot', 'mode',
+                      self.gf('django.db.models.fields.CharField')(default='presentiel', max_length=20),
+                      keep_default=False)
+
+
     def backwards(self, orm):
+        # Deleting field 'AppointmentPeriod.course'
+        db.delete_column('teleforma_appointment_period', 'course_id')
+
+        # Deleting field 'AppointmentPeriod.appointment_mail_text_distance'
+        db.delete_column('teleforma_appointment_period', 'appointment_mail_text_distance')
+
         # Deleting field 'AppointmentPeriod.bbb_room'
         db.delete_column('teleforma_appointment_period', 'bbb_room')
+
+
+        # Changing field 'AppointmentPeriod.appointment_mail_text'
+        db.alter_column('teleforma_appointment_period', 'appointment_mail_text', self.gf('django.db.models.fields.TextField')(default=''))
+        # Deleting field 'AppointmentSlot.mode'
+        db.delete_column('teleforma_appointment_slot', 'mode')
 
 
     models = {
@@ -103,7 +133,8 @@ class Migration(SchemaMigration):
         },
         'teleforma.appointmentperiod': {
             'Meta': {'ordering': "('id',)", 'object_name': 'AppointmentPeriod', 'db_table': "'teleforma_appointment_period'"},
-            'appointment_mail_text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'appointment_mail_text': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'appointment_mail_text_distance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'appointment_slot_size': ('django.db.models.fields.IntegerField', [], {'default': '40'}),
             'bbb_room': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'book_delay': ('django.db.models.fields.IntegerField', [], {'default': '2'}),

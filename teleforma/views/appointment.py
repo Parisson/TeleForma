@@ -45,6 +45,7 @@ class Appointments(View):
                     'name': ap_period.name,
                     'appointment':ap_period.get_appointment(user),
                     'modes':ap_period.modes,
+                    'course': ap_period.course,
                     'show_modes':len(ap_period.modes) > 1
                 })
         # for ap_period in ap_periods:
@@ -122,12 +123,16 @@ class Appointments(View):
         """
         Send the confirm mail to student
         """
+        main_text = ap.slot.mode == 'distance' and ap.appointment_period.appointment_mail_text_distance or ap.appointment_period.appointment_mail_text
         data = { 'mfrom': settings.DEFAULT_FROM_EMAIL,
                  'mto': ap.student.email,
+                 'title': ap.appointment_period.name,
                  'jury_address': ap.jury.address,
                  'date': ap.real_date,
                  'student': ap.student,
-                 'main_text': ap.appointment_period.appointment_mail_text }
+                 'mode': ap.slot.mode,
+                 'bbb': ap.appointment_period.bbb_room,
+                 'main_text': main_text }
         # DEBUG
         data['mto'] = "yoanl@pilotsystems.net"
         # data['mto'] = "dorothee.lavalle@pre-barreau.com"

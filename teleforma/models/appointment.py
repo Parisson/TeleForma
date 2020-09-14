@@ -41,8 +41,10 @@ class AppointmentPeriod(Model):
                                      default=2)
     cancel_delay = models.IntegerField("délai minimal (en jours ouvrables) d'annulation de rendez-vous",
                                        default=2)
-    appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous",
-                                             blank=True)
+    appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous pour le présentiel",
+                                             blank=True, null=True)
+    appointment_mail_text_distance = models.TextField("message à inclure dans le mail de confirmation de rendez-vous pour les rendez-vous à distance",
+                                             blank=True, null=True)
     appointment_slot_size = models.IntegerField("écart entre les créneaux d'inscription (minutes)", default=40)
 
     bbb_room = models.URLField("salon bbb", help_text='Lien vers le salon BBB pour les inscriptions à distance (ex: https://bbb.parisson.com/b/yoa-mtc-a2e). La salle doit avoir été au préalable créé par un membre du jury sur https://bbb.parisson.com.', null=True, blank=True, max_length=200)
@@ -64,7 +66,7 @@ class AppointmentPeriod(Model):
         return self.start <= datetime.date.today() <= self.end and self.enable_appointment
 
     @cached_property
-    @timing
+    # @timing
     def days(self):
         days = {}
         delay = self.book_delay
@@ -342,6 +344,9 @@ class Appointment(Model):
 
     @property
     def arrival(self):
+        """
+        arrival hour is only used for 'presentiel' mode
+        """
         start = self.slot.start
         delta = self.slot_nb * self.appointment_period.appointment_slot_size
         dt = datetime.datetime.combine(datetime.date.today(), start) + datetime.timedelta(minutes=delta)
@@ -349,7 +354,11 @@ class Appointment(Model):
 
     @property
     def real_date(self):
-        return datetime.datetime.combine(self.day, self.arrival)
+        if self.slot.mode == 'distance':
+            start = self.start
+        else:
+            start = self.arrival
+        return datetime.datetime.combine(self.day, start)
 
     @property
     def real_date_human(self):

@@ -201,16 +201,18 @@
 
         {% if ap_period.appointment %}
             <p>
-                Vous avez réservé pour cette période le {{ ap_period.appointment.real_date|date:'d/m/Y' }}.
+                Vous avez réservé pour cette période le <strong>{{ ap_period.appointment.real_date|date:'d/m/Y' }}</strong>.
                 <br/>
                 <strong>{{ ap_period.appointment.jury.name }}</strong>
                 <br/>
                 {{ ap_period.appointment.jury.address|linebreaks }}
-                Heure d'arrivé : {{ ap_period.appointment.arrival|date:'H:i' }}
+                {% if ap_period.appointment.slot.mode == 'presentiel' %}
+                    Heure d'arrivé : <strong>{{ ap_period.appointment.arrival|date:'H:i' }}</strong>
+                    <br/>
+                {% endif %}
+                Heure de début : <strong>{{ ap_period.appointment.start|date:'H:i' }}</strong>
                 <br/>
-                Heure de début : {{ ap_period.appointment.start|date:'H:i' }}
-                <br/>
-                Heure de fin : {{ ap_period.appointment.end|date:'H:i' }}
+                Heure de fin : <strong>{{ ap_period.appointment.end|date:'H:i' }}</strong>
                 <br/>
 
                 {% if ap_period.appointment.slot.mode == 'distance' %}
@@ -221,6 +223,7 @@
             {% if ap_period.appointment.can_cancel %}
                 <form class="cancel_form" action="{% url teleforma-appointment-cancel %}" method="POST">
                     {% csrf_token %}
+                    <input type="hidden" name="course_id" value="{{ ap_period.course.id }}"/>
                     <input type="hidden" name="period_id" value="{{ period_id }}"/>
                     <input type="hidden" name="appointment_id" value="{{ ap_period.appointment.id }}"/>
                     <button type="submit">Annuler</button>
@@ -282,10 +285,10 @@
 
                                     {% for slot in groupslot.slots %}
                                         <tr>
-                                            <td class="arrival">
+                                            <td class="arrival" {% if day.mode == 'distance'%}style="display:none"{% endif %}>
                                                 {{ slot.arrival|date:'H:i' }}
                                             </td>
-                                            <td class="start" style="display:none">
+                                            <td class="start" {% if day.mode == 'presentiel'%}style="display:none"{% endif %}>
                                                 {{ slot.start|date:'H:i' }}
                                             </td>
                                             <td class="end" style="display:none">
