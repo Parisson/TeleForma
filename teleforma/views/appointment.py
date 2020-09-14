@@ -134,9 +134,8 @@ class Appointments(View):
                  'bbb': ap.appointment_period.bbb_room,
                  'main_text': main_text }
         # DEBUG
-        data['mto'] = "yoanl@pilotsystems.net"
+        # data['mto'] = "yoanl@pilotsystems.net"
         # data['mto'] = "dorothee.lavalle@pre-barreau.com"
-        # data['mto'] = "gael@pilotsystems.net"
 
         subject_template = 'teleforma/messages/email_appointment_sujet.txt'
         message_template = 'teleforma/messages/email_appointment.txt'
