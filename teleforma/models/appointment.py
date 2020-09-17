@@ -12,6 +12,8 @@ from django.core.cache import cache
 CACHE_KEY = 'appointment'
 
 
+APPOINTMENT_MODE = (('presentiel', 'Presentiel'), ('distance', 'A distance'))
+
 def timing(f):
     def wrap(*args):
         time1 = time.time()
@@ -25,6 +27,8 @@ class AppointmentPeriod(Model):
     periods = models.ManyToManyField(Period, related_name='appointment_periods',
                                      verbose_name=u"Période")
     name = models.CharField(_('name'), max_length=255)
+
+    course = models.ForeignKey("Course", verbose_name=_("Course"), on_delete=models.SET_NULL, default=19, blank=True, null=True)
     # nb_appointments = models.IntegerField("nombre de rendez-vous autorisé sur la période",
     #                                       default=1)
 
@@ -37,9 +41,13 @@ class AppointmentPeriod(Model):
                                      default=2)
     cancel_delay = models.IntegerField("délai minimal (en jours ouvrables) d'annulation de rendez-vous",
                                        default=2)
-    appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous",
-                                             blank=True)
+    appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous pour le présentiel",
+                                             blank=True, null=True)
+    appointment_mail_text_distance = models.TextField("message à inclure dans le mail de confirmation de rendez-vous pour les rendez-vous à distance",
+                                             blank=True, null=True)
     appointment_slot_size = models.IntegerField("écart entre les créneaux d'inscription (minutes)", default=40)
+
+    bbb_room = models.URLField("salon bbb", help_text='Lien vers le salon BBB pour les inscriptions à distance (ex: https://bbb.parisson.com/b/yoa-mtc-a2e). La salle doit avoir été au préalable créé par un membre du jury sur https://bbb.parisson.com.', null=True, blank=True, max_length=200)
 
     def __unicode__(self):
         return self.name
@@ -58,46 +66,59 @@ class AppointmentPeriod(Model):
         return self.start <= datetime.date.today() <= self.end and self.enable_appointment
 
     @cached_property
-    @timing
+    # @timing
     def days(self):
         days = {}
         delay = self.book_delay
         today = datetime.date.today()
 
         for slot in AppointmentSlot.objects.filter(appointment_period=self).order_by('start'):
-            cache_key = '%s_%s_%s' % (CACHE_KEY, self.id, slot.date)
+            cache_key = '%s_%s_%s-%s' % (CACHE_KEY, self.id, slot.date, slot.mode)
             dayData = cache.get(cache_key)
+            # dayData = None
+            slot_key = str(slot.date) + "-" + slot.mode
             if not dayData:
                 slotData = {'instance':slot,
                             'slots':slot.slots,
+                            'mode': slot.mode,
                             'get_visible_jurys':slot.get_visible_jurys,
                             'get_nb_of_visible_jurys':slot.get_nb_of_visible_jurys,
                             'has_available_slot':slot.has_available_slot}
-                if slot.date not in days:
-                    days[slot.date] = {}
-                    days[slot.date]['date'] = slot.date
-                    days[slot.date]['slots'] = [slotData, ]
-                    days[slot.date]['available'] = False
+                if slot_key not in days:
+                    days[slot_key] = {}
+                    days[slot_key]['date'] = slot.date
+                    days[slot_key]['mode'] = slot.mode
+                    days[slot_key]['slots'] = [slotData, ]
+                    days[slot_key]['available'] = False
                 else:
-                    days[slot.date]['slots'].append(slotData)
+                    days[slot_key]['slots'].append(slotData)
 
                 # days are available if they are within the good period and if there are remaining slots
                 if slotData['has_available_slot'] and self.work_day_between(today, slot.date) >= delay:
-                    days[slot.date]['available'] = True
-                days[slot.date]['from_cache'] = False
+                    days[slot_key]['available'] = True
+                days[slot_key]['from_cache'] = False
             else:
-                days[slot.date] = dayData
-                days[slot.date]['from_cache'] = True
+                days[slot_key] = dayData
+                days[slot_key]['from_cache'] = True
 
         for day in days:
             if not days[day]['from_cache']:
                 cache_key = '%s_%s_%s' % (CACHE_KEY, self.id, day)
                 cache.set(cache_key, days[day], 1800)
 
-
         # print days
         return sorted(days.values(), key=lambda d:d['date'])
 
+    @cached_property
+    def modes(self):
+        modes = set()
+        for day in self.days:
+            if day['mode'] not in modes:
+                for MODE in APPOINTMENT_MODE:
+                    if MODE[0] == day['mode']:
+                        modes.add(MODE)
+                        break
+        return modes
 
     @staticmethod
     def work_day_between(start, end):
@@ -168,6 +189,8 @@ class AppointmentSlot(Model):
     appointment_period = models.ForeignKey(AppointmentPeriod,
                                            related_name="slots",
                                            verbose_name=u"Période de prise de rendez-vous", null=True, blank=False)
+    mode = models.CharField('Mode', choices=APPOINTMENT_MODE, default='presentiel', max_length=20)
+    
     date = models.DateField('date', null=True, blank=False)
 
     start = models.TimeField("heure du premier créneau (heure d'arrivée)")
@@ -269,6 +292,8 @@ class AppointmentJury(Model):
 
     name = models.CharField(_('name'), max_length=255)
     address = models.TextField("adresse")
+    # account = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.SET_NULL, blank=True, null=True)
+
 
     def __unicode__(self):
         return self.name
@@ -319,6 +344,9 @@ class Appointment(Model):
 
     @property
     def arrival(self):
+        """
+        arrival hour is only used for 'presentiel' mode
+        """
         start = self.slot.start
         delta = self.slot_nb * self.appointment_period.appointment_slot_size
         dt = datetime.datetime.combine(datetime.date.today(), start) + datetime.timedelta(minutes=delta)
@@ -326,7 +354,11 @@ class Appointment(Model):
 
     @property
     def real_date(self):
-        return datetime.datetime.combine(self.day, self.arrival)
+        if self.slot.mode == 'distance':
+            start = self.start
+        else:
+            start = self.arrival
+        return datetime.datetime.combine(self.day, start)
 
     @property
     def real_date_human(self):

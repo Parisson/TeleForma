@@ -344,12 +344,27 @@ class CourseListView(CourseAccessMixin, ListView):
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
         user = self.request.user
         is_student = user.student.all().count()
-        appointments = AppointmentPeriod.objects.filter(periods=context['period'])
-        appointments_open = False
-        for appointment in appointments:
-            if appointment.is_open:
-                appointments_open = True
-        context['hasAppointment'] = appointments_open and is_student
+        # appointments_open = False
+        appointments = []
+        if is_student:
+            available_courses = [course['course'] for course in context['all_courses']]
+            for appointment in  AppointmentPeriod.objects.filter(periods=context['period'], course__in=available_courses):
+                if appointment.is_open:
+                    found = False
+                    for existing in appointments:
+                        if existing.course == appointment.course:
+                            found = True
+                    if not found:
+                        appointments.append(appointment)
+        context['appointments'] = appointments
+        # check if user appointment is next
+        user_appointment = Appointment.objects.filter(student=user, slot__mode='distance', slot__appointment_period__periods=context['period'])
+        if user_appointment:
+            user_appointment = user_appointment[0]
+            now = datetime.datetime.now()
+            # now = datetime.datetime(2020, 10, 29, 9, 00)
+            if user_appointment.real_date - datetime.timedelta(hours=1) < now < user_appointment.real_date + datetime.timedelta(hours=1):
+                context['current_appointement'] = user_appointment
 
         homes = Home.objects.filter(enabled = True).order_by('-modified_at')
         for home in homes:

@@ -115,7 +115,7 @@ urlpatterns = patterns('',
         name="teleforma-conferences"),
 
     # APPOINTMENTS
-    url(r'^desk/periods/(?P<period_id>.*)/appointments/$', Appointments.as_view(),
+    url(r'^desk/periods/(?P<period_id>.*)/appointments/(?P<course_id>.*)/$', Appointments.as_view(),
        name="teleforma-appointments"),
     url(r'^desk/periods/appointments/cancel$', cancel_appointment,
        name="teleforma-appointment-cancel"),

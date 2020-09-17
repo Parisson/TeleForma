@@ -1,10 +1,13 @@
 Bonjour {{ student.first_name }},
 
-Nous vous confirmons votre rendez-vous à une simulation du grand-oral
+Nous vous confirmons votre rendez-vous pour "{{ title }}"
 le {{ date|date:"l d F Y à H:i" }}.
 
-Votre simulations se tiendra au
+{% if mode == 'presentiel' %}
+Votre simulation se tiendra au
 {{ jury_address }}
+{% elif mode == 'distance' %}
+Vous devrez vous connecter à cette adresse à l'heure indiquée : {{ bbb }}
+{% endif %}
 
-{{ main_text }}
-
+{{ main_text|safe }}
