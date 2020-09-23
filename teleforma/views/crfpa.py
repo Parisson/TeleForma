@@ -37,6 +37,7 @@ from teleforma.models.core import Period
 from teleforma.views.core import *
 from teleforma.forms import WriteForm
 from telemeta.views import ProfileView
+from teleforma.decorators import access_required
 from registration.views import *
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from postman.views import WriteView as PostmanWriteView
@@ -525,7 +526,7 @@ class AnnalsView(ListView):
         context['period'] = periods[0]
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(AnnalsView, self).dispatch(*args, **kwargs)
 

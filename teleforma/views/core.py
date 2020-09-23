@@ -64,7 +64,6 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -74,6 +73,7 @@ from teleforma.models import *
 from teleforma.forms import *
 from teleforma.models.appointment import AppointmentPeriod
 from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
+from teleforma.decorators import access_required
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
@@ -87,6 +87,7 @@ try:
     from telecaster.tools import *
 except:
     pass
+
 
 
 def render(request, template, data = None, mimetype = None):
@@ -389,6 +390,7 @@ class CourseListView(CourseAccessMixin, ListView):
                     to_subscribe.append(webclass)
             context['webclass_slots'] = slots
             context['webclass_to_subscribe'] = to_subscribe
+            context['restricted'] = student.restricted
         
         return context
 
@@ -471,7 +473,7 @@ class CourseView(CourseAccessMixin, DetailView):
             context['webclass_error'] = True
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
 
@@ -572,7 +574,7 @@ class MediaPendingView(ListView):
         return context
 
     @method_decorator(permission_required('is_superuser'))
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaPendingView, self).dispatch(*args, **kwargs)
 
@@ -600,7 +602,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         context['periods'] = get_periods(self.request.user)
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(DocumentView, self).dispatch(*args, **kwargs)
 
@@ -681,7 +683,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
             except:
                 pass
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
@@ -808,7 +810,7 @@ class ConferenceRecordView(FormView):
         command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
         os.system(command)
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 

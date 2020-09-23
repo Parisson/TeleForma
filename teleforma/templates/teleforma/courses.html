@@ -78,7 +78,7 @@
 
 <div class="desk_center home">
 
-  {% if appointments %}
+  {% if appointments and not restricted %}
   <div class="appointment">
     {% if current_appointement %}
       <p>
@@ -129,7 +129,7 @@
   </div>
   {% endif %}
 
-  {% if webclass_slots or webclass_to_subscribe %}
+  {% if webclass_slots or webclass_to_subscribe and not restricted %}
   <div class="course_title">
     Webclasse
   </div>
@@ -170,47 +170,48 @@
   </div>
   {% endif %}
 
+  {% if not restricted %}
+    {% for c in courses %}
+    {% with c.course as course %}
+    {% for type in c.types %}
+    <div class="course">
+      <div class="course_title">
+        <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} -
+          {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
+      </div>
 
-  {% for c in courses %}
-  {% with c.course as course %}
-  {% for type in c.types %}
-  <div class="course">
-    <div class="course_title">
-      <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} -
-        {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
+      {% if show_media %}
+
+      {% block conference %}
+      {% include "teleforma/inc/conference_list.html" %}
+      {% endblock %}
+
+      {% block media %}
+      {% with "Passed conferences" as title %}
+      {% include "teleforma/inc/media_list.html" with show_only=1 %}
+      {% endwith %}
+      {% endblock %}
+
+      {% comment %}
+      {% block webclass %}
+      {% with "Web class" as title %}
+      {% include "teleforma/inc/media_list.html" with show_only=1 %}
+      {% endwith %}
+      {% endblock %}
+      {% endcomment %}
+
+      {% endif %}
+
+      {% block document %}
+      {% with forloop.counter as type_counter %}
+      {% include "teleforma/inc/document_list.html" %}
+      {% endwith %}
+      {% endblock %}
     </div>
-
-    {% if show_media %}
-
-    {% block conference %}
-    {% include "teleforma/inc/conference_list.html" %}
-    {% endblock %}
-
-    {% block media %}
-    {% with "Passed conferences" as title %}
-    {% include "teleforma/inc/media_list.html" with show_only=1 %}
+    {% endfor %}
     {% endwith %}
-    {% endblock %}
-
-    {% comment %}
-    {% block webclass %}
-    {% with "Web class" as title %}
-    {% include "teleforma/inc/media_list.html" with show_only=1 %}
-    {% endwith %}
-    {% endblock %}
-    {% endcomment %}
-
-    {% endif %}
-
-    {% block document %}
-    {% with forloop.counter as type_counter %}
-    {% include "teleforma/inc/document_list.html" %}
-    {% endwith %}
-    {% endblock %}
-  </div>
-  {% endfor %}
-  {% endwith %}
-  {% endfor %}
+    {% endfor %}
+  {% endif %}
 </div>
 {% endblock course %}
 

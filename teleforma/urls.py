@@ -35,7 +35,7 @@
 import os.path
 from django.conf.urls import patterns, url, include
 from django.conf import settings
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.list import ListView
 from teleforma.models import *
 from teleforma.views import *
@@ -77,6 +77,9 @@ urlpatterns = patterns('',
 
     # Home
     url(r'^$', HomeRedirectView.as_view(), name="teleforma-home"),
+
+    # Unauthorized
+    url(r'^unauthorized/$', TemplateView.as_view(template_name="teleforma/unauthorized.html"), name="teleforma-unauthorized"),
 
     # Telemeta
     url(r'^', include('telemeta.urls')),

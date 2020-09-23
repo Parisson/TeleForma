@@ -5,6 +5,7 @@
 from teleforma.exam.models import *
 from teleforma.exam.forms import *
 from teleforma.views.core import *
+from teleforma.decorators import access_required
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -136,7 +137,7 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScriptView, self).dispatch(*args, **kwargs)
 
@@ -196,7 +197,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
             base_qs = base_qs.order_by('-date_submitted')
         return base_qs
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScriptsView, self).dispatch(*args, **kwargs)
 
@@ -271,7 +272,7 @@ class ScriptCreateView(ScriptMixinView, CreateView):
         context['form'].fields['course'].queryset = context['courses']
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         self.period = Period.objects.get(id=kwargs['period_id'])
         return super(ScriptCreateView, self).dispatch(*args, **kwargs)
@@ -294,7 +295,7 @@ class QuotasView(ListView):
     model = Quota
     template_name='exam/quotas.html'
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(QuotasView, self).dispatch(*args, **kwargs)
 
@@ -412,7 +413,7 @@ class ScoreCreateView(ScriptCreateView):
         context['create_fields'] = ['course', 'session', 'type', 'score' ]
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScoreCreateView, self).dispatch(*args, **kwargs)
 

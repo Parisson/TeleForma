@@ -16,6 +16,7 @@ from django.core.cache import cache
 
 from teleforma.webclass.models import Webclass, WebclassSlot
 from teleforma.webclass.forms import WebclassRecordsForm
+from teleforma.decorators import access_required
 
 from teleforma.views.core import get_periods, get_courses
 
@@ -159,12 +160,12 @@ class WebclassRecordsFormView(FormView):
         return super(WebclassRecordsFormView, self).form_valid(form)
         
     @method_decorator(permission_required('is_superuser'))
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(WebclassRecordsFormView, self).dispatch(*args, **kwargs)
 
 
-@login_required
+@access_required
 def join_webclass(request, pk):
     webclass_slot = WebclassSlot.published.get(pk=int(pk))
     # webclass = webclass_slot.webclass
