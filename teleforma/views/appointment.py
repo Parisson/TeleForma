@@ -131,7 +131,7 @@ class Appointments(View):
                  'date': ap.real_date,
                  'student': ap.student,
                  'mode': ap.slot.mode,
-                 'bbb': ap.appointment_period.bbb_room,
+                 'bbb': ap.jury.bbb_room,
                  'main_text': main_text }
         # DEBUG
         # data['mto'] = "yoanl@pilotsystems.net"

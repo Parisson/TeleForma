@@ -285,10 +285,10 @@
 
                                     {% for slot in groupslot.slots %}
                                         <tr>
-                                            <td class="arrival" {% if day.mode == 'distance'%}style="display:none"{% endif %}>
+                                            <td class="arrival">
                                                 {{ slot.arrival|date:'H:i' }}
                                             </td>
-                                            <td class="start" {% if day.mode == 'presentiel'%}style="display:none"{% endif %}>
+                                            <td class="start" style="display:none">
                                                 {{ slot.start|date:'H:i' }}
                                             </td>
                                             <td class="end" style="display:none">

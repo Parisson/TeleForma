@@ -8,16 +8,38 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Deleting field 'AppointmentPeriod.bbb_room'
+        db.delete_column('teleforma_appointment_period', 'bbb_room')
+
         # Adding field 'Student.restricted'
         db.add_column('teleforma_student', 'restricted',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
+        # Adding field 'AppointmentJury.bbb_room'
+        db.add_column('teleforma_appointment_jury', 'bbb_room',
+                      self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True),
+                      keep_default=False)
+
+
+        # Changing field 'AppointmentJury.address'
+        db.alter_column('teleforma_appointment_jury', 'address', self.gf('django.db.models.fields.TextField')(null=True))
 
     def backwards(self, orm):
+        # Adding field 'AppointmentPeriod.bbb_room'
+        db.add_column('teleforma_appointment_period', 'bbb_room',
+                      self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True),
+                      keep_default=False)
+
         # Deleting field 'Student.restricted'
         db.delete_column('teleforma_student', 'restricted')
 
+        # Deleting field 'AppointmentJury.bbb_room'
+        db.delete_column('teleforma_appointment_jury', 'bbb_room')
+
+
+        # Changing field 'AppointmentJury.address'
+        db.alter_column('teleforma_appointment_jury', 'address', self.gf('django.db.models.fields.TextField')(default=' '))
 
     models = {
         'auth.group': {
@@ -96,17 +118,20 @@ class Migration(SchemaMigration):
         },
         'teleforma.appointmentjury': {
             'Meta': {'ordering': "('id',)", 'object_name': 'AppointmentJury', 'db_table': "'teleforma_appointment_jury'"},
-            'address': ('django.db.models.fields.TextField', [], {}),
+            'address': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'bbb_room': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'slot': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'jurys'", 'null': 'True', 'to': "orm['teleforma.AppointmentSlot']"})
         },
         'teleforma.appointmentperiod': {
             'Meta': {'ordering': "('id',)", 'object_name': 'AppointmentPeriod', 'db_table': "'teleforma_appointment_period'"},
-            'appointment_mail_text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'appointment_mail_text': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'appointment_mail_text_distance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'appointment_slot_size': ('django.db.models.fields.IntegerField', [], {'default': '40'}),
             'book_delay': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
             'cancel_delay': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
+            'course': ('django.db.models.fields.related.ForeignKey', [], {'default': '19', 'to': "orm['teleforma.Course']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'enable_appointment': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'end': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -119,6 +144,7 @@ class Migration(SchemaMigration):
             'appointment_period': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'slots'", 'null': 'True', 'to': "orm['teleforma.AppointmentPeriod']"}),
             'date': ('django.db.models.fields.DateField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'mode': ('django.db.models.fields.CharField', [], {'default': "'presentiel'", 'max_length': '20'}),
             'nb': ('django.db.models.fields.IntegerField', [], {}),
             'start': ('django.db.models.fields.TimeField', [], {})
         },

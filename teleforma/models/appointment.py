@@ -47,7 +47,7 @@ class AppointmentPeriod(Model):
                                              blank=True, null=True)
     appointment_slot_size = models.IntegerField("écart entre les créneaux d'inscription (minutes)", default=40)
 
-    bbb_room = models.URLField("salon bbb", help_text='Lien vers le salon BBB pour les inscriptions à distance (ex: https://bbb.parisson.com/b/yoa-mtc-a2e). La salle doit avoir été au préalable créé par un membre du jury sur https://bbb.parisson.com.', null=True, blank=True, max_length=200)
+    # bbb_room = models.URLField("salon bbb", help_text='Lien vers le salon BBB pour les inscriptions à distance (ex: https://bbb.parisson.com/b/yoa-mtc-a2e). La salle doit avoir été au préalable créé par un membre du jury sur https://bbb.parisson.com.', null=True, blank=True, max_length=200)
 
     def __unicode__(self):
         return self.name
@@ -75,7 +75,7 @@ class AppointmentPeriod(Model):
         for slot in AppointmentSlot.objects.filter(appointment_period=self).order_by('start'):
             cache_key = '%s_%s_%s-%s' % (CACHE_KEY, self.id, slot.date, slot.mode)
             dayData = cache.get(cache_key)
-            # dayData = None
+            dayData = None
             slot_key = str(slot.date) + "-" + slot.mode
             if not dayData:
                 slotData = {'instance':slot,
@@ -248,9 +248,12 @@ class AppointmentSlot(Model):
 
         for i in range(self.nb):
             arrival = datetime.datetime.combine(self.date, self.start) + datetime.timedelta(minutes=i * size)
-            start = arrival + datetime.timedelta(minutes=60)
-            end = start + datetime.timedelta(minutes=size)
-
+            if self.mode == 'distance':
+                start = arrival
+                end = start + datetime.timedelta(minutes=size)
+            else:
+                start = arrival + datetime.timedelta(minutes=60)
+                end = start + datetime.timedelta(minutes=size)
             slot_info = {
                 'slot_nb': i,
                 'start': start,
@@ -291,7 +294,8 @@ class AppointmentJury(Model):
                              verbose_name='creneau', null=True, blank=False)
 
     name = models.CharField(_('name'), max_length=255)
-    address = models.TextField("adresse")
+    address = models.TextField("adresse", null=True, blank=True)
+    bbb_room = models.URLField("salon bbb", help_text='Lien vers le salon BBB pour les inscriptions à distance (ex: https://bbb.parisson.com/b/yoa-mtc-a2e). La salle doit avoir été au préalable créé par un membre du jury sur https://bbb.parisson.com.', null=True, blank=True, max_length=200)
     # account = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.SET_NULL, blank=True, null=True)
 
 
@@ -333,7 +337,9 @@ class Appointment(Model):
 
     @property
     def start(self):
-        dt = datetime.datetime.combine(datetime.date.today(), self.arrival) + datetime.timedelta(minutes=60)
+        base = dt = datetime.datetime.combine(datetime.date.today(), self.arrival)
+        if self.slot.mode != 'distance':
+            dt = base + datetime.timedelta(minutes=60)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property
@@ -345,7 +351,7 @@ class Appointment(Model):
     @property
     def arrival(self):
         """
-        arrival hour is only used for 'presentiel' mode
+        arrival hour
         """
         start = self.slot.start
         delta = self.slot_nb * self.appointment_period.appointment_slot_size
@@ -354,10 +360,7 @@ class Appointment(Model):
 
     @property
     def real_date(self):
-        if self.slot.mode == 'distance':
-            start = self.start
-        else:
-            start = self.arrival
+        start = self.arrival
         return datetime.datetime.combine(self.day, start)
 
     @property
