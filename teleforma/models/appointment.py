@@ -75,7 +75,7 @@ class AppointmentPeriod(Model):
         for slot in AppointmentSlot.objects.filter(appointment_period=self).order_by('start'):
             cache_key = '%s_%s_%s-%s' % (CACHE_KEY, self.id, slot.date, slot.mode)
             dayData = cache.get(cache_key)
-            dayData = None
+            # dayData = None
             slot_key = str(slot.date) + "-" + slot.mode
             if not dayData:
                 slotData = {'instance':slot,
@@ -248,12 +248,9 @@ class AppointmentSlot(Model):
 
         for i in range(self.nb):
             arrival = datetime.datetime.combine(self.date, self.start) + datetime.timedelta(minutes=i * size)
-            if self.mode == 'distance':
-                start = arrival
-                end = start + datetime.timedelta(minutes=size)
-            else:
-                start = arrival + datetime.timedelta(minutes=60)
-                end = start + datetime.timedelta(minutes=size)
+            start = arrival + datetime.timedelta(minutes=60)
+            end = start + datetime.timedelta(minutes=size)
+
             slot_info = {
                 'slot_nb': i,
                 'start': start,
@@ -337,9 +334,7 @@ class Appointment(Model):
 
     @property
     def start(self):
-        base = dt = datetime.datetime.combine(datetime.date.today(), self.arrival)
-        if self.slot.mode != 'distance':
-            dt = base + datetime.timedelta(minutes=60)
+        dt = datetime.datetime.combine(datetime.date.today(), self.arrival) + datetime.timedelta(minutes=60)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property

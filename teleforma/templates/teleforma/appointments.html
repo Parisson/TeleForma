@@ -206,10 +206,9 @@
                 <strong>{{ ap_period.appointment.jury.name }}</strong>
                 <br/>
                 {{ ap_period.appointment.jury.address|linebreaks }}
-                {% if ap_period.appointment.slot.mode == 'presentiel' %}
-                    Heure d'arrivé : <strong>{{ ap_period.appointment.arrival|date:'H:i' }}</strong>
-                    <br/>
-                {% endif %}
+                
+                Heure de préparation : <strong>{{ ap_period.appointment.arrival|date:'H:i' }}</strong>
+                <br/>
                 Heure de début : <strong>{{ ap_period.appointment.start|date:'H:i' }}</strong>
                 <br/>
                 Heure de fin : <strong>{{ ap_period.appointment.end|date:'H:i' }}</strong>
@@ -271,7 +270,7 @@
                                 {% for groupslot in day.slots %}
 
                                     <tr class="separator">
-                                        <th>Heure d'arrivé</th>
+                                        <th>Heure de préparation</th>
                                         {% for jury in groupslot.get_visible_jurys %}
                                         <th>
                                             Jury {{ forloop.counter }}

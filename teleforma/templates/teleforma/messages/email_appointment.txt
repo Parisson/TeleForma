@@ -1,13 +1,15 @@
 Bonjour {{ student.first_name }},
 
-Nous vous confirmons votre rendez-vous pour "{{ title }}"
-le {{ date|date:"l d F Y à H:i" }}.
+Nous vous confirmons votre rendez-vous pour "{{ title }}" le {{ arrival|date:"l d F Y" }}.
+Heure de préparation : {{ arrival|date:"H:i" }}
+Heure de début : {{ start|date:"H:i" }}
+Heure de fin :{{ end|date:"H:i" }}
 
 {% if mode == 'presentiel' %}
 Votre simulation se tiendra au
 {{ jury_address }}
 {% elif mode == 'distance' %}
-Vous devrez vous connecter à cette adresse à l'heure indiquée : {{ bbb }}
+Vous devrez vous connecter à cette adresse à l'heure de début : {{ bbb }}
 {% endif %}
 
 {{ main_text|safe }}
