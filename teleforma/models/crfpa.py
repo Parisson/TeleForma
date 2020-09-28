@@ -365,6 +365,7 @@ class Payment(models.Model):
                                       help_text=u"paiement en ligne uniquement",
                                       blank=True)
 
+    date_paid = models.DateField(u"date de paiement", blank=True, null=True)
     
     class Meta(MetaCore):
         db_table = app_label + '_' + 'payments'

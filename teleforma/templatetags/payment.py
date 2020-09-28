@@ -20,7 +20,7 @@ def payment_summary(context, payment, with_pending=True):
             elif obj.id == payment.id and with_pending:
                 status = 'en cours'
                 sclass = "pending"
-            elif obj.scheduled > today:
+            elif obj.scheduled and obj.scheduled > today:
                 status = 'à payer ultérieurement'
                 sclass = "topay_later"
             else:

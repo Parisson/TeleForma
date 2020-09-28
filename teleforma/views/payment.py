@@ -13,6 +13,8 @@ from django.contrib.sites.models import get_current_site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
+import pprint
+import datetime
 import commands
 
 import logging
@@ -71,6 +73,7 @@ def process_payment(request, payment):
                                                  kwargs = kwargs)
     params['automatic_response_url'] = root + reverse('teleforma-bank-auto',
                                                       kwargs = kwargs)
+    pprint.pprint(params)
     res = call_scherlocks('request', params, merchant_id = merchant_id)
     return res[0]
 
@@ -106,6 +109,20 @@ def bank_auto(request, merchant_id):
     payment = Payment.objects.get(pk = order_id)
     if check_payment_info(res) and payment.type == 'online' and not payment.online_paid:
         payment.online_paid = True
+        payment.date_paid = datetime.datetime.now()
+        if payment.student.restricted:
+            payment.student.restricted = False
+            # send mail
+            data = {
+                'mfrom': settings.DEFAULT_FROM_EMAIL,
+                'mto': payment.student.user.email,
+                'student': payment.student
+            }
+            message = render_to_string('teleforma/messages/email_account_activated.txt', data)
+            send_mail("Inscription à la formation Pré-Barreau", message, data['mfrom'], [ data['mto'] ],
+                  fail_silently=False)
+            payment.student.save()
+            
         payment.save()
         log.info('bank_auto validating order_id %s' % (order_id))
         tmpl_name = 'payment_ok'
