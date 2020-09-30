@@ -128,13 +128,13 @@
 
 
 <div id="date_start_d" class="date">
-  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'j' }}{% else %}{{ first_revision.date|date:'j' }}{% endif %}
+  {{ first_revision.date|date:'j' }}
 </div>
 <div id="date_start_m">
-  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'m' }}{% else %}{{ first_revision.date|date:'m' }}{% endif %}
+  {{ first_revision.date|date:'m' }}
 </div>
 <div id="date_start_y">
-  {% if first_revision.date_modified %}{{ first_revision.date_modified|date:'y' }}{% else %}{{ first_revision.date|date:'y' }}{% endif %}
+  {{ first_revision.date|date:'y' }}
 </div>
 
 <div id="date_end_d">

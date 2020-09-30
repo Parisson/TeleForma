@@ -6,7 +6,7 @@ This validation is a requisite to allow us to deliver you a testimonial for this
 
 http://{{ domain }}{{ path }}
 
-We remind you that you absolutely need to terminate your training before {{ date }}.
+We remind you that you absolutely need to terminate your training before the end of your subscription.
 
 The team of the {{ organization }} thank you for your confidence and we remain at your disposal for further information.
 {% endblocktrans %}{% endautoescape %}

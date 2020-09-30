@@ -162,6 +162,16 @@ class SeminarAdmin(admin.ModelAdmin):
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
     list_filter = ('period', 'publish_date', 'expiry_date')
+    actions = ['clone_seminars']
+
+    def clone_seminars(self, request, queryset):
+        log = ""
+        for seminar in queryset:
+            log += seminar.clone_to_next_year()
+            log += "\n"
+        return HttpResponse(log)
+            
+    clone_seminars.short_description = "Dupliquer les séminaires"
 
     class Media:
         css = { 'all': ('admin/extra.css',) }

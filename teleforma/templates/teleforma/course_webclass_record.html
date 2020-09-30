@@ -1,0 +1,42 @@
+{% extends "teleforma/base.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+
+{% block infra_javascript %}
+
+<style>
+iframe {
+    position: fixed;
+    background: #000;
+    border: none;
+    top: 40px; right: 0;
+    bottom: 100px; left: 0;
+    width: 100%;
+    height: 90%;
+}
+</style>
+
+<script type="text/javascript">
+{% if show_record %}
+$(document).ready(function(){
+    onLoadSeminar('{{seminar.id}}','{{user.username}}')
+});
+
+$(window).ready(function(){
+    $(window).bind('beforeunload', function(){
+        onUnloadSeminar('{{seminar.id}}','{{user.username}}')        
+    });
+});
+{% endif %}
+</script>
+
+{% endblock infra_javascript %}
+
+
+
+{% block content %}
+<iframe src="{{record.url}}" width="100%"></iframe>
+{% endblock content %}
+

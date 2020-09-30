@@ -43,6 +43,7 @@ import string
 import datetime
 import mimetypes
 import copy
+from unidecode import unidecode
 
 from django.conf import settings
 from django.db.models import *
@@ -53,6 +54,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
+from django.contrib.sites.models import Site
 from notes.models import Note
 import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
@@ -62,7 +64,12 @@ from mezzanine.core.models import Displayable
 from mezzanine.core.managers import DisplayableManager
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import date
+from bigbluebutton_api_python.exception import BBBException
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from jxmlease import XMLListNode, XMLDictNode
 
+from teleforma.bbb_utils import bbb, register_web_hook
 
 app_label = 'teleforma'
 
@@ -523,7 +530,153 @@ class Media(MediaBase):
         ordering = ['rank']
 
 
-class Conference(Displayable):
+class WebclassMixin(Model):
+    webclass                        = models.BooleanField(_('Web class'), default=False)
+    webclass_max_participants       = models.IntegerField(_('Web class : nombre maxium de participants'), blank=True, null=True)
+    webclass_hours_complementary    = DurationField('Web class : heures de validation des acquis')
+    webclass_id                     = models.CharField('Web class : id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255)
+    webclass_password               = models.CharField('Web class : password du modérateur (généré automatiquement)', blank=True, null=True, max_length=255)
+
+    class Meta(MetaCore):
+        abstract = True
+
+    @property
+    def weight(self):
+        return 50
+
+    def prepare_webclass(self):
+        """
+        generate room id and moderator password 
+        """
+        if not self.webclass_id and self.webclass:
+            # not sure why, but the slug contains accent
+            meeting_id = unidecode(self.slug) + "-" + str(self.period)
+            password = User.objects.make_random_password()
+            self.webclass_id = meeting_id
+            self.webclass_password = password
+
+
+    def create_webclass_room(self, request):
+        """ create a BBB room and generate meeting id and moderator password """
+        if self.webclass_id and self.webclass:
+            try:
+                # check if meeting already exists
+                self.get_webclass_info()
+            except BBBException:
+                year = datetime.datetime.now().year
+                # site_url = 'https://' + request.get_host()
+                params = {
+                    'moderatorPW':self.webclass_password,
+                    'attendeePW':'pwattendee',
+                    # 'maxParticipants':self.webclass_max_participants + 1,
+                    'welcome':"Pro-Barreau : Bienvenue sur la conférence \"%s\"." % (self.title.encode('utf-8'),),
+                    'record':True,
+                    # 'autoStartRecording':True,
+                    'muteOnStart':True,
+                    'allowModsToUnmuteUsers':True,
+                    'logo':'https://www.pro-barreau.com/static/img/logo_probarreau.png',
+                    'copyright': "© %d Pro-Barreau" % year,
+                    # 'guestPolicy':'ALWAYS_ACCEPT'
+                    'bannerText': "Pro-Barreau",
+                    'bannerColor': "#003768",
+                    # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
+                }
+                try:
+                    result = bbb.create_meeting(self.webclass_id, params=params)
+                    register_web_hook()
+                except BBBException as e:
+                    print(e)
+                    raise
+            
+    
+    def get_join_webclass_url(self, request, user, username=None):
+        """ 
+        Get url to BBB meeting.
+        If user are professor or staff, provide the url with the moderator password
+        """
+        self.create_webclass_room(request)
+        username = user.get_full_name()
+        is_professor = len(user.professor.all()) >= 1
+        is_staff = user.is_staff or user.is_superuser
+        password = 'pwattendee'
+        if is_professor or is_staff:
+            password = self.webclass_password
+        params = {'userID': user.username}
+        return bbb.get_join_meeting_url(username, self.webclass_id, password, params)
+
+    def get_fake_join_webclass_url(self, username):
+        """ 
+        Fake join url for testing purpose
+        Get url to BBB meeting.
+        If user are professor or staff, provide the url with the moderator password
+        """
+        self.create_webclass_room()
+        password = 'pwattendee'
+        params = {'userID': username}
+        return bbb.get_join_meeting_url(username, self.webclass_id, password, params)
+
+    def is_webclass_running(self):
+        """ Is webclass currently running ? """
+        # print(self.get_webclass_info())
+        return bbb.is_meeting_running(self.webclass_id).get_field('running').decode() == 'true' or False
+
+    def get_webclass_info(self):
+        """ """
+        return bbb.get_meeting_info(self.webclass_id)
+
+    def get_record(self):
+        """ get longest published record for the current conference """
+        all_records = []
+        recordings = []
+        recordings_xml = bbb.get_recordings(self.webclass_id).get_field('recordings')
+        if hasattr(recordings_xml, 'get'):
+            recordings = recordings_xml['recording']
+        if type(recordings) is XMLDictNode:
+            recordings = [recordings]
+        for recording in recordings:
+            url = recording.get('playback', {}).get('format', {}).get('url')
+            if url:
+                url = url.decode()
+            data = {
+                'start': int(recording['startTime'].decode()),
+                'end': int(recording['endTime'].decode()),
+                'url': url,
+                'state': recording['state'].decode(),
+            }
+            data['duration'] = data['end'] - data['start']
+            all_records.append(data)
+
+        if not all_records:
+            return None
+        all_records = sorted(all_records, key=lambda record:-record['duration'])
+
+        longest_record = all_records[0]
+        if not longest_record['url'] or longest_record['state'] != 'published':
+            return None
+        return longest_record
+
+    @property
+    def participant_slot_available(self):
+        """
+        is there any slot available for another participants
+        """
+        if self.webclass and self.webclass_max_participants:
+            auditors = self.auditor.count()
+            return auditors < self.webclass_max_participants
+        return True
+    
+    @property
+    def webclass_duration(self):
+        """ in seconds """
+        if self.webclass_hours_complementary:
+            return (self.duration.as_seconds() - self.webclass_hours_complementary.as_seconds())
+        return self.duration.as_seconds()
+
+    # def clean(self):
+    #     if self.start_date > self.end_date::
+    #         raise ValidationError("Dates are incorrect")
+
+class Conference(Displayable, WebclassMixin):
 
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     public_id       = models.CharField(_('public id'), max_length=255, blank=True)
@@ -538,6 +691,7 @@ class Conference(Displayable):
                                  blank=True, null=True, on_delete=models.SET_NULL)
     session         = models.CharField(_('session'), choices=session_choices,
                                       max_length=16, default="1")
+    
     concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
     level           = models.CharField(_('level'), max_length=255, blank=True)
     location        = WeakForeignKey(Location, related_name='location', verbose_name=_('location'))
@@ -659,13 +813,22 @@ class Conference(Displayable):
     def suggestions(self):
         return (list(self.suggested_seminars.all()) + list(self.suggested_conferences.all()))[:3]
 
+    def set_as_read(self, user):
+        """ set as read for user """
+        if user not in self.readers.all():
+            self.readers.add(user)
+            self.save()
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
         verbose_name = _('conference')
         ordering = ['-date_begin']
 
 
-
+@receiver(pre_save, sender=Conference)
+def create_webclass_room(sender, **kwargs):
+    instance = kwargs['instance']
+    instance.prepare_webclass()
 
 class NamePaginator(object):
     """Pagination for string-based objects"""
