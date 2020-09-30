@@ -51,7 +51,12 @@ class Command(BaseCommand):
                 if seminar.period == from_period and not seminar.code in self.less:
                     clone = seminar.clone()
                     clone.publish_date = seminar.publish_date.replace(year=to_year)
-                    clone.expiry_date = seminar.expiry_date.replace(year=to_year)
+                    print(seminar.expiry_date)
+                    if seminar.expiry_date.month == 2 and seminar.expiry_date.day == 29:
+                        clone.expiry_date = seminar.expiry_date.replace(day=28)
+                        clone.expiry_date = clone.expiry_date.replace(year=to_year)
+                    else:
+                        clone.expiry_date = seminar.expiry_date.replace(year=to_year)
                     clone.date_forced = datetime.datetime(to_year, 1, 1)
                     clone.period = to_period
                     clone.status = 1
