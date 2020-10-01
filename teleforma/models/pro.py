@@ -175,6 +175,55 @@ class Seminar(ClonableMixin, Displayable):
     def suggestions(self):
         return (list(self.suggested_seminars.all())+list(self.suggested_conferences.all()))[:3]
 
+    def clone_to_next_year(self):
+        """ copy the seminar for next year """
+        log = ""
+        clone = self.clone()
+        from_year = self.publish_date.year
+        to_year = from_year + 1
+        to_period, c = Period.objects.get_or_create(name=str(to_year))
+        from_period, c = Period.objects.get_or_create(name=str(from_year))
+        try:
+            clone.publish_date = self.publish_date.replace(year=to_year)
+        except ValueError:
+            # probably a 29th of february
+            clone.publish_date = self.publish_date.replace(day=28, year=to_year)
+        clone.expiry_date = self.expiry_date.replace(year=to_year)
+        clone.date_forced = datetime.datetime(to_year, 1, 1)
+        clone.period = to_period
+        clone.status = 1
+        clone.quiz = self.quiz
+        clone.save()
+        log += 'https://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': clone.id}) + '<br/>'
+
+        for field in self._meta.many_to_many:
+
+            if field.rel.to == Document:
+                source = getattr(self, field.attname)
+                destination = getattr(clone, field.attname)
+                for item in source.all():
+                    item.period = from_period
+                    item.save()
+                    item_clone = item.clone()
+                    item_clone.readers = []
+                    item_clone.period = to_period
+                    item_clone.save()
+                    destination.remove(item)
+                    destination.add(item_clone)
+                    # print ("media cloned and assigned:", item_clone)
+
+            elif field.rel.to == Media:
+                source = getattr(self, field.attname)
+                destination = getattr(clone, field.attname)
+                for item in source.all():
+                    destination.add(item)
+
+        for question in self.question.all():
+            question_clone = question.clone()
+            question_clone.seminar = clone
+            question_clone.save()
+        return log
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar'
         verbose_name = _('Seminar')
