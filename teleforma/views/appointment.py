@@ -103,7 +103,7 @@ class Appointments(View):
             ap.student = user
             try:
                 ap.save()
-                cache.delete('%s_%s_%s' % (CACHE_KEY, ap.slot.appointment_period.id, ap.slot.date))
+                cache.delete('%s_%s_%s-%s' % (CACHE_KEY, ap.slot.appointment_period.id, ap.slot.date, ap.slot.mode))
                 self.send_ap_mail(ap)
             except IntegrityError:
                 # Duplicate appointment caught by the db
@@ -163,7 +163,7 @@ def cancel_appointment(request):
         messages.add_message(request, messages.ERROR, 'Il est trop tard pour annuler ce rendez-vous.')
         return redirect('teleforma-appointments', period_id=period_id, course_id=course_id)
 
-    cache.delete('%s_%s_%s' % (CACHE_KEY, app.slot.appointment_period.id, app.slot.date))
+    cache.delete('%s_%s_%s-%s' % (CACHE_KEY, app.slot.appointment_period.id, app.slot.date, app.slot.mode))
     app.delete()
     messages.add_message(request, messages.INFO, 'Votre réservation a été annulé.')
     return redirect('teleforma-appointments', period_id=period_id, course_id=course_id)
