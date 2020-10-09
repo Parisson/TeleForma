@@ -318,6 +318,7 @@ class AppointmentJuryAdmin(admin.ModelAdmin):
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('real_date', 'student', 'jury')
     list_filter = ('slot__date', 'slot__appointment_period', 'slot__mode')
+    search_fields = ('student__username',)
     actions = ['export_csv']
 
     def export_csv(self, request, queryset):
