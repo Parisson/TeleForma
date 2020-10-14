@@ -133,6 +133,8 @@ class Seminar(ClonableMixin, Displayable):
 
     objects = DisplayableManager()
 
+    search_fields = {'description': 1, 'sub_title':2, 'index':1}
+
     def __unicode__(self):
         if self.publish_date:
             return ' - '.join([str(self.publish_date.year), self.course.title, str(self.rank), self.title])

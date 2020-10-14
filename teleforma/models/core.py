@@ -736,6 +736,7 @@ class Conference(Displayable, WebclassMixin):
                                      blank=True)
 
     objects = DisplayableManager()
+    search_fields = {'description': 1, 'sub_title': 2}
 
     @property
     def slug_streaming(self):
