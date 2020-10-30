@@ -676,6 +676,7 @@ class WebclassMixin(Model):
     #     if self.start_date > self.end_date::
     #         raise ValidationError("Dates are incorrect")
 
+
 class Conference(Displayable, WebclassMixin):
 
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
@@ -718,19 +719,24 @@ class Conference(Displayable, WebclassMixin):
     suggested_conferences = models.ManyToManyField('Conference', related_name="conference_suggested_conferences",
                                                    verbose_name=_('suggested conferences'),
                                                    blank=True, null=True)
-    additional_info = tinymce.models.HTMLField(_('additional info'),
-                                               null=True,
-                                               blank=True)
-    banner_image = models.ImageField(verbose_name=_("banner image"),
+    additional_info         = tinymce.models.HTMLField(
+                                    "Informations complémentaires", 
+                                    help_text="Affiché sur la page formation du shop",
+                                    null=True, 
+                                    blank=True) 
+    banner_image            = models.ImageField(verbose_name="Bannière",
+                                    help_text="Environ 1200x255 (l'important est de respecter le ratio)",
                                     upload_to="seminars",
                                     null=True,
                                     blank=True)
-    vignette_image = models.ImageField(verbose_name=_("vignette Image"),
+    vignette_image          = models.ImageField(verbose_name="Vignette",
+                                     help_text="Environ 270x170 (l'important est de respecter le ratio)",
                                      upload_to="seminars",
                                      null=True,
                                      blank=True)
 
     objects = DisplayableManager()
+    search_fields = {'description': 1, 'sub_title': 2}
 
     @property
     def slug_streaming(self):
