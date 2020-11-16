@@ -610,7 +610,7 @@ class WebclassMixin(Model):
         Get url to BBB meeting.
         If user are professor or staff, provide the url with the moderator password
         """
-        self.create_webclass_room()
+        self.create_webclass_room(request=None)
         password = 'pwattendee'
         params = {'userID': username}
         return bbb.get_join_meeting_url(username, self.webclass_id, password, params)
