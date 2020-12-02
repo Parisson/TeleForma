@@ -13,6 +13,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.admin.helpers import ActionForm
 from django import forms
+from django.conf import settings
 import csv
 
 class PeriodListFilter(SimpleListFilter):
@@ -105,60 +106,103 @@ class BalanceFilter(admin.SimpleListFilter):
         else:
             return queryset
 
+if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
+    class StudentAdmin(admin.ModelAdmin):
+        model = Student
+        exclude = ['options', 'training']
+        filter_horizontal = ['trainings', 'courses']
+        inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
+        search_fields = ['user__first_name', 'user__last_name', 'user__username']
+        list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
+                        'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
+                        'oral_1', 'oral_2', 'fascicule', BalanceFilter ]
+        list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
+                        'total_payments', 'total_fees', 'balance', 'balance_intermediary']
+        readonly_fields = [ 'balance', 'balance_intermediary' ]
+        actions = ['export_xls', 'write_message', 'add_to_group']
+        action_form = StudentGroupForm
 
-class AEStudentProfileInline(admin.StackedInline):
-    model = AEStudent
-    filter_horizontal = ['courses']
-    extra = 1
+        def get_trainings(self, instance):
+            return ' - '.join([unicode(training) for training in instance.trainings.all()])
 
-class StudentAdmin(admin.ModelAdmin):
-    model = Student
-    exclude = ['options', 'training']
-    filter_horizontal = ['trainings']
-    inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
-    search_fields = ['user__first_name', 'user__last_name', 'user__username']
-    list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
-                    'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
-                    'oral_1', 'oral_2', 'fascicule', BalanceFilter ]
-    list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
-                    'total_payments', 'total_fees', 'balance', 'balance_intermediary']
-    readonly_fields = [ 'balance', 'balance_intermediary' ]
-    actions = ['export_xls', 'write_message', 'add_to_group']
-    action_form = StudentGroupForm
+        def student_name(self, instance):
+            return instance.user.last_name + ' ' + instance.user.first_name
 
-    def get_trainings(self, instance):
-        return ' - '.join([unicode(training) for training in instance.trainings.all()])
+        # def queryset(self, request):
+        #     qs = super(StudentAdmin, self).queryset(request)
+        #     qs = qs.annotate(models.Count('warehouse__amount'))
+        #     return qs
 
-    def student_name(self, instance):
-        return instance.user.last_name + ' ' + instance.user.first_name
+        def export_json(self, request, queryset):
+            response = HttpResponse(content_type="application/json")
+            serializers.serialize("json", queryset, stream=response)
+            return response
 
-    # def queryset(self, request):
-    #     qs = super(StudentAdmin, self).queryset(request)
-    #     qs = qs.annotate(models.Count('warehouse__amount'))
-    #     return qs
+        def export_xls(self, request, queryset):
+            book = UserXLSBook(students = queryset)
+            book.write()
+            response = HttpResponse(mimetype="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'attachment; filename=users.xls'
+            book.book.save(response)
+            return response
 
-    def export_json(self, request, queryset):
-        response = HttpResponse(content_type="application/json")
-        serializers.serialize("json", queryset, stream=response)
-        return response
+        export_xls.short_description = "Export vers XLS"
 
-    def export_xls(self, request, queryset):
-        book = UserXLSBook(students = queryset)
-        book.write()
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
-        response['Content-Disposition'] = 'attachment; filename=users.xls'
-        book.book.save(response)
-        return response
+        def add_to_group(self, request, queryset):
+            group_name = request.POST['group_name']
+            group, c = StudentGroup.objects.get_or_create(name=group_name)
+            for student in queryset:
+                group.students.add(student)
+            # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
+        add_to_group.short_description = "Ajouter au groupe"
 
-    export_xls.short_description = "Export vers XLS"
+else:
+    class StudentAdmin(admin.ModelAdmin):
+        model = Student
+        filter_horizontal = ['courses']
+        inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
+        search_fields = ['user__first_name', 'user__last_name', 'user__username']
+        list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
+                        'fascicule', BalanceFilter ]
+        list_display = ['student_name', 'restricted', 'platform_only',
+                        'total_payments', 'total_fees', 'balance', 'balance_intermediary']
+        readonly_fields = [ 'balance', 'balance_intermediary' ]
+        actions = ['export_xls', 'write_message', 'add_to_group']
+        action_form = StudentGroupForm
 
-    def add_to_group(self, request, queryset):
-        group_name = request.POST['group_name']
-        group, c = StudentGroup.objects.get_or_create(name=group_name)
-        for student in queryset:
-            group.students.add(student)
-        # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
-    add_to_group.short_description = "Ajouter au groupe"
+        def get_trainings(self, instance):
+            return ' - '.join([unicode(training) for training in instance.trainings.all()])
+
+        def student_name(self, instance):
+            return instance.user.last_name + ' ' + instance.user.first_name
+
+        # def queryset(self, request):
+        #     qs = super(StudentAdmin, self).queryset(request)
+        #     qs = qs.annotate(models.Count('warehouse__amount'))
+        #     return qs
+
+        def export_json(self, request, queryset):
+            response = HttpResponse(content_type="application/json")
+            serializers.serialize("json", queryset, stream=response)
+            return response
+
+        def export_xls(self, request, queryset):
+            book = UserXLSBook(students = queryset)
+            book.write()
+            response = HttpResponse(mimetype="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'attachment; filename=users.xls'
+            book.book.save(response)
+            return response
+
+        export_xls.short_description = "Export vers XLS"
+
+        def add_to_group(self, request, queryset):
+            group_name = request.POST['group_name']
+            group, c = StudentGroup.objects.get_or_create(name=group_name)
+            for student in queryset:
+                group.students.add(student)
+            # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
+        add_to_group.short_description = "Ajouter au groupe"
 
 
 class CorrectorAdmin(admin.ModelAdmin):
@@ -194,7 +238,7 @@ class ProfileInline(admin.StackedInline):
 
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [AEStudentProfileInline, ProfileInline, StudentInline, ProfessorProfileInline]
+    inlines = [ProfileInline, StudentInline]
     search_fields = ['username', 'email']
 
 
@@ -376,10 +420,10 @@ admin.site.register(Training, TrainingAdmin)
 admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
-admin.site.register(Student, StudentAdmin)
-admin.site.register(Corrector, CorrectorAdmin)
-admin.site.register(Professor, ProfessorAdmin)
-admin.site.register(StudentGroup, StudentGroupAdmin)
+# admin.site.register(Student, StudentAdmin)
+# admin.site.register(Corrector, CorrectorAdmin)
+# admin.site.register(Professor, ProfessorAdmin)
+# admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(Parameters, ParametersAdmin)

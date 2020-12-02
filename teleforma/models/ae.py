@@ -41,24 +41,16 @@ from teleforma.models.core import *
 
 
 
-class AEStudent(Model):
+# class AEStudent(StudentMixin):
 
-    user            = ForeignKey(User, related_name='ae_student', verbose_name=_('user'), unique=True )
-    period          = ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
-                                  blank=True, null=True)
-    platform_only   = BooleanField(_('platform only'))
-    courses       	= ManyToManyField('Course', related_name="ae_student",
-                                        verbose_name=_('courses'),
-                                        blank=True, null=True)
-    
-    def __unicode__(self):
-        try:
-            return self.user.last_name + ' ' + self.user.first_name
-        except:
-            return ''
+#     period          = ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
+#                                   blank=True, null=True)
+#     courses       	= ManyToManyField('Course', related_name="ae_student",
+#                                         verbose_name=_('courses'),
+#                                         blank=True, null=True)
 
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'ae_student'
-        verbose_name = _('AE student')
-        verbose_name_plural = _('AE students')
-        ordering = ['user__last_name']
+#     class Meta(MetaCore):
+#         db_table = app_label + '_' + 'ae_student'
+#         verbose_name = _('AE student')
+#         verbose_name_plural = _('AE students')
+#         ordering = ['user__last_name']

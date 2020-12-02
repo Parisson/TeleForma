@@ -845,3 +845,111 @@ class NamePage(object):
             return self.start_letter
         else:
             return '%c-%c' % (self.start_letter, self.end_letter)
+
+class StudentMixin(Model):
+    user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
+    iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
+                                    blank=True, null=True, on_delete=models.SET_NULL)
+    restricted = models.BooleanField("Accès restreint", help_text="Cocher cette case lorsque vous voulez que l'étudiant puisse se connecter, mais ne pas avoir accès aux cours.", default=False)
+    portrait = models.ImageField(max_length=500, upload_to='portraits/', blank=True, null=True)
+    platform_only   = models.BooleanField(_('e-learning platform only'))
+    application_fees = models.BooleanField(_('application fees'), blank=True, default=True)
+    default_application_fees = 40
+    subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
+    promo_code = models.CharField(_('promo code'), blank=True, max_length=100)
+    date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
+    date_subscribed = models.DateTimeField(_('subscription date'), null=True, blank=True)
+    is_subscribed = models.BooleanField(_('subscribed'))
+    confirmation_sent = models.BooleanField(_('confirmation sent'))
+    level = models.CharField(_('studying level'), blank=True, max_length=100)
+
+    balance = models.FloatField(_('balance de paiement'), help_text='€', blank=True, null=True)
+    balance_intermediary = models.FloatField('balance de paiement intermédiaire', help_text='€', blank=True, null=True)
+
+    fascicule = models.BooleanField(_('envoi des fascicules'), blank=True,
+                                    default=False)
+
+    payment_type = models.CharField(_('type de paiement'), choices=payment_choices,
+                                    max_length=64, blank=True, null=True,
+                                    default='online')
+    payment_schedule = models.CharField(_(u'échéancier de paiement'),
+                                        choices=payment_schedule_choices,
+                                        max_length=64, blank=True, null=True,
+                                        default='split')
+    comment = models.TextField(_('commentaire'), blank=True, null=True)
+
+    receipt_id = models.IntegerField('numéro de facture', blank=True, null=True,
+                                     unique=True)
+    def __unicode__(self):
+        try:
+            return self.user.last_name + ' ' + self.user.first_name
+        except:
+            return ''
+
+    @property
+    def total_fees(self):
+        amount = 0
+        if self.subscription_fees:
+            amount += self.subscription_fees
+        if self.application_fees:
+            amount += self.default_application_fees
+        amount += self.total_optional_fees
+        amount += self.total_discount
+        return amount
+
+    @property
+    def total_optional_fees(self):
+        amount = 0
+        for optional_fee in self.optional_fees.values('value'):
+            amount += optional_fee['value']
+        return amount
+
+    @property
+    def total_payments(self):
+        amount = 0
+        for payment in self.payments.values('value', 'type', 'online_paid'):
+            if payment['type'] != 'online' or payment['online_paid']:
+                amount += payment['value']
+        return amount
+    
+    @property
+    def total_payments_all(self):
+        amount = 0
+        for payment in self.payments.values('value', 'type', 'online_paid'):
+            amount += payment['value']
+        return amount
+
+    @property
+    def total_discount(self):
+        amount = 0
+        for discount in self.discounts.values('value'):
+            amount -= discount['value']
+        return amount
+
+    @property
+    def total_paybacks(self):
+        amount = 0
+        for payback in self.paybacks.values('value'):
+            amount -= payback['value']
+        return amount
+
+    def update_balance(self):
+        old = self.balance
+        new = round(self.total_payments - self.total_fees + self.total_paybacks, 2)
+        save = False
+        if old != new:
+            self.balance = new
+            save = True
+        old_int = self.balance_intermediary
+        new_int = round(self.total_payments_all - self.total_fees + self.total_paybacks, 2)
+        if old_int != new_int:
+            self.balance_intermediary = new_int
+            save = True
+        if save:
+            self.save()
+
+    def get_absolute_url(self):
+        return reverse_lazy('teleforma-profile-detail', kwargs={'username':self.user.username})
+
+    class Meta:
+        abstract = True

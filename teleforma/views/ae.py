@@ -57,14 +57,14 @@ def get_ae_courses(user, date_order=False, num_order=False, period=None):
         return None
 
     professor = user.professor.all()
-    student = user.ae_student.all()
+    student = user.student.all()
 
     if professor:
         professor = user.professor.get()
         courses = format_ae_courses(courses, queryset=professor.courses.all())
 
     elif student:
-        student = user.ae_student.get()
+        student = user.student.get()
         s_courses = student.courses.all()
 
         for course in s_courses:

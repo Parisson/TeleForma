@@ -166,9 +166,9 @@ def get_host(request):
     return host
 
 def get_periods(user):
-    student = user.ae_student.all()
+    student = user.student.all()
     if student:
-        student = user.ae_student.get()
+        student = user.student.get()
         periods = student.period.all()
 
     if user.is_superuser or user.is_staff:
