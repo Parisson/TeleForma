@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+{% block head_title %}Gestion des enregistrements{% endblock %}
+
+{% block title %}Gestion des enregistrements{% endblock %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+
+    <p>Vous pouvez choisir un/plusieurs enregistrements qui seront ajoutés à la page de cours.</p>
+    {{ form.as_p }}
+    <input type="submit" value="Ajouter">
+</form>
+{% endblock %}

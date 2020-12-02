@@ -5,7 +5,7 @@
 
     {% block rss_title %}
       <a href="{% url telemeta-rss %}">
-      <img src="{{ STATIC_URL }}telemeta/images/rss.png" alt="rss" style="vertical-align:middle" />
+      <img src="/static/telemeta/images/rss.png" alt="rss" style="vertical-align:middle" />
       <h3>{% trans title %}</h3></a>
       <a href="{% url telemeta-rss %}" style="float:right" class="icon_rss">&nbsp;&nbsp;</a>
     {% endblock rss_title %}

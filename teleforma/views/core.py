@@ -44,7 +44,7 @@ from jsonrpc import jsonrpc_method
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
-from django.template import RequestContext, loader
+from django.template import RequestContext, loader, Context
 from django import template
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
@@ -63,7 +63,6 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -71,9 +70,16 @@ from jsonrpc.proxy import ServiceProxy
 
 from teleforma.models import *
 from teleforma.forms import *
+from teleforma.models.appointment import AppointmentPeriod
+from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
+from teleforma.decorators import access_required
 from telemeta.views import *
 import jqchat.models
 from xlwt import Workbook
+
+from cgi import escape
+from cStringIO import StringIO
+from xhtml2pdf import pisa
 
 try:
     from telecaster.models import *
@@ -81,6 +87,11 @@ try:
 except:
     pass
 
+
+
+def render(request, template, data = None, mimetype = None):
+    return render_to_response(template, data, context_instance=RequestContext(request),
+                              mimetype=mimetype)
 
 def format_courses(courses, course=None, queryset=None, types=None):
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
@@ -118,7 +129,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
         name = 'site'
 
     if settings.TELEFORMA_PERIOD_TWEETER and period:
-        name = name + '-' + period 
+        name = name + '-' + period
 
     if settings.TELEFORMA_GLOBAL_TWEETER:
         rooms = jqchat.models.Room.objects.filter(name=name[:20])
@@ -133,6 +144,7 @@ def get_room(content_type=None, id=None, name=None, period=None):
     else:
         room = rooms[0]
     return room
+
 
 def get_access(obj, courses):
     access = False
@@ -160,14 +172,97 @@ def get_periods(user):
         periods = student.period.all()
 
     if user.is_superuser or user.is_staff:
-        periods = Period.objects.all()
+        periods = Period.objects.filter(is_open=True)
 
     professor = user.professor.all()
     if professor:
-        professor = user.professor.get()
-        periods = Period.objects.all()
+        periods = Period.objects.filter(is_open=True)
+
+    quotas = user.quotas.all()
+    if quotas and not (user.is_superuser or user.is_staff) and not professor:
+        periods = []
+        for quota in quotas:
+            if not quota.period in periods:
+                periods.append(quota.period)
 
     return periods
+
+def get_default_period(periods):
+    if not periods:
+        return None
+    elif len(periods) == 1:
+        return periods[0]
+    else:
+        return Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
+
+
+def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
+    """
+    Write into *dest* file object the given html *content*.
+    Return True if the operation completed successfully.
+    """
+    from xhtml2pdf import pisa
+    src = StringIO(content.encode(encoding))
+    pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
+    return not pdf.err
+
+def content_to_response(content, filename=None):
+    """
+    Return a pdf response using given *content*.
+    """
+    response = HttpResponse(content, mimetype='application/pdf')
+    if filename is not None:
+        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    return response
+
+def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
+    **kwargs):
+    """
+    Render a pdf response using given *request*, *template* and *context*.
+    """
+    if not isinstance(context, Context):
+        context = RequestContext(request, context)
+
+    content = loader.render_to_string(template, context)
+    buffer = StringIO()
+
+    succeed = content_to_pdf(content, buffer, encoding, **kwargs)
+    if succeed:
+        return content_to_response(buffer.getvalue(), filename)
+    return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
+
+
+def serve_media(media_path, content_type="", buffering=True, streaming=False):
+    if not content_type:
+        content_type = mimetypes.guess_type(media_path)[0]
+
+    if not settings.DEBUG:
+        return nginx_media_accel(media_path, content_type=content_type,
+                                 buffering=buffering, streaming=streaming)
+    else:
+        response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
+        filename = os.path.basename(media_path)
+        if not streaming:
+            response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
+        return response
+
+
+def nginx_media_accel(media_path, content_type="", buffering=True, streaming=False):
+    """Send a protected media file through nginx with X-Accel-Redirect"""
+
+    response = HttpResponse()
+    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
+    filename = os.path.basename(media_path)
+    if not streaming:
+        response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+    response['Content-Type'] = content_type
+    response['X-Accel-Redirect'] = url
+
+    if not buffering:
+        response['X-Accel-Buffering'] = 'no'
+        #response['X-Accel-Limit-Rate'] = 524288
+
+    return response
 
 
 def serve_media(media_path, content_type="", buffering=True, streaming=False):
@@ -209,14 +304,19 @@ class HomeRedirectView(View):
     def get(self, request):
         if request.user.is_authenticated():
             periods = get_periods(request.user)
-            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
+            if periods:
+                period = get_default_period(periods)
+                if period in periods:
+                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
+                else:
+                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
+            else:
+                return HttpResponseRedirect(reverse('telemeta-admin'))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 
 
 class PeriodAccessMixin(View):
-
-    period = None
 
     def get_context_data(self, **kwargs):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
@@ -224,6 +324,9 @@ class PeriodAccessMixin(View):
             period = Period.objects.filter(id=int(self.kwargs['period_id']))
             if period:
                 self.period = period[0]
+            else:
+                periods = get_periods(self.request.user)
+                self.period = get_default_period(periods)
         context['period'] = self.period
         return context
 
@@ -245,6 +348,14 @@ class CourseAccessMixin(PeriodAccessMixin):
     def get_context_data(self, **kwargs):
         context = super(CourseAccessMixin, self).get_context_data(**kwargs)
         context['all_courses'] = get_courses(self.request.user, num_order=True, period=self.period)
+        # If we are a corrector but not a professor, limit object types
+        role = get_user_role(self.request.user)
+        if role == "corrector":
+            context['doc_types'] = DocumentType.objects.filter(for_corrector = True)
+            context['show_media'] = False
+        else:
+            context['doc_types'] = DocumentType.objects.all()
+            context['show_media'] = True
         return context
 
 
@@ -255,11 +366,58 @@ class CourseListView(CourseAccessMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
-        context['notes'] = Note.objects.filter(author=self.request.user)
         context['room'] = get_room(name='site', period=context['period'].name)
-        context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
-        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
+        user = self.request.user
+        is_student = user.student.all().count()
+        # appointments_open = False
+        appointments = []
+        if is_student:
+            available_courses = [course['course'] for course in context['all_courses']]
+            for appointment in  AppointmentPeriod.objects.filter(periods=context['period'], course__in=available_courses):
+                if appointment.is_open:
+                    found = False
+                    for existing in appointments:
+                        if existing.course == appointment.course:
+                            found = True
+                    if not found:
+                        appointments.append(appointment)
+        context['appointments'] = appointments
+        # check if user appointment is next
+        user_appointment = Appointment.objects.filter(student=user, slot__mode='distance', slot__appointment_period__periods=context['period'])
+        if user_appointment:
+            user_appointment = user_appointment[0]
+            now = datetime.datetime.now()
+            # now = datetime.datetime(2020, 10, 29, 9, 00)
+            if user_appointment.real_date - datetime.timedelta(hours=1) < now < user_appointment.real_date + datetime.timedelta(hours=1):
+                context['current_appointement'] = user_appointment
+
+        homes = Home.objects.filter(enabled = True).order_by('-modified_at')
+        for home in homes:
+            if home.is_for_period(context['period']):
+                context['home_title'] = home.visible_title
+                context['home_text'] = home.text
+                context['home_video'] = home.video
+                break
+               
+        if is_student:
+            student = user.student.all()[0]
+            slots = []
+            to_subscribe = []
+            student_courses = [course['course'] for course in get_courses(user)]
+            for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
+                # if webclass.course not in student_courses:
+                #     continue
+                slot = webclass.get_slot(user)
+                if slot and slot.status in ('almost', 'ingoing'):
+                    slots.append(slot)
+                if not slot:
+                    to_subscribe.append(webclass)
+            context['webclass_slots'] = slots
+            context['webclass_to_subscribe'] = to_subscribe
+            context['restricted'] = student.restricted
+        
         return context
 
     @method_decorator(login_required)
@@ -274,12 +432,12 @@ class CourseListView(CourseAccessMixin, ListView):
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
     def pull(request, organization_name, department_name):
-        organization = organization.objects.get(name=organization_name)
+        organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name, organization=organization)
         url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
 
-        remote_list = s.teleforma.get_course_list(organization.name, department.name)
+        remote_list = s.teleforma.get_course_list(organization_name, department.name)
         for course_dict in remote_list['result']:
             course = Course.objects.filter(code=course_dict['code'])
             if not course:
@@ -287,7 +445,7 @@ class CourseListView(CourseAccessMixin, ListView):
             else:
                 course = course[0]
             course.from_dict(course_dict)
-            
+
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)
@@ -303,7 +461,7 @@ class CourseView(CourseAccessMixin, DetailView):
 
     model = Course
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super(CourseView, self).get_context_data(**kwargs)
         course = self.get_object()
         courses = []
@@ -316,12 +474,56 @@ class CourseView(CourseAccessMixin, DetailView):
         context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
-        context['doc_types'] = DocumentType.objects.all()
+        
+        # webclass
+        webclass = None
+        webclass_slot = None
+        student = self.request.user.student.all()
+        if student:
+            student = student[0]
+        
+        if student:
+            try:
+                webclass = Webclass.published.filter(period=self.period, course=course, iej=student.iej)[0]
+            except IndexError:
+                pass
+            if webclass:
+                webclass_slot = webclass.get_slot(self.request.user)
+        context['webclass'] = webclass
+        context['webclass_slot'] = webclass_slot
+
+        try:
+            context['webclass_records'] = WebclassRecord.get_records(context['period'], course)
+        except Exception, e:
+            print(e)
+            context['webclass_error'] = True
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
+
+    @jsonrpc_method('teleforma.get_course_media_urls')
+    def get_course_media_urls(request, id):
+        course = Course.objects.get(code=id)
+        media_list = []
+        for media in course.media.all():
+            if media.is_published and media.item.file and media.conference and 'video' in media.mime_type:
+                urls = [ {'url': settings.MEDIA_URL + unicode(media.item.file), 'mime_type': media.mime_type} ]
+                for transcoded in media.item.transcoded.all():
+                    urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': media.mime_type})
+                media_list.append({'session': media.conference.session, 'urls': urls, 'poster': media.poster_url()})
+        return media_list
+
+
+class CoursePendingListView(CourseListView):
+
+    template_name='teleforma/courses_pending.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CoursePendingListView, self).get_context_data(**kwargs)
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)
+        return context
 
 
 class MediaView(CourseAccessMixin, DetailView):
@@ -340,7 +542,12 @@ class MediaView(CourseAccessMixin, DetailView):
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=media.course.code,period=context['period'].name,
+
+        room_name = media.course.code
+        if media.conference.web_class_group:
+            room_name += '_' + media.conference.public_id
+
+        context['room'] = get_room(name=room_name,period=context['period'].name,
                                    content_type=content_type,
                                    id=media.course.id)
 
@@ -348,33 +555,12 @@ class MediaView(CourseAccessMixin, DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
+
         return context
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaView, self).dispatch(*args, **kwargs)
-
-    def download(self, request, pk):
-        courses = get_courses(request.user)
-        media = Media.objects.get(id=pk)
-        if get_access(media, courses):
-            path = media.item.file.path
-            filename, ext = os.path.splitext(path)
-            filename = filename.split(os.sep)[-1]
-            fsock = open(media.item.file.path, 'r')
-            view = ItemView()
-            mimetype = view.item_analyze(media.item)
-            extension = mimetypes.guess_extension(mimetype)
-            if not extension:
-                extension = ext
-            response = HttpResponse(fsock, mimetype=mimetype)
-
-            response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                             (filename.encode('utf8'), extension)
-            return response
-        else:
-            return redirect('teleforma-media-detail', self.context['period'].id, media.id)
-
 
     @jsonrpc_method('teleforma.publish_media')
     def publish(request, id):
@@ -387,6 +573,18 @@ class MediaView(CourseAccessMixin, DetailView):
         media = Media.objects.get(id=id)
         media.is_published = False
         media.save()
+
+    def stream(self, request, period_id, pk, streaming=True):
+        courses = get_courses(request.user)
+        media = Media.objects.get(id=pk)
+        if get_access(media, courses):
+            media_path = media.item.file.path
+            return serve_media(media_path, content_type=media.mime_type, streaming=streaming)
+        else:
+            raise Http404("You don't have access to this media.")
+
+    def download(self, request, period_id, pk):
+        return self.stream(request, period_id, pk, streaming=False)
 
 
 class MediaPendingView(ListView):
@@ -402,9 +600,15 @@ class MediaPendingView(ListView):
         return context
 
     @method_decorator(permission_required('is_superuser'))
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaPendingView, self).dispatch(*args, **kwargs)
+
+
+class MediaViewEmbed(DetailView):
+
+    model = Media
+    template_name='teleforma/course_media_video_embed.html'
 
 
 class DocumentView(CourseAccessMixin, DetailView):
@@ -424,13 +628,13 @@ class DocumentView(CourseAccessMixin, DetailView):
         context['periods'] = get_periods(self.request.user)
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(DocumentView, self).dispatch(*args, **kwargs)
 
     def download(self, request, pk):
         courses = get_courses(request.user)
-        document = Document.objects.get(id=pk)
+        document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             return serve_media(document.file.path.encode('utf8'), streaming=False) 
             #fsock = open(document.file.path.encode('utf8'), 'r')
@@ -445,7 +649,7 @@ class DocumentView(CourseAccessMixin, DetailView):
 
     def view(self, request, pk):
         courses = get_courses(request.user)
-        document = Document.objects.get(id=pk)
+        document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             return serve_media(document.file.path.encode('utf8'), streaming=True) 
             #fsock = open(document.file.path.encode('utf8'), 'r')
@@ -469,9 +673,15 @@ class ConferenceView(CourseAccessMixin, DetailView):
         context['type'] = conference.course_type
         # context['notes'] = conference.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        context['room'] = get_room(name=conference.course.code, period=context['period'].name,
+
+        room_name = conference.course.code
+        if conference.web_class_group:
+            room_name += '_' + conference.public_id
+
+        context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
                                    id=conference.course.id)
+
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
         access = get_access(conference, context['all_courses'])
@@ -499,7 +709,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
             except:
                 pass
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
@@ -626,7 +836,7 @@ class ConferenceRecordView(FormView):
         command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
         os.system(command)
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 
@@ -672,7 +882,6 @@ class ProfessorListView(View):
         return [p.to_json_dict() for p in professors]
 
     def pull(request, host=None):
-        
         if host:
             url = 'http://' + host + '/json/'
         else:
@@ -696,6 +905,25 @@ class ProfessorListView(View):
             professor.save()
 
 
+class WebClassGroupView(View):
+
+    @jsonrpc_method('teleforma.get_class_group_list')
+    def get_class_group_list(request):
+        class_groups = WebClassGroup.objects.all()
+        return [w.to_json_dict() for w in class_groups]
+
+    def pull(request, host=None):
+        if host:
+            url = 'http://' + host + '/json/'
+        else:
+            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+        s = ServiceProxy(url)
+
+        remote_list = s.teleforma.get_class_group_list()
+        for class_group_dict in remote_list['result']:
+            class_group, c = WebClassGroup.objects.get_or_create(name=class_group_dict['name'])
+
+
 class HelpView(TemplateView):
 
     template_name='teleforma/help.html'
@@ -709,3 +937,92 @@ class HelpView(TemplateView):
     def dispatch(self, *args, **kwargs):
         return super(HelpView, self).dispatch(*args, **kwargs)
 
+
+class PDFTemplateResponseMixin(TemplateResponseMixin):
+    """
+    Mixin for Django class based views.
+    Switch normal and pdf template based on request.
+
+    The switch is made when the request has a particular querydict, e.g.::
+
+        http://www.example.com?format=pdf
+
+    The key and value of the querydict can be overridable using *as_view()*.
+    That pdf url will be present in the context as *pdf_url*.
+
+    For example it is possible to define a view like this::
+
+        from django.views.generic import View
+
+        class MyView(PDFTemplateResponseMixin, View):
+            template_name = 'myapp/myview.html'
+            pdf_filename = 'report.pdf'
+
+    The pdf generation is automatically done by *xhtml2pdf* using
+    the *myapp/myview_pdf.html* template.
+
+    Note that the pdf template takes the same context as the normal template.
+    """
+    pdf_template_name = None
+    pdf_template_name_suffix = '_pdf'
+    pdf_querydict_key = 'format'
+    pdf_querydict_value = 'pdf'
+    pdf_encoding = 'utf-8'
+    pdf_filename = None
+    pdf_url_varname = 'pdf_url'
+    pdf_kwargs = {}
+
+    def is_pdf(self):
+        value = self.request.REQUEST.get(self.pdf_querydict_key, '')
+        return value.lower() == self.pdf_querydict_value.lower()
+
+    def _get_pdf_template_name(self, name):
+        base, ext = os.path.splitext(name)
+        return '%s%s%s' % (base, self.pdf_template_name_suffix, ext)
+
+    def get_pdf_template_names(self):
+        """
+        If the template name is not given using the class attribute
+        *pdf_template_name*, then it is obtained using normal template
+        names, appending *pdf_template_name_suffix*, e.g.::
+
+            path/to/detail.html -> path/to/detail_pdf.html
+        """
+        if self.pdf_template_name is None:
+            names = super(PDFTemplateResponseMixin, self).get_template_names()
+            return map(self._get_pdf_template_name, names)
+        return [self.pdf_template_name]
+
+    def get_pdf_filename(self):
+        """
+        Return the pdf attachment filename.
+        If the filename is None, the pdf will not be an attachment.
+        """
+        return self.pdf_filename
+
+    def get_pdf_url(self):
+        """
+        This method is used to put the pdf url in the context.
+        """
+        querydict = self.request.GET.copy()
+        querydict[self.pdf_querydict_key] = self.pdf_querydict_value
+        return '%s?%s' % (self.request.path, querydict.urlencode())
+
+    def get_pdf_response(self, context, **response_kwargs):
+        return render_to_pdf(
+            request=self.request,
+            template=self.get_pdf_template_names(),
+            context=context,
+            encoding=self.pdf_encoding,
+            filename=self.get_pdf_filename(),
+            **self.pdf_kwargs
+        )
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.is_pdf():
+            from django.conf import settings
+            context['STATIC_ROOT'] = settings.STATIC_ROOT
+            return self.get_pdf_response(context, **response_kwargs)
+        context[self.pdf_url_varname] = self.get_pdf_url()
+        return super(PDFTemplateResponseMixin, self).render_to_response(
+            context, **response_kwargs)

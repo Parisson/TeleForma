@@ -33,25 +33,44 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import os.path
-from django.conf.urls.defaults import *
-from django.views.generic import *
-from django.views.generic.base import *
+from django.conf.urls import patterns, url, include
+from django.conf import settings
+from django.views.generic.base import RedirectView, TemplateView
+from django.views.generic.list import ListView
 from teleforma.models import *
 from teleforma.views import *
 from telemeta.views import *
+from teleforma.forms import *
+from registration.views import *
 from jsonrpc import jsonrpc_site
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
-profile_view = ProfileView()
+profile_view = CRFPAProfileView()
 document = DocumentView()
 media = MediaView()
 
 urlpatterns = patterns('',
 
-
     # login
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html'},
         name="teleforma-login"),
+    # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
+    url(r'^accounts/register/$', UserAddView.as_view(), name="teleforma-register"),
+    url(r'^accounts/register/(?P<username>.*)/complete/$', UserCompleteView.as_view(), name="teleforma-register-complete"),
+    url(r'^accounts/register/(?P<username>.*)/download/$', RegistrationPDFViewDownload.as_view(), name="teleforma-registration-download"),
+    url(r'^accounts/register/(?P<username>.*)/view/$', RegistrationPDFView.as_view(), name="teleforma-registration-view"),
+                       
+    url(r'^correctors/register/$', CorrectorAddView.as_view(), name="teleforma-corrector-register"),
+    url(r'^correctors/register/(?P<username>.*)/complete/$', CorrectorCompleteView.as_view(), name="teleforma-corrector-register-complete"),
+    url(r'^correctors/register/(?P<username>.*)/download/$', CorrectorRegistrationPDFViewDownload.as_view(), name="teleforma-corrector-registration-download"),
+    url(r'^correctors/register/(?P<username>.*)/view/$', CorrectorRegistrationPDFView.as_view(), name="teleforma-corrector-registration-view"),
+
+    url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
+                               name="teleforma-profile-detail"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail, name="telemeta-profile-detail"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9._-]+)/profile/edit/$', profile_view.profile_edit, name="telemeta-profile-edit"),
+    
+    url(r'^captcha/', include('captcha.urls')),
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
@@ -59,17 +78,23 @@ urlpatterns = patterns('',
     # Home
     url(r'^$', HomeRedirectView.as_view(), name="teleforma-home"),
 
+    # Unauthorized
+    url(r'^unauthorized/$', TemplateView.as_view(template_name="teleforma/unauthorized.html"), name="teleforma-unauthorized"),
+
     # Telemeta
     url(r'^', include('telemeta.urls')),
 
     # Desk
     url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/$', CourseListView.as_view(), name="teleforma-desk-period-list"),
+    url(r'^desk/periods/(?P<period_id>.*)/courses_pending/$', CoursePendingListView.as_view(), name="teleforma-desk-period-pending"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
         name="teleforma-desk-period-course"),
 
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/embed/$', MediaViewEmbed.as_view(), name="teleforma-media-embed"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$', media.download, name="teleforma-media-download"),
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/stream/$', media.stream, name="teleforma-media-stream"),
 
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),
@@ -92,8 +117,16 @@ urlpatterns = patterns('',
     url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
 
+    # APPOINTMENTS
+    url(r'^desk/periods/(?P<period_id>.*)/appointments/(?P<course_id>.*)/$', Appointments.as_view(),
+       name="teleforma-appointments"),
+    url(r'^desk/periods/appointments/cancel$', cancel_appointment,
+       name="teleforma-appointment-cancel"),
+
     # Postman
+    url(r'^messages/write/(?:(?P<recipients>[^/#]+)/)?$', WriteView.as_view(), name='postman_write'),
     url(r'^messages/', include('postman.urls')),
+
 
     # Users
     url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/list/$',
@@ -102,17 +135,48 @@ urlpatterns = patterns('',
     url(r'^users/training/(?P<training_id>.*)/iej/(?P<iej_id>.*)/course/(?P<course_id>.*)/export/$',
         UsersExportView.as_view(), name="teleforma-users-export"),
 
-    url(r'^users/(?P<username>[A-Za-z0-9._-]+)/profile/$', profile_view.profile_detail,
-                               name="teleforma-profile-detail"),
-
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
+
+    # Ajax update training
+    url(r'^update-training/(?P<id>.*)/$', update_training, name="update-training"),
+
+    # News Item
+    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
+    url(r'^newsitems/create', NewsItemCreate.as_view(), name='newsitem-create'),
+    url(r'^newsitems/update/(?P<pk>.*)', NewsItemUpdate.as_view(), name='newsitem-update'),
+    url(r'^newsitems/delete/(?P<pk>.*)', NewsItemDelete.as_view(), name='newsitem-delete'),
+    url(r'^newsitems/(?P<period_id>.*)/list', NewsItemList.as_view(), name='newsitem-list'),
 
     # JSON RPC
     url(r'json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
+    url(r'jsonrpc/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
 
 #    url(r'^private_files/', include('private_files.urls')),
 
     # JQCHAT
     url(r'^', include('jqchat.urls')),
 
+    # EXAM
+    url(r'^', include('teleforma.exam.urls')),
+                       
+    # WEBCLASS
+    url(r'^', include('teleforma.webclass.urls')),
+
+    # Payment
+    url(r'^payment/(?P<pk>.*)/start/$', PaymentStartView.as_view(),
+        name="teleforma-payment-start"),
+
+    url(r'^payment/bank_auto/(?P<merchant_id>.*)',
+        bank_auto, name='teleforma-bank-auto'),
+    url(r'^payment/bank_success/(?P<merchant_id>.*)',
+        bank_success, name='teleforma-bank-success'),
+    url(r'^payment/bank_cancel/(?P<merchant_id>.*)',
+        bank_cancel, name='teleforma-bank-cancel'),
+
+    url(r'^echec-de-paiement',
+        bank_fail, name='teleforma-bank-fail'),
+
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/receipt/download/$', ReceiptPDFViewDownload.as_view(), name="teleforma-receipt-download"),
+    url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/receipt/view/$', ReceiptPDFView.as_view(), name="teleforma-receipt-view"),
+                       
 )

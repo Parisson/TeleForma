@@ -1,0 +1,29 @@
+{% extends "teleforma/courses.html" %}
+{% load teleforma_tags %}
+{% load telemeta_utils %}
+{% load i18n %}
+
+{% block module-action %}
+{% endblock module-action %}
+
+{% block course %}
+<div class="desk_center">
+
+    {% for c in courses %}
+     {% with c.course as course %}
+      {% for type in c.types %}
+      <div class="course">
+        <div class="course_title">
+         <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
+        </div>
+
+        {% block media %}
+         {% include "teleforma/inc/media_list_pending.html" %}
+        {% endblock %}
+
+      </div>
+     {% endfor %}
+    {% endwith %}
+   {% endfor %}
+</div>
+{% endblock course %}

@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load telemeta_utils %}
 {% load teleforma_tags %}
+{% load payment %}
 
 {% block head_title %}{% trans "User Profile" %} : {{ usr.username }}{% endblock %}
 
@@ -13,7 +14,7 @@
   {% block modules %}
 
     <div class="module">
-    <h3><a href="{% url teleforma-home %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
+    <h3><a href="{% url teleforma-home %}"><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
     <div style="background: white;">
     <ul>
     {% block courses %}
@@ -55,7 +56,11 @@
    <div class="course_content">
 
    <div class="infos" style="width: 55%">
+     {% if usr.student.get.portrait %}
+     <img style="float:right" src="{{ usr.student.get.portrait.url }}" />
+     {% endif %}
      <dl class="listing">
+
       <dt>{% trans "First Name" %}</dt><dd>{{ usr.first_name }}</dd>
       <dt>{% trans "Last Name" %}</dt><dd>{{ usr.last_name }}</dd>
       <dt>{% trans "Username" %}</dt><dd>{{ usr.username }}</dd>
@@ -72,10 +77,12 @@
         <dt>{% trans "Options"%}</dt><dd>{{ usr.student.get.options }}</dd>
       {% endif %}
 
-      {% if user.is_staff or user.is_superuser %}
+      {% if user.is_staff or user.is_superuser or usr == user %}
       <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
-      <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }} {{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
+          <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }}{% if usr.profile.get.address_detail %}, {% endif %}</span>{{ usr.profile.get.address_detail }}{% if usr.profile.get.postal_code or usr.profile.get.city %}, {% endif %}{{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
       <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
+      <dt>{% trans "WiFi login" %}</dt><dd>{{ usr.profile.get.wifi_login }}</dd>
+      <dt>{% trans "WiFi password" %}</dt><dd>{{ usr.profile.get.wifi_pass }}</dd>
       {% endif %}
 
       <dt>{% trans "Date added" %}</dt><dd>{{ usr.date_joined }}</dd>
@@ -97,8 +104,11 @@
       {%  endif %}
      </dl>
     </div>
-
   </div>
+
+  {% if payment %}
+    {% payment_summary payment with_pending=False %}
+  {% endif %}
 
 <div class="buttons">
 <!--<a href="{% url telemeta-password-change %}" class="component_icon button icon_login">{% trans "Password reset" %}</a>-->

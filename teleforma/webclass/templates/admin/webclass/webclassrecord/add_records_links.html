@@ -1,0 +1,5 @@
+<div class="object-tools">
+    {% for period in periods %}
+    <a class="btn btn-success" href="{% url teleforma-webclass-records-form period.id %}"><i class="icon-plus-sign icon-white"></i>{{ period.name}} </a>
+    {% endfor %}
+</div>

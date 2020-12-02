@@ -1,0 +1,8 @@
+{% extends "telemeta/base.html" %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    <p>Etes-vous sûr de vouloir supprimer "{{ object.title }}"?</p>
+    <input type="submit" value="Confirmer" />
+</form>
+{% endblock %}

@@ -33,27 +33,16 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 from django import template
-from django.utils.http import urlquote
-from teleforma.models import *
-from django.core.urlresolvers import reverse
-from django.utils import html
-from django import template
-from django.utils.text import capfirst
-from django.utils.translation import ungettext
-from docutils.core import publish_parts
-from django.utils.encoding import smart_str, force_unicode
-from django.utils.safestring import mark_safe
-from django import db
-import re
-import os
-import datetime
-from django.conf import settings
-from django.template.defaultfilters import stringfilter
-import django.utils.timezone as timezone
+from django.shortcuts import get_object_or_404
+import json
 from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
-from teleforma.views import get_courses
 from urlparse import urlparse
+
+from teleforma.models.core import Document
+from teleforma.models.crfpa import Course, NewsItem
+from teleforma.views import get_courses
+from teleforma.exam.models import *
 
 register = template.Library()
 
@@ -81,6 +70,11 @@ def parse_urls(text):
             output += block
     return output
 
+@register.filter('startswith')
+def startswith(text, starts):
+    if isinstance(text, basestring):
+        return text.startswith(starts)
+    return False
 
 @register.tag
 def value_from_settings(parser, token):
@@ -134,9 +128,21 @@ def yes_no(bool):
         return _('No')
 
 @register.filter
+def get_item(dictionary, key):
+    try:
+        return dictionary.get(key)
+    except AttributeError:
+        return dictionary[key]
+
+@register.filter
 def from_course_type(contents, type):
     if contents:
         return contents.filter(course_type=type)
+
+@register.filter
+def streaming_only(contents):
+    if contents:
+        return contents.filter(streaming=True)
 
 @register.filter
 def from_doc_type(contents, type):
@@ -146,11 +152,53 @@ def from_doc_type(contents, type):
 @register.filter
 def from_period(contents, period):
     if contents:
-        return contents.filter(period=period)
+        if type(contents[0]) == Document:
+            return contents.filter(periods__in=(period,))
+        else:
+            return contents.filter(period=period)
 
 @register.assignment_tag
 def get_all_professors():
     return Professor.objects.all()
+
+@register.assignment_tag
+def get_all_professors_with_courses():
+    professors = []
+    for professor in Professor.objects.order_by('user__last_name').all():
+        name = professor.user.last_name + professor.user.first_name
+        if name:
+            professors.append({
+                'username':professor.user.username,
+                'name':professor.user.last_name + " " + professor.user.first_name,
+                'courses':json.dumps([course.id for course in professor.courses.all()])
+            })
+    return professors
+
+
+@register.assignment_tag
+def get_all_correctors_with_courses():
+    correctors = {}
+
+    for quota in Quota.objects.all():
+        if not quota.corrector:
+            continue
+        if quota.corrector not in correctors:
+            correctors[quota.corrector] = set()
+        correctors[quota.corrector].add(quota.course.id)
+
+    result = []
+    for corrector in correctors.keys():
+        name = corrector.last_name + corrector.first_name
+        if name:
+            result.append({
+                'id': corrector.id,
+                'username':corrector.username,
+                'name':corrector.last_name + " " + corrector.first_name,
+                'courses':json.dumps(list(correctors[corrector]))
+            })
+    result = sorted(result, key=lambda corrector:int(corrector['id']))
+    return result
+
 
 @register.assignment_tag
 def get_all_admins():
@@ -176,20 +224,33 @@ def get_telecaster():
 def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
 
+@register.assignment_tag
+def show_chat(user):
+    """ everybody should see the chat panel, except the correctors """
+    professor = user.professor.all()
+    if user.is_superuser or professor:
+        return True
+    if user.quotas.all():
+        return False
+    return True
+
+
 @register.filter
 def get_audio_id(media):
-    medias = media.conference.media.all()
-    for m in medias:
-        if 'audio' in m.mime_type:
-            return m.id
+    if media.conference:
+        medias = media.conference.media.all()
+        for m in medias:
+            if 'audio' in m.mime_type:
+                return m.id
     return
 
 @register.filter
 def get_video_id(media):
-    medias = media.conference.media.all()
-    for m in medias:
-        if 'video' in m.mime_type:
-            return m.id
+    if media.conference:
+        medias = media.conference.media.all()
+        for m in medias:
+            if 'video' in m.mime_type:
+                return m.id
     return
 
 @register.filter
@@ -200,3 +261,70 @@ def get_host(url, host):
         return nu
     else:
         return url
+
+@register.filter
+def published(doc):
+    if doc:
+        return doc.filter(is_published=True)
+
+def scripts_count(user, period, statuses):
+    if not period:
+        return ''
+    Q1 = Q(author=user)
+    Q2 = Q(corrector=user)
+    scripts = Script.objects.filter(Q1 | Q2).filter(status__in = statuses,
+                                                    period = period)
+    if scripts:
+        return ' (' + str(len(scripts)) + ')'
+    else:
+        return ''
+
+@register.simple_tag
+def untreated_scripts_count(user, period):
+    return scripts_count(user, period, (3,))
+
+@register.simple_tag
+def treated_scripts_count(user, period):
+    return scripts_count(user, period, (4,))
+
+@register.simple_tag
+def get_training_profile(user):
+    text = ''
+    if user:
+        student = user.student.all()
+        if student:
+            student = student[0]
+            if student.platform_only:
+                text += 'Internaute - '
+            for training in student.trainings.all():
+                text += unicode(training) + ' '
+    return text
+
+@register.inclusion_tag('teleforma/inc/newsitems_portlet.html', takes_context=True)
+def newsitems_portlet(context, course_id, period_id):
+    request = context['request']
+    user = request.user
+    def get_data(newsitem):
+        return {
+        'id':newsitem.id,
+        'title':newsitem.title,
+        'text':newsitem.text,
+        'creator':newsitem.creator,
+        'created':newsitem.created,
+        'can_edit':newsitem.can_edit(request),
+        'can_delete':newsitem.can_delete(request),
+        }
+
+    course = get_object_or_404(Course, id=course_id)
+    course_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, course__id=course_id, period_id=period_id).order_by('-created')]
+    all_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, period_id=period_id).order_by('-created')]
+    can_add = False
+    if user.is_staff or user.professor.count():
+        can_add = True
+    return {
+            'can_add':can_add,
+            'course':course,
+            'period_id':period_id,
+            'course_newsitems':course_newsitems,
+            'all_newsitems':all_newsitems
+           }

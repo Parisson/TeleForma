@@ -1,0 +1,33 @@
+data:
+  image: debian:jessie
+  volumes:
+     - ./var/media/:/srv/media
+     - ./var/static/:/srv/static
+     - ./var/backup/:/srv/backup
+  command: "true"
+
+db:
+  image: mariadb
+  environment:
+    - MYSQL_ROOT_PASSWORD=mysecretpassword
+    - MYSQL_DATABASE=teleforma
+    - MYSQL_USER=teleforma
+    - MYSQL_PASSWORD=admin
+  volumes:
+    - ./data/var/lib/mysql/:/var/lib/mysql
+    - ./data/var/log/mysql/:/var/log/mysql
+
+app:
+  build: .
+  command: /bin/sh deploy/start_app.sh
+  volumes:
+    - ./app/:/srv/app
+    - ./teleforma/:/srv/lib/teleforma/teleforma
+  volumes_from:
+    - data
+  ports:
+    - "8000:8000"
+  links:
+    - db
+
+
