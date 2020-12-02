@@ -106,6 +106,11 @@ class BalanceFilter(admin.SimpleListFilter):
             return queryset
 
 
+class AEStudentProfileInline(admin.StackedInline):
+    model = AEStudent
+    filter_horizontal = ['courses']
+    extra = 1
+
 class StudentAdmin(admin.ModelAdmin):
     model = Student
     exclude = ['options', 'training']
@@ -258,6 +263,13 @@ class ConferenceAdmin(admin.ModelAdmin):
     search_fields = ['public_id', 'id', 'course__code', 'course__title', 'session']
 
 
+# class SeminarQuestionInline(admin.StackedInline):
+#     model = Question
+
+# class SeminarAdmin(admin.ModelAdmin):
+#     inlines = [SeminarQuestionInline,]
+#     exclude = ['suscribers']
+
 class HomeAdmin(admin.ModelAdmin):
     list_filter = ('enabled',)
     search_fields = [ 'periods__name', 'title', 'text' ]
@@ -364,10 +376,6 @@ admin.site.register(Training, TrainingAdmin)
 admin.site.register(CourseType)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
-admin.site.register(Seminar, SeminarAdmin)
-admin.site.register(Question)
-admin.site.register(Testimonial)
-admin.site.register(TestimonialTemplate)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Corrector, CorrectorAdmin)
 admin.site.register(Professor, ProfessorAdmin)

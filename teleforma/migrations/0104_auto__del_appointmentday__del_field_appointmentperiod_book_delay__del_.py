@@ -105,25 +105,28 @@ class Migration(SchemaMigration):
         db.alter_column('teleforma_appointment', 'jury_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, on_delete=models.SET_NULL, to=orm['teleforma.AppointmentJury']))
 
         if not db.dry_run:
-            from teleforma.models import Appointment, AppointmentSlot, AppointmentJury
-            AppointmentJury.objects.all().delete()
+            pass
+            # no need on AE (no previous records)
 
-            for date in dates:
+            # from teleforma.models import Appointment, AppointmentSlot, AppointmentJury
+            # AppointmentJury.objects.all().delete()
 
-                # recreate juries and update slot date
-                for slotD in date['slots']:
-                    # import pdb;pdb.set_trace()
-                    slot = AppointmentSlot.objects.get(id=slotD['id'])
-                    slot.date = date['date']
-                    slot.appointment_period_id = date['period']
-                    slot.save()
-                    for jury in slotD['jurys']:
-                        juryObj = AppointmentJury(slot=slot, name=jury['name'], address=jury['address'])
-                        juryObj.save()
-                        for app in jury['appointments']:
-                            appointment = Appointment.objects.get(id=app)
-                            appointment.jury = juryObj
-                            appointment.save()
+            # for date in dates:
+
+            #     # recreate juries and update slot date
+            #     for slotD in date['slots']:
+            #         # import pdb;pdb.set_trace()
+            #         slot = AppointmentSlot.objects.get(id=slotD['id'])
+            #         slot.date = date['date']
+            #         slot.appointment_period_id = date['period']
+            #         slot.save()
+            #         for jury in slotD['jurys']:
+            #             juryObj = AppointmentJury(slot=slot, name=jury['name'], address=jury['address'])
+            #             juryObj.save()
+            #             for app in jury['appointments']:
+            #                 appointment = Appointment.objects.get(id=app)
+            #                 appointment.jury = juryObj
+            #                 appointment.save()
 
 
 

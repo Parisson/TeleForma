@@ -10,12 +10,12 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Changing field 'Period.appointment_slot_size'
-        db.alter_column('teleforma_period', 'appointment_slot_size', self.gf('django.db.models.fields.IntegerField')())
+        db.alter_column('teleforma_period', 'appointment_slot_size', self.gf('django.db.models.fields.IntegerField')(default=40))
 
     def backwards(self, orm):
 
         # Changing field 'Period.appointment_slot_size'
-        db.alter_column('teleforma_period', 'appointment_slot_size', self.gf('django.db.models.fields.TextField')())
+        db.alter_column('teleforma_period', 'appointment_slot_size', self.gf('django.db.models.fields.IntegerField')())
 
     models = {
         'auth.group': {

@@ -55,7 +55,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'Period.appointment_slot_size'
         db.add_column('teleforma_period', 'appointment_slot_size',
-                      self.gf('django.db.models.fields.TextField')(default=40),
+                      self.gf('django.db.models.fields.IntegerField')(default=40),
                       keep_default=False)
 
 
