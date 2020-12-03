@@ -150,12 +150,17 @@ def from_doc_type(contents, type):
         return contents.filter(type=type)
 
 @register.filter
-def from_period(contents, period):
+def from_periods(contents, period):
     if contents:
         if type(contents[0]) == Document:
             return contents.filter(periods__in=(period,))
         else:
-            return contents.filter(period=period)
+            # check if it's a list before building the query
+            try:
+                iter(period)
+                return contents.filter(period__in=period)
+            except:
+                return contents.filter(period=period)
 
 @register.assignment_tag
 def get_all_professors():
