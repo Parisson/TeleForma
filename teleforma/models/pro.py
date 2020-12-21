@@ -56,7 +56,7 @@ class SeminarType(models.Model):
         verbose_name = _('Seminar type')
 
 
-class Seminar(ClonableMixin, Displayable, SuggestionsMixin):
+class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
 
     # title, description, keywords, dates and status are given by Displayable
     # status values : 1: draft, 2: published

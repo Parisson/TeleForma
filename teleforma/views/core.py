@@ -538,7 +538,7 @@ def join_webclass(request, pk):
     # fake debug links
     username = request.GET.get('username')
     if username:
-        return redirect(conference.get_fake_join_webclass_url(request, username))
+        return redirect(conference.get_fake_join_webclass_url(username))
     user = request.user
     authorized = False
 

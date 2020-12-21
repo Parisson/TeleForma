@@ -24,12 +24,18 @@ class Command(BaseCommand):
             print("Syntax: %s %s <duration in seconds>" % (sys.argv[0],
                                                            sys.argv[1]))
             sys.exit(1)
-        duration = int(args[0])
-        meetings = bbb.get_meetings()
-        meetings = as_list(meetings.get_field("meetings")["meeting"])
 
+        duration = int(args[0])
         end = datetime.datetime.now()
         start = end - datetime.timedelta(seconds = duration)
+        print("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S'))
+        meetings = bbb.get_meetings()
+        meetings = meetings.get_field("meetings")
+        # no conference in BBB
+        if "meeting" not in meetings:
+            print("No meeting found")
+            return
+        meetings = as_list(meetings["meeting"])
 
         print("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S'))
 

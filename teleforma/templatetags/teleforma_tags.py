@@ -327,7 +327,9 @@ def fancy_seconds(seconds):
         if minutes_int:
             time += str(hours) + 'h'
         else:
-            time += str(hours) + ' heures'
+            time += str(hours) + ' heure'
+            if hours > 1:
+                time += 's'
     if minutes_int<10:
         minutes = '0' + str(minutes_int)
     else:
