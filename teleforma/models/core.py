@@ -530,6 +530,26 @@ class Media(MediaBase):
         ordering = ['rank']
 
 
+class SuggestionsMixin(Model):
+    suggested_seminars = models.ManyToManyField('Seminar', related_name="%(class)ss_related",
+                                                verbose_name=_('suggested seminars'),
+                                                blank=True, null=True)
+    suggested_conferences = models.ManyToManyField('Conference', related_name="%(class)ss_related",
+                                                   verbose_name=_('suggested conferences'),
+                                                   blank=True, null=True)
+
+    class Meta(MetaCore):
+        abstract = True
+
+    @property
+    def visible_suggested_seminars(self):
+        return self.suggested_seminars.published()
+
+    def visible_suggested_conferences(self):
+        return self.suggested_conferences.published().filter(date_begin__gte=datetime.datetime.today())
+
+
+
 class WebclassMixin(Model):
     webclass                        = models.BooleanField(_('Web class'), default=False)
     webclass_max_participants       = models.IntegerField(_('Web class : nombre maxium de participants'), blank=True, null=True)
@@ -677,7 +697,7 @@ class WebclassMixin(Model):
     #         raise ValidationError("Dates are incorrect")
 
 
-class Conference(Displayable, WebclassMixin):
+class Conference(Displayable, WebclassMixin, SuggestionsMixin):
 
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     public_id       = models.CharField(_('public id'), max_length=255, blank=True)
@@ -713,12 +733,6 @@ class Conference(Displayable, WebclassMixin):
 
     notes           = generic.GenericRelation(Note)
 
-    suggested_seminars = models.ManyToManyField('Seminar', related_name="conference_suggested_seminars",
-                                                verbose_name=_('suggested seminars'),
-                                                blank=True, null=True)
-    suggested_conferences = models.ManyToManyField('Conference', related_name="conference_suggested_conferences",
-                                                   verbose_name=_('suggested conferences'),
-                                                   blank=True, null=True)
     additional_info         = tinymce.models.HTMLField(
                                     "Informations complémentaires", 
                                     help_text="Affiché sur la page formation du shop",
@@ -814,10 +828,6 @@ class Conference(Displayable, WebclassMixin):
         """
         url = reverse('teleforma-conference-detail', kwargs={'pk':self.id})
         return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
-
-    @property
-    def suggestions(self):
-        return (list(self.suggested_seminars.all()) + list(self.suggested_conferences.all()))[:3]
 
     def set_as_read(self, user):
         """ set as read for user """

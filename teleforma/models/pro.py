@@ -56,7 +56,7 @@ class SeminarType(models.Model):
         verbose_name = _('Seminar type')
 
 
-class Seminar(ClonableMixin, Displayable):
+class Seminar(ClonableMixin, Displayable, SuggestionsMixin):
 
     # title, description, keywords, dates and status are given by Displayable
     # status values : 1: draft, 2: published
@@ -107,12 +107,6 @@ class Seminar(ClonableMixin, Displayable):
     date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
     date_forced     = models.DateTimeField(_('date forced'), null=True, blank=True)
-    suggested_seminars = models.ManyToManyField('Seminar', related_name="seminar_suggested_seminars",
-                                    verbose_name=_('suggested seminars'),
-                                    blank=True, null=True)
-    suggested_conferences = models.ManyToManyField('Conference', related_name="seminar_suggested_conferences",
-                                                verbose_name=_('suggested conferences'),
-                                                blank=True, null=True)
     additional_info           = tinymce.models.HTMLField(
                                     "Informations complémentaires", 
                                     help_text="Affiché sur la page formation du shop",
