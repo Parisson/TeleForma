@@ -530,6 +530,41 @@ class Media(MediaBase):
         ordering = ['rank']
 
 
+class ProductCodeMixin(Model):
+    product_code = models.CharField("Code produit", max_length=8, blank=True, null=True)
+
+    class Meta(MetaCore):
+        abstract = True
+
+    def save(self, **kwargs):
+        # generate a new code if code does not exists
+        if not self.product_code:
+            prefix = ""
+            klass = None
+            current = None
+            if self.__class__.__name__ == 'Seminar':
+                prefix = "SEMI"
+                from teleforma.models.pro import Seminar
+                klass = Seminar
+            elif self.__class__.__name__ == 'Conference':
+                prefix = "CONF"
+                klass = Conference
+            else:
+                raise NotImplemented
+            if klass:
+                sorted_objs = klass.objects.filter(product_code__isnull=False).order_by('-product_code')
+                if sorted_objs.count():
+                    current = sorted_objs[0].product_code
+            if current:
+                new_code = int(current[4:]) + 1
+            else:
+                new_code = 1
+            new_code = str(new_code)
+            code = prefix + new_code.zfill(4)
+            self.product_code = code
+        super(ProductCodeMixin, self).save(**kwargs)
+
+
 class WebclassMixin(Model):
     webclass                        = models.BooleanField(_('Web class'), default=False)
     webclass_max_participants       = models.IntegerField(_('Web class : nombre maxium de participants'), blank=True, null=True)
@@ -677,8 +712,7 @@ class WebclassMixin(Model):
     #         raise ValidationError("Dates are incorrect")
 
 
-class Conference(Displayable, WebclassMixin):
-
+class Conference(Displayable, ProductCodeMixin, WebclassMixin):
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     public_id       = models.CharField(_('public id'), max_length=255, blank=True)
     department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
