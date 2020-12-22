@@ -543,10 +543,10 @@ class SuggestionsMixin(Model):
 
     @property
     def visible_suggested_seminars(self):
-        return self.suggested_seminars.published()
+        return self.suggested_seminars.published().filter(private=False)
 
     def visible_suggested_conferences(self):
-        return self.suggested_conferences.published().filter(date_begin__gte=datetime.datetime.today())
+        return self.suggested_conferences.published().filter(private=False, date_begin__gte=datetime.datetime.today())
 
                                                    
 class ProductCodeMixin(Model):
@@ -733,6 +733,7 @@ class WebclassMixin(Model):
 
 class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin):
 
+    private         = models.BooleanField(_('private'), help_text="Hide in shop", default=False)  
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     public_id       = models.CharField(_('public id'), max_length=255, blank=True)
     department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
