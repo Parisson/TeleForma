@@ -62,6 +62,7 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     # status values : 1: draft, 2: published
 
     private         = models.BooleanField(_('private'), default=False)
+    upcoming        = models.BooleanField("A venir (shop)", default=False)
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True)
     period          = ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
@@ -112,6 +113,10 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
                                     help_text="Affiché sur la page formation du shop",
                                     null=True, 
                                     blank=True)
+    plan            = tinymce.models.HTMLField("Plan détaillé", 
+                                                help_text="Affiché sur la page formation du shop. Ajouter dans le code source &lt;div class=\"break\"&gt;&lt;/div&gt; pour choisir ou couper la colonne.",
+                                                null=True, 
+                                                blank=True)
     banner_image = models.ImageField(verbose_name="Bannière",
                                     help_text="Environ 1200x255 (l'important est de respecter le ratio)",
                                     upload_to="seminars",

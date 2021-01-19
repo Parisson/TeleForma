@@ -733,7 +733,8 @@ class WebclassMixin(Model):
 
 class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin):
 
-    private         = models.BooleanField(_('private'), help_text="Hide in shop", default=False)  
+    private         = models.BooleanField(_('private'), help_text="Hide in shop", default=False)
+    upcoming        = models.BooleanField("A venir (shop)", default=False)
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     public_id       = models.CharField(_('public id'), max_length=255, blank=True)
     department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
@@ -773,6 +774,10 @@ class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin)
                                     help_text="Affiché sur la page formation du shop",
                                     null=True, 
                                     blank=True) 
+    plan                    = tinymce.models.HTMLField("Plan détaillé", 
+                                                help_text="Affiché sur la page formation du shop. Ajouter dans le code source &lt;div class=\"break\"&gt;&lt;/div&gt; pour choisir ou couper la colonne.",
+                                                null=True, 
+                                                blank=True)
     banner_image            = models.ImageField(verbose_name="Bannière",
                                     help_text="Environ 1200x255 (l'important est de respecter le ratio)",
                                     upload_to="seminars",
