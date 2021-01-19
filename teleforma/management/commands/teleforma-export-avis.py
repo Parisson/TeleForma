@@ -48,9 +48,9 @@ class Command(BaseCommand):
             cart = None
             if testimonial.seminar.course.code == "demo":
                 continue
-            for cart in Cart.objects.filter(user=testimonial.user, status=Cart.STATE_PAYMENT_ACCEPTED).all():
-                if cart.has_item(testimonial.seminar):
-                    break
+            for some_cart in Cart.objects.filter(user=testimonial.user, status=Cart.STATE_PAYMENT_ACCEPTED).all():
+                if some_cart.has_item(testimonial.seminar):
+                    cart = some_cart
             if not cart:
                 logging.warning("Can't find cart for testimonial %d" % testimonial.id)
                 continue
@@ -80,9 +80,9 @@ class Command(BaseCommand):
             for auditor in conference.auditor.all():
                 cart = None
                 user = auditor.user
-                for cart in Cart.objects.filter(user=user, status=Cart.STATE_PAYMENT_ACCEPTED).all():
-                    if cart.has_item(conference):
-                        break
+                for some_cart in Cart.objects.filter(user=user, status=Cart.STATE_PAYMENT_ACCEPTED).all():
+                    if some_cart.has_item(conference):
+                        cart = some_cart
                 
                 if not cart:
                     logging.warning("Can't find cart for conference %d" % conference.id)
