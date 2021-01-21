@@ -92,7 +92,7 @@ class UserForm(ModelForm):
     written_speciality = ModelChoiceField(label='Specialité écrite',
                                           queryset=Course.objects.filter(written_speciality=True),
                                           help_text="Matière juridique de spécialité")
-    oral_1 = ModelChoiceField(label=_('Oral de langue (option)'),
+    oral_1 = ModelChoiceField(label='Souscription à l\'oral de langue (option)',
                               help_text="Matière d’oral de langue (en option)",
                               queryset=Course.objects.filter(oral_1=True))
     promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
