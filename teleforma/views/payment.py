@@ -111,7 +111,9 @@ def bank_auto(request, merchant_id):
         payment.online_paid = True
         payment.date_paid = datetime.datetime.now()
         if payment.student.restricted:
-            payment.student.restricted = False
+            student = payment.student
+            if student.period.date_close_accounts > datetime.date.today():
+                student.restricted = False
             # send mail
             data = {
                 'mfrom': settings.DEFAULT_FROM_EMAIL,
@@ -121,7 +123,7 @@ def bank_auto(request, merchant_id):
             message = render_to_string('teleforma/messages/email_account_activated.txt', data)
             send_mail("Inscription à la formation Pré-Barreau", message, data['mfrom'], [ data['mto'] ],
                   fail_silently=False)
-            payment.student.save()
+            student.save()
             
         payment.save()
         log.info('bank_auto validating order_id %s' % (order_id))

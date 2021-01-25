@@ -2096,7 +2096,7 @@ column-rule: 0;
 }
 #_registerForm fieldset label{
     display: inline-block;
-    min-width: 190px;
+    max-width: 190px;
 }
 #_registerForm fieldset input[type="text"]{
     width: calc(100% - 190px);

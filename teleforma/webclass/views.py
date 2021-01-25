@@ -64,8 +64,19 @@ class WebclassAppointment(View):
         # Ensure user is logged in, a student, and has access to current period
         user = request.user
         student = user.student.all()[0]
-        
-        return render(request, self.template_name, {'slots': webclass.slots.order_by('day', 'start_hour'), 'webclass': webclass})
+        slots = webclass.slots.order_by('day', 'start_hour')
+        # only display unavaible slots or first slot of the day
+        filtered_slots = []
+        day = None
+        for slot in slots:
+            if slot.participant_slot_available:
+                if slot.day != day:
+                    filtered_slots.append(slot)
+                    day = slot.day
+            else:
+                filtered_slots.append(slot)
+
+        return render(request, self.template_name, {'slots': filtered_slots, 'webclass': webclass})
 
     def check_slot_validity(self, user, slot):
         """

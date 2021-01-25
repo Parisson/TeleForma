@@ -374,7 +374,7 @@ class CourseListView(CourseAccessMixin, ListView):
                 context['home_text'] = home.text
                 context['home_video'] = home.video
                 break
-               
+
         if is_student:
             student = user.student.all()[0]
             slots = []
@@ -391,7 +391,7 @@ class CourseListView(CourseAccessMixin, ListView):
             context['webclass_slots'] = slots
             context['webclass_to_subscribe'] = to_subscribe
             context['restricted'] = student.restricted
-        
+
         return context
 
     @method_decorator(login_required)
@@ -404,6 +404,10 @@ class CourseListView(CourseAccessMixin, ListView):
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
+
+    @jsonrpc_method('teleforma.get_course_type_list')
+    def get_course_type_list(request):
+        return [course_type.to_dict() for course_type in CourseType.objects.all()]
 
     def pull(request, organization_name, department_name):
         organization = Organization.objects.get(name=organization_name)
@@ -419,6 +423,16 @@ class CourseListView(CourseAccessMixin, ListView):
             else:
                 course = course[0]
             course.from_dict(course_dict)
+
+        remote_list = s.teleforma.get_course_type_list()
+        if remote_list['result']:
+            for course_type_dict in remote_list['result']:
+                course_type = CourseType.objects.filter(name=course_type_dict['name'])
+                if not course_type:
+                    course_type = CourseType()
+                else:
+                    course_type = course_type[0]
+                course_type.from_dict(course_type_dict)
 
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
@@ -448,14 +462,14 @@ class CourseView(CourseAccessMixin, DetailView):
         context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
-        
+
         # webclass
         webclass = None
         webclass_slot = None
         student = self.request.user.student.all()
         if student:
             student = student[0]
-        
+
         if student:
             try:
                 webclass = Webclass.published.filter(period=self.period, course=course, iej=student.iej)[0]
@@ -610,7 +624,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path.encode('utf8'), streaming=False) 
+            return serve_media(document.file.path.encode('utf8'), streaming=False)
             #fsock = open(document.file.path.encode('utf8'), 'r')
             #mimetype = mimetypes.guess_type(document.file.path)[0]
             #extension = mimetypes.guess_extension(mimetype)
@@ -625,7 +639,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path.encode('utf8'), streaming=True) 
+            return serve_media(document.file.path.encode('utf8'), streaming=True)
             #fsock = open(document.file.path.encode('utf8'), 'r')
             #mimetype = mimetypes.guess_type(document.file.path)[0]
             #extension = mimetypes.guess_extension(mimetype)
