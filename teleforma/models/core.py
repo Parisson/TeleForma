@@ -135,6 +135,7 @@ class Period(Model):
         db_table = app_label + '_' + 'period'
         verbose_name = _('period')
 
+
 class CourseType(Model):
 
     name            = CharField(_('name'), max_length=255)
@@ -147,6 +148,11 @@ class CourseType(Model):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
 
+    def to_dict(self):
+        dict = {'name' : self.name,
+                'description' : self.description,
+                }
+        return dict
 
     def from_dict(self, data):
         self.name = data['name']

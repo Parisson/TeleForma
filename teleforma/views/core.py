@@ -227,7 +227,56 @@ class CourseListView(CourseAccessMixin, ListView):
         context['room'] = get_room(name='site', period=context['period'].name)
         context['doc_types'] = DocumentType.objects.all()
         context['list_view'] = True
-        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:5]
+        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
+        user = self.request.user
+        is_student = user.student.all().count()
+        # appointments_open = False
+        appointments = []
+        if is_student:
+            available_courses = [course['course'] for course in context['all_courses']]
+            for appointment in  AppointmentPeriod.objects.filter(periods=context['period'], course__in=available_courses):
+                if appointment.is_open:
+                    found = False
+                    for existing in appointments:
+                        if existing.course == appointment.course:
+                            found = True
+                    if not found:
+                        appointments.append(appointment)
+        context['appointments'] = appointments
+        # check if user appointment is next
+        user_appointment = Appointment.objects.filter(student=user, slot__mode='distance', slot__appointment_period__periods=context['period'])
+        if user_appointment:
+            user_appointment = user_appointment[0]
+            now = datetime.datetime.now()
+            # now = datetime.datetime(2020, 10, 29, 9, 00)
+            if user_appointment.real_date - datetime.timedelta(hours=1) < now < user_appointment.real_date + datetime.timedelta(hours=1):
+                context['current_appointement'] = user_appointment
+
+        homes = Home.objects.filter(enabled = True).order_by('-modified_at')
+        for home in homes:
+            if home.is_for_period(context['period']):
+                context['home_title'] = home.visible_title
+                context['home_text'] = home.text
+                context['home_video'] = home.video
+                break
+
+        if is_student:
+            student = user.student.all()[0]
+            slots = []
+            to_subscribe = []
+            student_courses = [course['course'] for course in get_courses(user)]
+            for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
+                # if webclass.course not in student_courses:
+                #     continue
+                slot = webclass.get_slot(user)
+                if slot and slot.status in ('almost', 'ingoing'):
+                    slots.append(slot)
+                if not slot:
+                    to_subscribe.append(webclass)
+            context['webclass_slots'] = slots
+            context['webclass_to_subscribe'] = to_subscribe
+            context['restricted'] = student.restricted
+
         return context
 
     @method_decorator(login_required)
@@ -241,8 +290,11 @@ class CourseListView(CourseAccessMixin, ListView):
         department = Department.objects.get(organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
-    def pull(request, organization_name):
-        from teleforma.models import Organization, Department
+    @jsonrpc_method('teleforma.get_course_type_list')
+    def get_course_type_list(request):
+        return [course_type.to_dict() for course_type in CourseType.objects.all()]
+
+    def pull(request, organization_name, department_name):
         organization = Organization.objects.get(name=organization_name)
         departments = Department.objects.filter(organization=organization)
         for department in departments:
@@ -430,13 +482,14 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(id=pk)
         if get_access(document, courses):
-            fsock = open(document.file.path, 'r')
-            mimetype = mimetypes.guess_type(document.file.path)[0]
-            extension = mimetypes.guess_extension(mimetype)
-            response = HttpResponse(fsock, mimetype=mimetype)
-            response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                             (document.title.encode('utf8'), extension)
-            return response
+            return serve_media(document.file.path.encode('utf8'), streaming=False)
+            #fsock = open(document.file.path.encode('utf8'), 'r')
+            #mimetype = mimetypes.guess_type(document.file.path)[0]
+            #extension = mimetypes.guess_extension(mimetype)
+            #response = HttpResponse(fsock, mimetype=mimetype)
+            #response['Content-Disposition'] = "attachment; filename=%s%s" % \
+            #                                 (document.title.encode('utf8'), extension)
+            #return response
         else:
             return redirect('teleforma-home')
 
@@ -444,11 +497,12 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(id=pk)
         if get_access(document, courses):
-            fsock = open(document.file.path, 'r')
-            mimetype = mimetypes.guess_type(document.file.path)[0]
-            extension = mimetypes.guess_extension(mimetype)
-            response = HttpResponse(fsock, mimetype=mimetype)
-            return response
+            return serve_media(document.file.path.encode('utf8'), streaming=True)
+            #fsock = open(document.file.path.encode('utf8'), 'r')
+            #mimetype = mimetypes.guess_type(document.file.path)[0]
+            #extension = mimetypes.guess_extension(mimetype)
+            #response = HttpResponse(fsock, mimetype=mimetype)
+            #return response
         else:
             return redirect('teleforma-home')
 
