@@ -22,5 +22,5 @@ class Command(BaseCommand):
         view.pull(organization_name)
 
         for course_type in CourseType.objects.all():
-            if 'é' in course_type.name:
+            if 'supp' in course_type.name:
                 course_type.delete()
