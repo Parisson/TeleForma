@@ -230,32 +230,6 @@ class CourseListView(CourseAccessMixin, ListView):
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
         user = self.request.user
         is_student = user.student.all().count()
-
-        homes = Home.objects.filter(enabled = True).order_by('-modified_at')
-        for home in homes:
-            if home.is_for_period(context['period']):
-                context['home_title'] = home.visible_title
-                context['home_text'] = home.text
-                context['home_video'] = home.video
-                break
-
-        if is_student:
-            student = user.student.all()[0]
-            slots = []
-            to_subscribe = []
-            student_courses = [course['course'] for course in get_courses(user)]
-            for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
-                # if webclass.course not in student_courses:
-                #     continue
-                slot = webclass.get_slot(user)
-                if slot and slot.status in ('almost', 'ingoing'):
-                    slots.append(slot)
-                if not slot:
-                    to_subscribe.append(webclass)
-            context['webclass_slots'] = slots
-            context['webclass_to_subscribe'] = to_subscribe
-            context['restricted'] = student.restricted
-
         return context
 
     @method_decorator(login_required)
