@@ -424,6 +424,16 @@ class CourseListView(CourseAccessMixin, ListView):
                 course = course[0]
             course.from_dict(course_dict)
 
+        remote_list = s.teleforma.get_course_type_list()
+        if remote_list['result']:
+            for course_type_dict in remote_list['result']:
+                course_type = CourseType.objects.filter(name=course_type_dict['name'])
+                if not course_type:
+                    course_type = CourseType()
+                else:
+                    course_type = course_type[0]
+                course_type.from_dict(course_type_dict)
+
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)

@@ -194,6 +194,12 @@ class CourseType(Model):
                 }
         return dict
 
+    def from_dict(self, data):
+        self.name = data['name']
+        self.description = data['description']
+        self.save()
+
+
 class Course(Model):
 
     department = models.ForeignKey('Department', related_name='course',
