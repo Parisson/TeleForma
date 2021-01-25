@@ -294,7 +294,7 @@ class CourseListView(CourseAccessMixin, ListView):
     def get_course_type_list(request):
         return [course_type.to_dict() for course_type in CourseType.objects.all()]
 
-    def pull(request, organization_name, department_name):
+    def pull(request, organization_name):
         organization = Organization.objects.get(name=organization_name)
         departments = Department.objects.filter(organization=organization)
         for department in departments:
