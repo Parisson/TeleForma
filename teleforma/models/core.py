@@ -148,6 +148,12 @@ class CourseType(Model):
         verbose_name = _('course type')
 
 
+    def from_dict(self, data):
+        self.name = data['name']
+        self.description = data['description']
+        self.save()
+
+
 class Course(Model):
 
     department      = ForeignKey('Department', related_name='course',
