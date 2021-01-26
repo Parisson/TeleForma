@@ -28,7 +28,7 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     args = 'organization log_file'
     spacer = '_-_'
-    original_format = 'webm'
+    original_format = ['webm', 'mp4']
     transcoded_formats = ['mp4', 'ogg', 'mp3']
     image_formats = ['png', 'jpg']
 

@@ -11,7 +11,7 @@
     <tbody>
         {% for media in course.media.all|from_course_type:type|from_period:period %}
          {% if not media.is_published and user.is_staff %}
-          {% if media.type == 'webm' %}
+          {% if media.type == 'webm' or media.type == 'mp4' %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
             <a href="{% url teleforma-media-detail period.id media.id %}" title="{% trans "Play" %}">
