@@ -12,16 +12,17 @@ import datetime
 
 
 class Command(BaseCommand):
-    help = "Delete postman messages olders than one year"
+    help = "Archive postman messages olders than one year"
     admin_email = 'webmaster@parisson.com'
 
     def handle(self, *args, **options):
-        date = datetime.datetime.now()
-        date.year = date.year - 1
-        print(date)
-        messages = Message.objects.filter(sent_at__lte=datetime_now)
+        date_now = datetime.datetime.now()
+        date_old = date_now.replace(year=date_now.year-1)
+        print(date_old)
+        messages = Message.objects.filter(sent_at__lte=date_old)
         print(messages.count())
         for message in messages:
-            print(message.sent_at)
-            message.delete()
+            message.sender_archived = True
+            message.recipient_archived = True
+            message.save()
 
