@@ -38,12 +38,13 @@ class WebclassRecordsForm(Form):
                     label = u"%s à %s - %s" % (record['start_date'].strftime('%d/%m/%Y %H:%M'), record['end_date'].strftime('%H:%M'), webclass_slot.professor.user.last_name)
                     vocabulary.append((str(record['id']) + ";" + str(record['server_id']), label))
                 self.fields[field_name] = ChoiceField(label=course.title,  choices=vocabulary, required=False)
-    
+
     def get_records_by_course(self):
         records = get_records(period_id=self.period_id)
         by_course = {}
         for record in records:
-            by_course.setdefault(record['course_id'], []).append(record)
+            if hasattr(record, 'course_id'):
+                by_course.setdefault(record['course_id'], []).append(record)
         return by_course
 
     def save_records(self):
