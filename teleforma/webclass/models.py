@@ -65,11 +65,13 @@ def get_records_from_bbb(**kwargs):
                 'state': recording['state'].decode(),
             }
             if recording['metadata'].get('periodid'):
-                data.update({
-                    'period_id': int(recording['metadata'].get('periodid').decode()),
-                    'course_id': int(recording['metadata'].get('courseid').decode()),
-                    'slot': WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
-                })
+                webclass_slots = WebclassSlot.objects.filter(pk=int(recording['metadata'].get('slotid').decode()))
+                if webclass_slots:
+                    data.update({
+                        'period_id': int(recording['metadata'].get('periodid').decode()),
+                        'course_id': int(recording['metadata'].get('courseid').decode()),
+                        'slot': WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
+                    })
 
             data['duration'] = data['end'] - data['start']
             records.append(data)
