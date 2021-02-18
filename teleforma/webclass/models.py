@@ -65,13 +65,18 @@ def get_records_from_bbb(**kwargs):
                 'state': recording['state'].decode(),
             }
             if recording['metadata'].get('periodid'):
-                webclass_slots = WebclassSlot.objects.filter(pk=int(recording['metadata'].get('slotid').decode()))
-                if webclass_slots:
-                    data.update({
-                        'period_id': int(recording['metadata'].get('periodid').decode()),
-                        'course_id': int(recording['metadata'].get('courseid').decode()),
-                        'slot': WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
-                    })
+                # we try to get metadata added to bbb record during the recording
+                slot = None
+                try:
+                    slot = WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
+                except WebclassSlot.DoesNotExist:
+                    # this happen if the slot is deleted in django admin
+                    continue
+                data.update({
+                    'period_id': int(recording['metadata'].get('periodid').decode()),
+                    'course_id': int(recording['metadata'].get('courseid').decode()),
+                    'slot': slot
+                })
 
             data['duration'] = data['end'] - data['start']
             records.append(data)
