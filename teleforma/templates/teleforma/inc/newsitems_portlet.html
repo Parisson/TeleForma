@@ -6,7 +6,7 @@
 <div class="tabs module">
     <h3><img src="{% static 'teleforma/images/actus.png' %}" alt="actualités"/>Actualités</h3>
     <ul>
-        <li><a href="#news_local">{{ course.title_tweeter }}</a>
+        <li><a href="#news_local">{% if course.title_tweeter %}{{ course.title_tweeter }}{% else %}{{ course.title }}{% endif %}</a>
             {% if can_add %}<a href="{% url newsitem-create %}?course_id={{course.id}}&period_id={{period_id}}">+</a>{% endif %}
         </li>
         <li><a href="#news_global">Générales</a>

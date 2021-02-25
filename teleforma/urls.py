@@ -114,6 +114,8 @@ urlpatterns = patterns('',
         name="teleforma-conference-audio"),
     url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
         name="teleforma-conference-record"),
+    url(r'^desk/bbbconference_record/$', BBBConferenceRecordView.as_view(),
+        name="teleforma-bbbconference-record"),
     url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
 
@@ -141,7 +143,6 @@ urlpatterns = patterns('',
     url(r'^update-training/(?P<id>.*)/$', update_training, name="update-training"),
 
     # News Item
-    url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$', MediaView.as_view(), name="teleforma-media-detail"),
     url(r'^newsitems/create', NewsItemCreate.as_view(), name='newsitem-create'),
     url(r'^newsitems/update/(?P<pk>.*)', NewsItemUpdate.as_view(), name='newsitem-update'),
     url(r'^newsitems/delete/(?P<pk>.*)', NewsItemDelete.as_view(), name='newsitem-delete'),

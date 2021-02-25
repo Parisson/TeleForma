@@ -758,13 +758,14 @@ def live_message(conference):
         message = Message.objects.create_message(user, room, text)
 
 
-class ConferenceRecordView(FormView):
-    "Conference record form : TeleCaster module required"
-
+class ConferenceMixin(FormView):
     model = Conference
+    hidden_fields = ['started', 'date_begin', 'date_end', 'public_id', 'readers']
+
+class ConferenceRecordView(ConferenceMixin):
+    "Conference record form : TeleCaster module required"
     form_class = ConferenceForm
     template_name='teleforma/course_conference_record.html'
-    hidden_fields = ['started', 'date_begin', 'date_end', 'public_id', 'readers']
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
@@ -872,6 +873,45 @@ class ConferenceRecordView(FormView):
         url = 'http://' + self.conference.department.domain + '/json/'
         s = ServiceProxy(url)
         s.teleforma.create_conference(self.conference.to_json_dict())
+
+class BBBConferenceRecordView(ConferenceMixin):
+    "Conference record form to create BBB"
+
+    model = Conference
+    form_class = BBBConferenceForm
+    template_name='teleforma/course_conference_record.html'
+    hidden_fields = ['started', 'date_begin', 'date_end', 'public_id', 'readers']
+
+    def get_context_data(self, **kwargs):
+        context = super(ConferenceRecordView, self).get_context_data(**kwargs)
+        context['hidden_fields'] = self.hidden_fields
+        return context
+
+    def get_success_url(self):
+        return reverse('teleforma-conference-detail', kwargs={'period_id': self.conference.period.id,
+                                                              'pk':self.conference.id})
+
+    def form_valid(self, form):
+        form.save()
+        conference = form.instance
+        conference.date_begin = datetime.datetime.now()
+        conference.is_webclass = True
+        conference.professor = self.request.user
+        # conference.course = 
+        conference.save()
+        status = Status()
+
+        try:
+            live_message(conference)
+        except:
+            pass
+
+        return super(BBBConferenceRecordView, self).form_valid(form)
+
+    @method_decorator(access_required)
+    def dispatch(self, *args, **kwargs):
+        return super(BBBConferenceRecordView, self).dispatch(*args, **kwargs)
+
 
 
 class ProfessorListView(View):

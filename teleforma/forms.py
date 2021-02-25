@@ -50,153 +50,278 @@ class ConferenceForm(ModelForm):
     class Meta:
         model = Conference
 
-
-#
-# class RegistrationForm(ModelForm):
-#     captcha = CaptchaField()
-#     accept = BooleanField()
-#
-#
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name', 'email', 'accept']
-
-
-class UserForm(ModelForm):
-    # profile
-    address = CharField(label=_('Address'), max_length=255)
-    address_detail = CharField(label=_('Address detail'), max_length=255, required=False)
-    postal_code = CharField(label=_('Postal code'), max_length=255)
-    city = CharField(label=_('City'), max_length=255)
-    country = CharField(label=_('Country'), max_length=255)
-    telephone = CharField(label=_('Telephone'), max_length=255)
-    birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
-    # student
-    portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=True,
-                          help_text="Veuillez utiliser une photo au format d'identité.")
-    level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
-    iej = ModelChoiceField(label='IEJ',
-                           queryset=IEJ.objects.all())
-    platform_only = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
-                                      label='E-learning uniquement',
-                                      widget=forms.Select())
-    period = ModelChoiceField(label='Période',
-                              queryset=Period.objects.filter(is_open=True,
-                                                             date_inscription_start__lte=datetime.datetime.now(),
-                                                             date_inscription_end__gte=datetime.datetime.now()))
-    training = ModelChoiceField(label='Formation',
-                                queryset=Training.objects.filter(available=True))
-    procedure = ModelChoiceField(label=_('Procedure'),
-                                 help_text="Matière de procédure",
-                                 queryset=Course.objects.filter(procedure=True))
-    written_speciality = ModelChoiceField(label='Specialité écrite',
-                                          queryset=Course.objects.filter(written_speciality=True),
-                                          help_text="Matière juridique de spécialité")
-    oral_1 = ModelChoiceField(label=_('Oral de langue (option)'),
-                              help_text="Matière d’oral de langue (en option)",
-                              queryset=Course.objects.filter(oral_1=True))
-    promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
-
-    payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
-                                 choices=payment_schedule_choices,
-                                 required=True)
-
-    fascicule = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
-                                  label='Envoi postal des fascicules',
-                                  required=False,
-                                  widget=forms.Select())
-    
-    # no model
-    captcha = CaptchaField()
-    accept = BooleanField()
-
+class BBBConferenceForm(ModelForm):
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email']
+        model = Conference
 
 
-    def __init__(self, *args, **kwargs):
-        super(UserForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].required = True
-        self.fields['last_name'].required = True
-        self.fields['email'].required = True
-        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
-        self.training_fields = ['level', 'iej', 'platform_only', 'fascicule', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
+if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
+    class UserForm(ModelForm):
+        # profile
+        address = CharField(label=_('Address'), max_length=255)
+        address_detail = CharField(label=_('Address detail'), max_length=255, required=False)
+        postal_code = CharField(label=_('Postal code'), max_length=255)
+        city = CharField(label=_('City'), max_length=255)
+        country = CharField(label=_('Country'), max_length=255)
+        telephone = CharField(label=_('Telephone'), max_length=255)
+        birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
+        # student
+        portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=True,
+                            help_text="Veuillez utiliser une photo au format d'identité.")
+        level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
+        iej = ModelChoiceField(label='IEJ',
+                            queryset=IEJ.objects.all())
+        platform_only = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                        label='E-learning uniquement',
+                                        widget=forms.Select())
+        period = ModelChoiceField(label='Période',
+                                queryset=Period.objects.filter(is_open=True,
+                                                                date_inscription_start__lte=datetime.datetime.now(),
+                                                                date_inscription_end__gte=datetime.datetime.now()))
+        training = ModelChoiceField(label='Formation',
+                                    queryset=Training.objects.filter(available=True))
 
-    def clean_portrait(self):
-        image = self.cleaned_data['portrait']
-        if not image:
-            return image
-        #width, height = get_image_dimensions(image)
-        #ratio = float(height) / float(width)
-        #if ratio > 2.5 or ratio < 1:
-        #    raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
-        NEW_HEIGHT = 230
-        NEW_WIDTH = 180
-        #if width < NEW_WIDTH or height < NEW_HEIGHT:
-        #    raise ValidationError({'portrait': "L'image est trop petite. Elle doit faire au moins %spx de large et %spx de hauteur." % (NEW_WIDTH, NEW_HEIGHT)})
+        
+        procedure = ModelChoiceField(label=_('Procedure'),
+                                    help_text="Matière de procédure",
+                                    queryset=Course.objects.filter(procedure=True))
+        written_speciality = ModelChoiceField(label='Specialité écrite',
+                                            queryset=Course.objects.filter(written_speciality=True),
+                                            help_text="Matière juridique de spécialité")
+        oral_1 = ModelChoiceField(label=_('Oral de langue (option)'),
+                                help_text="Matière d’oral de langue (en option)",
+                                queryset=Course.objects.filter(oral_1=True))
+        promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
 
-        # resize image
-        img = Image.open(image.file)
-        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+        payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
+                                    choices=payment_schedule_choices,
+                                    required=True)
 
-        temp = StringIO()
-        new_image.save(temp, 'jpeg')
-        temp.seek(0)
-        return SimpleUploadedFile('temp', temp.read())
+        fascicule = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                    label='Envoi postal des fascicules',
+                                    required=False,
+                                    widget=forms.Select())
+        
+        # no model
+        captcha = CaptchaField()
+        accept = BooleanField()
 
-    def save(self, commit=True):
+        class Meta:
+            model = User
+            fields = ['first_name', 'last_name', 'email']
 
-        data = self.cleaned_data
-        user = super(UserForm, self).save(commit=False)
-        username = get_unique_username(data['first_name'], data['last_name'])
-        self.username = username
-        user.username = username
-        user.last_name = data['last_name'].upper()
-        user.first_name = data['first_name'].capitalize()
-        user.is_active = False
-        if commit:
-            user.save()
-        profile = Profile(user=user,
-                          address=data['address'],
-                          address_detail=data.get('address_detail'),
-                          postal_code=data['postal_code'],
-                          city=data['city'],
-                          country=data['country'],
-                          telephone=data['telephone'],
-                          birthday=data['birthday']
-                          )
-        if commit:
-            profile.save()
-        platform_only = data.get('platform_only') == 'True' and True or False
-        fascicule = data.get('fascicule') == 'True' and True or False
-        training = data.get('training')
-        subscription_fees = 0
-        if platform_only:
-            if fascicule:
-                subscription_fees = training.cost_elearning_fascicle
+
+        def __init__(self, *args, **kwargs):
+            super(UserForm, self).__init__(*args, **kwargs)
+            self.fields['first_name'].required = True
+            self.fields['last_name'].required = True
+            self.fields['email'].required = True
+            self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
+            self.training_fields = ['level', 'iej', 'platform_only', 'fascicule', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
+
+        def clean_portrait(self):
+            image = self.cleaned_data['portrait']
+            if not image:
+                return image
+            #width, height = get_image_dimensions(image)
+            #ratio = float(height) / float(width)
+            #if ratio > 2.5 or ratio < 1:
+            #    raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
+            NEW_HEIGHT = 230
+            NEW_WIDTH = 180
+            #if width < NEW_WIDTH or height < NEW_HEIGHT:
+            #    raise ValidationError({'portrait': "L'image est trop petite. Elle doit faire au moins %spx de large et %spx de hauteur." % (NEW_WIDTH, NEW_HEIGHT)})
+
+            # resize image
+            img = Image.open(image.file)
+            new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+
+            temp = StringIO()
+            new_image.save(temp, 'jpeg')
+            temp.seek(0)
+            return SimpleUploadedFile('temp', temp.read())
+
+        def save(self, commit=True):
+
+            data = self.cleaned_data
+            user = super(UserForm, self).save(commit=False)
+            username = get_unique_username(data['first_name'], data['last_name'])
+            self.username = username
+            user.username = username
+            user.last_name = data['last_name'].upper()
+            user.first_name = data['first_name'].capitalize()
+            user.is_active = False
+            if commit:
+                user.save()
+            profile = Profile(user=user,
+                            address=data['address'],
+                            address_detail=data.get('address_detail'),
+                            postal_code=data['postal_code'],
+                            city=data['city'],
+                            country=data['country'],
+                            telephone=data['telephone'],
+                            birthday=data['birthday']
+                            )
+            if commit:
+                profile.save()
+            platform_only = data.get('platform_only') == 'True' and True or False
+            fascicule = data.get('fascicule') == 'True' and True or False
+            training = data.get('training')
+            subscription_fees = 0
+            if platform_only:
+                if fascicule:
+                    subscription_fees = training.cost_elearning_fascicle
+                else:
+                    subscription_fees = training.cost_elearning_nofascicle
             else:
-                subscription_fees = training.cost_elearning_nofascicle
-        else:
-            subscription_fees = training.cost
-        student = Student(user=user,
-                          portrait=data['portrait'],
-                          level=data.get('level'),
-                          iej=data.get('iej'),
-                          period=data.get('period'),
-                          platform_only=platform_only,
-                          procedure=data.get('procedure'),
-                          written_speciality=data.get('written_speciality'),
-                          oral_1=data.get('oral_1'),
-                          promo_code=data.get('promo_code'),
-                          training=training,
-                          payment_schedule=data.get('payment_schedule'),
-                          fascicule=fascicule,
-                          subscription_fees=subscription_fees
-                          )
-        student.save()
-        student.trainings.add(data.get('training', None))
-        return user
+                subscription_fees = training.cost
+            student = Student(user=user,
+                            portrait=data['portrait'],
+                            level=data.get('level'),
+                            iej=data.get('iej'),
+                            period=data.get('period'),
+                            platform_only=platform_only,
+                            procedure=data.get('procedure'),
+                            written_speciality=data.get('written_speciality'),
+                            oral_1=data.get('oral_1'),
+                            promo_code=data.get('promo_code'),
+                            training=training,
+                            payment_schedule=data.get('payment_schedule'),
+                            fascicule=fascicule,
+                            subscription_fees=subscription_fees
+                            )
+            student.save()
+            student.trainings.add(data.get('training', None))
+            return user
+
+
+else:
+    class UserForm(ModelForm):
+        # profile
+        address = CharField(label=_('Address'), max_length=255)
+        address_detail = CharField(label=_('Address detail'), max_length=255, required=False)
+        postal_code = CharField(label=_('Postal code'), max_length=255)
+        city = CharField(label=_('City'), max_length=255)
+        country = CharField(label=_('Country'), max_length=255)
+        telephone = CharField(label=_('Telephone'), max_length=255)
+        birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
+        # student
+        portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=True,
+                            help_text="Veuillez utiliser une photo au format d'identité.")
+        level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
+        platform_only = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                        label='E-learning uniquement',
+                                        widget=forms.Select())
+        period = ModelChoiceField(label='Période',
+                                queryset=Period.objects.filter(is_open=True,
+                                                                date_inscription_start__lte=datetime.datetime.now(),
+                                                                date_inscription_end__gte=datetime.datetime.now()))
+        training = ModelChoiceField(label='Formation',
+                                    queryset=Training.objects.filter(available=True))
+
+        
+        promo_code = CharField(label=_('Code promo'), max_length=100, required=False)
+
+        payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
+                                    choices=payment_schedule_choices,
+                                    required=True)
+
+        fascicule = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,
+                                    label='Envoi postal des fascicules',
+                                    required=False,
+                                    widget=forms.Select())
+        
+        # no model
+        captcha = CaptchaField()
+        accept = BooleanField()
+
+        class Meta:
+            model = User
+            fields = ['first_name', 'last_name', 'email']
+
+
+        def __init__(self, *args, **kwargs):
+            super(UserForm, self).__init__(*args, **kwargs)
+            self.fields['first_name'].required = True
+            self.fields['last_name'].required = True
+            self.fields['email'].required = True
+            self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
+            self.training_fields = ['level', 'iej', 'platform_only', 'fascicule', 'period', 'training', 'procedure', 'written_speciality', 'oral_1']
+
+        def clean_portrait(self):
+            image = self.cleaned_data['portrait']
+            if not image:
+                return image
+            #width, height = get_image_dimensions(image)
+            #ratio = float(height) / float(width)
+            #if ratio > 2.5 or ratio < 1:
+            #    raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
+            NEW_HEIGHT = 230
+            NEW_WIDTH = 180
+            #if width < NEW_WIDTH or height < NEW_HEIGHT:
+            #    raise ValidationError({'portrait': "L'image est trop petite. Elle doit faire au moins %spx de large et %spx de hauteur." % (NEW_WIDTH, NEW_HEIGHT)})
+
+            # resize image
+            img = Image.open(image.file)
+            new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+
+            temp = StringIO()
+            new_image.save(temp, 'jpeg')
+            temp.seek(0)
+            return SimpleUploadedFile('temp', temp.read())
+
+        def save(self, commit=True):
+
+            data = self.cleaned_data
+            user = super(UserForm, self).save(commit=False)
+            username = get_unique_username(data['first_name'], data['last_name'])
+            self.username = username
+            user.username = username
+            user.last_name = data['last_name'].upper()
+            user.first_name = data['first_name'].capitalize()
+            user.is_active = False
+            if commit:
+                user.save()
+            profile = Profile(user=user,
+                            address=data['address'],
+                            address_detail=data.get('address_detail'),
+                            postal_code=data['postal_code'],
+                            city=data['city'],
+                            country=data['country'],
+                            telephone=data['telephone'],
+                            birthday=data['birthday']
+                            )
+            if commit:
+                profile.save()
+            platform_only = data.get('platform_only') == 'True' and True or False
+            fascicule = data.get('fascicule') == 'True' and True or False
+            training = data.get('training')
+            subscription_fees = 0
+            if platform_only:
+                if fascicule:
+                    subscription_fees = training.cost_elearning_fascicle
+                else:
+                    subscription_fees = training.cost_elearning_nofascicle
+            else:
+                subscription_fees = training.cost
+            student = Student(user=user,
+                            portrait=data['portrait'],
+                            level=data.get('level'),
+                            iej=data.get('iej'),
+                            period=data.get('period'),
+                            platform_only=platform_only,
+                            procedure=data.get('procedure'),
+                            written_speciality=data.get('written_speciality'),
+                            oral_1=data.get('oral_1'),
+                            promo_code=data.get('promo_code'),
+                            training=training,
+                            payment_schedule=data.get('payment_schedule'),
+                            fascicule=fascicule,
+                            subscription_fees=subscription_fees
+                            )
+            student.save()
+            student.trainings.add(data.get('training', None))
+            return user
 
 class CorrectorForm(ModelForm):
     # profile

@@ -238,15 +238,18 @@ class ProfileInline(admin.StackedInline):
 
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [ProfileInline, StudentInline]
+    inlines = [ProfileInline, StudentInline, ProfessorProfileInline]
     search_fields = ['username', 'email']
 
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
-    filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2','magistral']
-    exclude = ['options']
+
+    if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
+        filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+                            'written_speciality', 'oral_1', 'oral_2','magistral']
+    else:
+        filter_horizontal = []
 
 
 class CourseAdmin(admin.ModelAdmin):

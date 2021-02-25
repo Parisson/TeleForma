@@ -199,14 +199,17 @@ class Course(Model):
     title_tweeter = models.CharField(_('tweeter title'), max_length=255)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
     number = models.IntegerField(_('number'), blank=True, null=True)
-    synthesis_note = models.BooleanField(_('synthesis note'))
-    obligation = models.BooleanField(_('obligations'))
-    magistral = models.BooleanField(_('magistral'))
-    procedure = models.BooleanField(_('procedure'))
-    written_speciality = models.BooleanField(_('written_speciality'))
-    oral_speciality = models.BooleanField(_('oral_speciality'))
-    oral_1 = models.BooleanField(_('oral_1'))
-    oral_2 = models.BooleanField(_('oral_2'))
+
+    if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
+        synthesis_note = models.BooleanField(_('synthesis note'))
+        obligation = models.BooleanField(_('obligations'))
+        magistral = models.BooleanField(_('magistral'))
+        procedure = models.BooleanField(_('procedure'))
+        written_speciality = models.BooleanField(_('written_speciality'))
+        oral_speciality = models.BooleanField(_('oral_speciality'))
+        oral_1 = models.BooleanField(_('oral_1'))
+        oral_2 = models.BooleanField(_('oral_2'))
+
     has_exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
     quiz = models.ManyToManyField(Quiz, verbose_name=_('quiz'), blank=True, null=True)
     # last professor which received a student message on automatic mode
@@ -350,6 +353,7 @@ class Conference(models.Model):
     streaming       = models.BooleanField(_('streaming'), default=True)
     web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
                              blank=True, null=True, on_delete=models.SET_NULL)
+    # is_webclass     = models.BooleanField("Webclass", default=False)
 
     @property
     def description(self):

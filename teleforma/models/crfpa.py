@@ -82,32 +82,35 @@ class Training(Model):
     description = models.CharField(_('description'), max_length=512, blank=True)
     period = models.ForeignKey('Period', related_name='training', verbose_name=_('period'), blank=True, null=True)
     parent = models.ForeignKey('Training', related_name='children', verbose_name=_('parent'), blank=True, null=True)
-    synthesis_note  = models.ManyToManyField('CourseType', related_name="training_synthesis_note", verbose_name=_('synthesis note'),
-                                        blank=True, null=True)
-    obligation = models.ManyToManyField('CourseType', related_name="training_obligation",
-                                        verbose_name=_('obligations'),
-                                        blank=True, null=True)
-    procedure = models.ManyToManyField('CourseType', related_name="training_procedure",
-                                        verbose_name=_('procedure'),
-                                        blank=True, null=True)
-    written_speciality = models.ManyToManyField('CourseType', related_name="training_written_speciality",
-                                        verbose_name=_('written speciality'),
-                                        blank=True, null=True)
-    oral_speciality = models.ManyToManyField('CourseType', related_name="training_oral_speciality",
-                                        verbose_name=_('oral speciality'),
-                                        blank=True, null=True)
-    oral_1 = models.ManyToManyField('CourseType', related_name="training_oral_1",
-                                        verbose_name=_('oral 1'),
-                                        blank=True, null=True)
-    oral_2 = models.ManyToManyField('CourseType', related_name="training_oral_2",
-                                        verbose_name=_('oral 2'),
-                                        blank=True, null=True)
-    options = models.ManyToManyField('CourseType', related_name="training_options",
-                                        verbose_name=_('options'),
-                                        blank=True, null=True)
-    magistral = models.ManyToManyField('CourseType', related_name="training_magistral",
-                                        verbose_name=_('magistral'),
-                                        blank=True, null=True)
+
+    if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
+        synthesis_note  = models.ManyToManyField('CourseType', related_name="training_synthesis_note", verbose_name=_('synthesis note'),
+                                            blank=True, null=True)
+        obligation = models.ManyToManyField('CourseType', related_name="training_obligation",
+                                            verbose_name=_('obligations'),
+                                            blank=True, null=True)
+        procedure = models.ManyToManyField('CourseType', related_name="training_procedure",
+                                            verbose_name=_('procedure'),
+                                            blank=True, null=True)
+        written_speciality = models.ManyToManyField('CourseType', related_name="training_written_speciality",
+                                            verbose_name=_('written speciality'),
+                                            blank=True, null=True)
+        oral_speciality = models.ManyToManyField('CourseType', related_name="training_oral_speciality",
+                                            verbose_name=_('oral speciality'),
+                                            blank=True, null=True)
+        oral_1 = models.ManyToManyField('CourseType', related_name="training_oral_1",
+                                            verbose_name=_('oral 1'),
+                                            blank=True, null=True)
+        oral_2 = models.ManyToManyField('CourseType', related_name="training_oral_2",
+                                            verbose_name=_('oral 2'),
+                                            blank=True, null=True)
+        options = models.ManyToManyField('CourseType', related_name="training_options",
+                                            verbose_name=_('options'),
+                                            blank=True, null=True)
+        magistral = models.ManyToManyField('CourseType', related_name="training_magistral",
+                                            verbose_name=_('magistral'),
+                                            blank=True, null=True)
+
     cost = models.FloatField(_('cost'), blank=True, null=True)
     cost_elearning_fascicle = models.FloatField(_('e-learning cost with fascicle'), blank=True, null=True)
     cost_elearning_nofascicle = models.FloatField(_('e-learning cost without fascicle'), blank=True, null=True)
@@ -146,9 +149,6 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
         written_speciality = models.ForeignKey('Course', related_name="written_speciality_students",
                                             verbose_name=_('written speciality'), help_text="Matière juridique de spécialité",
                                             blank=True, null=True, limit_choices_to={'written_speciality': True})
-        written_speciality = models.ForeignKey('Course', related_name="written_speciality_2students",
-                                        verbose_name=_('written speciality'), help_text="Matière juridique de spécialité",
-                                        blank=True, null=True, limit_choices_to={'written_speciality': True})
         oral_speciality = models.ForeignKey('Course', related_name="oral_speciality_students",
                                             verbose_name=_('oral speciality'),
                                             help_text="Matière d’oral de spécialité (matière incluse dans la formation approfondie, en option pour toutes les autres formations)",

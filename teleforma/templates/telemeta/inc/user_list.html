@@ -19,14 +19,8 @@
    <thead>
    <tr><th>{% trans "Last Name"%}</th>
     <th>{% trans "First Name"%}</th>
-    <th>{% trans "IEJ"%}</th>
-    <th>{% trans "Trainings"%}</th>
-    <th>{% trans "Procedure"%}</th>
-    <th>{% trans "Written spe"%}</th>
-    <th>{% trans "Oral spe"%}</th>
-    <th>{% trans "Oral 1"%}</th>
-    <th>{% trans "Oral 2"%}</th>
-    <th>{% trans "Write"%}</th>
+    <th>Type</td>
+    <th></th>
     </tr>
     </thead>
     <tbody id="spacing">
@@ -37,38 +31,14 @@
 
      {% if user.student.get %}
       {% with user.student.get as student %}
-        <td>{{ student.iej.name }}</td>
-        <td>{% for training in student.trainings.all %}{{ training }} {% endfor %}</td>
-        <td>{{ student.procedure.code }}</td>
-        <td>{{ student.written_speciality.code }}</td>
-        <td>{{ student.oral_speciality.code }}</td>
-        <td>{{ student.oral_1.code }}</td>
-        <td>{{ student.oral_2.code }}</td>
+        <td>{% trans "Student"%}</td>
      {% endwith %}
     {% elif user.professor.get %}
         <td>{% trans "Professor" %}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
     {% elif user.is_staff %}
         <td>{% trans "Administrator" %}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
     {% else %}
         <td>{% trans "Unknown" %}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
     {%  endif %}
     <td><a href="{% url postman_write user.username %}" class="component_icon button" id="action_orange">{% trans "Message" %}</a></td>
     </tr>
