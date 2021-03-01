@@ -57,9 +57,10 @@ def process_payment(request, payment):
     Process a payment to Sherlocks
     """
     params = dict(settings.PAYMENT_PARAMETERS)
-    period = payment.student.period
-    period_short_name = period.name.split()[0]
-    params['merchant_id'] = params['merchant_id'][period_short_name]
+    if isinstance(params['merchant_id'], dict):
+        period = payment.student.period
+        period_short_name = period.name.split()[0]    
+        params['merchant_id'] = params['merchant_id'][period_short_name]
     merchant_id = params['merchant_id']
     params['amount'] = str(int(payment.value*100))
     params['order_id'] = str(payment.pk)

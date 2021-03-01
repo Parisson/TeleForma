@@ -1,7 +1,7 @@
 {% url teleforma-payment-start payment.pk as payment_url %}
 Bonjour,
 
-Suite à votre inscription à la formation {{ period }}, une échéance de
+Suite à votre inscription à la formation avocat étranger, une échéance de
 {{ payment.value }} € est arrivée.
 
 Pour effectuer votre paiement, veuillez cliquer sur l’URL suivante :

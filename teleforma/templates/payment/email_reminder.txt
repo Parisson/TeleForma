@@ -3,7 +3,7 @@ Bonjour,
 
 A ce jour, nous restons dans l’attente de votre échéance de paiement
 de {{ payment.value }} € relative à vos frais d’inscription à notre
-formation {{ period }}.
+formation avocat étranger.
 
 Merci de bien vouloir procéder à votre règlement dans les meilleurs
 délais en cliquant sur l'URL suivante :

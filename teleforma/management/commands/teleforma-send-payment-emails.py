@@ -38,18 +38,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         log_file = args[-1]
-        period_name = args[-2]
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
-        period = Period.objects.get(name=period_name)
         students = Student.objects.all()
         translation.activate(self.language_code)
 
         today = datetime.date.today()
         
         for student in students:
-            if student.is_subscribed and student.user.email and student.period == period:
+            if student.is_subscribed and student.user.email:
                 for payment in student.payments.filter(type = 'online').exclude(online_paid = True).filter(scheduled__lte = today):
                     if payment.scheduled == today:
                         self.email(student, 'initial', payment)

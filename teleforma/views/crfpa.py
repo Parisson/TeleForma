@@ -645,12 +645,6 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         context['site'] = Site.objects.get_current()
         
         student = user.student.all()[0]
-
-        if not student.training and student.trainings.all():
-            student.training = student.trainings.all()[0]
-        training = student.training
-        period = training.period
-        student.save()            
         profile = user.profile.all()[0]
 
         context['student'] = student
@@ -666,44 +660,29 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
             student.receipt_id = receipt_id
             student.save()
 
-        period_name = period.name.split()
-        period_name = period_name[0].upper()
+        period = student.period.all()[0]
+        date_begin = period.date_begin or datetime.date.today()
+        date_end = period.date_end or datetime.date.today()
+        period_name = period.name
+        if period_name.startswith('Session '):
+            period_name = period_name[8:]
+        period_name = 'AE_%s' % period_name
         context['receipt_id'] = "%s_%04d_%05d" % (period_name,
-                                                  period.date_begin.year,
+                                                  date_begin.year,
                                                   receipt_id)
         self.receipt_id = context['receipt_id']
 
         # Added items to pay
         items = []
-        if student.application_fees:
-            substract = student.default_application_fees
-            items.append({ 'label': "<b>Frais de dossier</b>",
-                           'unit_price': substract,
-                           'amount': 1,
-                           'discount': None, },)
-        else:
-            substract = 0
+        substract = 0
 
-        label = u"<b>Préparation à l'examen du CRFPA</b><br/>"
-        label += u"<b>%s &mdash; %s</b><br />" % (period, training.name)
-        label += u"<i>%d heures de formation du %s au %s</i>" % (training.duration,
-                                                                period.date_begin.strftime('%d/%m/%Y'),
-                                                                period.date_end.strftime('%d/%m/%Y'),)
+        label = u"<b>Préparation à l'examen d'équivalence au barreau<br/>français - article 100</b><br/>"
+        label += u"<i>130h d’enseignement – 28 simulations du %s<br /> au %s</i>" % (date_begin.strftime('%d/%m/%Y'), date_end.strftime('%d/%m/%Y'),)
 
-        oral_1 = student.oral_1 and student.oral_1.title != 'Aucune'
-        
-        if oral_1:
-            substract += ORAL_OPTION_PRICE            
-        
         items.append({ 'label': label,
                        'unit_price': student.total_fees - substract - student.total_discount,
                        'amount': 1,
                        'discount': student.total_discount, }, )
-        if oral_1:
-            items.append({ 'label': "<b>Option langue</b>",
-                           'unit_price': ORAL_OPTION_PRICE,
-                           'amount': 1,
-                           'discount': 0, }, )
         for item in items:
             item['total'] = item['unit_price'] * item['amount']
             if item['discount']:
@@ -711,7 +690,9 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
 
         # Add payments
         payments = Payment.objects.filter(student = student)
-        receipt_last = receipt_date = student.date_subscribed.date()
+        start = student.date_subscribed
+        start = start and start.date() or datetime.date(1970, 1, 1)
+        receipt_last = receipt_date = start
         for payment in payments:
             date = payment.scheduled or payment.date_modified.date()
             receipt_last = max(date, receipt_last)
