@@ -149,6 +149,24 @@ class ConferenceAdmin(admin.ModelAdmin):
     search_fields = ['public_id', 'id']
     filter_vertical = ['docs_description',
                        'suggested_seminars', 'suggested_conferences']
+    actions = ['export_conference']
+
+    def export_conference(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        filename = "conferences"
+        response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+        data = {}
+        writer = UnicodeWriter(response, delimiter=";")
+        writer.writerow(("id", "nom", "prix", "code produit"))
+
+        for conference in queryset.order_by('-publish_date'):
+            row = (conference.id, conference.title, conference.price, conference.product_code)
+            writer.writerow(row)
+        return response
+
+    export_conference.short_description = "Exporter les conferences"
+
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
@@ -162,7 +180,11 @@ class SeminarAdmin(admin.ModelAdmin):
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
     list_filter = ('period', 'publish_date', 'expiry_date')
-    actions = ['clone_seminars']
+    actions = ['clone_seminars', 'export_seminar']
+    # raw_id_fields = ['docs_description', 'docs_1',
+    #                    'docs_2', 'docs_correct', 'medias', 'media_preview',
+    #                    'suggested_seminars', 'suggested_conferences', 'quiz', 'conference']
+
 
     def clone_seminars(self, request, queryset):
         log = ""
@@ -172,6 +194,23 @@ class SeminarAdmin(admin.ModelAdmin):
         return HttpResponse(log)
             
     clone_seminars.short_description = "Dupliquer les séminaires"
+
+
+    def export_seminar(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        filename = "seminaires"
+        response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+        data = {}
+        writer = UnicodeWriter(response, delimiter=";")
+        writer.writerow(("id", "nom", "prix", "code produit"))
+
+        for seminar in queryset.order_by('-publish_date'):
+            row = (seminar.id, seminar.title, seminar.price, seminar.product_code)
+            writer.writerow(row)
+        return response
+
+    export_seminar.short_description = "Exporter les séminaires"
 
     class Media:
         css = { 'all': ('admin/extra.css',) }
