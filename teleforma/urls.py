@@ -51,10 +51,9 @@ media = MediaView()
 
 urlpatterns = patterns('',
 #    url(r'^$', HomeView.as_view(), name='teleforma-home'),
-    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
+    url(r'^$', SeminarsView.as_view(), name="home"),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
         name="teleforma-login"),
-    url(r'^$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
-        name="home"),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
         name="telemeta-login"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'telemeta/login.html', 'authentication_form': AuthenticationForm },
@@ -176,5 +175,4 @@ urlpatterns = patterns('',
     # Webclass hook
     url(r'^webclass_bbb_webhook/', webclass_bbb_webhook,
         name="webclass_bbb_webhook"),
-                       
 )
