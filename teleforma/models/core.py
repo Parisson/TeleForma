@@ -198,6 +198,8 @@ class Course(Model):
     types           = ManyToManyField('CourseType', related_name="course",
                                         verbose_name=_('types'),
                                         blank=True, null=True)
+    private         = models.BooleanField(_('private'), help_text="Hide in shop", default=False)
+    
 
     notes = generic.GenericRelation(Note)
 
