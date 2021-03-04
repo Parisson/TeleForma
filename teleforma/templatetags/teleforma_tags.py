@@ -317,6 +317,19 @@ def fancy_duration(duration):
         minutes = str(minutes)
     time +=  minutes + 'mn'
     return time
+
+@register.filter
+def fancy_duration_shop_like(duration):
+    if not duration:
+        return ""
+    time = ''
+    d = unicode(duration).split(':')
+    hours = int(d[0])
+    minutes = int(d[1])
+    if hours:
+        time += str(hours) + 'h'
+    time += "%02d" % minutes
+    return time
     
 @register.filter
 def fancy_seconds(seconds):

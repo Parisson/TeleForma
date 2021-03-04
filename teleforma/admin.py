@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from telemeta.util.unicode import UnicodeWriter
 from teleforma.models import *
+from teleforma.templatetags.teleforma_tags import fancy_duration_shop_like, fancy_seconds
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -161,7 +162,15 @@ class ConferenceAdmin(admin.ModelAdmin):
         writer.writerow(("id", "nom", "prix", "code produit"))
 
         for conference in queryset.order_by('-publish_date'):
-            row = (conference.id, conference.title, conference.price, conference.product_code)
+            title = conference.pretty_title
+            
+            if conference.webclass:
+                title = u"Webconférence - " + title
+            if conference.duration:
+                title += u" - Durée : %s" % (fancy_duration_shop_like(conference.duration))
+            if conference.webclass:
+                title += u" (%s live + %s de validation des acquis)" % (fancy_seconds(conference.webclass_duration), fancy_seconds(conference.webclass_hours_complementary.as_seconds()))
+            row = (conference.id, title, conference.price, conference.product_code)
             writer.writerow(row)
         return response
 
@@ -206,7 +215,7 @@ class SeminarAdmin(admin.ModelAdmin):
         writer.writerow(("id", "nom", "prix", "code produit"))
 
         for seminar in queryset.order_by('-publish_date'):
-            row = (seminar.id, seminar.title, seminar.price, seminar.product_code)
+            row = (seminar.id, seminar.pretty_title_with_duration, seminar.price, seminar.product_code)
             writer.writerow(row)
         return response
 
