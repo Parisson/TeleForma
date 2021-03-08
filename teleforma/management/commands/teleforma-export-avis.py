@@ -61,7 +61,7 @@ class Command(BaseCommand):
         for testimonial in testimonials:
             user = testimonial.user
             seminar = testimonial.seminar
-            if seminar_validated(user, seminar) and (get_seminar_delta(user, seminar) >= 0):
+            if not seminar_validated(user, seminar) or not (get_seminar_delta(user, seminar) >= 0):
                 testimonial_not_ok.append(user)
                 continue
             # find relevant cart
@@ -132,10 +132,10 @@ class Command(BaseCommand):
         self.log("\n".join([str(user) for user in added]))
         self.log("\n")
 
-        # if testimonial_not_ok:
-        #     self.log("Testimonial not validated :")
-        #     self.log("\n".join([str(user) for user in testimonial_not_ok]))
-        #     self.log("\n")
+        if testimonial_not_ok:
+            self.log("Testimonial not validated :")
+            self.log("\n".join([str(user) for user in testimonial_not_ok]))
+            self.log("\n")
 
         if cart_not_found:
             self.log("Cart not found :")
@@ -153,23 +153,22 @@ class Command(BaseCommand):
 
         self.log('Sending csv to ftp...')
 
-        ftp = FTP(self.FTP_HOST)
-        try:
-            
-            ftp.login(self.FTP_LOGIN, self.FTP_PASSWORD)
-            ftp.cwd(self.FTP_PATH)
-            ftp.storlines("STOR export-orders%s.csv" % str(date.today()), output)
-            ftp.quit()
-        except:
-            ftp.close()
-            self.log('Error while uploading to FTP')
-            raise
-        self.log('Sending csv to ftp done')
+        # ftp = FTP(self.FTP_HOST)
+        # try:
+        #     ftp.login(self.FTP_LOGIN, self.FTP_PASSWORD)
+        #     ftp.cwd(self.FTP_PATH)
+        #     ftp.storlines("STOR export-orders%s.csv" % str(date.today()), output)
+        #     ftp.quit()
+        # except:
+        #     ftp.close()
+        #     self.log('Error while uploading to FTP')
+        #     raise
+        # self.log('Sending csv to ftp done')
 
-        send_mail(
-            "Rapport export d'avis",
-            self.logs,
-            settings.DEFAULT_FROM_EMAIL,
-            settings.REPORT_TO_EMAIL,
-            fail_silently=False,
-        )
+        # send_mail(
+        #     "Rapport export d'avis",
+        #     self.logs,
+        #     settings.DEFAULT_FROM_EMAIL,
+        #     settings.REPORT_TO_EMAIL,
+        #     fail_silently=False,
+        # )
