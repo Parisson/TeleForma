@@ -50,7 +50,6 @@ import datetime
 from django.conf import settings
 from django.template.defaultfilters import stringfilter
 import django.utils.timezone as timezone
-from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
 from teleforma.views import get_courses
 from teleforma.context_processors import *
@@ -111,6 +110,7 @@ def to_recipients(users):
 
 @register.filter
 def localtime(value, timezone):
+    from timezones.utils import localtime_for_timezone
     return localtime_for_timezone(value, timezone)
 
 @register.filter
