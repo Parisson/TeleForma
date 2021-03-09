@@ -30,7 +30,27 @@
       expandText: 'Lire plus',
       userCollapseText: 'Cacher le texte',
     });
+
+
+    {% if popup_message %}
+      // show a warning popup and set a cookie to not display the popup each visit
+      if(getCookie('time-popup-view') != 1){
+        $( "#warning-message" ).dialog({
+          modal: true,
+          buttons: {
+            Ok: function() {
+              $( this ).dialog( "close" );
+              var expirationDate=new Date();
+              expirationDate.setDate(expirationDate.getDate() + 1);
+              setCookie('time-popup-view', 1 , 1);
+            }
+          }
+        });
+      }
+    {% endif %}
   });
+
+
 
 </script>
 
@@ -38,24 +58,23 @@
 <script type="text/javascript">
 
   var seminarUtils = {
-
-        {% if user.is_staff %}
-  publish: function(id) {
-    var p = $('#publish');
-    json([id], 'teleforma.publish_seminar', function () {
-      p.removeClass('icon_delete').addClass('icon_ok');
-      p.html('{% trans " published" %}');
-    });
-  },
-  unpublish: function(id) {
-    var p = $('#publish');
-    json([id], 'teleforma.unpublish_seminar', function () {
-      p.removeClass('icon_ok').addClass('icon_delete');
-      p.html('{% trans " rejected" %}');
-    });
-  },
-  {% endif %}
-        }
+    {% if user.is_staff %}
+      publish: function(id) {
+        var p = $('#publish');
+        json([id], 'teleforma.publish_seminar', function () {
+          p.removeClass('icon_delete').addClass('icon_ok');
+          p.html('{% trans " published" %}');
+        });
+      },
+      unpublish: function(id) {
+        var p = $('#publish');
+        json([id], 'teleforma.unpublish_seminar', function () {
+          p.removeClass('icon_ok').addClass('icon_delete');
+          p.html('{% trans " rejected" %}');
+        });
+      },
+    {% endif %}
+  }
 
   var f = seminarUtils;
   $(document).ready(function () {
@@ -94,6 +113,14 @@
   <div class="course">
 
     <div class="course_title">
+
+      {% if popup_message %}
+      <div id="warning-message" title="Avertissement">
+        <p>
+          {{popup_message}}
+        </p>
+      </div>
+      {% endif %}
 
       <div style="float: right; font-size: 0.9em;">
         {% if seminar_progress == 100 and not user.is_staff %}
