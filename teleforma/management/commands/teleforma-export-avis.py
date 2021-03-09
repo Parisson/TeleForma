@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from optparse import make_option
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -17,6 +18,10 @@ from teleforma.views.pro import get_seminar_delta
 class Command(BaseCommand):
     help = "Send orders to avis-verifies ftp"
     args = 'days'
+    option_list = BaseCommand.option_list + (
+        make_option('--dry-run', action='store_true',
+            help='Do not send to ftp / mail'),
+    )
     FTP_HOST = "global-ftp.netreviews.eu"
     FTP_PORT = 22
     FTP_LOGIN = "fr_pro-barreau.com"
@@ -25,19 +30,19 @@ class Command(BaseCommand):
 
     
     def log(self, message):
+        print(message)
         logging.info(message)
         self.logs += message + "\n"
-
 
     def handle(self, *args, **options):
         self.logs = ""
         days = int(args[0])
+        dry_run = options['dry_run']
+        print(dry_run)
         logging.info('Generate csv file...')
 
         output = StringIO.StringIO()
         writer = csv.writer(output, delimiter=';')
-
-        
         
         writer.writerow([
             "order_ref", 
@@ -61,13 +66,14 @@ class Command(BaseCommand):
         for testimonial in testimonials:
             user = testimonial.user
             seminar = testimonial.seminar
+            if testimonial.seminar.course.code == "demo":
+                continue
             if not seminar_validated(user, seminar) or not (get_seminar_delta(user, seminar) >= 0):
                 testimonial_not_ok.append(user)
                 continue
             # find relevant cart
             cart = None
-            if testimonial.seminar.course.code == "demo":
-                continue
+
             for some_cart in Cart.objects.filter(user=testimonial.user, status=Cart.STATE_PAYMENT_ACCEPTED).all():
                 if some_cart.has_item(testimonial.seminar):
                     cart = some_cart
@@ -151,24 +157,24 @@ class Command(BaseCommand):
         self.log(output.getvalue())
         output.seek(0)
 
-        self.log('Sending csv to ftp...')
+        if not dry_run:
+            self.log('Sending csv to ftp...')
+            ftp = FTP(self.FTP_HOST)
+            try:
+                ftp.login(self.FTP_LOGIN, self.FTP_PASSWORD)
+                ftp.cwd(self.FTP_PATH)
+                ftp.storlines("STOR export-orders%s.csv" % str(date.today()), output)
+                ftp.quit()
+            except:
+                ftp.close()
+                self.log('Error while uploading to FTP')
+                raise
+            self.log('Sending csv to ftp done')
 
-        ftp = FTP(self.FTP_HOST)
-        try:
-            ftp.login(self.FTP_LOGIN, self.FTP_PASSWORD)
-            ftp.cwd(self.FTP_PATH)
-            ftp.storlines("STOR export-orders%s.csv" % str(date.today()), output)
-            ftp.quit()
-        except:
-            ftp.close()
-            self.log('Error while uploading to FTP')
-            raise
-        self.log('Sending csv to ftp done')
-
-        send_mail(
-            "Rapport export d'avis",
-            self.logs,
-            settings.DEFAULT_FROM_EMAIL,
-            settings.REPORT_TO_EMAIL,
-            fail_silently=False,
-        )
+            send_mail(
+                "Rapport export d'avis",
+                self.logs,
+                settings.DEFAULT_FROM_EMAIL,
+                settings.REPORT_TO_EMAIL,
+                fail_silently=False,
+            )
