@@ -263,7 +263,8 @@ class SeminarView(SeminarAccessMixin, DetailView):
                 missing = "%dh%02d" % (hours, minutes % 60)
             messages.warning(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you "
                                            "still have to work at least %(time)s.") % {'time':missing})
-
+            context['popup_message'] = _("Your connexion time is not sufficient. In order to get your testimonial, you "
+                                           "still have to work at least %(time)s.") % {'time':missing}
         return context
 
     @jsonrpc_method('teleforma.publish_seminar')
