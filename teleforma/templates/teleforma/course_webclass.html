@@ -17,54 +17,57 @@
     </div>
 
     {% if not seminar and user.is_superuser %}
-    <p class="warning">Attention, aucun séminaire n'est associé à cette conférence.</p>
+        <p class="warning">Attention, aucun séminaire n'est associé à cette conférence.</p>
     {% endif %}
 
     <br /><br />
 
 
     {% if webclass_status == 'past' %}
-    {% if record %}
-    <p>La conférence est terminée, vous pouvez la revoir ci-dessous.</p>
-    <a href="{% url teleforma-conference-webclass-record conference.id%}"
-        class="conference-big-button component_icon button icon_next">Voir l'enregistrement</a>
-    {% else %}
-    <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.</p>
-    {% endif %}
+        {% if record %}
+        <p>La conférence est terminée, vous pouvez la revoir ci-dessous.</p>
+        <a href="{% url teleforma-conference-webclass-record conference.id%}"
+            class="conference-big-button component_icon button icon_next">Voir l'enregistrement</a>
+        {% else %}
+        {% comment %} <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.</p> {% endcomment %}
+        <p class="warning">
+            En raison d'un important incendie survenu le 10/03 chez notre hébergeur OVH, votre vidéo est actuellement inaccessible. Nos équipes sont mobilisées pour rétablir l'ensemble de vos services au plus vite. Nous vous prions de bien vouloir nous excuser de la gêne occasionnée.
+        </p>
+        {% endif %}
     {% elif webclass_status == 'ingoing' %}
-    <p>La conférence est en cours.</p>
-    <a href="{% url teleforma-conference-join conference.id %}" target="_blank"
-        class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
+        <p>La conférence est en cours.</p>
+        <a href="{% url teleforma-conference-join conference.id %}" target="_blank"
+            class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
     {% elif webclass_status == 'almost' %}
-    <p>Le salon « Pro-Barreau Live » est accessible.</p>
-    <a href="{% url teleforma-conference-join conference.id %}" target="_blank"
-        class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
+        <p>Le salon « Pro-Barreau Live » est accessible.</p>
+        <a href="{% url teleforma-conference-join conference.id %}" target="_blank"
+            class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
     {% elif webclass_status == 'future' %}
-    <p>
-        Votre Webconférence débutera le <strong>{{ conference.date_begin|date:"d/m/Y" }} à
-            {{ conference.date_begin|time:"H\hi" }}</strong>.
-        Vous pourrez accéder au salon « Pro-Barreau Live » dès {{ begin_minus_1_hour|time:"H\hi" }} en cliquant sur le
-        lien qui apparaitra ci-dessous.
-    </p>
+        <p>
+            Votre Webconférence débutera le <strong>{{ conference.date_begin|date:"d/m/Y" }} à
+                {{ conference.date_begin|time:"H\hi" }}</strong>.
+            Vous pourrez accéder au salon « Pro-Barreau Live » dès {{ begin_minus_1_hour|time:"H\hi" }} en cliquant sur le
+            lien qui apparaitra ci-dessous.
+        </p>
     {% endif %}
 
 
     {% if user.is_superuser %}
-    <div style="border:1px solid grey">
-        <h3>Liens d'invitation</h3>
-        <p>
-            Se connecter en tant qu'admin : <a href="{% url teleforma-conference-join conference.id %}"
-                target="_blank">Cliquez ici pour rejoindre la conférence en tant que
-                <strong>{{ request.user.username }}</strong></a>
-        </p>
-        <ul>
-            {% for i in range %}
-            <li><a href="{% url teleforma-conference-join conference.id %}?username=utilisateur{{i}}"
+        <div style="border:1px solid grey">
+            <h3>Liens d'invitation</h3>
+            <p>
+                Se connecter en tant qu'admin : <a href="{% url teleforma-conference-join conference.id %}"
                     target="_blank">Cliquez ici pour rejoindre la conférence en tant que
-                    <strong>utilisateur{{i}}</strong></a></li>
-            {% endfor %}
-        </ul>
-    </div>
+                    <strong>{{ request.user.username }}</strong></a>
+            </p>
+            <ul>
+                {% for i in range %}
+                <li><a href="{% url teleforma-conference-join conference.id %}?username=utilisateur{{i}}"
+                        target="_blank">Cliquez ici pour rejoindre la conférence en tant que
+                        <strong>utilisateur{{i}}</strong></a></li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
 
