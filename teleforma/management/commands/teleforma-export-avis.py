@@ -79,7 +79,9 @@ class Command(BaseCommand):
                     cart = some_cart
             if not cart:
                 cart_not_found.append(user)
-                self.log("Can't find cart for testimonial %d and user %s" % (testimonial.id, str(user)))
+                # if this is a seminar linked to a conference, it's normal we don't find it in the cart
+                if not testimonial.seminar.conference:
+                    self.log("Can't find cart for testimonial %d and user %s" % (testimonial.id, str(user)))
                 continue
 
             if not testimonial.seminar.product_code:
