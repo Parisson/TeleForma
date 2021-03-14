@@ -1,3 +1,4 @@
+import datetime
 from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -55,7 +56,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         organization_name = args[0]
         department_name = args[1]
-        log_file = args[2]
+        period_name = args[2]
+        log_file = args[3]
         logger = Logger(log_file)
 
         organization = Organization.objects.get(name=organization_name)
@@ -79,18 +81,23 @@ class Command(BaseCommand):
                     course = root_list[-2]
                     course_code = course.split(self.spacer)[0]
                     course_type_name = course.split(self.spacer)[1].lower()
-                    period_name = root_list[-3]
+                    year = root_list[-3]
                     department_name = root_list[-4]
                     organization_name = root_list[-5]
+                    abs_path = root + os.sep + filename
                     dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_code, course_type_name])
-
-                    course_obj = Course.objects.get(code=course_code)
+                    
+                    print(public_id)
+                    courses = Course.objects.filter(code=course_code)
                     course_type_obj = CourseType.objects.get(name=course_type_name)
                     period_obj = Period.objects.get(name=period_name)
+                    mtime = os.path.getmtime(abs_path)
+                    conf_datetime = datetime.datetime.fromtimestamp(mtime)
 
-                    if department:
+                    if department and courses:
+                        course_obj = courses[0]
                         conferences = Conference.objects.filter(public_id=public_id)
                         if conferences:
                             conference = conferences[0]
@@ -99,6 +106,7 @@ class Command(BaseCommand):
                             conference.course = course_obj
                             conference.course_type = course_type_obj
                             conference.period = period_obj
+                            conference.date_begin = conf_datetime
                             conference.save()
 
                         department = Department.objects.get(name=department_name,
