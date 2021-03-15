@@ -1,5 +1,5 @@
 setuptools
-django==1.4.19
+django==1.11.29
 telemeta==1.4.6
 south
 django-pagination==1.0.7
