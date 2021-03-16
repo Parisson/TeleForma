@@ -428,7 +428,7 @@ class UserXLSBook(object):
 
         if not users:
             print(last_name)
-            username = get_unique_username('first_name', 'last_name')
+            username = get_unique_username(first_name, last_name)
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
             user.save()
 
@@ -444,10 +444,13 @@ class UserXLSBook(object):
 
             student = Student(user=user)
             student.user = user
-            studnet.period = period
+            student.period = period
             student.iej = IEJ.objects.get(name=iej)
             student.save()
-            student.trainings.add(Training.objects.get(code=training))
+            if 'I - ' in training:
+                training = training.split(' - ')[1]
+                student.platform_only = True
+            student.trainings.add(Training.objects.get(code=training, period=period, platform_only=student.platform_only))
             student.procedure = Course.objects.get(code=proc)
             student.written_speciality = Course.objects.get(code=spe)
             student.oral_1 = Course.objects.get(code=oral_1)
