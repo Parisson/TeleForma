@@ -389,12 +389,12 @@ class UserXLSBook(object):
 
     def date_str_to_date(self, date):
         date_split = date.split('/')
-        pydate = datetime.date(day=date_split[0], month=date_split[1], year=date_split[2])
+        pydate = datetime.date(day=int(date_split[0]), month=int(date_split[1]), year=int(date_split[2]))
         return pydate
 
     def date_str_to_datetime(self, date):
         date_split = date.split('/')
-        pydate = datetime.datetime(day=date_split[0], month=date_split[1], year=date_split[2])
+        pydate = datetime.datetime(day=int(date_split[0]), month=int(date_split[1]), year=int(date_split[2]))
         return pydate
 
     def import_user(self, row):
@@ -423,9 +423,10 @@ class UserXLSBook(object):
         subscription_fees = row[22]
         fascicule_sent = row[23]
 
-        students = Student.objects.filter(first_name=first_name, last_name=last_name, email=email)
+        users = User.objects.filter(first_name=first_name, last_name=last_name, email=email)
 
-        if not students:
+        if not users:
+            print(last_name)
             username = get_unique_username('first_name', 'last_name')
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
             user.save()
@@ -436,18 +437,21 @@ class UserXLSBook(object):
             profile.postal_code = cp
             profile.city = city
             profile.telephone = tel
-            profile.birthday = self.date_str_to_date(birth)
+            if birth:
+                profile.birthday = self.date_str_to_date(birth)
             profile.save()
 
-            student = Student(first_name=first_name, last_name=last_name, email=email)
+            student = Student(user=user)
             student.user = user
             student.iej = IEJ.objects.get(name=iej)
+            student.save()
             student.trainings.add(Training.objects.get(code=training))
             student.procedure = Course.objects.get(code=proc)
             student.written_speciality = Course.objects.get(code=spe)
             student.oral_1 = Course.objects.get(code=oral_1)
             student.level = level
-            student.date_subscribed = self.date_str_to_datetime(register_date)
+            if register_date:
+                student.date_subscribed = self.date_str_to_datetime(register_date)
 
             if total_reduction:
                 discount = Discount(student=student, value=float(total_reduction), description=desc_reduction)
@@ -458,7 +462,7 @@ class UserXLSBook(object):
                 payback = Payback(student=student, value=float(total_paybacks))
                 payback.save()
             student.subscription_fees = float(subscription_fees)
-            student.fascicule = True if fascicule else False
+            student.fascicule = True if fascicule_sent else False
 
             student.save()
 
@@ -466,7 +470,7 @@ class UserXLSBook(object):
             for month in months_choices:
                 amount = row[i]
                 payment_type = row[i+1]
-                payment = Payment(student=student, value=float(amount), month=month, type=payment_type)
+                payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type)
                 payment.save()
                 i += 2
 
