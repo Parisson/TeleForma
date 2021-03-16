@@ -321,7 +321,7 @@ class UserXLSBook(object):
                 if month in payment_per_month:
                     payment_per_month[month]['amount'] += value
                     payment_per_month[month]['type'].add(ptype_label)
-                
+
             row.write(19, total_payments)
 
             row.write(20, student.total_fees)
@@ -330,8 +330,8 @@ class UserXLSBook(object):
 
             row.write(23, student.subscription_fees)
             row.write(24, student.fascicule)
-                
-            
+
+
             i = 25
             for month in months_choices:
                 row.write(i, payment_per_month[month[0]]['amount'])
@@ -383,6 +383,124 @@ class UserXLSBook(object):
         counter = 0
         for student in self.students:
             counter = self.export_user(counter, student)
+
+    def date_str_to_date(self, date):
+        date_split = date.split('/')
+        pydate = datetime.date(day=date_split[0], month=date_split[1], year=date_split[2])
+        return pydate
+
+    def date_str_to_datetime(self, date):
+        date_split = date.split('/')
+        pydate = datetime.datetime(day=date_split[0], month=date_split[1], year=date_split[2])
+        return pydate
+
+    def import_user(self, row):
+        last_name = row[0]
+        first_name = row[1]
+        iej = row[2]
+        training = row[3]
+        proc = row[4]
+        spe = row[5]
+        oral_1 = row[6]
+        email = row[7]
+        address = row[8]
+        address_detail = row[9]
+        cp = row[10]
+        city = row[11]
+        tel = row[12]
+        birth = row[13]
+        level = row[14]
+        register_date = row[15]
+        total_reduction = row[16]
+        desc_reduction = row[17]
+        total_payment = row[18]
+        total_fees = row[19]
+        balance = row[20]
+        total_paybacks = row[21]
+        subscription_fees = row[22]
+        fascicule_sent = row[23]
+
+        students = Student.objects.filter(first_name=first_name, last_name=last_name, email=email)
+
+        if not students:
+            username = get_unique_username('first_name', 'last_name')
+            user = User(first_name=first_name, last_name=last_name, email=email, username=username)
+            user.save()
+
+            profile = Profile(user=user)
+            profile.address = address
+            profile.address_detail = address_detail
+            profile.postal_code = cp
+            profile.city = city
+            profile.telephone = tel
+            profile.birthday = self.date_str_to_date(birth)
+            profile.save()
+
+            student = Student(first_name=first_name, last_name=last_name, email=email)
+            student.user = user
+            student.iej = IEJ.objects.get(name=iej)
+            student.trainings.add(Training.objects.get(code=training))
+            student.procedure = Course.objects.get(code=proc)
+            student.written_speciality = Course.objects.get(code=spe)
+            student.oral_1 = Course.objects.get(code=oral_1)
+            student.level = level
+            student.date_subscribed = self.date_str_to_datetime(register_date)
+
+            if total_reduction:
+                discount = Discount(student=student, value=float(total_reduction), description=desc_reduction)
+                discount.save()
+            student.balance = float(balance)
+
+            if total_paybacks:
+                payback = Payback(student=student, value=float(total_paybacks))
+                payback.save()
+            student.subscription_fees = float(subscription_fees)
+            student.fascicule = True if fascicule else False
+
+            student.save()
+
+            i = 24
+            for month in months_choices:
+                amount = row[i]
+                payment_type = row[i+1]
+                payment = Payment(student=student, value=float(amount), month=month, type=payment_type)
+                payment.save()
+                i += 2
+
+
+    def read(self, path):
+
+        cols = [{'name':'NOM', 'width':5000},
+            {'name':'PRENOM', 'width':5000},
+            {'name': 'PHOTO', 'width': 7500},
+            {'name':'IEJ', 'width':2500},
+            {'name':'FORMATIONS', 'width':6000},
+            {'name':'PROC', 'width':2500},
+            {'name':'Ecrit Spe', 'width':3000},
+            {'name':'ORAL 1', 'width':3000},
+            {'name':'MAIL', 'width':7500},
+            {'name':'ADRESSE', 'width':7500},
+            {'name':'ADRESSE (suite)', 'width': 7500},
+            {'name':'CP', 'width':2500},
+            {'name':'VILLE', 'width':5000},
+            {'name':'TEL', 'width':5000},
+            {'name': 'Date de naissance', 'width': 5000},
+            {'name': "Niveau d'etude", 'width': 5000},
+            {'name':"Date inscription", 'width':5000},
+            {'name':"Total reductions", 'width':4000},
+            {'name':"Description reduction", 'width':4000},
+            {'name':"Total paiements", 'width':4000},
+            {'name':"Prix formation net", 'width':4000},
+            {'name':"Balance", 'width':4000},
+            {'name':"Total remboursement", 'width':4000},
+            {'name': "Frais d'inscription", 'width': 4000},
+            {'name':"Envoi des fascicules", 'width':3500},
+            ]
+
+        book = xlrd.open_workbook(path)
+        sheet = book.sheet_by_index(0)
+        for rx in range(sheet.nrows):
+            self.import_user(sheet.row_values(rx))
 
 
 class UsersExportView(UsersView):
@@ -442,7 +560,7 @@ class CorrectorXLSBook(object):
             row.write(15, str(corrector.period))
             row.write(16, corrector.pay_status)
             row.write(17, (', ').join([course.title for course in corrector.courses.all()]))
-                
+
         return counter + 1
 
     def write(self):
@@ -466,13 +584,13 @@ class CorrectorXLSBook(object):
                 {'name':"STATUT", 'width':5000},
                 {'name':"MATIERES", 'width':30000},
                 ]
-        
+
         i = 0
         for col in cols:
             row.write(i, col['name'])
             self.sheet.col(i).width = col['width']
             i += 1
-            
+
         counter = 0
         for corrector in self.correctors:
             counter = self.export_user(counter, corrector)
@@ -601,7 +719,7 @@ class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
             student.oral_1 = Course.objects.get(code='X')
         if not student.oral_2:
             student.oral_2 = Course.objects.get(code='X')
-        student.save()            
+        student.save()
         profile = user.profile.all()[0]
         if profile.city:
             profile.city = profile.city.upper()
@@ -626,7 +744,7 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         filename += '.pdf'
         return filename.encode('utf-8')
 
-    
+
 class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
 
     template_name = 'receipt/receipt_pdf.html'
@@ -643,14 +761,14 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
             raise PermissionDenied
 
         context['site'] = Site.objects.get_current()
-        
+
         student = user.student.all()[0]
 
         if not student.training and student.trainings.all():
             student.training = student.trainings.all()[0]
         training = student.training
         period = training.period
-        student.save()            
+        student.save()
         profile = user.profile.all()[0]
 
         context['student'] = student
@@ -691,10 +809,10 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
                                                                 period.date_end.strftime('%d/%m/%Y'),)
 
         oral_1 = student.oral_1 and student.oral_1.title != 'Aucune'
-        
+
         if oral_1:
-            substract += ORAL_OPTION_PRICE            
-        
+            substract += ORAL_OPTION_PRICE
+
         items.append({ 'label': label,
                        'unit_price': student.total_fees - substract - student.total_discount,
                        'amount': 1,
@@ -732,7 +850,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         context['receipt_items'] = items
         context['receipt_total'] = sum([ i['total'] for i in items ])
         return context
-    
+
 class ReceiptPDFViewDownload(ReceiptPDFView):
 
     pdf_filename = 'facture.pdf'
@@ -749,7 +867,7 @@ class ReceiptPDFViewDownload(ReceiptPDFView):
         filename += '.pdf'
         return filename.encode('utf-8')
 
-    
+
 class CorrectorRegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
 
     template_name = 'registration/registration_corrector_pdf.html'
@@ -774,7 +892,7 @@ class CorrectorRegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
         context['corrector'] = corrector
         context['profile'] = profile
         return context
-    
+
 class RegistrationPDFViewDownload(RegistrationPDFView):
 
     pdf_filename = 'registration.pdf'
@@ -802,7 +920,7 @@ class CorrectorRegistrationPDFViewDownload(RegistrationPDFView):
         filename = '_'.join([prefix, corrector.user.first_name, corrector.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
-    
+
 
 class CorrectorAddView(CreateView):
 
@@ -820,7 +938,7 @@ class CorrectorAddView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('teleforma-corrector-register-complete', kwargs={'username':self.object.username})
-    
+
 class CorrectorCompleteView(TemplateView):
 
     template_name = 'registration/registration_corrector_complete.html'

@@ -41,6 +41,12 @@ from teleforma.models.core import *
 from tinymce.models import HTMLField
 from  django.db.models import signals
 
+
+months_choices = []
+for i in range(1,13):
+    months_choices.append((i, datetime.date(2015, i, 1).strftime('%B')))
+
+
 class IEJ(Model):
 
     name = models.CharField(_('name'), max_length=255)
@@ -113,7 +119,7 @@ class Training(Model):
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
     duration = models.IntegerField(u"Durée en heures", default=0)
-    
+
     def __unicode__(self):
         if self.name and self.period:
             return ' - '.join([self.name, self.period.name])
@@ -195,7 +201,7 @@ class Student(Model):
 
     receipt_id = models.IntegerField('numéro de facture', blank=True, null=True,
                                      unique=True)
-    
+
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -227,7 +233,7 @@ class Student(Model):
             if payment['type'] != 'online' or payment['online_paid']:
                 amount += payment['value']
         return amount
-    
+
     @property
     def total_payments_all(self):
         amount = 0
@@ -325,27 +331,22 @@ class Corrector(Model):
     pay_status = models.CharField('Statut', choices=PAY_STATUS_CHOICES,
                                     max_length=64, blank=True, null=True,
                                     default='honoraire')
-    
+
     date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
-    
-    
+
+
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:
             return ''
 
-    
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'corrector'
         verbose_name = _('Correcteur')
         verbose_name_plural = _('Correcteurs')
         ordering = ['user__last_name', '-date_registered']
-
-
-months_choices = []
-for i in range(1,13):
-    months_choices.append((i, datetime.date(2015, i, 1).strftime('%B')))
 
 
 class Payment(models.Model):
@@ -366,7 +367,7 @@ class Payment(models.Model):
                                       blank=True)
 
     date_paid = models.DateField(u"date de paiement", blank=True, null=True)
-    
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'payments'
         verbose_name = _("Payment")
