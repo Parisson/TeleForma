@@ -397,7 +397,7 @@ class UserXLSBook(object):
         pydate = datetime.datetime(day=int(date_split[0]), month=int(date_split[1]), year=int(date_split[2]))
         return pydate
 
-    def import_user(self, row):
+    def import_user(self, row, period):
         last_name = row[0]
         first_name = row[1]
         iej = row[2]
@@ -423,6 +423,7 @@ class UserXLSBook(object):
         subscription_fees = row[22]
         fascicule_sent = row[23]
 
+        period = Period.objects.get(name=period)
         users = User.objects.filter(first_name=first_name, last_name=last_name, email=email)
 
         if not users:
@@ -443,6 +444,7 @@ class UserXLSBook(object):
 
             student = Student(user=user)
             student.user = user
+            studnet.period = period
             student.iej = IEJ.objects.get(name=iej)
             student.save()
             student.trainings.add(Training.objects.get(code=training))
@@ -475,7 +477,7 @@ class UserXLSBook(object):
                 i += 2
 
 
-    def read(self, path):
+    def read(self, path, period):
 
         cols = [{'name':'NOM', 'width':5000},
             {'name':'PRENOM', 'width':5000},
@@ -506,8 +508,8 @@ class UserXLSBook(object):
 
         book = xlrd.open_workbook(path)
         sheet = book.sheet_by_index(0)
-        for rx in range(sheet.nrows):
-            self.import_user(sheet.row_values(rx))
+        for rx in range(1, sheet.nrows):
+            self.import_user(sheet.row_values(rx), period)
 
 
 class UsersExportView(UsersView):

@@ -16,8 +16,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file = args[0]
+        period = args[1]
         xls = UserXLSBook()
-        xls.read(file)
+        xls.read(file, period)
 
 
 
