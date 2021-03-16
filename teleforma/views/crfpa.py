@@ -439,7 +439,10 @@ class UserXLSBook(object):
             profile.city = city
             profile.telephone = tel
             if birth:
-                profile.birthday = self.date_str_to_date(birth)
+                try:
+                    profile.birthday = self.date_str_to_date(birth)
+                except:
+                    pass
             profile.save()
 
             student = Student(user=user)
