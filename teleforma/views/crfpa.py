@@ -51,6 +51,9 @@ from django.forms.formsets import all_valid
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import Site
 
+import xlrd
+
+
 ORAL_OPTION_PRICE = 250
 
 def get_course_code(obj):
