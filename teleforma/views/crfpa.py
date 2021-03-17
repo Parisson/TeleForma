@@ -481,8 +481,7 @@ class UserXLSBook(object):
 
         else:
             print(last_name.encode('utf8') + ' : updating')
-            user = users[0]
-            student = user.student.get()
+            student = Student.objects.get(user=user, period=period)
 
         i = 24
         for month in months_choices:
@@ -491,6 +490,7 @@ class UserXLSBook(object):
             payments = Payment.objects.filter(student=student, month=month[0])
             if not payments and amount:
                 payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type, online_paid=True)
+                print(last_name.encode('utf8') + ' : add payment')
                 payment.save()
                 student.is_subscribed = True
             i += 2
