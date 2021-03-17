@@ -445,6 +445,7 @@ class UserXLSBook(object):
             student.level = level
             student.period = period
             student.iej = IEJ.objects.get(name=iej)
+            student.is_subscribed = False
 
             student.save()
 
@@ -489,9 +490,12 @@ class UserXLSBook(object):
             payment_type = row[i+1]
             payments = Payment.objects.filter(student=student, month=month[0])
             if not payments and amount:
-                payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type)
+                payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type, online_paid=True)
                 payment.save()
+                student.is_subscribed = True
             i += 2
+
+        student.save()
 
 
     def read(self, path, period):
