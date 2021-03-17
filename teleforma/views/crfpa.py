@@ -427,28 +427,13 @@ class UserXLSBook(object):
         users = User.objects.filter(first_name=first_name, last_name=last_name, email=email)
 
         if not users:
-            print(last_name)
+            print(last_name + ' creating')
             username = get_unique_username(first_name, last_name)
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
             user.save()
-
             profile = Profile(user=user)
-            profile.address = address
-            profile.address_detail = address_detail
-            profile.postal_code = cp
-            profile.city = city
-            profile.telephone = tel
-            if birth:
-                try:
-                    profile.birthday = self.date_str_to_date(birth)
-                except:
-                    pass
             profile.save()
-
             student = Student(user=user)
-            student.user = user
-            student.period = period
-            student.iej = IEJ.objects.get(name=iej)
             student.save()
             if 'I - ' in training:
                 training = training.split(' - ')[1]
@@ -458,6 +443,25 @@ class UserXLSBook(object):
             student.written_speciality = Course.objects.get(code=spe)
             student.oral_1 = Course.objects.get(code=oral_1)
             student.level = level
+            student.period = period
+            student.iej = IEJ.objects.get(name=iej)
+
+            student.save()
+
+            profile.address = address
+            profile.address_detail = address_detail
+            profile.postal_code = cp
+            profile.city = city
+            profile.telephone = tel
+
+            if birth:
+                try:
+                    profile.birthday = self.date_str_to_date(birth)
+                except:
+                    pass
+
+            profile.save()
+
             if register_date:
                 student.date_subscribed = self.date_str_to_datetime(register_date)
 
@@ -474,13 +478,20 @@ class UserXLSBook(object):
 
             student.save()
 
-            i = 24
-            for month in months_choices:
-                amount = row[i]
-                payment_type = row[i+1]
+        else:
+            print(last_name + ' updating')
+            user = users[0]
+            student = user.student.get()
+
+        i = 24
+        for month in months_choices:
+            amount = row[i]
+            payment_type = row[i+1]
+            payments = Payment.objects.filter(student=student, month=month[0])
+            if not payments and amount:
                 payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type)
                 payment.save()
-                i += 2
+            i += 2
 
 
     def read(self, path, period):
