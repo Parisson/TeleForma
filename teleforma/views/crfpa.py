@@ -427,7 +427,7 @@ class UserXLSBook(object):
         users = User.objects.filter(first_name=first_name, last_name=last_name, email=email)
 
         if not users:
-            print(last_name)
+            print(last_name.encode('utf8'))
             username = get_unique_username(first_name, last_name)
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
             user.save()
