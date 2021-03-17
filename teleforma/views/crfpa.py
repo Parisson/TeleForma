@@ -427,7 +427,7 @@ class UserXLSBook(object):
         users = User.objects.filter(first_name=first_name, last_name=last_name, email=email)
 
         if not users:
-            print(last_name + ' creating')
+            print(last_name.encode('utf8') + ' : creating')
             username = get_unique_username(first_name, last_name)
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
             user.save()
@@ -479,7 +479,7 @@ class UserXLSBook(object):
             student.save()
 
         else:
-            print(last_name + ' updating')
+            print(last_name.encode('utf8') + ' : updating')
             user = users[0]
             student = user.student.get()
 
