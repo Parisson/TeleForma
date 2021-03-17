@@ -433,7 +433,6 @@ class UserXLSBook(object):
                 if students:
                     print(last_name.encode('utf8') + ' : updating')
                     student = students[0]
-                    profile = UserProfile(user=user)
                     break
 
         if not student:
@@ -446,12 +445,20 @@ class UserXLSBook(object):
             student = Student(user=user)
             student.save()
 
+        profiles = Profile.objects.filter(user=user)
+        if profiles:
+            profile = profiles[0]
+        else:
+            profile = Profile(user=user)
+
         if 'I - ' in training:
             training = training.split(' - ')[1]
             student.platform_only = True
         student.trainings.add(Training.objects.get(code=training, period=period, platform_only=student.platform_only))
         student.procedure = Course.objects.get(code=proc)
         student.written_speciality = Course.objects.get(code=spe)
+        if oral_1 == '':
+            oral_1 = 'X'
         student.oral_1 = Course.objects.get(code=oral_1)
         student.level = level
         student.period = period
@@ -485,6 +492,8 @@ class UserXLSBook(object):
         if total_paybacks:
             payback = Payback(student=student, value=float(total_paybacks))
             payback.save()
+        if subscription_fees == '':
+            subscription_fees = 0
         student.subscription_fees = float(subscription_fees)
         student.fascicule = True if fascicule_sent else False
         student.restricted = True
