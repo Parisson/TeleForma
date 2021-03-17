@@ -433,6 +433,7 @@ class UserXLSBook(object):
                 if students:
                     print(last_name.encode('utf8') + ' : updating')
                     student = students[0]
+                    profile = UserProfile(user=user)
                     break
 
         if not student:
@@ -444,56 +445,57 @@ class UserXLSBook(object):
             profile.save()
             student = Student(user=user)
             student.save()
-            if 'I - ' in training:
-                training = training.split(' - ')[1]
-                student.platform_only = True
-            student.trainings.add(Training.objects.get(code=training, period=period, platform_only=student.platform_only))
-            student.procedure = Course.objects.get(code=proc)
-            student.written_speciality = Course.objects.get(code=spe)
-            student.oral_1 = Course.objects.get(code=oral_1)
-            student.level = level
-            student.period = period
-            student.iej = IEJ.objects.get(name=iej)
-            student.is_subscribed = True
 
-            student.save()
+        if 'I - ' in training:
+            training = training.split(' - ')[1]
+            student.platform_only = True
+        student.trainings.add(Training.objects.get(code=training, period=period, platform_only=student.platform_only))
+        student.procedure = Course.objects.get(code=proc)
+        student.written_speciality = Course.objects.get(code=spe)
+        student.oral_1 = Course.objects.get(code=oral_1)
+        student.level = level
+        student.period = period
+        student.iej = IEJ.objects.get(name=iej)
+        student.is_subscribed = True
 
-            profile.address = address
-            profile.address_detail = address_detail
-            profile.postal_code = cp
-            profile.city = city
-            profile.telephone = tel
+        student.save()
 
-            if birth:
-                try:
-                    profile.birthday = self.date_str_to_date(birth)
-                except:
-                    pass
+        profile.address = address
+        profile.address_detail = address_detail
+        profile.postal_code = cp
+        profile.city = city
+        profile.telephone = tel
 
-            profile.save()
+        if birth:
+            try:
+                profile.birthday = self.date_str_to_date(birth)
+            except:
+                pass
 
-            if register_date:
-                student.date_subscribed = self.date_str_to_datetime(register_date)
+        profile.save()
 
-            if total_reduction:
-                discount = Discount(student=student, value=-float(total_reduction), description=desc_reduction)
-                discount.save()
-            student.balance = float(balance)
+        if register_date:
+            student.date_subscribed = self.date_str_to_datetime(register_date)
 
-            if total_paybacks:
-                payback = Payback(student=student, value=float(total_paybacks))
-                payback.save()
-            student.subscription_fees = float(subscription_fees)
-            student.fascicule = True if fascicule_sent else False
+        if total_reduction:
+            discount = Discount(student=student, value=-float(total_reduction), description=desc_reduction)
+            discount.save()
+        student.balance = float(balance)
 
-            student.save()
+        if total_paybacks:
+            payback = Payback(student=student, value=float(total_paybacks))
+            payback.save()
+        student.subscription_fees = float(subscription_fees)
+        student.fascicule = True if fascicule_sent else False
+        student.restricted = True
+
+        student.save()
 
         i = 24
         for month in months_choices:
             amount = row[i]
             payment_type = row[i+1]
             payments = Payment.objects.filter(student=student, month=month[0])
-            student.restricted = True
             if not payments and amount:
                 payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type, online_paid=True)
                 print(last_name.encode('utf8') + ' : add payment')
