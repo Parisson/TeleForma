@@ -493,12 +493,12 @@ class UserXLSBook(object):
             amount = row[i]
             payment_type = row[i+1]
             payments = Payment.objects.filter(student=student, month=month[0])
-            student.restricted = False
+            student.restricted = True
             if not payments and amount:
                 payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type, online_paid=True)
                 print(last_name.encode('utf8') + ' : add payment')
                 payment.save()
-                student.restricted = True
+                student.restricted = False
             i += 2
 
         student.save()
