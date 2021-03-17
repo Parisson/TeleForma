@@ -426,7 +426,16 @@ class UserXLSBook(object):
         period = Period.objects.get(name=period)
         users = User.objects.filter(first_name=first_name, last_name=last_name, email=email)
 
-        if not users:
+        student = None
+        if users:
+            for user in users:
+                students = Student.objects.filter(user=user, period=period)
+                if students:
+                    print(last_name.encode('utf8') + ' : updating')
+                    student = students[0]
+                    break
+
+        if not student:
             print(last_name.encode('utf8') + ' : creating')
             username = get_unique_username(first_name, last_name)
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
@@ -478,14 +487,6 @@ class UserXLSBook(object):
             student.fascicule = True if fascicule_sent else False
 
             student.save()
-
-        else:
-            print(last_name.encode('utf8') + ' : updating')
-            for user in users:
-                try:
-                    student = Student.objects.get(user=user, period=period)
-                except:
-                    continue
 
         i = 24
         for month in months_choices:
