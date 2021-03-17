@@ -445,7 +445,7 @@ class UserXLSBook(object):
             student.level = level
             student.period = period
             student.iej = IEJ.objects.get(name=iej)
-            student.is_subscribed = False
+            student.is_subscribed = True
 
             student.save()
 
@@ -467,7 +467,7 @@ class UserXLSBook(object):
                 student.date_subscribed = self.date_str_to_datetime(register_date)
 
             if total_reduction:
-                discount = Discount(student=student, value=float(total_reduction), description=desc_reduction)
+                discount = Discount(student=student, value=-float(total_reduction), description=desc_reduction)
                 discount.save()
             student.balance = float(balance)
 
@@ -492,11 +492,12 @@ class UserXLSBook(object):
             amount = row[i]
             payment_type = row[i+1]
             payments = Payment.objects.filter(student=student, month=month[0])
+            student.restricted = False
             if not payments and amount:
                 payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type, online_paid=True)
                 print(last_name.encode('utf8') + ' : add payment')
                 payment.save()
-                student.is_subscribed = True
+                student.restricted = True
             i += 2
 
         student.save()
