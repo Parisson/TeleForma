@@ -481,7 +481,11 @@ class UserXLSBook(object):
 
         else:
             print(last_name.encode('utf8') + ' : updating')
-            student = Student.objects.get(user=user, period=period)
+            for user in users:
+                try:
+                    student = Student.objects.get(user=user, period=period)
+                except:
+                    continue
 
         i = 24
         for month in months_choices:
