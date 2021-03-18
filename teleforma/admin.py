@@ -235,6 +235,9 @@ class TestimonialAdmin(admin.ModelAdmin):
 
 class AnswerAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__last_name']
+    list_filter = ['status', 'treated', 'validated', 'date_submitted', 'date_validated', 'question__seminar']
+    list_display = ['question', 'user', 'status', 'treated', 'validated', 'date_submitted', 'date_validated']
+
 
 
 class SeminarRevisionAdmin(admin.ModelAdmin):
