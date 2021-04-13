@@ -29,10 +29,7 @@
         <a href="{% url teleforma-conference-webclass-record conference.id%}"
             class="conference-big-button component_icon button icon_next">Voir l'enregistrement</a>
         {% else %}
-        {% comment %} <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.</p> {% endcomment %}
-        <p class="warning">
-            En raison d'un important incendie survenu le 10/03 chez notre hébergeur OVH, votre vidéo est actuellement inaccessible. Nos équipes sont mobilisées pour rétablir l'ensemble de vos services au plus vite. Nous vous prions de bien vouloir nous excuser de la gêne occasionnée.
-        </p>
+        <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.</p>
         {% endif %}
     {% elif webclass_status == 'ingoing' %}
         <p>La conférence est en cours.</p>
