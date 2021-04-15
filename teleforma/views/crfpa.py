@@ -319,7 +319,12 @@ class UserXLSBook(object):
                 value = payment['value']
                 month = payment['month']
                 ptype = payment['type']
-                ptype_label = next((payment_choice[1] for payment_choice in payment_choices if payment_choice[0] == ptype), ['none'])
+                for payment_choice in payment_choices:
+                    if payment_choice[0] == ptype:
+                        ptype_label = payment_choice[1]
+                        break
+                else:
+                    ptype_label = 'none'
                 total_payments += value
                 if month in payment_per_month:
                     payment_per_month[month]['amount'] += value
