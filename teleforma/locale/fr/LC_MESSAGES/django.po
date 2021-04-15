@@ -2088,9 +2088,10 @@ msgid ""
 "testimonial will be available as soon as the pedagogical team validate all "
 "your answers (48h maximum)."
 msgstr ""
-"Vous avez achevé avec succès votre séminaire e-learning. Une attestation de "
-"formation vous sera délivrée dès que vos réponses aux consultations fictives "
-"auront été validées par notre équipe pédagogique (48h maximum)."
+"Vous avez franchi avec succès toutes les étapes de votre formation. "
+"Une attestation de formation vous sera délivrée dès que vos réponses aux "
+"consultations fictives auront été validées par notre équipe pédagogique "
+"(2 jours ouvrés maximum) sous réserve d'un temps de connexion suffisant."
 
 #: views/pro.py:186
 msgid ""
