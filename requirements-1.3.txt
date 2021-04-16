@@ -20,7 +20,7 @@ django-bootstrap-pagination==1.5.1
 django-bootstrap3==6.1.0
 django-cacheops==2.1.1
 django-celery==2.5.5
-django-debug-toolbar==1.0.1
+django-debug-toolbar==1.11.1
 django-email-extras==0.1.13
 django-extensions==1.2.1
 #django-extra-views==0.6.5
