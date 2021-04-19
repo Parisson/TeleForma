@@ -10,7 +10,6 @@ from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import os
-import timeside
 
 
 class Logger:
