@@ -58,8 +58,12 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.conf import settings
 from quiz.models import Quiz
 
-# TODO notelemeta : delete after data migration
-# from telemeta.models.media import MediaItem
+HAS_TELEMETA = False
+try:
+    from telemeta.models.media import MediaItem
+    HAS_TELEMETA = True
+except ImportError:
+    pass
 
 app_label = 'teleforma'
 
@@ -734,8 +738,9 @@ class Media(MediaBase):
                                  blank=True, null=True)
     period          = models.ForeignKey('Period', related_name='media', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    # item            = models.ForeignKey(MediaItem, related_name='media',            #  TODO notelemeta : delete after data migration
-    #                              verbose_name='item', blank=True, null=True)
+    if HAS_TELEMETA:
+        item            = models.ForeignKey(MediaItem, related_name='media',
+                                    verbose_name='item', blank=True, null=True)
     type            = models.CharField(_('type'), choices=streaming_choices, max_length=32)
     readers         = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True, null=True)
