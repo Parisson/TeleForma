@@ -125,7 +125,8 @@ margin-bottom: 0em;
     background:no-repeat url(/static/teleforma/images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat; 
-	border-top: .25em solid #6a0307;
+    /* border-top: .25em solid #6a0307; */
+    /*     background: url("/static/telemeta/images/waves.png") 100% 0% no-repeat; */
 }
 
 #content_header, #header{

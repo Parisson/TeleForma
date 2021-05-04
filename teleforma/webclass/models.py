@@ -127,8 +127,8 @@ class Webclass(models.Model):
     max_participants        = models.IntegerField('Nombre maxium de participants par créneau', blank=True, null=True, default=80)
     status                  = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
-    published = PublishedManager()
     objects = models.Manager()
+    published = PublishedManager()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass'
@@ -161,8 +161,8 @@ class WebclassSlot(models.Model):
     room_id         = models.CharField('id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255)
     room_password   = models.CharField('password du modérateur (généré automatiquement)', blank=True, null=True, max_length=255)
 
-    published = SlotPublishedManager()
     objects = models.Manager()
+    published = SlotPublishedManager()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass_slot'
