@@ -71,8 +71,12 @@ from jxmlease import XMLListNode, XMLDictNode
 
 from teleforma.bbb_utils import bbb, register_web_hook
 
-# TODO notelemeta : delete after data migration
-# from telemeta.models.media import MediaItem
+HAS_TELEMETA = False
+try:
+    from telemeta.models.media import MediaItem
+    HAS_TELEMETA = True
+except ImportError:
+    pass
 
 app_label = 'teleforma'
 
@@ -530,6 +534,9 @@ class Media(MediaBase):
                                  blank=True, null=True)
     period          = ForeignKey('Period', related_name='media', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
+    if HAS_TELEMETA:
+        item            = models.ForeignKey(MediaItem, related_name='media',
+                                    verbose_name='item', blank=True, null=True)                                 
     type            = CharField(_('type'), choices=streaming_choices, max_length=32)
     rank            = IntegerField(_('rank'), blank=True, null=True)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
