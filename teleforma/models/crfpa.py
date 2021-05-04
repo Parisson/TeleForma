@@ -40,6 +40,12 @@ from teleforma.models.core import *
 from tinymce.models import HTMLField
 from  django.db.models import signals
 
+
+months_choices = []
+for i in range(1,13):
+    months_choices.append((i, datetime.date(2015, i, 1).strftime('%B')))
+
+
 class IEJ(Model):
 
     name = models.CharField(_('name'), max_length=255)
@@ -112,7 +118,7 @@ class Training(Model):
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
     duration = models.IntegerField(u"Durée en heures", default=0)
-    
+
     def __unicode__(self):
         if self.name and self.period:
             return ' - '.join([self.name, self.period.name])
@@ -134,6 +140,7 @@ class Student(Model):
     "A student profile"
 
     user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
+    restricted = models.BooleanField("Accès restreint", help_text="Cocher cette case lorsque vous voulez que l'étudiant puisse se connecter, mais ne pas avoir accès aux cours.", default=False)
     portrait = models.ImageField(max_length=500, upload_to='portraits/', blank=True, null=True)
     iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
@@ -193,7 +200,7 @@ class Student(Model):
 
     receipt_id = models.IntegerField('numéro de facture', blank=True, null=True,
                                      unique=True)
-    
+
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -225,7 +232,7 @@ class Student(Model):
             if payment['type'] != 'online' or payment['online_paid']:
                 amount += payment['value']
         return amount
-    
+
     @property
     def total_payments_all(self):
         amount = 0
@@ -297,8 +304,12 @@ class Profile(models.Model):
     wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
     birthday = models.DateField(_('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
     birthday_place =  models.CharField('Lieu de naissance', max_length=255, blank=True, null=True)
+    nationality = models.CharField('Nationalité', max_length=255, null=True, blank=True)
     ss_number = models.CharField('Sécurité sociale',
                                  max_length=15, blank=True, null=True)
+    siret = models.CharField('Siret',
+                             max_length=13, blank=True, null=True)
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
         verbose_name = _('profile')
@@ -315,30 +326,26 @@ class Corrector(Model):
     user = models.ForeignKey(User, related_name='corrector', verbose_name=_('user'), unique=True)
     period = models.ForeignKey('Period', related_name='corrector', verbose_name=_('period'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
+    courses = models.ManyToManyField("Course", verbose_name=_("Course"), blank=True, null=True)
     pay_status = models.CharField('Statut', choices=PAY_STATUS_CHOICES,
                                     max_length=64, blank=True, null=True,
                                     default='honoraire')
-    
+
     date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
-    
-    
+
+
     def __unicode__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:
             return ''
 
-    
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'corrector'
         verbose_name = _('Correcteur')
         verbose_name_plural = _('Correcteurs')
         ordering = ['user__last_name', '-date_registered']
-
-
-months_choices = []
-for i in range(1,13):
-    months_choices.append((i, datetime.date(2015, i, 1).strftime('%B')))
 
 
 class Payment(models.Model):
@@ -358,7 +365,8 @@ class Payment(models.Model):
                                       help_text=u"paiement en ligne uniquement",
                                       blank=True)
 
-    
+    date_paid = models.DateField(u"date de paiement", blank=True, null=True)
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'payments'
         verbose_name = _("Payment")
@@ -407,9 +415,10 @@ class Payback(models.Model):
 
 class Home(models.Model):
 
-    title = models.CharField(_('Title'), max_length=255,
+    title = models.CharField('Title (interne)', max_length=255,
                              default="Page d'accueil")
-    text = HTMLField('Texte', blank=True)
+    visible_title = models.CharField(_('Title'), max_length=255, null=True, blank=True)
+    text = models.TextField('Texte', blank=True)
     video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
     modified_at = models.DateTimeField(u'Date de modification', auto_now=True,
                                        default=datetime.datetime.now)

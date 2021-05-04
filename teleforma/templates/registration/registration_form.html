@@ -25,9 +25,14 @@
 
 {% block content %}
 
-
 <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">
     {% csrf_token %}
+    
+    <p>Pour ceux qui <strong>souhaitent s’inscrire en présentiel</strong>, nous vous informons que vous êtes susceptibles 
+    - dans la mesure ou les conditions sanitaires ne s’amélioreraient pas d’ici fin juin et que les mesures gouvernementales nous imposeraient des effectifs réduits – <strong>d’être basculé en e-learning</strong>.</p>
+
+    <p>Bien évidemment, dans ce cas de figure, vous seriez remboursé à due concurrence.</p>
+    <br/>
 
     <h1>{% if mode_corrector %}Pré-inscription des correcteurs - PRÉ-BARREAU -
         CRFPA{% else %}{% trans "Pre-registration" %} -

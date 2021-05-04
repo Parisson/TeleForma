@@ -47,7 +47,7 @@
     {% for livestream in livestreams %}
         {% if "webm" == livestream.stream_type %}
             <div class="video">
-                <video width="864" height="480" controls preload="auto">
+                <video width="100%" height="auto" controls>
                     <source src="{{ livestream.url|get_host:host }}" type="video/webm" />
                 </video>
             </div>
@@ -64,8 +64,7 @@
 {% if conference.professor %}
     <dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
     <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
-    <dt>{% trans "Professor" %}</dt>
-        <dd><a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
+    <dt>{% trans "Professor" %}</dt><dd>{{ conference.professor }}</dd>
 {% endif %}
 
 {% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}

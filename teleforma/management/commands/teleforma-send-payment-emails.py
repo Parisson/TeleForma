@@ -46,9 +46,9 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
 
         today = datetime.date.today()
-        
+
         for student in students:
-            if student.is_subscribed and student.user.email and student.period == period:
+            if student.is_subscribed and student.user.email and student.period == period and student.user.is_active :
                 for payment in student.payments.filter(type = 'online').exclude(online_paid = True).filter(scheduled__lte = today):
                     if payment.scheduled == today:
                         self.email(student, 'initial', payment)

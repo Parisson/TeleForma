@@ -1151,10 +1151,16 @@ a.image-link {
     padding:4px 8px 4px 26px; /*top right bottom left - last value depends on the icon size (default=16)*/
 }
 
+table.listing tbody td.show_more_videos {
+    text-align:center;
+    padding: 1.5em 0em;
+}
+
 .button,  .button:visited, .button:hover{
     font-weight: bold;
     border:  1px solid #e1e1e1;
     white-space:nowrap;
+    cursor: pointer;
     /*    border-top:  1px solid #e1e1e1 !important;
         border-left:  1px solid #e1e1e1 !important;
         border-right:  1px solid #e1e1e1 !important;
@@ -1940,6 +1946,10 @@ form.add_actus #id_text_parent{
     font-size: 1.2em;
     }
 
+.conference-big-button {
+    line-height: 2;
+}
+
 
 .info {
     margin-top: 0.3em;
@@ -2080,7 +2090,7 @@ column-rule: 0;
 }
 #_registerForm fieldset label{
     display: inline-block;
-    min-width: 190px;
+    max-width: 190px;
 }
 #_registerForm fieldset input[type="text"]{
     width: calc(100% - 190px);

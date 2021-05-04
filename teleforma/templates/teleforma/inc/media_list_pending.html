@@ -11,7 +11,7 @@
     <tbody>
         {% for media in course.media.all|from_course_type:type|from_period:period %}
          {% if not media.is_published and user.is_staff %}
-          {% if media.type == 'webm' %}
+          {% if media.type == 'webm' or media.type == 'mp4' %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
             <a href="{% url teleforma-media-detail period.id media.id %}" title="{% trans "Play" %}">
@@ -33,7 +33,7 @@
                     <dt>{% trans "Title" %}</dt><dd>{{ media.conference.course.title }}</dd>
                     <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
                     {% if media.conference.professor %}
-                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+                    <dt>{% trans "Professor" %}</dt><dd>{{ media.conference.professor }}</dd>
                     {% endif %}
                     <dt>{% trans "Begin" %}</dt><dd>{{ media.conference.date_begin }}</dd>
                     {% if media.conference.comment %}

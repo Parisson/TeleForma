@@ -185,6 +185,7 @@ class Period(Model):
         verbose_name = _('period')
         ordering = ['name']
 
+
 class CourseType(Model):
 
     name            = models.CharField(_('name'), max_length=255)
@@ -196,6 +197,17 @@ class CourseType(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
+
+    def to_dict(self):
+        dict = {'name' : self.name,
+                'description' : self.description,
+                }
+        return dict
+
+    def from_dict(self, data):
+        self.name = data['name']
+        self.description = data['description']
+        self.save()
 
 
 class Course(Model):

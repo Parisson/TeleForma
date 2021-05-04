@@ -37,8 +37,8 @@ class ScriptAdmin(admin.ModelAdmin):
     readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
     list_filter = ['period', 'course__title', 'session', 'type', 'status',
                     'date_submitted', 'date_marked', 'date_rejected',
-                   'author__student__platform_only' ]
-    list_display = ['title', 'author_name', 'file_size', 'status']
+                   'author__student__platform_only']
+    list_display = ['title', 'author_name', 'corrector', 'file_size', 'status']
     actions = ['force_resubmit',]
 
     class Media:

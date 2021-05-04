@@ -99,6 +99,8 @@
        <option value="1" {% if platform_only == '1' %}selected="selected"{% endif %}>Oui</option>
        <option value="0" {% if platform_only == '0' %}selected="selected"{% endif %}>Non</option>
     </select>
+    <label for="student_name">Etudiant</label>
+    <input name="student_name" id="student_name" placeholder="nom, mail ou identifiant de l'étudiant" value="{{student_name}}" />
     <input type="submit" value="Filtrer"/>
 </form>
 {% endif %}

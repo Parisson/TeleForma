@@ -35,7 +35,7 @@
 import os.path
 from django.conf.urls import patterns, url, include
 from django.conf import settings
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.list import ListView
 from teleforma.models import *
 from teleforma.views import *
@@ -96,6 +96,9 @@ urlpatterns = patterns('',
 
     # Flat pages
     url(r'^pages/(?P<path>.*)$', home_view.render_flatpage, name="teleforma-flatpage"),
+        # Unauthorized
+    url(r'^unauthorized/$', TemplateView.as_view(template_name="teleforma/unauthorized.html"), name="teleforma-unauthorized"),
+
 
     # Desk
     url(r'^desk/$', HomeRedirectView.as_view(), name="teleforma-desk"),
@@ -135,7 +138,7 @@ urlpatterns = patterns('',
         name="teleforma-conferences"),
 
     # APPOINTMENTS
-    url(r'^desk/periods/(?P<period_id>.*)/appointments/$', Appointments.as_view(),
+    url(r'^desk/periods/(?P<period_id>.*)/appointments/(?P<course_id>.*)/$', Appointments.as_view(),
        name="teleforma-appointments"),
     url(r'^desk/periods/appointments/cancel$', cancel_appointment,
        name="teleforma-appointment-cancel"),

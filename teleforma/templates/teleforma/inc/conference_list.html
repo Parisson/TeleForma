@@ -25,7 +25,7 @@
                     <dt>{% trans "Title" %}</dt><dd>{{ stream.conference.course.title }}</dd>
                     <dt>{% trans "Session" %}</dt><dd>{{ stream.conference.session }}</dd>
                     {% if stream.conference.professor.user.username %}
-                    <dt>{% trans "Professor" %}</dt><dd><a href="{% url teleforma-profile-detail stream.conference.professor.user.username %}" target="_blank">{{ stream.conference.professor }}</a></dd>
+                    <dt>{% trans "Professor" %}</dt><dd>{{ stream.conference.professor }}</dd>
                     {% endif %}
                     <dt>{% trans "Begin" %}</dt><dd>{{ stream.conference.date_begin }}</dd>
                     </dl>

@@ -8,7 +8,6 @@ from django.template.defaultfilters import slugify
 from teleforma.models import *
 import logging
 import os
-import timeside
 
 
 class Logger:
