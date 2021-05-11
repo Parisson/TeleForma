@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM parisson/telemeta:latest-dev
+FROM python2
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 
