@@ -1,0 +1,9 @@
+Bonjour {{ student.first_name }} {{ student.last_name }},
+
+En raison de problèmes rencontrés avec notre hébergeur, nous sommes contraints de désactiver temporairement votre compte sur notre plateforme.
+
+Tout sera bien évidemment rétablit dans les meilleurs délais et nous ne manquerons pas de vous tenir informé.
+
+Les paiements sont en conséquence reportés.
+
+Cordialement, L'équipe du Pré-Barreau

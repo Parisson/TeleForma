@@ -16,6 +16,7 @@ from django.core.cache import cache
 
 from teleforma.webclass.models import Webclass, WebclassSlot
 from teleforma.webclass.forms import WebclassRecordsForm
+from teleforma.decorators import access_required
 
 from teleforma.views.core import get_periods, get_courses
 
@@ -63,8 +64,19 @@ class WebclassAppointment(View):
         # Ensure user is logged in, a student, and has access to current period
         user = request.user
         student = user.student.all()[0]
-        
-        return render(request, self.template_name, {'slots': webclass.slots.order_by('day', 'start_hour'), 'webclass': webclass})
+        slots = webclass.slots.order_by('day', 'start_hour')
+        # only display unavaible slots or first slot of the day
+        filtered_slots = []
+        day = None
+        for slot in slots:
+            if slot.participant_slot_available:
+                if slot.day != day:
+                    filtered_slots.append(slot)
+                    day = slot.day
+            else:
+                filtered_slots.append(slot)
+
+        return render(request, self.template_name, {'slots': filtered_slots, 'webclass': webclass})
 
     def check_slot_validity(self, user, slot):
         """
@@ -159,12 +171,12 @@ class WebclassRecordsFormView(FormView):
         return super(WebclassRecordsFormView, self).form_valid(form)
         
     @method_decorator(permission_required('is_superuser'))
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(WebclassRecordsFormView, self).dispatch(*args, **kwargs)
 
 
-@login_required
+@access_required
 def join_webclass(request, pk):
     webclass_slot = WebclassSlot.published.get(pk=int(pk))
     # webclass = webclass_slot.webclass

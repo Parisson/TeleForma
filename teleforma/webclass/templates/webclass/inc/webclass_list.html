@@ -54,9 +54,10 @@
                 <td {% if forloop.first %}class="border-top" {% endif %} style="padding-left: 1em;">
                     <div>
                         <dl class="listing" style="font-size: 1.2em;">
-                            <dt>{% trans "Professor" %}</dt>
-                            <dd><a href="{% url teleforma-profile-detail record.slot.professor.user.username %}"
-                                    target="_blank">{{ record.slot.professor }}</a></dd>
+                            {% if record.slot %}
+                                <dt>{% trans "Professor" %}</dt>
+                                <dd>{{ record.slot.professor }}</dd>
+                            {% endif %}
                             <dt>{% trans "Begin" %}</dt>
                             <dd>{{ record.start_date }}</dd>
                         </dl>

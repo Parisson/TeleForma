@@ -5,6 +5,7 @@
 from teleforma.exam.models import *
 from teleforma.exam.forms import *
 from teleforma.views.core import *
+from teleforma.decorators import access_required
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -31,7 +32,7 @@ class ScriptMixinView(View):
         courses = [ c for c in courses if c.has_exam_scripts ]
         courses = [ c for c in courses if c.is_for_period(self.period) ]
         return [ c.id for c in courses ]
-        
+
     def get_context_data(self, **kwargs):
         context = super(ScriptMixinView, self).get_context_data(**kwargs)
         self.period = Period.objects.get(id=self.kwargs['period_id'])
@@ -87,6 +88,7 @@ class ScriptsListMixinView(ScriptMixinView):
             context['courses_list'] = [(str(course.id), course.title) for course in courses]
             context['course_selected'] = self.request.GET.get('course')
             context['platform_only'] = self.request.GET.get('platform_only')
+            context['student_name'] = self.request.GET.get('student_name') or ''
         return context
 
 class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
@@ -136,7 +138,7 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScriptView, self).dispatch(*args, **kwargs)
 
@@ -154,6 +156,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
         session = self.request.GET.get('session')
         course = self.request.GET.get('course')
         platform_only = self.request.GET.get('platform_only')
+        student_name = self.request.GET.get('student_name')
         if type:
             QT &= Q(type__id=int(type))
         if session:
@@ -164,8 +167,12 @@ class ScriptsView(ScriptsListMixinView, ListView):
             QT &= Q(corrector__id=int(corrector))
         if platform_only:
             QT &= Q(author__student__platform_only = int(platform_only))
+        if student_name:
+            QT &= Q(author__student__user__first_name__icontains=student_name) | Q(author__student__user__last_name__icontains=student_name) | Q(author__student__user__email=student_name) | Q(author__student__user__username=student_name)
+            
+
         return QT
- 
+
     def get_base_queryset(self):
         QT = self.get_form_queryset() & Q(period_id=self.kwargs['period_id'])
         if self.status_filter:
@@ -191,7 +198,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
             base_qs = base_qs.order_by('-date_submitted')
         return base_qs
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScriptsView, self).dispatch(*args, **kwargs)
 
@@ -202,7 +209,7 @@ class ScriptsPendingView(ScriptsView):
 
     def get_queryset(self):
         qs = super(ScriptsPendingView, self).get_queryset()
-        
+
         if self.request.GET.get('corrector') is None:
             user = self.request.user
             # Exclude status=2 but not author=user
@@ -219,7 +226,7 @@ class ScriptsPendingView(ScriptsView):
 class ScriptsTreatedView(ScriptsView):
 
     status_filter = (4, 5 ,7)
-    
+
     def get_context_data(self, **kwargs):
         context = super(ScriptsTreatedView, self).get_context_data(**kwargs)
         period = Period.objects.get(id=self.kwargs['period_id'])
@@ -260,13 +267,13 @@ class ScriptCreateView(ScriptMixinView, CreateView):
         messages.error(self.request, _("There was a problem with your submission. Please try again, later if possible."))
         return super(ScriptCreateView, self).form_invalid(form)
 
-    def get_context_data(self, **kwargs):    
+    def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
         context['create_fields'] = ['course', 'session', 'file' ]
         context['form'].fields['course'].queryset = context['courses']
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         self.period = Period.objects.get(id=kwargs['period_id'])
         return super(ScriptCreateView, self).dispatch(*args, **kwargs)
@@ -289,7 +296,7 @@ class QuotasView(ListView):
     model = Quota
     template_name='exam/quotas.html'
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(QuotasView, self).dispatch(*args, **kwargs)
 
@@ -297,7 +304,7 @@ class QuotasView(ListView):
 class ScriptsScoreAllView(ScriptsTreatedView):
 
     perso_name = 'Moyenne personnelle'
-    
+
     template_name='exam/scores.html'
 
     def score_data_setup(self, x, y):
@@ -330,7 +337,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         context = super(ScriptsScoreAllView, self).get_context_data(**kwargs)
         user = self.request.user
         period_id = self.kwargs['period_id']
-        
+
         if 'course_id' in self.kwargs:
             course = Course.objects.get(id=self.kwargs['course_id'])
         else:
@@ -351,7 +358,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         if course:
             scripts = scripts.filter(course=course)
             all_scripts = all_scripts.filter(course=course)
-            
+
         sessions = set()
         scores = []
 
@@ -364,19 +371,20 @@ class ScriptsScoreAllView(ScriptsTreatedView):
             res = { s: [] for s in sessions }
             for script in scripts.values('score', 'session'):
                 if script['session'] in res:
-                    res[script['session']].append(script['score'])
+                    if script['score']:
+                        res[script['session']].append(script['score'])
             return [ np.mean(res[s]) for s in sessions ]
-        
+
         if not staff_or_teacher:
             scores.append({'name': self.perso_name,
                            'data': by_session(scripts)})
-            
+
         scores.append({'name': 'Moyenne generale',
                        'data': by_session(all_scripts)})
 
         for script_type in ScriptType.objects.all():
             scripts = all_scripts.filter(type=script_type)
-            scores.append({'name': 'Moyenne ' + script_type.name, 
+            scores.append({'name': 'Moyenne ' + script_type.name,
                            'data': by_session(scripts)})
 
         context['data'] = self.score_data_setup(sessions_x, scores)
@@ -406,7 +414,7 @@ class ScoreCreateView(ScriptCreateView):
         context['create_fields'] = ['course', 'session', 'type', 'score' ]
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScoreCreateView, self).dispatch(*args, **kwargs)
 
@@ -437,19 +445,19 @@ class MassScoreCreateView(ScoreCreateView):
                                         session = session,
                                         course_id = course_id).values('author_id')
         scripts = set([s['author_id'] for s in scripts])
-        
-        students = students.exclude(user_id__in = scripts)            
+
+        students = students.exclude(user_id__in = scripts)
 
         res = []
         for student in students:
            user = student.user
            # FIXME : Filter those who access the course, but that's very slow,
-           # so I disable it for now - we'll see if we can do that faster later    
+           # so I disable it for now - we'll see if we can do that faster later
            # courses = get_courses(user)
            # if course_id in [ c['course'].id for c in courses ]:
            res.append({ 'id': user.id,
                         'name': str(user) })
-        
+
         return res
 
     def form_valid(self, form):
@@ -478,7 +486,7 @@ class MassScoreCreateView(ScoreCreateView):
                          session = session,
                          author_id = student,
                          type = sc_type,
-                         score = score,                                 
+                         score = score,
                          status = 7)
             obj.save()
 

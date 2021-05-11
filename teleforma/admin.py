@@ -113,10 +113,10 @@ class StudentAdmin(admin.ModelAdmin):
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
-    list_filter = ['user__is_active', 'is_subscribed', 'platform_only', PeriodListFilter,
+    list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
                     'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
                     'oral_1', 'oral_2', 'fascicule', BalanceFilter ]
-    list_display = ['student_name', 'get_trainings', 'platform_only',
+    list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance', 'balance_intermediary']
     readonly_fields = [ 'balance', 'balance_intermediary' ]
     actions = ['export_xls', 'write_message', 'add_to_group']
@@ -312,8 +312,8 @@ class AppointmentPeriodAdmin(admin.ModelAdmin):
 
 
 class AppointmentSlotAdmin(admin.ModelAdmin):
-    list_filter = ('date',)
-    list_display = ('date', 'start', 'nb', 'get_nb_jury')
+    list_filter = ('date', 'appointment_period')
+    list_display = ('date', 'appointment_period', 'mode', 'start', 'nb', 'get_nb_jury')
     inlines = [AppointmentJuryInline]
 
 class AppointmentJuryAdmin(admin.ModelAdmin):
@@ -323,7 +323,8 @@ class AppointmentJuryAdmin(admin.ModelAdmin):
 
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('real_date', 'student', 'jury')
-    list_filter = ('slot__date', 'slot__appointment_period')
+    list_filter = ('slot__date', 'slot__appointment_period', 'slot__mode')
+    search_fields = ('student__username',)
     actions = ['export_csv']
 
     def export_csv(self, request, queryset):
@@ -331,7 +332,7 @@ class AppointmentAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename=rendezvous.csv'
         writer = csv.writer(response)
 
-        writer.writerow(['date', 'creneau', 'nom', 'prenom', 'email', 'iej', 'jury'])
+        writer.writerow(['date', 'creneau', 'nom', 'prenom', 'email', 'iej', 'jury', 'mode'])
         def csv_encode(item):
             if isinstance(item, unicode):
                 return item.encode('utf-8')
@@ -342,7 +343,7 @@ class AppointmentAdmin(admin.ModelAdmin):
             user = app.student
             student = user.student.all()[0]
 
-            row = [ app.day.strftime('%d/%m/%Y'), app.start, user.last_name, user.first_name, user.email, student.iej, app.jury.name ]
+            row = [ app.day.strftime('%d/%m/%Y'), app.start, user.last_name, user.first_name, user.email, student.iej, app.jury.name, app.slot.mode ]
             row = [ csv_encode(col) for col in row ]
 
             writer.writerow(row)

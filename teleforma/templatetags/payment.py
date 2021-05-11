@@ -20,7 +20,7 @@ def payment_summary(context, payment, with_pending=True):
             elif obj.id == payment.id and with_pending:
                 status = 'en cours'
                 sclass = "pending"
-            elif obj.scheduled > today:
+            elif obj.scheduled and obj.scheduled > today:
                 status = 'à payer ultérieurement'
                 sclass = "topay_later"
             else:
@@ -52,7 +52,7 @@ def payment_format_amount(value):
     else:
         prefix = ''
     while len(unit) > 3:
-        res = res + ' ' + unit[-3:]
+        res = res + ' ' + unit[-3:]
         unit = unit[:-3]
     res = prefix + unit + res
     return '%s,%s' % (res, decimal)

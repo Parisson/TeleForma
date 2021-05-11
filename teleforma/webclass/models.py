@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-from datetime import timedelta
+from datetime import timedelta, date
 import calendar
 from unidecode import unidecode
 
@@ -39,19 +39,18 @@ def get_records_from_bbb(**kwargs):
     records = []
     for server in BBBServer.objects.all():
         recordings = server.get_instance().get_recordings(**kwargs).get_field('recordings')
-        # import pdb;pdb.set_trace()
         if hasattr(recordings, 'get'):
             recordings = recordings['recording']
         if type(recordings) is XMLDictNode:
             recordings = [recordings]
         for recording in recordings:
-            recording.prettyprint()
+            # recording.prettyprint()
             url = recording.get('playback', {}).get('format', {}).get('url')
             if url:
                 url = url.decode()
             else:
                 continue
-                
+
             start = int(recording['startTime'].decode()[:-3])
             end = int(recording['endTime'].decode()[:-3])
             data = {
@@ -66,14 +65,22 @@ def get_records_from_bbb(**kwargs):
                 'state': recording['state'].decode(),
             }
             if recording['metadata'].get('periodid'):
+                # we try to get metadata added to bbb record during the recording
+                slot = None
+                try:
+                    slot = WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
+                except WebclassSlot.DoesNotExist:
+                    # this happen if the slot is deleted in django admin
+                    continue
                 data.update({
                     'period_id': int(recording['metadata'].get('periodid').decode()),
                     'course_id': int(recording['metadata'].get('courseid').decode()),
-                    'slot': WebclassSlot.objects.get(pk=int(recording['metadata'].get('slotid').decode()))
+                    'slot': slot
                 })
 
             data['duration'] = data['end'] - data['start']
             records.append(data)
+    records = sorted(records, key=lambda r:r['start'])
     return records
 
 def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
@@ -87,12 +94,12 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
     if course_id:
         meta['courseid'] = period_id
     meta['origin'] = 'crfpa'
-    
+
     all_records = get_records_from_bbb(meta=meta)
     # vocabulary = [('Aucun', 'none')]
     if not all_records:
         return []
-    
+
     all_records = sorted(all_records, key=lambda record:-record['start'])
     # for record in all_records:
     #     vocabulary.append((record['url'], record['start']))
@@ -108,19 +115,19 @@ class BBBServer(models.Model):
         db_table = app_label + '_' + 'bbb_server'
         verbose_name = _('BBB server')
         verbose_name_plural = _('BBB servers')
-    
+
     def get_instance(self):
         return BigBlueButton(self.url, self.api_key)
-    
+
     def __unicode__(self):
         return "Serveur %d" % self.id
 
 class PublishedManager(models.Manager):
     def get_query_set(self):
-        return super(PublishedManager, self).get_query_set().filter(status=3)
+        return super(PublishedManager, self).get_query_set().filter(status=3).exclude(end_date__lt=date.today())
 
 class Webclass(models.Model):
-    
+
     department              = models.ForeignKey('teleforma.Department', related_name='webclass', verbose_name=_('department'), on_delete=models.SET_NULL, blank=True, null=True)
     period                  = models.ForeignKey('teleforma.Period', related_name='webclass', verbose_name=_('period'), on_delete=models.SET_NULL, blank=True, null=True)
     course                  = models.ForeignKey('teleforma.Course', related_name='webclass', verbose_name=_('course'))
@@ -128,6 +135,7 @@ class Webclass(models.Model):
     bbb_server              = models.ForeignKey('BBBServer', related_name='webclass', verbose_name='Serveur BBB')
     duration                = DurationField('Durée de la conférence', default="00:30:00")
     max_participants        = models.IntegerField('Nombre maxium de participants par créneau', blank=True, null=True, default=80)
+    end_date                = models.DateField('date de fin', blank=True, null=True)
     status                  = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
 
     objects = models.Manager()
@@ -150,7 +158,7 @@ class Webclass(models.Model):
 
 class SlotPublishedManager(models.Manager):
     def get_query_set(self):
-        return super(SlotPublishedManager, self).get_query_set().filter(webclass__status=3)
+        return super(SlotPublishedManager, self).get_query_set().filter(webclass__status=3).exclude(webclass__end_date__lt=date.today())
 
 class WebclassSlot(models.Model):
     """ Webclass slot """
@@ -160,7 +168,7 @@ class WebclassSlot(models.Model):
     professor       = models.ForeignKey('teleforma.Professor', related_name='webclass_slot', verbose_name=_('professor'),
                                  on_delete=models.SET_NULL, blank=True, null=True)
     participants    = models.ManyToManyField(User, related_name="webclass_slot", verbose_name=_('participants'),
-                                        blank=True, null=True)                                 
+                                        blank=True, null=True)
     room_id         = models.CharField('id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255)
     room_password   = models.CharField('password du modérateur (généré automatiquement)', blank=True, null=True, max_length=255)
 
@@ -178,7 +186,7 @@ class WebclassSlot(models.Model):
     @property
     def remaining_participant_slot(self):
         """
-        get remaining participant slot 
+        get remaining participant slot
         """
         nb_participants = self.participants.count()
         return self.webclass.max_participants - nb_participants
@@ -204,7 +212,7 @@ class WebclassSlot(models.Model):
 
     def prepare_webclass(self):
         """
-        generate room id and moderator password 
+        generate room id and moderator password
         """
         if not self.room_id:
             # not sure why, but the slug contains accent
@@ -254,10 +262,10 @@ class WebclassSlot(models.Model):
                 except BBBException as e:
                     print(e)
                     raise
-            
-    
+
+
     def get_join_webclass_url(self, request, user, username=None):
-        """ 
+        """
         Get url to BBB meeting.
         If user are professor or staff, provide the url with the moderator password
         """
@@ -272,7 +280,7 @@ class WebclassSlot(models.Model):
         return self.bbb.get_join_meeting_url(username, self.room_id, password, params)
 
     def get_fake_join_webclass_url(self, username):
-        """ 
+        """
         Fake join url for testing purpose
         Get url to BBB meeting.
         If user are professor or staff, provide the url with the moderator password
@@ -283,8 +291,8 @@ class WebclassSlot(models.Model):
         return self.bbb.get_join_meeting_url(username, self.room_id, password, params)
 
     def next_webclass_date(self):
-        """ 
-        get the next webclass date for this slot 
+        """
+        get the next webclass date for this slot
         (or today webclass if this is the current day)
         """
         now = datetime.datetime.now()
@@ -292,18 +300,26 @@ class WebclassSlot(models.Model):
         if days_ahead < 0:
             days_ahead += 7
         next_date = now + datetime.timedelta(days_ahead)
-        next_date.replace(hour=self.start_hour.hour, minute=self.start_hour.minute)
+        next_date = next_date.replace(hour=self.start_hour.hour, minute=self.start_hour.minute)
+        if self.webclass.end_date and next_date.date() > self.webclass.end_date:
+            return None
         return next_date
 
     @property
     def status(self):
-        """ is webclass running, about to start, or finished ? 
+        """ is webclass running, about to start, or finished ?
         state : future, past, almost, ingoing
         """
         now = datetime.datetime.now()
         next_webclass_date_begin = self.next_webclass_date()
-        next_webclass_date_end = next_webclass_date_begin + timedelta(seconds=self.webclass.duration.as_seconds())
+        if next_webclass_date_begin:
+            next_webclass_date_end = next_webclass_date_begin + timedelta(seconds=self.webclass.duration.as_seconds())
+        else:
+            return "none"
         begin_minus_1_hour = next_webclass_date_begin - timedelta(hours=1)
+
+        if not next_webclass_date_begin:
+            return "none"
         if now < begin_minus_1_hour:
             # conference not yet started
             status = "future"
@@ -315,7 +331,6 @@ class WebclassSlot(models.Model):
             status = "almost"
         else:
             status = "ingoing"
-        
         return status
 
     def is_webclass_running(self):
@@ -325,8 +340,6 @@ class WebclassSlot(models.Model):
 
     def get_webclass_info(self):
         """ """
-        print(self.room_id)
-        print(self.bbb.get_meeting_info(self.room_id))
         return self.bbb.get_meeting_info(self.room_id)
 
     # def get_record(self):
@@ -370,7 +383,7 @@ def create_webclass_room(sender, **kwargs):
 
 
 class WebclassRecord(models.Model):
-    
+
     period                  = models.ForeignKey('teleforma.Period', verbose_name=_('period'))
     course                  = models.ForeignKey('teleforma.Course', related_name='webclass_records', verbose_name=_('course'))
     record_id               = models.CharField("Enregistrement BBB", max_length=255)
@@ -394,5 +407,4 @@ class WebclassRecord(models.Model):
         if not record_ids:
             return []
         records = get_records_from_bbb(recording_id=','.join(record_ids))
-        print(records)
         return records

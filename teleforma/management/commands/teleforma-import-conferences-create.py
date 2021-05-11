@@ -1,3 +1,4 @@
+import datetime
 from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -24,7 +25,7 @@ class Logger:
 
 
 class Command(BaseCommand):
-    help = "Import conferences from the MEDIA_ROOT directory "
+    help = "Import conferences from the MEDIA_ROOT directory, create conferences if don't exist"
     admin_email = 'webmaster@parisson.com'
     args = 'organization log_file'
     spacer = '_-_'
@@ -43,19 +44,20 @@ class Command(BaseCommand):
     def get_duration(self, file):
         #TODO: avoid timeside
         #decoder = timeside.decoder.FileDecoder(file)
-        #decoder.setup()
-        # time.sleep(0.5)
-        #value = str(datetime.timedelta(0,decoder.input_duration))
+        #value = str(period_nametime.timedelta(0,decoder.input_duration))
         #t = value.split(':')
         #t[2] = t[2].split('.')[0]
         #return ':'.join(t)
         return
 
 
+        #decoder.setup()
+        # time.sleep(0.5)
     def handle(self, *args, **options):
         organization_name = args[0]
         department_name = args[1]
-        log_file = args[2]
+        period_name = args[2]
+        log_file = args[3]
         logger = Logger(log_file)
 
         organization = Organization.objects.get(name=organization_name)
@@ -77,17 +79,36 @@ class Command(BaseCommand):
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
                     course = root_list[-2]
-                    course_id = course.split(self.spacer)[0]
-                    course_type = course.split(self.spacer)[1].lower()
-                    date = root_list[-3]
+                    course_code = course.split(self.spacer)[0]
+                    course_type_name = course.split(self.spacer)[1].lower()
+                    year = root_list[-3]
                     department_name = root_list[-4]
                     organization_name = root_list[-5]
+                    abs_path = root + os.sep + filename
                     dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
-                    collection_id = '_'.join([department_name, course_id, course_type])
+                    collection_id = '_'.join([department_name, course_code, course_type_name])
+                    
+                    print(public_id)
+                    courses = Course.objects.filter(code=course_code)
+                    course_type_obj = CourseType.objects.get(name=course_type_name)
+                    period_obj = Period.objects.get(name=period_name)
+                    mtime = os.path.getmtime(abs_path)
+                    conf_datetime = datetime.datetime.fromtimestamp(mtime)
 
-                    if Conference.objects.filter(public_id=public_id) and department:
-                        conference = Conference.objects.get(public_id=public_id)
+                    if department and courses:
+                        course_obj = courses[0]
+                        conferences = Conference.objects.filter(public_id=public_id)
+                        if conferences:
+                            conference = conferences[0]
+                        else:
+                            conference = Conference(public_id=public_id)
+                            conference.course = course_obj
+                            conference.course_type = course_type_obj
+                            conference.period = period_obj
+                            conference.date_begin = conf_datetime
+                            conference.save()
+
                         department = Department.objects.get(name=department_name,
                                                             organization=organization)
                         exist = False

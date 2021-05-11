@@ -64,7 +64,6 @@ from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -75,6 +74,7 @@ from teleforma.forms import *
 from teleforma.models.appointment import AppointmentPeriod
 from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
 import pages
+from teleforma.decorators import access_required
 import jqchat.models
 from xlwt import Workbook
 
@@ -87,6 +87,7 @@ try:
     from telecaster.tools import *
 except:
     pass
+
 
 
 def render(request, template, data = None, mimetype = None):
@@ -344,12 +345,27 @@ class CourseListView(CourseAccessMixin, ListView):
         context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
         user = self.request.user
         is_student = user.student.all().count()
-        appointments = AppointmentPeriod.objects.filter(periods=context['period'])
-        appointments_open = False
-        for appointment in appointments:
-            if appointment.is_open:
-                appointments_open = True
-        context['hasAppointment'] = appointments_open and is_student
+        # appointments_open = False
+        appointments = []
+        if is_student:
+            available_courses = [course['course'] for course in context['all_courses']]
+            for appointment in  AppointmentPeriod.objects.filter(periods=context['period'], course__in=available_courses):
+                if appointment.is_open:
+                    found = False
+                    for existing in appointments:
+                        if existing.course == appointment.course:
+                            found = True
+                    if not found:
+                        appointments.append(appointment)
+        context['appointments'] = appointments
+        # check if user appointment is next
+        user_appointment = Appointment.objects.filter(student=user, slot__mode='distance', slot__appointment_period__periods=context['period'])
+        if user_appointment:
+            user_appointment = user_appointment[0]
+            now = datetime.datetime.now()
+            # now = datetime.datetime(2020, 10, 29, 9, 00)
+            if user_appointment.real_date - datetime.timedelta(hours=1) < now < user_appointment.real_date + datetime.timedelta(hours=1):
+                context['current_appointement'] = user_appointment
 
         homes = Home.objects.filter(enabled = True).order_by('-modified_at')
         for home in homes:
@@ -358,7 +374,7 @@ class CourseListView(CourseAccessMixin, ListView):
                 context['home_text'] = home.text
                 context['home_video'] = home.video
                 break
-               
+
         if is_student:
             student = user.student.all()[0]
             slots = []
@@ -374,7 +390,8 @@ class CourseListView(CourseAccessMixin, ListView):
                     to_subscribe.append(webclass)
             context['webclass_slots'] = slots
             context['webclass_to_subscribe'] = to_subscribe
-        
+            context['restricted'] = student.restricted
+
         return context
 
     @method_decorator(login_required)
@@ -387,6 +404,10 @@ class CourseListView(CourseAccessMixin, ListView):
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
+
+    @jsonrpc_method('teleforma.get_course_type_list')
+    def get_course_type_list(request):
+        return [course_type.to_dict() for course_type in CourseType.objects.all()]
 
     def pull(request, organization_name, department_name):
         organization = Organization.objects.get(name=organization_name)
@@ -402,6 +423,16 @@ class CourseListView(CourseAccessMixin, ListView):
             else:
                 course = course[0]
             course.from_dict(course_dict)
+
+        remote_list = s.teleforma.get_course_type_list()
+        if remote_list['result']:
+            for course_type_dict in remote_list['result']:
+                course_type = CourseType.objects.filter(name=course_type_dict['name'])
+                if not course_type:
+                    course_type = CourseType()
+                else:
+                    course_type = course_type[0]
+                course_type.from_dict(course_type_dict)
 
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
@@ -431,14 +462,14 @@ class CourseView(CourseAccessMixin, DetailView):
         context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
-        
+
         # webclass
         webclass = None
         webclass_slot = None
         student = self.request.user.student.all()
         if student:
             student = student[0]
-        
+
         if student:
             try:
                 webclass = Webclass.published.filter(period=self.period, course=course, iej=student.iej)[0]
@@ -456,7 +487,7 @@ class CourseView(CourseAccessMixin, DetailView):
             context['webclass_error'] = True
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(CourseView, self).dispatch(*args, **kwargs)
 
@@ -606,7 +637,7 @@ class MediaPendingView(ListView):
         return context
 
     @method_decorator(permission_required('is_superuser'))
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(MediaPendingView, self).dispatch(*args, **kwargs)
 
@@ -634,7 +665,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         context['periods'] = get_periods(self.request.user)
         return context
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(DocumentView, self).dispatch(*args, **kwargs)
 
@@ -642,7 +673,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path.encode('utf8'), streaming=False) 
+            return serve_media(document.file.path.encode('utf8'), streaming=False)
             #fsock = open(document.file.path.encode('utf8'), 'r')
             #mimetype = mimetypes.guess_type(document.file.path)[0]
             #extension = mimetypes.guess_extension(mimetype)
@@ -657,7 +688,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path.encode('utf8'), streaming=True) 
+            return serve_media(document.file.path.encode('utf8'), streaming=True)
             #fsock = open(document.file.path.encode('utf8'), 'r')
             #mimetype = mimetypes.guess_type(document.file.path)[0]
             #extension = mimetypes.guess_extension(mimetype)
@@ -715,7 +746,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
             except:
                 pass
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
 
@@ -842,7 +873,7 @@ class ConferenceRecordView(FormView):
         command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
         os.system(command)
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 
