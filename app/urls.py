@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
+from django.http import HttpResponse
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 js_info_dict = {
-    'packages': ('telemeta','telecaster'),
+    'packages': ('telemeta', 'teleforma'),
 }
 
 urlpatterns = patterns('',
@@ -20,10 +21,13 @@ urlpatterns = patterns('',
 
     # TeleForma
     (r'^', include('teleforma.urls')),
-    (r'^telecaster/', include('telecaster.urls')),
 
     # Languages
     (r'^i18n/', include('django.conf.urls.i18n')),
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict),
+    (r'^robots\.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", mimetype="text/plain")),
 
+    #url(r'^pdfviewer/', include('webviewer.urls')),
+    url(r'^pdfannotator/', include('pdfannotator.urls')),
+    url(r'^captcha/', include('captcha.urls')),
 )

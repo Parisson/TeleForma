@@ -2,9 +2,8 @@ git
 netcat
 vim
 locales
+ipython
+python-setuptools
+python-mysqldb
+python-psycopg2
 python-yaml
-libshout3-dev
-librtmp-dev
-liblo-dev
-libcurl4-openssl-dev
-cython

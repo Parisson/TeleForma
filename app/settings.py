@@ -8,30 +8,29 @@ import environ
 
 sys.dont_write_bytecode = True
 
-env = environ.Env(DEBUG=(bool, False),
-                  CELERY_ALWAYS_EAGER=(bool, False),
-                  )
-
-# Django settings for server project.
-DEBUG = env('DEBUG')  # False if not in os.environ
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['*']
+import warnings
+warnings.showwarning = lambda *x: None
 
 ADMINS = (
     ('Guillaume Pellerin', 'webmaster@parisson.com'),
+    ('Gael le Mignot', 'gael@pilotsystems.net'),
+#    ('Admin CRFPA', 'admin-crfpa@pre-barreau.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': env('ENGINE'),  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'USER': env('MYSQL_USER'),      # Not used with sqlite3.
-        'PASSWORD': env('MYSQL_PASSWORD'),  # Not used with sqlite3.
-        'NAME': env('MYSQL_DATABASE'),
-        'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',   # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'teleforma_crfpa',                      # Or path to database file if using sqlite3.
+        'USER': 'teleforma',                      # Not used with sqlite3.
+        'PASSWORD': '8ShaqueWrac',                  # Not used with sqlite3.
+        'HOST': 'db',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'OPTIONS'  : { 'init_command' : 'SET storage_engine=InnoDB', },
     }
 }
 
@@ -46,7 +45,7 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-#LANGUAGE_CODE = 'fr_FR'
+LANGUAGE_CODE = 'fr_FR'
 LANGUAGES = [ ('fr', 'French'),
               ('en', 'English'),
 ]
@@ -63,21 +62,19 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media/')
-
-if not os.path.exists(MEDIA_ROOT):
-	os.mkdir(MEDIA_ROOT)
+MEDIA_ROOT = '/srv/crfpa/var/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://localhost:8040/'
+#MEDIA_URL = 'http://pre-barreau.com/archives/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/var/www/static/'
+STATIC_ROOT = '/srv/crfpa/var/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -102,12 +99,12 @@ STATICFILES_FINDERS = (
 SECRET_KEY = 'a8l7%06wr2k+3=%#*#@#rvop2mmzko)44%7k(zx%lls^ihm9^5'
 
 # List of callables that know how to import templates from various sources.
-#TEMPLATE_LOADERS = (
-#    ('django.template.loaders.cached.Loader', (
-#        'django.template.loaders.filesystem.Loader',
-#        'django.template.loaders.app_directories.Loader',
-#    )),
-#)
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
 
 
 MIDDLEWARE_CLASSES = (
@@ -118,18 +115,21 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'teleforma.middleware.XsSharing',
+    'django_user_agents.middleware.UserAgentMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = (
+#TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/momo/dev/teleforma/teleforma/teleforma/templates/',
-)
+#    '/var/teleforma/crfpa/lib/teleforma-crfpa/teleforma/templates/',
+#)
 
 INSTALLED_APPS = (
+    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -137,10 +137,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'teleforma',
+    'teleforma.webclass',
     'telemeta',
     'jsonrpc',
-    # 'south',
     'teleforma',
+    'south',
+    'teleforma.exam',
     'sorl.thumbnail',
     'django_extensions',
     'pagination',
@@ -151,106 +154,41 @@ INSTALLED_APPS = (
     # 'jquery',
     'timezones',
     'jqchat',
-    # 'follow',
-    # 'googletools',
-    'telecaster',
+#    'follow',
+    'googletools',
+#    'devserver',
+    #'timeside',
+    'extra_views',
+    'captcha',
+    'django_nvd3',
+    'bootstrap3',
+    'bootstrap_pagination',
+    'django_user_agents',
+    'tinymce',
     'multichoice',
     'true_false',
     'essay',
     'quiz',
+    'unique_session',
+    #'webviewer',
+    'pdfannotator',
+    'captcha',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
+    "django.contrib.messages.context_processors.messages",
     'postman.context_processors.inbox',
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
     'django.core.context_processors.static',
-    "teleforma.context_processors.periods",
+    'teleforma.context_processors.periods',
 )
 
-BROKER_URL = env('BROKER_URL')
-CELERY_IMPORTS = ("timeside.server.tasks",)
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['application/json']
-
-from worker import app
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        #'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'ENGINE': 'telemeta.util.backend.CustomElasticEngine',
-        'URL': env('HAYSTACK_URL'),
-        'INDEX_NAME': env('HAYSTACK_INDEX_NAME'),
-        'INLUDE_SPELLING': True,
-        'EXCLUDED_INDEXES': ['telemeta.search_indexes.LocationIndex',
-                             'telemeta.search_indexes.LocationAliasIndex',
-                             'telemeta.search_indexes.InstrumentIndex',
-                             'telemeta.search_indexes.InstrumentAliasIndex'
-                             ]
-    },
-    'autocomplete': {
-        # 'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'ENGINE': 'telemeta.util.backend.CustomElasticEngine',
-        'URL': env('HAYSTACK_URL'),
-        'INDEX_NAME': env('HAYSTACK_INDEX_NAME_AUTOCOMPLETE'),
-        'INLUDE_SPELLING': True,
-        'EXCLUDED_INDEXES': ['telemeta.search_indexes.MediaItemIndex',
-                             'telemeta.search_indexes.MediaCollectionIndex',
-                             'telemeta.search_indexes.MediaCorpusIndex',
-                             'telemeta.search_indexes.MediaFondsIndex'
-                             ]
-    },
-}
-
-HAYSTACK_ROUTERS = ['telemeta.util.search_router.AutoRouter', 'haystack.routers.DefaultRouter']
-# HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-HAYSTACK_SIGNAL_PROCESSOR = 'telemeta.util.search_signals.RealTimeCustomSignal'
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = 50
-
-BOWER_COMPONENTS_ROOT = '/srv/bower/'
-BOWER_PATH = '/usr/local/bin/bower'
-BOWER_INSTALLED_APPS = (
-    'jquery#2.2.4',
-    'jquery-migrate#~1.2.1',
-    'underscore#1.8.3',
-    'bootstrap#3.3.7',
-    'bootstrap-select#1.5.4',
-    'font-awesome#4.4.0',
-    'angular#1.2.26',
-    'angular-bootstrap-select#0.0.5',
-    'angular-resource#1.2.26',
-    'raphael#2.2.7',
-    'soundmanager#V2.97a.20150601',
-    'jquery-ui#1.11.4',
-    'tablesorter',
-    'video.js',
-    'sass-bootstrap-glyphicons',
-    # 'https://github.com/Parisson/loaders.git',
-    # 'https://github.com/Parisson/ui.git',
-)
-
-NOTEBOOK_DIR = MEDIA_ROOT + 'notebooks'
-if not os.path.exists(NOTEBOOK_DIR):
-    os.makedirs(NOTEBOOK_DIR)
-
-NOTEBOOK_ARGUMENTS = [
-    '--ip=0.0.0.0', # reach notebooks from outside
-    '--port=8888',  # std port
-    '--no-browser', # don't start browser on start
-    '--allow-root',
-    '--notebook-dir', NOTEBOOK_DIR
-]
-
-SILENCED_SYSTEM_CHECKS = ['fields.W342',]
-
-
-TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
-TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
-TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
+TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
+TELEMETA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
+TELEMETA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
 TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
 TELEMETA_CACHE_DIR = MEDIA_ROOT + 'cache'
 TELEMETA_EXPORT_CACHE_DIR = TELEMETA_CACHE_DIR + "/export"
@@ -268,12 +206,14 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-EMAIL_HOST = 'smtp.numericable.fr'
-DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
-SERVER_EMAIL = 'webmaster@parisson.com'
+EMAIL_HOST = 'localhost'
+DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
+SERVER_EMAIL = 'crfpa@pre-barreau.com'
 EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
 
-POSTMAN_AUTO_MODERATE_AS = True
+POSTMAN_AUTO_MODERATE_AS=True
+
+#FILE_PROTECTION_METHOD = 'xsendfile'
 
 TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
 TELEFORMA_GLOBAL_TWEETER = False
@@ -281,30 +221,110 @@ TELEFORMA_PERIOD_TWEETER = True
 TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
 TELEFORMA_EXAM_SCRIPT_UPLOAD = True
 TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
-TELEFORMA_PERIOD_DEFAULT_ID = 12
+TELEFORMA_PERIOD_DEFAULT_ID = 22
 TELEFORMA_EXAM_MAX_SESSIONS = 15
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 
-TELECASTER_LIVE_STREAMING_SERVER = 'stream.parisson.com'
-TELECASTER_LIVE_STREAMING_PORT = 443
-
-TELECASTER_CONF = [{'type':'mp3','server_type':'icecast','conf':'/etc/telecaster/deefuzzer_mp3.xml', 'port':'8000'},
-                   {'type':'webm','server_type':'stream-m','conf':'/etc/telecaster/deefuzzer_webm.xml', 'port':'8080'}, ]
-
-TELECASTER_RSYNC_SERVER = 'telecaster@jimi.parisson.com:archives/'
-TELECASTER_RSYNC_LOG = '/var/log/telecaster/rsync.log'
-TELECASTER_MASTER_SERVER = 'angus.parisson.com'
-
-TELECASTER_LIVE_STREAMING_SERVER = 'stream.parisson.com'
+TELECASTER_LIVE_STREAMING_SERVER = 'stream4.parisson.com'
 TELECASTER_LIVE_STREAMING_PORT = 443
 TELECASTER_LIVE_ICECAST_STREAMING_PORT = 8000
-TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8888
+TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8080
 
-# CRFPA or AE or PRO
-TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
-TELEFORMA_GLOBAL_TWEETER = False
-TELEFORMA_PERIOD_TWEETER = True
+JQCHAT_DISPLAY_COUNT = 100
+JQCHAT_DISPLAY_TIME = 72
+JQCHAT_DATE_FORMAT = "D-H:i"
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+]
+
+BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
+
+FILE_UPLOAD_TEMP_DIR = '/srv/crfpa/var/tmp'
+
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_ENGINE = "unique_session.backends.session_backend"
+UNIQUE_SESSION_WHITELIST = (1, 2042)
+
+SOUTH_MIGRATION_MODULES = {
+    'captcha': 'captcha.south_migrations',
+}
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'TeleForma Admin',
+}
+
+# Cache backend is optional, but recommended to speed up user agent parsing
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#        'LOCATION': '127.0.0.1:11211',
+#    }
+#}
+
+# Name of cache backend to cache user agents. If it not specified default
+# cache alias will be used. Set to `None` to disable caching.
+USER_AGENTS_CACHE = 'default'
+
+AUTH_USER_MODEL = 'auth.User'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+}
+
+# Sherlock's online payment
+PAYMENT_SHERLOCKS_PATH='/opt/sherlocks2'
+PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "040109417200053",
+                                      'Estivale': "040109417200054", },
+                    'merchant_country': 'fr',
+                    'currency_code': '978',
+                    'language': 'fr'
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': "/srv/crfpa/var/log/app.log",
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'payment': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
+from django.utils.encoding import force_text
+def show_user_as(user):
+    professor = user.professor.all()
+    is_corrector = False
+    if user.quotas.count() and not professor and not user.is_superuser:
+        return "#"+str(user.id)
+    else:
+        return force_text(user)
+POSTMAN_SHOW_USER_AS = show_user_as
+
+#THUMBNAIL_FORCE_OVERWRITE = True
 
 JQCHAT_DISPLAY_COUNT = 50
 JQCHAT_DISPLAY_TIME  = 48

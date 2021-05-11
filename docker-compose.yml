@@ -1,72 +1,41 @@
-version: '2'
+version: '3'
 
 services:
-  var:
-    image: debian:jessie
-    volumes:
-      - ./var/media/:/srv/media
-      - ./var/static/:/srv/static
-      - ./var/backup/:/srv/backup
-    command: "true"
-
-  db:
-    image: mariadb:10
-    env_file:
-    - env/debug.env
-    volumes:
-      - ./var/lib/mysql/:/var/lib/mysql
-
-  broker:
-    image: redis:5
-
-  search:
-    image: elasticsearch:1.7
-
   app:
     build: .
-    command: /bin/bash bin/app.sh
+    command: /bin/sh app/bin/app.sh
     volumes:
       - ./app/:/srv/app
+      - ./bin:/srv/bin
       - ./teleforma/:/srv/lib/teleforma/teleforma
-    volumes_from:
-      - var
+      - ./var/media:/srv/media
+      - ./var/backup:/srv/backup
+      - ./var/static:/srv/static
     ports:
       - "8000:8000"
     links:
       - db
-      - broker
-      - search
-    env_file:
-      - env/debug.env
 
-  worker:
-    build: .
-    command: /bin/bash bin/worker.sh
-    volumes_from:
-      - app
-      - var
-    env_file:
-      - env/debug.env
-    command: /bin/bash bin/worker.sh
-    links:
-      - broker
-      - db
-
-  web:
-    image: nginx
-    ports:
-      - "80:80"
+  db:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecretrootpassword
+      - MYSQL_DATABASE=teleforma
+      - MYSQL_USER=teleforma
+      - MYSQL_PASSWORD=mysecretpassword
     volumes:
-      - ./app/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
-      - ./var/log/nginx/:/var/log/nginx
-    volumes_from:
-      - var
-    links:
-      - app
+      - ./var/lib/mysql/:/var/lib/mysql
+      - ./var/log/mysql/:/var/log/mysql
+      - ./var/backup/:/srv/backup
+
+  memcached:
+      image: memcached:alpine
+      entrypoint:
+          - memcached
+          - -m 1024
+          - -I 128m
+          - -v
 
 volumes:
-    var:
     app:
     db:
-    web:
-

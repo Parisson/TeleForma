@@ -1,2 +1,2 @@
--e git+https://github.com/Parisson/django_quiz.git#egg=django_quiz-0.6.0
--e git+https://github.com/Parisson/telecaster-client.git#egg=telecaster_client-0.8
+-e git+https://github.com/Parisson/django_quiz.git#egg=django_quiz-0.5.1 # a supprimer
+-e git+https://github.com/Parisson/django-jqchat.git@master#egg=django-jqchat

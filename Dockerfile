@@ -21,8 +21,7 @@ MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 ENV PYTHONUNBUFFERED 1
 
 RUN mkdir -p /srv/app
-RUN mkdir -p /srv/lib/
-RUN mkdir -p /srv/lib/telemeta
+RUN mkdir -p /srv/lib/teleforma
 
 WORKDIR /srv
 
@@ -40,14 +39,17 @@ ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
-RUN pip install cython
-RUN mkdir -p /srv/lib/teleforma
-COPY . /srv/lib/teleforma
-WORKDIR /srv/lib/teleforma
-RUN pip install -r requirements.txt
-
 COPY requirements-dev.txt /srv
 RUN pip install -r requirements-dev.txt --src /srv/lib
+
+COPY requirements.txt /srv
+RUN pip install -r requirements.txt
+
+WORKDIR /srv/lib/teleforma
+COPY setup.py /srv/lib/teleforma
+COPY teleforma /srv/lib/teleforma
+COPY README.rst /srv/lib/teleforma
+RUN python setup.py develop
 
 WORKDIR /srv/app
 
