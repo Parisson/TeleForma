@@ -137,12 +137,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'south',
     'teleforma',
     'teleforma.webclass',
     'teleforma.exam',
     'jsonrpc',
     'teleforma',
-    'south',
     'sorl.thumbnail',
     'django_extensions',
     'pagination',
@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'quiz',
     'pdfannotator',
     'captcha',
+    'telemeta',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
