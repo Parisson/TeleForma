@@ -1,0 +1,8 @@
+version: '3.6'
+services:
+  app:
+    volumes:
+      - ./var/media:${MEDIA_PATH}
+      - /srv/ftp:${FTP_PATH}
+    env_file:
+      - 'env/staging.env'

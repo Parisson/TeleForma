@@ -7,3 +7,4 @@ python-setuptools
 python-mysqldb
 python-psycopg2
 python-yaml
+uwsgi

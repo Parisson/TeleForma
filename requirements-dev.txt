@@ -1,2 +1,0 @@
--e git+https://github.com/Parisson/django_quiz.git#egg=django_quiz-0.5.1 # a supprimer
--e git+https://github.com/Parisson/django-jqchat.git@master#egg=django-jqchat

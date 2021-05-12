@@ -4,11 +4,11 @@
 import os
 import sys
 from django.core.urlresolvers import reverse_lazy
-import environ
+# import environ
 
 sys.dont_write_bytecode = True
 
-DEBUG = False
+DEBUG = True if os.environ.get('DEBUG') == 'True' else False
 TEMPLATE_DEBUG = DEBUG
 
 import warnings
@@ -25,9 +25,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'teleforma_crfpa',                      # Or path to database file if using sqlite3.
-        'USER': 'teleforma',                      # Not used with sqlite3.
-        'PASSWORD': '8ShaqueWrac',                  # Not used with sqlite3.
+        'NAME': os.environ.get('MYSQL_DATABASE'),                      # Or path to database file if using sqlite3.
+        'USER': os.environ.get('MYSQL_USER'),                      # Not used with sqlite3.
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),                  # Not used with sqlite3.
         'HOST': 'db',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         'OPTIONS'  : { 'init_command' : 'SET storage_engine=InnoDB', },
@@ -62,7 +62,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/srv/crfpa/var/media/'
+MEDIA_ROOT = '/srv/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -74,7 +74,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/srv/crfpa/var/static/'
+STATIC_ROOT = '/srv/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -139,25 +139,17 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'teleforma',
     'teleforma.webclass',
-    'telemeta',
+    'teleforma.exam',
     'jsonrpc',
     'teleforma',
     'south',
-    'teleforma.exam',
     'sorl.thumbnail',
     'django_extensions',
     'pagination',
     'postman',
-    # 'private_files',
-    # 'markup_mixin',
-    #'notes',
-    # 'jquery',
     'timezones',
     'jqchat',
-#    'follow',
     'googletools',
-#    'devserver',
-    #'timeside',
     'extra_views',
     'captcha',
     'django_nvd3',
@@ -169,8 +161,6 @@ INSTALLED_APPS = (
     'true_false',
     'essay',
     'quiz',
-    'unique_session',
-    #'webviewer',
     'pdfannotator',
     'captcha',
 )
@@ -215,6 +205,9 @@ POSTMAN_AUTO_MODERATE_AS=True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
+TELEFORMA_ORGANIZATION = 'Pré-Barreau - CRFPA'
+TELEFORMA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
+TELEFORMA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
 TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
 TELEFORMA_GLOBAL_TWEETER = False
 TELEFORMA_PERIOD_TWEETER = True
@@ -241,7 +234,7 @@ PASSWORD_HASHERS = [
 
 BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
 
-FILE_UPLOAD_TEMP_DIR = '/srv/crfpa/var/tmp'
+FILE_UPLOAD_TEMP_DIR = '/tmp'
 
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_ENGINE = "unique_session.backends.session_backend"
@@ -300,7 +293,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': "/srv/crfpa/var/log/app.log",
+            'filename': "/var/log/app.log",
             'formatter': 'simple',
         },
     },

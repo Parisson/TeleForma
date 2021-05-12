@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python2
+FROM python:2
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 
@@ -27,9 +27,9 @@ WORKDIR /srv
 
 RUN apt-get update && apt-get install -y apt-transport-https
 # COPY etc/apt/sources.list /etc/apt/
-COPY requirements-debian.txt /srv
+COPY debian-packages.txt /srv
 RUN apt-get update && \
-    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" /srv/requirements-debian.txt) && \
+    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" /srv/debian-packages.txt) && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     echo fr_FR.UTF-8 UTF-8 >> /etc/locale.gen && \
     locale-gen && \
@@ -39,16 +39,17 @@ ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
-COPY requirements-dev.txt /srv
-RUN pip install -r requirements-dev.txt --src /srv/lib
-
 COPY requirements.txt /srv
 RUN pip install -r requirements.txt
 
-WORKDIR /srv/lib/teleforma
-COPY setup.py /srv/lib/teleforma
-COPY teleforma /srv/lib/teleforma
-COPY README.rst /srv/lib/teleforma
+COPY lib /srv/lib
+COPY bin/build/local/setup_lib.sh /srv
+RUN /srv/setup_lib.sh
+
+WORKDIR /srv/src/teleforma
+COPY setup.py /srv/src/teleforma
+COPY teleforma /srv/src/teleforma
+COPY README.rst /srv/src/teleforma
 RUN python setup.py develop
 
 WORKDIR /srv/app
