@@ -43,8 +43,8 @@ COPY requirements.txt /srv
 RUN pip install -r requirements.txt
 
 COPY lib /srv/lib
-COPY bin/build/local/setup_lib.sh /srv
-RUN /srv/setup_lib.sh
+COPY bin/build/local/setup_lib_py2.sh /srv
+RUN /srv/setup_lib_py2.sh
 
 WORKDIR /srv/src/teleforma
 COPY setup.py /srv/src/teleforma
