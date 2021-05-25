@@ -45,7 +45,7 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'fr_FR'
+LANGUAGE_CODE = 'fr'
 LANGUAGES = [ ('fr', 'French'),
               ('en', 'English'),
 ]
@@ -163,7 +163,7 @@ INSTALLED_APPS = (
     'quiz',
     'pdfannotator',
     'captcha',
-    'telemeta',
+    # 'telemeta',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
