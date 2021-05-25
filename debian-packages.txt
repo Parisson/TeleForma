@@ -3,8 +3,8 @@ netcat
 vim
 locales
 ipython
-python-setuptools
-python-mysqldb
-python-psycopg2
-python-yaml
+python3-setuptools
+python3-mysqldb
+python3-psycopg2
+python3-yaml
 uwsgi

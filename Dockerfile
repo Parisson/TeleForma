@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:2
+FROM python:3
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 
@@ -35,18 +35,18 @@ RUN apt-get update && \
     locale-gen && \
     apt-get clean
 
-RUN pip install -U pip
+RUN pip3 install -U pip
 
 ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
-COPY requirements.txt /srv
-RUN pip install -r requirements.txt
+# COPY requirements.txt /srv
+# RUN pip3 install -r requirements.txt
 
-COPY lib /srv/lib
-COPY bin/build/local/setup_lib_py2.sh /srv
-RUN /srv/setup_lib_py2.sh
+# COPY lib /srv/lib
+# COPY bin/build/local/setup_lib.sh /srv
+# RUN /srv/setup_lib.sh
 
 WORKDIR /srv/src/teleforma
 COPY setup.py /srv/src/teleforma
@@ -55,8 +55,8 @@ COPY README.rst /srv/src/teleforma
 RUN python setup.py develop
 
 # Workaround for django installation bugs
-RUN cp -ra /usr/local/django/* /usr/local/lib/python2.7/site-packages/django/
-RUN cp -ra /usr/local/django_extensions/* /usr/local/lib/python2.7/site-packages/django_extensions/
+# RUN cp -ra /usr/local/django/* /usr/local/lib/python2.7/site-packages/django/
+# RUN cp -ra /usr/local/django_extensions/* /usr/local/lib/python2.7/site-packages/django_extensions/
 
 WORKDIR /srv/app
 
