@@ -7,7 +7,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 js_info_dict = {
-    'packages': ('telemeta', 'teleforma'),
+    'packages': ('teleforma'),
 }
 
 urlpatterns = patterns('',
@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/django/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 
     # TeleForma
     (r'^', include('teleforma.urls')),

@@ -121,12 +121,12 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-#TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-#    '/var/teleforma/crfpa/lib/teleforma-crfpa/teleforma/templates/',
-#)
+# TEMPLATE_DIRS = (
+# #     Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+# #     Always use forward slashes, even on Windows.
+# #     Don't forget to use absolute paths, not relative paths.
+#    '/srv/src/teleforma/teleforma/templates/',
+# )
 
 INSTALLED_APPS = (
     'suit',
@@ -142,7 +142,6 @@ INSTALLED_APPS = (
     'teleforma.webclass',
     'teleforma.exam',
     'jsonrpc',
-    'teleforma',
     'sorl.thumbnail',
     'django_extensions',
     'pagination',
@@ -176,6 +175,27 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'teleforma.context_processors.periods',
 )
+
+
+# BASE_DIR = os.path.dirname(__file__)
+
+# TEMPLATES = [
+# {
+#     'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#     'DIRS': [
+#         os.path.join(BASE_DIR, 'templates')
+#     ],
+#     'APP_DIRS': True,
+#     'OPTIONS': {
+#         'context_processors': [
+#            'django.template.context_processors.debug',
+#            'django.template.context_processors.request',
+#            'django.contrib.auth.context_processors.auth',
+#            'django.contrib.messages.context_processors.messages',
+#         ],
+#     },
+# },]
+
 
 TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
 TELEMETA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
