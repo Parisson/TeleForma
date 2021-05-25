@@ -35,6 +35,8 @@ RUN apt-get update && \
     locale-gen && \
     apt-get clean
 
+RUN pip install -U pip
+
 ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
@@ -51,6 +53,10 @@ COPY setup.py /srv/src/teleforma
 COPY teleforma /srv/src/teleforma
 COPY README.rst /srv/src/teleforma
 RUN python setup.py develop
+
+# Workaround for django installation bugs
+RUN cp -ra /usr/local/django/* /usr/local/lib/python2.7/site-packages/django/
+RUN cp -ra /usr/local/django_extensions/* /usr/local/lib/python2.7/site-packages/django_extensions/
 
 WORKDIR /srv/app
 
