@@ -44,7 +44,7 @@ from ..models.core import MetaCore
 
 class AEStudent(models.Model):
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, related_name='ae_student', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     period = models.ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
                                     blank=True)
