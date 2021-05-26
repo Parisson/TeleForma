@@ -12,7 +12,7 @@ except:
     XS_SHARING_ALLOWED_HEADERS = ['Origin', 'Content-Type', 'Accept']
 
 
-class XsSharing(object):
+class XsSharing:
     """
         This middleware allows cross-domain XHR using the html5 postMessage API.
 
@@ -23,6 +23,10 @@ class XsSharing(object):
 
     def __init__(self, get_response):
         self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
 
     def process_request(self, request):
 
