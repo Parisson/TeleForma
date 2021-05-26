@@ -20,7 +20,7 @@ def user_passes_test(login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
         def _wrapped_view(request, *args, **kwargs):
             user = request.user
             restricted = False
-            if user.is_authenticated():
+            if user.is_authenticated:
                 try:
                     student = user.student.get()
                 except Student.DoesNotExist:

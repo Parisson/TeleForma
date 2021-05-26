@@ -41,7 +41,7 @@ def periods(request):
 
     user = request.user
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return {'periods': None}
     else:
         return {'periods': get_periods(user)}
