@@ -2,14 +2,6 @@
 {% load i18n %}
 {% load teleforma_tags %}
 
-{% block extra_javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url 'jqchat_ajax' room.id %}", null);
-    });
-</script>
-{% endblock extra_javascript %}
-
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
@@ -26,7 +18,7 @@ $(document).ready(function(){
   <div class="block important">
     <p>
       <strong>Vous n'êtes pas inscrit à la webclass de cette matière. </strong><a
-        href="{% url teleforma-webclass-appointments webclass.id %}"
+        href="{% url 'teleforma-webclass-appointments' webclass.id %}"
         class="conference-big-button component_icon button icon_next">Cliquez-ici pour choisir un créneau horaire</a>
     </p>
   </div>

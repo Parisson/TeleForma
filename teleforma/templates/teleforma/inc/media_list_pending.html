@@ -14,7 +14,7 @@
           {% if media.type == 'webm' or media.type == 'mp4' %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-            <a href="{% url teleforma-media-detail period.id media.id %}" title="{% trans "Play" %}">
+            <a href="{% url 'teleforma-media-detail' period.id media.id %}" title="{% trans "Play" %}">
             {% if media.poster_file %}
                {% thumbnail media.poster_file "168x96" as im %}
                 <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">

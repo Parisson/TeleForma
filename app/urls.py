@@ -22,7 +22,7 @@ urlpatterns = [
 
     # Languages
     url(r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^jsi18n/$', JavaScriptCatalog.as_view(packages=js_info_dict)),
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(packages=js_info_dict), name="js_catalog"),
     url(r'^robots\.txt$', lambda r: HttpResponse(
         "User-agent: *\nDisallow: /", mimetype="text/plain")),
 

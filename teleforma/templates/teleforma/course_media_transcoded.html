@@ -12,7 +12,6 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
     $('#my_video_1').bind('contextmenu',function() { return false; });
     });
 </script>
@@ -23,7 +22,7 @@ $(document).ready(function(){
 {% if media_transcoded.file and media.is_published or user.is_superuser or user.is_staff %}
  {% if not "video" in media.mime_type or request.user_agent.os.family == 'iOS' %}
   <div class="module_action">
-   <a href="{% url teleforma-media-transcoded-download period.id media.id %}" class="component_icon button" id="action_red"><img src="/static/teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+   <a href="{% url 'teleforma-media-transcoded-download' period.id media.id %}" class="component_icon button" id="action_red"><img src="/static/teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
   </div>
  {% endif %}
 {% endif %}
@@ -35,14 +34,14 @@ $(document).ready(function(){
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
         {% if "video" in media_transcoded.mime_type %}
-        <a href="{% url teleforma-media-transcoded period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url 'teleforma-media-transcoded' period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
         {% endif %}
         {% if "audio" in media_transcoded.mime_type %}
-        <a href="{% url teleforma-media-detail period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url 'teleforma-media-detail' period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
         {% endif %}
     </div>
 
-    <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
+    <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
 
 </div>
 
@@ -91,11 +90,11 @@ $(document).ready(function(){
 <dl class="listing">
 
 {% if media.conference %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
+<dt>{% trans "Course" %}</dt><dd><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
 {% if media.conference.professor %}
 <dt>{% trans "Professor" %}</dt>
-    <dd><a href="{% url teleforma-profile-detail media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
+    <dd><a href="{% url 'teleforma-profile-detail' media.conference.professor.user.username %}" target="_blank">{{ media.conference.professor }}</a></dd>
 {% endif %}
 {% if media.conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>

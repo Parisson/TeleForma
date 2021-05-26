@@ -4,14 +4,6 @@
 {% load i18n %}
 
 
-{% block extra_javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url 'jqchat_ajax' room.id %}", null);
-    });
-</script>
-{% endblock extra_javascript %}
-
 {% block content %}
 
 <div id="module-set-left" style="width: 18%">
@@ -76,7 +68,7 @@ $(document).ready(function(){
     {% endif %}
 
     {% for appointment in appointments %}
-      <a href="{% url teleforma-appointments period_id=period.id course_id=appointment.course.id %}"><button>Rendez-vous individuels "{{ appointment.name }}"</button></a>
+      <a href="{% url 'teleforma-appointments' period_id=period.id course_id=appointment.course.id %}"><button>Rendez-vous individuels "{{ appointment.name }}"</button></a>
     {% endfor %}
   </div>
   <br />
@@ -97,7 +89,7 @@ $(document).ready(function(){
     </div>
 
     <div class="video" style="width:400px">
-      <a href="{% url teleforma-media-detail period.id home_video.id %}" title="{% trans "Play" %}">
+      <a href="{% url 'teleforma-media-detail' period.id home_video.id %}" title="{% trans "Play" %}">
         {% if home_video.poster_file %}
         {% thumbnail home_video.poster_file "168x96" as im %}
         <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
@@ -159,7 +151,7 @@ $(document).ready(function(){
     {% for type in c.types %}
     <div class="course">
       <div class="course_title">
-        <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} -
+        <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} -
           {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
       </div>
 

@@ -2,10 +2,10 @@
 {% load i18n %}
 {% load telemeta_utils %}
 {% load teleforma_tags %}
-{% get_googletools as googletools %}
+{% comment %} {% get_googletools as googletools %}
 {%  if googletools %}
 {% load googletools %}
-{% endif %}
+{% endif %} {% endcomment %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}><head>
@@ -132,7 +132,7 @@ alt="logo" />
   {% endif %}
 
   {% if user.professor.count %}
-    <li><a href="{% url teleforma-webclass-professor %}" class="yellow">Webclass</a></li>
+    <li><a href="{% url 'teleforma-webclass-professor' %}" class="yellow">Webclass</a></li>
   {% endif %}
 
   {% if periods|length == 1 %}
@@ -238,10 +238,10 @@ alt="logo" />
 
 </div>
 {% endblock layout %}
-
+{% comment %} 
 {% block analytics %}
 {% analytics_code %}
-{% endblock analytics %}
+{% endblock analytics %} {% endcomment %}
 
 <script type='text/javascript'>
 window.scrollTo(0, 1);

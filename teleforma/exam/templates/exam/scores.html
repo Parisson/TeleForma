@@ -16,11 +16,11 @@
 
 {% block modules %}
     <div class="module">
-    <h3><a href="{% url teleforma-home %}"><img src="/static/teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+    <h3><a href="{% url 'teleforma-home' %}"><img src="/static/teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
     <div style="background: white;">
     <ul>
      {% for course in courses %}
-       <li><a href="{% url teleforma-exam-scripts-scores-course period.id course.id %}">{{ course.title}} {{ course.type }}</a></li>
+       <li><a href="{% url 'teleforma-exam-scripts-scores-course' period.id course.id %}">{{ course.title}} {{ course.type }}</a></li>
      {% endfor %}
     </ul>
     </div>
@@ -29,12 +29,12 @@
 {% block module-action %}
 {% if upload %}
 <div class="module_action">
-<a href="{% url teleforma-exam-scores-create period.id %}" class="component_icon button" id="action_green">{% trans "New score" %}</a>
+<a href="{% url 'teleforma-exam-scores-create' period.id %}" class="component_icon button" id="action_green">{% trans "New score" %}</a>
 </div>
 {% endif %}
 {% if admin %}
 <div class="module_action">
-<a href="{% url teleforma-exam-scores-mass-create period.id %}" class="component_icon button" id="action_green">Saisie en masse de notes</a>
+<a href="{% url 'teleforma-exam-scores-mass-create' period.id %}" class="component_icon button" id="action_green">Saisie en masse de notes</a>
 </div>
 {% endif %}
 {% endblock module-action %}
