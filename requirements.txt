@@ -10,6 +10,7 @@ django-nvd3==0.8.2
 django-postman==4.2
 django-simple-captcha==0.5.14   # a maj
 django-tinymce==3.3.0
+-e git+https://git.parisson.com/git/django-unique-session.git@master#egg=django-unique-session
 django-user-agents==0.4.0
 jxmlease==1.0.3
 mysqlclient==2.0.3
