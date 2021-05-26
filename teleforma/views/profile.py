@@ -34,12 +34,17 @@
 # # Authors: Olivier Guilyardi <olivier@samalyse.com>
 # #          Guillaume Pellerin <yomguy@parisson.com>
 
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserChangeForm
-from django.utils.decorators import method_decorator
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from teleforma.models.crfpa import Profile as UserProfile
-from teleforma.forms import UserProfileForm
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext
+
+from ..forms import UserProfileForm
+from ..models.crfpa import Profile as UserProfile
+
 
 class ProfileView(object):
     """Provide Collections web UI methods"""
@@ -52,24 +57,26 @@ class ProfileView(object):
         except:
             profile = None
 
-        return render(request, template, {'profile' : profile, 'usr': user})
+        return render(request, template, {'profile': profile, 'usr': user})
 
     @method_decorator(login_required)
     def profile_edit(self, request, username, template='teleforma/profile_edit.html'):
         if request.user.is_superuser:
-            user_hidden_fields = ['profile-user', 'user-password', 'user-last_login', 'user-date_joined']
+            user_hidden_fields = [
+                'profile-user', 'user-password', 'user-last_login', 'user-date_joined']
         else:
             user_hidden_fields = ['user-username', 'user-is_staff', 'profile-user', 'user-is_active',
-                         'user-password', 'user-last_login', 'user-date_joined', 'user-groups',
-                         'user-user_permissions', 'user-is_superuser', 'profile-expiration_date']
+                                  'user-password', 'user-last_login', 'user-date_joined', 'user-groups',
+                                  'user-user_permissions', 'user-is_superuser', 'profile-expiration_date']
 
         user = User.objects.get(username=username)
         if user != request.user and not request.user.is_staff:
             mess = ugettext('Access not allowed')
             title = ugettext('User profile') + ' : ' + username + ' : ' + mess
-            description = ugettext('Please login or contact the website administator to get a private access.')
+            description = ugettext(
+                'Please login or contact the website administator to get a private access.')
             messages.error(request, title)
-            return render(request, 'teleforma/messages.html', {'description' : description})
+            return render(request, 'teleforma/messages.html', {'description': description})
 
         try:
             profile = user.get_profile()
@@ -77,8 +84,10 @@ class ProfileView(object):
             profile = UserProfile(user=user)
 
         if request.method == 'POST':
-            user_form = UserChangeForm(request.POST, instance=user, prefix='user')
-            profile_form = UserProfileForm(request.POST, instance=profile, prefix='profile')
+            user_form = UserChangeForm(
+                request.POST, instance=user, prefix='user')
+            profile_form = UserProfileForm(
+                request.POST, instance=profile, prefix='profile')
             if user_form.is_valid() and profile_form.is_valid():
                 user_form.save()
                 profile_form.save()
@@ -88,5 +97,4 @@ class ProfileView(object):
             profile_form = UserProfileForm(instance=profile, prefix='profile')
             forms = [user_form, profile_form]
         return render(request, template, {'forms': forms, 'usr': user,
-                                'user_hidden_fields': user_hidden_fields})
-
+                                          'user_hidden_fields': user_hidden_fields})

@@ -32,16 +32,11 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-import os.path
-from django.conf.urls import patterns, url, include
-from django.http import HttpResponse
-from teleforma.exam.models import *
-from teleforma.exam.views import *
-from jsonrpc import jsonrpc_site
+from teleforma.exam.views import MassScoreCreateView, ScoreCreateView, ScriptCreateView, ScriptView, ScriptsPendingView, ScriptsRejectedView, ScriptsScoreAllView, ScriptsScoreCourseView, ScriptsTreatedView, ScriptsView, get_correctors, get_mass_students
+from django.conf.urls import url
 
 
-urlpatterns = patterns('',
-
+urlpatterns = [
     url(r'^scripts/periods/(?P<period_id>.*)/(?P<pk>.*)/detail/$', ScriptView.as_view(), name="teleforma-exam-script-detail"),
     url(r'^scripts/periods/(?P<period_id>.*)/list/$', ScriptsView.as_view(), name="teleforma-exam-script-list"),
     url(r'^scripts/periods/(?P<period_id>.*)/create/$', ScriptCreateView.as_view(), name="teleforma-exam-script-create"),
@@ -56,7 +51,4 @@ urlpatterns = patterns('',
 
     url(r'^scripts/get-correctors/$', get_correctors, name="teleforma-exam-get-correctors"),
     url(r'^scripts/get-mass-students/$', get_mass_students, name="teleforma-exam-get-mass-students"),
-    # url(r'^exam/periods/(?P<period_id>.*)/quotas/$', QuotasView.as_view(), name="teleforma-exam-quotas"),
-
-
-)
+]

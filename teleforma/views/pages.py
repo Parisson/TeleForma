@@ -6,6 +6,7 @@ import teleforma
 
 PAGES_ROOT = os.path.join(os.path.dirname(teleforma.__file__), 'pages')
 
+
 class PageTextContent(object):
     def __init__(self, filename, path):
         self.filename = filename
@@ -17,16 +18,17 @@ class PageTextContent(object):
             yield line.rstrip('\r\n')
         file.close()
 
-    def __unicode__(self):
+    def __str__(self):
         file = open(self.filename, 'r')
         data = file.read()
         file.close()
         return data
 
+
 class PageAttachment(object):
     def __init__(self, filename, path):
         self.filename = filename
-        self.path     = path
+        self.path = path
 
     def mimetype(self):
         type, encoding = mimetypes.guess_type(self.filename)
@@ -43,11 +45,14 @@ class PageAttachment(object):
 
         file.close()
 
+
 def language_code(request=None):
-    code = (request and getattr(request, 'LANGUAGE_CODE', None)) or settings.LANGUAGE_CODE
+    code = (request and getattr(request, 'LANGUAGE_CODE', None)
+            ) or settings.LANGUAGE_CODE
     cut = re.split('[_-]', code)
     code = cut[0]
     return code.lower()
+
 
 def project_dir():
     import settings as settings_mod
@@ -60,6 +65,7 @@ def project_dir():
         project_directory = os.getcwd()
 
     return project_directory
+
 
 def resolve_page_file(root, relative_path, ignore_slash_issue=False):
     root = os.path.realpath(root)
@@ -75,7 +81,7 @@ def resolve_page_file(root, relative_path, ignore_slash_issue=False):
             filename = rst
             break
         elif os.path.isfile(current):
-            filename      = current
+            filename = current
             is_attachment = True
         elif not os.path.isdir(current):
             break
@@ -101,18 +107,20 @@ def resolve_page_file(root, relative_path, ignore_slash_issue=False):
 
     return None
 
+
 def get_page_content(request, relative_path, ignore_slash_issue=False):
     lang = language_code(request)
     userroot = os.path.join(project_dir(), 'telemeta-pages')
     rootlist = [os.path.join(userroot, lang), os.path.join(userroot, 'default'),
                 os.path.join(PAGES_ROOT, lang), os.path.join(PAGES_ROOT, 'default')]
     for root in rootlist:
-        content = resolve_page_file(root, relative_path, ignore_slash_issue=ignore_slash_issue)
+        content = resolve_page_file(
+            root, relative_path, ignore_slash_issue=ignore_slash_issue)
         if content:
             return content
 
     return None
 
+
 class MalformedPagePath(Exception):
     pass
-

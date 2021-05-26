@@ -33,7 +33,8 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-from teleforma.views.core import *
+from ..models.core import Course, CourseType
+from .core import format_courses
 
 
 def format_ae_courses(courses, course=None, queryset=None, types=None, admin=False):

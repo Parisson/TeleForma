@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from teleforma.admin import *
-from teleforma.webclass.models import *
 from django.contrib import admin
+from teleforma.webclass.models import (BBBServer, Webclass, WebclassRecord,
+                                       WebclassSlot)
+
 
 class BBBServerAdmin(admin.ModelAdmin):
     model = BBBServer

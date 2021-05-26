@@ -1,18 +1,27 @@
 # -*- coding: utf-8 -*-
 # Django settings for sandbox project.
 
+from django.utils.encoding import force_text
+import warnings
 import os
 import sys
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
+# import environ
 
 sys.dont_write_bytecode = True
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+warnings.showwarning = lambda *x: None
+
 ADMINS = (
     ('Guillaume Pellerin', 'webmaster@parisson.com'),
-    ('Lists', 'lists@parisson.com'),
+    ('Gael le Mignot', 'gael@pilotsystems.net'),
+    #    ('Admin CRFPA', 'admin-crfpa@pre-barreau.com'),
 )
 
 MANAGERS = ADMINS
@@ -39,9 +48,10 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-#LANGUAGE_CODE = 'fr_FR'
-LANGUAGES = [ ('fr', 'French'),
-              ('en', 'English'),
+LANGUAGE_CODE = 'fr'
+LANGUAGES = [
+    ('fr', 'French'),
+    ('en', 'English'),
 ]
 
 SITE_ID = 1
@@ -88,7 +98,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -103,7 +113,7 @@ SECRET_KEY = 'a8l7%06wr2k+3=%#*#@#rvop2mmzko)44%7k(zx%lls^ihm9^5'
 #)
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -115,12 +125,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    '/home/momo/dev/teleforma/teleforma/teleforma/templates/',
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -130,23 +134,27 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'telemeta',
-    'jsonrpc',
-    'south',
+    # 'south',
     'teleforma',
     'sorl.thumbnail',
-    'django_extensions',
-    'pagination',
+    # 'django_extensions',
+    # 'pagination',
     'postman',
-#    'private_files',
-    'markup_mixin',
-    'notes',
-#    'jquery',
-    'timezones',
-    'jqchat',
-#    'follow',
-     'googletools',
-     'telecaster',
+    # 'timezones',
+    # 'googletools',
+    # 'extra_views',
+    'captcha',
+    'django_nvd3',
+    # 'bootstrap3',
+    # 'bootstrap_pagination',
+    # 'django_user_agents',
+    'tinymce',
+    # 'multichoice',
+    # 'true_false',
+    # 'essay',
+    # 'quiz',
+    'pdfannotator',
+    # 'telemeta',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -159,9 +167,27 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "teleforma.context_processors.periods",
 )
 
-TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
-TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
-TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
+TELEMETA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
+TELEMETA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
 TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
 TELEMETA_CACHE_DIR = MEDIA_ROOT + 'cache'
 TELEMETA_EXPORT_CACHE_DIR = TELEMETA_CACHE_DIR + "/export"
@@ -179,10 +205,10 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-EMAIL_HOST = 'smtp.numericable.fr'
-DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
-SERVER_EMAIL = 'webmaster@parisson.com'
-EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
+EMAIL_HOST = 'localhost'
+DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
+SERVER_EMAIL = 'crfpa@pre-barreau.com'
+EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
 
 POSTMAN_AUTO_MODERATE_AS = True
 
@@ -202,6 +228,103 @@ TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8888
 TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
 TELEFORMA_GLOBAL_TWEETER = False
 TELEFORMA_PERIOD_TWEETER = True
+TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
+TELEFORMA_EXAM_SCRIPT_UPLOAD = True
+TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
+TELEFORMA_PERIOD_DEFAULT_ID = 22
+TELEFORMA_EXAM_MAX_SESSIONS = 15
+TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
+TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 
-JQCHAT_DISPLAY_COUNT = 50
-JQCHAT_DISPLAY_TIME  = 48
+TELECASTER_LIVE_STREAMING_SERVER = 'stream4.parisson.com'
+TELECASTER_LIVE_STREAMING_PORT = 443
+TELECASTER_LIVE_ICECAST_STREAMING_PORT = 8000
+TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8080
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+]
+
+BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
+
+FILE_UPLOAD_TEMP_DIR = '/tmp'
+
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_ENGINE = "unique_session.backends.session_backend"
+UNIQUE_SESSION_WHITELIST = (1, 2042)
+
+# SOUTH_MIGRATION_MODULES = {
+#     'captcha': 'captcha.south_migrations',
+# }
+
+# Cache backend is optional, but recommended to speed up user agent parsing
+# CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#        'LOCATION': '127.0.0.1:11211',
+#    }
+# }
+
+# Name of cache backend to cache user agents. If it not specified default
+# cache alias will be used. Set to `None` to disable caching.
+USER_AGENTS_CACHE = 'default'
+
+AUTH_USER_MODEL = 'auth.User'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+}
+
+# Sherlock's online payment
+PAYMENT_SHERLOCKS_PATH = '/opt/sherlocks2'
+PAYMENT_PARAMETERS = {'merchant_id': {'Semestrielle': "040109417200053",
+                                      'Estivale': "040109417200054", },
+                      'merchant_country': 'fr',
+                      'currency_code': '978',
+                      'language': 'fr'
+                      }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': "/var/log/app.log",
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'payment': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
+def show_user_as(user):
+    professor = user.professor.all()
+    is_corrector = False
+    if user.quotas.count() and not professor and not user.is_superuser:
+        return "#"+str(user.id)
+    else:
+        return force_text(user)
+
+
+POSTMAN_SHOW_USER_AS = show_user_as
+
+#THUMBNAIL_FORCE_OVERWRITE = True

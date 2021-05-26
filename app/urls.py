@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import os
-
+from django.http import HttpResponse
 from django.conf.urls import include, url
-from django.conf import settings
+from django.views.i18n import JavaScriptCatalog
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.http import HttpResponse
@@ -29,7 +28,7 @@ urlpatterns = [
 
     # Languages
     url(r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^jsi18n/$', JavaScriptCatalog.as_view(packages=js_info_dict), name="js_catalog"),
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(packages=js_info_dict)),
     url(r'^robots\.txt$', lambda r: HttpResponse(
         "User-agent: *\nDisallow: /", mimetype="text/plain")),
 

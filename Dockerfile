@@ -52,7 +52,6 @@ RUN if [ "${dev}" = "1" ]; then apt-get -y install less nano postgresql-client r
 COPY lib /srv/lib
 COPY bin/build/local/setup_lib.sh /srv
 RUN /srv/setup_lib.sh
-
 WORKDIR /srv/src/teleforma
 COPY setup.py /srv/src/teleforma
 COPY teleforma /srv/src/teleforma

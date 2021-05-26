@@ -34,19 +34,33 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
-import django.db.models as models
-from django.utils.translation import ugettext_lazy as _
-from teleforma.models.core import *
-from tinymce.models import HTMLField
-from  django.db.models import signals
-from django.conf import settings
+import datetime
 
-class IEJ(Model):
+import django.db.models as models
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.db.models import signals
+from django.urls.base import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
+from tinymce.models import HTMLField
+
+from ..models.core import (Course, Media, MetaCore, payment_choices,
+                           payment_schedule_choices)
+
+app_label = 'teleforma'
+
+months_choices = []
+for i in range(1, 13):
+    months_choices.append((i, datetime.date(2015, i, 1).strftime('%B')))
+
+
+class IEJ(models.Model):
 
     name = models.CharField(_('name'), max_length=255)
-    description = models.CharField(_('description'), max_length=255, blank=True)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -56,25 +70,7 @@ class IEJ(Model):
         ordering = ['name']
 
 
-class WebClassGroup(models.Model):
-
-    name = models.CharField(_('name'), max_length=255)
-    iejs = models.ManyToManyField('IEJ', related_name="web_class_group", verbose_name=_('IEJ'),
-                                        blank=True, null=True)
-
-    class Meta(MetaCore):
-        verbose_name = _('web class group')
-        verbose_name_plural = _('web class group')
-        ordering = ['name']
-
-    def to_json_dict(self):
-        data = {'name': self.name,
-                'iejs': [iej.name for iej in self.iejs.all()],
-                 }
-        return data
-
-
-class Training(Model):
+class Training(models.Model):
 
     code = models.CharField(_('code'), max_length=255)
     name = models.CharField(_('name'), max_length=255, blank=True)
@@ -111,13 +107,15 @@ class Training(Model):
                                             blank=True, null=True)
 
     cost = models.FloatField(_('cost'), blank=True, null=True)
-    cost_elearning_fascicle = models.FloatField(_('e-learning cost with fascicle'), blank=True, null=True)
-    cost_elearning_nofascicle = models.FloatField(_('e-learning cost without fascicle'), blank=True, null=True)
+    cost_elearning_fascicle = models.FloatField(
+        _('e-learning cost with fascicle'), blank=True, null=True)
+    cost_elearning_nofascicle = models.FloatField(
+        _('e-learning cost without fascicle'), blank=True, null=True)
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
     duration = models.IntegerField(u"Durée en heures", default=0)
-    
-    def __unicode__(self):
+
+    def __str__(self):
         if self.name and self.period:
             return ' - '.join([self.name, self.period.name])
         else:
@@ -192,27 +190,36 @@ def update_balance_signal(sender, instance, *args, **kwargs):
     except:
         pass
 
+
 signals.post_save.connect(update_balance_signal)
 signals.post_delete.connect(update_balance_signal)
+
 
 class Profile(models.Model):
     "User profile extension"
 
-    user = models.ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
+    user = models.OneToOneField(User, related_name='profile',
+                             verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     address = models.CharField(_('Address'), max_length=255, blank=True)
-    address_detail = models.CharField(_('Address detail'), max_length=255, blank=True, null=True)
-    postal_code = models.CharField(_('Postal code'), max_length=255, blank=True)
+    address_detail = models.CharField(
+        _('Address detail'), max_length=255, blank=True, null=True)
+    postal_code = models.CharField(
+        _('Postal code'), max_length=255, blank=True)
     city = models.CharField(_('City'), max_length=255, blank=True)
     country = models.CharField(_('Country'), max_length=255, blank=True)
     language = models.CharField(_('Language'), max_length=255, blank=True)
     telephone = models.CharField(_('Telephone'), max_length=255, blank=True)
-    expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
+    expiration_date = models.DateField(
+        _('Expiration_date'), blank=True, null=True)
     init_password = models.BooleanField(_('Password initialized'))
     wifi_login = models.CharField(_('WiFi login'), max_length=255, blank=True)
     wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
-    birthday = models.DateField(_('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
-    birthday_place =  models.CharField('Lieu de naissance', max_length=255, blank=True, null=True)
-    nationality = models.CharField('Nationalité', max_length=255, null=True, blank=True)
+    birthday = models.DateField(
+        _('birthday'), blank=True, null=True, help_text="jj/mm/aaaa")
+    birthday_place = models.CharField(
+        'Lieu de naissance', max_length=255, blank=True, null=True)
+    nationality = models.CharField(
+        'Nationalité', max_length=255, null=True, blank=True)
     ss_number = models.CharField('Sécurité sociale',
                                  max_length=15, blank=True, null=True)
     siret = models.CharField('Siret',
@@ -223,32 +230,34 @@ class Profile(models.Model):
         verbose_name = _('profile')
 
 
-
 PAY_STATUS_CHOICES = [
     ('honoraires', 'Honoraires'),
     ('salarie', 'Salarié'),
 ]
-class Corrector(Model):
+
+
+class Corrector(models.Model):
     "A corrector profile, only used for registration for the moment"
 
-    user = models.ForeignKey(User, related_name='corrector', verbose_name=_('user'), unique=True)
+    user = models.OneToOneField(
+        User, related_name='corrector', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     period = models.ForeignKey('Period', related_name='corrector', verbose_name=_('period'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
-    courses = models.ManyToManyField("Course", verbose_name=_("Course"), blank=True, null=True)
+                               blank=True, null=True, on_delete=models.SET_NULL)
+    courses = models.ManyToManyField(
+        "Course", verbose_name=_("Course"), blank=True)
     pay_status = models.CharField('Statut', choices=PAY_STATUS_CHOICES,
-                                    max_length=64, blank=True, null=True,
-                                    default='honoraire')
-    
-    date_registered = models.DateTimeField(_('registration date'), auto_now_add=True, null=True, blank=True)
-    
-    
-    def __unicode__(self):
+                                  max_length=64, blank=True, null=True,
+                                  default='honoraire')
+
+    date_registered = models.DateTimeField(
+        _('registration date'), auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:
             return ''
 
-    
     class Meta(MetaCore):
         db_table = app_label + '_' + 'corrector'
         verbose_name = _('Correcteur')
@@ -264,7 +273,8 @@ for i in range(1,13):
 class Payment(models.Model):
     "a payment from a student"
 
-    student = models.ForeignKey(Student, related_name='payments', verbose_name=_('student'))
+    student = models.ForeignKey(
+        Student, related_name='payments', verbose_name=_('student'), on_delete=models.CASCADE)
     value = models.FloatField(_('amount'), help_text='€')
     month = models.IntegerField(_('month'), choices=months_choices, default=1,
                                 blank=True, null=True)
@@ -290,9 +300,11 @@ class Payment(models.Model):
 class Discount(models.Model):
     "a discount for a student subscription"
 
-    student = models.ForeignKey(Student, related_name='discounts', verbose_name=_('student'))
+    student = models.ForeignKey(
+        Student, related_name='discounts', verbose_name=_('student'), on_delete=models.CASCADE)
     value = models.FloatField(_('amount'), help_text='€')
-    description = models.CharField(_('description'), max_length=255, blank=True)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'discounts'
@@ -303,9 +315,11 @@ class Discount(models.Model):
 class OptionalFee(models.Model):
     "an optional fee for a student subscription"
 
-    student = models.ForeignKey(Student, related_name='optional_fees', verbose_name=_('student'))
+    student = models.ForeignKey(
+        Student, related_name='optional_fees', verbose_name=_('student'), on_delete=models.CASCADE)
     value = models.FloatField(_('amount'), help_text='€')
-    description = models.CharField(_('description'), max_length=255, blank=True)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'optional_fees'
@@ -316,9 +330,11 @@ class OptionalFee(models.Model):
 class Payback(models.Model):
     "an payback for a student subscription"
 
-    student = models.ForeignKey(Student, related_name='paybacks', verbose_name=_('student'))
+    student = models.ForeignKey(
+        Student, related_name='paybacks', verbose_name=_('student'), on_delete=models.CASCADE)
     value = models.FloatField(_('amount'), help_text='€')
-    description = models.CharField(_('description'), max_length=255, blank=True)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'paybacks'
@@ -330,14 +346,14 @@ class Home(models.Model):
 
     title = models.CharField('Title (interne)', max_length=255,
                              default="Page d'accueil")
-    visible_title = models.CharField(_('Title'), max_length=255, null=True, blank=True)
+    visible_title = models.CharField(
+        _('Title'), max_length=255, null=True, blank=True)
     text = models.TextField('Texte', blank=True)
-    video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True)
-    modified_at = models.DateTimeField(u'Date de modification', auto_now=True,
-                                       default=datetime.datetime.now)
+    video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True, on_delete=models.SET_NULL)
+    modified_at = models.DateTimeField(u'Date de modification', auto_now=True, default=datetime.datetime.now)
     periods = models.ManyToManyField('Period', related_name="home_texts",
                                      verbose_name=u'Périodes associées',
-                                     blank=True, null=True)
+                                     blank=True)
     enabled = models.BooleanField(u'Activé', default=True)
 
     class Meta(MetaCore):
@@ -348,11 +364,12 @@ class Home(models.Model):
         """
         Check if it's available for given period
         """
-        periods = [ p['id'] for p in self.periods.values('id') ]
+        periods = [p['id'] for p in self.periods.values('id')]
         return not periods or period.id in periods
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
+
 
 class Parameters(models.Model):
     """ used to store various unique parameters """
@@ -374,30 +391,30 @@ class Parameters(models.Model):
         except cls.DoesNotExist:
             return cls()
 
+
 class NewsItem(models.Model):
 
     title = models.CharField(_('Title'), max_length=255)
-    course = models.ForeignKey(Course, related_name='newsitems', verbose_name=_('course'))
-    period = models.ForeignKey('Period', related_name='newsitems', verbose_name=_('period'), blank=False, null=True)
+    course = models.ForeignKey(
+        Course, related_name='newsitems', verbose_name=_('course'), on_delete=models.CASCADE)
+    period = models.ForeignKey('Period', related_name='newsitems', verbose_name=_(
+        'period'), blank=False, null=True, on_delete=models.SET_NULL)
     text = HTMLField('Texte')
 
     created = models.DateTimeField(_('date created'), auto_now_add=True)
-    creator = models.ForeignKey(User, related_name='newsitems', verbose_name="Créateur")
+    creator = models.ForeignKey(
+        User, related_name='newsitems', verbose_name="Créateur", on_delete=models.CASCADE)
     deleted = models.BooleanField('Supprimé')
 
     class Meta(MetaCore):
         verbose_name = "Actualité"
         verbose_name_plural = "Actualités"
 
-    def __unicode__(self):
+    def __str__(self):
         return "NewsItem %s" % str(self.id)
-
 
     def can_edit(self, request):
         return request.user.is_staff or request.user.id == self.creator.id
 
     def can_delete(self, request):
         return request.user.is_staff or request.user.id == self.creator.id
-
-
-

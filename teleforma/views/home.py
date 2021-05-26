@@ -34,26 +34,27 @@
 # Authors: Olivier Guilyardi <olivier@samalyse.com>
 #          Guillaume Pellerin <yomguy@parisson.com>
 
-import pages
-from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.http import HttpResponse
+from django.shortcuts import redirect, render
+
+from .pages import MalformedPagePath, PageAttachment, get_page_content
+
 
 class HomeView(object):
     """Provide general web UI methods"""
 
     def render_flatpage(self, request, path):
         try:
-            content = pages.get_page_content(request, path)
-        except pages.MalformedPagePath:
+            content = get_page_content(request, path)
+        except MalformedPagePath:
             return redirect(request.path + '/')
 
-        if isinstance(content, pages.PageAttachment):
+        if isinstance(content, PageAttachment):
             return HttpResponse(content, content.mimetype())
         else:
-            return render(request, 'teleforma/flatpage.html', {'page_content': content })
+            return render(request, 'teleforma/flatpage.html', {'page_content': content})
 
     def logout(self, request):
         auth.logout(request)
         return redirect('teleforma-home')
-

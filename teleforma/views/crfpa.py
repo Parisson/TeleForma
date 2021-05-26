@@ -31,31 +31,49 @@
 # knowledge of the CeCILL license and that you accept its terms.
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
-from django.core.exceptions import ValidationError, PermissionDenied
-from teleforma.models.crfpa import Parameters
-from teleforma.models.core import Period
-from teleforma.views.core import *
-from teleforma.forms import WriteForm
-from teleforma.decorators import access_required
-from teleforma.views.profile import ProfileView
-from registration.views import *
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
-from postman.views import WriteView as PostmanWriteView
-from postman.forms import AnonymousWriteForm
+
+import datetime
+
+import xlrd
+from django.contrib.auth import get_backends, login
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.paginator import InvalidPage
+from django.db.models import Max, Q
+from django.forms.formsets import all_valid
+from django.http import HttpResponseForbidden
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.defaultfilters import slugify
+from django.urls.base import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
-from django.db.models import Max
-from django.http import HttpResponseForbidden
-from django.forms.formsets import all_valid
-from django.core.exceptions import ValidationError
-from django.contrib.sites.models import Site
+from django.views.generic.base import TemplateView, View
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
+from postman.forms import AnonymousWriteForm
+from postman.views import WriteView as PostmanWriteView
+from xlwt import Workbook
+
+from ..decorators import access_required
+from ..forms import (CorrectorForm, NewsItemForm, UserForm, WriteForm,
+                     get_unique_username)
+from ..models.core import Course, CourseType, Document, NamePaginator, Period
+from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
+                            Payment, Profile, Student, Training)
+from ..views.core import (PDFTemplateResponseMixin, format_courses,
+                          get_courses, get_periods, months_choices,
+                          payment_choices)
+from ..views.profile import ProfileView
 
 ORAL_OPTION_PRICE = 250
 
 def get_course_code(obj):
     if obj:
-        return unicode(obj.code)
+        return str(obj.code)
     else:
         return ''
 
@@ -267,7 +285,7 @@ class UserXLSBook(object):
             row.write(1, user.first_name)
             row.write(2, student.portrait and student.portrait.url or '')
             row.write(8, user.email)
-            row.write(3, unicode(student.iej))
+            row.write(3, str(student.iej))
 
             codes = []
             for training in student.trainings.values('code'):
@@ -275,7 +293,7 @@ class UserXLSBook(object):
                     codes.append('I - ' + training['code'])
                 else:
                     codes.append(training['code'])
-            row.write(4, unicode(' '.join(codes)))
+            row.write(4, str(' '.join(codes)))
 
             row.write(5, self.get_course_code(student.procedure_id))
             row.write(6, self.get_course_code(student.written_speciality_id))
@@ -623,7 +641,7 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         user = User.objects.get(username=self.kwargs['username'])
         # user = self.get_object()
         student = user.student.all()[0]
-        prefix = unicode(_('Registration'))
+        prefix = str(_('Registration'))
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
@@ -767,7 +785,7 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         user = User.objects.get(username=self.kwargs['username'])
         # user = self.get_object()
         student = user.student.all()[0]
-        prefix = unicode(_('Registration'))
+        prefix = str(_('Registration'))
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
@@ -781,7 +799,7 @@ class CorrectorRegistrationPDFViewDownload(RegistrationPDFView):
         user = User.objects.get(username=self.kwargs['username'])
         # user = self.get_object()
         corrector = user.corrector.all()[0]
-        prefix = unicode(_('Registration'))
+        prefix = str(_('Registration'))
         filename = '_'.join([prefix, corrector.user.first_name, corrector.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')

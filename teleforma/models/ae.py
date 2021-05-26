@@ -35,21 +35,31 @@
 """
 
 import django.db.models as models
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from teleforma.models.core import *
+
+from ..models import app_label
+from ..models.core import MetaCore
 
 
+class AEStudent(models.Model):
 
-# class AEStudent(StudentMixin):
+    user = models.OneToOneField(
+        User, related_name='ae_student', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
+    period = models.ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
+                                    blank=True)
+    platform_only = models.BooleanField(_('platform only'))
+    courses = models.ManyToManyField('Course', related_name="ae_student",
+                                     verbose_name=_('courses'),
+                                     blank=True)
 
-#     period          = ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
-#                                   blank=True, null=True)
-#     courses       	= ManyToManyField('Course', related_name="ae_student",
-#                                         verbose_name=_('courses'),
-#                                         blank=True, null=True)
+    def __str__(self):
+        try:
+            return self.user.last_name + ' ' + self.user.first_name
+        except:
+            return ''
 
-#     class Meta(MetaCore):
-#         db_table = app_label + '_' + 'ae_student'
-#         verbose_name = _('AE student')
-#         verbose_name_plural = _('AE students')
-#         ordering = ['user__last_name']
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'ae_student'
+        verbose_name = _('AE student')
+        ordering = ['user__last_name']

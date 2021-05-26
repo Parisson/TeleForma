@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-from django.forms import Form, ModelChoiceField, ChoiceField
-from teleforma.models.core import Course, Period
-from teleforma.webclass.models import get_records, WebclassSlot, WebclassRecord, BBBServer
-from django.core.exceptions import ValidationError
+from django.forms import ChoiceField, Form
+
+from ..models.core import Course, Period
+from ..webclass.models import (BBBServer, WebclassRecord, WebclassSlot,
+                               get_records)
+
 
 class WebclassRecordsForm(Form):
     # period = ModelChoiceField(label='Période',
@@ -21,6 +22,7 @@ class WebclassRecordsForm(Form):
 
         courses = Course.objects.all()
         all_records = self.get_records_by_course()
+
         for course in courses:
             webclasses = course.webclass.filter(period=self.period).all()
             if webclasses:
@@ -33,12 +35,18 @@ class WebclassRecordsForm(Form):
                 records = all_records.get(course.id, [])
 
                 vocabulary = [('none', 'Aucun')]
+                # for each bbb record for the current course, add an option to the field
+
                 for record in records:
-                    webclass_slot = WebclassSlot.objects.get(pk=record['slot'].id)
-                    label = u"%s à %s - %s" % (record['start_date'].strftime('%d/%m/%Y %H:%M'), record['end_date'].strftime('%H:%M'), webclass_slot.professor.user.last_name)
-                    vocabulary.append((str(record['id']) + ";" + str(record['server_id']), label))
-                self.fields[field_name] = ChoiceField(label=course.title,  choices=vocabulary, required=False)
-    
+                    webclass_slot = WebclassSlot.objects.get(
+                        pk=record['slot'].id)
+                    label = u"%s à %s - %s" % (record['start_date'].strftime(
+                        '%d/%m/%Y %H:%M'), record['end_date'].strftime('%H:%M'), webclass_slot.professor.user.last_name)
+                    vocabulary.append(
+                        (str(record['id']) + ";" + str(record['server_id']), label))
+                self.fields[field_name] = ChoiceField(
+                    label=course.title,  choices=vocabulary, required=False)
+
     def get_records_by_course(self):
         records = get_records(period_id=self.period_id)
         by_course = {}
@@ -53,5 +61,6 @@ class WebclassRecordsForm(Form):
                 course_id = key.replace('course_', '')
                 course = Course.objects.get(pk=course_id)
                 server = BBBServer.objects.get(pk=server_id)
-                record = WebclassRecord(course=course, period=self.period, record_id=record_id, bbb_server=server)
+                record = WebclassRecord(
+                    course=course, period=self.period, record_id=record_id, bbb_server=server)
                 record.save()

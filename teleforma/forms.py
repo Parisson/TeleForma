@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
-from StringIO import StringIO
+import datetime
+from io import StringIO
 
-from django.core.files.uploadedfile import SimpleUploadedFile
-from models.core import Period, CourseType
-from models.crfpa import IEJ, Training, PAY_STATUS_CHOICES
-from teleforma.models import *
-from django.forms import ModelForm, ModelChoiceField, ModelMultipleChoiceField, BooleanField, ImageField, CharField, \
-    DateField, FileInput, ChoiceField
-from django.forms.extras.widgets import SelectDateWidget
-from postman.forms import WriteForm as PostmanWriteForm
-from postman.fields import BasicCommaSeparatedUserField
-
-from registration.forms import RegistrationForm
-from django.utils.translation import ugettext_lazy as _
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView
 from captcha.fields import CaptchaField
-
-from teleforma.models.core import Course, Professor
-from teleforma.models.crfpa import Profile as UserProfile
-from tinymce.widgets import TinyMCE
-from itertools import cycle
-from django.core.files.images import get_image_dimensions
+from django import forms
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.forms import (BooleanField, CharField, ChoiceField, DateField,
+                          FileInput, ImageField, ModelChoiceField, ModelForm,
+                          ModelMultipleChoiceField)
+from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext_lazy as _
 from PIL import Image
+from postman.fields import BasicCommaSeparatedUserField
+from postman.forms import WriteForm as PostmanWriteForm
+from tinymce.widgets import TinyMCE
+
+from .models.core import Conference, Course, Period, payment_schedule_choices
+from .models.crfpa import IEJ, PAY_STATUS_CHOICES, Corrector, NewsItem
+from .models.crfpa import Profile as UserProfile
+from .models.crfpa import Student, Training
 
 LEVEL_CHOICES = [
     ('', '---------'),
@@ -47,9 +47,10 @@ def get_unique_username(first_name, last_name):
     return username[:30]
 
 
-class ConferenceForm(ModelForm):
-    class Meta:
-        model = Conference
+# class ConferenceForm(ModelForm):
+#     class Meta:
+#         model = Conference
+#         fields = '__all__'
 
 class BBBConferenceForm(ModelForm):
     class Meta:
@@ -58,6 +59,7 @@ class BBBConferenceForm(ModelForm):
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
+        fields = '__all__'
 
 
 if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
@@ -158,7 +160,7 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
             user.is_active = False
             if commit:
                 user.save()
-            profile = Profile(user=user,
+            profile = UserProfile(user=user,
                             address=data['address'],
                             address_detail=data.get('address_detail'),
                             postal_code=data['postal_code'],
@@ -258,7 +260,7 @@ else:
             user.is_active = False
             if commit:
                 user.save()
-            profile = Profile(user=user,
+            profile = UserProfile(user=user,
                             address=data['address'],
                             address_detail=data.get('address_detail'),
                             postal_code=data['postal_code'],
@@ -294,16 +296,17 @@ else:
 class CorrectorForm(ModelForm):
     # profile
     address = CharField(label=_('Address'), max_length=255)
-    address_detail = CharField(label=_('Address detail'), max_length=255, required=False)
+    address_detail = CharField(
+        label=_('Address detail'), max_length=255, required=False)
     postal_code = CharField(label=_('Postal code'), max_length=255)
     city = CharField(label=_('City'), max_length=255)
     country = CharField(label=_('Country'), max_length=255)
     telephone = CharField(label=_('Telephone'), max_length=255)
     birthday = DateField(label=_('Birthday'), help_text="Au format jj/mm/aaaa")
-    birthday_place =  CharField(label='Lieu de naissance', max_length=255)
-    nationality =  CharField(label='Nationalité', max_length=255)
+    birthday_place = CharField(label='Lieu de naissance', max_length=255)
+    nationality = CharField(label='Nationalité', max_length=255)
     ss_number = CharField(label='N° de sécurité sociale',
-                                 max_length=15)
+                          max_length=15)
     siret = CharField(label='N° SIRET',
                       max_length=13, required=False)
     # corrector
@@ -311,12 +314,12 @@ class CorrectorForm(ModelForm):
                               queryset=Period.objects.filter(is_open=True,
                                                              date_inscription_start__lte=datetime.datetime.now(),
                                                              date_inscription_end__gte=datetime.datetime.now()))
-    pay_status = forms.ChoiceField(choices = PAY_STATUS_CHOICES,
-                                      label='Statut',
-                                      widget=forms.Select())
+    pay_status = forms.ChoiceField(choices=PAY_STATUS_CHOICES,
+                                   label='Statut',
+                                   widget=forms.Select())
     courses = ModelMultipleChoiceField(label='Matière',
-        queryset=Course.objects.all().exclude(title="Aucune").order_by('title'),
-        widget=forms.CheckboxSelectMultiple())
+                                       queryset=Course.objects.all().exclude(title="Aucune").order_by('title'),
+                                       widget=forms.CheckboxSelectMultiple())
     # no model
     captcha = CaptchaField()
     # accept = BooleanField()
@@ -325,18 +328,19 @@ class CorrectorForm(ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
 
-
     def __init__(self, *args, **kwargs):
         super(CorrectorForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['email'].required = True
-        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code', 'city', 'country', 'telephone', 'birthday', 'birthday_place', 'nationality', 'ss_number', 'siret']
+        self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail', 'postal_code',
+                            'city', 'country', 'telephone', 'birthday', 'birthday_place', 'nationality', 'ss_number', 'siret']
         self.training_fields = ['courses', 'period', 'pay_status']
 
     def clean_siret(self):
         if self.data['pay_status'] == 'honoraires' and not self.cleaned_data['siret'].strip():
-            raise ValidationError("Le SIRET est obligatoire si vous choississez le statut honoraires")
+            raise ValidationError(
+                "Le SIRET est obligatoire si vous choississez le statut honoraires")
         return self.data['siret']
 
     def save(self, commit=True):
@@ -351,25 +355,25 @@ class CorrectorForm(ModelForm):
         user.is_active = False
         if commit:
             user.save()
-        profile = Profile(user=user,
-                          address=data['address'],
-                          address_detail=data.get('address_detail'),
-                          postal_code=data['postal_code'],
-                          city=data['city'],
-                          country=data['country'],
-                          telephone=data['telephone'],
-                          birthday=data['birthday'],
-                          birthday_place=data['birthday_place'],
-                          ss_number=data['ss_number'],
-                          siret=data['siret'],
-                          nationality=data['nationality']
-                          )
+        profile = UserProfile(user=user,
+                              address=data['address'],
+                              address_detail=data.get('address_detail'),
+                              postal_code=data['postal_code'],
+                              city=data['city'],
+                              country=data['country'],
+                              telephone=data['telephone'],
+                              birthday=data['birthday'],
+                              birthday_place=data['birthday_place'],
+                              ss_number=data['ss_number'],
+                              siret=data['siret'],
+                              nationality=data['nationality']
+                              )
         if commit:
             profile.save()
         corrector = Corrector(user=user,
-                          period=data.get('period'),
-                          pay_status=data.get('pay_status'),
-                          )
+                              period=data.get('period'),
+                              pay_status=data.get('pay_status'),
+                              )
         corrector.save()
         corrector.courses = data.get('courses')
         return user
@@ -385,7 +389,8 @@ class NewsItemForm(ModelForm):
 
 
 class WriteForm(PostmanWriteForm):
-    recipients = BasicCommaSeparatedUserField(label=(_("Recipients"), _("Recipient")), help_text='')
+    recipients = BasicCommaSeparatedUserField(
+        label=(_("Recipients"), _("Recipient")), help_text='')
     course = ModelChoiceField(queryset=Course.objects.all(), required=False)
 
     class Meta(PostmanWriteForm.Meta):

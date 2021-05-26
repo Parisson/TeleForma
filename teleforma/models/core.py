@@ -34,37 +34,24 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
-import os
-import re
-import pwd
-import time
-import urllib
-import string
 import datetime
 import mimetypes
+import os
+import string
 
-from django.db.models import *
-from teleforma.fields import *
 import django.db.models as models
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.contrib.contenttypes import generic
-from notes.models import Note
-import jqchat.models
-from django.core.paginator import InvalidPage, EmptyPage
-from django.template.defaultfilters import slugify
-from sorl.thumbnail import default as sorl_default
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.conf import settings
-from quiz.models import Quiz
+from django.contrib.auth.models import User
+from django.core.paginator import InvalidPage
+from django.db import models
+from django.forms.fields import FileField
+from django.template.defaultfilters import random, slugify
+from django.urls import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
+# from quiz.models import Quiz
+from sorl.thumbnail import default as sorl_default
 
-HAS_TELEMETA = False
-try:
-    from telemeta.models.media import MediaItem
-    HAS_TELEMETA = True
-except ImportError:
-    pass
+from ..fields import ShortTextField
 
 app_label = 'teleforma'
 
@@ -72,17 +59,20 @@ app_label = 'teleforma'
 def get_n_choices(n):
     return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]
 
+
 def get_nint_choices(n):
     return [(x, y) for x in range(1, n) for y in range(1, n) if x == y]
+
 
 session_choices = get_n_choices(settings.TELEFORMA_EXAM_MAX_SESSIONS+1)
 
 server_choices = [('icecast', 'icecast'), ('stream-m', 'stream-m')]
-streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'), ('webm', 'webm'), ('mp4', 'mp4')]
-mimetypes.add_type('video/webm','.webm')
+streaming_choices = [('mp3', 'mp3'), ('ogg', 'ogg'),
+                     ('webm', 'webm'), ('mp4', 'mp4')]
+mimetypes.add_type('video/webm', '.webm')
 
 ITEM_TRANSODING_STATUS = ((0, _('broken')), (1, _('pending')), (2, _('processing')),
-                         (3, _('done')), (5, _('ready')))
+                          (3, _('done')), (5, _('ready')))
 
 payment_choices = [
     ('online', u'en ligne'),
@@ -99,17 +89,19 @@ payment_schedule_choices = [
 ]
 
 STATUS_CHOICES = (
-        (0, _('Hidden')),
-        (1, _('Private')),
-        (2, _('Draft')),
-        (3, _('Public')),
-    )
+    (0, _('Hidden')),
+    (1, _('Private')),
+    (2, _('Draft')),
+    (3, _('Public')),
+)
 
 WEIGHT_CHOICES = get_nint_choices(5)
+
 
 def get_random_hash():
     hash = random.getrandbits(128)
     return "%032x" % hash
+
 
 def get_user_role(user):
     if user.is_superuser:
@@ -121,6 +113,7 @@ def get_user_role(user):
     else:
         return 'corrector'
 
+
 class MetaCore:
     app_label = app_label
 
@@ -128,9 +121,10 @@ class MetaCore:
 class Organization(models.Model):
 
     name = models.CharField(_('name'), max_length=255)
-    description = models.CharField(_('description'), max_length=255, blank=True)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -141,12 +135,15 @@ class Organization(models.Model):
 class Department(models.Model):
 
     name = models.CharField(_('name'), max_length=255)
-    description = models.CharField(_('description'), max_length=255, blank=True)
-    organization = models.ForeignKey('Organization', related_name='department', verbose_name=_('organization'))
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
+    organization = models.ForeignKey(
+        'Organization', related_name='department', verbose_name=_('organization'), on_delete=models.CASCADE)
     domain = models.CharField(_('Master domain'), max_length=255, blank=True)
-    default_period  = models.ForeignKey('Period', related_name='departments', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
+    default_period = models.ForeignKey('Period', related_name='departments', verbose_name=_(
+        'period'), null=True, blank=True, on_delete=models.SET_NULL)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -158,27 +155,37 @@ class Department(models.Model):
         verbose_name = _('department')
 
 
-class Period(Model):
+class Period(models.Model):
 
-    name            = models.CharField(_('name'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
-    parent = models.ForeignKey('Period', related_name='children', verbose_name=_('parent'), blank=True, null=True)
-    department      = ForeignKey('Department', related_name='period',
-    							 verbose_name=_('department'),
-    							 blank=True, null=True)
-    date_begin      = models.DateField(_('begin date'), null=True, blank=True)
-    date_end        = models.DateField(_('end date'), null=True, blank=True)
-    date_password_init = models.DateField(_("date d'init de mot de passe"), null=True, blank=True)
-    message_platform = models.TextField(_('message pour internaute'), blank=True)
-    message_local = models.TextField(_('message pour presentielle'), blank=True)
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
+    parent = models.ForeignKey('Period', related_name='children', verbose_name=_(
+        'parent'), blank=True, null=True, on_delete=models.SET_NULL)
+    department = models.ForeignKey('Department', related_name='period',
+                                   verbose_name=_('department'),
+                                   blank=True, null=True, on_delete=models.SET_NULL)
+    date_begin = models.DateField(_('begin date'), null=True, blank=True)
+    date_end = models.DateField(_('end date'), null=True, blank=True)
+    date_password_init = models.DateField(
+        _("date d'init de mot de passe"), null=True, blank=True)
+    message_platform = models.TextField(
+        _('message pour internaute'), blank=True)
+    message_local = models.TextField(
+        _('message pour presentielle'), blank=True)
     is_open = models.BooleanField(_('is open'), default=True)
-    date_exam_end = models.DateTimeField(_("date de fin d'examens"), null=True, blank=True)
-    nb_script = models.IntegerField(_("nombre maximal de copies"), null=True, blank=True)
-    date_close_accounts = models.DateField("date de fermeture des comptes étudiants", null = True, blank = True)
-    date_inscription_start = models.DateField("date d'ouverture des inscriptions", null = True, blank = True)
-    date_inscription_end = models.DateField("date de fermeture des inscriptions", null=True, blank=True)
+    date_exam_end = models.DateTimeField(
+        _("date de fin d'examens"), null=True, blank=True)
+    nb_script = models.IntegerField(
+        _("nombre maximal de copies"), null=True, blank=True)
+    date_close_accounts = models.DateField(
+        "date de fermeture des comptes étudiants", null=True, blank=True)
+    date_inscription_start = models.DateField(
+        "date d'ouverture des inscriptions", null=True, blank=True)
+    date_inscription_end = models.DateField(
+        "date de fermeture des inscriptions", null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -186,28 +193,43 @@ class Period(Model):
         verbose_name = _('period')
         ordering = ['name']
 
-class CourseType(Model):
 
-    name            = models.CharField(_('name'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
+class CourseType(models.Model):
 
-    def __unicode__(self):
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
+
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
 
+    def to_dict(self):
+        dict = {'name': self.name,
+                'description': self.description,
+                }
+        return dict
 
-class Course(Model):
+    def from_dict(self, data):
+        self.name = data['name']
+        self.description = data['description']
+        self.save()
+
+
+class Course(models.Model):
 
     department = models.ForeignKey('Department', related_name='course',
-                                 verbose_name=_('department'))
+                                   verbose_name=_('department'), on_delete=models.CASCADE)
     title = models.CharField(_('title'), max_length=255)
-    description = models.CharField(_('description'), max_length=255, blank=True)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
     code = models.CharField(_('code'), max_length=255)
     title_tweeter = models.CharField(_('tweeter title'), max_length=255)
-    date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
+    date_modified = models.DateTimeField(
+        _('date modified'), auto_now=True, null=True)
     number = models.IntegerField(_('number'), blank=True, null=True)
 
     if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
@@ -221,39 +243,42 @@ class Course(Model):
         oral_2 = models.BooleanField(_('oral_2'))
 
     has_exam_scripts = models.BooleanField(_("copies d'examen"), default=True)
-    quiz = models.ManyToManyField(Quiz, verbose_name=_('quiz'), blank=True, null=True)
+    # quiz = models.ManyToManyField(
+    #     Quiz, verbose_name=_('quiz'), blank=True, null=True)
     # last professor which received a student message on automatic mode
-    last_professor_sent = models.ForeignKey('Professor', blank=True, null=True)
+    last_professor_sent = models.ForeignKey(
+        'Professor', blank=True, null=True, on_delete=models.SET_NULL)
 
     periods = models.ManyToManyField('Period', related_name="courses",
                                      verbose_name=u'Périodes associées',
                                      blank=True, null=True)
-    types = ManyToManyField('CourseType', related_name="course",
+    types = models.ManyToManyField('CourseType', related_name="course",
                                         verbose_name=_('types'),
                                         blank=True, null=True)
-    notes = generic.GenericRelation(Note)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     @property
     def slug(self):
-        return slugify(unicode(self.code))
+        return slugify(str(self.code))
 
     def to_dict(self):
-        dict = {'organization' : self.department.organization.name,
-                'department' : self.department.name,
-                'title' : self.title,
-                'description' : self.description,
-                'code' : self.code,
-                'title_tweeter' : self.title_tweeter,
-                'number' : str(self.number),
+        dict = {'organization': self.department.organization.name,
+                'department': self.department.name,
+                'title': self.title,
+                'description': self.description,
+                'code': self.code,
+                'title_tweeter': self.title_tweeter,
+                'number': str(self.number),
                 }
         return dict
 
     def from_dict(self, data):
-        organization, c = Organization.objects.get_or_create(name=data['organization'])
-        self.department, c = Department.objects.get_or_create(name=data['department'], organization=organization)
+        organization, c = Organization.objects.get_or_create(
+            name=data['organization'])
+        self.department, c = Department.objects.get_or_create(
+            name=data['department'], organization=organization)
         self.title = data['title']
         self.description = data['description']
         self.code = data['code']
@@ -266,7 +291,7 @@ class Course(Model):
         """
         Check if it's available for given period
         """
-        periods = [ p['id'] for p in self.periods.values('id') ]
+        periods = [p['id'] for p in self.periods.values('id')]
         return not periods or period.id in periods
 
     class Meta(MetaCore):
@@ -280,9 +305,9 @@ class CourseGroup(models.Model):
 
     name = models.CharField(_('name'), max_length=255)
     courses = models.ManyToManyField(Course, related_name="course_groups", verbose_name=_('courses'),
-                                        blank=True, null=True)
+                                     blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"CourseGroup"
 
     class Meta(MetaCore):
@@ -290,18 +315,18 @@ class CourseGroup(models.Model):
         verbose_name = _('course group')
 
 
-class Professor(Model):
+class Professor(models.Model):
 
-    user = models.ForeignKey(User, related_name='professor',
-                                 verbose_name=_('user'), unique=True)
+    user = models.OneToOneField(User, related_name='professor',
+                             verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     courses = models.ManyToManyField('Course', related_name="professor",
-                                        verbose_name=_('courses'),
-                                        blank=True, null=True)
+                                     verbose_name=_('courses'),
+                                     blank=True)
     department = models.ForeignKey('Department', related_name='professor',
-                                 verbose_name=_('department'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
+                                   verbose_name=_('department'),
+                                   blank=True, null=True, on_delete=models.SET_NULL)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.user.first_name and self.user.last_name:
             return self.user.last_name + ' ' + self.user.first_name[0] + '.'
         else:
@@ -311,13 +336,13 @@ class Professor(Model):
         data = {'username': self.user.username,
                 'first_name': self.user.first_name,
                 'last_name': self.user.last_name,
-                'email' : self.user.email,
+                'email': self.user.email,
                 'courses': [course.code for course in self.courses.all()],
-                 }
+                }
         return data
 
     def get_absolute_url(self):
-        return reverse_lazy('teleforma-profile-detail', kwargs={'username':self.user.username})
+        return reverse_lazy('teleforma-profile-detail', kwargs={'username': self.user.username})
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'professor'
@@ -325,13 +350,15 @@ class Professor(Model):
         ordering = ['user__last_name']
 
 
-class Room(Model):
+class Room(models.Model):
 
-    organization    = models.ForeignKey('Organization', related_name='room', verbose_name=_('organization'))
-    name            = models.CharField(_('name'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
+    organization = models.ForeignKey(
+        'Organization', related_name='room', verbose_name=_('organization'), on_delete=models.CASCADE)
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.organization.name + ' - ' + self.name
 
     class Meta(MetaCore):
@@ -341,29 +368,31 @@ class Room(Model):
 
 class Conference(models.Model):
 
-    public_id       = models.CharField(_('public_id'), max_length=255, blank=True)
-    department      = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
-    period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
-    course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'))
-    course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'))
-    professor       = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
-    session         = models.CharField(_('session'), choices=session_choices,
-                                      max_length=16, default="1")
-    room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
-                                 null=True, blank=True)
-    comment         = ShortTextField(_('comment'), max_length=255, blank=True)
-    date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
-    date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
-    readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
-                                        blank=True, null=True)
-    status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
-    streaming       = models.BooleanField(_('streaming'), default=True)
+    public_id = models.CharField(_('public_id'), max_length=255, blank=True)
+    department = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
+                                   null=True, blank=True, on_delete=models.SET_NULL)
+    period = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
+                               null=True, blank=True, on_delete=models.SET_NULL)
+    course = models.ForeignKey(
+        'Course', related_name='conference', verbose_name=_('course'), on_delete=models.CASCADE)
+    course_type = models.ForeignKey(
+        'CourseType', related_name='conference', verbose_name=_('course type'), on_delete=models.CASCADE)
+    professor = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
+                                  blank=True, null=True, on_delete=models.SET_NULL)
+    session = models.CharField(_('session'), choices=session_choices,
+                               max_length=16, default="1")
+    room = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
+                             null=True, blank=True, on_delete=models.SET_NULL)
+    comment = ShortTextField(_('comment'), max_length=255, blank=True)
+    date_begin = models.DateTimeField(_('begin date'), null=True, blank=True)
+    date_end = models.DateTimeField(_('end date'), null=True, blank=True)
+    readers = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
+                                     blank=True)
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2)
+    streaming = models.BooleanField(_('streaming'), default=True)
     web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
-                             blank=True, null=True, on_delete=models.SET_NULL)
-    # is_webclass     = models.BooleanField("Webclass", default=False)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
 
     @property
     def description(self):
@@ -376,17 +405,17 @@ class Conference(models.Model):
                          self.course_type.name.lower()])
         return slug
 
-    def __unicode__(self):
+    def __str__(self):
         if self.professor:
             list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
-                           self.professor.user.first_name,
-                           self.professor.user.last_name,
-                           str(self.date_begin)]
+                    self.course_type.name, self.session,
+                    self.professor.user.first_name,
+                    self.professor.user.last_name,
+                    str(self.date_begin)]
         else:
             list = [self.course.department.name, self.course.title,
-                           self.course_type.name, self.session,
-                           str(self.date_begin)]
+                    self.course_type.name, self.session,
+                    str(self.date_begin)]
         return ' - '.join(list)
 
     @property
@@ -403,13 +432,19 @@ class Conference(models.Model):
         super(Conference, self).save(*args, **kwargs)
 
     def to_dict(self):
-        dict = [{'id':'public_id','value': self.public_id, 'class':'', 'label': 'public_id'},
-                {'id':'organization','value': self.course.department.organization, 'class':'', 'label': 'Organization'},
-                {'id': 'department', 'value': self.course.department , 'class':'', 'label': 'Department'},
-                {'id': 'period', 'value': self.period, 'class':'', 'label': 'Period'},
-                {'id': 'professor', 'value': self.professor, 'class':'' , 'label': 'Professor'},
-                {'id': 'session', 'value': self.session, 'class':'' , 'label': 'Session'},
-                {'id': 'comment', 'value': self.comment, 'class':'' , 'label': 'Comment'},
+        dict = [{'id': 'public_id', 'value': self.public_id, 'class': '', 'label': 'public_id'},
+                {'id': 'organization', 'value': self.course.department.organization,
+                    'class': '', 'label': 'Organization'},
+                {'id': 'department', 'value': self.course.department,
+                    'class': '', 'label': 'Department'},
+                {'id': 'period', 'value': self.period,
+                    'class': '', 'label': 'Period'},
+                {'id': 'professor', 'value': self.professor,
+                    'class': '', 'label': 'Professor'},
+                {'id': 'session', 'value': self.session,
+                    'class': '', 'label': 'Session'},
+                {'id': 'comment', 'value': self.comment,
+                    'class': '', 'label': 'Comment'},
                 ]
         return dict
 
@@ -428,7 +463,7 @@ class Conference(models.Model):
                 'date_begin': self.date_begin.strftime('%Y %m %d %H %M %S') if self.date_begin else 'None',
                 'date_end': self.date_end.strftime('%Y %m %d %H %M %S') if self.date_end else 'None',
                 'web_class_group': self.web_class_group.name if self.web_class_group else 'None',
-                 }
+                }
 
         if self.room:
             data['room'] = self.room.name
@@ -440,13 +475,14 @@ class Conference(models.Model):
                 data['streams'].append({'host': stream.server.host,
                                         'port': stream.server.port,
                                         'server_type': stream.server.type,
-                                        'stream_type': stream.stream_type  })
+                                        'stream_type': stream.stream_type})
         return data
 
     def from_json_dict(self, data):
         self.public_id = data['id']
         self.course, c = Course.objects.get_or_create(code=data['course_code'])
-        self.course_type, c = CourseType.objects.get_or_create(name=data['course_type'])
+        self.course_type, c = CourseType.objects.get_or_create(
+            name=data['course_type'])
 
         if 'streaming' in data:
             if data['streaming'] == 'False':
@@ -454,7 +490,8 @@ class Conference(models.Model):
             else:
                 self.streaming = True
 
-        organization, c = Organization.objects.get_or_create(name=data['organization'])
+        organization, c = Organization.objects.get_or_create(
+            name=data['organization'])
 
         if data['department'] != 'None':
             self.department, c = Department.objects.get_or_create(name=data['department'],
@@ -480,18 +517,18 @@ class Conference(models.Model):
         if data['date_end'] != 'None':
             dl = data['date_end'].split(' ')
             self.date_end = datetime.datetime(int(dl[0]), int(dl[1]), int(dl[2]),
-                                                int(dl[3]), int(dl[4]), int(dl[5]))
+                                              int(dl[3]), int(dl[4]), int(dl[5]))
         if data['comment'] != 'None':
             self.comment = data['comment']
 
         if 'room' in data.keys():
             self.room, c = Room.objects.get_or_create(name=data['room'],
-                                                   organization=organization)
+                                                      organization=organization)
 
         if 'web_class_group' in data.keys():
             if data['web_class_group'] != 'None':
-                self.web_class_group = WebClassGroup.objet.get(name=data['web_class_group'])
-
+                self.web_class_group = WebClassGroup.objet.get(
+                    name=data['web_class_group'])
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
@@ -499,18 +536,20 @@ class Conference(models.Model):
         ordering = ['-date_begin']
 
 
-class StreamingServer(Model):
+class StreamingServer(models.Model):
 
     element_type = 'streamingserver'
 
-    host            = models.CharField(_('host'), max_length=255)
-    port            = models.CharField(_('port'), max_length=32)
-    type            = models.CharField(_('type'), choices=server_choices, max_length=32)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
+    host = models.CharField(_('host'), max_length=255)
+    port = models.CharField(_('port'), max_length=32)
+    type = models.CharField(_('type'), choices=server_choices, max_length=32)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
     source_password = models.CharField(_('source password'), max_length=32)
-    admin_password  = models.CharField(_('admin password'), max_length=32, blank=True)
+    admin_password = models.CharField(
+        _('admin password'), max_length=32, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.host + ':' + self.port + ' - ' + self.type
 
     class Meta(MetaCore):
@@ -518,18 +557,18 @@ class StreamingServer(Model):
         verbose_name = _('streaming server')
 
 
-class LiveStream(Model):
+class LiveStream(models.Model):
 
     element_type = 'livestream'
 
-    conference   = models.ForeignKey('Conference', related_name='livestream',
-                                verbose_name=_('conference'),
-                                blank=True, null=True, on_delete=models.SET_NULL)
-    server       = models.ForeignKey('StreamingServer', related_name='livestream',
-                                verbose_name=_('streaming server'))
-    stream_type  = models.CharField(_('Streaming type'),
-                            choices=streaming_choices, max_length=32)
-    streaming    = models.BooleanField(_('streaming'))
+    conference = models.ForeignKey('Conference', related_name='livestream',
+                                   verbose_name=_('conference'),
+                                   blank=True, null=True, on_delete=models.SET_NULL)
+    server = models.ForeignKey('StreamingServer', related_name='livestream',
+                               verbose_name=_('streaming server'), on_delete=models.CASCADE)
+    stream_type = models.CharField(_('Streaming type'),
+                                   choices=streaming_choices, max_length=32)
+    streaming = models.BooleanField(_('streaming'))
 
     @property
     def slug(self):
@@ -553,7 +592,7 @@ class LiveStream(Model):
         url = ''
         if self.server.type == 'stream-m':
             url = 'http://' + self.server.host + ':' + self.server.port + \
-                    '/snapshot/' + self.slug
+                '/snapshot/' + self.slug
         return url
 
     @property
@@ -563,7 +602,7 @@ class LiveStream(Model):
         else:
             return 'https://' + self.server.host + '/stream/audio/' + self.slug
 
-    def __unicode__(self):
+    def __str__(self):
         if self.conference:
             return self.conference.description
         else:
@@ -574,18 +613,22 @@ class LiveStream(Model):
         verbose_name = _('live stream')
 
 
-class MediaBase(Model):
+class MediaBase(models.Model):
     "Base media resource"
 
-    title           = models.CharField(_('title'), max_length=255, blank=True)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
-    credits         = models.CharField(_('credits'), max_length=255, blank=True)
-    date_added      = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
-    date_modified   = models.DateTimeField(_('date modified'), auto_now=True, null=True)
-    code            = models.CharField(_('code'), max_length=255, blank=True)
-    is_published    = models.BooleanField(_('published'))
-    mime_type       = models.CharField(_('mime type'), max_length=255, blank=True)
-    weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
+    title = models.CharField(_('title'), max_length=255, blank=True)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
+    credits = models.CharField(_('credits'), max_length=255, blank=True)
+    date_added = models.DateTimeField(
+        _('date added'), auto_now_add=True, null=True)
+    date_modified = models.DateTimeField(
+        _('date modified'), auto_now=True, null=True)
+    code = models.CharField(_('code'), max_length=255, blank=True)
+    is_published = models.BooleanField(_('published'))
+    mime_type = models.CharField(_('mime type'), max_length=255, blank=True)
+    weight = models.IntegerField(
+        _('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
 
     def get_fields(self):
         return self._meta.fields
@@ -594,16 +637,17 @@ class MediaBase(Model):
         abstract = True
 
 
-class DocumentType(Model):
+class DocumentType(models.Model):
 
-    name            = models.CharField(_('name'), max_length=255)
-    description     = models.CharField(_('description'), max_length=255, blank=True)
-    number          = models.IntegerField(_('number'), blank=True, null=True)
-    for_corrector   = models.BooleanField('autorisé aux correcteurs',
-                                          blank = True, null = False,
-                                          default = False)
+    name = models.CharField(_('name'), max_length=255)
+    description = models.CharField(
+        _('description'), max_length=255, blank=True)
+    number = models.IntegerField(_('number'), blank=True, null=True)
+    for_corrector = models.BooleanField('autorisé aux correcteurs',
+                                        blank=True, null=False,
+                                        default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -616,27 +660,28 @@ class Document(MediaBase):
 
     element_type = 'document'
 
-    course          = models.ForeignKey('Course', related_name='document', verbose_name=_('course'))
-    course_type     = models.ManyToManyField('CourseType', related_name='document',
-                                      verbose_name=_('course type'), blank=True)
-    conference      = models.ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
+    course = models.ForeignKey(
+        'Course', related_name='document', verbose_name=_('course'), on_delete=models.CASCADE)
+    course_type = models.ManyToManyField('CourseType', related_name='document',
+                                         verbose_name=_('course type'), blank=True)
+    conference = models.ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
+                                   blank=True, null=True, on_delete=models.SET_NULL)
     # period          = models.ForeignKey('Period', related_name='document', verbose_name=_('period'),
     #                              null=True, blank=True, on_delete=models.SET_NULL)
-    periods          = models.ManyToManyField('Period', related_name='documents', verbose_name=_('periods'),
-                                 null=True, blank=True)
-    type            = models.ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
-                                 blank=True, null=True)
-    session         = models.CharField(_('session'), choices=session_choices,
-                                      max_length=16, default="1")
-    iej             = models.ForeignKey('IEJ', related_name='document', verbose_name=_('iej'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
-    is_annal        = models.BooleanField(_('annal'))
-    annal_year      = models.IntegerField(_('year'), blank=True, null=True)
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
-                                max_length=1024, blank=True)
-    readers         = models.ManyToManyField(User, related_name="document", verbose_name=_('readers'),
-                                        blank=True, null=True)
+    periods = models.ManyToManyField('Period', related_name='documents', verbose_name=_('periods'),
+                                     blank=True)
+    type = models.ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
+                             blank=True, null=True, on_delete=models.SET_NULL)
+    session = models.CharField(_('session'), choices=session_choices,
+                               max_length=16, default="1")
+    iej = models.ForeignKey('IEJ', related_name='document', verbose_name=_('iej'),
+                            blank=True, null=True, on_delete=models.SET_NULL)
+    is_annal = models.BooleanField(_('annal'))
+    annal_year = models.IntegerField(_('year'), blank=True, null=True)
+    file = models.FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
+                            max_length=1024, blank=True)
+    readers = models.ManyToManyField(User, related_name="document", verbose_name=_('readers'),
+                                     blank=True)
 
     def is_image(self):
         is_url_image = False
@@ -650,9 +695,9 @@ class Document(MediaBase):
     def set_mime_type(self):
         self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
-    def __unicode__(self):
-        types = ' - '.join([unicode(t) for t in self.course_type.all()])
-        return  ' - '.join([unicode(self.course), unicode(types), self.title, str(self.date_added) ])
+    def __str__(self):
+        types = ' - '.join([str(t) for t in self.course_type.all()])
+        return ' - '.join([str(self.course), str(types), self.title, str(self.date_added)])
 
     def save(self, **kwargs):
         if not self.is_annal:
@@ -669,12 +714,12 @@ class DocumentSimple(MediaBase):
 
     element_type = 'document_simple'
 
-    period          = models.ForeignKey('Period', related_name='document_simple', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
-    file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
-                                max_length=1024, blank=True)
-    readers         = models.ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
-                                        blank=True, null=True)
+    period = models.ForeignKey('Period', related_name='document_simple', verbose_name=_('period'),
+                               null=True, blank=True, on_delete=models.SET_NULL)
+    file = models.FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
+                            max_length=1024, blank=True)
+    readers = models.ManyToManyField(User, related_name="document_simple", verbose_name=_('readers'),
+                                     blank=True)
 
     def is_image(self):
         is_url_image = False
@@ -688,7 +733,7 @@ class DocumentSimple(MediaBase):
     def set_mime_type(self):
         self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def save(self, **kwargs):
@@ -700,17 +745,19 @@ class DocumentSimple(MediaBase):
         ordering = ['-date_added']
 
 
-
-class MediaTranscoded(Model):
+class MediaTranscoded(models.Model):
     "Item file transcoded"
 
     element_type = 'transcoded item'
 
-    item            = models.ForeignKey('Media', related_name="transcoded", verbose_name=_('item'))
-    mimetype        = models.CharField(_('mime_type'), max_length=255, blank=True)
-    date_added      = DateTimeField(_('date'), auto_now_add=True)
-    status          = models.IntegerField(_('status'), choices=ITEM_TRANSODING_STATUS, default=1)
-    file            = models.FileField(_('file'), upload_to='items/%Y/%m/%d', max_length=1024, blank=True)
+    item = models.ForeignKey(
+        'Media', related_name="transcoded", verbose_name=_('item'), on_delete=models.CASCADE)
+    mimetype = models.CharField(_('mime_type'), max_length=255, blank=True)
+    date_added = models.DateTimeField(_('date'), auto_now_add=True)
+    status = models.IntegerField(
+        _('status'), choices=ITEM_TRANSODING_STATUS, default=1)
+    file = models.FileField(
+        _('file'), upload_to='items/%Y/%m/%d', max_length=1024, blank=True)
 
     @property
     def mime_type(self):
@@ -727,7 +774,7 @@ class MediaTranscoded(Model):
         else:
             return self.mimetype
 
-    def __unicode__(self):
+    def __str__(self):
         if self.item.title:
             return self.item.title + ' - ' + self.mime_type
         else:
@@ -742,22 +789,25 @@ class Media(MediaBase):
 
     element_type = 'media'
 
-    conference      = models.ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
-                                 blank=True, null=True, on_delete=models.SET_NULL)
-    course          = models.ForeignKey('Course', related_name='media', verbose_name=_('course'),
-                                 blank=True, null=True)
-    course_type     = models.ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
-                                 blank=True, null=True)
-    period          = models.ForeignKey('Period', related_name='media', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
+    conference = models.ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
+                                   blank=True, null=True, on_delete=models.SET_NULL)
+    course = models.ForeignKey('Course', related_name='media', verbose_name=_('course'),
+                               blank=True, null=True, on_delete=models.SET_NULL)
+    course_type = models.ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
+                                    blank=True, null=True, on_delete=models.SET_NULL)
+    period = models.ForeignKey('Period', related_name='media', verbose_name=_('period'),
+                               null=True, blank=True, on_delete=models.SET_NULL)
     if HAS_TELEMETA:
-        item            = models.ForeignKey(MediaItem, related_name='media',
-                                    verbose_name='item', blank=True, null=True)
-    type            = models.CharField(_('type'), choices=streaming_choices, max_length=32)
-    readers         = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
-                                        blank=True, null=True)
-    file            = models.FileField(_('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
-    poster_file     = models.FileField(_('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
+        item = models.ForeignKey(MediaItem, related_name='media',
+                                 verbose_name='item', blank=True, null=True, on_delete=models.SET_NULL)
+    type = models.CharField(
+        _('type'), choices=streaming_choices, max_length=32)
+    readers = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
+                                     blank=True)
+    file = models.FileField(
+        _('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
+    poster_file = models.FileField(
+        _('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
 
     def set_mime_type(self):
         if self.item.file:
@@ -768,7 +818,7 @@ class Media(MediaBase):
                 self.mime_type = mime_type
             self.save()
 
-    def __unicode__(self):
+    def __str__(self):
         if self.conference:
             return self.conference.description
         elif self.course:
@@ -786,7 +836,8 @@ class Media(MediaBase):
     def poster_url(self, geometry='640'):
         url = ''
         if self.poster_file:
-            url = sorl_default.backend.get_thumbnail(self.poster_file, geometry).url
+            url = sorl_default.backend.get_thumbnail(
+                self.poster_file, geometry).url
         return url
 
     class Meta(MetaCore):
@@ -829,7 +880,8 @@ class NamePaginator(object):
                 current_page.add([], letter)
                 continue
 
-            sub_list = chunks[letter] # the items in object_list starting with this letter
+            # the items in object_list starting with this letter
+            sub_list = chunks[letter]
 
             new_page_count = len(sub_list) + current_page.count
             # first, check to see if sub_list will fit or it needs to go onto a new page.
@@ -846,7 +898,8 @@ class NamePaginator(object):
             current_page.add(sub_list, letter)
 
         # if we finished the for loop with a page that isn't empty, add it
-        if current_page.count > 0: self.pages.append(current_page)
+        if current_page.count > 0:
+            self.pages.append(current_page)
 
     def page(self, num):
         """Returns a Page object for the given 1-based page number."""
@@ -861,6 +914,7 @@ class NamePaginator(object):
     def num_pages(self):
         """Returns the total number of pages"""
         return len(self.pages)
+
 
 class NamePage(object):
     def __init__(self, paginator):
@@ -877,14 +931,16 @@ class NamePage(object):
         if len(self.letters) > 0:
             self.letters.sort(key=str.upper)
             return self.letters[0]
-        else: return None
+        else:
+            return None
 
     @property
     def end_letter(self):
         if len(self.letters) > 0:
             self.letters.sort(key=str.upper)
             return self.letters[-1]
-        else: return None
+        else:
+            return None
 
     @property
     def number(self):

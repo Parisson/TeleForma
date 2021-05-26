@@ -2,20 +2,32 @@
 # -*- coding: utf-8 -*-
 # Create your views here.
 
-from teleforma.exam.models import *
-from teleforma.exam.forms import *
-from teleforma.views.core import *
-from teleforma.decorators import access_required
-
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse_lazy, reverse
-from django.utils.translation import ugettext_lazy as _
+import datetime
 import json
-import numpy as np
 
-from django.contrib.auth.decorators import permission_required
-from django.db.models import Q
+import numpy as np
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.models import User
+from django.db.models import Q
+from django.http.response import HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic.base import View
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.list import ListView
+from teleforma.decorators import access_required
+from teleforma.models.crfpa import Student
+from teleforma.views.core import CourseAccessMixin, get_courses
+
+from ..exam.forms import MassScoreForm, ScoreForm, ScriptForm
+from ..exam.models import Quota, Script, ScriptType
+from ..models.core import Course, Document, DocumentType, Period, get_n_choices
+from ..views.core import access_error, contact_message
 
 STUDENT = 0
 CORRECTOR = 1
@@ -28,10 +40,10 @@ class ScriptMixinView(View):
         """
         Get the list of pk of courses current user is allowed to access
         """
-        courses = [ c['course'] for c in get_courses(self.request.user) ]
-        courses = [ c for c in courses if c.has_exam_scripts ]
-        courses = [ c for c in courses if c.is_for_period(self.period) ]
-        return [ c.id for c in courses ]
+        courses = [c['course'] for c in get_courses(self.request.user)]
+        courses = [c for c in courses if c.has_exam_scripts]
+        courses = [c for c in courses if c.is_for_period(self.period)]
+        return [c.id for c in courses]
 
     def get_context_data(self, **kwargs):
         context = super(ScriptMixinView, self).get_context_data(**kwargs)
@@ -39,13 +51,14 @@ class ScriptMixinView(View):
         context['period'] = self.period
         course_pk_list = self.get_course_pk_list()
         context['courses'] = Course.objects.filter(pk__in=course_pk_list)
-        context['script_service_url'] = getattr(settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL')
+        context['script_service_url'] = getattr(
+            settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL')
         self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
             upload = datetime.datetime.now() <= self.period.date_exam_end
-            cur_scripts = Script.objects.filter(period = self.period,
-                                                author = self.request.user)\
-                                        .exclude(status=0).count()
+            cur_scripts = Script.objects.filter(period=self.period,
+                                                author=self.request.user)\
+                .exclude(status=0).count()
             allowed_scripts = self.nb_script * len(self.get_course_pk_list())
             if cur_scripts >= allowed_scripts:
                 upload = False
@@ -56,6 +69,7 @@ class ScriptMixinView(View):
         context['admin'] = self.request.user.is_superuser
 
         return context
+
 
 class ScriptsListMixinView(ScriptMixinView):
 
@@ -75,26 +89,34 @@ class ScriptsListMixinView(ScriptMixinView):
         context['profile'] = self.get_profile()
 
         if context['profile'] >= CORRECTOR:
-            correctors = User.objects.filter(corrector_scripts__in=self.get_base_queryset()).order_by('last_name').distinct()
-            context['correctors_list'] = [(str(corrector.id), corrector.get_full_name()) for corrector in correctors]
-            context['corrector_selected'] = self.request.GET.get('corrector', str(self.request.user.id))
+            correctors = User.objects.filter(
+                corrector_scripts__in=self.get_base_queryset()).order_by('last_name').distinct()
+            context['correctors_list'] = [
+                (str(corrector.id), corrector.get_full_name()) for corrector in correctors]
+            context['corrector_selected'] = self.request.GET.get(
+                'corrector', str(self.request.user.id))
             session_choices = get_n_choices(self.nb_script + 1)
             context['sessions_list'] = session_choices
             context['session_selected'] = self.request.GET.get('session')
             types = ScriptType.objects.all()
-            context['types_list'] = [(str(type.id), type.name) for type in types]
+            context['types_list'] = [(str(type.id), type.name)
+                                     for type in types]
             context['type_selected'] = self.request.GET.get('type')
-            courses = Course.objects.filter(scripts__in=self.get_base_queryset()).distinct()
-            context['courses_list'] = [(str(course.id), course.title) for course in courses]
+            courses = Course.objects.filter(
+                scripts__in=self.get_base_queryset()).distinct()
+            context['courses_list'] = [
+                (str(course.id), course.title) for course in courses]
             context['course_selected'] = self.request.GET.get('course')
             context['platform_only'] = self.request.GET.get('platform_only')
-            context['student_name'] = self.request.GET.get('student_name') or ''
+            context['student_name'] = self.request.GET.get(
+                'student_name') or ''
         return context
+
 
 class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 
     model = Script
-    template_name='exam/script_detail.html'
+    template_name = 'exam/script_detail.html'
     form_class = ScriptForm
 
     def get_form_kwargs(self):
@@ -105,28 +127,29 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 
     def get_success_url(self):
         period = Period.objects.get(id=self.kwargs['period_id'])
-        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':period.id})
+        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id': period.id})
 
     def get_context_data(self, **kwargs):
         context = super(ScriptView, self).get_context_data(**kwargs)
         script = self.get_object()
         context['script'] = script
         context['course'] = script.course
-        context['mark_fields'] = ['score', 'comments' ]
-        context['reject_fields'] = ['reject_reason' ]
+        context['mark_fields'] = ['score', 'comments']
+        context['reject_fields'] = ['reject_reason']
 
-        doc_type = DocumentType.objects.get(id=settings.TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID)
+        doc_type = DocumentType.objects.get(
+            id=settings.TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID)
         topics = Document.objects.filter(course=script.course, periods__in=(script.period,),
-                                            session=script.session, type=doc_type)
+                                         session=script.session, type=doc_type)
         topic = None
         if topics:
             topic = topics[0]
         context['topic'] = topic
 
         access = self.request.user == script.author or \
-                    self.request.user == script.corrector or \
-                    self.request.user.is_superuser or \
-                     self.request.user.is_staff or self.request.user.professor.all()
+            self.request.user == script.corrector or \
+            self.request.user.is_superuser or \
+            self.request.user.is_staff or self.request.user.professor.all()
 
         if not access:
             context['access_error'] = access_error
@@ -146,7 +169,7 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 class ScriptsView(ScriptsListMixinView, ListView):
 
     model = Script
-    template_name='exam/scripts.html'
+    template_name = 'exam/scripts.html'
     status_filter = None
 
     def get_form_queryset(self):
@@ -166,10 +189,10 @@ class ScriptsView(ScriptsListMixinView, ListView):
         if corrector:
             QT &= Q(corrector__id=int(corrector))
         if platform_only:
-            QT &= Q(author__student__platform_only = int(platform_only))
+            QT &= Q(author__student__platform_only=int(platform_only))
         if student_name:
-            QT &= Q(author__student__user__first_name__icontains=student_name) | Q(author__student__user__last_name__icontains=student_name) | Q(author__student__user__email=student_name) | Q(author__student__user__username=student_name)
-            
+            QT &= Q(author__student__user__first_name__icontains=student_name) | Q(author__student__user__last_name__icontains=student_name) | Q(
+                author__student__user__email=student_name) | Q(author__student__user__username=student_name)
 
         return QT
 
@@ -189,7 +212,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
             professor = user.professor.all()
             if professor:
                 professor = professor[0]
-                courses_id = [ c['id'] for c in professor.courses.values('id') ]
+                courses_id = [c['id'] for c in professor.courses.values('id')]
                 QT |= Q(course_id__in=courses_id)
 
             base_qs = base_qs.filter(QT)
@@ -225,7 +248,7 @@ class ScriptsPendingView(ScriptsView):
 
 class ScriptsTreatedView(ScriptsView):
 
-    status_filter = (4, 5 ,7)
+    status_filter = (4, 5, 7)
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsTreatedView, self).get_context_data(**kwargs)
@@ -246,30 +269,33 @@ class ScriptsRejectedView(ScriptsView):
 class ScriptCreateView(ScriptMixinView, CreateView):
 
     model = Script
-    template_name='exam/script_form.html'
+    template_name = 'exam/script_form.html'
     form_class = ScriptForm
 
     def get_success_url(self):
-        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id':self.period.id})
+        return reverse_lazy('teleforma-exam-scripts-pending', kwargs={'period_id': self.period.id})
 
     def form_valid(self, form):
         scripts = Script.objects.filter(course=form.cleaned_data['course'], session=form.cleaned_data['session'],
                                         author=self.request.user, period=self.period).exclude(status=0)
         if scripts:
-            messages.error(self.request, _("Error: you have already submitted a script for this session, the same course and the same type!"))
+            messages.error(self.request, _(
+                "Error: you have already submitted a script for this session, the same course and the same type!"))
             return redirect('teleforma-exam-script-create', self.period.id)
         else:
             form.instance.author = self.request.user
-            messages.info(self.request, _("You have successfully submitted your script. It will be processed in the next hours."))
+            messages.info(self.request, _(
+                "You have successfully submitted your script. It will be processed in the next hours."))
         return super(ScriptCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, _("There was a problem with your submission. Please try again, later if possible."))
+        messages.error(self.request, _(
+            "There was a problem with your submission. Please try again, later if possible."))
         return super(ScriptCreateView, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super(ScriptCreateView, self).get_context_data(**kwargs)
-        context['create_fields'] = ['course', 'session', 'file' ]
+        context['create_fields'] = ['course', 'session', 'file']
         context['form'].fields['course'].queryset = context['courses']
         return context
 
@@ -284,7 +310,6 @@ class ScriptCreateView(ScriptMixinView, CreateView):
         return kwargs
 
 
-
 class ScriptUpdateView(UpdateView):
 
     model = Script
@@ -294,7 +319,7 @@ class ScriptUpdateView(UpdateView):
 class QuotasView(ListView):
 
     model = Quota
-    template_name='exam/quotas.html'
+    template_name = 'exam/quotas.html'
 
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
@@ -305,11 +330,12 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
     perso_name = 'Moyenne personnelle'
 
-    template_name='exam/scores.html'
+    template_name = 'exam/scores.html'
 
     def score_data_setup(self, x, y):
         if not x['x']:
-            messages.warning(self.request, _("You must add your score to access to the statistics."))
+            messages.warning(self.request, _(
+                "You must add your score to access to the statistics."))
 
         chartdata = x
         i = 1
@@ -327,10 +353,10 @@ class ScriptsScoreAllView(ScriptsTreatedView):
             'extra': {
                 'x_is_date': False,
                 'x_axis_format': '',
-                'chart_attr': { 'reduceXTicks': 0 },
+                'chart_attr': {'reduceXTicks': 0},
                 'tag_script_js': True,
-                'jquery_on_ready': False,}
-            }
+                'jquery_on_ready': False, }
+        }
         return data
 
     def get_context_data(self, **kwargs):
@@ -346,7 +372,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         is_staff = user.is_staff
         staff_or_teacher = is_staff or user.professor.exists()
 
-        QT = Q(period_id=period_id, status__in = self.status_filter)
+        QT = Q(period_id=period_id, status__in=self.status_filter)
         all_scripts = Script.objects.filter(QT).exclude(score=None)
 
         if is_staff:
@@ -364,16 +390,16 @@ class ScriptsScoreAllView(ScriptsTreatedView):
 
         for script in scripts.values('session'):
             sessions.add(script['session'])
-        sessions = sorted(sessions, key = lambda v: int(v))
+        sessions = sorted(sessions, key=lambda v: int(v))
         sessions_x = {'x': sessions}
 
         def by_session(scripts):
-            res = { s: [] for s in sessions }
+            res = {s: [] for s in sessions}
             for script in scripts.values('score', 'session'):
                 if script['session'] in res:
                     if script['score']:
                         res[script['session']].append(script['score'])
-            return [ np.mean(res[s]) for s in sessions ]
+            return [np.mean(res[s]) for s in sessions]
 
         if not staff_or_teacher:
             scores.append({'name': self.perso_name,
@@ -398,20 +424,21 @@ class ScriptsScoreCourseView(ScriptsScoreAllView):
 
 class ScoreCreateView(ScriptCreateView):
 
-    template_name='exam/score_form.html'
+    template_name = 'exam/score_form.html'
     form_class = ScoreForm
 
     def form_invalid(self, form):
-        messages.error(self.request, "Il y une erreur sur ce formulaire, veuillez le corriger.")
+        messages.error(
+            self.request, "Il y une erreur sur ce formulaire, veuillez le corriger.")
         return super(ScriptCreateView, self).form_invalid(form)
 
     def get_success_url(self):
         period = Period.objects.get(id=self.kwargs['period_id'])
-        return reverse_lazy('teleforma-exam-scripts-scores-all', kwargs={'period_id':period.id})
+        return reverse_lazy('teleforma-exam-scripts-scores-all', kwargs={'period_id': period.id})
 
     def get_context_data(self, **kwargs):
         context = super(ScoreCreateView, self).get_context_data(**kwargs)
-        context['create_fields'] = ['course', 'session', 'type', 'score' ]
+        context['create_fields'] = ['course', 'session', 'type', 'score']
         return context
 
     @method_decorator(access_required)
@@ -424,39 +451,41 @@ def get_correctors(request):
     course = request.GET.get('course')
 
     correctors = []
-    for corrector in User.objects.filter(quotas__period__id = period, quotas__course__id = course).order_by('last_name').distinct():
-        correctors.append({'label': '%s %s' % (corrector.last_name, corrector.first_name), 'value':corrector.id})
+    for corrector in User.objects.filter(quotas__period__id=period, quotas__course__id=course).order_by('last_name').distinct():
+        correctors.append({'label': '%s %s' % (
+            corrector.last_name, corrector.first_name), 'value': corrector.id})
     dump = json.dumps(correctors)
     return HttpResponse(dump, content_type='application/json')
 
+
 class MassScoreCreateView(ScoreCreateView):
 
-    template_name='exam/mass_score_form.html'
+    template_name = 'exam/mass_score_form.html'
     form_class = MassScoreForm
 
     def get_allowed_students(self, course_id, session):
         """
         Get allowed students for given course and session
         """
-        students = Student.objects.filter(period = self.period)
+        students = Student.objects.filter(period=self.period)
 
         # Exclude students who already have a script for this session
-        scripts = Script.objects.filter(period = self.period,
-                                        session = session,
-                                        course_id = course_id).values('author_id')
+        scripts = Script.objects.filter(period=self.period,
+                                        session=session,
+                                        course_id=course_id).values('author_id')
         scripts = set([s['author_id'] for s in scripts])
 
-        students = students.exclude(user_id__in = scripts)
+        students = students.exclude(user_id__in=scripts)
 
         res = []
         for student in students:
-           user = student.user
-           # FIXME : Filter those who access the course, but that's very slow,
-           # so I disable it for now - we'll see if we can do that faster later
-           # courses = get_courses(user)
-           # if course_id in [ c['course'].id for c in courses ]:
-           res.append({ 'id': user.id,
-                        'name': str(user) })
+            user = student.user
+            # FIXME : Filter those who access the course, but that's very slow,
+            # so I disable it for now - we'll see if we can do that faster later
+            # courses = get_courses(user)
+            # if course_id in [ c['course'].id for c in courses ]:
+            res.append({'id': user.id,
+                        'name': str(user)})
 
         return res
 
@@ -467,7 +496,7 @@ class MassScoreCreateView(ScoreCreateView):
 
         allowed_students = self.get_allowed_students(course.id,
                                                      session)
-        allowed_students = set([ str(s['id']) for s in allowed_students ])
+        allowed_students = set([str(s['id']) for s in allowed_students])
         done = set()
         nb_errors = 0
         nb_ok = 0
@@ -481,34 +510,38 @@ class MassScoreCreateView(ScoreCreateView):
                 continue
             nb_ok += 1
             done.add(student)
-            obj = Script(course = course,
-                         period = self.period,
-                         session = session,
-                         author_id = student,
-                         type = sc_type,
-                         score = score,
-                         status = 7)
+            obj = Script(course=course,
+                         period=self.period,
+                         session=session,
+                         author_id=student,
+                         type=sc_type,
+                         score=score,
+                         status=7)
             obj.save()
 
-        messages.info(self.request, "%d notes créées, %d en erreur (copie déjà existante, ...)" % (nb_ok, nb_errors))
+        messages.info(self.request, "%d notes créées, %d en erreur (copie déjà existante, ...)" % (
+            nb_ok, nb_errors))
 
         return redirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         context = super(MassScoreCreateView, self).get_context_data(**kwargs)
-        context['create_fields'] = ['course', 'session', 'type' ]
-        context['rows'] = [ { 'student_name': 'student%d' % i,
-                              'score_name': 'score%d' % i } for i in range(20) ]
+        context['create_fields'] = ['course', 'session', 'type']
+        context['rows'] = [{'student_name': 'student%d' % i,
+                            'score_name': 'score%d' % i} for i in range(20)]
         for row in context['rows']:
             student = self.request.POST.get(row['student_name'], '')
             label = ""
             if student:
                 user = User.objects.get(pk=student)
-                label = "%s %s - %s" % (user.last_name, user.first_name, user.username)
-            row['student_value'] = self.request.POST.get(row['student_name'], '')
+                label = "%s %s - %s" % (user.last_name,
+                                        user.first_name, user.username)
+            row['student_value'] = self.request.POST.get(
+                row['student_name'], '')
             row['student_label'] = label
             row['score_value'] = self.request.POST.get(row['score_name'], '')
-            row['error'] = context['form'].table_errors.get(row['student_name'], None)
+            row['error'] = context['form'].table_errors.get(
+                row['student_name'], None)
         return context
 
     @method_decorator(permission_required('is_superuser'))
@@ -524,25 +557,26 @@ def get_mass_students(request):
     session = request.GET.get('session')
     course_id = request.GET.get('course_id')
     q = request.GET.get('q[term]')
-    students = Student.objects.filter(period = period).filter(Q(user__username__icontains=q) | Q(user__last_name__icontains=q) | Q(user__first_name__icontains=q))
+    students = Student.objects.filter(period=period).filter(Q(user__username__icontains=q) | Q(
+        user__last_name__icontains=q) | Q(user__first_name__icontains=q))
 
     # Exclude students who already have a script for this session
-    scripts = Script.objects.filter(period = period,
-                                    session = session,
-                                    course_id = course_id).values('author_id')
+    scripts = Script.objects.filter(period=period,
+                                    session=session,
+                                    course_id=course_id).values('author_id')
     scripts = set([s['author_id'] for s in scripts])
 
-    students = students.exclude(user_id__in = scripts)
+    students = students.exclude(user_id__in=scripts)
 
     res = []
     for student in students:
-       user = student.user
-       # FIXME : Filter those who access the course, but that's very slow,
-       # so I disable it for now - we'll see if we can do that faster later
-       # courses = get_courses(user)
-       # if course_id in [ c['course'].id for c in courses ]:
-       res.append({ 'id': user.id,
-                    'text': "%s %s - %s" % (user.last_name, user.first_name, user.username) })
+        user = student.user
+        # FIXME : Filter those who access the course, but that's very slow,
+        # so I disable it for now - we'll see if we can do that faster later
+        # courses = get_courses(user)
+        # if course_id in [ c['course'].id for c in courses ]:
+        res.append({'id': user.id,
+                    'text': "%s %s - %s" % (user.last_name, user.first_name, user.username)})
 
-    data = {'results':res, 'pagination':{'more':False}}
+    data = {'results': res, 'pagination': {'more': False}}
     return HttpResponse(json.dumps(data), content_type='application/json')

@@ -2,33 +2,37 @@
 
 import datetime
 
-from django.db.models import *
-from teleforma.models.core import *
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.core import urlresolvers
-from django.utils.functional import cached_property
 from django.core.cache import cache
-CACHE_KEY = 'appointment'
+from django.db import models
+from django.utils.functional import cached_property
+from django.utils.translation import ugettext_lazy as _
 
+from ..models import app_label
+from ..models.core import MetaCore, Period
+
+CACHE_KEY = 'appointment'
 
 APPOINTMENT_MODE = (('presentiel', 'Presentiel'), ('distance', 'A distance'))
 
 def timing(f):
     def wrap(*args):
-        time1 = time.time()
+        time1 = datetime.time.time()
         ret = f(*args)
-        time2 = time.time()
-        print '%s function took %0.3f ms' % (f.func_name, (time2-time1)*1000.0)
+        time2 = datetime.time()
+        print('%s function took %0.3f ms' %
+              (f.func_name, (time2-time1)*1000.0))
         return ret
     return wrap
 
-class AppointmentPeriod(Model):
+
+class AppointmentPeriod(models.Model):
     periods = models.ManyToManyField(Period, related_name='appointment_periods',
                                      verbose_name=u"Période")
     name = models.CharField(_('name'), max_length=255)
 
-    course = models.ForeignKey("Course", verbose_name=_("Course"), on_delete=models.SET_NULL, default=19, blank=True, null=True)
+    course = models.ForeignKey("Course", verbose_name=_(
+        "Course"), on_delete=models.SET_NULL, default=19, blank=True, null=True)
     # nb_appointments = models.IntegerField("nombre de rendez-vous autorisé sur la période",
     #                                       default=1)
 
@@ -44,16 +48,18 @@ class AppointmentPeriod(Model):
     appointment_mail_text = models.TextField("message à inclure dans le mail de confirmation de rendez-vous pour le présentiel",
                                              blank=True, null=True)
     appointment_mail_text_distance = models.TextField("message à inclure dans le mail de confirmation de rendez-vous pour les rendez-vous à distance",
-                                             blank=True, null=True)
-    appointment_slot_size = models.IntegerField("écart entre les créneaux d'inscription (minutes)", default=40)
+                                                      blank=True, null=True)
+    appointment_slot_size = models.IntegerField(
+        "écart entre les créneaux d'inscription (minutes)", default=40)
 
     # bbb_room = models.URLField("salon bbb", help_text='Lien vers le salon BBB pour les inscriptions à distance (ex: https://bbb.parisson.com/b/yoa-mtc-a2e). La salle doit avoir été au préalable créé par un membre du jury sur https://bbb.parisson.com.', null=True, blank=True, max_length=200)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_appointment(self, user):
-        q = Appointment.objects.filter(student=user, slot__appointment_period=self)
+        q = Appointment.objects.filter(
+            student=user, slot__appointment_period=self)
         if q:
             return q.get()
         return None
@@ -73,17 +79,18 @@ class AppointmentPeriod(Model):
         today = datetime.date.today()
 
         for slot in AppointmentSlot.objects.filter(appointment_period=self).order_by('start'):
-            cache_key = '%s_%s_%s-%s' % (CACHE_KEY, self.id, slot.date, slot.mode)
+            cache_key = '%s_%s_%s-%s' % (CACHE_KEY,
+                                         self.id, slot.date, slot.mode)
             dayData = cache.get(cache_key)
             # dayData = None
             slot_key = str(slot.date) + "-" + slot.mode
             if not dayData:
-                slotData = {'instance':slot,
-                            'slots':slot.slots,
+                slotData = {'instance': slot,
+                            'slots': slot.slots,
                             'mode': slot.mode,
-                            'get_visible_jurys':slot.get_visible_jurys,
-                            'get_nb_of_visible_jurys':slot.get_nb_of_visible_jurys,
-                            'has_available_slot':slot.has_available_slot}
+                            'get_visible_jurys': slot.get_visible_jurys,
+                            'get_nb_of_visible_jurys': slot.get_nb_of_visible_jurys,
+                            'has_available_slot': slot.has_available_slot}
                 if slot_key not in days:
                     days[slot_key] = {}
                     days[slot_key]['date'] = slot.date
@@ -107,7 +114,7 @@ class AppointmentPeriod(Model):
                 cache.set(cache_key, days[day], 1800)
 
         # print days
-        return sorted(days.values(), key=lambda d:d['date'])
+        return sorted(days.values(), key=lambda d: d['date'])
 
     @cached_property
     def modes(self):
@@ -166,49 +173,26 @@ class AppointmentPeriod(Model):
         verbose_name_plural = "périodes de prise de rendez-vous"
 
 
-# class AppointmentDay(Model):
-#     appointment_period = models.ForeignKey(AppointmentPeriod,
-#                                            related_name = "days",
-#                                            verbose_name = u"Période de prise de rendez-vous")
-#     date = models.DateField('date')
-#
-#     def __unicode__(self):
-#         return self.date and self.date.strftime('%d/%m/%Y') or u''
-#
-#     class Meta(MetaCore):
-#         db_table = app_label + '_appointment_date'
-#         verbose_name = "date de prise de rendez-vous"
-#         verbose_name_plural = "dates de prise de rendez-vous"
-#
-
-
-class AppointmentSlot(Model):
-    # day = models.ForeignKey(AppointmentDay,
-    #                         related_name = 'slots',
-    #                         verbose_name = 'jour')
+class AppointmentSlot(models.Model):
     appointment_period = models.ForeignKey(AppointmentPeriod,
                                            related_name="slots",
-                                           verbose_name=u"Période de prise de rendez-vous", null=True, blank=False)
-    mode = models.CharField('Mode', choices=APPOINTMENT_MODE, default='presentiel', max_length=20)
-    
+                                           verbose_name=u"Période de prise de rendez-vous", null=True, blank=False, on_delete=models.CASCADE)
+    mode = models.CharField('Mode', choices=APPOINTMENT_MODE,
+                            default='presentiel', max_length=20)
+
     date = models.DateField('date', null=True, blank=False)
 
     start = models.TimeField("heure du premier créneau (heure d'arrivée)")
     nb = models.IntegerField('nombre de créneaux')
 
-    def __unicode__(self):
-        return unicode(self.date) + ' ' + (self.start and self.start.strftime('%H:%M') or '')
+    def __str__(self):
+        return str(self.date) + ' ' + (self.start and self.start.strftime('%H:%M') or '')
 
     class Meta(MetaCore):
         ordering = ('id',)
         db_table = app_label + '_appointment_slot'
         verbose_name = "créneau de rendez-vous"
         verbose_name_plural = "créneaux de rendez-vous"
-
-
-    # @property
-    # def slots_from_same_day(self):
-    #     slots = AppointmentSlot.objets.filter(appointment_period=self.appointment_period, date=self.date)
 
     def get_nb_jury(self):
         return self.jurys.count()
@@ -244,10 +228,12 @@ class AppointmentSlot(Model):
         jurys_slots = []
 
         for jury in jurys:
-            jurys_slots.append([ap.slot_nb for ap in self.appointments.filter(jury=jury, slot=self)])
+            jurys_slots.append(
+                [ap.slot_nb for ap in self.appointments.filter(jury=jury, slot=self)])
 
         for i in range(self.nb):
-            arrival = datetime.datetime.combine(self.date, self.start) + datetime.timedelta(minutes=i * size)
+            arrival = datetime.datetime.combine(
+                self.date, self.start) + datetime.timedelta(minutes=i * size)
             start = arrival + datetime.timedelta(minutes=60)
             end = start + datetime.timedelta(minutes=size)
 
@@ -261,7 +247,8 @@ class AppointmentSlot(Model):
             # compute if a slot is available for each jury
             sjurys = []
             for j, jury in enumerate(jurys):
-                sjurys.append({'id': jury.id, 'available': i not in jurys_slots[j]})
+                sjurys.append(
+                    {'id': jury.id, 'available': i not in jurys_slots[j]})
             slot_info['jurys'] = sjurys
             res.append(slot_info)
 
@@ -285,18 +272,17 @@ class AppointmentSlot(Model):
         return self.appointment_period.work_day_between(today, self.date) >= delay
 
 
-class AppointmentJury(Model):
+class AppointmentJury(models.Model):
     slot = models.ForeignKey(AppointmentSlot,
                              related_name='jurys',
-                             verbose_name='creneau', null=True, blank=False)
+                             verbose_name='creneau', null=True, blank=False, on_delete=models.SET_NULL)
 
     name = models.CharField(_('name'), max_length=255)
     address = models.TextField("adresse", null=True, blank=True)
     bbb_room = models.URLField("salon bbb", help_text='Lien vers le salon BBB pour les inscriptions à distance (ex: https://bbb.parisson.com/b/yoa-mtc-a2e). La salle doit avoir été au préalable créé par un membre du jury sur https://bbb.parisson.com.', null=True, blank=True, max_length=200)
     # account = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.SET_NULL, blank=True, null=True)
 
-
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -305,16 +291,16 @@ class AppointmentJury(Model):
         verbose_name = "jury"
 
 
-class Appointment(Model):
+class Appointment(models.Model):
     slot = models.ForeignKey(AppointmentSlot, related_name="appointments",
-                             verbose_name=u"créneau")
+                             verbose_name=u"créneau", on_delete=models.CASCADE)
     student = models.ForeignKey(User, related_name="appointments",
-                                verbose_name="étudiant")
+                                verbose_name="étudiant", on_delete=models.CASCADE)
     jury = models.ForeignKey(AppointmentJury, related_name="appointments",
                              verbose_name="jury", on_delete=models.SET_NULL, blank=False, null=True)
     slot_nb = models.IntegerField('numéro du créneau')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s (%s, %s)" % (self.student, self.real_date_human,
                                  self.jury)
 
@@ -334,7 +320,8 @@ class Appointment(Model):
 
     @property
     def start(self):
-        dt = datetime.datetime.combine(datetime.date.today(), self.arrival) + datetime.timedelta(minutes=60)
+        dt = datetime.datetime.combine(
+            datetime.date.today(), self.arrival) + datetime.timedelta(minutes=60)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property
@@ -350,7 +337,8 @@ class Appointment(Model):
         """
         start = self.slot.start
         delta = self.slot_nb * self.appointment_period.appointment_slot_size
-        dt = datetime.datetime.combine(datetime.date.today(), start) + datetime.timedelta(minutes=delta)
+        dt = datetime.datetime.combine(
+            datetime.date.today(), start) + datetime.timedelta(minutes=delta)
         return datetime.time(dt.hour, dt.minute, 0)
 
     @property
