@@ -31,11 +31,11 @@
 
 <div class="course_title">
 
-    <a href="{% url teleforma-desk-period-course period.id script.course.id %}">{{ script.title }}</a>
+    <a href="{% url 'teleforma-desk-period-course' period.id script.course.id %}">{{ script.title }}</a>
 
     <div style="float: right; font-size: 0.9em;">
         {% if topic.file %}
-        <a id="topic" href="{% url teleforma-document-download topic.id %}" class="component_icon button icon_download">&nbsp;{% trans "Topic" %}</a>
+        <a id="topic" href="{% url 'teleforma-document-download' topic.id %}" class="component_icon button icon_download">&nbsp;{% trans "Topic" %}</a>
         {% endif %}
         {% if script.score %}
         <a id="score" href="#" class="component_icon button icon_ok"> {% trans "Score" %} : {{ script.score|floatformat }}/20</a>

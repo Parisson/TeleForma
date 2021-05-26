@@ -24,14 +24,14 @@
                     {% elif webclass_slot.status == 'ingoing' %}
                     <p>
                         La webclasse est en cours.
-                        <a href="{% url teleforma-webclass-join webclass_slot.id %}" target="_blank"
+                        <a href="{% url 'teleforma-webclass-join' webclass_slot.id %}" target="_blank"
                             class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la
                             conférence</a>
                     </p>
                     {% elif webclass_slot.status == 'almost' %}
                     <p>
                         La webclasse est accessible mais elle n'a pas encore démarré.
-                        <a href="{% url teleforma-webclass-join webclass_slot.id %}" target="_blank"
+                        <a href="{% url 'teleforma-webclass-join' webclass_slot.id %}" target="_blank"
                             class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la
                             conférence</a>
                     </p>
@@ -46,7 +46,7 @@
             {% for record in webclass_records %}
             <tr>
                 <td {% if forloop.first %}class="border-top" {% endif %} style="width:200px">
-                    <a href="{% url teleforma-webclass-record %}?url={{record.url}}" title="{% trans "View" %}">
+                    <a href="{% url 'teleforma-webclass-record' %}?url={{record.url}}" title="{% trans "View" %}">
                         <img src="{{ record.preview }}" style="width:176px" alt="{% trans 'Click here' %}" />
                         <div>Cliquez-ici</div>
                     </a>
