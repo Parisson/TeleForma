@@ -35,7 +35,7 @@ class WebclassAppointment(View):
     template_name = 'webclass/appointments.html'
 
     def check_rights(self, user, webclass):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return HttpResponseRedirect(reverse('teleforma-login'))
         student = user.student.all()[:1]
         if not student:

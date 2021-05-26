@@ -40,7 +40,7 @@ from .core import format_courses
 def get_ae_courses(user, date_order=False, num_order=False):
     courses = []
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return None
 
     professor = user.professor.all()

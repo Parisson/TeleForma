@@ -80,7 +80,7 @@ def get_course_code(obj):
 def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
     courses = []
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return courses
 
     professor = user.professor.all()
@@ -822,7 +822,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         user = User.objects.get(username=kwargs['username'])
 
         cur_user = self.request.user
-        if not cur_user.is_authenticated():
+        if not cur_user.is_authenticated:
             raise PermissionDenied
         if cur_user.pk != user.pk and not cur_user.is_superuser:
             raise PermissionDenied

@@ -20,7 +20,7 @@ class Appointments(View):
     template_name = 'teleforma/appointments.html'
 
     def check_rights(self, user, period_id):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return HttpResponseRedirect(reverse('teleforma-login'))
         student = user.student.all().count()
         if not student:

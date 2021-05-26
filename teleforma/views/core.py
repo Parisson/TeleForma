@@ -151,7 +151,7 @@ def get_host(request):
 
 def get_periods(user):
     periods = []
-
+    print(user.student)
     student = user.student.all()
     if student:
         student = user.student.get()
@@ -262,7 +262,7 @@ def nginx_media_accel(media_path, content_type="", buffering=True, streaming=Fal
 class HomeRedirectView(View):
 
     def get(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             periods = get_periods(request.user)
             if periods:
                 period = get_default_period(periods)
