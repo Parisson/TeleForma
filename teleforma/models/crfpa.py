@@ -135,7 +135,7 @@ class Training(models.Model):
 class Student(models.Model):
     "A student profile"
 
-    user = models.OneToOneField(User, related_name='student',
+    user = models.ForeignKey(User, related_name='student',
                              verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     restricted = models.BooleanField(
         "Accès restreint", help_text="Cocher cette case lorsque vous voulez que l'étudiant puisse se connecter, mais ne pas avoir accès aux cours.", default=False)
@@ -300,7 +300,7 @@ signals.post_delete.connect(update_balance_signal)
 class Profile(models.Model):
     "User profile extension"
 
-    user = models.OneToOneField(User, related_name='profile',
+    user = models.ForeignKey(User, related_name='profile',
                              verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     address = models.CharField(_('Address'), max_length=255, blank=True)
     address_detail = models.CharField(
@@ -341,7 +341,7 @@ PAY_STATUS_CHOICES = [
 class Corrector(models.Model):
     "A corrector profile, only used for registration for the moment"
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, related_name='corrector', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     period = models.ForeignKey('Period', related_name='corrector', verbose_name=_('period'),
                                blank=True, null=True, on_delete=models.SET_NULL)

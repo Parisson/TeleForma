@@ -315,7 +315,7 @@ class CourseGroup(models.Model):
 
 class Professor(models.Model):
 
-    user = models.OneToOneField(User, related_name='professor',
+    user = models.ForeignKey(User, related_name='professor',
                              verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     courses = models.ManyToManyField('Course', related_name="professor",
                                      verbose_name=_('courses'),
