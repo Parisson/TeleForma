@@ -35,40 +35,48 @@
 """
 
 import django.db.models as models
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from teleforma.models.core import *
+
+from ..fields import DurationField
+from ..models import app_label
+from ..models.core import (STATUS_CHOICES, WEIGHT_CHOICES, Course,
+                           DocumentSimple, Media, MetaCore, Organization)
 
 
-class Seminar(Model):
+class Seminar(models.Model):
 
-    course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
-    title           = models.CharField(_('title'), max_length=255, blank=True)
-    price           = models.FloatField(_('price'), blank=True, null=True)
-    status			= models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2, blank=True)
-    rank            = models.IntegerField(_('rank'))
-    concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
+    course = models.ForeignKey(
+        Course, related_name='seminar', verbose_name=_('course'))
+    title = models.CharField(_('title'), max_length=255, blank=True)
+    price = models.FloatField(_('price'), blank=True, null=True)
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2, blank=True)
+    rank = models.IntegerField(_('rank'))
+    concerned = models.CharField(
+        _('public concerned'), max_length=1024, blank=True)
 
-    doc_1           = models.ForeignKey(DocumentSimple, related_name="seminar_doc1", 
-                                        verbose_name=_('document 1'),
+    doc_1 = models.ForeignKey(DocumentSimple, related_name="seminar_doc1",
+                              verbose_name=_('document 1'),
+                              blank=True, null=True)
+    media = models.ForeignKey(Media, related_name="seminar",
+                              verbose_name=_('media'),
+                              blank=True, null=True)
+    doc_2 = models.ForeignKey(DocumentSimple, related_name="seminar_doc2",
+                              verbose_name=_('document 2'),
+                              blank=True, null=True)
+    doc_correct = models.ForeignKey(DocumentSimple, related_name="seminar_doccorrect",
+                                    verbose_name=_('corrected document'),
+                                    blank=True, null=True)
+    suscribers = models.ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
                                         blank=True, null=True)
-    media           = models.ForeignKey(Media, related_name="seminar",
-                                        verbose_name=_('media'),
-                                        blank=True, null=True)
-    doc_2           = models.ForeignKey(DocumentSimple, related_name="seminar_doc2",
-                                        verbose_name=_('document 2'),
-                                        blank=True, null=True)
-    doc_correct     = models.ForeignKey(DocumentSimple, related_name="seminar_doccorrect",
-                                        verbose_name=_('corrected document'),
-                                        blank=True, null=True)
-    suscribers      = models.ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
-                                        blank=True, null=True)
 
-    date_added      = models.DateTimeField(_('date added'), auto_now_add=True)
-    date_modified   = models.DateTimeField(_('date modified'), auto_now=True)
-    duration        = DurationField(_('approximative duration'))
-    keywords        = models.CharField(_('keywords'), max_length=1024, blank=True)
+    date_added = models.DateTimeField(_('date added'), auto_now_add=True)
+    date_modified = models.DateTimeField(_('date modified'), auto_now=True)
+    duration = DurationField(_('approximative duration'))
+    keywords = models.CharField(_('keywords'), max_length=1024, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([self.course.title, str(self.rank), self.title])
 
     class Meta(MetaCore):
@@ -76,18 +84,19 @@ class Seminar(Model):
         verbose_name = _('Seminar')
 
 
-class Question(Model):
+class Question(models.Model):
 
-    seminar     = models.ForeignKey(Seminar, verbose_name=_('seminar'))
-    title       = models.CharField(_('title'), max_length=255, blank=True)
-    question    = models.TextField(_('question'))
-    rank        = models.IntegerField(_('rank'))
-    weight      = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1)
-    min_nchar   = models.IntegerField(_('minimum numbers of characters'))
-    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
+    seminar = models.ForeignKey(Seminar, verbose_name=_('seminar'))
+    title = models.CharField(_('title'), max_length=255, blank=True)
+    question = models.TextField(_('question'))
+    rank = models.IntegerField(_('rank'))
+    weight = models.IntegerField(
+        _('weight'), choices=WEIGHT_CHOICES, default=1)
+    min_nchar = models.IntegerField(_('minimum numbers of characters'))
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2)
 
-
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([self.seminar.__unicode__(), str(self.rank), self.title])
 
     class Meta(MetaCore):
@@ -95,15 +104,18 @@ class Question(Model):
         verbose_name = _('Question')
 
 
-class Answer(Model):
+class Answer(models.Model):
 
-    user        = models.ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
-    question    = models.ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
-    answer      = models.TextField(_('answer'))
-    status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
-    validated   = models.BooleanField(_('validated'))
+    user = models.ForeignKey(User, related_name=_(
+        "answer"), verbose_name=_('user'))
+    question = models.ForeignKey(Question, related_name=_(
+        "answer"), verbose_name=_('question'))
+    answer = models.TextField(_('answer'))
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2)
+    validated = models.BooleanField(_('validated'))
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([self.question, self.user])
 
     def validate(self):
@@ -116,16 +128,16 @@ class Answer(Model):
         verbose_name = _('Answer')
 
 
-class TestimonialTemplate(Model):
+class TestimonialTemplate(models.Model):
 
     organization = models.ForeignKey(Organization, related_name='testimonial_template',
-                                 verbose_name=_('organization'))
-    description  = models.TextField(_('description'), blank=True)
-    comments     = models.TextField(_('comments'), blank=True)
-    document     = models.ForeignKey(DocumentSimple, related_name=_("testimonial_template"),
-                                verbose_name=_('template'))
+                                     verbose_name=_('organization'))
+    description = models.TextField(_('description'), blank=True)
+    comments = models.TextField(_('comments'), blank=True)
+    document = models.ForeignKey(DocumentSimple, related_name=_("testimonial_template"),
+                                 verbose_name=_('template'))
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([self.organization.name, self.description])
 
     class Meta(MetaCore):
@@ -133,16 +145,16 @@ class TestimonialTemplate(Model):
         verbose_name = _('Testimonial template')
 
 
-class Testimonial(Model):
+class Testimonial(models.Model):
 
-    seminar     = models.ForeignKey(Seminar, verbose_name=_('seminar'))
-    user        = models.ForeignKey(User, related_name=_("testimonial"), verbose_name=_('user'))
-    template    = models.ForeignKey(TestimonialTemplate, related_name=_("testimonial"), 
-                                    verbose_name=_('testimonial_template'))
-    document    = models.ForeignKey(DocumentSimple, related_name=_("testimonial"), 
-                                        blank=True, null=True)
+    seminar = models.ForeignKey(Seminar, verbose_name=_('seminar'))
+    user = models.ForeignKey(User, related_name=_(
+        "testimonial"), verbose_name=_('user'))
+    template = models.ForeignKey(TestimonialTemplate, related_name=_("testimonial"),
+                                 verbose_name=_('testimonial_template'))
+    document = models.ForeignKey(DocumentSimple, related_name=_("testimonial"),
+                                 blank=True, null=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'testimonial'
         verbose_name = _('Testimonial')
-

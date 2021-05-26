@@ -2,7 +2,7 @@
 
 from django import template
 from datetime import date
-from teleforma.models import Payment
+from ..models import Payment
 register = template.Library()
 
 @register.inclusion_tag('payment/payment_summary.html',

@@ -32,20 +32,26 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-from django import template
-from django.shortcuts import get_object_or_404
+import datetime
 import json
-from timezones.utils import localtime_for_timezone
-from django.utils.translation import ugettext_lazy as _
-from urlparse import urlparse
-from docutils.core import publish_parts
-from django.utils.encoding import smart_str, force_unicode
-from django.utils.safestring import mark_safe
+import re
+import urllib.parse as urlparse
 
-from teleforma.models.core import Document
-from teleforma.models.crfpa import Course, NewsItem
-from teleforma.views import get_courses
-from teleforma.exam.models import *
+from django import template
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.db.models.query_utils import Q
+from django.shortcuts import get_object_or_404
+from django.urls.base import reverse
+from django.utils.encoding import force_text, smart_str
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+from docutils.core import publish_parts
+
+from ..exam.models import Quota, Script
+from ..models.core import Document, Professor
+from ..models.crfpa import IEJ, Course, NewsItem, Training
+from ..views import get_courses
 
 register = template.Library()
 
@@ -53,15 +59,18 @@ register = template.Library()
 title = _('General tweeter')
 title = _('Local tweeter')
 
+
 class TeleFormaVersionNode(template.Node):
     def render(self, context):
         from teleforma import __version__
         return __version__
 
+
 @register.tag
 def teleforma_version(parser, token):
     "Get TeleForma version number"
     return TeleFormaVersionNode()
+
 
 @register.filter
 def parse_urls(text):
@@ -73,11 +82,13 @@ def parse_urls(text):
             output += block
     return output
 
+
 @register.filter('startswith')
 def startswith(text, starts):
-    if isinstance(text, basestring):
+    if isinstance(text, str):
         return text.startswith(starts)
     return False
+
 
 @register.tag
 def value_from_settings(parser, token):
@@ -85,18 +96,22 @@ def value_from_settings(parser, token):
         # split_contents() knows not to split quoted strings.
         tag_name, var = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, "%r tag requires a single argument" % token.contents.split()[0]
+        raise template.TemplateSyntaxError("%r tag requires a single argument" % token.contents.split()[0])
     return ValueFromSettings(var)
+
 
 class ValueFromSettings(template.Node):
     def __init__(self, var):
         self.arg = template.Variable(var)
+
     def render(self, context):
         return settings.__getattr__(str(self.arg))
+
 
 @register.filter
 def user_courses(user):
     return get_courses(user)
+
 
 @register.filter
 def to_recipients(users):
@@ -105,9 +120,6 @@ def to_recipients(users):
         list.append(user.username)
     return ':'.join(list)
 
-@register.filter
-def localtime(value, timezone):
-    return localtime_for_timezone(value, timezone)
 
 @register.filter
 def or_me(value, arg):
@@ -117,11 +129,12 @@ def or_me(value, arg):
     Typical usage: sender|or_me:user
 
     """
-    if not isinstance(value, (unicode, str)):
-        value = unicode(value)
-    if not isinstance(arg, (unicode, str)):
-        arg = unicode(arg)
+    if not isinstance(value, str):
+        value = str(value)
+    if not isinstance(arg, str):
+        arg = str(arg)
     return _('me') if value == arg else value
+
 
 @register.filter
 def yes_no(bool):
@@ -130,6 +143,7 @@ def yes_no(bool):
     else:
         return _('No')
 
+
 @register.filter
 def get_item(dictionary, key):
     try:
@@ -137,20 +151,24 @@ def get_item(dictionary, key):
     except AttributeError:
         return dictionary[key]
 
+
 @register.filter
 def from_course_type(contents, type):
     if contents:
         return contents.filter(course_type=type)
+
 
 @register.filter
 def streaming_only(contents):
     if contents:
         return contents.filter(streaming=True)
 
+
 @register.filter
 def from_doc_type(contents, type):
     if contents:
         return contents.filter(type=type)
+
 
 @register.filter
 def from_period(contents, period):
@@ -160,25 +178,27 @@ def from_period(contents, period):
         else:
             return contents.filter(period=period)
 
-@register.assignment_tag
+
+@register.simple_tag
 def get_all_professors():
     return Professor.objects.all()
 
-@register.assignment_tag
+
+@register.simple_tag
 def get_all_professors_with_courses():
     professors = []
     for professor in Professor.objects.order_by('user__last_name').all():
         name = professor.user.last_name + professor.user.first_name
         if name:
             professors.append({
-                'username':professor.user.username,
-                'name':professor.user.last_name + " " + professor.user.first_name,
-                'courses':json.dumps([course.id for course in professor.courses.all()])
+                'username': professor.user.username,
+                'name': professor.user.last_name + " " + professor.user.first_name,
+                'courses': json.dumps([course.id for course in professor.courses.all()])
             })
     return professors
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_all_correctors_with_courses():
     correctors = {}
 
@@ -195,39 +215,45 @@ def get_all_correctors_with_courses():
         if name:
             result.append({
                 'id': corrector.id,
-                'username':corrector.username,
-                'name':corrector.last_name + " " + corrector.first_name,
-                'courses':json.dumps(list(correctors[corrector]))
+                'username': corrector.username,
+                'name': corrector.last_name + " " + corrector.first_name,
+                'courses': json.dumps(list(correctors[corrector]))
             })
-    result = sorted(result, key=lambda corrector:int(corrector['id']))
+    result = sorted(result, key=lambda corrector: int(corrector['id']))
     return result
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_all_admins():
     return User.objects.filter(is_superuser=True).order_by('last_name')
 
-@register.assignment_tag
+
+@register.simple_tag
 def get_all_trainings():
     return Training.objects.all()
 
-@register.assignment_tag
+
+@register.simple_tag
 def get_all_iejs():
     return IEJ.objects.all()
 
-@register.assignment_tag
+
+@register.simple_tag
 def get_all_courses():
     return Course.objects.all()
 
-@register.assignment_tag
+
+@register.simple_tag
 def get_telecaster():
     return 'telecaster' in settings.INSTALLED_APPS
 
-@register.assignment_tag
+
+@register.simple_tag
 def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
 
-@register.assignment_tag
+
+@register.simple_tag
 def show_chat(user):
     """ everybody should see the chat panel, except the correctors """
     professor = user.professor.all()
@@ -245,6 +271,7 @@ def get_audio_id(media):
             return m.id
     return
 
+
 @register.filter
 def get_video_id(media):
     if media.conference:
@@ -253,6 +280,7 @@ def get_video_id(media):
             if 'video' in m.mime_type:
                 return m.id
     return
+
 
 @register.filter
 def get_host(url, host):
@@ -263,30 +291,35 @@ def get_host(url, host):
     else:
         return url
 
+
 @register.filter
 def published(doc):
     if doc:
         return doc.filter(is_published=True)
+
 
 def scripts_count(user, period, statuses):
     if not period:
         return ''
     Q1 = Q(author=user)
     Q2 = Q(corrector=user)
-    scripts = Script.objects.filter(Q1 | Q2).filter(status__in = statuses,
-                                                    period = period)
+    scripts = Script.objects.filter(Q1 | Q2).filter(status__in=statuses,
+                                                    period=period)
     if scripts:
         return ' (' + str(len(scripts)) + ')'
     else:
         return ''
 
+
 @register.simple_tag
 def untreated_scripts_count(user, period):
     return scripts_count(user, period, (3,))
 
+
 @register.simple_tag
 def treated_scripts_count(user, period):
     return scripts_count(user, period, (4,))
+
 
 @register.simple_tag
 def get_training_profile(user):
@@ -298,37 +331,41 @@ def get_training_profile(user):
             if student.platform_only:
                 text += 'Internaute - '
             for training in student.trainings.all():
-                text += unicode(training) + ' '
+                text += str(training) + ' '
     return text
+
 
 @register.inclusion_tag('teleforma/inc/newsitems_portlet.html', takes_context=True)
 def newsitems_portlet(context, course_id, period_id):
     request = context['request']
     user = request.user
+
     def get_data(newsitem):
         return {
-        'id':newsitem.id,
-        'title':newsitem.title,
-        'text':newsitem.text,
-        'creator':newsitem.creator,
-        'created':newsitem.created,
-        'can_edit':newsitem.can_edit(request),
-        'can_delete':newsitem.can_delete(request),
+            'id': newsitem.id,
+            'title': newsitem.title,
+            'text': newsitem.text,
+            'creator': newsitem.creator,
+            'created': newsitem.created,
+            'can_edit': newsitem.can_edit(request),
+            'can_delete': newsitem.can_delete(request),
         }
 
     course = get_object_or_404(Course, id=course_id)
-    course_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, course__id=course_id, period_id=period_id).order_by('-created')]
-    all_newsitems = [get_data(news) for news in NewsItem.objects.filter(deleted=False, period_id=period_id).order_by('-created')]
+    course_newsitems = [get_data(news) for news in NewsItem.objects.filter(
+        deleted=False, course__id=course_id, period_id=period_id).order_by('-created')]
+    all_newsitems = [get_data(news) for news in NewsItem.objects.filter(
+        deleted=False, period_id=period_id).order_by('-created')]
     can_add = False
     if user.is_staff or user.professor.count():
         can_add = True
     return {
-            'can_add':can_add,
-            'course':course,
-            'period_id':period_id,
-            'course_newsitems':course_newsitems,
-            'all_newsitems':all_newsitems
-           }
+        'can_add': can_add,
+        'course': course,
+        'period_id': period_id,
+        'course_newsitems': course_newsitems,
+        'all_newsitems': all_newsitems
+    }
 
 
 ##### FROM TELEMETA #####
@@ -337,23 +374,27 @@ def newsitems_portlet(context, course_id, period_id):
 def description():
     return settings.TELEFORMA_DESCRIPTION
 
+
 @register.simple_tag
 def organization():
     return settings.TELEFORMA_ORGANIZATION
+
 
 @register.simple_tag
 def current_year():
     return datetime.datetime.now().strftime("%Y")
 
+
 @register.filter
 def render_flatpage(content):
     parsed = ""
     path = getattr(content, 'path', '')
-    if isinstance(content, basestring):
+    if isinstance(content, str):
         content = content.split("\n")
 
     for line in content:
-        match = re.match('^(\.\. *(?:_[^:]*:|(?:\|\w+\|)? *image::) *)([^ ]+) *$', line)
+        match = re.match(
+            '^(\.\. *(?:_[^:]*:|(?:\|\w+\|)? *image::) *)([^ ]+) *$', line)
         if match:
             directive, urlname = match.groups()
             line = directive
@@ -364,12 +405,16 @@ def render_flatpage(content):
             if i == 0:
                 line += reverse(urlname)
             elif urlname[:1] != '/':
-                line += reverse('telemeta-flatpage', args=[path + '/../' + urlname])
+                line += reverse('telemeta-flatpage',
+                                args=[path + '/../' + urlname])
             else:
                 line += urlname
 
         parsed += line + "\n"
 
-    parts = publish_parts(source=smart_str(parsed), writer_name="html4css1", settings_overrides={})
-    return mark_safe('<div class="rst-content">\n' + force_unicode(parts["html_body"]) + '</div>')
+    parts = publish_parts(source=smart_str(
+        parsed), writer_name="html4css1", settings_overrides={})
+    return mark_safe('<div class="rst-content">\n' + force_text(parts["html_body"]) + '</div>')
+
+
 render_flatpage.is_safe = True

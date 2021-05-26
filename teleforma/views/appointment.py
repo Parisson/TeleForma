@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from django.views.generic import View
-from django.contrib import messages
-from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404, render
-from django.template.loader import render_to_string
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import IntegrityError
-from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib import messages
 from django.core.cache import cache
+from django.core.mail import send_mail
+from django.db import IntegrityError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.views.generic import View
 
-from teleforma.models.appointment import AppointmentPeriod, Appointment, AppointmentSlot, CACHE_KEY, APPOINTMENT_MODE
-
-from teleforma.views.core import get_periods
+from ..models.appointment import (CACHE_KEY, Appointment, AppointmentPeriod,
+                                  AppointmentSlot)
+from ..views.core import get_periods
 
 
 class Appointments(View):

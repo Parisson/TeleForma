@@ -33,7 +33,8 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-from teleforma.views.core import *
+from ..models.core import Course, CourseType
+from .core import format_courses
 
 
 def get_ae_courses(user, date_order=False, num_order=False):
@@ -49,7 +50,7 @@ def get_ae_courses(user, date_order=False, num_order=False):
     if professor:
         professor = user.professor.get()
         courses = format_courses(courses, queryset=professor.courses.all(),
-                                  types=types)
+                                 types=types)
 
     elif student:
         student = user.ae_student.get()
@@ -57,17 +58,17 @@ def get_ae_courses(user, date_order=False, num_order=False):
 
         for course in s_courses:
             courses = format_courses(courses, course=course,
-                               types=types)
+                                     types=types)
 
         magistrals = Course.objects.filter(magistral=True)
         if magistrals:
             courses = format_courses(courses,
-                            queryset=magistrals,
-                            types=types)
+                                     queryset=magistrals,
+                                     types=types)
 
     elif user.is_staff or user.is_superuser:
         courses = format_courses(courses, queryset=Course.objects.all(),
-                    types=types)
+                                 types=types)
     else:
         courses = None
 

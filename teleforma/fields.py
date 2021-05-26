@@ -1,18 +1,13 @@
 
-import django.db.models as models
-from django.forms import ModelForm, TextInput, Textarea
-from south.modelsinspector import add_introspection_rules
-from django.core.exceptions import ValidationError
-from django.core import exceptions
-from django import forms
 import datetime
-from django.utils.translation import ugettext_lazy as _
 import re
 
-try:
-    from django.contrib.auth import get_user_model  # Django 1.5
-except ImportError:
-    from postman.future_1_5 import get_user_model
+import django.db.models as models
+from django import forms
+from django.contrib.auth import get_user_model
+from django.core import exceptions
+from django.forms import Textarea
+from django.utils.translation import ugettext_lazy as _
 
 
 class ShortTextField(models.TextField):
@@ -22,10 +17,6 @@ class ShortTextField(models.TextField):
             {"widget": Textarea(attrs={'rows':2, 'cols':40})}
          )
          return super(ShortTextField, self).formfield(**kwargs)
-
-add_introspection_rules([], ["^teleforma\.fields\.ShortTextField"])
-
-
 
 
 
@@ -79,7 +70,7 @@ class Duration(object):
 
                 return Duration(hours=hours, minutes=minutes, seconds=seconds)
             except TypeError:
-                print groups
+                print(groups)
                 raise
         else:
             raise ValueError("Malformed duration string: " + str)
@@ -97,14 +88,14 @@ def normalize_field(args, default_value=None):
        The default value can also be overriden with the default=value argument.
        """
     required = False
-    if args.has_key('required'):
+    if 'required' in args:
         required = args['required']
         args.pop('required')
 
     args['blank'] = not required
 
     if not required:
-        if not args.has_key('default'):
+        if 'default' not in args:
             if args.get('null'):
                 args['default'] = None
             elif default_value is not None:
@@ -123,7 +114,7 @@ class DurationField(models.Field):
 
     description = _("Duration")
 
-    __metaclass__ = models.SubfieldBase
+    # __metaclass__ = models.SubfieldBase
 
     default_error_messages = {
         'invalid': _('Enter a valid duration in HH:MM[:ss] format.'),
@@ -138,7 +129,7 @@ class DurationField(models.Field):
     def to_python(self, value):
         if value is None:
             return None
-        if isinstance(value, int) or isinstance(value, long):
+        if isinstance(value, int):
             return Duration(seconds=value)
         if isinstance(value, datetime.time):
             return Duration(hours=value.hour, minutes=value.minute, seconds=value.second)
@@ -169,7 +160,7 @@ class DurationField(models.Field):
         if val is None:
             data = ''
         else:
-            data = unicode(val)
+            data = str(val)
         return data
 
     def formfield(self, **kwargs):

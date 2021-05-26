@@ -41,12 +41,12 @@ ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
-# COPY requirements.txt /srv
-# RUN pip3 install -r requirements.txt
+COPY requirements.txt /srv
+RUN pip3 install -r requirements.txt
 
-# COPY lib /srv/lib
-# COPY bin/build/local/setup_lib.sh /srv
-# RUN /srv/setup_lib.sh
+COPY lib /srv/lib
+COPY bin/build/local/setup_lib.sh /srv
+RUN /srv/setup_lib.sh
 
 WORKDIR /srv/src/teleforma
 COPY setup.py /srv/src/teleforma

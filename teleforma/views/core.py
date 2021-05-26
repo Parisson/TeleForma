@@ -33,77 +33,53 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-import mimetypes
 import datetime
-import random
-import urllib
-import urllib2
-import json
+import mimetypes
+from html import escape
+from io import StringIO
 
-from jsonrpc import jsonrpc_method
-
-from django.utils.decorators import method_decorator
-from django.contrib.auth import authenticate, login, get_backends
-from django.template import RequestContext, loader, Context
-from django import template
-from django.http import HttpResponse, HttpResponseRedirect
-from django.http import Http404
-from django.shortcuts import render_to_response, redirect, get_object_or_404
-from django.views.generic import *
-from django.views.generic.base import *
 from django.conf import settings
-from django.contrib import auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.context_processors import csrf
-from django.forms.models import modelformset_factory, inlineformset_factory
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import UserChangeForm
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.syndication.views import Feed
-from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http.response import StreamingHttpResponse
+from django.shortcuts import redirect, render as django_render
+from django.template import Context, RequestContext, loader
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic import *
+from django.views.generic.base import *
 from django.views.generic.edit import FormView
-from django.core.urlresolvers import reverse, reverse_lazy
+from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
-
-from teleforma.models import *
-from teleforma.forms import *
-from teleforma.models.appointment import AppointmentPeriod
-from teleforma.webclass.models import Webclass, WebclassSlot, WebclassRecord
-import pages
 from teleforma.decorators import access_required
-import jqchat.models
-from xlwt import Workbook
-
-from cgi import escape
-from cStringIO import StringIO
 from xhtml2pdf import pisa
 
-try:
-    from telecaster.models import *
-    from telecaster.tools import *
-except:
-    pass
+from ..forms import *
+from ..models import *
+from ..models.appointment import AppointmentPeriod
+from ..webclass.models import Webclass, WebclassRecord
+from .pages import get_page_content
 
 
+def render(request, template, data=None, mimetype=None):
+    return django_render(template, data, context_instance=RequestContext(request),
+                         mimetype=mimetype)
 
-def render(request, template, data = None, mimetype = None):
-    return render_to_response(template, data, context_instance=RequestContext(request),
-                              mimetype=mimetype)
 
 def format_courses(courses, course=None, queryset=None, types=None):
     if queryset:
         for c in queryset:
             if c and c.code != 'X':
                 courses.append({'course': c, 'types': types.all(),
-                'date': c.date_modified, 'number': c.number})
+                                'date': c.date_modified, 'number': c.number})
     elif course:
         if course.code != 'X':
             courses.append({'course': course, 'types': types.all(),
-            'date': course.date_modified, 'number': course.number})
+                            'date': course.date_modified, 'number': course.number})
     return courses
 
 
@@ -129,25 +105,26 @@ def stream_from_file(__file):
 
 
 def get_room(content_type=None, id=None, name=None, period=None):
-    if settings.TELEFORMA_GLOBAL_TWEETER:
-        name = 'site'
+    return None
+    # if settings.TELEFORMA_GLOBAL_TWEETER:
+    #     name = 'site'
 
-    if settings.TELEFORMA_PERIOD_TWEETER and period:
-        name = name + '-' + period
+    # if settings.TELEFORMA_PERIOD_TWEETER and period:
+    #     name = name + '-' + period
 
-    if settings.TELEFORMA_GLOBAL_TWEETER:
-        rooms = jqchat.models.Room.objects.filter(name=name[:20])
-    else:
-        rooms = jqchat.models.Room.objects.filter(name=name[:20],
-                                                  content_type=content_type,
-                                                  object_id=id)
-    if not rooms:
-        room = jqchat.models.Room.objects.create(content_type=content_type,
-                                                 object_id=id,
-                                                 name=name[:20])
-    else:
-        room = rooms[0]
-    return room
+    # if settings.TELEFORMA_GLOBAL_TWEETER:
+    #     rooms = jqchat.models.Room.objects.filter(name=name[:20])
+    # else:
+    #     rooms = jqchat.models.Room.objects.filter(name=name[:20],
+    #                                               content_type=content_type,
+    #                                               object_id=id)
+    # if not rooms:
+    #     room = jqchat.models.Room.objects.create(content_type=content_type,
+    #                                              object_id=id,
+    #                                              name=name[:20])
+    # else:
+    #     room = rooms[0]
+    # return room
 
 
 def get_access(obj, courses):
@@ -157,8 +134,11 @@ def get_access(obj, courses):
             access = True
     return access
 
+
 access_error = _('Access not allowed.')
-contact_message = _('Please login or contact the website administator to get a private access.')
+contact_message = _(
+    'Please login or contact the website administator to get a private access.')
+
 
 def get_host(request):
     host = request.META['HTTP_HOST']
@@ -167,6 +147,7 @@ def get_host(request):
     if host == 'localhost':
         host = '127.0.0.1'
     return host
+
 
 def get_periods(user):
     periods = []
@@ -195,6 +176,7 @@ def get_periods(user):
 
     return periods
 
+
 def get_default_period(periods):
     if not periods:
         return None
@@ -209,10 +191,10 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    from xhtml2pdf import pisa
     src = StringIO(content.encode(encoding))
     pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
     return not pdf.err
+
 
 def content_to_response(content, filename=None):
     """
@@ -223,8 +205,9 @@ def content_to_response(content, filename=None):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
+
 def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
-    **kwargs):
+                  **kwargs):
     """
     Render a pdf response using given *request*, *template* and *context*.
     """
@@ -248,10 +231,12 @@ def serve_media(media_path, content_type="", buffering=True, streaming=False):
         return nginx_media_accel(media_path, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
-        response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
+        response = StreamingHttpResponse(
+            stream_from_file(media_path), content_type=content_type)
         filename = os.path.basename(media_path)
         if not streaming:
-            response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
+            response['Content-Disposition'] = 'attachment; ' + \
+                'filename=' + filename
         return response
 
 
@@ -262,7 +247,8 @@ def nginx_media_accel(media_path, content_type="", buffering=True, streaming=Fal
     url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
     filename = os.path.basename(media_path)
     if not streaming:
-        response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+        response['Content-Disposition'] = "attachment; filename=%s" % (
+            filename)
     response['Content-Type'] = content_type
     response['X-Accel-Redirect'] = url
 
@@ -307,7 +293,8 @@ class PeriodAccessMixin(View):
     def render_to_response(self, context):
         period = context['period']
         if not period in get_periods(self.request.user):
-            messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
+            messages.warning(self.request, _(
+                "You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-home')
         return super(PeriodAccessMixin, self).render_to_response(context)
 
@@ -321,11 +308,13 @@ class CourseAccessMixin(PeriodAccessMixin):
 
     def get_context_data(self, **kwargs):
         context = super(CourseAccessMixin, self).get_context_data(**kwargs)
-        context['all_courses'] = get_courses(self.request.user, num_order=True, period=self.period)
+        context['all_courses'] = get_courses(
+            self.request.user, num_order=True, period=self.period)
         # If we are a corrector but not a professor, limit object types
         role = get_user_role(self.request.user)
         if role == "corrector":
-            context['doc_types'] = DocumentType.objects.filter(for_corrector = True)
+            context['doc_types'] = DocumentType.objects.filter(
+                for_corrector=True)
             context['show_media'] = False
         else:
             context['doc_types'] = DocumentType.objects.all()
@@ -336,20 +325,22 @@ class CourseAccessMixin(PeriodAccessMixin):
 class CourseListView(CourseAccessMixin, ListView):
 
     model = Course
-    template_name='teleforma/courses.html'
+    template_name = 'teleforma/courses.html'
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         context['room'] = get_room(name='site', period=context['period'].name)
         context['list_view'] = True
-        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
+        context['courses'] = sorted(
+            context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
         user = self.request.user
         is_student = user.student.all().count()
         # appointments_open = False
         appointments = []
         if is_student:
-            available_courses = [course['course'] for course in context['all_courses']]
-            for appointment in  AppointmentPeriod.objects.filter(periods=context['period'], course__in=available_courses):
+            available_courses = [course['course']
+                                 for course in context['all_courses']]
+            for appointment in AppointmentPeriod.objects.filter(periods=context['period'], course__in=available_courses):
                 if appointment.is_open:
                     found = False
                     for existing in appointments:
@@ -359,7 +350,8 @@ class CourseListView(CourseAccessMixin, ListView):
                         appointments.append(appointment)
         context['appointments'] = appointments
         # check if user appointment is next
-        user_appointment = Appointment.objects.filter(student=user, slot__mode='distance', slot__appointment_period__periods=context['period'])
+        user_appointment = Appointment.objects.filter(
+            student=user, slot__mode='distance', slot__appointment_period__periods=context['period'])
         if user_appointment:
             user_appointment = user_appointment[0]
             now = datetime.datetime.now()
@@ -367,7 +359,7 @@ class CourseListView(CourseAccessMixin, ListView):
             if user_appointment.real_date - datetime.timedelta(hours=1) < now < user_appointment.real_date + datetime.timedelta(hours=1):
                 context['current_appointement'] = user_appointment
 
-        homes = Home.objects.filter(enabled = True).order_by('-modified_at')
+        homes = Home.objects.filter(enabled=True).order_by('-modified_at')
         for home in homes:
             if home.is_for_period(context['period']):
                 context['home_title'] = home.visible_title
@@ -379,7 +371,8 @@ class CourseListView(CourseAccessMixin, ListView):
             student = user.student.all()[0]
             slots = []
             to_subscribe = []
-            student_courses = [course['course'] for course in get_courses(user)]
+            student_courses = [course['course']
+                               for course in get_courses(user)]
             for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
                 # if webclass.course not in student_courses:
                 #     continue
@@ -400,9 +393,10 @@ class CourseListView(CourseAccessMixin, ListView):
 
     @jsonrpc_method('teleforma.get_course_list')
     def get_course_list(request, organization_name, department_name):
-        from teleforma.models import Organization, Department
+        from teleforma.models import Department, Organization
         organization = Organization.objects.get(name=organization_name)
-        department = Department.objects.get(organization=organization, name=department_name)
+        department = Department.objects.get(
+            organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]
 
     @jsonrpc_method('teleforma.get_course_type_list')
@@ -411,11 +405,13 @@ class CourseListView(CourseAccessMixin, ListView):
 
     def pull(request, organization_name, department_name):
         organization = Organization.objects.get(name=organization_name)
-        department = Department.objects.get(name=department_name, organization=organization)
+        department = Department.objects.get(
+            name=department_name, organization=organization)
         url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
 
-        remote_list = s.teleforma.get_course_list(organization_name, department.name)
+        remote_list = s.teleforma.get_course_list(
+            organization_name, department.name)
         for course_dict in remote_list['result']:
             course = Course.objects.filter(code=course_dict['code'])
             if not course:
@@ -427,7 +423,8 @@ class CourseListView(CourseAccessMixin, ListView):
         remote_list = s.teleforma.get_course_type_list()
         if remote_list['result']:
             for course_type_dict in remote_list['result']:
-                course_type = CourseType.objects.filter(name=course_type_dict['name'])
+                course_type = CourseType.objects.filter(
+                    name=course_type_dict['name'])
                 if not course_type:
                     course_type = CourseType()
                 else:
@@ -437,12 +434,12 @@ class CourseListView(CourseAccessMixin, ListView):
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+        return [{'id': str(c.id), 'name': str(c)} for c in department.course.all()]
 
     @jsonrpc_method('teleforma.get_dep_periods')
     def get_dep_periods(request, id):
         department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
+        return [{'id': str(c.id), 'name': str(c)} for c in department.period.all()]
 
 
 class CourseView(CourseAccessMixin, DetailView):
@@ -455,10 +452,12 @@ class CourseView(CourseAccessMixin, DetailView):
         courses = []
         for c in context['all_courses']:
             if c['course'] == course:
-                courses = format_courses(courses, course=course, types=c['types'])
+                courses = format_courses(
+                    courses, course=course, types=c['types'])
         context['courses'] = courses
         # context['notes'] = course.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        content_type = ContentType.objects.get(
+            app_label="teleforma", model="course")
         context['room'] = get_room(name=course.code, period=context['period'].name,
                                    content_type=content_type,
                                    id=course.id)
@@ -472,7 +471,8 @@ class CourseView(CourseAccessMixin, DetailView):
 
         if student:
             try:
-                webclass = Webclass.published.filter(period=self.period, course=course, iej=student.iej)[0]
+                webclass = Webclass.published.filter(
+                    period=self.period, course=course, iej=student.iej)[0]
             except IndexError:
                 pass
             if webclass:
@@ -481,8 +481,9 @@ class CourseView(CourseAccessMixin, DetailView):
         context['webclass_slot'] = webclass_slot
 
         try:
-            context['webclass_records'] = WebclassRecord.get_records(context['period'], course)
-        except Exception, e:
+            context['webclass_records'] = WebclassRecord.get_records(
+                context['period'], course)
+        except Exception as e:
             print(e)
             context['webclass_error'] = True
         return context
@@ -497,27 +498,31 @@ class CourseView(CourseAccessMixin, DetailView):
         media_list = []
         for media in course.media.all():
             if media.is_published and media.file and media.conference and 'video' in media.mime_type:
-                urls = [ {'url': settings.MEDIA_URL + unicode(media.file), 'mime_type': media.mime_type} ]
+                urls = [{'url': settings.MEDIA_URL +
+                         str(media.file), 'mime_type': media.mime_type}]
                 for transcoded in media.transcoded.all():
-                    urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': transcoded.mime_type})
-                media_list.append({'session': media.conference.session, 'urls': urls, 'poster': media.poster_url()})
+                    urls.append(
+                        {'url': settings.MEDIA_URL + str(transcoded.file), 'mime_type': transcoded.mime_type})
+                media_list.append(
+                    {'session': media.conference.session, 'urls': urls, 'poster': media.poster_url()})
         return media_list
 
 
 class CoursePendingListView(CourseListView):
 
-    template_name='teleforma/courses_pending.html'
+    template_name = 'teleforma/courses_pending.html'
 
     def get_context_data(self, **kwargs):
         context = super(CoursePendingListView, self).get_context_data(**kwargs)
-        context['courses'] = sorted(context['all_courses'], key=lambda k: k['date'], reverse=True)
+        context['courses'] = sorted(
+            context['all_courses'], key=lambda k: k['date'], reverse=True)
         return context
 
 
 class MediaView(CourseAccessMixin, DetailView):
 
     model = Media
-    template_name='teleforma/course_media.html'
+    template_name = 'teleforma/course_media.html'
 
     def get_context_data(self, **kwargs):
         context = super(MediaView, self).get_context_data(**kwargs)
@@ -528,13 +533,14 @@ class MediaView(CourseAccessMixin, DetailView):
         context['course'] = media.course
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        content_type = ContentType.objects.get(
+            app_label="teleforma", model="course")
 
         room_name = media.course.code
         if media.conference.web_class_group:
             room_name += '_' + media.conference.public_id
 
-        context['room'] = get_room(name=room_name,period=context['period'].name,
+        context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
                                    id=media.course.id)
 
@@ -573,10 +579,11 @@ class MediaView(CourseAccessMixin, DetailView):
     def download(self, request, period_id, pk):
         return self.stream(request, period_id, pk, streaming=False)
 
+
 class MediaTranscodedView(CourseAccessMixin, DetailView):
 
     model = MediaTranscoded
-    template_name='teleforma/course_media_transcoded.html'
+    template_name = 'teleforma/course_media_transcoded.html'
 
     def get_context_data(self, **kwargs):
         context = super(MediaTranscodedView, self).get_context_data(**kwargs)
@@ -590,13 +597,14 @@ class MediaTranscodedView(CourseAccessMixin, DetailView):
         context['course'] = media.course
         context['type'] = media.course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        content_type = ContentType.objects.get(
+            app_label="teleforma", model="course")
 
         room_name = media.course.code
         if media.conference.web_class_group:
             room_name += '_' + media.conference.public_id
 
-        context['room'] = get_room(name=room_name,period=context['period'].name,
+        context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
                                    id=media.course.id)
 
@@ -627,7 +635,7 @@ class MediaTranscodedView(CourseAccessMixin, DetailView):
 class MediaPendingView(ListView):
 
     model = Media
-    template_name='teleforma/media_pending.html'
+    template_name = 'teleforma/media_pending.html'
 
     def get_queryset(self):
         return Media.objects.filter(is_published=False)
@@ -645,13 +653,13 @@ class MediaPendingView(ListView):
 class MediaViewEmbed(DetailView):
 
     model = Media
-    template_name='teleforma/course_media_video_embed.html'
+    template_name = 'teleforma/course_media_video_embed.html'
 
 
 class DocumentView(CourseAccessMixin, DetailView):
 
     model = Document
-    template_name='teleforma/course_document.html'
+    template_name = 'teleforma/course_document.html'
 
     def get_context_data(self, **kwargs):
         context = super(DocumentView, self).get_context_data(**kwargs)
@@ -678,9 +686,9 @@ class DocumentView(CourseAccessMixin, DetailView):
             #mimetype = mimetypes.guess_type(document.file.path)[0]
             #extension = mimetypes.guess_extension(mimetype)
             #response = HttpResponse(fsock, mimetype=mimetype)
-            #response['Content-Disposition'] = "attachment; filename=%s%s" % \
+            # response['Content-Disposition'] = "attachment; filename=%s%s" % \
             #                                 (document.title.encode('utf8'), extension)
-            #return response
+            # return response
         else:
             return redirect('teleforma-home')
 
@@ -693,7 +701,7 @@ class DocumentView(CourseAccessMixin, DetailView):
             #mimetype = mimetypes.guess_type(document.file.path)[0]
             #extension = mimetypes.guess_extension(mimetype)
             #response = HttpResponse(fsock, mimetype=mimetype)
-            #return response
+            # return response
         else:
             return redirect('teleforma-home')
 
@@ -701,7 +709,7 @@ class DocumentView(CourseAccessMixin, DetailView):
 class ConferenceView(CourseAccessMixin, DetailView):
 
     model = Conference
-    template_name='teleforma/course_conference.html'
+    template_name = 'teleforma/course_conference.html'
 
     def get_context_data(self, **kwargs):
         context = super(ConferenceView, self).get_context_data(**kwargs)
@@ -709,7 +717,8 @@ class ConferenceView(CourseAccessMixin, DetailView):
         context['course'] = conference.course
         context['type'] = conference.course_type
         # context['notes'] = conference.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
+        content_type = ContentType.objects.get(
+            app_label="teleforma", model="course")
 
         room_name = conference.course.code
         if conference.web_class_group:
@@ -765,14 +774,16 @@ class ConferenceListView(View):
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_conference_list()
             for conf_dict in remote_list['result']:
-                conference = Conference.objects.filter(public_id=conf_dict['id'])
+                conference = Conference.objects.filter(
+                    public_id=conf_dict['id'])
                 if not conference:
                     conference = Conference()
                     conference.from_json_dict(conf_dict)
 
     def push(request, organization_name, department_name):
-        organization = organization.objects.get(name=organization_name)
-        department = Department.objects.get(name=department_name, organization=organization)
+        organization = Organization.objects.get(name=organization_name)
+        department = Department.objects.get(
+            name=department_name, organization=organization)
         url = 'http://' + department.domain + '/json/'
         s = ServiceProxy(url)
         remote_list = s.teleforma.get_conference_list()['result']
@@ -783,138 +794,145 @@ class ConferenceListView(View):
 
 
 def live_message(conference):
-        from jqchat.models import Message
-        user, c = User.objects.get_or_create(username='bot')
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        room = get_room(name=conference.course.code, period=conference.period.name,
-                           content_type=content_type,
-                           id=conference.course.id)
-        text = _("A new live conference has started : ")
-        text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
-                       kwargs={'period_id': conference.period.id, 'pk': conference.id})
-        message = Message.objects.create_message(user, room, text)
+    from jqchat.models import Message
+    user, c = User.objects.get_or_create(username='bot')
+    content_type = ContentType.objects.get(
+        app_label="teleforma", model="course")
+    room = get_room(name=conference.course.code, period=conference.period.name,
+                    content_type=content_type,
+                    id=conference.course.id)
+    text = _("A new live conference has started : ")
+    text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
+                                                               kwargs={'period_id': conference.period.id, 'pk': conference.id})
+    message = Message.objects.create_message(user, room, text)
 
 
-class ConferenceRecordView(FormView):
-    "Conference record form : TeleCaster module required"
+# class ConferenceRecordView(FormView):
+#     "Conference record form : TeleCaster module required"
 
-    model = Conference
-    form_class = ConferenceForm
-    template_name='teleforma/course_conference_record.html'
-    hidden_fields = ['started', 'date_begin', 'date_end', 'public_id', 'readers']
+#     model = Conference
+#     form_class = ConferenceForm
+#     template_name = 'teleforma/course_conference_record.html'
+#     hidden_fields = ['started', 'date_begin',
+#                      'date_end', 'public_id', 'readers']
 
-    def get_context_data(self, **kwargs):
-        context = super(ConferenceRecordView, self).get_context_data(**kwargs)
-        context['mime_type'] = 'video/webm'
-        status = Status()
-        status.update()
-        context['hidden_fields'] = self.hidden_fields
-        context['room'] = get_room(name='monitor')
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
+#         context['mime_type'] = 'video/webm'
+#         status = Status()
+#         status.update()
+#         context['hidden_fields'] = self.hidden_fields
+#         context['room'] = get_room(name='monitor')
+#         return context
 
-    def get_success_url(self):
-        return reverse('teleforma-conference-detail', kwargs={'period_id': self.conference.period.id,
-                                                              'pk':self.conference.id})
+#     def get_success_url(self):
+#         return reverse('teleforma-conference-detail', kwargs={'period_id': self.conference.period.id,
+#                                                               'pk': self.conference.id})
 
-    def form_valid(self, form):
-        form.save()
-        uuid = get_random_hash()
-        conference = form.instance
-        conference.date_begin = datetime.datetime.now()
-        conference.public_id = uuid
-        conference.save()
-        self.conference = conference
-        status = Status()
-        status.get_hosts()
+#     def form_valid(self, form):
+#         form.save()
+#         uuid = get_random_hash()
+#         conference = form.instance
+#         conference.date_begin = datetime.datetime.now()
+#         conference.public_id = uuid
+#         conference.save()
+#         self.conference = conference
+#         status = Status()
+#         status.get_hosts()
 
-        stations = settings.TELECASTER_CONF
-        for station in stations:
-            type = station['type']
-            conf = station['conf']
-            port = station['port']
-            server_type = station['server_type']
-            server, c = StreamingServer.objects.get_or_create(host=status.ip, port=port, type=server_type)
-            station = Station(conference=conference, public_id=uuid)
-            station.setup(conf)
-            try:
-                station.start()
-            except:
-                continue
-            station.save()
-            stream = LiveStream(conference=conference, server=server,
-                            stream_type=type, streaming=True)
-            stream.save()
-            if server_type == 'stream-m':
-                try:
-                    self.snapshot('http://localhost:8080/snapshot/monitor', station.output_dir)
-                except:
-                    pass
+#         stations = settings.TELECASTER_CONF
+#         for station in stations:
+#             type = station['type']
+#             conf = station['conf']
+#             port = station['port']
+#             server_type = station['server_type']
+#             server, c = StreamingServer.objects.get_or_create(
+#                 host=status.ip, port=port, type=server_type)
+#             station = Station(conference=conference, public_id=uuid)
+#             station.setup(conf)
+#             try:
+#                 station.start()
+#             except:
+#                 continue
+#             station.save()
+#             stream = LiveStream(conference=conference, server=server,
+#                                 stream_type=type, streaming=True)
+#             stream.save()
+#             if server_type == 'stream-m':
+#                 try:
+#                     self.snapshot(
+#                         'http://localhost:8080/snapshot/monitor', station.output_dir)
+#                 except:
+#                     pass
 
-        try:
-            live_message(self.conference)
-        except:
-            pass
+#         try:
+#             live_message(self.conference)
+#         except:
+#             pass
 
-        try:
-            self.push()
-        except:
-            pass
+#         try:
+#             self.push()
+#         except:
+#             pass
 
-        return super(ConferenceRecordView, self).form_valid(form)
+#         return super(ConferenceRecordView, self).form_valid(form)
 
-    def snapshot(self, url, dir):
-        width = 160
-        height = 90
-        img = urllib.urlopen(url)
-        path = dir + os.sep + 'preview.webp'
-        f = open(path, 'w')
-        f.write(img.read())
-        f.close()
-        command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
-        os.system(command)
+#     def snapshot(self, url, dir):
+#         width = 160
+#         height = 90
+#         img = urllib.urlopen(url)
+#         path = dir + os.sep + 'preview.webp'
+#         f = open(path, 'w')
+#         f.write(img.read())
+#         f.close()
+#         command = 'dwebp ' + path + ' -o ' + dir + os.sep + 'preview.png &'
+#         os.system(command)
 
-    @method_decorator(access_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
+#     @method_decorator(access_required)
+#     def dispatch(self, *args, **kwargs):
+#         return super(ConferenceRecordView, self).dispatch(*args, **kwargs)
 
-    @jsonrpc_method('teleforma.create_conference')
-    def create(request, conf_dict):
-        if isinstance(conf_dict, dict):
-            conferences = Conference.objects.filter(public_id=conf_dict['id'])
-            if not conferences:
-                conference = Conference()
-                conference.from_json_dict(conf_dict)
-                conference.save()
+#     @jsonrpc_method('teleforma.create_conference')
+#     def create(request, conf_dict):
+#         if isinstance(conf_dict, dict):
+#             conferences = Conference.objects.filter(public_id=conf_dict['id'])
+#             if not conferences:
+#                 conference = Conference()
+#                 conference.from_json_dict(conf_dict)
+#                 conference.save()
 
-                if conference.streaming:
-                    for stream in conf_dict['streams']:
-                        host = getattr(settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
-                        server_type = stream['server_type']
-                        stream_type = stream['stream_type']
-                        if server_type == 'icecast':
-                            port = getattr(settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", stream['port'])
-                        elif server_type == 'stream-m':
-                            port = getattr(settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", stream['port'])
-                        #site = Site.objects.all()[0]
-                        server, c = StreamingServer.objects.get_or_create(host=host,
-                                                                        port=port,
-                                                                        type=server_type)
-                        stream = LiveStream(conference=conference, server=server,
-                                            stream_type=stream_type, streaming=True)
-                        stream.save()
+#                 if conference.streaming:
+#                     for stream in conf_dict['streams']:
+#                         host = getattr(
+#                             settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+#                         server_type = stream['server_type']
+#                         stream_type = stream['stream_type']
+#                         if server_type == 'icecast':
+#                             port = getattr(
+#                                 settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", stream['port'])
+#                         elif server_type == 'stream-m':
+#                             port = getattr(
+#                                 settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", stream['port'])
+#                         #site = Site.objects.all()[0]
+#                         server, c = StreamingServer.objects.get_or_create(host=host,
+#                                                                           port=port,
+#                                                                           type=server_type)
+#                         stream = LiveStream(conference=conference, server=server,
+#                                             stream_type=stream_type, streaming=True)
+#                         stream.save()
 
-                    if not conference.web_class_group:
-                        try:
-                            live_message(conference)
-                        except:
-                            pass
-        else:
-            raise 'Error : input must be a conference dictionnary'
+#                     if not conference.web_class_group:
+#                         try:
+#                             live_message(conference)
+#                         except:
+#                             pass
+#         else:
+#             raise 'Error : input must be a conference dictionnary'
 
-    def push(self):
-        url = 'http://' + self.conference.department.domain + '/json/'
-        s = ServiceProxy(url)
-        s.teleforma.create_conference(self.conference.to_json_dict())
+#     def push(self):
+#         url = 'http://' + self.conference.department.domain + '/json/'
+#         s = ServiceProxy(url)
+#         s.teleforma.create_conference(self.conference.to_json_dict())
 
 
 class ProfessorListView(View):
@@ -933,7 +951,8 @@ class ProfessorListView(View):
 
         remote_list = s.teleforma.get_professor_list()
         for professor_dict in remote_list['result']:
-            user, c = User.objects.get_or_create(username=professor_dict['username'])
+            user, c = User.objects.get_or_create(
+                username=professor_dict['username'])
             user.first_name = professor_dict['first_name']
             user.last_name = professor_dict['last_name']
             user.email = professor_dict['email']
@@ -964,17 +983,18 @@ class WebClassGroupView(View):
 
         remote_list = s.teleforma.get_class_group_list()
         for class_group_dict in remote_list['result']:
-            class_group, c = WebClassGroup.objects.get_or_create(name=class_group_dict['name'])
+            class_group, c = WebClassGroup.objects.get_or_create(
+                name=class_group_dict['name'])
 
 
 class HelpView(TemplateView):
 
-    template_name='teleforma/help.html'
+    template_name = 'teleforma/help.html'
 
     def get_context_data(self, **kwargs):
         context = super(HelpView, self).get_context_data(**kwargs)
-        context['page_content'] = pages.get_page_content(self.request, 'help',
-                                                         ignore_slash_issue=True)
+        context['page_content'] = get_page_content(self.request, 'help',
+                                                   ignore_slash_issue=True)
         return context
 
     def dispatch(self, *args, **kwargs):

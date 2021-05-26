@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-from teleforma.admin import *
-from teleforma.exam.models import *
+from ..exam.models import Quota, Script, ScriptPage, ScriptType
 from django.contrib import admin
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin
 from django.template.defaultfilters import filesizeformat
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import template
-from teleforma.models.crfpa import Period
+from ..models.core import Period
 
 register = template.Library()
 

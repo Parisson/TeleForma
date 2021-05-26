@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Django settings for sandbox project.
 
+from django.utils.encoding import force_text
+import warnings
 import os
 import sys
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 # import environ
 
 sys.dont_write_bytecode = True
@@ -11,26 +13,34 @@ sys.dont_write_bytecode = True
 DEBUG = True if os.environ.get('DEBUG') == 'True' else False
 TEMPLATE_DEBUG = DEBUG
 
-import warnings
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 warnings.showwarning = lambda *x: None
 
 ADMINS = (
     ('Guillaume Pellerin', 'webmaster@parisson.com'),
     ('Gael le Mignot', 'gael@pilotsystems.net'),
-#    ('Admin CRFPA', 'admin-crfpa@pre-barreau.com'),
+    #    ('Admin CRFPA', 'admin-crfpa@pre-barreau.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.environ.get('MYSQL_DATABASE'),                      # Or path to database file if using sqlite3.
-        'USER': os.environ.get('MYSQL_USER'),                      # Not used with sqlite3.
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),                  # Not used with sqlite3.
-        'HOST': 'db',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-        'OPTIONS'  : { 'init_command' : 'SET storage_engine=InnoDB', },
+        # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql',
+        # Or path to database file if using sqlite3.
+        'NAME': os.environ.get('MYSQL_DATABASE'),
+        # Not used with sqlite3.
+        'USER': os.environ.get('MYSQL_USER'),
+        # Not used with sqlite3.
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': 'db',
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': '',
+        'OPTIONS': {'init_command': 'SET storage_engine=InnoDB', },
     }
 }
 
@@ -46,8 +56,9 @@ TIME_ZONE = 'Europe/Paris'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'fr'
-LANGUAGES = [ ('fr', 'French'),
-              ('en', 'English'),
+LANGUAGES = [
+    ('fr', 'French'),
+    ('en', 'English'),
 ]
 
 SITE_ID = 1
@@ -92,7 +103,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -107,7 +118,7 @@ TEMPLATE_LOADERS = (
 )
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -121,15 +132,8 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-# TEMPLATE_DIRS = (
-# #     Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-# #     Always use forward slashes, even on Windows.
-# #     Don't forget to use absolute paths, not relative paths.
-#    '/srv/src/teleforma/teleforma/templates/',
-# )
 
 INSTALLED_APPS = (
-    'suit',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -137,31 +141,29 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'south',
+    # 'south',
     'teleforma',
     'teleforma.webclass',
     'teleforma.exam',
     'jsonrpc',
     'sorl.thumbnail',
-    'django_extensions',
-    'pagination',
+    # 'django_extensions',
+    # 'pagination',
     'postman',
-    'timezones',
-    'jqchat',
-    'googletools',
-    'extra_views',
+    # 'timezones',
+    # 'googletools',
+    # 'extra_views',
     'captcha',
     'django_nvd3',
-    'bootstrap3',
-    'bootstrap_pagination',
-    'django_user_agents',
+    # 'bootstrap3',
+    # 'bootstrap_pagination',
+    # 'django_user_agents',
     'tinymce',
-    'multichoice',
-    'true_false',
-    'essay',
-    'quiz',
+    # 'multichoice',
+    # 'true_false',
+    # 'essay',
+    # 'quiz',
     'pdfannotator',
-    'captcha',
     # 'telemeta',
 )
 
@@ -176,26 +178,23 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'teleforma.context_processors.periods',
 )
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
-# BASE_DIR = os.path.dirname(__file__)
-
-# TEMPLATES = [
-# {
-#     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-#     'DIRS': [
-#         os.path.join(BASE_DIR, 'templates')
-#     ],
-#     'APP_DIRS': True,
-#     'OPTIONS': {
-#         'context_processors': [
-#            'django.template.context_processors.debug',
-#            'django.template.context_processors.request',
-#            'django.contrib.auth.context_processors.auth',
-#            'django.contrib.messages.context_processors.messages',
-#         ],
-#     },
-# },]
-
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
 TELEMETA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
@@ -220,9 +219,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
 SERVER_EMAIL = 'crfpa@pre-barreau.com'
-EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
+EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
 
-POSTMAN_AUTO_MODERATE_AS=True
+POSTMAN_AUTO_MODERATE_AS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
@@ -245,10 +244,6 @@ TELECASTER_LIVE_STREAMING_PORT = 443
 TELECASTER_LIVE_ICECAST_STREAMING_PORT = 8000
 TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8080
 
-JQCHAT_DISPLAY_COUNT = 100
-JQCHAT_DISPLAY_TIME = 72
-JQCHAT_DATE_FORMAT = "D-H:i"
-
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
 ]
@@ -261,21 +256,17 @@ FILE_UPLOAD_TEMP_DIR = '/tmp'
 SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 
-SOUTH_MIGRATION_MODULES = {
-    'captcha': 'captcha.south_migrations',
-}
-
-SUIT_CONFIG = {
-    'ADMIN_NAME': 'TeleForma Admin',
-}
+# SOUTH_MIGRATION_MODULES = {
+#     'captcha': 'captcha.south_migrations',
+# }
 
 # Cache backend is optional, but recommended to speed up user agent parsing
-#CACHES = {
+# CACHES = {
 #    'default': {
 #        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
 #        'LOCATION': '127.0.0.1:11211',
 #    }
-#}
+# }
 
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.
@@ -291,13 +282,13 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 # Sherlock's online payment
-PAYMENT_SHERLOCKS_PATH='/opt/sherlocks2'
-PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "040109417200053",
+PAYMENT_SHERLOCKS_PATH = '/opt/sherlocks2'
+PAYMENT_PARAMETERS = {'merchant_id': {'Semestrielle': "040109417200053",
                                       'Estivale': "040109417200054", },
-                    'merchant_country': 'fr',
-                    'currency_code': '978',
-                    'language': 'fr'
-}
+                      'merchant_country': 'fr',
+                      'currency_code': '978',
+                      'language': 'fr'
+                      }
 
 LOGGING = {
     'version': 1,
@@ -328,7 +319,6 @@ LOGGING = {
 }
 
 
-from django.utils.encoding import force_text
 def show_user_as(user):
     professor = user.professor.all()
     is_corrector = False
@@ -336,9 +326,8 @@ def show_user_as(user):
         return "#"+str(user.id)
     else:
         return force_text(user)
+
+
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
-
-JQCHAT_DISPLAY_COUNT = 50
-JQCHAT_DISPLAY_TIME  = 48
