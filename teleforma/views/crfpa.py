@@ -679,9 +679,9 @@ class AnnalsView(ListView):
             self.student = students[0]
             docs = Document.objects.filter(is_annal=True).filter(Q(iej=self.student.iej) | Q(iej=None)).order_by('-annal_year')
         if iej:
-            docs = docs.filter(iej=iej)
+            docs = docs.filter(iej=iej[0])
         if course:
-            docs = docs.filter(course=course)
+            docs = docs.filter(course=course[0])
 
         for doc in docs:
             if doc.course in courses:
