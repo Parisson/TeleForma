@@ -63,10 +63,9 @@ from ..forms import (CorrectorForm, NewsItemForm, UserForm, WriteForm,
                      get_unique_username)
 from ..models.core import Course, CourseType, Document, NamePaginator, Period
 from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
-                            Payment, Profile, Student, Training)
+                            Payment, Profile, Student, Training, months_choices, payment_choices)
 from ..views.core import (PDFTemplateResponseMixin, format_courses,
-                          get_courses, get_periods, months_choices,
-                          payment_choices)
+                          get_courses, get_periods)
 from ..views.profile import ProfileView
 
 ORAL_OPTION_PRICE = 250
@@ -577,7 +576,7 @@ class UsersExportView(UsersView):
         super(UsersExportView, self).get(*args, **kwargs)
         book = UserXLSBook(users = self.users)
         book.write()
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response = HttpResponse(content_type="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         book.book.save(response)
         return response

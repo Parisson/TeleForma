@@ -156,7 +156,7 @@ class StudentAdmin(admin.ModelAdmin):
     def export_xls(self, request, queryset):
         book = UserXLSBook(students=queryset)
         book.write()
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response = HttpResponse(content_type="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         book.book.save(response)
         return response
@@ -184,7 +184,7 @@ class CorrectorAdmin(admin.ModelAdmin):
     def export_xls(self, request, queryset):
         book = CorrectorXLSBook(correctors=queryset)
         book.write()
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response = HttpResponse(content_type="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=correcteurs.xls'
         book.book.save(response)
         return response

@@ -2,19 +2,26 @@
 
 import datetime
 import logging
+import os
 import pprint
 import subprocess
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.template.context import RequestContext
 from django.template.loader import render_to_string
+from django.urls.base import reverse
+from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.detail import DetailView
 
 from ..models.crfpa import Payment
-from ..views.core import *
 
 log = logging.getLogger('payment')
 
@@ -167,7 +174,7 @@ def bank_success(request, merchant_id):
         order_id = res[24]
         payment = Payment.objects.get(pk=order_id)
         if payment.type == 'online' and payment.online_paid and (payment.student.user_id == request.user.pk or request.user.is_superuser):
-            return render_to_response('payment/payment_validate.html',
+            return render(request, 'payment/payment_validate.html',
                                       {'payment': payment, },
                                       context_instance=RequestContext(request))
     return HttpResponseRedirect('/echec-de-paiement')
@@ -185,4 +192,4 @@ def bank_fail(request):
     """
     Display message when a payment failed
     """
-    return render_to_response('payment/payment_fail.html')
+    return render(request, 'payment/payment_fail.html')

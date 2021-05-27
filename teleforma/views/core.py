@@ -35,6 +35,7 @@
 
 import datetime
 import mimetypes
+import os
 from html import escape
 from io import StringIO
 
@@ -43,31 +44,34 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
-from django.shortcuts import redirect, render as django_render
+from django.shortcuts import redirect
 from django.template import Context, RequestContext, loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import *
-from django.views.generic.base import *
-from django.views.generic.edit import FormView
+from django.views.generic.base import TemplateResponseMixin, TemplateView, View
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
-from teleforma.decorators import access_required
+from teleforma.models.crfpa import Home
 from xhtml2pdf import pisa
 
-from ..forms import *
-from ..models import *
-from ..models.appointment import AppointmentPeriod
+from ..decorators import access_required
+from ..models.appointment import Appointment, AppointmentPeriod
+from ..models.core import (Conference, Course, CourseType, Department,
+                           Document, DocumentType, Media, MediaTranscoded,
+                           Organization, Period, Professor, WebClassGroup,
+                           get_user_role)
 from ..webclass.models import Webclass, WebclassRecord
 from .pages import get_page_content
 
-
-def render(request, template, data=None, mimetype=None):
-    return django_render(template, data, context_instance=RequestContext(request),
-                         mimetype=mimetype)
+# def render(request, template, data=None, mimetype=None):
+#     return django_render(template, data, context_instance=RequestContext(request),
+#                          mimetype=mimetype)
 
 
 def format_courses(courses, course=None, queryset=None, types=None):
