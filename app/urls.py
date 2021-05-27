@@ -29,4 +29,5 @@ urlpatterns = [
     #url(r'^pdfviewer/', include('webviewer.urls')),
     url(r'^pdfannotator/', include('pdfannotator.urls')),
     url(r'^captcha/', include('captcha.urls')),
+    url(r'^messages/', include('postman.urls', namespace='postman')),
 ]

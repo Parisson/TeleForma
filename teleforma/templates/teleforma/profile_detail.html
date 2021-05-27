@@ -33,7 +33,7 @@
 
   {% if user.is_authenticated and user.username != usr.username %}
    <div class="module_action">
-    <a href="{% url 'postman_write' usr.username %}" class="component_icon button" id="action_orange">{% trans "Send a message" %}</a>
+    <a href="{% url 'postman:write' usr.username %}" class="component_icon button" id="action_orange">{% trans "Send a message" %}</a>
    </div>
   {%  endif %}
  </div>
