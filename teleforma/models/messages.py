@@ -47,7 +47,7 @@ class GroupedMessage(models.Model):
         verbose_name = _('Grouped message')
 
     def __str__(self):
-        return self.group.name + ' ' + self.subject
+        return self.group and self.group.name + ' ' + self.subject or self.subject
 
     def save(self, *args, **kwargs):
         if self.to_send:
