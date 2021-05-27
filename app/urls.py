@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^robots\.txt$', lambda r: HttpResponse(
         "User-agent: *\nDisallow: /", mimetype="text/plain")),
 
+    url(r'^tinymce/', include('tinymce.urls')),
     #url(r'^pdfviewer/', include('webviewer.urls')),
     url(r'^pdfannotator/', include('pdfannotator.urls')),
     url(r'^captcha/', include('captcha.urls')),
