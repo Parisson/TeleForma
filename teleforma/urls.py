@@ -77,7 +77,7 @@ urlpatterns = [
                # login / logout
                url(r'^login/$', LoginView.as_view(template_name='teleforma/login.html'),
                    name="telemeta-login"),
-               url(r'^accounts/login/$', LoginView.as_view(template_name='registration/login.html'),
+               url(r'^accounts/login/$', LoginView.as_view(template_name='teleforma/login.html'),
                    name="teleforma-login"),
                url(r'^logout/$', LogoutView.as_view(),
                    name="teleforma-logout"),
