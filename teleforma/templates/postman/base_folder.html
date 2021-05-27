@@ -47,13 +47,13 @@
   <tr>
    <td><input type="checkbox" {% if by_conversation and message.thread_id %}name="tpks" value="{{ message.thread_id }}"{% else %}name="pks" value="{{ message.pk }}"{% endif %} /></td>
 
-   {% block pm_sender_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}" title="{% get_training_profile message.sender %}">{% if message.is_new %}<strong>{% endif %}{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}{% if message.is_new %}</strong>{% endif %}</a></td>{% endblock %}
+   {% block pm_sender_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url 'postman:view_conversation' message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}" title="{% get_training_profile message.sender %}">{% if message.is_new %}<strong>{% endif %}{{ message.obfuscated_sender|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}{% if message.is_new %}</strong>{% endif %}</a></td>{% endblock %}
 
-   {% block pm_recipient_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}" title="{% get_training_profile message.recipient %}">{{ message.obfuscated_recipient|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</a></td>{% endblock %}
+   {% block pm_recipient_cell %}<td><a href="{% if by_conversation and message.thread_id %}{% url 'postman:view_conversation' message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}" title="{% get_training_profile message.recipient %}">{{ message.obfuscated_recipient|or_me:user }}{% if message.count %} ({{ message.count }}){% endif %}</a></td>{% endblock %}
 
    <td>{% if message.is_new %}<strong>{% endif %}{% if message.is_replied %}<em>{% endif %}
    {% block pm_subject %}
-    <a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}">
+    <a href="{% if by_conversation and message.thread_id %}{% url 'postman:view_conversation' message.thread_id %}{% else %}{{message.get_absolute_url }}{% endif %}?next={{ current_url|urlencode }}">
     {% include "postman/inc_subject_ex.html" %}
     </a>{% endblock %}
    {% if message.is_replied %}</em>{% endif %}{% if message.is_new %}</strong>{% endif %}</td>
@@ -66,13 +66,13 @@
 <br />
 {% block pm_form_buttons %}<span id="pm_buttons">
 {% block pm_delete_button %}
-<a href="#" class="component_icon button icon_delete" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_delete %}'; f.submit(); return false;">{% trans "Delete" %}</a>
+<a href="#" class="component_icon button icon_delete" onclick="f=document.getElementById('_messageForm'); f.action='{% url 'postman:delete' %}'; f.submit(); return false;">{% trans "Delete" %}</a>
 {% endblock %}
 {% block pm_archive_button %}
-<a href="#" class="component_icon button icon_save" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_archive %}'; f.submit(); return false;">{% trans "Archive" %}</a>
+<a href="#" class="component_icon button icon_save" onclick="f=document.getElementById('_messageForm'); f.action='{% url 'postman:archive' %}'; f.submit(); return false;">{% trans "Archive" %}</a>
 {% endblock %}
 {% block pm_undelete_button %}
-<a href="#" class="component_icon button icon_previous" onclick="f=document.getElementById('_messageForm'); f.action='{% url postman_undelete %}'; f.submit(); return false;">{% trans "Undelete" %}</a>
+<a href="#" class="component_icon button icon_previous" onclick="f=document.getElementById('_messageForm'); f.action='{% url 'postman:undelete' %}'; f.submit(); return false;">{% trans "Undelete" %}</a>
 {% endblock %}
 </span>{% endblock %}
 
