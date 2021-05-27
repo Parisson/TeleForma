@@ -33,7 +33,7 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-from teleforma.views.core import *
+from teleforma.views.core import get_periods
 
 
 def periods(request):

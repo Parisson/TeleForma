@@ -168,16 +168,6 @@ INSTALLED_APPS = (
     # 'telemeta',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    "django.contrib.messages.context_processors.messages",
-    'postman.context_processors.inbox',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'teleforma.context_processors.periods',
-)
 
 TEMPLATES = [
     {
@@ -190,6 +180,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'postman.context_processors.inbox',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'teleforma.context_processors.periods',
+
             ],
         },
     },
