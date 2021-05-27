@@ -1,3 +1,4 @@
+from teleforma.utils import guess_mimetypes
 from django.conf import settings
 import re
 import os
@@ -31,7 +32,7 @@ class PageAttachment(object):
         self.path = path
 
     def mimetype(self):
-        type, encoding = mimetypes.guess_type(self.filename)
+        type = guess_mimetypes(self.filename)
         return type
 
     def __iter__(self):

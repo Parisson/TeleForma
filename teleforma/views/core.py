@@ -38,6 +38,7 @@ import mimetypes
 import os
 from html import escape
 from io import StringIO
+from teleforma.utils import guess_mimetypes
 
 from django.conf import settings
 from django.contrib import messages
@@ -228,7 +229,7 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 
 def serve_media(media_path, content_type="", buffering=True, streaming=False):
     if not content_type:
-        content_type = mimetypes.guess_type(media_path)[0]
+        content_type = guess_mimetypes(media_path)
 
     if not settings.DEBUG:
         return nginx_media_accel(media_path, content_type=content_type,
@@ -685,13 +686,6 @@ class DocumentView(CourseAccessMixin, DetailView):
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             return serve_media(document.file.path.encode('utf8'), streaming=False)
-            #fsock = open(document.file.path.encode('utf8'), 'r')
-            #mimetype = mimetypes.guess_type(document.file.path)[0]
-            #extension = mimetypes.guess_extension(mimetype)
-            #response = HttpResponse(fsock, mimetype=mimetype)
-            # response['Content-Disposition'] = "attachment; filename=%s%s" % \
-            #                                 (document.title.encode('utf8'), extension)
-            # return response
         else:
             return redirect('teleforma-home')
 
@@ -700,11 +694,6 @@ class DocumentView(CourseAccessMixin, DetailView):
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             return serve_media(document.file.path.encode('utf8'), streaming=True)
-            #fsock = open(document.file.path.encode('utf8'), 'r')
-            #mimetype = mimetypes.guess_type(document.file.path)[0]
-            #extension = mimetypes.guess_extension(mimetype)
-            #response = HttpResponse(fsock, mimetype=mimetype)
-            # return response
         else:
             return redirect('teleforma-home')
 
