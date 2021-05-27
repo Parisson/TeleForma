@@ -149,7 +149,7 @@ alt="logo" />
 
  {% if user.is_authenticated %}
   {% if user.is_superuser %}
-  <li><a href="/admin/django/" target="_blank" class="blue">{% trans "Admin" %}</a></li>
+  <li><a href="/admin/" target="_blank" class="blue">{% trans "Admin" %}</a></li>
   {% else %}
    <li><a href="{% url 'teleforma-help' %}" class="blue">{% trans "Help" %}</a></li>
  {% endif %}

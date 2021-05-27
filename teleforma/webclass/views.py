@@ -158,7 +158,7 @@ class WebclassRecordView(TemplateView):
 class WebclassRecordsFormView(FormView):
     template_name = 'webclass/records_form.html'
     form_class = WebclassRecordsForm
-    success_url = '/admin/django/webclass/webclassrecord'
+    success_url = '/admin/webclass/webclassrecord'
 
     def get_form_kwargs(self):
         kwargs = super(WebclassRecordsFormView, self).get_form_kwargs()

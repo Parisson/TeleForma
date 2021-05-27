@@ -394,7 +394,7 @@ class Conference(models.Model):
 
     @property
     def description(self):
-        return self.__unicode__()
+        return str(self)
 
     @property
     def slug(self):
@@ -773,7 +773,7 @@ class MediaTranscoded(models.Model):
         if self.item.title:
             return self.item.title + ' - ' + self.mime_type
         else:
-            return self.item.public_id + ' - ' + self.mime_type
+            return str(self.item.id) + ' - ' + self.mime_type
 
     class Meta(MetaCore):
         db_table = app_label + '_media_transcoded'

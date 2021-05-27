@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
-from ..exam.models import Quota, Script, ScriptPage, ScriptType
+import os
+
 from django.contrib import admin
 from django.template.defaultfilters import filesizeformat
+
+from ..exam.models import Quota, Script, ScriptPage, ScriptType
 
 
 class QuotaAdmin(admin.ModelAdmin):
