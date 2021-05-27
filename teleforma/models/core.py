@@ -38,6 +38,7 @@ import datetime
 import mimetypes
 import os
 import string
+from teleforma.utils import guess_mimetypes
 
 import django.db.models as models
 from django.conf import settings
@@ -693,7 +694,7 @@ class Document(MediaBase):
         return 'image' in self.mime_type or is_url_image
 
     def set_mime_type(self):
-        self.mime_type = mimetypes.guess_type(self.file.path)[0]
+        self.mime_type = guess_mimetypes(self.file.path)
 
     def __str__(self):
         types = ' - '.join([str(t) for t in self.course_type.all()])
@@ -731,7 +732,7 @@ class DocumentSimple(MediaBase):
         return 'image' in self.mime_type or is_url_image
 
     def set_mime_type(self):
-        self.mime_type = mimetypes.guess_type(self.file.path)[0]
+        self.mime_type = guess_mimetypes(self.file.path)
 
     def __str__(self):
         return self.title
@@ -764,7 +765,7 @@ class MediaTranscoded(models.Model):
         if not self.mimetype:
             if self.file:
                 if os.path.exists(self.file.path):
-                    self.mimetype = mimetypes.guess_type(self.file.path)[0]
+                    self.mimetype = guess_mimetypes(self.file.path)
                     self.save()
                     return self.mimetype
                 else:
@@ -811,7 +812,7 @@ class Media(MediaBase):
 
     def set_mime_type(self):
         if self.item.file:
-            mime_type = mimetypes.guess_type(self.file.path)[0]
+            mime_type = guess_mimetypes(self.file.path)
             if mime_type == 'audio/mpeg':
                 self.mime_type = 'audio/mp3'
             else:

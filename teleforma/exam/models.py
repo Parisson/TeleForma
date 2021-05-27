@@ -39,6 +39,7 @@ from __future__ import division
 import datetime
 import mimetypes
 import os
+from teleforma.utils import guess_mimetypes
 import urllib
 import uuid
 
@@ -122,11 +123,6 @@ def sha1sum_file(filename):
         for chunk in iter(lambda: f.read(chunk_size), b''):
             sha1.update(chunk)
     return sha1.hexdigest()
-
-
-def mimetype_file(path):
-    return mimetypes.guess_type(path)[0]
-
 
 def check_unique_mimetype(l):
     i = 0
@@ -448,7 +444,7 @@ class Script(BaseResource):
             self.auto_reject('file not found')
             return
 
-        mime_type = mimetype_file(self.file.path)
+        mime_type = guess_mimetypes(self.file.path)
         if mime_type:
             if not 'pdf' in mime_type:
                 self.auto_reject('wrong format')
@@ -503,9 +499,9 @@ def set_file_properties(sender, instance, **kwargs):
     if instance.file:
         trig_save = False
         if not instance.mime_type:
-            mime_type = mimetype_file(instance.file.path)
+            mime_type = guess_mimetypes(instance.file.path)
             if mime_type:
-                instance.mime_type = mimetype_file(instance.file.path)
+                instance.mime_type = guess_mimetypes(instance.file.path)
                 trig_save = True
             # HOTFIX
             else:
