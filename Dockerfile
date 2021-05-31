@@ -44,6 +44,11 @@ ENV LC_ALL fr_FR.UTF-8
 COPY requirements.txt /srv
 RUN pip3 install -r requirements.txt
 
+COPY requirements-dev.txt /srv
+ARG dev=0
+RUN echo "${dev}"
+RUN if [ "${dev}" = "1" ]; then pip3 install -r requirements-dev.txt; fi
+
 COPY lib /srv/lib
 COPY bin/build/local/setup_lib.sh /srv
 RUN /srv/setup_lib.sh
