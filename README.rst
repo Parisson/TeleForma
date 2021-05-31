@@ -21,6 +21,19 @@ keywords: social e-learning, live conferencing, hypermedia private access
 News
 ====
 
+1.0
++++++
+
+ * Add Exam module to have online script correction service (need Box / Crocodoc API token key)
+ *
+
+
+0.9
++++++
+
+ * Add
+
+
 0.8
 +++++
 

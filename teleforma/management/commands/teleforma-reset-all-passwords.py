@@ -29,4 +29,3 @@ class Command(BaseCommand):
         users = User.objects.filter(is_staff=True)
         for user in users:
             self.reset_password_email(user.email)
-

@@ -1,0 +1,98 @@
+{% extends "telemeta/base.html" %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+
+{% block extra_javascript %}
+
+    <script type="text/javascript">
+        var currentForm;
+
+        $(document).ready(function () {
+
+            $("#booking-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                modal: true,
+                buttons: {
+                    'Confirmer': function () {
+                        currentForm.submit();
+                    },
+                    "Annuler": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+
+            $('.booking_form').submit(function () {
+                currentForm = this;
+                // fill dialog with selected date
+                $('#date_placeholder').text($(currentForm).find('.booking_date').text());
+
+                $('#booking-confirm').dialog('open');
+                return false;
+            });
+
+
+        })
+    </script>
+
+{% endblock extra_javascript %}
+
+
+{% block content %}
+
+    <div id="booking-confirm" title="Réservation">
+        <p>
+            Êtes-vous sûr de vouloir réserver ce créneau ? Vous ne pourrez plus modifier votre choix.
+        </p>
+
+        <h2>Créneau horaire</h2>
+        <strong id="date_placeholder"></strong>
+    </div>
+
+
+    <h1>Inscription à la Webclasse "{{webclass.course.title}}"</h1>
+    <br/><br/>
+
+    <table class="webclass-appointment listing" width="100%">
+        <thead>
+            <tr>
+                <th>Horaire</th>
+                <th>Professeur</th>
+                <th>Places restantes</th>
+                <th>Inscription</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for slot in slots %}
+            <tr>
+                <td>
+                <span class="booking_date"><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
+                </td>
+                <td>
+                {{slot.professor}}
+                </td>
+                <td>
+                {{slot.remaining_participant_slot}}
+                </td>
+
+                <td>
+                    <form class="booking_form" method="POST">
+                        <span class="booking_date" style="display:none"><strong>{{slot.get_day_display}}</strong> de <strong>{{slot.start_hour|date:"H\hi"}}</strong> à <strong>{{slot.end_hour|date:"H\hi"}}</strong></span>
+                        {% csrf_token %}
+                        <input type="hidden" name="slot_id" value="{{slot.id}}" />
+                        {% if slot.participant_slot_available %}
+                            <input type="submit" value="Sélectionner" />
+                        {% else %}
+                            <span style="color:red">Complet</span>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        
+
+{% endblock content %}

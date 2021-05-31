@@ -1,0 +1,112 @@
+@page {
+  margin: 1cm;
+  margin-bottom: 2.5cm;
+  @frame footer {
+    -pdf-frame-content: footer;
+    bottom: 0cm;
+    margin-left: 1cm;
+    margin-right: 1cm;
+    height: 2cm;
+    color: #000;
+  }
+}
+
+#receipt{
+    font-family: sans-serif;
+}
+#header{
+   font-weight: bold;
+}
+
+#header h2{
+   margin-bottom: 5px;
+}
+#header p{
+    margin: 5px 0;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+
+#content .address p{
+    margin-left: 55%;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+#content .title{
+    margin-top: 80px;
+    margin-bottom: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    text-align: center;
+    border: 1px solid #000 !important;
+    padding: 5px 0;
+}
+
+#content .dates{
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#content table{
+    margin-top: 30px;
+    width: 100%;
+    line-height: 20px;
+    border-spacing : 0;
+    border-collapse : collapse;
+    table-layout: fixed;
+}
+
+#content table tr th{
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #000;
+}
+
+#content table tr th{
+    width: 10%;
+}
+
+#content table tr th:first-child{
+    width: 60%;
+}
+
+#content table tr td{
+    padding: 15px 5px;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    line-height: 24px;
+    font-size: 14px;
+    font-weight: bold;
+}
+#content table tr td:first-child{
+    font-weight: normal;
+}
+
+#content table tbody tr .discount{
+    color: #873c37;
+}
+#content table tbody tr:last-child th{
+    text-align: left;
+}
+
+#content h1 {
+    color: #000000;
+    font-weight: bold;
+    display:  inline;
+    font-size: 2em;
+}
+
+
+#footer{
+    text-align: center;
+}
+
+.bold {
+    font-weight: bold;
+	vertical-align: top;
+}

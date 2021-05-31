@@ -98,8 +98,8 @@ class Question(Model):
 
 class Answer(Model):
 
-    user        = models.ForeignKey(User, related_name=_("answer"), verbose_name=_('user'))
-    question    = models.ForeignKey(Question, related_name=_("answer"), verbose_name=_('question'))
+    user        = models.ForeignKey(User, related_name="answer", verbose_name=_('user'))
+    question    = models.ForeignKey(Question, related_name="answer", verbose_name=_('question'))
     answer      = models.TextField(_('answer'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
     validated   = models.BooleanField(_('validated'))
@@ -114,7 +114,7 @@ class Answer(Model):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'answer'
-        verbose_name = _('Answer')
+        verbose_name = 'Reponse'
 
 
 class TestimonialTemplate(Model):

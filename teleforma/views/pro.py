@@ -35,14 +35,14 @@
 
 
 from teleforma.views.core import *
-
+from teleforma.decorators import access_required
 
 class SeminarView(DetailView):
 
     model = Seminar
     template_name='teleforma/seminar_detail.html'
 
-    @method_decorator(login_required)
+    @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(SeminarView, self).dispatch(*args, **kwargs)
 

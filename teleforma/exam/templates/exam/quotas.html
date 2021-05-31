@@ -1,0 +1,48 @@
+{% extends "exam/scripts.html" %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+{% block extra_javascript %}
+{% endblock extra_javascript %}
+
+{% block answers %}
+
+<div class="course_title">
+{% trans "Quotas" %}
+</div>
+<br />
+
+<div id="users">
+  <table class="listing" width="100%">
+   <thead>
+   <tr>
+    <th>{% trans "Corrector"%}</th>
+    <th>{% trans "Course"%}</th>
+    <th>{% trans "date start"%}</th>
+    <th>{% trans "date end"%}</th>
+    <th>{% trans "Pending"%}</th>
+    <th>{% trans "Marked"%}</th>
+    <th>{% trans "Value"%}</th>
+    <th>{% trans "Level"%} (%)</th>
+    </tr>
+    </thead>
+    <tbody id="spacing" class="script-list">
+    {% for quota in object_list %}
+    <tr>
+     <td><a href="{% url teleforma-profile-detail quota.corrector.username %}">{{ quota.corrector.username }}</a></td>
+     <td>{{ quota.course.title }}</td>
+     <td>{{ quota.date_start }}</td>
+     <td>{{ quota.date_end }}</td>
+     <td>{{ quota.pending_script_count }}</td>
+     <td>{{ quota.marked_script_count }}</td>
+     <td>{{ quota.value }}</td>
+     <td>{{ quota.level|floatformat }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock answers %}

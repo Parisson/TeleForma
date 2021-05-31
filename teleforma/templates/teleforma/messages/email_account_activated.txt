@@ -1,0 +1,7 @@
+Bonjour {{ student.first_name }},
+
+Suite à votre règlement, nous confirmons votre inscription définitive à la formation du Pré-Barreau. 
+
+Cordialement, 
+
+L'équipe du Pré-Barreau

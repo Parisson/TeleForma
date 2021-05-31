@@ -1,0 +1,118 @@
+{% extends "telemeta/base.html" %}
+{% load i18n %}
+{% load telemeta_utils %}
+{% load teleforma_tags %}
+
+{% block head_title %}{% trans "Answers" %} - {{ block.super }}{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+
+{% block infra_javascript %}
+{% endblock infra_javascript %}
+
+{% block content %}
+
+<div id="module-set-left" style="width: 18%">
+
+{% block modules %}
+<div class="module">
+<h3><a href="{% url teleforma-desk %}"><img src="/static/telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Scripts" %}</a></h3>
+ <div style="background: white;">
+  <ul>
+  {% block courses %}
+   <li><a href="{% url teleforma-exam-scripts-pending period.id %}">{% trans "Pending" %}{% if user.is_staff or user.quotass.all %}{% untreated_scripts_count user period %}{% endif %}</a></li>
+   <li><a href="{% url teleforma-exam-scripts-treated period.id %}">{% trans "Marked" %}{% if not user.is_staff and not user.quotas.all %}{% treated_scripts_count user period %}{% endif %}</a></li>
+   <li><a href="{% url teleforma-exam-scripts-rejected period.id %}">{% trans "Rejected" %}</a></li>
+  {% endblock courses %}
+  </ul>
+ </div>
+</div>
+
+{% block module-action %}
+{% if upload %}
+<div class="module_action">
+<a href="{% url teleforma-exam-script-create period.id %}" class="component_icon button" id="action_green">{% trans "New script" %}</a>
+</div>
+{% endif %}
+{% endblock module-action %}
+
+{% endblock modules %}
+
+</div>
+
+<div class="desk_messages">
+
+{% if user.is_staff %}
+<div style="float:right;">
+</div>
+{% endif %}
+
+{% block answers %}
+<div class="course_title">{{ title }}</div>
+
+{% comment %} {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+          <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %} {% endcomment %}
+<br />
+
+{% if profile > 0 %}
+<form method="GET">
+    {% if profile > 1 %}
+    <label for="corrector_select">{% trans "Corrector"%}</label>
+    <select name="corrector" id="corrector_select">
+       <option value="">---</option>
+       {% for corrector in correctors_list %}
+       <option value="{{corrector.0}}" {% if corrector.0 == corrector_selected %}selected="selected"{% endif %}>{{corrector.1}}</option>
+       {% endfor %}
+    </select>
+    {% endif %}
+    <label for="course_select">{% trans "Course"%}</label>
+    <select name="course" id="course_select">
+       <option value="">---</option>
+       {% for course in courses_list %}
+       <option value="{{course.0}}" {% if course.0 == course_selected %}selected="selected"{% endif %}>{{course.1}}</option>
+       {% endfor %}
+    </select>
+    <label for="session_select">{% trans "Session"%}</label>
+    <select name="session" id="session_select">
+       <option value="">---</option>
+       {% for session in sessions_list %}
+       <option value="{{session.0}}" {% if session.0 == session_selected %}selected="selected"{% endif %}>{{session.1}}</option>
+       {% endfor %}
+    </select>
+    <label for="type_select">{% trans "Type"%}</label>
+    <select name="type" id="type_select">
+       <option value="">---</option>
+       {% for type in types_list %}
+       <option value="{{type.0}}" {% if type.0 == type_selected %}selected="selected"{% endif %}>{{type.1}}</option>
+       {% endfor %}
+    </select>
+    <br />
+    <label for="platform_only_select">{% trans "E-learning uniquement"%}</label>
+    <select name="platform_only" id="platform_only_select">
+       <option value="">---</option>
+       <option value="1" {% if platform_only == '1' %}selected="selected"{% endif %}>Oui</option>
+       <option value="0" {% if platform_only == '0' %}selected="selected"{% endif %}>Non</option>
+    </select>
+    <label for="student_name">Etudiant</label>
+    <input name="student_name" id="student_name" placeholder="nom, mail ou identifiant de l'étudiant" value="{{student_name}}" />
+    <input type="submit" value="Filtrer"/>
+</form>
+{% endif %}
+
+ {% if object_list %}
+  {% include "exam/inc/script_list.html" %}
+ {% else %}
+    <p class="help">{% trans "No scripts" %}</p>
+ {% endif %}
+{% endblock answers %}
+
+</div>
+
+{% endblock %}

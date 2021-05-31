@@ -1,17 +1,23 @@
-
 Recommandations
 ================
 
 Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
 
-Néanmoins, le format des flux vidéo n'est peut-être pas compatible avec tous les navigateurs de vos appareils informatiques. Dans ce cas, nous vous conseillons vivement d'installer et d'utiliser le navigateur ouvert et gratuit `Chrome <https://www.google.com/chrome?hl=fr>`_  avec lequel nous garantissons tous nos accès multimédias, en direct, comme en différé. Aussi `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ pourra lire les vidéos mais pas peut-être pas l'audio selon votre installation. Nous y travaillons. Safari, dans l'immédiat ne vous permet pas de visionner les vidéos.
+Les flux vidéo en direct et en différé utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
 
-En attendant que nous puissions convenir à tous les formats demandés et si vous rencontrez des problèmes à la lecture des médias en streaming, nous vous recommandons alors de télécharger les archives à l'aide du boutton "Télécharger" de la conférence vidéo ou audio, puis de les relire avec le lecteur libre, gratuit et multi-plateforme : `VLC <http://www.videolan.org/vlc/>`_ (VideoLan).
+ * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_ (recommandé, version >=44)
+ * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_
+ * Internet Explorer (version > 9) avec `l'extension WebM <https://tools.google.com/dlpage/webmmf/>`_ (uniquement en différé)
 
-Pour la lecture des fichiers MP3 sur des réseaux à faible débit, en mobilité sur votre iPhone ou Android par exemple, tout lecteur audio basique devrait faire l'affaire après téléchargement de l'archive. Pour les vidéos, un lecteur compatible WebM est nécessaire (MX Player sur Android).
+Les flux audio au format MP3 sont compatibles avec les navigateurs suivants :
 
-|
+ * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_ (recommandé)
+ * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_
+ * Safari
+ * Internet Explorer
+ * Opera
 
+Sur les smartphones et tablettes, nous proposons différentes solutions selon les plateformes :
 
 FAQ
 ====
@@ -40,7 +46,6 @@ J'ai perdu mon mot de passe, que dois-je faire ?
 -------------------------------------------------------------------------------
 
 Vous pouvez à tout moment réinitialiser votre mot de passe personnel depuis l'accueil du site en cliquant sur "mot de passe oublié".
-
 |
 
 Support
