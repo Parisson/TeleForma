@@ -15,19 +15,21 @@ services:
     ports:
       - "8000:8000"
     links:
-      - db
+      - postgres
     env_file:
       - env/debug.env
 
-  db:
-    image: mariadb
+  postgres:
+    image: postgres
     env_file:
       - env/debug.env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
+      - ./var/lib/postgresql:/var/lib/postgresql/data:rw
       - ./bin:/srv/bin
-      - ./var/lib/mysql/:/var/lib/mysql
-      - ./var/log/mysql/:/var/log/mysql
       - ./var/backup/:/srv/backup
+      - /etc/localtime:/etc/localtime:ro
 
   memcached:
       image: memcached:alpine

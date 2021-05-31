@@ -29,20 +29,20 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         # Or path to database file if using sqlite3.
-        'NAME': os.environ.get('MYSQL_DATABASE'),
+        'NAME': os.environ.get('POSTGRES_DATABASE'),
         # Not used with sqlite3.
-        'USER': os.environ.get('MYSQL_USER'),
+        'USER': os.environ.get('POSTGRES_USER'),
         # Not used with sqlite3.
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'db',
+        'HOST': 'postgres',
         # Set to empty string for default. Not used with sqlite3.
         'PORT': '',
-        'OPTIONS': {'init_command': 'SET storage_engine=InnoDB', },
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -336,3 +336,5 @@ def show_user_as(user):
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
+
+ALLOWED_HOSTS = [ 'crfpa.dockdev.pilotsystems.net' ]
