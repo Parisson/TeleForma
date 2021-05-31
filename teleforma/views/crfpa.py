@@ -169,10 +169,11 @@ class UsersView(ListView):
             self.course = Course.objects.get(id=self.kwargs['course_id'])
             u = []
             for user in self.users:
-                user_courses = get_crfpa_courses(user)
-                for course in user_courses:
-                    if course['course'] == self.course:
-                        u.append(user)
+                user_courses = get_courses(user)
+                if user_courses:
+                    for course in user_courses:
+                        if course['course'] == self.course:
+                            u.append(user)
             self.users = u
         else:
             self.course = Course(id=0)
