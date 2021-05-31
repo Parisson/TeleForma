@@ -2,7 +2,10 @@ version: '3'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        dev: 1
     command: /bin/sh /srv/app/bin/app.sh --runserver
     volumes:
       - ./app/:/srv/app
