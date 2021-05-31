@@ -10,7 +10,8 @@ from django.urls import reverse_lazy
 
 sys.dont_write_bytecode = True
 
-DEBUG = True if os.environ.get('DEBUG') == 'True' else False
+DEBUG_ENV = os.environ.get('DEBUG') == 'True'
+DEBUG = DEBUG_ENV
 TEMPLATE_DEBUG = DEBUG
 
 
@@ -117,8 +118,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-
-MIDDLEWARE = (
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_ENV else []) + (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -169,6 +169,9 @@ INSTALLED_APPS = (
 )
 
 
+if DEBUG_ENV:
+    INSTALLED_APPS += ('debug_toolbar',)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -217,6 +220,10 @@ EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
 SERVER_EMAIL = 'crfpa@pre-barreau.com'
 EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
+if DEBUG_ENV:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 
 POSTMAN_AUTO_MODERATE_AS = True
 POSTMAN_DISALLOW_ANONYMOUS = True
@@ -338,3 +345,10 @@ POSTMAN_SHOW_USER_AS = show_user_as
 #THUMBNAIL_FORCE_OVERWRITE = True
 
 ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net']
+
+if DEBUG_ENV:
+    def show_toolbar(request):
+        return True
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+    }

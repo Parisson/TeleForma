@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse
+import os
+
+import debug_toolbar
 from django.conf.urls import include, url
-from django.views.i18n import JavaScriptCatalog
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.http import HttpResponse
+from django.views.i18n import JavaScriptCatalog
+
 admin.autodiscover()
 
 js_info_dict = ['teleforma']
+
+DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 
 urlpatterns = [
     # Example:
@@ -31,4 +37,5 @@ urlpatterns = [
     url(r'^pdfannotator/', include('pdfannotator.urls')),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^messages/', include('postman.urls', namespace='postman')),
-]
+] + ([url(r'^__debug__/', include(debug_toolbar.urls)),] if DEBUG_ENV else [])
+
