@@ -852,12 +852,14 @@ class NamePage(object):
 
 class StudentMixin(Model):
     user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
+    trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
+                                        blank=True, null=True)
     iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                     blank=True, null=True, on_delete=models.SET_NULL)
     restricted = models.BooleanField("Accès restreint", help_text="Cocher cette case lorsque vous voulez que l'étudiant puisse se connecter, mais ne pas avoir accès aux cours.", default=False)
     portrait = models.ImageField(max_length=500, upload_to='portraits/', blank=True, null=True)
     platform_only   = models.BooleanField(_('e-learning platform only'))
-    application_fees = models.BooleanField(_('application fees'), blank=True, default=True)
+    application_fees = models.BooleanField(_('application fees'), blank=True, default=settings.TELEFORMA_E_LEARNING_TYPE != 'AE')
     default_application_fees = 40
     subscription_fees = models.FloatField(_('subscription fees'), help_text='€', blank=True, null=True)
     promo_code = models.CharField(_('promo code'), blank=True, max_length=100)

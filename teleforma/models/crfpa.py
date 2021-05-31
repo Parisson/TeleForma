@@ -138,8 +138,7 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
     class Student(StudentMixin):
         "A student profile"
         
-        trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
-                                        blank=True, null=True)
+        
         # deprecated, replaced by trainings field
         training = models.ForeignKey('Training', related_name='student_training', verbose_name=_('training'),
                                         blank=True, null=True, limit_choices_to={'available': True})
@@ -163,7 +162,6 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
                                             blank=True, null=True)
         period = models.ForeignKey('Period', related_name='student', verbose_name=_('period'),
                                     blank=True, null=True, on_delete=models.SET_NULL)
-
         class Meta(MetaCore):
             db_table = app_label + '_' + 'student'
             verbose_name = _('Student')
@@ -177,6 +175,8 @@ else:
         courses       	= ManyToManyField('Course', related_name="student",
                                             verbose_name=_('courses'),
                                             blank=True, null=True)
+        # to stay in sync with crfpa
+        training = None
 
         class Meta(MetaCore):
             db_table = app_label + '_' + 'ae_student'
