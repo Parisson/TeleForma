@@ -337,4 +337,4 @@ POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
 
-ALLOWED_HOSTS = [ 'crfpa.dockdev.pilotsystems.net' ]
+ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net']
