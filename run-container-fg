@@ -1,0 +1,63 @@
+#!/usr/bin/python3
+
+import yaml
+import os
+import sys
+import shlex
+
+if not os.path.exists('./docker-compose.yml'):
+    print("This script requires a « docker-compose.yml » file in current directory.")
+    sys.exit(1)
+
+if len(sys.argv) < 2 or sys.argv[1].startswith('-'):
+    print("Syntax: %s [service] <...>" % sys.argv[0])
+    print(" Will run the container named « service » from docker compose in foreground.")
+    print(" All extra arguments will be passed to Docker.")
+    sys.exit(1)
+    
+with open('./docker-compose.yml') as f:
+    compose = yaml.load(f)
+
+service_name = sys.argv[1]
+    
+services = compose['services']
+service = services.get(service_name, None)
+if not service:
+    print("Service %s not found." % service_name)
+    sys.exit(1)
+
+command = sys.argv[2:]
+if not command:
+    command = shlex.split(service.get('command', []))
+
+_, compose_name = os.path.split(os.getcwd())
+network = '%s_default' % compose_name
+
+image = service.get('image', None)
+if image is None:
+    image = '%s_%s' % (compose_name, service_name)
+
+cmd_line = [ 'docker', 'run', '-it',
+             '--network', network,
+             ]
+
+ports = service.get('ports', [])
+for port in ports:
+    cmd_line.extend([ '-p', port ])
+
+volumes = service.get('volumes', [])                    
+for volume in volumes:
+    items = volume.split(':')
+    items[0] = os.path.abspath(items[0])
+    volume = ':'.join(items)
+    cmd_line.extend([ '-v', volume ])
+
+env_files = service.get('env_file', [])
+for env_file in env_files:
+    cmd_line.extend([ '--env-file', env_file ])
+    
+cmd_line.append(image)
+cmd_line.extend(command)
+
+print(" ".join(cmd_line))
+os.execvp('docker', cmd_line)
