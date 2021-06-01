@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 {% load i18n %}
-{% load teleforma_tags %}
-{% comment %} {% get_googletools as googletools %}
-{%  if googletools %}
-{% load googletools %} {% endcomment %}
-{% comment %} {% endif %} {% endcomment %}
+{% load teleforma_tags static %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}"
@@ -12,10 +8,6 @@
 
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-  <!--<meta name="Viewport" content="width=device-width" />
-<meta name="Viewport" content="initial-scale=1.0" />
-<meta name="Viewport" content="maximum-scale=1.5" />
-<meta name="Viewport" content="user-scalable=1" />-->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -51,10 +43,80 @@
   <script src="/static/teleforma/js/application.js" type="text/javascript"></script>
 
   {% if user.is_authenticated %}
-  <script type='text/javascript'>var CURRENT_USER_NAME = "{{ user.username }}";</script>
+  <script type='text/javascript'>
+    var CURRENT_USER_NAME = "{{ user.username }}";
+  </script>
   {% else %}
-  <script type='text/javascript'>var CURRENT_USER_NAME = undefined;</script>
+  <script type='text/javascript'>
+    var CURRENT_USER_NAME = undefined;
+  </script>
   {% endif %}
+
+
+  <script type="text/javascript" src="{% static 'teleforma/tarteaucitron/tarteaucitron.js' %}"></script>
+
+  <script type="text/javascript">
+    tarteaucitron.init({
+      "privacyUrl": "/pages/legal_notices",
+      /* Privacy policy url */
+
+      "hashtag": "#tarteaucitron",
+      /* Open the panel with this hashtag */
+      "cookieName": "tarteaucitron",
+      /* Cookie name */
+
+      "orientation": "bottom",
+      /* Banner position (top - bottom) */
+
+      "groupServices": false,
+      /* Group services by category */
+
+      "showAlertSmall": false,
+      /* Show the small banner on bottom right */
+      "cookieslist": false,
+      /* Show the cookie list */
+
+      "closePopup": false,
+      /* Show a close X on the banner */
+
+      "showIcon": false,
+      /* Show cookie icon to manage cookies */
+      //"iconSrc": "", /* Optionnal: URL or base64 encoded image */
+      "iconPosition": "BottomRight",
+      /* BottomRight, BottomLeft, TopRight and TopLeft */
+
+      "adblocker": false,
+      /* Show a Warning if an adblocker is detected */
+
+      "DenyAllCta": true,
+      /* Show the deny all button */
+      "AcceptAllCta": true,
+      /* Show the accept all button when highPrivacy on */
+      "highPrivacy": true,
+      /* HIGHLY RECOMMANDED Disable auto consent */
+
+      "handleBrowserDNTRequest": false,
+      /* If Do Not Track == 1, disallow all */
+
+      "removeCredit": false,
+      /* Remove credit link */
+      "moreInfoLink": true,
+      /* Show more info link */
+
+      "useExternalCss": false,
+      /* If false, the tarteaucitron.css file will be loaded */
+      "useExternalJs": false,
+      /* If false, the tarteaucitron.js file will be loaded */
+
+      //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
+
+      "readmoreLink": "",
+      /* Change the default readmore link */
+
+      "mandatory": true,
+      /* Show a message about mandatory cookies */
+    });
+  </script>
 
   {% block js-status %}
   {% get_telecaster as telecaster %}
@@ -113,24 +175,26 @@
               ({{ postman_unread_count }}){% endif %}</a></li>
 
           {% if not user.student or not user.student.get.restricted %}
-            <li><a href="{% url 'teleforma-annals' %}" class="yellow">{% trans "Annals" %}</a></li>
+          <li><a href="{% url 'teleforma-annals' %}" class="yellow">{% trans "Annals" %}</a></li>
 
-            {% if periods|length == 1 %}
-            <li><a href="{% url 'teleforma-exam-scripts-pending' periods.0.id %}" class="green">&nbsp;{% trans "Scripts" %}
-                {% if user.is_staff or user.quotas.all %}{% untreated_scripts_count user periods.0.id %}
-                {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
-            </li>
-            {% else %}
-            <li><a href="#scripts#" class="green">&nbsp;{% trans "Scripts" %}
-                {% if user.is_staff or user.quotas.all %}{% untreated_scripts_count user periods.0.id %}
-                {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
-              <ul>
-                {% for period in periods %}
-                <li><a href="{% url 'teleforma-exam-scripts-pending' period.id %}" class="green">{{ period.name }}</a></li>
-                {% endfor %}
-              </ul>
-            </li>
-            {% endif %}
+          {% if periods|length == 1 %}
+          <li><a href="{% url 'teleforma-exam-scripts-pending' periods.0.id %}"
+              class="green">&nbsp;{% trans "Scripts" %}
+              {% if user.is_staff or user.quotas.all %}{% untreated_scripts_count user periods.0.id %}
+              {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
+          </li>
+          {% else %}
+          <li><a href="#scripts#" class="green">&nbsp;{% trans "Scripts" %}
+              {% if user.is_staff or user.quotas.all %}{% untreated_scripts_count user periods.0.id %}
+              {% else %}{% treated_scripts_count user periods.0.id %}{% endif %}</a>
+            <ul>
+              {% for period in periods %}
+              <li><a href="{% url 'teleforma-exam-scripts-pending' period.id %}" class="green">{{ period.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endif %}
           {% endif %}
 
           {% if user.professor.count %}
@@ -173,7 +237,8 @@
             </ul>
           </li>
           {% else %}
-          <li><a href="{% url 'teleforma-profile-detail' user.username %}" class="darkblue">{% trans "Profile" %}</a></li>
+          <li><a href="{% url 'teleforma-profile-detail' user.username %}" class="darkblue">{% trans "Profile" %}</a>
+          </li>
           <li><a href="{% url 'teleforma-logout' %}" class="black">{% trans "Sign out" %}</a></li>
           {% endif %}
 
@@ -249,10 +314,6 @@
   </div>
   {% endblock layout %}
 
-  {% comment %} {% block analytics %}
-  {% analytics_code %}
-  {% endblock analytics %} {% endcomment %}
-
   <script type='text/javascript'>
     window.scrollTo(0, 1);
 
@@ -261,7 +322,12 @@
         e.preventDefault();
       });
     });
+  </script>
 
+  <script type="text/javascript">
+    tarteaucitron.user.gajsUa = 'UA-6573030-11';
+    tarteaucitron.user.gajsMore = function () {};
+    (tarteaucitron.job = tarteaucitron.job || []).push('gajs');
   </script>
 
 </body>
