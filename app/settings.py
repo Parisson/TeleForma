@@ -13,6 +13,8 @@ sys.dont_write_bytecode = True
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+DEBUG_TOOLBAR = True
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -112,8 +114,7 @@ SECRET_KEY = 'a8l7%06wr2k+3=%#*#@#rvop2mmzko)44%7k(zx%lls^ihm9^5'
 #    )),
 #)
 
-
-MIDDLEWARE = (
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -170,6 +171,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "teleforma.context_processors.periods",
 )
 
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += ('debug_toolbar',)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -218,6 +222,8 @@ EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
 SERVER_EMAIL = 'crfpa@pre-barreau.com'
 EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
+if DEBUG_TOOLBAR:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 POSTMAN_AUTO_MODERATE_AS = True
 POSTMAN_DISALLOW_ANONYMOUS = True
@@ -345,3 +351,11 @@ def show_user_as(user):
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
+ALLOWED_HOSTS = ['localhost', 'ae.dockdev.pilotsystems.net']
+
+if DEBUG_TOOLBAR:
+    def show_toolbar(request):
+        return True
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+    }
