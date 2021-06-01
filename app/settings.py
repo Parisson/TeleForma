@@ -121,8 +121,7 @@ MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOL
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    # TODO : check if useless
-    # 'pagination.middleware.PaginationMiddleware',
+    'dj_pagination.middleware.PaginationMiddleware',
     'teleforma.middleware.XsSharing',
     'django_user_agents.middleware.UserAgentMiddleware',
 )
@@ -142,7 +141,7 @@ INSTALLED_APPS = (
     'teleforma',
     'sorl.thumbnail',
     # 'django_extensions',
-    # 'pagination',
+    'dj_pagination',
     'postman',
     # 'timezones',
     # 'googletools',
