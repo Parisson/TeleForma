@@ -14,6 +14,8 @@ DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
 TEMPLATE_DEBUG = DEBUG
 
+DEBUG_TOOLBAR = True
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -118,7 +120,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_ENV else []) + (
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -169,7 +171,7 @@ INSTALLED_APPS = (
 )
 
 
-if DEBUG_ENV:
+if DEBUG_TOOLBAR:
     INSTALLED_APPS += ('debug_toolbar',)
 
 TEMPLATES = [
@@ -220,7 +222,7 @@ EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
 SERVER_EMAIL = 'crfpa@pre-barreau.com'
 EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
-if DEBUG_ENV:
+if DEBUG_TOOLBAR:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
@@ -346,7 +348,7 @@ POSTMAN_SHOW_USER_AS = show_user_as
 
 ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net']
 
-if DEBUG_ENV:
+if DEBUG_TOOLBAR:
     def show_toolbar(request):
         return True
     DEBUG_TOOLBAR_CONFIG = {
