@@ -203,7 +203,7 @@ urlpatterns = [
 
                # Postman
                url(r'^messages/write/(?:(?P<recipients>[^/#]+)/)?$',
-                   WriteView.as_view(), name='postman_write'),
+                   WriteView.as_view(), name='postman:write'),
                url(r'^messages/', include('postman.urls')),
 
 

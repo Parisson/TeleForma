@@ -942,7 +942,7 @@ class WriteView(PostmanWriteView):
 
     """
     form_classes = (WriteForm, AnonymousWriteForm)
-    success_url = "postman_sent"
+    success_url = "postman:sent"
 
 class CRFPAProfileView(ProfileView):
     """Provide Collections web UI methods"""
