@@ -46,7 +46,7 @@ urlpatterns = [
         name="teleforma-webclass-professor"),
     url(r'^desk/webclass_record$', WebclassRecordView.as_view(),
         name="teleforma-webclass-record"),
-    url(r'^admin/periods/(?P<period_id>.*)/webclass_records_form/$',
+    url(r'^webclass/periods/(?P<period_id>.*)/webclass_records_form/$',
         WebclassRecordsFormView.as_view(), name="teleforma-webclass-records-form"),
     url(r'^desk/webclass/(?P<pk>.*)/join/$',
         join_webclass,
