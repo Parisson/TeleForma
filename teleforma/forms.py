@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from io import StringIO
+from io import BytesIO
 
 from captcha.fields import CaptchaField
 from django import forms
@@ -150,8 +150,10 @@ class UserForm(ModelForm):
         # resize image
         img = Image.open(image.file)
         new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+        if new_image.mode == "RGBA":
+            new_image = new_image.convert("RGB")
 
-        temp = StringIO()
+        temp = BytesIO()
         new_image.save(temp, 'jpeg')
         temp.seek(0)
         return SimpleUploadedFile('temp', temp.read())

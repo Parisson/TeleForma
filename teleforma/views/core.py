@@ -37,7 +37,7 @@ import datetime
 import mimetypes
 import os
 from html import escape
-from io import StringIO
+from io import BytesIO
 from teleforma.utils import guess_mimetypes
 
 from django.conf import settings
@@ -195,7 +195,7 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    src = StringIO(content.encode(encoding))
+    src = BytesIO(content.encode(encoding))
     pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
     return not pdf.err
 
@@ -204,7 +204,7 @@ def content_to_response(content, filename=None):
     """
     Return a pdf response using given *content*.
     """
-    response = HttpResponse(content, mimetype='application/pdf')
+    response = HttpResponse(content, content_type='application/pdf')
     if filename is not None:
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
@@ -215,11 +215,8 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     """
     Render a pdf response using given *request*, *template* and *context*.
     """
-    if not isinstance(context, Context):
-        context = RequestContext(request, context)
-
-    content = loader.render_to_string(template, context)
-    buffer = StringIO()
+    content = loader.render_to_string(template, context, request = request)
+    buffer = BytesIO()
 
     succeed = content_to_pdf(content, buffer, encoding, **kwargs)
     if succeed:

@@ -182,8 +182,9 @@ class Student(models.Model):
         _('registration date'), auto_now_add=True, null=True, blank=True)
     date_subscribed = models.DateTimeField(
         _('subscription date'), null=True, blank=True)
-    is_subscribed = models.BooleanField(_('subscribed'))
-    confirmation_sent = models.BooleanField(_('confirmation sent'))
+    is_subscribed = models.BooleanField(_('subscribed'), default=False)
+    confirmation_sent = models.BooleanField(_('confirmation sent'),
+                                            default=False)
     level = models.CharField(_('studying level'), blank=True, max_length=100)
 
     balance = models.FloatField(
@@ -313,7 +314,7 @@ class Profile(models.Model):
     telephone = models.CharField(_('Telephone'), max_length=255, blank=True)
     expiration_date = models.DateField(
         _('Expiration_date'), blank=True, null=True)
-    init_password = models.BooleanField(_('Password initialized'))
+    init_password = models.BooleanField(_('Password initialized'), default=False)
     wifi_login = models.CharField(_('WiFi login'), max_length=255, blank=True)
     wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
     birthday = models.DateField(

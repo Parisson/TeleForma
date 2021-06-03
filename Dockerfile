@@ -48,10 +48,14 @@ COPY requirements-dev.txt /srv
 ARG dev=0
 RUN echo "${dev}"
 RUN if [ "${dev}" = "1" ]; then pip3 install -r requirements-dev.txt; fi
+RUN if [ "${dev}" = "1" ]; then apt-get -y install less nano postgresql-client; fi
 
 COPY lib /srv/lib
 COPY bin/build/local/setup_lib.sh /srv
 RUN /srv/setup_lib.sh
+
+COPY sherlocks /srv/sherlocks
+RUN ln -s /srv/app/sherlocks-param /srv/sherlocks/param
 
 WORKDIR /srv/src/teleforma
 COPY setup.py /srv/src/teleforma

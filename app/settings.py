@@ -446,6 +446,17 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": False
 }
+# Sherlock's online payment
+PAYMENT_SHERLOCKS_PATH='/srv/sherlocks'
+
+PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "014295303911111",
+                                         'Estivale': "014295303911111",
+                                         'Pré-estivale': "014295303911111", },
+                       'merchant_country': 'fr',
+                       'currency_code': '978',
+                       'language': 'fr'
+}
+
 
 if DEBUG_TOOLBAR:
     def show_toolbar(request):
