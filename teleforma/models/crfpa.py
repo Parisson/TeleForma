@@ -211,7 +211,7 @@ class Profile(models.Model):
     telephone = models.CharField(_('Telephone'), max_length=255, blank=True)
     expiration_date = models.DateField(
         _('Expiration_date'), blank=True, null=True)
-    init_password = models.BooleanField(_('Password initialized'))
+    init_password = models.BooleanField(_('Password initialized'), default=False)
     wifi_login = models.CharField(_('WiFi login'), max_length=255, blank=True)
     wifi_pass = models.CharField(_('WiFi pass'), max_length=255, blank=True)
     birthday = models.DateField(

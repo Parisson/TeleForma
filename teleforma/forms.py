@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from io import StringIO
+from io import BytesIO
 
 from captcha.fields import CaptchaField
 from django import forms
@@ -139,14 +139,16 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
             #if width < NEW_WIDTH or height < NEW_HEIGHT:
             #    raise ValidationError({'portrait': "L'image est trop petite. Elle doit faire au moins %spx de large et %spx de hauteur." % (NEW_WIDTH, NEW_HEIGHT)})
 
-            # resize image
-            img = Image.open(image.file)
-            new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+        # resize image
+        img = Image.open(image.file)
+        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+        if new_image.mode == "RGBA":
+            new_image = new_image.convert("RGB")
 
-            temp = StringIO()
-            new_image.save(temp, 'jpeg')
-            temp.seek(0)
-            return SimpleUploadedFile('temp', temp.read())
+        temp = BytesIO()
+        new_image.save(temp, 'jpeg')
+        temp.seek(0)
+        return SimpleUploadedFile('temp', temp.read())
 
         def save(self, commit=True):
 
