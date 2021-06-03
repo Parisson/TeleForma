@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'jazzmin',
     'django.contrib.admin',
     # 'south',
     'teleforma',
@@ -221,7 +222,7 @@ EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
 SERVER_EMAIL = 'crfpa@pre-barreau.com'
 EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
-if DEBUG_TOOLBAR:
+if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
@@ -346,6 +347,105 @@ POSTMAN_SHOW_USER_AS = show_user_as
 #THUMBNAIL_FORCE_OVERWRITE = True
 
 ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net']
+
+JAZZMIN_SETTINGS = {
+    "site_title": "CRFPA",
+    "site_header": "CRFPA",
+    "site_logo": "teleforma/images/logo_pb.png",
+
+    # # Links to put along the top menu
+    # "topmenu_links": [
+
+    #     # Url that gets reversed (Permissions can be added)
+    #     {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+    #     # external url that opens in a new window (Permissions can be added)
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+
+    #     # model admin to link to (Permissions checked against model)
+    #     {"model": "auth.User"},
+
+    #     # App with dropdown menu to all its models pages (Permissions checked against models)
+    #     {"app": "books"},
+    # ],
+
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["auth", "teleforma", "teleforma.webclass", "teleforma.exam", "pdfannotator"],
+
+    # Custom links to append to app groups, keyed on app name
+    # "custom_links": {
+    #     "teleforma": [{
+    #         "name": "Make Messages", 
+    #         "url": "make_messages", 
+    #         "icon": "fas fa-comments",
+    #         "permissions": ["books.view_book"]
+    #     }]
+    # },
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "teleforma.newsitem": "fas fa-newspaper",
+        "teleforma.conference": "fas fa-users",
+        "teleforma.document": "fas fa-file",
+        "teleforma.student": "fas fa-user-graduate",
+        "teleforma.professor": "fas fa-user-tie",
+        "webclass.webclass": "fas fa-phone",
+    },
+    "related_modal_active": True,
+
+    "custom_css": None,
+    "custom_js": None,
+    "show_ui_builder": False,
+
+    ###############
+    # Change view #
+    ###############
+    # Render out the change view as a single form, or in tabs, current options are
+    # - single
+    # - horizontal_tabs (default)
+    # - vertical_tabs
+    # - collapsible
+    # - carousel
+    "changeform_format": "horizontal_tabs",
+    # override change forms on a per modeladmin basis
+    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+    "language_chooser": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": True,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-outline-warning",
+        "danger": "btn-outline-danger",
+        "success": "btn-outline-success"
+    },
+    "actions_sticky_top": False
+}
 
 if DEBUG_TOOLBAR:
     def show_toolbar(request):
