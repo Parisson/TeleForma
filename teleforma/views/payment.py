@@ -173,10 +173,9 @@ def bank_success(request, merchant_id):
     if check_payment_info(res):
         order_id = res[24]
         payment = Payment.objects.get(pk=order_id)
-        if payment.type == 'online' and payment.online_paid and (payment.student.user_id == request.user.pk or request.user.is_superuser):
+        if payment.type == 'online' and payment.online_paid:
             return render(request, 'payment/payment_validate.html',
-                                      {'payment': payment, },
-                                      context_instance=RequestContext(request))
+                                      {'payment': payment, })
     return HttpResponseRedirect('/echec-de-paiement')
 
 
