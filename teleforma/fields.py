@@ -48,7 +48,6 @@ class Duration(object):
         hours   = self._delta.days * 24 + self._delta.seconds / 3600
         minutes = (self._delta.seconds % 3600) / 60
         seconds = self._delta.seconds % 60
-
         return "%.2d:%.2d:%.2d" % (hours, minutes, seconds)
 
     @staticmethod
@@ -162,6 +161,9 @@ class DurationField(models.Field):
         else:
             data = str(val)
         return data
+
+    def from_db_value(self, value, expression, connection):
+        return self.to_python(value)
 
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.CharField}
