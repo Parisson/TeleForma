@@ -417,13 +417,6 @@ class Conference(models.Model):
                     str(self.date_begin)]
         return ' - '.join(list)
 
-    @property
-    def slug(self):
-        slug = '-'.join([self.course.department.slug,
-                         self.course.slug,
-                         self.course_type.name.lower()])
-        return slug
-
     def save(self, *args, **kwargs):
         if not self.public_id:
             self.public_id = get_random_hash()
