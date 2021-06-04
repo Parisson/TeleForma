@@ -48,35 +48,34 @@ def get_records_from_bbb(**kwargs):
             # recording.prettyprint()
             url = recording.get('playback', {}).get('format', {}).get('url')
             if url:
-                url = url.decode()
+                url = str(url)
             else:
                 continue
-
-            start = int(recording['startTime'].decode()[:-3])
-            end = int(recording['endTime'].decode()[:-3])
+            start = int(str(recording['startTime'])[:-3])
+            end = int(str(recording['endTime'])[:-3])
             data = {
-                'id': recording['recordID'].decode(),
+                'id': str(recording['recordID']),
                 'server_id': server.id,
                 'start': start,
                 'start_date': datetime.datetime.fromtimestamp(start),
                 'end': end,
                 'end_date': datetime.datetime.fromtimestamp(end),
                 'url': url,
-                'preview': recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])[0].decode(),
-                'state': recording['state'].decode(),
+                'preview': str(recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])[0]),
+                'state': str(recording['state']),
             }
             if recording['metadata'].get('periodid'):
                 # we try to get metadata added to bbb record during the recording
                 slot = None
                 try:
                     slot = WebclassSlot.objects.get(
-                        pk=int(recording['metadata'].get('slotid').decode()))
+                        pk=int(recording['metadata'].get('slotid', -1)))
                 except WebclassSlot.DoesNotExist:
                     # this happen if the slot is deleted in django admin
                     continue
                 data.update({
-                    'period_id': int(recording['metadata'].get('periodid').decode()),
-                    'course_id': int(recording['metadata'].get('courseid').decode()),
+                    'period_id': int(recording['metadata'].get('periodid', -1)),
+                    'course_id': int(recording['metadata'].get('courseid', -1)),
                     'slot': slot
                 })
 
@@ -355,7 +354,7 @@ class WebclassSlot(models.Model):
     def is_webclass_running(self):
         """ Is webclass currently running ? """
         # print(self.get_webclass_info())
-        return self.bbb.is_meeting_running(self.room_id).get_field('running').decode() == 'true' or False
+        return str(self.bbb.is_meeting_running(self.room_id).get_field('running')) == 'true' or False
 
     def get_webclass_info(self):
         """ """
