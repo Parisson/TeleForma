@@ -117,7 +117,7 @@ urlpatterns = [
                url(r'^accounts/password_reset/$', PasswordResetView.as_view(template_name='registration/password_reset_form.html',
                    email_template_name='registration/password_reset_email.html'), name="teleforma-password-reset"),
                url(r'^accounts/password_reset_done/$', PasswordResetDoneView.as_view(
-                   template_name='registration/password_reset_done.html'), name="teleforma-password-reset-done"),
+                   template_name='registration/password_reset_done.html'), name="password_reset_done"),
                url(r'^accounts/password_reset_confirm/(?P<uidb36>[A-Za-z0-9._-]+)/(?P<token>[A-Za-z0-9._-]+)/$', PasswordResetConfirmView.as_view(
                    template_name='registration/password_reset_confirm.html'), name="teleforma-password-reset-confirm"),
                url(r'^accounts/password_reset_complete/$', PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
