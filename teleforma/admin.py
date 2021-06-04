@@ -124,6 +124,7 @@ class BalanceFilter(admin.SimpleListFilter):
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
+    list_per_page = 30
     exclude = ['options', 'training']
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
@@ -224,6 +225,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 class DocumentAdmin(admin.ModelAdmin):
+    list_per_page = 30
     exclude = ['readers']
     filter_horizontal = ['course_type']
     list_filter = ('course', 'periods', 'date_added', 'type')
@@ -272,6 +274,7 @@ class MediaTranscodedInline(admin.TabularInline):
 
 
 class MediaAdmin(admin.ModelAdmin):
+    list_per_page = 30
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
@@ -280,6 +283,7 @@ class MediaAdmin(admin.ModelAdmin):
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
+    list_per_page = 30
     list_filter = ('course', 'period', 'date_begin', 'session')
     search_fields = ['public_id', 'id',
                      'course__code', 'course__title', 'session']
@@ -309,6 +313,7 @@ class NewsItemAdmin(admin.ModelAdmin):
 
 class AppointmentSlotInline(admin.TabularInline):
     model = AppointmentSlot
+    list_per_page = 30
 
 
 class AppointmentJuryInline(admin.StackedInline):
@@ -345,11 +350,13 @@ class AppointmentSlotAdmin(admin.ModelAdmin):
 
 
 class AppointmentJuryAdmin(admin.ModelAdmin):
+    list_per_page = 30
     list_filter = ('slot',)
     list_display = ('name', 'slot')
 
 
 class AppointmentAdmin(admin.ModelAdmin):
+    list_per_page = 30
     list_display = ('real_date', 'student', 'jury')
     list_filter = ('slot__date', 'slot__appointment_period', 'slot__mode')
     search_fields = ('student__username',)
@@ -379,7 +386,10 @@ class AppointmentAdmin(admin.ModelAdmin):
         return response
     export_csv.short_description = "Exporter en CSV"
 
+class GroupedMessageAdmin(admin.ModelAdmin):
+    list_per_page = 30    
 
+    
 admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
@@ -401,7 +411,7 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Corrector, CorrectorAdmin)
 admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)
-admin.site.register(GroupedMessage)
+admin.site.register(GroupedMessage, GroupedMessageAdmin)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(Parameters, ParametersAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
