@@ -29,7 +29,7 @@
 
 
 #content .address p{
-    margin-left: 55%;
+    margin-left: 5%;
     line-height: 20px;
     font-size: 14px;
     font-weight: bold;
@@ -54,7 +54,7 @@
 
 #content table{
     margin-top: 30px;
-    width: 100%;
+    width: 96%;
     line-height: 20px;
     border-spacing : 0;
     border-collapse : collapse;
@@ -62,8 +62,8 @@
 }
 
 #content table tr th{
-    padding: 5px;
-    font-size: 14px;
+    padding: 4px;
+    font-size: 12px;
     border: 1px solid #000;
 }
 
@@ -72,15 +72,15 @@
 }
 
 #content table tr th:first-child{
-    width: 60%;
+    width: 56%;
 }
 
 #content table tr td{
-    padding: 15px 5px;
+    padding: 12px 4px;
     border-left: 1px solid #000;
     border-right: 1px solid #000;
     line-height: 24px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
 }
 #content table tr td:first-child{

@@ -59,7 +59,7 @@ from django.views.generic.list import ListView
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
 from teleforma.models.crfpa import Home
-from xhtml2pdf import pisa
+import weasyprint
 
 from ..decorators import access_required
 from ..models.appointment import Appointment, AppointmentPeriod
@@ -195,10 +195,9 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    src = BytesIO(content.encode(encoding))
-    pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
-    return not pdf.err
-
+    src = weasyprint.HTML(string = content, encoding = encoding)
+    src.write_pdf(dest)
+    return True
 
 def content_to_response(content, filename=None):
     """
@@ -216,6 +215,7 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     Render a pdf response using given *request*, *template* and *context*.
     """
     content = loader.render_to_string(template, context, request = request)
+    #return HttpResponse(content)
     buffer = BytesIO()
 
     succeed = content_to_pdf(content, buffer, encoding, **kwargs)
@@ -1010,7 +1010,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
             template_name = 'myapp/myview.html'
             pdf_filename = 'report.pdf'
 
-    The pdf generation is automatically done by *xhtml2pdf* using
+    The pdf generation is automatically done by *weasyprint* using
     the *myapp/myview_pdf.html* template.
 
     Note that the pdf template takes the same context as the normal template.
