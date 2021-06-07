@@ -42,6 +42,14 @@ services:
           - -I 128m
           - -v
 
+  redis:
+    image: redis
+    entrypoint:
+      - redis-server
+      - --appendonly yes
+    volumes:
+      - ./var/redis:/data
+
 volumes:
     app:
     db:

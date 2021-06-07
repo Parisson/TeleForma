@@ -25,3 +25,4 @@ weasyprint==52.5
 xlrd==2.0.1
 xlwt==1.3.0
 psycopg2==2.8.6 
+redis==3.5.3 
