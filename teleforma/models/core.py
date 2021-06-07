@@ -406,13 +406,13 @@ class Conference(models.Model):
 
     def __str__(self):
         if self.professor:
-            list = [self.course.department.name, self.course.title,
+            list = [self.course.title,
                     self.course_type.name, self.session,
                     self.professor.user.first_name,
                     self.professor.user.last_name,
                     str(self.date_begin)]
         else:
-            list = [self.course.department.name, self.course.title,
+            list = [self.course.title,
                     self.course_type.name, self.session,
                     str(self.date_begin)]
         return ' - '.join(list)
