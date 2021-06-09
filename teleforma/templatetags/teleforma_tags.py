@@ -35,6 +35,7 @@
 import datetime
 import json
 import re
+from teleforma.models.chat import ChatMessage
 import urllib.parse as urlparse
 
 from django import template
@@ -96,7 +97,8 @@ def value_from_settings(parser, token):
         # split_contents() knows not to split quoted strings.
         tag_name, var = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError("%r tag requires a single argument" % token.contents.split()[0])
+        raise template.TemplateSyntaxError(
+            "%r tag requires a single argument" % token.contents.split()[0])
     return ValueFromSettings(var)
 
 
@@ -253,17 +255,6 @@ def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
 
 
-@register.simple_tag
-def show_chat(user):
-    """ everybody should see the chat panel, except the correctors """
-    professor = user.professor.all()
-    if user.is_superuser or professor:
-        return True
-    if user.quotas.all():
-        return False
-    return True
-
-
 @register.filter
 def get_audio_id(media):
     for m in media.transcoded.all():
@@ -418,3 +409,23 @@ def render_flatpage(content):
 
 
 render_flatpage.is_safe = True
+
+
+@register.inclusion_tag('teleforma/inc/chat_room.html', takes_context=True)
+def chat_room(context, period=None, course=None):
+    """ display chat room """
+    # conditionnaly show chat
+    show = True
+    room_name = ChatMessage.get_room_name(period, course)
+    if course:
+        room_title = course.title_tweeter or course.title
+    else:
+        room_title = period.name
+    return {
+        'show': show,
+        'data': {
+            'room_name': room_name,
+            'room_title': room_title,
+            'user_id': context.request.user.id
+        }
+    }

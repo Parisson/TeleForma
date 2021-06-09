@@ -192,7 +192,6 @@
 
 
 <div id="module-set" style="width: 22%">
-
   {% block status %}
   {% get_telecaster as telecaster %}
   {%  if telecaster %}
@@ -206,11 +205,8 @@
   {% endblock status %}
 
   {% block chat %}
-  {% if room %}
-  {% with "General tweeter" as title %}
-  {% include "teleforma/inc/chat_room.html" %}
-  {% endwith %}
-  {% endif %}
+  
+  {% chat_room period=period %}
   {% endblock chat %}
 
 </div>

@@ -1,22 +1,9 @@
 {% load i18n %}
-{% load teleforma_tags %}
+{% load teleforma_tags static %}
 
-{% show_chat user as display_chat %}
-{% if display_chat %}
+{% if show %}
+{{ data|json_script:"room-info" }}
 
-    <div class="module">
-        <h3><img src="/static/teleforma/images/vox_wh.png" %}" alt="rss" style="vertical-align:middle"
-            />{% trans title %}</h3>
-        <div style="background: transparent;">
-            <div id="chatwindow"><span id="loading">Loading...</span></div>
-            <form id="chatform">{% csrf_token %}
-                <label for="msg"></label>
-                <div class="msg">
-                    <input type="text" id="msg" size="28"/>
-                    <input type="submit" value="{% trans "Send" %}"/>
-                </div>
-            </form>
-            <!--         <script type="text/javascript">document.getElementById("msg").focus();</script> -->
-        </div>
-    </div>
+<div id="chat"></div>
+
 {% endif %}

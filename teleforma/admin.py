@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import datetime
+from teleforma.models.chat import ChatMessage
 
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
@@ -389,7 +390,12 @@ class AppointmentAdmin(admin.ModelAdmin):
 class GroupedMessageAdmin(admin.ModelAdmin):
     list_per_page = 30    
 
-    
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ('message', 'user', 'room_name')
+    ordering = ['-created']
+    raw_id_fields = ['user',]
+
+
 admin.site.unregister(User)
 admin.site.register(Organization)
 admin.site.register(Department)
@@ -420,3 +426,4 @@ admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
 admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
 admin.site.register(AppointmentJury, AppointmentJuryAdmin)
 admin.site.register(Appointment, AppointmentAdmin)
+admin.site.register(ChatMessage, ChatMessageAdmin)
