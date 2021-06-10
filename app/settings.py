@@ -142,10 +142,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'teleforma',
     'jazzmin',
     'django.contrib.admin',
     # 'south',
-    'teleforma',
+    
     'teleforma.webclass',
     'teleforma.exam',
     'jsonrpc',
