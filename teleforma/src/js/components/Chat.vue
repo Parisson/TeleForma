@@ -62,13 +62,12 @@ export default class Chat extends Vue {
     let roomInfo: any = null
     if (roomInfoStr) roomInfo = JSON.parse(roomInfoStr)
     else throw "No room info provided"
-    console.log(roomInfo.room_name)
 
     this.rooms = [
       {
         roomId: roomInfo.room_name,
         roomName: roomInfo.room_title,
-        // add fake users to make sure username are displayed in the chat
+        // add fake users to make sure username are displayed in the chat (if less than two, name are not displayed)
         users: [
           {
             _id: 1,
@@ -100,11 +99,21 @@ export default class Chat extends Vue {
         ]
       }
     ]
+    this.connect(roomInfo.room_name)
     this.currentUserId = roomInfo.user_id
-    this.socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomInfo.room_name + "/")
+  }
 
-    this.socket.onclose = function () {
+  connect(roomName: string) {
+    // connect to socket
+    this.socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomName + "/")
+    this.fetchMessages()
+
+    this.socket.onclose = () => {
       console.error("Chat socket closed unexpectedly")
+      // retry to connect
+      setTimeout(() => {
+        this.connect(roomName)
+      }, 10000)
     }
   }
 
@@ -114,18 +123,16 @@ export default class Chat extends Vue {
 
   async fetchMessages() {
     const roomId = this.rooms[0].roomId
+    this.messagesLoaded = false
     try {
       const response = await axios.get("/chat/get_messages/" + roomId)
       this.messages = response.data
       this.messagesLoaded = true
-      console.log(response)
     } catch (error) {
       console.error(error)
     }
     this.socket!.onmessage = (e) => {
-      console.log("message arrived")
       const data = JSON.parse(e.data) as Message
-      console.log(data)
       this.messages = [...this.messages, data]
     }
   }

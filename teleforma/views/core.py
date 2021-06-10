@@ -746,9 +746,6 @@ class ConferenceListView(View):
 
 
 def get_chat_messages(request, room_name):
-    # import pdb;pdb.set_trace()
-    print("get_chat_messages")
-    print(room_name)
     messages = [message.to_dict() for message in ChatMessage.objects.filter(room_name=room_name).order_by('created')[:100]]
     return JsonResponse(messages, safe=False)
 
