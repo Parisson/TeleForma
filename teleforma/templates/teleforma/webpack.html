@@ -1,0 +1,7 @@
+{% if url %}
+    {% if is_css %}
+    <link rel="stylesheet" href="{{ url }}">
+    {% else %}
+    <script src="{{ url }}"></script>
+    {% endif %}
+{% endif %}

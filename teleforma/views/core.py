@@ -34,6 +34,7 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import datetime
+import json
 import mimetypes
 import os
 from html import escape
@@ -47,7 +48,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.http.response import StreamingHttpResponse
+from django.http.response import JsonResponse, StreamingHttpResponse
 from django.shortcuts import redirect
 from django.template import Context, RequestContext, loader
 from django.urls import reverse
@@ -67,6 +68,7 @@ from ..models.core import (Conference, Course, CourseType, Department,
                            Document, DocumentType, Media, MediaTranscoded,
                            Organization, Period, Professor, WebClassGroup,
                            get_user_role)
+from ..models.chat import ChatMessage
 from ..webclass.models import Webclass, WebclassRecord
 from .pages import get_page_content
 
@@ -107,29 +109,6 @@ def stream_from_file(__file):
             f.close()
             break
         yield __chunk
-
-
-def get_room(content_type=None, id=None, name=None, period=None):
-    return None
-    # if settings.TELEFORMA_GLOBAL_TWEETER:
-    #     name = 'site'
-
-    # if settings.TELEFORMA_PERIOD_TWEETER and period:
-    #     name = name + '-' + period
-
-    # if settings.TELEFORMA_GLOBAL_TWEETER:
-    #     rooms = jqchat.models.Room.objects.filter(name=name[:20])
-    # else:
-    #     rooms = jqchat.models.Room.objects.filter(name=name[:20],
-    #                                               content_type=content_type,
-    #                                               object_id=id)
-    # if not rooms:
-    #     room = jqchat.models.Room.objects.create(content_type=content_type,
-    #                                              object_id=id,
-    #                                              name=name[:20])
-    # else:
-    #     room = rooms[0]
-    # return room
 
 
 def get_access(obj, courses):
@@ -330,7 +309,6 @@ class CourseListView(CourseAccessMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
-        context['room'] = get_room(name='site', period=context['period'].name)
         context['list_view'] = True
         context['courses'] = sorted(
             context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
@@ -459,9 +437,6 @@ class CourseView(CourseAccessMixin, DetailView):
         # context['notes'] = course.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(
             app_label="teleforma", model="course")
-        context['room'] = get_room(name=course.code, period=context['period'].name,
-                                   content_type=content_type,
-                                   id=course.id)
 
         # webclass
         webclass = None
@@ -541,10 +516,6 @@ class MediaView(CourseAccessMixin, DetailView):
         if media.conference.web_class_group:
             room_name += '_' + media.conference.public_id
 
-        context['room'] = get_room(name=room_name, period=context['period'].name,
-                                   content_type=content_type,
-                                   id=media.course.id)
-
         access = get_access(media, context['all_courses'])
         if not access:
             context['access_error'] = access_error
@@ -604,10 +575,6 @@ class MediaTranscodedView(CourseAccessMixin, DetailView):
         room_name = media.course.code
         if media.conference.web_class_group:
             room_name += '_' + media.conference.public_id
-
-        context['room'] = get_room(name=room_name, period=context['period'].name,
-                                   content_type=content_type,
-                                   id=media.course.id)
 
         access = get_access(media, context['all_courses'])
         if not access:
@@ -713,10 +680,6 @@ class ConferenceView(CourseAccessMixin, DetailView):
         if conference.web_class_group:
             room_name += '_' + conference.public_id
 
-        context['room'] = get_room(name=room_name, period=context['period'].name,
-                                   content_type=content_type,
-                                   id=conference.course.id)
-
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
         access = get_access(conference, context['all_courses'])
@@ -782,19 +745,9 @@ class ConferenceListView(View):
                 s.teleforma.create_conference(conference.to_json_dict())
 
 
-def live_message(conference):
-    from jqchat.models import Message
-    user, c = User.objects.get_or_create(username='bot')
-    content_type = ContentType.objects.get(
-        app_label="teleforma", model="course")
-    room = get_room(name=conference.course.code, period=conference.period.name,
-                    content_type=content_type,
-                    id=conference.course.id)
-    text = _("A new live conference has started : ")
-    text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
-                                                               kwargs={'period_id': conference.period.id, 'pk': conference.id})
-    message = Message.objects.create_message(user, room, text)
-
+def get_chat_messages(request, room_name):
+    messages = [message.to_dict() for message in ChatMessage.objects.filter(room_name=room_name).order_by('created')[:100]]
+    return JsonResponse(messages, safe=False)
 
 # class ConferenceRecordView(FormView):
 #     "Conference record form : TeleCaster module required"

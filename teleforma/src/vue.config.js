@@ -1,0 +1,51 @@
+const path = require("path");
+const outputDir = '../static/teleforma/dist';
+
+
+module.exports = {
+    publicPath: 'http://172.22.19.95:3000/',
+    css: {
+        sourceMap: true
+    },
+    configureWebpack: {
+        devServer: {
+            host: '0.0.0.0',
+            port: 3000,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            disableHostCheck: true
+        },
+        output: {
+            filename: 'app.js',
+        },
+        
+    },
+    outputDir: outputDir,
+    chainWebpack: config => {
+        config
+            .entry("app")
+            .clear()
+            .add("./js/main.ts")
+            .end();
+        config.resolve.alias
+            .set("@", path.join(__dirname, "./js"));
+        config.externals({
+            ...config.get('externals'),
+            jquery: 'jQuery',
+            $: 'jQuery'
+        });
+        if (config.plugins.has("extract-css")) {
+            const extractCSSPlugin = config.plugin("extract-css");
+            extractCSSPlugin &&
+                extractCSSPlugin.tap(() => [{
+                    filename: "[name].css",
+                }]);
+        }
+        config.optimization.delete('splitChunks');
+        config.plugins
+            .delete("html")
+            .delete("prefetch")
+            .delete("preload");
+    }
+}

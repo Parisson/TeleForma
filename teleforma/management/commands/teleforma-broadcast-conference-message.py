@@ -6,12 +6,12 @@ from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
-    help = "Broadcast a chat message"
-    args = "username text"
+    help = "Broadcast a chat conference message"
+
+    def add_arguments(self, parser):
+        parser.add_argument('conference_id', type=int)
 
     def handle(self, *args, **options):
-        # text = args[1]
-        # username = args[0]
-        print("Is this still necessary ?")
+        ChatMessage.live_conference_message(Conference.objects.get(id=options['conference_id']))
 
 

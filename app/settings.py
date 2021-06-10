@@ -14,7 +14,8 @@ DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
 TEMPLATE_DEBUG = DEBUG
 
-DEBUG_TOOLBAR = True
+# disable to debug websocket
+DEBUG_TOOLBAR = False
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -28,6 +29,20 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+ASGI_APPLICATION = "teleforma.ws.routing.application"
+
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
+}
 
 DATABASES = {
     'default': {
@@ -145,8 +160,7 @@ INSTALLED_APPS = (
     'teleforma',
     'jazzmin',
     'django.contrib.admin',
-    # 'south',
-    
+    'channels',
     'teleforma.webclass',
     'teleforma.exam',
     'jsonrpc',
@@ -323,10 +337,18 @@ LOGGING = {
             'filename': "/var/log/app.log",
             'formatter': 'simple',
         },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
     },
     'loggers': {
         'payment': {
             'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'websocket': {
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -465,3 +487,7 @@ if DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
     }
+
+
+USE_WEBPACK_DEV_SERVER = DEBUG
+WEBPACK_DEV_SERVER_URL = "http://172.22.19.95:3000/"
