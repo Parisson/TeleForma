@@ -34,7 +34,7 @@ import { Component, Vue } from "vue-property-decorator"
 import ChatWindow, { Message, Messages, Rooms } from "vue-advanced-chat"
 import axios from "axios"
 
-import "../vue-advanced-chat/dist/vue-advanced-chat.css"
+import "vue-advanced-chat/dist/vue-advanced-chat.css"
 
 @Component({
   components: {
