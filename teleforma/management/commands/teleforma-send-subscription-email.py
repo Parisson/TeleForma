@@ -29,6 +29,10 @@ class Command(BaseCommand):
     help = "Send an email to new subscribed student"
     language_code = 'fr_FR'
 
+    def add_arguments(self, parser):
+        parser.add_argument('period_name')
+        parser.add_argument('log_file')
+        
     def email(self, student):
         site = Site.objects.get_current()
         if student.platform_only:
@@ -47,8 +51,8 @@ class Command(BaseCommand):
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [student.user.email], fail_silently=False)
 
     def handle(self, *args, **options):
-        log_file = args[-1]
-        period_name = args[-2]
+        log_file = options['log_file']
+        period_name = options['period_name']
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
