@@ -3,7 +3,7 @@ const outputDir = '../static/teleforma/dist';
 
 
 module.exports = {
-    publicPath: 'http://172.22.19.95:3000/',
+    publicPath: 'http://172.24.104.152:3000/',
     css: {
         sourceMap: true
     },

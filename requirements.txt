@@ -3,6 +3,7 @@ channels==3.0.3
 channels_redis==3.2.0
 docutils==0.17.1
 Django==3.2.3
+djangorestframework==3.12.4
 # django-extensions==1.2.1
 # django-timezones==0.2
 # django-registration==3.1.2

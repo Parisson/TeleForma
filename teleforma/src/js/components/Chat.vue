@@ -125,7 +125,11 @@ export default class Chat extends Vue {
     const roomId = this.rooms[0].roomId
     this.messagesLoaded = false
     try {
-      const response = await axios.get("/chat/get_messages/" + roomId)
+      const response = await axios.get("/chat/messages", {
+        params: {
+          room_name: roomId
+        }
+      })
       this.messages = response.data
       this.messagesLoaded = true
     } catch (error) {

@@ -183,6 +183,8 @@ INSTALLED_APPS = (
     # 'quiz',
     'pdfannotator',
     # 'telemeta',
+    'rest_framework',
+    'rest_framework.authtoken'
 )
 
 
@@ -318,6 +320,14 @@ PAYMENT_PARAMETERS = {'merchant_id': {'Semestrielle': "040109417200053",
                       'currency_code': '978',
                       'language': 'fr'
                       }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ]
+}
 
 LOGGING = {
     'version': 1,
@@ -490,4 +500,4 @@ if DEBUG_TOOLBAR:
 
 
 USE_WEBPACK_DEV_SERVER = DEBUG
-WEBPACK_DEV_SERVER_URL = "http://172.22.19.95:3000/"
+WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"

@@ -35,6 +35,7 @@
 import os.path
 
 from django.conf.urls import include, url
+from django.urls import path
 from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordChangeDoneView,
                                        PasswordChangeView,
@@ -49,10 +50,10 @@ from jsonrpc import jsonrpc_site
 from teleforma.views.home import HomeView
 
 from .views.appointment import Appointments, cancel_appointment
-from .views.core import (ConferenceListView, ConferenceView, CourseListView,
+from .views.core import (ChatMessageView, ConferenceListView, ConferenceView, CourseListView,
                          CoursePendingListView, CourseView, DocumentView,
                          HelpView, HomeRedirectView, MediaTranscodedView,
-                         MediaView, MediaViewEmbed, get_chat_messages)
+                         MediaView, MediaViewEmbed)
 from .views.crfpa import (AnnalsCourseView, AnnalsIEJView, AnnalsView,
                           CorrectorAddView, CorrectorCompleteView,
                           CorrectorRegistrationPDFView,
@@ -263,7 +264,7 @@ urlpatterns = [
     url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/receipt/view/$',
         ReceiptPDFView.as_view(), name="teleforma-receipt-view"),
 
-    # chat 
-    url(r'^chat/get_messages/(?P<room_name>.*)',
-        get_chat_messages, name='teleforma-chat-getmessages'),
+    # chat
+    path('chat/messages',
+         ChatMessageView.as_view(), name='teleforma-chat-messages'),
 ]

@@ -27,23 +27,22 @@
 # requirements in conditions enabling the security of their systems and/or
 # data to be ensured and,  more generally, to use and operate it in the
 # same conditions as regards security.
-
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL license and that you accept its terms.
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
-
 import datetime
 import json
 import mimetypes
 import os
 from html import escape
 from io import BytesIO
-from teleforma.utils import guess_mimetypes
 
+import weasyprint
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
@@ -54,21 +53,29 @@ from django.template import Context, RequestContext, loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+# The fact that you are presently reading this means that you have had
+# knowledge of the CeCILL license and that you accept its terms.
+#
+# Authors: Guillaume Pellerin <yomguy@parisson.com>
+from rest_framework.views import APIView
 from teleforma.models.crfpa import Home
-import weasyprint
+from teleforma.utils import guess_mimetypes
 
 from ..decorators import access_required
 from ..models.appointment import Appointment, AppointmentPeriod
+from ..models.chat import ChatMessage
 from ..models.core import (Conference, Course, CourseType, Department,
                            Document, DocumentType, Media, MediaTranscoded,
                            Organization, Period, Professor, WebClassGroup,
                            get_user_role)
-from ..models.chat import ChatMessage
 from ..webclass.models import Webclass, WebclassRecord
 from .pages import get_page_content
 
@@ -174,9 +181,10 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    src = weasyprint.HTML(string = content, encoding = encoding)
+    src = weasyprint.HTML(string=content, encoding=encoding)
     src.write_pdf(dest)
     return True
+
 
 def content_to_response(content, filename=None):
     """
@@ -193,8 +201,8 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     """
     Render a pdf response using given *request*, *template* and *context*.
     """
-    content = loader.render_to_string(template, context, request = request)
-    #return HttpResponse(content)
+    content = loader.render_to_string(template, context, request=request)
+    # return HttpResponse(content)
     buffer = BytesIO()
 
     succeed = content_to_pdf(content, buffer, encoding, **kwargs)
@@ -745,9 +753,35 @@ class ConferenceListView(View):
                 s.teleforma.create_conference(conference.to_json_dict())
 
 
-def get_chat_messages(request, room_name):
-    messages = [message.to_dict() for message in ChatMessage.objects.filter(room_name=room_name).order_by('created')[:100]]
-    return JsonResponse(messages, safe=False)
+@method_decorator(csrf_exempt, name='dispatch')
+class ChatMessageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Get last 100 messages, in json
+        You need to provide a room_name in request
+        """
+        messages = [message.to_dict() for message in ChatMessage.objects.filter(
+            room_name=request.GET['room_name']).order_by('created')[:100]]
+        return Response(messages)
+
+    def post(self, request):
+        """
+        Send a chat message
+        You can pass either : 
+        - a conference id 
+        - a room name and a message
+        """
+        room_name = request.POST.get('room_name')
+        message = request.POST.get('message')
+        if not room_name:
+            conference = Conference.objects.get(id=request.POST.get('conference_id'))
+            ChatMessage.live_conference_message(conference=conference)
+        else:
+            ChatMessage.add_message(room_name, message, system=True)
+        return Response({'status': 'ok'})
+
 
 # class ConferenceRecordView(FormView):
 #     "Conference record form : TeleCaster module required"
