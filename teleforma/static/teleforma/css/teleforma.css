@@ -306,8 +306,8 @@ input[type=reset][disabled] {
     border-style: solid;
     color: #999;
 }
-input[type=text], input[type=password], input.textwidget, textarea { border: 1px solid #ccc; }
-input[type=text], input[type=password], input.textwidget { padding: .25em .1em }
+input[type=text], input[type=password], input[type=email], input.textwidget, textarea { border: 1px solid #ccc; }
+input[type=text], input[type=password], input[type=email], input.textwidget { padding: .25em .1em }
 input[type=text]:focus, input[type=password]:focus, input.textwidget:focus, textarea:focus {
     border-color: #aaa;
 }
@@ -2092,7 +2092,7 @@ column-rule: 0;
     display: inline-block;
     max-width: 190px;
 }
-#_registerForm fieldset input[type="text"]{
+#_registerForm fieldset input[type="text"], #_registerForm fieldset input[type="email"]{
     width: calc(100% - 190px);
     margin: 0;
     float: right;
@@ -2148,8 +2148,11 @@ column-rule: 0;
     float: right;
     background-color: #F2F2F2;
 }
-#_registerForm .submit-panel div{
-    padding: 15px 15px 25px 15px;
+#_registerForm .submit-panel div {
+    padding: 5px 15px 25px 15px;
+}
+#_registerForm .submit-panel .captcha-div{
+    padding: 5px 0px;
 }
 
 #_registerForm .submit-panel label{

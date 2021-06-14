@@ -265,8 +265,8 @@ input[type=reset][disabled] {
     border-style: solid;
     color: #999;
 }
-input[type=text], input[type=password], input.textwidget, textarea { border: 1px solid #ccc; }
-input[type=text], input[type=password], input.textwidget { padding: .25em .1em }
+input[type=text], input[type=password], input[type=email], input.textwidget, textarea { border: 1px solid #ccc; }
+input[type=text], input[type=password], input[type=email], input.textwidget { padding: .25em .1em }
 input[type=text]:focus, input[type=password]:focus, input.textwidget:focus, textarea:focus {
     border-color: #aaa;
 }
