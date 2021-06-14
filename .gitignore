@@ -10,6 +10,7 @@ parts
 var
 sdist
 develop-eggs
+node_modules
 .installed.cfg
 .directory
 *.e4p
