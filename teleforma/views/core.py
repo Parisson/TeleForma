@@ -32,8 +32,6 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 import datetime
-import json
-import mimetypes
 import os
 from html import escape
 from io import BytesIO
@@ -42,14 +40,12 @@ import weasyprint
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sites.models import Site
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.http.response import JsonResponse, StreamingHttpResponse
+from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect
-from django.template import Context, RequestContext, loader
+from django.template import loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
