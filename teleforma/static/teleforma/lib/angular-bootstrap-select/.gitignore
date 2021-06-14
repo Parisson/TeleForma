@@ -1,0 +1,7 @@
+*.log
+node_modules
+components
+bower_components
+nbproject
+.idea
+.tmp
