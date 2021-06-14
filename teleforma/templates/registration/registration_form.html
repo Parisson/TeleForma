@@ -27,12 +27,14 @@
 
 <form class="register" id="_registerForm" method="post" action="" enctype="multipart/form-data" data-ajax="false">
     {% csrf_token %}
-    
-    <p>Pour ceux qui <strong>souhaitent s’inscrire en présentiel</strong>, nous vous informons que vous êtes susceptibles 
-    - dans la mesure ou les conditions sanitaires ne s’amélioreraient pas d’ici fin juin et que les mesures gouvernementales nous imposeraient des effectifs réduits – <strong>d’être basculé en e-learning</strong>.</p>
+
+    <p>Pour ceux qui <strong>souhaitent s’inscrire en présentiel</strong>, nous vous informons que vous êtes
+        susceptibles
+        - dans la mesure ou les conditions sanitaires ne s’amélioreraient pas d’ici fin juin et que les mesures
+        gouvernementales nous imposeraient des effectifs réduits – <strong>d’être basculé en e-learning</strong>.</p>
 
     <p>Bien évidemment, dans ce cas de figure, vous seriez remboursé à due concurrence.</p>
-    <br/>
+    <br />
 
     <h1>{% if mode_corrector %}Pré-inscription des correcteurs - PRÉ-BARREAU -
         CRFPA{% else %}{% trans "Pre-registration" %} -
@@ -72,8 +74,8 @@
 
     <h2><img src="{{ STATIC_URL }}teleforma/images/crfpa_formation.svg"
             onerror="this.onerror=null; this.src='{{ STATIC_URL }}teleforma/images/crfpa_formation.png'"
-            alt="votre formation" title="votre formation" class="votreformation"
-            />{% if mode_corrector %}Statut{% else %}Votre formation{% endif %} </h2>
+            alt="votre formation" title="votre formation"
+            class="votreformation" />{% if mode_corrector %}Statut{% else %}Votre formation{% endif %} </h2>
     <fieldset class="form_select">
         <div class="column"> {% for fieldname in form.training_fields %}
             {% with field=form|get_item:fieldname %}
@@ -96,7 +98,7 @@
     <span class="error">* Champs obligatoires</span>
 
     <div class="submit-panel">
-        <div> 
+        <div>
             <span class="error">
                 {{ form.payment_schedule.errors }}
             </span>
@@ -119,12 +121,13 @@
             </span>
             <label for="id_promo_code">{{ form.promo_code.label }}</label>
             {{ form.promo_code }}
-            <span>
+            <div class="captcha-div">
                 <span class="error">
                     {{ form.captcha.errors }}
                 </span>
                 <label for="id_captcha_1">{{ form.captcha.label }}*</label>
-                {{ form.captcha }}</span>
+                {{ form.captcha }}
+            </div>
         </div>
         <a href="#" class="component_icon button" onclick="$('#_registerForm').submit();">{% trans "Submit" %}</a>
     </div>
@@ -158,7 +161,7 @@
 
     function updateFascicule() {
         var platformOnly = $("[name='platform_only']").val() === 'True' ? true : false;
-        if(platformOnly)
+        if (platformOnly)
             $("[name='fascicule']").parent().show();
         else
             $("[name='fascicule']").parent().hide();
