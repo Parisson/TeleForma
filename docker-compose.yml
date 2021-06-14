@@ -19,6 +19,7 @@ services:
       - "8000:8000"
     links:
       - postgres
+      - redis
     env_file:
       - env/debug.env
 

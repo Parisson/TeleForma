@@ -31,6 +31,10 @@ class Command(BaseCommand):
     subject_template = 'postman/email_user_subject_init.txt'
     language_code = 'fr_FR'
 
+    def add_arguments(self, parser):
+        parser.add_argument('period_name')
+        parser.add_argument('log_file')
+        
     def init_password_email(self, user):
         site = Site.objects.get_current()
         ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'usr': user}
@@ -40,8 +44,8 @@ class Command(BaseCommand):
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
 
     def handle(self, *args, **options):
-        log_file = args[-1]
-        period_name = args[-2]
+        log_file = options['log_file']
+        period_name = options['period_name']
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
