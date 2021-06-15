@@ -22,7 +22,8 @@ class Command(BaseCommand):
 
 # server.port
 # listening port
-server.port=8080
+http.port=8080
+rtmp.port=8081
 
 streams.safe=true
 streams.safe.password=source2parisson
