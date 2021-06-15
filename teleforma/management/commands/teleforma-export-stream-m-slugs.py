@@ -41,7 +41,7 @@ streams.monitor.limit=100
         for course in courses:
             for type in types:
                 slug = course.slug + '-' + type.name.lower()
-                slug = course.department.name.lower() + '-' + slug
+                slug = course.department.name.lower() + '-' + slug.replace(' ', '-')
                 self.data += '\nstreams.' + slug + '=true\n'
                 self.data += 'streams.' + slug + '.password=' + self.passwd + '\n'
                 self.data += 'streams.' + slug + '.limit=1000\n'
