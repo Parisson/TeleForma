@@ -359,7 +359,9 @@ class CourseListView(CourseAccessMixin, ListView):
             for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
                 # if webclass.course not in student_courses:
                 #     continue
-                if webclass.platform_only and not student.platform_only:
+                if student.platform_only and not webclass.allow_elearning:
+                    continue
+                if not student.platform_only and not webclass.allow_presentiel:
                     continue
                 slot = webclass.get_slot(user)
                 if slot and slot.status in ('almost', 'ingoing'):
@@ -458,7 +460,9 @@ class CourseView(CourseAccessMixin, DetailView):
             except IndexError:
                 pass
             if webclass:
-                if webclass.platform_only and not student.platform_only:
+                if student.platform_only and not webclass.allow_elearning:
+                    webclass = None
+                elif not student.platform_only and not webclass.allow_presentiel:
                     webclass = None
                 else:
                     webclass_slot = webclass.get_slot(self.request.user)

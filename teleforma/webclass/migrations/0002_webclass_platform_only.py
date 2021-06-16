@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='webclass',
             name='platform_only',
-            field=models.BooleanField(default=False, verbose_name='platform only'),
+            field=models.BooleanField(default=True, verbose_name='platform only'),
         ),
     ]

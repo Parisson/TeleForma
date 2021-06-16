@@ -55,7 +55,9 @@ class WebclassAppointment(View):
         # Student is in the right IEJ ?
         if not student.iej in webclass.iej.all():
             return HttpResponse('Unauthorized', status=401)
-        if webclass.platform_only and not student.platform_only:
+        if student.platform_only and not webclass.allow_elearning:
+            return HttpResponse('Unauthorized', status=401)
+        if not student.platform_only and not webclass.allow_presentiel:
             return HttpResponse('Unauthorized', status=401)
             
         return
