@@ -139,6 +139,7 @@ class Webclass(models.Model):
         'teleforma.Course', related_name='webclass', verbose_name=_('course'), on_delete=models.CASCADE)
     iej = models.ManyToManyField(
         'teleforma.IEJ', related_name='webclass', verbose_name=_('iej'), blank=True)
+    platform_only = models.BooleanField(_('platform only'), default=False)
     bbb_server = models.ForeignKey(
         'BBBServer', related_name='webclass', verbose_name='Serveur BBB', on_delete=models.CASCADE)
     duration = DurationField('Durée de la conférence', default="00:30:00")
