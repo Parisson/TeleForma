@@ -105,7 +105,10 @@ export default class Chat extends Vue {
 
   connect(roomName: string) {
     // connect to socket
-    this.socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomName + "/")
+    let protocol = "wss"
+    if (window.location.protocol != "https:")
+      protocol = "ws"
+    this.socket = new WebSocket(protocol + "://" + window.location.host + "/ws/chat/" + roomName + "/")
     this.fetchMessages()
 
     this.socket.onclose = () => {
