@@ -127,8 +127,6 @@ urlpatterns = [
         template_name='registration/password_reset_complete.html'), name="teleforma-password-reset-complete"),
 
 
-    url(r'^captcha/', include('captcha.urls')),
-
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
 

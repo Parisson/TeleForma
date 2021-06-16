@@ -184,7 +184,7 @@ INSTALLED_APPS = (
     'pdfannotator',
     # 'telemeta',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
 )
 
 
@@ -280,9 +280,9 @@ FILE_UPLOAD_TEMP_DIR = '/tmp'
 SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 
-# SOUTH_MIGRATION_MODULES = {
-#     'captcha': 'captcha.south_migrations',
-# }
+RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
+RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
+RECAPTCHA_REQUIRED_SCORE = 0.85
 
 # Cache backend is optional, but recommended to speed up user agent parsing
 # CACHES = {
@@ -499,5 +499,5 @@ if DEBUG_TOOLBAR:
     }
 
 
-USE_WEBPACK_DEV_SERVER = DEBUG
+USE_WEBPACK_DEV_SERVER = False
 WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"

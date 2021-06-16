@@ -2,7 +2,8 @@
 import datetime
 from io import BytesIO
 
-from captcha.fields import CaptchaField
+from captcha.fields import ReCaptchaField
+
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -117,7 +118,7 @@ class UserForm(ModelForm):
                                   widget=forms.Select())
 
     # no model
-    captcha = CaptchaField()
+    captcha = ReCaptchaField()
     accept = BooleanField()
 
     class Meta:
@@ -240,7 +241,7 @@ class CorrectorForm(ModelForm):
                                        queryset=Course.objects.all().exclude(title="Aucune").order_by('title'),
                                        widget=forms.CheckboxSelectMultiple())
     # no model
-    captcha = CaptchaField()
+    captcha = ReCaptchaField()
     # accept = BooleanField()
 
     class Meta:
