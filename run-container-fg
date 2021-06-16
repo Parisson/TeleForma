@@ -4,6 +4,7 @@ import yaml
 import os
 import sys
 import shlex
+import subprocess
 
 if not os.path.exists('./docker-compose.yml'):
     print("This script requires a « docker-compose.yml » file in current directory.")
@@ -37,8 +38,25 @@ image = service.get('image', None)
 if image is None:
     image = '%s_%s' % (compose_name, service_name)
 
+i = 1
+while True:
+    name = image + '_%d' % i
+    print("Checking %s..." % name)
+    output = subprocess.check_output([ "docker", "ps", "-a", "--format={{.State}}", "--filter=name=%s" % name ]).strip()
+    if output == b'running':
+        print("Container %s already running, trying next..." % name)
+        i += 1
+        continue
+    elif output in (b'exited', b'created'):
+        print("Cleaning %s..." % name)
+        output = subprocess.check_output([ "docker", "rm", name ])
+        break
+    else:
+        break
+
 cmd_line = [ 'docker', 'run', '-it',
              '--network', network,
+             '--name', name,
              ]
 
 ports = service.get('ports', [])
