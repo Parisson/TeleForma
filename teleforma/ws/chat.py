@@ -8,7 +8,6 @@ from channels.db import database_sync_to_async
 @log_consumer_exceptions
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        print('join room')
 
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
