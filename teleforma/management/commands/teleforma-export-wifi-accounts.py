@@ -29,8 +29,8 @@ class Command(BaseCommand):
                     data = []
                     data.append(user.first_name)
                     data.append(user.last_name)
-                    data.append(period.date_begin)
-                    data.append(period.date_end)
+                    data.append(str(period.date_begin))
+                    data.append(str(period.date_end))
                     # data.append(p.wifi_login)
                     # data.append(p.wifi_pass)
                     data.append('\n')
