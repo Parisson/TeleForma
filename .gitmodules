@@ -3,4 +3,4 @@
 	url = https://github.com/Ircam-Web/mezzo-bin.git
 [submodule "lib/pdfannotator"]
 	path = lib/pdfannotator
-	url = git@git.pilotsystems.net:probarreau/pdfannotator.git
+	url = https://git.pilotsystems.net/probarreau/pdfannotator.git
