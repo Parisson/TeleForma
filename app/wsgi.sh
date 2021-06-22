@@ -12,8 +12,8 @@ debug_log='/var/log/app/debug.log'
 
 # uwsgi params
 port=8000
-processes=8
-threads=16
+processes=64
+#threads=2
 autoreload=3
 uid='www-data'
 gid='www-data'
@@ -24,13 +24,13 @@ gid='www-data'
 # You need at first checkout your sources in 'lib' folder
 # in host project side, then run :
 # pip install -e /srv/lib/mypackage...
-#pip install mysqlclient==1.3.13
+pip3 install -U uwsgi
 
 # Install (staging) libs
 # /srv/bin/build/local/setup_lib.sh
 
 # waiting for other services
-sh $app/bin/wait.sh
+sh $app/wait.sh
 
 # django setup
 #python $manage wait-for-db
@@ -51,9 +51,9 @@ else
 
     python $manage collectstatic --noinput
 
-    chown www-data: $debug_log
+    chown -R www-data: $debug_log
 
     uwsgi --socket :$port --wsgi-file $wsgi --chdir $app --master \
-    --processes $processes --threads $threads \
+    --processes $processes \
     --uid $uid --gid $gid --logto $uwsgi_log --touch-reload $wsgi
 fi

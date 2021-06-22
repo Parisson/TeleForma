@@ -344,7 +344,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': "/var/log/app.log",
+            'filename': "/var/log/app/app.log",
             'formatter': 'simple',
         },
         'console': {
@@ -379,7 +379,9 @@ POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
 
-ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net']
+ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net', 
+    'staging.docker.e-learning.crfpa.pre-barreau.parisson.com', 
+]
 
 JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",

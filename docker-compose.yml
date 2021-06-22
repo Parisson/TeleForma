@@ -6,7 +6,7 @@ services:
       context: .
       args:
         dev: 1
-    command: /bin/sh /srv/app/bin/app.sh --runserver
+    command: /bin/sh /srv/app/wsgi.sh --runserver
     volumes:
       - ./app/:/srv/app
       - ./bin:/srv/bin
@@ -15,8 +15,10 @@ services:
       - ./var/media:/srv/media
       - ./var/backup:/srv/backup
       - ./var/static:/srv/static
+      - ./var/log/app:/var/log/app
+      - ./var/log/uwsgi:/var/log/uwsgi
     ports:
-      - "8000:8000"
+      - "9001:8000"
     links:
       - postgres
       - redis
