@@ -30,10 +30,10 @@ class Command(BaseCommand):
 
         scripts = Script.objects.all()
         for annotation_comment in AnnotationComment.objects.all():
-            if not scripts.objects.filter(uuid=annotation_comment.uuid):
+            if not scripts.filter(uuid=annotation_comment.uuid):
                 annotation_comment.delete()
         for annotation in Annotation.objects.all():
-            if not scripts.objects.filter(uuid=annotation.uuid):
+            if not scripts.filter(uuid=annotation.uuid):
                 annotation.delete()
 
 
