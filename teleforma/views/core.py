@@ -33,6 +33,7 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 import datetime
 import os
+import requests
 from html import escape
 from io import BytesIO
 
@@ -45,6 +46,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect
+from django.contrib.sites.shortcuts import get_current_site
 from django.template import loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -241,6 +243,14 @@ def nginx_media_accel(media_path, content_type="", buffering=True, streaming=Fal
         #response['X-Accel-Limit-Rate'] = 524288
 
     return response
+
+
+def live_message(conference):
+    site = get_current_site()
+    token = settings.ADMIN_TOKEN
+    requests.post('https://' + site.domain + '/chat/messages',
+        headers={'Authorization': token},
+        data={'conference_id': conference.id})
 
 
 class HomeRedirectView(View):

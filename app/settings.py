@@ -503,3 +503,18 @@ if DEBUG_TOOLBAR:
 
 USE_WEBPACK_DEV_SERVER = False
 WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"
+
+
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_settings import *
+except ImportError as e:
+    if "local_settings" not in str(e):
+        raise e
+

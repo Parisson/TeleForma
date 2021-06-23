@@ -50,7 +50,7 @@ class ChatMessage(models.Model):
         room_name = ChatMessage.get_room_name(
             conference.period, conference.course)
         text = _("A new live conference has started : ")
-        text += f"http://{Site.objects.all()[0].domain}{reverse('teleforma-conference-detail', kwargs={'period_id': conference.period.id, 'pk': conference.id})}"
+        text += f"https://{Site.objects.all()[0].domain}{reverse('teleforma-conference-detail', kwargs={'period_id': conference.period.id, 'pk': conference.id})}"
         message = ChatMessage.add_message(
             None, room_name, text, system=True)
         channel_layer = get_channel_layer()
