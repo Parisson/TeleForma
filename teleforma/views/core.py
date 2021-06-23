@@ -673,7 +673,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path.encode('utf8'), streaming=False)
+            return serve_media(document.file.path, streaming=False)
         else:
             return redirect('teleforma-home')
 
@@ -681,7 +681,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path.encode('utf8'), streaming=True)
+            return serve_media(document.file.path, streaming=True)
         else:
             return redirect('teleforma-home')
 
