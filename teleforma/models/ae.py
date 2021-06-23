@@ -35,23 +35,25 @@
 """
 
 import django.db.models as models
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from telemeta.models.core import *
-from teleforma.models.core import *
+
+from ..models import app_label
+from ..models.core import MetaCore
 
 
+class AEStudent(models.Model):
 
-class AEStudent(Model):
+    user = models.ForeignKey(
+        User, related_name='ae_student', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
+    period = models.ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
+                                    blank=True)
+    platform_only = models.BooleanField(_('platform only'))
+    courses = models.ManyToManyField('Course', related_name="ae_student",
+                                     verbose_name=_('courses'),
+                                     blank=True)
 
-    user            = ForeignKey(User, related_name='ae_student', verbose_name=_('user'), unique=True )
-    period          = ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
-                                  blank=True, null=True)
-    platform_only   = BooleanField(_('platform only'))
-    courses       	= ManyToManyField('Course', related_name="ae_student",
-                                        verbose_name=_('courses'),
-                                        blank=True, null=True)
-    
-    def __unicode__(self):
+    def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:

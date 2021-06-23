@@ -1,10 +1,10 @@
-{% load i18n %}{% load telemeta_utils %}{% load teleforma_tags %}{% autoescape off %}Bonjour,
+{% load i18n %}{% load teleforma_tags %}{% autoescape off %}Bonjour,
 
 Votre copie soumise le {{ script.date_added }} en {{ script.course }} pour la séance {{ script.session }} a été corrigée.
 
 La note, les commentaires et les annotations sont disponibles à cette adresse :
 
-http://{{ site.domain }}{% url teleforma-exam-script-detail script.period.id script.id %}
+http://{{ site.domain }}{% url 'teleforma-exam-script-detail' script.period.id script.id %}
 
 {% trans "Best regards" %},
 {% trans "The site administrator" %} {% trans "of the" %} {% organization %}

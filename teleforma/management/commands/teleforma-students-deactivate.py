@@ -8,8 +8,6 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 from postman import *
@@ -29,6 +27,9 @@ class Logger:
 
 class Command(BaseCommand):
     help = "Activate all user account for subscribed students"
+
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
         period_name = args[-2]

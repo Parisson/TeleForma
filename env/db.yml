@@ -1,0 +1,12 @@
+version: '3'
+
+  db:
+    image: mariadb
+    env_file:
+      - 'prod.env'
+      - 'db.env'
+
+    volumes:
+      - ./var/lib/mysql/:/var/lib/mysql
+      - ./var/log/mysql/:/var/log/mysql
+      - ./var/backup/:/srv/backup

@@ -3,8 +3,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.exam.models import *
 import logging
 import codecs
@@ -18,6 +16,9 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 class Command(BaseCommand):
     help = "init all user wifi pass"
     args = 'path'
+
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
         path = args[0]

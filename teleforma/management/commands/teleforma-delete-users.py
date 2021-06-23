@@ -3,8 +3,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import datetime
@@ -14,6 +12,9 @@ class Command(BaseCommand):
     args = "date1 date2"
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def export_user(self, count, user):
 
         if student:
@@ -22,17 +23,17 @@ class Command(BaseCommand):
             row.write(0, user.last_name)
             row.write(1, user.first_name)
             row.write(9, user.email)
-            row.write(2, unicode(student.iej))
+            row.write(2, str(student.iej))
             code = student.training.code
             if student.platform_only:
                 code = 'I - ' + code
-            row.write(3, unicode(code))
-            row.write(4, unicode(student.procedure.code))
-            row.write(5, unicode(student.written_speciality.code))
-            row.write(6, unicode(student.oral_speciality.code))
-            row.write(7, unicode(student.oral_1.code))
-            row.write(8, unicode(student.oral_2.code))
-            row.write(15, unicode(student.period))
+            row.write(3, str(code))
+            row.write(4, str(student.procedure.code))
+            row.write(5, str(student.written_speciality.code))
+            row.write(6, str(student.oral_speciality.code))
+            row.write(7, str(student.oral_1.code))
+            row.write(8, str(student.oral_2.code))
+            row.write(15, str(student.period))
 
             profile = Profile.objects.filter(user=user)
             if profile:
@@ -56,7 +57,7 @@ class Command(BaseCommand):
         row.write(3, 'FORMATION')
         row.write(4, 'PROC')
         row.write(5, 'Ecrit Spe')
-        row.write(6, unicode('Oral Spe'))
+        row.write(6, str('Oral Spe'))
         row.write(7, 'ORAL 1')
         row.write(8, 'ORAL 2')
         row.write(9, 'MAIL')

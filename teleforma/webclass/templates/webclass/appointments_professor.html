@@ -1,6 +1,5 @@
-{% extends "telemeta/base.html" %}
+{% extends "teleforma/base.html" %}
 {% load i18n %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 
 {% block head_title %}Calendrier des Webclass{% endblock %}
@@ -46,7 +45,7 @@ Calendrier des Webclass
          {{slot.participants.count}}
         </td>
         <td>
-            <a href="{% url teleforma-webclass-join slot.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Rejoindre la conférence</a>
+            <a href="{% url 'teleforma-webclass-join' slot.id %}" target="_blank" class="conference-big-button component_icon button icon_next">Rejoindre la conférence</a>
         </td>
     </tr>
     {% empty %}

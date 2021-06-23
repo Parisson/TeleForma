@@ -2,20 +2,12 @@
 {% load i18n %}
 {% load teleforma_tags %}
 
-{% block extra_javascript %}
-<script type="text/javascript">
-  $(document).ready(function () {
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-  });
-</script>
-{% endblock extra_javascript %}
-
 {% block courses %}
 {% for c in all_courses %}
-{% with c.course as course %}
-<li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
-{% endwith %}
-{% endfor %}
+  {% with c.course as course %}
+   <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
+  {% endwith %}
+ {% endfor %}
 {% endblock courses %}
 
 {% block course %}
@@ -26,7 +18,7 @@
   <div class="block important">
     <p>
       <strong>Vous n'êtes pas inscrit à la webclass de cette matière. </strong><a
-        href="{% url teleforma-webclass-appointments webclass.id %}"
+        href="{% url 'teleforma-webclass-appointments' webclass.id %}"
         class="conference-big-button component_icon button icon_next">Cliquez-ici pour choisir un créneau horaire</a>
     </p>
   </div>
@@ -48,7 +40,7 @@
       <table class="listing" width="100%">
         <tbody>
           {% for quiz in course.quiz.all %}
-          <td class="border-top"><a href="{% url quiz_start_page slug=quiz.url %}">{{quiz.title}}</a></td>
+          <td class="border-top"><a href="{% url 'quiz_start_page' slug=quiz.url %}">{{quiz.title}}</a></td>
           <td class="border-top">{{quiz.description}}</td>
           {% endfor %}
         </tbody>
@@ -93,19 +85,8 @@
 {% endblock course %}
 
 {% block chat %}
-{% if course.title_tweeter %}
-{% if room %}
-{% if 'site' in room.name %}
-{% with "General tweeter" as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% else %}
-{% with "Tweeter"|add:" "|add:course.title_tweeter as title %}
-{% include "teleforma/inc/chat_room.html" %}
-{% endwith %}
-{% endif %}
-{% endif %}
-{% endif %}
+
+{% chat_room period=period course=course  %}
 
 {% newsitems_portlet course_id=course.id period_id=period.id %}
 {% endblock chat %}

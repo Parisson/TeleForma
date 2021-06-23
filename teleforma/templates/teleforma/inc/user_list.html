@@ -1,0 +1,77 @@
+{% load i18n %}
+{% load teleforma_tags %}
+{% load pagination_tags %}
+
+<div class="pagination">
+    {% for p in page.paginator.pages %}
+      {% if p == page %}
+       <span class="selected">{{ page }}</span>
+      {% else %}
+       <a href="?page={{ p.number }}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+</div>
+
+<div id="users">
+<div class="shadow">...</div>
+  <table class="listing" width="100%">
+   <thead>
+   <tr><th>{% trans "Last Name"%}</th>
+    <th>{% trans "First Name"%}</th>
+    <th>{% trans "IEJ"%}</th>
+    <th>{% trans "Trainings"%}</th>
+    <th>{% trans "Procedure"%}</th>
+    <th>{% trans "Written spe"%}</th>
+    <th>{% trans "Oral spe"%}</th>
+    <th>{% trans "Oral 1"%}</th>
+    <th>{% trans "Oral 2"%}</th>
+    <th>{% trans "Write"%}</th>
+    </tr>
+    </thead>
+    <tbody id="spacing">
+    {% for user in page.object_list %}
+    <tr>
+     <td><a href="{% url 'teleforma-profile-detail' user.username %}">{{ user.last_name }}</a></td>
+     <td><a href="{% url 'teleforma-profile-detail' user.username %}">{{ user.first_name }}</a></td>
+
+     {% if user.student.get %}
+      {% with user.student.get as student %}
+        <td>{{ student.iej.name }}</td>
+        <td>{% for training in student.trainings.all %}{{ training }} {% endfor %}</td>
+        <td>{{ student.procedure.code }}</td>
+        <td>{{ student.written_speciality.code }}</td>
+        <td>{{ student.oral_speciality.code }}</td>
+        <td>{{ student.oral_1.code }}</td>
+        <td>{{ student.oral_2.code }}</td>
+     {% endwith %}
+    {% elif user.professor.get %}
+        <td>{% trans "Professor" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    {% elif user.is_staff %}
+        <td>{% trans "Administrator" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    {% else %}
+        <td>{% trans "Unknown" %}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    {%  endif %}
+    <td><a href="{% url 'postman:write' user.username %}" class="component_icon button" id="action_orange">{% trans "Message" %}</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>

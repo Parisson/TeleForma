@@ -33,14 +33,18 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
+from django.utils.decorators import method_decorator
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
 
-from teleforma.views.core import *
-from teleforma.decorators import access_required
+from ..decorators import access_required
+from ..models.pro import Answer, Question, Seminar
+
 
 class SeminarView(DetailView):
 
     model = Seminar
-    template_name='teleforma/seminar_detail.html'
+    template_name = 'teleforma/seminar_detail.html'
 
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
@@ -54,32 +58,25 @@ class SeminarView(DetailView):
         context['progress'] = self.progress(user, seminar)
         return context
 
-    def progress(user, seminar):    
+    def progress(user, seminar):
         """return the user progress of a seminar in percent"""
 
         progress = 0
         total = 0
-        
-        docs = [seminar.doc_1, seminar.doc_2, seminar.media, seminar.doc_correct]
+
+        docs = [seminar.doc_1, seminar.doc_2,
+                seminar.media, seminar.doc_correct]
         for doc in docs:
             total += doc.weight
             if user in doc.readers:
                 progress += doc.weight
-        
+
         questions = Question.objects.filter(seminar=seminar, status=3)
         for question in questions:
             total += question.weight
-            answer = Answer.objects.filter(question=question, validated=True, user=user)
+            answer = Answer.objects.filter(
+                question=question, validated=True, user=user)
             if answer:
                 progress += question.weight
 
         return int(progress*100/total)
-
-
-class AnswerView(FormView):
-
-    model = Answer
-    form_class = AnswerForm
-    template_name='teleforma/answer.html'
-
-

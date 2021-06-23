@@ -631,7 +631,7 @@ msgstr "procédure"
 #, fuzzy
 #| msgid "written speciality"
 msgid "written_speciality"
-msgstr "spécialité écrit"
+msgstr "Spécialité écrit"
 
 #: models/core.py:179
 #, fuzzy
@@ -808,7 +808,7 @@ msgstr ""
 #, fuzzy
 #| msgid "platform only"
 msgid "e-learning platform only"
-msgstr "plateforme seulement"
+msgstr "Plateforme seulement"
 
 #: models/crfpa.py:163
 msgid "application fees"

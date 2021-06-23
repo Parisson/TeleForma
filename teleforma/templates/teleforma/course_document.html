@@ -1,20 +1,13 @@
 {% extends "teleforma/course_media.html" %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load i18n %}
 
 {% block extra_javascript %}
 
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-    });
-</script>
-
 <script type="text/javascript" src="/static/teleforma/js/pdf-min.js"></script>
 
 <script type="text/javascript">
-    PDFJS.workerSrc = '/static/telemeta/js/pdf-min.js';
+    PDFJS.workerSrc = '/static/teleforma/js/pdf-min.js';
 </script>
 
 <script type="text/javascript">
@@ -23,7 +16,7 @@ $(document).ready(function(){
 //
 // Fetch the PDF document from the URL using promices
 //
-PDFJS.getDocument('{% url teleforma-document-download document.id %}').then(function(pdf) {
+PDFJS.getDocument('{% url 'teleforma-document-download' document.id %}').then(function(pdf) {
   // Using promise to fetch the page
   pdf.getPage(1).then(function(page) {
     var scale = 1.5;

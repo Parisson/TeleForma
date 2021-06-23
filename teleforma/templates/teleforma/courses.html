@@ -1,17 +1,8 @@
-{% extends "telemeta/base.html" %}
+{% extends "teleforma/base.html" %}
 {% load teleforma_tags %}
 {% load thumbnail %}
-{% load telemeta_utils %}
 {% load i18n %}
 
-
-{% block extra_javascript %}
-<script type="text/javascript">
-  $(document).ready(function () {
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-  });
-</script>
-{% endblock extra_javascript %}
 
 {% block content %}
 
@@ -20,14 +11,14 @@
   {% block modules %}
   <div class="module">
 
-    <h3><img src="/static/telemeta/images/module_playlist.png" alt="playlists"
+    <h3><img src="/static/teleforma/images/module_playlist.png" alt="playlists"
         style="vertical-align:middle" />{{ period }}</h3>
     <div style="background: white;">
       <ul>
         {% block courses %}
         {% for c in all_courses %}
         {% with c.course as course %}
-        <li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
+        <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
         {% endwith %}
         {% endfor %}
         {% endblock courses %}
@@ -40,14 +31,14 @@
   {% get_telecaster as telecaster %}
   {%  if telecaster %}
   <div class="module_action">
-    <a href="{% url teleforma-conference-record %}" class="component_icon button"
+    <a href="{% url 'teleforma-conference-record' %}" class="component_icon button"
       id="action_red">{% trans "New conference" %}</a>
   </div>
   {% endif %}
 
   {% if user.is_staff %}
   <div class="module_action">
-    <a href="{% url teleforma-desk-period-pending period.id %}" class="component_icon button"
+    <a href="{% url 'teleforma-desk-period-pending' period.id %}" class="component_icon button"
       id="action_red">{% trans "Pending" %}</a>
   </div>
   {% endif %}
@@ -55,19 +46,7 @@
   {% endblock module-action %}
 
   {% block notes %}
-  <!--<div class="module">
-<h3><img src="/static/telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
-<div style="background: white;">
-<ul>
-{% for note in notes %}
-<li>{{ note.content }}</li>
-{% endfor %}
-</ul>
-</div>
-</div>
-<div class="module_action">
-<a href="#" class="component_icon button" id="action_violet">{% trans "New note" %}</a>
-</div>-->
+
   {% endblock notes %}
 
   {% endblock modules %}
@@ -89,7 +68,7 @@
     {% endif %}
 
     {% for appointment in appointments %}
-      <a href="{% url teleforma-appointments period_id=period.id course_id=appointment.course.id %}"><button>Rendez-vous individuels "{{ appointment.name }}"</button></a>
+      <a href="{% url 'teleforma-appointments' period_id=period.id course_id=appointment.course.id %}"><button>Rendez-vous individuels "{{ appointment.name }}"</button></a>
     {% endfor %}
   </div>
   <br />
@@ -110,17 +89,13 @@
     </div>
 
     <div class="video" style="width:400px">
-      <a href="{% url teleforma-media-detail period.id home_video.id %}" title="{% trans "Play" %}">
-        {% if home_video.item.related.all %}
-        {% for related in home_video.item.related.all %}
-        {% if related.title == "preview" %}
-        {% thumbnail related.file "168x96" as im %}
+      <a href="{% url 'teleforma-media-detail' period.id home_video.id %}" title="{% trans "Play" %}">
+        {% if home_video.poster_file %}
+        {% thumbnail home_video.poster_file "168x96" as im %}
         <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
           <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
         </div>
         {% endthumbnail %}
-        {% endif %}
-        {% endfor %}
         {% else %}
         {% trans 'Click here' %}
         {% endif %}
@@ -146,7 +121,7 @@
               {% elif slot.status == 'almost' %}
               La webclasse <strong>"{{slot.webclass.course.title}}"</strong> va démarrer bientôt.
               {% endif %}
-              <a href="{% url teleforma-webclass-join slot.id %}" target="_blank"
+              <a href="{% url 'teleforma-webclass-join' slot.id %}" target="_blank"
                 class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la
                 webclasse</a>
             </p>
@@ -159,7 +134,7 @@
             <p>
               <strong>Vous n'êtes pas inscrit à la webclasse "{{webclass.course.title}}".</strong> <a
                 class="conference-big-button component_icon button icon_next"
-                href="{% url teleforma-webclass-appointments webclass.id %}">Cliquez-ici pour choisir un créneau
+                href="{% url 'teleforma-webclass-appointments' webclass.id %}">Cliquez-ici pour choisir un créneau
                 horaire</a>
             </p>
           </td>
@@ -176,7 +151,7 @@
     {% for type in c.types %}
     <div class="course">
       <div class="course_title">
-        <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} -
+        <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} -
           {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
       </div>
 
@@ -217,7 +192,6 @@
 
 
 <div id="module-set" style="width: 22%">
-
   {% block status %}
   {% get_telecaster as telecaster %}
   {%  if telecaster %}
@@ -231,11 +205,8 @@
   {% endblock status %}
 
   {% block chat %}
-  {% if room %}
-  {% with "General tweeter" as title %}
-  {% include "teleforma/inc/chat_room.html" %}
-  {% endwith %}
-  {% endif %}
+  
+  {% chat_room period=period %}
   {% endblock chat %}
 
 </div>

@@ -1,5 +1,4 @@
 {% extends "teleforma/course_media.html" %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load i18n %}
 
@@ -11,12 +10,6 @@ jQuery(window).ready(function(){
     var a = jQuery('#action_red');
     var f = jQuery('#_StationForm');
     a.unbind('click').click(function(){f.submit();return false;});
-    });
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
     });
 </script>
 

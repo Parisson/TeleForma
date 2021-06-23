@@ -36,5 +36,3 @@ class Command(BaseCommand):
             if not scripts.filter(uuid=annotation.uuid):
                 annotation.delete()
 
-
-        

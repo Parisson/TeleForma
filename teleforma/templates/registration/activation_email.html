@@ -4,7 +4,7 @@ This template is used for the html alternative of the activation email
 if you use a django-registration backend that looks for it. e.g.
 https://github.com/huseyinyilmaz/django-registration-extended-backend
 {% endcomment %}
-{% url registration_activate activation_key as activation_key_url %}
+{% url 'registration_activate' activation_key as activation_key_url %}
 {% blocktrans with sitename=site.name sitedomain=site.domain%}<body>
 <h3>Account registration for {{ sitename }}</h3>
 <p>

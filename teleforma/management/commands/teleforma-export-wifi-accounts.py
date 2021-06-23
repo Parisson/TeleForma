@@ -12,6 +12,9 @@ class Command(BaseCommand):
     help = "Export all WiFi accounts"
     args = 'path'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         path = args[0]
         period_name = args[1]
@@ -31,6 +34,8 @@ class Command(BaseCommand):
                     data.append(user.last_name)
                     data.append(str(period.date_begin))
                     data.append(str(period.date_end))
+                    data.append(period.date_begin)
+                    data.append(period.date_end)
                     # data.append(p.wifi_login)
                     # data.append(p.wifi_pass)
                     data.append('\n')

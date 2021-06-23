@@ -3,8 +3,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import json
@@ -29,6 +27,8 @@ class Command(BaseCommand):
             print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
         return json.dumps(list)
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
         file = args[0]

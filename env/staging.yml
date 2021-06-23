@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        dev: 0
+    command: /bin/sh /srv/app/wsgi.sh
+    restart: unless-stopped
+    env_file:
+      - env/staging.env
+    volumes:
+      - /mnt/crfpa-videos:/mnt/crfpa-videos
+      - /mnt/crfpa-scripts:/mnt/crfpa-scripts
+    ports:
+      - "9001:8000"
+  
+  channels:
+    build:
+      context: .
+      args:
+        dev: 0
+    command: /bin/sh /srv/app/asgi.sh
+    volumes:
+      - ./app/:/srv/app
+      - ./bin:/srv/bin
+      - ./lib:/srv/lib
+      - ./teleforma/:/srv/src/teleforma/teleforma
+      - ./var/log/app:/var/log/app
+    ports:
+      - "9002:8000"
+    links:
+      - postgres
+      - redis
+    env_file:
+      - env/staging.env
+
+
+volumes:
+    app:
+    channels:
+    postgres:
+    redis:

@@ -4,7 +4,7 @@
   <h2>Votre échéancier de paiement</h2>
 
   <p>
-    <a href="{% url teleforma-receipt-download username=user.username %}" class="component_icon button">Télécharger la facture</a>
+    <a href="{% url 'teleforma-receipt-download' username=user.username %}" class="component_icon button">Télécharger la facture</a>
   </p>
   
   <table>

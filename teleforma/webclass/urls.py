@@ -32,19 +32,23 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-from django.conf.urls import patterns, url, include
-from django.http import HttpResponse
-from teleforma.webclass.views import *
+from django.conf.urls import url
 
+from ..webclass.views import (WebclassAppointment,
+                              WebclassProfessorAppointments,
+                              WebclassRecordsFormView, WebclassRecordView,
+                              join_webclass)
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^desk/webclass_appointments/(?P<pk>.*)$', WebclassAppointment.as_view(),
-       name="teleforma-webclass-appointments"),
-    url(r'^desk/webclass_calendar/$', WebclassProfessorAppointments.as_view(), name="teleforma-webclass-professor"),
-    url(r'^desk/webclass_record$', WebclassRecordView.as_view(), name="teleforma-webclass-record"),
-    url(r'^admin/periods/(?P<period_id>.*)/webclass_records_form/$', WebclassRecordsFormView.as_view(), name="teleforma-webclass-records-form"),
+        name="teleforma-webclass-appointments"),
+    url(r'^desk/webclass_calendar/$', WebclassProfessorAppointments.as_view(),
+        name="teleforma-webclass-professor"),
+    url(r'^desk/webclass_record$', WebclassRecordView.as_view(),
+        name="teleforma-webclass-record"),
+    url(r'^webclass/periods/(?P<period_id>.*)/webclass_records_form/$',
+        WebclassRecordsFormView.as_view(), name="teleforma-webclass-records-form"),
     url(r'^desk/webclass/(?P<pk>.*)/join/$',
         join_webclass,
-        name="teleforma-webclass-join"),
-
-)
+        name="teleforma-webclass-join")
+]

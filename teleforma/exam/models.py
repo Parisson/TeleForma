@@ -35,32 +35,35 @@
 """
 
 from __future__ import division
-import os, uuid, time, hashlib, mimetypes, tempfile, datetime, urllib
 
-from django.db import models
+import datetime
+import mimetypes
+import os
+from teleforma.utils import guess_mimetypes
+import urllib
+import uuid
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.db.models import Q, Max, Min
+from django.db import models
 from django.db.models.signals import post_save
-from django.conf import settings
-from django.utils.translation import ugettext, ugettext_lazy as _
-from django.template.defaultfilters import slugify
-
-from teleforma.models import *
 from django.template.loader import render_to_string
-from postman.utils import email_visitor, notify_user
+from django.urls.base import reverse_lazy
+from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
 from postman.models import Message
+from postman.utils import notify_user
+from teleforma.models.core import Course, Period
 
+from ..models.core import session_choices
 
 app = 'teleforma'
+
 
 class MetaCore:
 
     app_label = 'exam'
-
-
-import crocodoc
-crocodoc.api_token = settings.BOX_API_TOKEN
 
 
 # import boxsdk
@@ -81,22 +84,22 @@ crocodoc.api_token = settings.BOX_API_TOKEN
 # box_client = Client(oauth)
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
-                 (3, _('pending')),(4, _('marked')), (5, _('read')),
-                 (6, _('backup')), (7, _('stat')) )
+                 (3, _('pending')), (4, _('marked')), (5, _('read')),
+                 (6, _('backup')), (7, _('stat')))
 
 REJECT_REASON = (('unreadable', _('unreadable')),
-                ('bad orientation', _('bad orientation')),
-                ('bad framing', _('bad framing')),
-                ('incomplete', _('incomplete')),
-                ('wrong course', _('wrong course')),
-                ('duplicate', _('duplicate')),
-                ('other', _('other')),
-                ('wrong format', _('wrong format')),
-                ('unreadable file', _('unreadable file')),
-                ('no file', _('no file')),
-                ('error retrieving file', _('error retrieving file')),
-                ('file too large', _('file too large')),
-                )
+                 ('bad orientation', _('bad orientation')),
+                 ('bad framing', _('bad framing')),
+                 ('incomplete', _('incomplete')),
+                 ('wrong course', _('wrong course')),
+                 ('duplicate', _('duplicate')),
+                 ('other', _('other')),
+                 ('wrong format', _('wrong format')),
+                 ('unreadable file', _('unreadable file')),
+                 ('no file', _('no file')),
+                 ('error retrieving file', _('error retrieving file')),
+                 ('file too large', _('file too large')),
+                 )
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
@@ -121,9 +124,6 @@ def sha1sum_file(filename):
             sha1.update(chunk)
     return sha1.hexdigest()
 
-def mimetype_file(path):
-    return mimetypes.guess_type(path)[0]
-
 def check_unique_mimetype(l):
     i = 0
     for d in l:
@@ -139,56 +139,62 @@ def check_unique_mimetype(l):
 
 class Quota(models.Model):
 
-    course = models.ForeignKey(Course, related_name="quotas", verbose_name=_('course'), null=True, blank=True, on_delete=models.SET_NULL)
-    corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_('corrector'), null=True, blank=True, on_delete=models.SET_NULL)
-    period = models.ForeignKey(Period, related_name='quotas', verbose_name=_('period'), null=True, blank=True, on_delete=models.SET_NULL)
-    session = models.CharField(_('session'), choices=session_choices, max_length=16, default="1")
+    course = models.ForeignKey(Course, related_name="quotas", verbose_name=_(
+        'course'), null=True, blank=True, on_delete=models.SET_NULL)
+    corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_(
+        'corrector'), null=True, blank=True, on_delete=models.SET_NULL)
+    period = models.ForeignKey(Period, related_name='quotas', verbose_name=_(
+        'period'), null=True, blank=True, on_delete=models.SET_NULL)
+    session = models.CharField(
+        _('session'), choices=session_choices, max_length=16, default="1")
     value = models.IntegerField(_('value'))
     date_start = models.DateField(_('date start'))
     date_end = models.DateField(_('date end'))
-    script_type = models.ForeignKey('ScriptType', related_name='quotas', verbose_name=_('type'), null=True, blank=True, on_delete=models.SET_NULL)
+    script_type = models.ForeignKey('ScriptType', related_name='quotas', verbose_name=_(
+        'type'), null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
         verbose_name = _('Quota')
         verbose_name_plural = _('Quotas')
         ordering = ['-date_end']
 
-    def __unicode__(self):
-        title = ' - '.join([unicode(self.corrector), self.course.title,
+    def __str__(self):
+        title = ' - '.join([str(self.corrector), self.course.title,
                             str(self.all_script_count) + '/' + str(self.value)])
         if self.script_type:
-            title = ' - '.join([title, unicode(self.script_type)])
+            title = ' - '.join([title, str(self.script_type)])
         if self.date_start:
-            title = ' - '.join([title, unicode(self.date_start)])
+            title = ' - '.join([title, str(self.date_start)])
         if self.date_end:
-            title = ' - '.join([title, unicode(self.date_end)])
+            title = ' - '.join([title, str(self.date_end)])
         return title
 
     def script_count(self, statuses):
         if self.corrector:
-            q = self.corrector.corrector_scripts.filter(status__in = statuses)
+            q = self.corrector.corrector_scripts.filter(status__in=statuses)
             q = q.filter(course=self.course)
             q = q.filter(period=self.period)
             q = q.filter(session=self.session)
             # Careful, MySQL considers '2019-07-28 11:42:00" to not be >= "2019-07-28"
             start = self.date_start
-            end = self.date_end + datetime.timedelta(days = 1)
-            q = q.filter(date_submitted__gte=start).filter(date_submitted__lte=end)
+            end = self.date_end + datetime.timedelta(days=1)
+            q = q.filter(date_submitted__gte=start).filter(
+                date_submitted__lte=end)
             return q.count()
         else:
             return 0
 
     @property
     def all_script_count(self):
-        return self.script_count(statuses = (3,4,5))
+        return self.script_count(statuses=(3, 4, 5))
 
     @property
     def pending_script_count(self):
-        return self.script_count(statuses = (3,))
+        return self.script_count(statuses=(3,))
 
     @property
     def marked_script_count(self):
-        return self.script_count(statuses = (4,5))
+        return self.script_count(statuses=(4, 5))
 
     @property
     def level(self):
@@ -205,9 +211,11 @@ class Quota(models.Model):
 class BaseResource(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
-    date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
+    date_modified = models.DateTimeField(
+        _('date modified'), auto_now=True, null=True)
     uuid = models.CharField(_('UUID'), blank=True, max_length=512)
-    mime_type = models.CharField(_('MIME type'), max_length=128, blank=True, null=True)
+    mime_type = models.CharField(
+        _('MIME type'), max_length=128, blank=True, null=True)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
 
     class Meta(MetaCore):
@@ -218,15 +226,18 @@ class BaseResource(models.Model):
             self.uuid = uuid.uuid4()
         super(BaseResource, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return unicode(self.uuid)
+    def __str__(self):
+        return str(self.uuid)
 
 
 class ScriptPage(BaseResource):
 
-    script = models.ForeignKey('Script', related_name='pages', verbose_name=_('script'), blank=True, null=True)
-    file = models.FileField(_('Page file'), upload_to='script_pages/%Y/%m/%d', max_length=1024, blank=True)
-    image = models.ImageField(_('Image file'), upload_to='script_pages/%Y/%m/%d', blank=True)
+    script = models.ForeignKey('Script', related_name='pages', verbose_name=_(
+        'script'), blank=True, null=True, on_delete=models.SET_NULL)
+    file = models.FileField(
+        _('Page file'), upload_to='script_pages/%Y/%m/%d', max_length=1024, blank=True)
+    image = models.ImageField(
+        _('Image file'), upload_to='script_pages/%Y/%m/%d', blank=True)
     rank = models.IntegerField(_('rank'), blank=True, null=True)
 
     class Meta(MetaCore):
@@ -236,76 +247,73 @@ class ScriptPage(BaseResource):
 
 class ScriptType(models.Model):
 
-    name  = models.CharField(_('name'), max_length='512', blank=True)
+    name = models.CharField(_('name'), max_length=512, blank=True)
 
     class Meta:
         verbose_name = _('ScriptType')
         verbose_name_plural = _('ScriptTypes')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class Script(BaseResource):
 
-    course = models.ForeignKey(Course, related_name="scripts", verbose_name=_('course'), null=True, on_delete=models.SET_NULL)
+    course = models.ForeignKey(Course, related_name="scripts", verbose_name=_(
+        'course'), null=True, on_delete=models.SET_NULL)
     period = models.ForeignKey(Period, related_name='scripts', verbose_name=_('period'),
-                                 null=True, blank=True, on_delete=models.SET_NULL)
+                               null=True, blank=True, on_delete=models.SET_NULL)
     session = models.CharField(_('session'), max_length=16, default="1")
-    type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_('type'), null=True, blank=True, on_delete=models.SET_NULL)
-    author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_('author'), null=True, blank=True, on_delete=models.SET_NULL)
-    corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_('corrector'), blank=True, null=True, on_delete=models.SET_NULL)
-    file = models.FileField(_('PDF file'), upload_to='scripts/%Y/%m/%d', max_length=1024, blank=True)
-    box_uuid  = models.CharField(_('Box UUID'), max_length='256', blank=True)
-    score = models.FloatField(_('score'), blank=True, null=True, help_text="/20")
+    type = models.ForeignKey(ScriptType, related_name='scripts', verbose_name=_(
+        'type'), null=True, blank=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, related_name="author_scripts", verbose_name=_(
+        'author'), null=True, blank=True, on_delete=models.SET_NULL)
+    corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_(
+        'corrector'), blank=True, null=True, on_delete=models.SET_NULL)
+    file = models.FileField(
+        _('PDF file'), upload_to='scripts/%Y/%m/%d', max_length=1024, blank=True)
+    box_uuid = models.CharField(_('Box UUID'), max_length=256, blank=True)
+    score = models.FloatField(_('score'), blank=True,
+                              null=True, help_text="/20")
     comments = models.TextField(_('comments'), blank=True)
-    status = models.IntegerField(_('status'), choices=SCRIPT_STATUS, blank=True)
-    reject_reason = models.CharField(_('reason'), choices=REJECT_REASON, max_length='256', blank=True)
-    date_submitted = models.DateTimeField(_('date submitted'), null=True, blank=True)
+    status = models.IntegerField(
+        _('status'), choices=SCRIPT_STATUS, blank=True)
+    reject_reason = models.CharField(
+        _('reason'), choices=REJECT_REASON, max_length=256, blank=True)
+    date_submitted = models.DateTimeField(
+        _('date submitted'), null=True, blank=True)
     date_marked = models.DateTimeField(_('date marked'), null=True, blank=True)
-    date_rejected = models.DateTimeField(_('date rejected'), null=True, blank=True)
-    url  = models.CharField(_('URL'), max_length='2048', blank=True)
+    date_rejected = models.DateTimeField(
+        _('date rejected'), null=True, blank=True)
+    url = models.CharField(_('URL'), max_length=2048, blank=True)
 
     @property
     def title(self):
         if self.type:
-            title = [self.course.title, self.type.name, _("Session") + ' ' + self.session, unicode(self.date_added)]
+            title = [self.course.title, self.type.name, _(
+                "Session") + ' ' + self.session, str(self.date_added)]
         else:
-            title = [self.course.title, _("Session") + ' ' + self.session, unicode(self.date_added)]
+            title = [self.course.title, _(
+                "Session") + ' ' + self.session, str(self.date_added)]
         if self.author:
-            title.append(unicode(self.author.first_name) + ' ' + unicode(self.author.last_name))
+            title.append(str(self.author.first_name) +
+                         ' ' + str(self.author.last_name))
         return ' - '.join(title)
 
-    def __unicode__(self):
-        return unicode(self.title)
+    def __str__(self):
+        return str(self.title)
 
     def get_absolute_url(self):
         period_id = None
         if self.period:
             period_id = self.period.id
         return reverse_lazy('teleforma-exam-script-detail',
-                            kwargs={'pk':self.id, 'period_id': period_id})
+                            kwargs={'pk': self.id, 'period_id': period_id})
 
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
         ordering = ['date_added']
-
-    @property
-    def box_admin_url(self):
-        user = {'id': self.corrector.id, 'name': unicode(self.corrector)}
-        session_key = crocodoc.session.create(self.box_uuid, editable=True, user=user,
-                                filter='all', admin=True, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='invisible')
-        return 'https://crocodoc.com/view/' + session_key
-
-    @property
-    def box_user_url(self):
-        user = {'id': 3, 'name': 'TeleForma'}
-        session_key = crocodoc.session.create(self.box_uuid, editable=False, user=user,
-                                filter='all', admin=False, downloadable=True,
-                                copyprotected=False, demo=False, sidebar='invisible')
-        return 'https://crocodoc.com/view/' + session_key
 
     def auto_set_corrector(self):
 
@@ -313,11 +321,11 @@ class Script(BaseResource):
 
         quota_list = []
         all_quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
-                                            date_end__gte=self.date_submitted,
-                                            session=self.session,
-                                            period=self.period)
+                                               date_end__gte=self.date_submitted,
+                                               session=self.session,
+                                               period=self.period)
 
-        ## Commented to not filter by type anymore
+        # Commented to not filter by type anymore
         # quotas = all_quotas.filter(script_type=self.type)
         # if not quotas:
         #     quotas = all_quotas.filter(script_type=None)
@@ -327,11 +335,11 @@ class Script(BaseResource):
         if quotas:
             for quota in quotas:
                 if quota.value:
-                    quota_list.append({'obj':quota, 'level': quota.level})
+                    quota_list.append({'obj': quota, 'level': quota.level})
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
         else:
-            #FIXME: default corrector goes to settings
+            # FIXME: default corrector goes to settings
             self.corrector = User.objects.filter(is_superuser=True)[1]
 
         self.status = 3
@@ -369,7 +377,7 @@ class Script(BaseResource):
             self.mark()
         elif self.status == 0 and self.reject_reason:
             self.reject()
-        #HOTFIX
+        # HOTFIX
         if not self.mime_type:
             self.mime_type = 'application/pdf'
         super(Script, self).save(*args, **kwargs)
@@ -382,32 +390,34 @@ class Script(BaseResource):
         old_abs_list = old_abs.split(os.sep)
         old_abs_root = old_abs_list[:-1]
 
-        old_rel = unicode(self.file)
+        old_rel = str(self.file)
         old_rel_list = old_rel.split(os.sep)
         old_rel_root = old_rel_list[:-1]
 
         filename, ext = os.path.splitext(old_abs_list[-1])
 
-        new_abs = os.sep.join(old_abs_root) + os.sep + unicode(self.uuid) + ext
-        new_rel = os.sep.join(old_rel_root) + os.sep + unicode(self.uuid) + ext
+        new_abs = os.sep.join(old_abs_root) + os.sep + str(self.uuid) + ext
+        new_rel = os.sep.join(old_rel_root) + os.sep + str(self.uuid) + ext
 
         if not os.path.exists(new_abs):
-            os.symlink(old_abs, new_abs)
+            os.symlink(filename + ext, new_abs)
 
         if not self.url:
-            self.url = settings.MEDIA_URL + unicode(new_rel)
+            self.url = settings.MEDIA_URL + str(new_rel)
 
     @property
     def safe_url(self):
         domain = Site.objects.get_current().domain
         url = self.url
-        url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//' + domain)
+        url = url.replace(
+            'http://e-learning.crfpa.pre-barreau.com', '//' + domain)
         return urllib.quote(url)
 
     def unquoted_url(self):
         domain = Site.objects.get_current().domain
         url = self.url
-        url = url.replace('http://e-learning.crfpa.pre-barreau.com', '//' + domain)
+        url = url.replace(
+            'http://e-learning.crfpa.pre-barreau.com', '//' + domain)
         return url
 
     def has_annotations_file(self):
@@ -415,39 +425,6 @@ class Script(BaseResource):
         check if an annotations file exists. Then use this file, otherwise use the new db implementation
         """
         return os.path.exists(os.path.join(settings.WEBVIEWER_ANNOTATIONS_PATH, self.uuid+'.xfdf'))
-
-    def box_upload(self):
-        sleep = 10
-        max_loop = 12
-        loop = 0
-
-        self.box_uuid = crocodoc.document.upload(url=self.url)
-
-        while True:
-            statuses = crocodoc.document.status([self.box_uuid,])
-            if (len(statuses) != 0):
-                if (statuses[0].get('error') == None):
-                    if statuses[0]['status'] == 'DONE':
-                        self.box_upload_done = 1
-                        self.save()
-                        break
-                    else:
-                        loop += 1
-                        time.sleep(sleep)
-                        if loop > max_loop:
-                            break
-                else:
-                    print 'File upload failed :('
-                    print '  Error Message: ' + statuses[0]['error']
-                    if 'too large' in statuses[0]['error']:
-                        self.auto_reject('file too large')
-                    elif 'retrieving file' in statuses[0]['error']:
-                        self.auto_reject('error retrieving file')
-                    break
-            else:
-                print 'failed :('
-                print '  Statuses were not returned.'
-                break
 
     def auto_reject(self, mess):
         self.reject_reason = mess
@@ -467,7 +444,7 @@ class Script(BaseResource):
             self.auto_reject('file not found')
             return
 
-        mime_type = mimetype_file(self.file.path)
+        mime_type = guess_mimetypes(self.file.path)
         if mime_type:
             if not 'pdf' in mime_type:
                 self.auto_reject('wrong format')
@@ -495,7 +472,8 @@ class Script(BaseResource):
         a = ugettext('Script')
         v = ugettext('marked')
         subject = '%s %s' % (a, v)
-        mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
+        mess = Message(sender=self.corrector, recipient=self.author,
+                       subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
         site = Site.objects.all()[0]
@@ -510,7 +488,8 @@ class Script(BaseResource):
         a = ugettext('Script')
         v = ugettext('rejected')
         subject = '%s %s' % (a, v)
-        mess = Message(sender=self.corrector, recipient=self.author, subject=subject[:119], body=text)
+        mess = Message(sender=self.corrector, recipient=self.author,
+                       subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()
         notify_user(mess, 'acceptance', site)
@@ -520,11 +499,11 @@ def set_file_properties(sender, instance, **kwargs):
     if instance.file:
         trig_save = False
         if not instance.mime_type:
-            mime_type = mimetype_file(instance.file.path)
+            mime_type = guess_mimetypes(instance.file.path)
             if mime_type:
-                instance.mime_type = mimetype_file(instance.file.path)
+                instance.mime_type = guess_mimetypes(instance.file.path)
                 trig_save = True
-            #HOTFIX
+            # HOTFIX
             else:
                 instance.mime_type = 'application/pdf'
         if not instance.sha1:
@@ -547,5 +526,7 @@ def set_file_properties(sender, instance, **kwargs):
         #         instance.image = path
 
 
-post_save.connect(set_file_properties, sender=Script, dispatch_uid="script_post_save")
-post_save.connect(set_file_properties, sender=ScriptPage, dispatch_uid="scriptpage_post_save")
+post_save.connect(set_file_properties, sender=Script,
+                  dispatch_uid="script_post_save")
+post_save.connect(set_file_properties, sender=ScriptPage,
+                  dispatch_uid="scriptpage_post_save")

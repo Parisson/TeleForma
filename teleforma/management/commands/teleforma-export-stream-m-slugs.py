@@ -3,8 +3,6 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import json
@@ -28,6 +26,9 @@ streams.safe=true
 streams.safe.password=source2parisson
 streams.safe.limit=100
 """
+
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def export(self):
         courses = Course.objects.all()

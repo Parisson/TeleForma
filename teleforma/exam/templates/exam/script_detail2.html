@@ -1,0 +1,149 @@
+{% extends "teleforma/course_detail.html" %}
+{% load teleforma_tags %}
+{% load i18n %}
+{% load static %}
+{% load webviewer %}
+{% load thumbnail %}
+
+{% block extra_javascript %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <script src="/static/exam/js/exam.js"></script>
+  <!--<script src='{% static "WebViewer/lib/html5/external/jquery-3.2.1.min.js" %}'></script>-->
+  <script src='{% static "WebViewer/lib/WebViewer.min.js" %}'></script>
+  <script>
+    // increase the default animation speed to exaggerate the effect
+  {% if script.comments %}
+    $(window).ready(function(){
+      $( "#dialog_comments" ).dialog( "open");
+    });
+  {% endif %}
+    </script>
+
+
+{% endblock extra_javascript %}
+
+{% block content %}
+
+{% block course %}
+<div class="course">
+
+<div class="course_title">
+
+    <a href="{% url 'teleforma-desk-period-course' period.id script.course.id %}">{{ script.title }}</a>
+
+    <div style="float: right; font-size: 0.9em;">
+        {% if topic.file %}
+        <a id="topic" href="{% url 'teleforma-document-download' topic.id %}" class="component_icon button icon_download">&nbsp;{% trans "Topic" %}</a>
+        {% endif %}
+        {% if script.score %}
+        <a id="score" href="#" class="component_icon button icon_ok"> {% trans "Score" %} : {{ script.score|floatformat }}/20</a>
+        <a id="opener_comments" href="#" class="component_icon button icon_ok"> {% trans "Comments" %}</a>
+        <a id="opener_print" href="#" class="component_icon button icon_download"> {% trans "Imprimer" %}</a>
+        {% elif script.status == 0 %}
+        <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
+        {% else %}
+         {% if user.quotas.all %}
+                <a id="opener_mark" href="#" class="component_icon button icon_edit"> {% trans "Scoring" %}</a>
+                <a id="opener_reject" href="#" class="component_icon button icon_delete"> {% trans "Reject" %}</a>
+         {% else %}
+                <a href="#" class="component_icon button icon_ok"> {% trans "Submitted" %}</a>
+         {% endif %}
+        {% endif %}
+
+    </div>
+
+</div>
+
+<div id="dialog_comments" title="{% trans "Comments" %}" style="width: 400px;">
+ {{ script.comments }}
+</div>
+
+<div id="dialog_mark" title="{% trans "Mark" %}" style="width: 400px;">
+    <form method="post" id="_MarkForm" action="">{% csrf_token %}
+       <table>
+       <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
+       {% for field in form %}
+       <tr>
+        {% if not field.html_name in mark_fields %}
+            <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
+        {% else %}
+                {% if field.html_name == 'score' %}
+             <td>{{ field.label_tag }}:</td><td> {{ field }}/20 <br />(utilisez la virgule pour les décimales)</td>
+            {% else %}
+             <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+                {% endif %}
+
+        {% endif %}
+        </tr>
+       {% endfor %}
+       </table>
+    </form>
+    <br />
+    <center>
+    <a href="#" id="validate_button" class="component_icon button icon_ok">{% trans "Send" %}</a>
+    </center>
+    <br /><br />
+</div>
+
+<div id="dialog_reject" title="{% trans "Reject" %}">
+<form method="post" id="_RejectForm" action="">{% csrf_token %}
+       <table>
+       <tr><td colspan="2">{% for error in form.non_field_errors %}<li class="error">{{ error }}</li>{% endfor %}</td></tr>
+       {% for field in form %}
+       <tr>
+        {% if not field.html_name in reject_fields %}
+            <td>{{ field.label_tag.as_hidden }}</td><td>{{ field.as_hidden }}</td>
+        {% else %}
+            <tr><td class="error">{{ field.errors }}</td></tr>
+            <td>{{ field.label_tag }}:</td><td> {{ field }}</td>
+        {% endif %}
+        </tr>
+       {% endfor %}
+       </table>
+    </form>
+    <br />
+    <center>
+     <a href="#" id="reject_button" class="component_icon button icon_delete">{% trans "Reject" %}</a>
+    </center>
+    <br /><br />
+</div>
+
+<div id="dialog_print" title="{% trans "Help" %}" style="width: 800px;">
+ <h2>Impression de la copie corrigée</h2>
+   Pour imprimer votre copie corrigée avec les annotations, veuillez :
+   <ul>
+       <li>Téléchager votre copie à l'aide du boutton "flêche vers le bas" du menu au dessus de la copie (Download annotated PDF)</li>
+       <li>Ouvir le fichier PDF obtenu avec <a href="https://get.adobe.com/fr/reader/">Acrobat Reader</a></li>
+       <li>Imprimer le document avec l'option "Document et annotations" comme expliqué <a href="https://helpx.adobe.com/fr/acrobat/kb/print-comments-acrobat-reader.html">ici</a></li>
+   </ul>
+</div>
+
+{% if access_error %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+
+{% else %}
+<br /><br />
+<div class="media">
+ <div class="script">
+  {% if script.has_annotations_file %}
+    <iframe id="box-iframe" style="position:fixed; top:12%; left:0px; bottom:0px; right:0px; width:100%; height:85%; border:none; margin:0; padding:0; z-index:0;" src="{% if user.quotas.all or user.is_superuser %}{{ script_service_url }}$
+    </iframe>
+  {% else %}
+    {% webviewer url=script.unquoted_url uuid=script.uuid %}
+  {% endif %}
+ </div>
+</div>
+
+{% block general_info %}
+{% endblock general_info %}
+
+{% endif %}
+
+</div>
+{% endblock course %}
+{% endblock content %}
+
+

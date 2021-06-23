@@ -1,0 +1,118 @@
+{% extends "teleforma/base.html" %}
+{% load i18n %}
+{% load teleforma_tags %}
+{% load payment %}
+
+{% block head_title %}{% trans "User Profile" %} : {{ usr.username }}{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+  <div id="module-set-left" style="width: 20%">
+  {% block modules %}
+
+    <div class="module">
+    <h3><a href="{% url 'teleforma-home' %}"><img src="/static/teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
+    <div style="background: white;">
+    <ul>
+    {% block courses %}
+    {% with usr|user_courses as courses %}
+     {% for c in courses %}
+       {% with c.course as course %}
+       <li><a href="#">{{ course.title}} {{ course.type }}</a></li>
+       {% endwith %}
+     {% endfor %}
+    {% endwith %}
+    {% endblock courses %}
+    </ul>
+    </div>
+    </div>
+
+  {% endblock %}
+
+  {% if user.is_authenticated and user.username != usr.username %}
+   <div class="module_action">
+    <a href="{% url 'postman:write' usr.username %}" class="component_icon button" id="action_orange">{% trans "Send a message" %}</a>
+   </div>
+  {%  endif %}
+ </div>
+
+<div class="desk_large">
+<div class="course">
+
+    <h1>{% trans "User profile" %} : {{ usr.username }}
+    </h1>
+
+    <div id="password" style="float: right;">
+    {% if user.is_authenticated and user.username == usr.username %}
+    <a href="{% url 'teleforma-password-change' %}" class="component_icon button icon_login">{% trans "Change password" %}</a>
+    {% elif user.is_staff %}
+        <a href="{% url 'teleforma-user-login' usr.id %}" class="component_icon button icon_login">{% trans "Login as" %}</a>
+    {%  endif %}
+    </div>
+
+   <div class="course_content">
+
+   <div class="infos" style="width: 55%">
+     {% if usr.student.get.portrait %}
+     <img style="float:right" src="{{ usr.student.get.portrait.url }}" />
+     {% endif %}
+     <dl class="listing">
+
+      <dt>{% trans "First Name" %}</dt><dd>{{ usr.first_name }}</dd>
+      <dt>{% trans "Last Name" %}</dt><dd>{{ usr.last_name }}</dd>
+      <dt>{% trans "Username" %}</dt><dd>{{ usr.username }}</dd>
+
+      {% if usr.student.get %}
+        <dt>{% trans "IEJ" %}</dt><dd>{{ usr.student.get.iej }}</dd>
+        <dt>{% trans "Trainings" %}</dt><dd>{% for training in usr.student.get.trainings.all %}{{ training }}<br />{% endfor %}</dd>
+        <dt>{% trans "Platform only" %}</dt><dd>{{ usr.student.get.platform_only|yes_no }}</dd>
+        <dt>{% trans "Procedure"%}</dt><dd>{{ usr.student.get.procedure}}</dd>
+        <dt>{% trans "Oral spe"%}</dt><dd>{{ usr.student.get.oral_speciality }}</dd>
+        <dt>{% trans "Written spe"%}</dt><dd>{{ usr.student.get.written_speciality }}</dd>
+        <dt>{% trans "Oral 1"%}</dt><dd>{{ usr.student.get.oral_1 }}</dd>
+        <dt>{% trans "Oral 2"%}</dt><dd>{{ usr.student.get.oral_2 }}</dd>
+        <dt>{% trans "Options"%}</dt><dd>{{ usr.student.get.options }}</dd>
+      {% endif %}
+
+      {% if user.is_staff or user.is_superuser or usr == user %}
+      <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
+          <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }}{% if usr.profile.get.address_detail %}, {% endif %}</span>{{ usr.profile.get.address_detail }}{% if usr.profile.get.postal_code or usr.profile.get.city %}, {% endif %}{{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
+      <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
+      <dt>{% trans "WiFi login" %}</dt><dd>{{ usr.profile.get.wifi_login }}</dd>
+      <dt>{% trans "WiFi password" %}</dt><dd>{{ usr.profile.get.wifi_pass }}</dd>
+      {% endif %}
+
+      <dt>{% trans "Date added" %}</dt><dd>{{ usr.date_joined }}</dd>
+      <dt>{% trans "Expiration date" %}</dt><dd>{{ usr.profile.get.expiration_date }}</dd>
+      <dt>{% trans "Last login" %}</dt><dd>{{ usr.last_login }}</dd>
+
+      {% if user.is_authenticated and user.username == usr.username %}
+      <dt>{% trans "Language" %}</dt><dd><form id="setlang" action="/i18n/setlang/" method="post">{% csrf_token %}
+        <input name="next" type="hidden" value="" />
+          <select name="language">
+            {% for lang in LANGUAGES %}
+             <option {% if lang.0 == LANGUAGE_CODE %}selected{% endif %} value="{{ lang.0 }}">{{ lang.1 }}</option>
+            {% endfor %}
+          </select><br /><br />
+          <a href="#" class="component_icon button icon_ok"
+            onclick="document.getElementById('setlang').submit(); return false;">{% trans "Apply" %}</a>
+         </form>
+        </dd>
+      {%  endif %}
+     </dl>
+    </div>
+  </div>
+
+  {% if payment %}
+    {% payment_summary payment with_pending=False %}
+  {% endif %}
+
+<div class="buttons">
+</div>
+
+</div>
+</div>
+{% endblock content %}
+

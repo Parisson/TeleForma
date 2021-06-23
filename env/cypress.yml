@@ -1,0 +1,76 @@
+version: '3.6'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ../var/lib/mysql:/var/lib/mysql
+      - ../etc/mysql/conf.d:/etc/mysql/conf.d
+      - ../var/backup:/srv/backup
+      - ../bin:/srv/bin
+    expose:
+      - "3306"
+    env_file:
+      - 'db.env'
+
+  app:
+    image: mills.ircam.fr:5000/brahms_app:latest
+    command: /bin/sh bin/app.sh
+    volumes:
+      - ../app:/srv/app
+      - ../gulpfile.js:/srv/gulpfile.js
+      - ../package.json:/srv/package.json
+      - ../var/log/uwsgi:/var/log/uwsgi
+      - ../var/log/app:/var/log/app
+      - ../bin:/srv/bin
+      - ../lib:/srv/lib
+      - ../doc:/srv/doc
+      - ../static:/srv/static
+      - ../pyproject.toml:/srv/pyproject.toml:consistent
+      - ../poetry.lock:/srv/poetry.lock:consistent
+    expose:
+      - "8000"
+    depends_on:
+      - db
+      - memcached
+      - node
+    env_file:
+      - 'prod.env'
+      - 'db.env'
+
+  memcached:
+    image: memcached:alpine
+    entrypoint:
+      - memcached
+      - -m 512
+      - -v
+
+  web:
+    image: nginx
+    volumes:
+      - ../etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ../etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../static:/srv/static
+      - ../var/media:/srv/media
+      - ../var/stream:/srv/stream
+    expose:
+      - "80"
+    ports:
+      - "9030:80"
+    depends_on:
+      - app
+
+  cypress:
+    build:
+      context: ..
+      dockerfile: ./cypress/Dockerfile
+    depends_on:
+      - app
+      - web
+    restart: always
+
+
+  node:
+    build: ../node
+    env_file:
+      - prod.env
+    restart: always

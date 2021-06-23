@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en" ng-app="selectDemoApp" id="top">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Angular bootstrap-select</title>
+
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bower_components/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+</head>
+<body>
+    <div role="main" dropdown-close>
+        <div class="container">
+            <!-- Extras -->
+            <section id="extras" ng-controller="ExtrasCtrl">
+                <h1>Extras</h1>
+                <div>
+                    <h3>Not popup without dropdownToggle directive</h3>
+                    <!-- This extra directive provide dropdown open and close without loading bootstrap.js -->
+                    <select selectpicker class="selectpicker">
+                        <option value="">Select one</option>
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option>Relish</option>
+                    </select>
+
+                    <h3>Popup with dropdownToggle directive</h3>
+                    <dropdown-toggle>
+                      <select selectpicker class="selectpicker">
+                          <option value="">Select one</option>
+                          <option>Mustard</option>
+                          <option>Ketchup</option>
+                          <option>Relish</option>
+                      </select>
+                    </dropdown-toggle>
+                </div>
+            </section>
+
+            <!-- Simple usage -->
+            <section id="simple-usage" ng-controller="SimpleUsageCtrl" dropdown-toggle>
+                <h1>Simple usage</h1>
+                <div>
+                    <h3>Works with simple select</h3>
+                    <div>Model value: <code>{{model || "''"}}</code></div>
+                    <select selectpicker ng-model="model">
+                        <option value="">Select one</option>
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option>Relish</option>
+                    </select>
+
+                    <h3>Works with ngIf</h3>
+                    <p>To work with ngIf, set ng-model to $parent <code>ng-model="$parent.model"</code></p>
+                    <div>Model value: <code>{{model || "''"}}</code></div>
+                    <div>Show/Hide <input type="checkbox" ng-model="selectWithOptionsIsVisible"></div>
+
+                    <div ng-if="selectWithOptionsIsVisible">
+                        <select id="selectVisible" class="dropup" selectpicker="{}" ng-model="$parent.model">
+                            <option value="">Select one</option>
+                            <option>Mustard</option>
+                            <option>Ketchup</option>
+                            <option>Relish</option>
+                        </select>
+                    </div>
+
+                    <h3>Works with ngDisable</h3>
+                    <div>Model value: <code>{{model || "''"}}</code></div>
+                    <div>Enabled/Disabled <input type="checkbox" ng-model="selectWithNgDisabled"></div>
+
+                    <div>
+                        <select id="selectVisible" ng-disabled="selectWithNgDisabled" selectpicker ng-model="model">
+                            <option value="">Select one</option>
+                            <option>Mustard</option>
+                            <option>Ketchup</option>
+                            <option>Relish</option>
+                        </select>
+                    </div>
+
+                    <h3>Works with optgroup</h3>
+                    <div>Model value: <code>{{model || "''"}}</code></div>
+                    <div>
+                        <select selectpicker ng-model="model">
+                            <option value="">Select one</option>
+                            <optgroup label="Favorite">
+                                <option>Mustard</option>
+                                <option>Ketchup</option>
+                            </optgroup>
+                            <optgroup label="Other">
+                                <option>Relish</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <h3>Works with ngOptions</h3>
+                    <div>Model value: <code>{{model || "''"}}</code></div>
+                    <div>Colors: <code>{{colors | json}}</code></div>
+                    <div>
+                        <select selectpicker ng-model="model" ng-options="c as c for c in colors">
+                            <option value="">Select one</option>
+                        </select>
+                    </div>
+
+                    <h3>Works with ngRepeat</h3>
+                    <p>To work with ngRepeat, set ng-model to $parent <code>ng-model="$parent.model"</code></p>
+                    <div ng-repeat="select in repeater">
+                        <div>
+                            <label>{{select.title}} {{model}}</label>
+                            <select selectpicker ng-model="$parent.model" ng-options="c as c for c in colors">
+                                <option value="">Select one</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Styles -->
+            <section id="simple-usage" ng-controller="StyleCtrl" dropdown-toggle>
+                <h1>Style usage</h1>
+                <div>
+                    <h3>Works with selectpicker style option</h3>
+                    <p>You can set different Bootstrap classes via the selectpicker style option</p>
+                    <select selectpicker="{style:'btn-info'}">
+                        <option value="">Select one</option>
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option>Relish</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Works with data-style</h3>
+                    <p>You can set different Bootstrap classes via the data-style attribute</p>
+                    <select selectpicker="" sp-theme="btn-{{color}}" ng-model="color">
+                        <option value="primary">btn-primary</option>
+                        <option value="info">btn-info</option>
+                        <option value="success">btn-success</option>
+                        <option value="danger">btn-danger</option>
+                        <option value="warning">btn-warning</option>
+                        <option value="inverse">btn-inverse</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Works with option data-content</h3>
+                    <select selectpicker="" ng-model="color">
+                        <option data-content="<span class='label label-primary'>btn-primary</span>" value="primary">btn-primary</option>
+                        <option data-content="<span class='label label-info'>btn-info</span>" value="info">btn-info</option>
+                        <option data-content="<span class='label label-success'>btn-success</span>" value="success">btn-success</option>
+                        <option data-content="<span class='label label-danger'>btn-danger</span>" value="danger">btn-danger</option>
+                        <option data-content="<span class='label label-warning'>btn-warning</span>" value="warning">btn-warning</option>
+                        <option data-content="<span class='label label-inverse'>btn-inverse</span>" value="inverse">btn-inverse</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Works with option data-icon</h3>
+                    <p>TODO: interpolate</p>
+                    <select selectpicker="" ng-model="color">
+                        <option data-icon="glyphicon glyphicon-search" value="primary">btn-primary</option>
+                        <option data-icon="glyphicon glyphicon-thumbs-up" value="info">btn-info</option>
+                        <option data-icon="glyphicon glyphicon-bell" value="success">btn-success</option>
+                        <option data-icon="glyphicon glyphicon-phone" value="danger">btn-danger</option>
+                        <option data-icon="glyphicon glyphicon-globe" value="warning">btn-warning</option>
+                        <option data-icon="glyphicon glyphicon-play" value="inverse">btn-inverse</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Works with option data-icon and ngOptions</h3>
+                    <select selectpicker="">
+                      <option value="">Select one</option>
+                      <option ng-repeat="i in icons" value="{{i.id}}" data-icon="{{i.icon}}">{{i.title}}</option>
+                    </select>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+
+    <script src="../src/angular-bootstrap-select.js"></script>
+    <script src="select-demo-app.js"></script>
+</body>
+</html>
