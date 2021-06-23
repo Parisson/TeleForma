@@ -24,7 +24,7 @@ gid='www-data'
 # You need at first checkout your sources in 'lib' folder
 # in host project side, then run :
 # pip install -e /srv/lib/mypackage...
-pip3 install -U uwsgi
+# pip3 install -U uwsgi
 
 # Install (staging) libs
 # /srv/bin/build/local/setup_lib.sh
