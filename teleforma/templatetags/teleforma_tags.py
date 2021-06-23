@@ -275,11 +275,14 @@ def get_video_id(media):
 
 @register.filter
 def get_host(url, host):
-    u = urlparse(url)
-    if host == '127.0.0.1' or host == 'localhost':
-        nu = u.scheme + '://' + host + ':' + str(u.port) + u.path
-        return nu
-    else:
+    try:
+        #TODO adapt to urllib py3
+        # https://stackoverflow.com/questions/12772190/urllib-module-object-is-not-callable
+        u = urlparse(url)
+        if host == '127.0.0.1' or host == 'localhost':
+            nu = u.scheme + '://' + host + ':' + str(u.port) + u.path
+            return nu
+    except:
         return url
 
 
