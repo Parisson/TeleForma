@@ -56,7 +56,7 @@ $(document).ready(function(){
 {% if "video" in media_transcoded.mime_type %}
 <div class="video">
     <video id="my_video_1" class="video-js vjs-default-skin" width="864" height="480" controls preload="auto" data-setup='{}' {% if media.poster_file %}{% thumbnail media.poster_file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}>
-        <source src="{{ MEDIA_URL }}{{ media.media_transcoded }}" type="{{ media.mime_type }}" />
+        <source src="{{ MEDIA_URL }}{{ media.media_transcoded.file }}" type="{{ media.mime_type }}" />
     </video>
 </div>
 
@@ -77,7 +77,7 @@ $(document).ready(function(){
 </div>
 <div class="audio">
     <audio controls preload="auto">
-        <source src="{{ MEDIA_URL }}{{ media.media_transcoded }}" type="{{ media.mime_type }}" />
+        <source src="{{ MEDIA_URL }}{{ media.media_transcoded.file }}" type="{{ media.mime_type }}" />
     </audio>
 </div>
 {% endif %}
@@ -101,10 +101,10 @@ $(document).ready(function(){
 <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
 {% if media.conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>{% endif %}
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
-<dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
-<dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
-<dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
+<dt>{% trans "Mime type" %}</dt><dd>{{ media_transcoded.mime_type }}</dd>
+<dt>{% trans "Date added" %}</dt><dd>{{ media_transcoded.date_added }}</dd>
+<dt>{% trans "Date modified" %}</dt><dd>{{ media_transcoded.date_modified }}</dd>
+<dt>{% trans "Media ID" %}</dt><dd>{{ media_transcoded.id }}</dd>
 <dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
 <dt>{% trans "Web class group" %}</dt><dd>{{ media.conference.web_class_group }}</dd>
 {% endif %}
