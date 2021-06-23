@@ -400,7 +400,7 @@ class Script(BaseResource):
         new_rel = os.sep.join(old_rel_root) + os.sep + str(self.uuid) + ext
 
         if not os.path.exists(new_abs):
-            os.symlink(old_abs, new_abs)
+            os.symlink(filename + ext, new_abs)
 
         if not self.url:
             self.url = settings.MEDIA_URL + str(new_rel)
