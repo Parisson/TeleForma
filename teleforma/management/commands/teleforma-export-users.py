@@ -9,6 +9,9 @@ class Command(BaseCommand):
     first_row = 1
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def export_user(self, count, user):
         student = Student.objects.filter(user=user)
         if student:

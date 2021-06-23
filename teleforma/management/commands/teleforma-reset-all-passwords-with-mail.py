@@ -32,9 +32,8 @@ class Command(BaseCommand):
     language_code = 'fr_FR'
 
     def add_arguments(self, parser):
-        parser.add_argument('period_name')
-        parser.add_argument('log_file')
-        
+        parser.add_argument('args', nargs='*')
+
     def init_password_email(self, user):
         site = Site.objects.get_current()
         ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'usr': user}

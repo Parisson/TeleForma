@@ -13,6 +13,8 @@ class Command(BaseCommand):
     args = "path"
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def import_professors(self, data):
         professors = json.loads(data)

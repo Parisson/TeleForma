@@ -12,6 +12,9 @@ class Command(BaseCommand):
     help = "Export all WiFi accounts"
     args = 'path'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         path = args[0]
         period_name = args[1]

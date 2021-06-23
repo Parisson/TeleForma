@@ -11,6 +11,9 @@ class Command(BaseCommand):
     args = "period_name"
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         period_name = args[0]
         period = Period.objects.get(name=period_name)

@@ -16,6 +16,9 @@ class Command(BaseCommand):
     first_row = 2
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         organization = args[0]
         path = args[1]

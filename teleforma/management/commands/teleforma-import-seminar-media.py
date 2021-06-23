@@ -33,6 +33,9 @@ class Command(BaseCommand):
     image_formats = ['png', 'jpg']
     media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4}
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def cleanup(self):
         items  = MediaItemTranscoded.objects.all()
         for i in items :

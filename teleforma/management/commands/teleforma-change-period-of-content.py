@@ -12,6 +12,9 @@ class Command(BaseCommand):
     args = "period_id_from period_id_to year"
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         period_from_id = args[0]
         period_to_id = args[1]

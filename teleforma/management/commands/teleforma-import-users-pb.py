@@ -17,6 +17,9 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     DEBUG = True
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def get_courses(self, code):
         courses = Course.objects.filter(code=code)
         if courses:

@@ -27,6 +27,9 @@ streams.safe.password=source2parisson
 streams.safe.limit=100
 """
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def export(self):
         courses = Course.objects.all()
         types = CourseType.objects.all()

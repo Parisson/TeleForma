@@ -31,7 +31,6 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('period_name')
         parser.add_argument('log_file')
-        
     
     def handle(self, *args, **options):
         log_file = options['log_file']

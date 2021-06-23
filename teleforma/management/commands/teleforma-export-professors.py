@@ -27,6 +27,8 @@ class Command(BaseCommand):
             print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
         return json.dumps(list)
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
         file = args[0]
