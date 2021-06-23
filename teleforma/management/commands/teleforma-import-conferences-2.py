@@ -25,8 +25,8 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     args = 'organization log_file'
     spacer = '_-_'
-    original_format = ['webm', 'mp4']
-    transcoded_formats = ['mp4', 'ogg', 'mp3']
+    original_format = ['mp4']
+    transcoded_formats = ['mp3']
     image_formats = ['png', 'jpg']
 
     def add_arguments(self, parser):
@@ -84,6 +84,7 @@ class Command(BaseCommand):
                             pass
 
                         if not exist and not streaming:
+                            # ORIGINAL MEDIA
                             media = Media(conference=conference)
                             media.file = path
                             media.course = conference.course
@@ -94,6 +95,15 @@ class Command(BaseCommand):
                             media.set_mime_type()
 
                             files = os.listdir(root)
+
+                            # TRANSCODED MEDIA
+                            for file in files:
+                                filename, extension = os.path.splitext(file)
+                                if extension[1:] in self.transcoded_formats:
+                                    r_path = dir + os.sep + file
+                                    t, c = MediaItemTranscoded.objects.get_or_create(item=media, file=r_path)
+
+                            # POSTER
                             for file in files:
                                 filename, extension = os.path.splitext(file)
                                 if extension[1:] in self.image_formats:
