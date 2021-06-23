@@ -153,7 +153,7 @@ class Department(models.Model):
 
     @property
     def slug(self):
-        return slugify(self.__unicode__())
+        return slugify(self.__str__())
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'department'
