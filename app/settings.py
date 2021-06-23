@@ -466,7 +466,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_small_text": True,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": False,
-    "sidebar_nav_compact_style": False,
+    "sidebar_nav_compact_style": True,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
     "theme": "default",
@@ -479,7 +479,7 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-outline-danger",
         "success": "btn-outline-success"
     },
-    "actions_sticky_top": False
+    "actions_sticky_top": True
 }
 # Sherlock's online payment
 PAYMENT_SHERLOCKS_PATH='/srv/sherlocks'

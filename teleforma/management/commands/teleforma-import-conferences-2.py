@@ -29,6 +29,9 @@ class Command(BaseCommand):
     transcoded_formats = ['mp4', 'ogg', 'mp3']
     image_formats = ['png', 'jpg']
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         organization_name = args[0]
         department_name = args[1]
@@ -87,6 +90,7 @@ class Command(BaseCommand):
                             media.period = conference.period
                             media.course_type = conference.course_type
                             media.type = ext
+                            media.is_published = False
                             media.set_mime_type()
 
                             files = os.listdir(root)

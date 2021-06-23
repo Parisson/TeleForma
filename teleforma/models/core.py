@@ -799,7 +799,7 @@ class Media(MediaBase):
         _('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
 
     def set_mime_type(self):
-        if self.item.file:
+        if self.file:
             mime_type = guess_mimetypes(self.file.path)
             if mime_type == 'audio/mpeg':
                 self.mime_type = 'audio/mp3'
