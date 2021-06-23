@@ -312,15 +312,6 @@ TINYMCE_DEFAULT_CONFIG = {
     "custom_undo_redo_levels": 10,
 }
 
-# Sherlock's online payment
-PAYMENT_SHERLOCKS_PATH = '/opt/sherlocks2'
-PAYMENT_PARAMETERS = {'merchant_id': {'Semestrielle': "040109417200053",
-                                      'Estivale': "040109417200054", },
-                      'merchant_country': 'fr',
-                      'currency_code': '978',
-                      'language': 'fr'
-                      }
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
