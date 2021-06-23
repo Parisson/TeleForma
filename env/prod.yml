@@ -13,6 +13,8 @@ services:
     volumes:
       - /mnt/crfpa-videos:/mnt/crfpa-videos
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
+    ports:
+      - "9003:8000"
   
   channels:
     build:
@@ -27,7 +29,7 @@ services:
       - ./teleforma/:/srv/src/teleforma/teleforma
       - ./var/log/app:/var/log/app
     ports:
-      - "9002:8000"
+      - "9004:8000"
     links:
       - postgres
       - redis
