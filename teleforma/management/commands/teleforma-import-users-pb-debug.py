@@ -22,6 +22,9 @@ class Command(BaseCommand):
         else:
             return None
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def get_training(self, code):
         platform_only = False
         if 'I' in code[0:2]:

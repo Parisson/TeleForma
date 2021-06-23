@@ -30,6 +30,9 @@ class Command(BaseCommand):
     language_code = 'fr_FR'
     username = 'test'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def email(self, student):
         site = Site.objects.get_current()
         if student.platform_only:

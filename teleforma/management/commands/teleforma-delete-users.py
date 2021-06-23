@@ -12,6 +12,9 @@ class Command(BaseCommand):
     args = "date1 date2"
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def export_user(self, count, user):
 
         if student:

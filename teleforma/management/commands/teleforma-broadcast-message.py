@@ -9,6 +9,9 @@ class Command(BaseCommand):
     help = "Broadcast a chat message"
     args = "username text"
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         # text = args[1]
         # username = args[0]

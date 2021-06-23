@@ -33,6 +33,9 @@ class Command(BaseCommand):
     transcoded_formats = ['mp4', 'ogg', 'mp3']
     image_formats = ['png', 'jpg']
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def cleanup(self):
         medias = Media.objects.all()
         for media in medias:

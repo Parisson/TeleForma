@@ -28,6 +28,9 @@ class Logger:
 class Command(BaseCommand):
     help = "Activate all user account for subscribed students"
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         period_name = args[-2]
         log_file = args[-1]

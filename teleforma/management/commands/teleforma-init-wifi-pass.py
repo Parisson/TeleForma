@@ -17,6 +17,9 @@ class Command(BaseCommand):
     help = "init all user wifi pass"
     args = 'path'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         path = args[0]
         f = open(path, 'w')
