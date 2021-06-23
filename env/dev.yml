@@ -25,4 +25,6 @@ services:
       command: /bin/sh bin/app.sh --runserver
       env_file:
         - 'env/dev.env'
+      ports:
+        - "9000:8000"
 
