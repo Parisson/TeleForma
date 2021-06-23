@@ -31,41 +31,55 @@
 # knowledge of the CeCILL license and that you accept its terms.
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
-from django.core.exceptions import ValidationError, PermissionDenied
-from teleforma.models.crfpa import Parameters
-from teleforma.models.core import Period
-from teleforma.views.core import *
-from teleforma.forms import WriteForm
-from telemeta.views import ProfileView
-from teleforma.decorators import access_required
-from registration.views import *
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
-from postman.views import WriteView as PostmanWriteView
-from postman.forms import AnonymousWriteForm
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
-from django.db.models import Max
-from django.http import HttpResponseForbidden
-from django.forms.formsets import all_valid
-from django.core.exceptions import ValidationError
-from django.contrib.sites.models import Site
+
+import datetime
 
 import xlrd
+from django.contrib.auth import get_backends, login
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.paginator import InvalidPage
+from django.db.models import Max, Q
+from django.forms.formsets import all_valid
+from django.http import HttpResponseForbidden
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.defaultfilters import slugify
+from django.urls.base import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import TemplateView, View
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
+from postman.forms import AnonymousWriteForm
+from postman.views import WriteView as PostmanWriteView
+from xlwt import Workbook
 
+from ..decorators import access_required
+from ..forms import (CorrectorForm, NewsItemForm, UserForm, WriteForm,
+                     get_unique_username)
+from ..models.core import Course, CourseType, Document, NamePaginator, Period
+from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
+                            Payment, Profile, Student, Training, months_choices, payment_choices)
+from ..views.core import (PDFTemplateResponseMixin, format_courses,
+                          get_courses, get_periods)
+from ..views.profile import ProfileView
 
 ORAL_OPTION_PRICE = 250
 
 def get_course_code(obj):
     if obj:
-        return unicode(obj.code)
+        return str(obj.code)
     else:
         return ''
 
 def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
     courses = []
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return courses
 
     professor = user.professor.all()
@@ -143,7 +157,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 class UsersView(ListView):
 
     model = User
-    template_name='telemeta/users.html'
+    template_name='teleforma/users.html'
     context_object_name = 'users'
     training = None
     iej = None
@@ -269,7 +283,7 @@ class UserXLSBook(object):
             row.write(1, user.first_name)
             row.write(2, student.portrait and student.portrait.url or '')
             row.write(8, user.email)
-            row.write(3, unicode(student.iej))
+            row.write(3, str(student.iej))
 
             codes = []
             for training in student.trainings.values('code'):
@@ -277,7 +291,7 @@ class UserXLSBook(object):
                     codes.append('I - ' + training['code'])
                 else:
                     codes.append(training['code'])
-            row.write(4, unicode(' '.join(codes)))
+            row.write(4, str(' '.join(codes)))
 
             row.write(5, self.get_course_code(student.procedure_id))
             row.write(6, self.get_course_code(student.written_speciality_id))
@@ -562,7 +576,7 @@ class UsersExportView(UsersView):
         super(UsersExportView, self).get(*args, **kwargs)
         book = UserXLSBook(users = self.users)
         book.write()
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response = HttpResponse(content_type="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         book.book.save(response)
         return response
@@ -665,9 +679,9 @@ class AnnalsView(ListView):
             self.student = students[0]
             docs = Document.objects.filter(is_annal=True).filter(Q(iej=self.student.iej) | Q(iej=None)).order_by('-annal_year')
         if iej:
-            docs = docs.filter(iej=iej)
+            docs = docs.filter(iej=iej[0])
         if course:
-            docs = docs.filter(course=course)
+            docs = docs.filter(course=course[0])
 
         for doc in docs:
             if doc.course in courses:
@@ -791,7 +805,7 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         user = User.objects.get(username=self.kwargs['username'])
         # user = self.get_object()
         student = user.student.all()[0]
-        prefix = unicode(_('Registration'))
+        prefix = str(_('Registration'))
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
@@ -807,7 +821,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         user = User.objects.get(username=kwargs['username'])
 
         cur_user = self.request.user
-        if not cur_user.is_authenticated():
+        if not cur_user.is_authenticated:
             raise PermissionDenied
         if cur_user.pk != user.pk and not cur_user.is_superuser:
             raise PermissionDenied
@@ -954,7 +968,7 @@ class RegistrationPDFViewDownload(RegistrationPDFView):
         user = User.objects.get(username=self.kwargs['username'])
         # user = self.get_object()
         student = user.student.all()[0]
-        prefix = unicode(_('Registration'))
+        prefix = str(_('Registration'))
         filename = '_'.join([prefix, student.user.first_name, student.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
@@ -968,7 +982,7 @@ class CorrectorRegistrationPDFViewDownload(RegistrationPDFView):
         user = User.objects.get(username=self.kwargs['username'])
         # user = self.get_object()
         corrector = user.corrector.all()[0]
-        prefix = unicode(_('Registration'))
+        prefix = str(_('Registration'))
         filename = '_'.join([prefix, corrector.user.first_name, corrector.user.last_name])
         filename += '.pdf'
         return filename.encode('utf-8')
@@ -1112,20 +1126,18 @@ class WriteView(PostmanWriteView):
 
     """
     form_classes = (WriteForm, AnonymousWriteForm)
-    success_url = "postman_sent"
+    success_url = "postman:sent"
 
 class CRFPAProfileView(ProfileView):
     """Provide Collections web UI methods"""
 
     @method_decorator(login_required)
-    def profile_detail(self, request, username, template='telemeta/profile_detail.html'):
+    def profile_detail(self, request, username, template='teleforma/profile_detail.html'):
         user = User.objects.get(username=username)
         try:
             profile = user.get_profile()
         except:
             profile = None
-        playlists = get_playlists(request, user)
-        user_revisions = get_revisions(25, user)
         student = user.student.all()
         payment = None
         if student and (user.username == request.user.username or request.user.is_superuser):
@@ -1134,5 +1146,4 @@ class CRFPAProfileView(ProfileView):
             if payment:
                 payment = payment[0]
 
-        return render(request, template, {'profile' : profile, 'usr': user, 'playlists': playlists, 'payment':payment,
-                                          'user_revisions': user_revisions})
+        return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})

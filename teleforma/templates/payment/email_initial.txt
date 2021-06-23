@@ -1,4 +1,4 @@
-{% url teleforma-payment-start payment.pk as payment_url %}
+{% url 'teleforma-payment-start' payment.pk as payment_url %}
 Bonjour,
 
 Suite à votre inscription à la formation {{ period }}, une échéance de

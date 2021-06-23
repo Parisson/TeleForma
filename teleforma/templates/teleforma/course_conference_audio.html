@@ -1,5 +1,4 @@
 {% extends "teleforma/course_media.html" %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load i18n %}
 
@@ -8,7 +7,7 @@
     var conferenceUtils = {
         stop : function(id){
             json([id],'teleforma.conference_stop',function(){
-                location.href = '{% url teleforma-conference-record %}';});
+                location.href = '{% url 'teleforma-conference-record' %}';});
         }}
 
     jQuery(window).ready(function(){
@@ -33,7 +32,7 @@
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-detail period.id conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url 'teleforma-conference-detail' period.id conference.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
     </div>
 
 {{ course.title }}{% if course.description %} - {{ course.description }}{% endif %} - {{ conference.session }} - {{ conference.professor }}

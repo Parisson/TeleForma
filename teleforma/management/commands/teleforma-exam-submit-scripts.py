@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils import translation
 from django.conf import settings
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.exam.models import *
 import logging
 import codecs
@@ -29,6 +27,9 @@ class Logger:
 class Command(BaseCommand):
     help = "submit all script to Box View"
     args = "log_file"
+
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
         translation.activate(settings.LANGUAGE_CODE)

@@ -4,7 +4,7 @@
 {% if course.document.all|from_course_type:type|from_period:period|published %}
 <div class="course_content">
 <div class="course_subtitle">
-<h3><img src="/static//telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Documents"%}</h3>
+<h3><img src="/static/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Documents"%}</h3>
 </div>
 
 {% with course.document.all as docs %}
@@ -15,9 +15,9 @@
     <tbody>
         {% for doc in docs|from_course_type:type|from_doc_type:doc_type|from_period:period|published %}
         <tr>
-        <td {% if forloop.first %}class="border-top"{% endif %} width="60%">{% if doc.file %}<a href="{% url teleforma-document-view doc.id %}" target="_blank" title="{% trans "View" %}"><img src="/static//teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="60%">{% if doc.file %}<a href="{% url 'teleforma-document-view' doc.id %}" target="_blank" title="{% trans "View" %}"><img src="/static//teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
         <td {% if forloop.first %}class="border-top"{% endif %} width="35%">{{ doc.date_added }}</td>
-        <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if doc.file %}<a href="{% url teleforma-document-download doc.id %}"><img src="/static/teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if doc.file %}<a href="{% url 'teleforma-document-download' doc.id %}"><img src="/static/teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
         </tr>
     {% endfor %}
     </tbody>

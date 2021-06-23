@@ -1,5 +1,4 @@
 {% extends "teleforma/course_media.html" %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load i18n %}
 
@@ -10,7 +9,7 @@
     var conferenceUtils = {
         stop : function(id){
             json([id],'teleforma.stop_conference',function(){
-                location.href = '{% url teleforma-conference-record %}';
+                location.href = '{% url 'teleforma-conference-record' %}';
                 }
                 );
         }}
@@ -34,9 +33,9 @@
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-audio period.id conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url 'teleforma-conference-audio' period.id conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
     </div>
-    <a href="{% url teleforma-desk-period-course period.id course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }} - {% trans "Session" %} {{ conference.session }}
+    <a href="{% url 'teleforma-desk-period-course' period.id course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }} - {% trans "Session" %} {{ conference.session }}
 </div>
 
 <div class="media">
@@ -63,7 +62,7 @@
 <dl class="listing">
 
 {% if conference.professor %}
-    <dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
+    <dt>{% trans "Course" %}</dt><dd><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
     <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
     <dt>{% trans "Professor" %}</dt><dd>{{ conference.professor }}</dd>
 {% endif %}

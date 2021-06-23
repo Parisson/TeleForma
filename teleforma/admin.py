@@ -1,19 +1,29 @@
 # -*- coding: utf-8 -*-
-from teleforma.models import *
-from teleforma.views import *
-from teleforma.exam.models import *
-from teleforma.exam.admin import *
-from teleforma.templatetags.teleforma_tags import to_recipients
-from django.contrib import admin
-from django.contrib.auth.models import User, Group
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.admin import SimpleListFilter
-from django.utils.translation import ugettext_lazy as _
-from django.http import HttpResponse
-from django.core import serializers
-from django.contrib.admin.helpers import ActionForm
-from django import forms
 import csv
+import datetime
+from teleforma.models.chat import ChatMessage
+
+from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+from django.core import serializers
+from django.http import HttpResponse
+from django.utils.translation import ugettext_lazy as _
+
+from .exam.admin import QuotaInline
+from .models.appointment import (Appointment, AppointmentJury,
+                                 AppointmentPeriod, AppointmentSlot)
+from .models.core import (Conference, Course, CourseType, Department, Document,
+                          DocumentSimple, DocumentType, LiveStream, Media,
+                          MediaTranscoded, Organization, Period, Professor,
+                          Room, StreamingServer)
+from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
+                           OptionalFee, Parameters, Payback, Payment, Profile,
+                           Student, Training)
+from .models.messages import GroupedMessage, StudentGroup
+from .views.crfpa import CorrectorXLSBook, UserXLSBook
+
 
 class PeriodListFilter(SimpleListFilter):
 
@@ -31,7 +41,7 @@ class PeriodListFilter(SimpleListFilter):
         in the right sidebar.
         """
 
-        return ( (period.name, period.name) for period in Period.objects.all() )
+        return ((period.name, period.name) for period in Period.objects.all())
 
     def queryset(self, request, queryset):
         """
@@ -48,28 +58,35 @@ class PeriodListFilter(SimpleListFilter):
 class PaymentInline(admin.StackedInline):
     model = Payment
 
+
 class OptionalFeeInline(admin.StackedInline):
     model = OptionalFee
     extra = 1
+
 
 class DiscountInline(admin.StackedInline):
     model = Discount
     extra = 1
 
+
 class PaybackInline(admin.StackedInline):
     model = Payback
     extra = 1
+
 
 class StudentInline(admin.StackedInline):
     model = Student
     extra = 1
 
-class StudentGroupForm(ActionForm):
-    group_name = forms.CharField(_('Group'), required=False)
+# TODO fix max_length
+# class StudentGroupForm(ActionForm):
+#     group_name = forms.CharField(_('Group'), required=False)
+
 
 class StudentGroupAdmin(admin.ModelAdmin):
     model = StudentGroup
     filter_horizontal = ['students']
+
 
 class BalanceFilter(admin.SimpleListFilter):
     title = _(u'balance')
@@ -85,9 +102,9 @@ class BalanceFilter(admin.SimpleListFilter):
         human-readable name for the option that will appear
         in the right sidebar.
         """
-        return [ ('ltz', u'négative'),
-                 ('eqz', u'zéro'),
-                 ('gtz', u'positive') ]
+        return [('ltz', u'négative'),
+                ('eqz', u'zéro'),
+                ('gtz', u'positive')]
 
     def queryset(self, request, queryset):
         """
@@ -97,32 +114,33 @@ class BalanceFilter(admin.SimpleListFilter):
         """
         value = self.value()
         if value == 'ltz':
-            return queryset.filter(balance__lt = 0)
-        elif value == 'eqz':    
-            return queryset.filter(balance = 0)
-        elif value == 'gtz':    
-            return queryset.filter(balance__gt = 0)
+            return queryset.filter(balance__lt=0)
+        elif value == 'eqz':
+            return queryset.filter(balance=0)
+        elif value == 'gtz':
+            return queryset.filter(balance__gt=0)
         else:
             return queryset
 
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
+    list_per_page = 30
     exclude = ['options', 'training']
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
-                    'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
-                    'oral_1', 'oral_2', 'fascicule', BalanceFilter ]
+                   'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
+                   'oral_1', 'oral_2', 'fascicule', BalanceFilter]
     list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance', 'balance_intermediary']
-    readonly_fields = [ 'balance', 'balance_intermediary' ]
+    readonly_fields = ['balance', 'balance_intermediary']
     actions = ['export_xls', 'write_message', 'add_to_group']
-    action_form = StudentGroupForm
+    # action_form = StudentGroupForm
 
     def get_trainings(self, instance):
-        return ' - '.join([unicode(training) for training in instance.trainings.all()])
+        return ' - '.join([str(training) for training in instance.trainings.all()])
 
     def student_name(self, instance):
         return instance.user.last_name + ' ' + instance.user.first_name
@@ -138,9 +156,9 @@ class StudentAdmin(admin.ModelAdmin):
         return response
 
     def export_xls(self, request, queryset):
-        book = UserXLSBook(students = queryset)
+        book = UserXLSBook(students=queryset)
         book.write()
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response = HttpResponse(content_type="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=users.xls'
         book.book.save(response)
         return response
@@ -159,20 +177,22 @@ class StudentAdmin(admin.ModelAdmin):
 class CorrectorAdmin(admin.ModelAdmin):
     model = Corrector
     list_filter = ['user__is_active', 'period']
-    list_display = ['__unicode__', 'period', 'pay_status',
+    list_display = ['__str__', 'period', 'pay_status',
                     'date_registered']
     actions = ['export_xls']
-    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'user__email']
+    search_fields = ['user__username', 'user__first_name',
+                     'user__last_name', 'user__email']
 
     def export_xls(self, request, queryset):
-        book = CorrectorXLSBook(correctors = queryset)
+        book = CorrectorXLSBook(correctors=queryset)
         book.write()
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
+        response = HttpResponse(content_type="application/vnd.ms-excel")
         response['Content-Disposition'] = 'attachment; filename=correcteurs.xls'
         book.book.save(response)
         return response
 
     export_xls.short_description = "Export vers XLS"
+
 
 class ProfessorProfileInline(admin.StackedInline):
     model = Professor
@@ -196,7 +216,7 @@ class UserProfileAdmin(UserAdmin):
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
-                         'written_speciality', 'oral_1', 'oral_2','magistral']
+                         'written_speciality', 'oral_1', 'oral_2', 'magistral']
     exclude = ['options']
 
 
@@ -206,10 +226,12 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 class DocumentAdmin(admin.ModelAdmin):
+    list_per_page = 30
     exclude = ['readers']
     filter_horizontal = ['course_type']
     list_filter = ('course', 'periods', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
+
 
 class ConferenceDateBeginFilter(admin.SimpleListFilter):
     title = _(u'date de début')
@@ -226,9 +248,9 @@ class ConferenceDateBeginFilter(admin.SimpleListFilter):
         in the right sidebar.
         """
         conferences = Conference.objects.all()
-        dates = [ c.date_begin.date() for c in conferences if c.date_begin ]
+        dates = [c.date_begin.date() for c in conferences if c.date_begin]
         dates = set(dates)
-        res = [ ( d.strftime('%Y%m%d'), d.strftime('%d/%m/%Y')) for d in dates ]
+        res = [(d.strftime('%Y%m%d'), d.strftime('%d/%m/%Y')) for d in dates]
         return sorted(res)[::-1]
 
     def queryset(self, request, queryset):
@@ -239,36 +261,50 @@ class ConferenceDateBeginFilter(admin.SimpleListFilter):
         """
         value = self.value()
         if value:
-            date = datetime.date(int(value[:4]), int(value[4:6]), int(value[6:]))
+            date = datetime.date(int(value[:4]), int(
+                value[4:6]), int(value[6:]))
             rng = (datetime.datetime.combine(date, datetime.time.min),
                    datetime.datetime.combine(date, datetime.time.max))
-            return queryset.filter(conference__date_begin__range = rng)
+            return queryset.filter(conference__date_begin__range=rng)
         else:
             return queryset
 
+
+class MediaTranscodedInline(admin.TabularInline):
+    model = MediaTranscoded
+
+
 class MediaAdmin(admin.ModelAdmin):
+    list_per_page = 30
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
+    inlines = [MediaTranscodedInline]
+
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers']
+    list_per_page = 30
     list_filter = ('course', 'period', 'date_begin', 'session')
-    search_fields = ['public_id', 'id', 'course__code', 'course__title', 'session']
+    search_fields = ['public_id', 'id',
+                     'course__code', 'course__title', 'session']
 
 
 class HomeAdmin(admin.ModelAdmin):
     list_filter = ('enabled',)
-    search_fields = [ 'periods__name', 'title', 'text' ]
+    search_fields = ['periods__name', 'title', 'text']
     list_display = ('title', 'enabled', 'modified_at')
     readonly_fields = ('modified_at',)
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(HomeAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['video'].queryset = Media.objects.filter(type='webm')
         return form
 
+
 class ParametersAdmin(admin.ModelAdmin):
     pass
+
 
 class NewsItemAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'course', 'creator')
@@ -278,6 +314,7 @@ class NewsItemAdmin(admin.ModelAdmin):
 
 class AppointmentSlotInline(admin.TabularInline):
     model = AppointmentSlot
+    list_per_page = 30
 
 
 class AppointmentJuryInline(admin.StackedInline):
@@ -290,7 +327,8 @@ class AppointmentJuryInline(admin.StackedInline):
 
 
 class AppointmentPeriodAdmin(admin.ModelAdmin):
-    list_display = ('name', 'periods_names', 'start', 'end', 'enable_appointment')
+    list_display = ('name', 'periods_names', 'start',
+                    'end', 'enable_appointment')
 
     # inlines = [ AppointmentDayInline ]
 
@@ -307,15 +345,19 @@ class AppointmentPeriodAdmin(admin.ModelAdmin):
 
 class AppointmentSlotAdmin(admin.ModelAdmin):
     list_filter = ('date', 'appointment_period')
-    list_display = ('date', 'appointment_period', 'mode', 'start', 'nb', 'get_nb_jury')
+    list_display = ('date', 'appointment_period',
+                    'mode', 'start', 'nb', 'get_nb_jury')
     inlines = [AppointmentJuryInline]
 
+
 class AppointmentJuryAdmin(admin.ModelAdmin):
+    list_per_page = 30
     list_filter = ('slot',)
     list_display = ('name', 'slot')
 
 
 class AppointmentAdmin(admin.ModelAdmin):
+    list_per_page = 30
     list_display = ('real_date', 'student', 'jury')
     list_filter = ('slot__date', 'slot__appointment_period', 'slot__mode')
     search_fields = ('student__username',)
@@ -326,24 +368,32 @@ class AppointmentAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = 'attachment; filename=rendezvous.csv'
         writer = csv.writer(response)
 
-        writer.writerow(['date', 'creneau', 'nom', 'prenom', 'email', 'iej', 'jury', 'mode'])
+        writer.writerow(['date', 'creneau', 'nom', 'prenom',
+                        'email', 'iej', 'jury', 'mode'])
+
         def csv_encode(item):
-            if isinstance(item, unicode):
-                return item.encode('utf-8')
-            else:
-                return item
+            return item
 
         for app in queryset:
             user = app.student
             student = user.student.all()[0]
 
-            row = [ app.day.strftime('%d/%m/%Y'), app.start, user.last_name, user.first_name, user.email, student.iej, app.jury.name, app.slot.mode ]
-            row = [ csv_encode(col) for col in row ]
+            row = [app.day.strftime('%d/%m/%Y'), app.start, user.last_name,
+                   user.first_name, user.email, student.iej, app.jury.name, app.slot.mode]
+            row = [csv_encode(col) for col in row]
 
             writer.writerow(row)
 
         return response
     export_csv.short_description = "Exporter en CSV"
+
+class GroupedMessageAdmin(admin.ModelAdmin):
+    list_per_page = 30    
+
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ('message', 'user', 'room_name')
+    ordering = ['-created']
+    raw_id_fields = ['user',]
 
 
 admin.site.unregister(User)
@@ -367,7 +417,7 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Corrector, CorrectorAdmin)
 admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(StudentGroup, StudentGroupAdmin)
-admin.site.register(GroupedMessage)
+admin.site.register(GroupedMessage, GroupedMessageAdmin)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(Parameters, ParametersAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
@@ -376,5 +426,4 @@ admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
 admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
 admin.site.register(AppointmentJury, AppointmentJuryAdmin)
 admin.site.register(Appointment, AppointmentAdmin)
-
-
+admin.site.register(ChatMessage, ChatMessageAdmin)

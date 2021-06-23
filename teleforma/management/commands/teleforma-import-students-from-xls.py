@@ -14,6 +14,9 @@ class Command(BaseCommand):
     args = "path"
     admin_email = 'webmaster@parisson.com'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         file = args[0]
         period = args[1]

@@ -8,8 +8,6 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 from postman import *
@@ -34,9 +32,12 @@ class Command(BaseCommand):
     language_code = 'fr_FR'
     username = 'test'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def init_password_email(self, user):
         site = Site.objects.get_current()
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'usr': user}
+        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'usr': user}
         subject = render_to_string(self.subject_template, ctx_dict)
         subject = ''.join(subject.splitlines())
         message = render_to_string(self.message_template, ctx_dict)

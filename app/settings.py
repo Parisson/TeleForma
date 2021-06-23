@@ -1,32 +1,66 @@
 # -*- coding: utf-8 -*-
 # Django settings for sandbox project.
 
+from django.utils.encoding import force_text
+import warnings
 import os
 import sys
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
+# import environ
 
 sys.dont_write_bytecode = True
 
-DEBUG = True
+DEBUG_ENV = os.environ.get('DEBUG') == 'True'
+DEBUG = DEBUG_ENV
 TEMPLATE_DEBUG = DEBUG
+
+# disable to debug websocket and improve performance
+DEBUG_TOOLBAR = False
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+warnings.showwarning = lambda *x: None
 
 ADMINS = (
     ('Guillaume Pellerin', 'webmaster@parisson.com'),
-    ('Lists', 'lists@parisson.com'),
+    ('Gael le Mignot', 'gael@pilotsystems.net'),
+    #    ('Admin CRFPA', 'admin-crfpa@pre-barreau.com'),
 )
 
 MANAGERS = ADMINS
 
+ASGI_APPLICATION = "teleforma.ws.routing.application"
+
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
+}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'teleforma',                      # Or path to database file if using sqlite3.
-        'USER': 'teleforma',                      # Not used with sqlite3.
-        'PASSWORD': 'HMYsrZLEtYeBrvER',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Or path to database file if using sqlite3.
+        'NAME': os.environ.get('POSTGRES_DATABASE'),
+        # Not used with sqlite3.
+        'USER': os.environ.get('POSTGRES_USER'),
+        # Not used with sqlite3.
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': 'postgres',
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': '',
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -39,9 +73,10 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-#LANGUAGE_CODE = 'fr_FR'
-LANGUAGES = [ ('fr', 'French'),
-              ('en', 'English'),
+LANGUAGE_CODE = 'fr'
+LANGUAGES = [
+    ('fr', 'French'),
+    ('en', 'English'),
 ]
 
 SITE_ID = 1
@@ -56,21 +91,19 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media/')
-
-if not os.path.exists(MEDIA_ROOT):
-	os.mkdir(MEDIA_ROOT)
+MEDIA_ROOT = '/srv/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://localhost:8040/'
+#MEDIA_URL = 'http://pre-barreau.com/archives/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/var/www/static/'
+STATIC_ROOT = '/srv/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -88,39 +121,34 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'a8l7%06wr2k+3=%#*#@#rvop2mmzko)44%7k(zx%lls^ihm9^5'
 
 # List of callables that know how to import templates from various sources.
-#TEMPLATE_LOADERS = (
-#    ('django.template.loaders.cached.Loader', (
-#        'django.template.loaders.filesystem.Loader',
-#        'django.template.loaders.app_directories.Loader',
-#    )),
-#)
+TEMPLATE_LOADERS = (
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+)
 
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'pagination.middleware.PaginationMiddleware',
+    'dj_pagination.middleware.PaginationMiddleware',
+    'teleforma.middleware.XsSharing',
+    'django_user_agents.middleware.UserAgentMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    '/home/momo/dev/teleforma/teleforma/teleforma/templates/',
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -129,39 +157,67 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
-    'telemeta',
-    'jsonrpc',
-    'south',
     'teleforma',
+    'jazzmin',
+    'django.contrib.admin',
+    'channels',
+    'teleforma.webclass',
+    'teleforma.exam',
+    'jsonrpc',
     'sorl.thumbnail',
-    'django_extensions',
-    'pagination',
+    # 'django_extensions',
+    'dj_pagination',
     'postman',
-#    'private_files',
-    'markup_mixin',
-    'notes',
-#    'jquery',
-    'timezones',
-    'jqchat',
-#    'follow',
-     'googletools',
-     'telecaster',
+    # 'timezones',
+    # 'googletools',
+    # 'extra_views',
+    'captcha',
+    'django_nvd3',
+    # 'bootstrap3',
+    # 'bootstrap_pagination',
+    # 'django_user_agents',
+    'tinymce',
+    # 'multichoice',
+    # 'true_false',
+    # 'essay',
+    # 'quiz',
+    'pdfannotator',
+    # 'telemeta',
+    'rest_framework',
+    'rest_framework.authtoken',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    'postman.context_processors.inbox',
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    'django.core.context_processors.static',
-    "teleforma.context_processors.periods",
-)
 
-TELEMETA_ORGANIZATION = 'Pre-Barreau - CRFPA'
-TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
-TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += ('debug_toolbar',)
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'postman.context_processors.inbox',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'teleforma.context_processors.periods',
+
+            ],
+        },
+    },
+]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
+TELEMETA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
+TELEMETA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
 TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
 TELEMETA_CACHE_DIR = MEDIA_ROOT + 'cache'
 TELEMETA_EXPORT_CACHE_DIR = TELEMETA_CACHE_DIR + "/export"
@@ -179,29 +235,286 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-EMAIL_HOST = 'smtp.numericable.fr'
-DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
-SERVER_EMAIL = 'webmaster@parisson.com'
-EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
+EMAIL_HOST = 'angus.parisson.com'
+DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
+SERVER_EMAIL = 'crfpa@pre-barreau.com'
+EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
+#if DEBUG:
+#    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 
 POSTMAN_AUTO_MODERATE_AS = True
+POSTMAN_DISALLOW_ANONYMOUS = True
 
-TELECASTER_CONF = [{'type':'mp3','server_type':'icecast','conf':'/etc/telecaster/deefuzzer_mp3.xml', 'port':'8000'},
-                   {'type':'webm','server_type':'stream-m','conf':'/etc/telecaster/deefuzzer_webm.xml', 'port':'8080'}, ]
+#FILE_PROTECTION_METHOD = 'xsendfile'
 
-TELECASTER_RSYNC_SERVER = 'telecaster@jimi.parisson.com:archives/'
-TELECASTER_RSYNC_LOG = '/var/log/telecaster/rsync.log'
-TELECASTER_MASTER_SERVER = 'angus.parisson.com'
-
-TELECASTER_LIVE_STREAMING_SERVER = 'stream.parisson.com'
-TELECASTER_LIVE_STREAMING_PORT = 443
-TELECASTER_LIVE_ICECAST_STREAMING_PORT = 8000
-TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8888
-
-# CRFPA or AE or PRO
+TELEFORMA_ORGANIZATION = 'Pré-Barreau - CRFPA'
+TELEFORMA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
+TELEFORMA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
 TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
 TELEFORMA_GLOBAL_TWEETER = False
 TELEFORMA_PERIOD_TWEETER = True
+TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
+TELEFORMA_EXAM_SCRIPT_UPLOAD = True
+TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
+TELEFORMA_PERIOD_DEFAULT_ID = 22
+TELEFORMA_EXAM_MAX_SESSIONS = 15
+TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
+TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 
-JQCHAT_DISPLAY_COUNT = 50
-JQCHAT_DISPLAY_TIME  = 48
+TELECASTER_LIVE_STREAMING_SERVER = 'stream4.parisson.com'
+TELECASTER_LIVE_STREAMING_PORT = 443
+TELECASTER_LIVE_ICECAST_STREAMING_PORT = 8000
+TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8080
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+]
+
+BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
+
+FILE_UPLOAD_TEMP_DIR = '/tmp'
+
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_ENGINE = "unique_session.backends.session_backend"
+UNIQUE_SESSION_WHITELIST = (1, 2042)
+
+RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
+RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
+RECAPTCHA_REQUIRED_SCORE = 0.85
+
+# Cache backend is optional, but recommended to speed up user agent parsing
+# CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#        'LOCATION': '127.0.0.1:11211',
+#    }
+# }
+
+# Name of cache backend to cache user agents. If it not specified default
+# cache alias will be used. Set to `None` to disable caching.
+USER_AGENTS_CACHE = 'default'
+
+AUTH_USER_MODEL = 'auth.User'
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "320px",
+    "width": "960px",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+    "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+    "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+    "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+    "a11ycheck ltr rtl | showcomments addcomment code",
+    "custom_undo_redo_levels": 10,
+}
+
+# Sherlock's online payment
+PAYMENT_SHERLOCKS_PATH = '/opt/sherlocks2'
+PAYMENT_PARAMETERS = {'merchant_id': {'Semestrielle': "040109417200053",
+                                      'Estivale': "040109417200054", },
+                      'merchant_country': 'fr',
+                      'currency_code': '978',
+                      'language': 'fr'
+                      }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ]
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': "/var/log/app/app.log",
+            'formatter': 'simple',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'payment': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'websocket': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
+def show_user_as(user):
+    professor = user.professor.all()
+    is_corrector = False
+    if user.quotas.count() and not professor and not user.is_superuser:
+        return "#"+str(user.id)
+    else:
+        return force_text(user)
+
+
+POSTMAN_SHOW_USER_AS = show_user_as
+
+#THUMBNAIL_FORCE_OVERWRITE = True
+
+ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net', 
+    'staging.docker.e-learning.crfpa.pre-barreau.parisson.com', 
+]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "CRFPA",
+    "site_header": "CRFPA",
+    "site_logo": "teleforma/images/logo_pb.png",
+
+    # # Links to put along the top menu
+    # "topmenu_links": [
+
+    #     # Url that gets reversed (Permissions can be added)
+    #     {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+    #     # external url that opens in a new window (Permissions can be added)
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+
+    #     # model admin to link to (Permissions checked against model)
+    #     {"model": "auth.User"},
+
+    #     # App with dropdown menu to all its models pages (Permissions checked against models)
+    #     {"app": "books"},
+    # ],
+
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["auth", "teleforma", "teleforma.webclass", "teleforma.exam", "pdfannotator"],
+
+    # Custom links to append to app groups, keyed on app name
+    # "custom_links": {
+    #     "teleforma": [{
+    #         "name": "Make Messages", 
+    #         "url": "make_messages", 
+    #         "icon": "fas fa-comments",
+    #         "permissions": ["books.view_book"]
+    #     }]
+    # },
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "teleforma.newsitem": "fas fa-newspaper",
+        "teleforma.conference": "fas fa-users",
+        "teleforma.document": "fas fa-file",
+        "teleforma.student": "fas fa-user-graduate",
+        "teleforma.professor": "fas fa-user-tie",
+        "webclass.webclass": "fas fa-phone",
+    },
+    "related_modal_active": True,
+
+    "custom_css": None,
+    "custom_js": None,
+    "show_ui_builder": False,
+
+    ###############
+    # Change view #
+    ###############
+    # Render out the change view as a single form, or in tabs, current options are
+    # - single
+    # - horizontal_tabs (default)
+    # - vertical_tabs
+    # - collapsible
+    # - carousel
+    "changeform_format": "horizontal_tabs",
+    # override change forms on a per modeladmin basis
+    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+    "language_chooser": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": True,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-outline-warning",
+        "danger": "btn-outline-danger",
+        "success": "btn-outline-success"
+    },
+    "actions_sticky_top": True
+}
+# Sherlock's online payment
+PAYMENT_SHERLOCKS_PATH='/srv/sherlocks'
+
+PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "014295303911111",
+                                         'Estivale': "014295303911111",
+                                         'Pré-estivale': "014295303911111", },
+                       'merchant_country': 'fr',
+                       'currency_code': '978',
+                       'language': 'fr'
+}
+
+
+if DEBUG_TOOLBAR:
+    def show_toolbar(request):
+        return True
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+    }
+
+
+USE_WEBPACK_DEV_SERVER = False
+WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"
+
+
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_settings import *
+except ImportError as e:
+    if "local_settings" not in str(e):
+        raise e
+

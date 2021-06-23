@@ -1,6 +1,5 @@
 {% extends "teleforma/courses.html" %}
 {% load teleforma_tags %}
-{% load telemeta_utils %}
 {% load i18n %}
 
 {% block module-action %}
@@ -14,7 +13,7 @@
       {% for type in c.types %}
       <div class="course">
         <div class="course_title">
-         <a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
+         <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if course.description %} - {{ course.description }}{% endif %}</a>
         </div>
 
         {% block media %}

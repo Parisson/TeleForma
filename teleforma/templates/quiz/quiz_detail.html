@@ -12,7 +12,7 @@
 {% endif %}
 <p>{{ quiz.description }}</p>
 <p>
-  <a href="{% url quiz_question quiz_name=quiz.url %}">
+  <a href="{% url 'quiz_question' quiz_name=quiz.url %}">
 	{% trans "Start quiz" %}
   </a>
 </p>

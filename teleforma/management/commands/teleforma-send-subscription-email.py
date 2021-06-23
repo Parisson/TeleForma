@@ -8,8 +8,6 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 from postman import *
@@ -31,6 +29,10 @@ class Command(BaseCommand):
     help = "Send an email to new subscribed student"
     language_code = 'fr_FR'
 
+    def add_arguments(self, parser):
+        parser.add_argument('period_name')
+        parser.add_argument('log_file')
+        
     def email(self, student):
         site = Site.objects.get_current()
         if student.platform_only:
@@ -40,7 +42,7 @@ class Command(BaseCommand):
             mode = 'Presentielle'
             message = student.period.message_local
 
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
+        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'student': student, 'mode': mode}
         subject_template = 'teleforma/messages/email_inscr_sujet.txt'
         subject = render_to_string(subject_template, ctx_dict)
         subject = ''.join(subject.splitlines())
@@ -49,8 +51,8 @@ class Command(BaseCommand):
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [student.user.email], fail_silently=False)
 
     def handle(self, *args, **options):
-        log_file = args[-1]
-        period_name = args[-2]
+        log_file = options['log_file']
+        period_name = options['period_name']
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 

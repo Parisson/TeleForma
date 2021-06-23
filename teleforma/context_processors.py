@@ -33,7 +33,7 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-from teleforma.views.core import *
+from teleforma.views.core import get_periods
 
 
 def periods(request):
@@ -41,7 +41,7 @@ def periods(request):
 
     user = request.user
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return {'periods': None}
     else:
         return {'periods': get_periods(user)}

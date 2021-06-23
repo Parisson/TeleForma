@@ -1,24 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from django.views.generic import View, TemplateView, FormView
-from django.utils.decorators import method_decorator
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404, render
-from django.template.loader import render_to_string
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import IntegrityError
-from django.core.mail import send_mail
-from django.conf import settings
-from django.core.cache import cache
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views.generic import FormView, TemplateView, View
 
-from teleforma.webclass.models import Webclass, WebclassSlot
-from teleforma.webclass.forms import WebclassRecordsForm
-from teleforma.decorators import access_required
-
-from teleforma.views.core import get_periods, get_courses
+from ..decorators import access_required
+from ..views.core import get_courses, get_periods
+from ..webclass.forms import WebclassRecordsForm
+from ..webclass.models import Webclass, WebclassSlot
 
 
 class WebclassProfessorAppointments(TemplateView):
@@ -26,20 +19,23 @@ class WebclassProfessorAppointments(TemplateView):
 
     def get_context_data(self, **kwargs):
         """ """
-        context = super(WebclassProfessorAppointments, self).get_context_data(**kwargs)
-        
+        context = super(WebclassProfessorAppointments,
+                        self).get_context_data(**kwargs)
+
         user = self.request.user
         if not user.professor:
             return HttpResponse('Unauthorized', status=401)
-        context['slots'] = WebclassSlot.published.filter(professor=user.professor.get(), webclass__status=3).order_by('day', 'start_hour')
+        context['slots'] = WebclassSlot.published.filter(
+            professor=user.professor.get(), webclass__status=3).order_by('day', 'start_hour')
         print(context['slots'])
         return context
+
 
 class WebclassAppointment(View):
     template_name = 'webclass/appointments.html'
 
     def check_rights(self, user, webclass):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return HttpResponseRedirect(reverse('teleforma-login'))
         student = user.student.all()[:1]
         if not student:
@@ -47,17 +43,23 @@ class WebclassAppointment(View):
         student = student[0]
         # check period
         period_id = webclass.period.id
-        periods = [ p for p in get_periods(user) if int(p.id) == period_id ]
+        periods = [p for p in get_periods(user) if int(p.id) == period_id]
         if not periods:
             return HttpResponse('Unauthorized', status=401)
         # check courses
         course_id = webclass.course.id
-        courses = [ c for c in get_courses(user) if int(c['course'].id) == course_id ]
+        courses = [c for c in get_courses(
+            user) if int(c['course'].id) == course_id]
         if not courses:
             return HttpResponse('Unauthorized', status=401)
         # Student is in the right IEJ ?
         if not student.iej in webclass.iej.all():
             return HttpResponse('Unauthorized', status=401)
+        if student.platform_only and not webclass.allow_elearning:
+            return HttpResponse('Unauthorized', status=401)
+        if not student.platform_only and not webclass.allow_presentiel:
+            return HttpResponse('Unauthorized', status=401)
+            
         return
 
     def render(self, request, webclass):
@@ -89,12 +91,12 @@ class WebclassAppointment(View):
             return u"Ce créneau n'est plus disponible."
 
         # Check we don't have another appointment on this period
-        webclass = slot.webclass        
+        webclass = slot.webclass
         if webclass.get_slot(user):
             return u"Vous êtes déjà inscrit."
 
     def post(self, request, pk):
-        webclass = get_object_or_404(Webclass, id = pk)
+        webclass = get_object_or_404(Webclass, id=pk)
         rights = self.check_rights(request.user, webclass)
         if rights:
             return rights
@@ -105,18 +107,19 @@ class WebclassAppointment(View):
 
         msg = self.check_slot_validity(user, slot)
 
-        if not msg:           
+        if not msg:
             slot.participants.add(user)
             slot.save()
             # self.send_ap_mail(ap)
-            messages.add_message(request, messages.INFO, "Votre réservation a bien été prise en compte.")
-            return HttpResponseRedirect(reverse('teleforma-desk-period-course', kwargs={'period_id':webclass.period.id, 'pk':webclass.course.id}))
+            messages.add_message(request, messages.INFO,
+                                 "Votre réservation a bien été prise en compte.")
+            return HttpResponseRedirect(reverse('teleforma-desk-period-course', kwargs={'period_id': webclass.period.id, 'pk': webclass.course.id}))
         else:
             messages.add_message(request, messages.ERROR, msg)
         return self.render(request, webclass)
 
     def get(self, request, pk):
-        webclass = get_object_or_404(Webclass, id = pk)
+        webclass = get_object_or_404(Webclass, id=pk)
         rights = self.check_rights(request.user, webclass)
         if rights:
             return rights
@@ -146,6 +149,7 @@ class WebclassAppointment(View):
     #               fail_silently=False)
     #     return data
 
+
 class WebclassRecordView(TemplateView):
     template_name = 'webclass/record.html'
 
@@ -159,7 +163,7 @@ class WebclassRecordView(TemplateView):
 class WebclassRecordsFormView(FormView):
     template_name = 'webclass/records_form.html'
     form_class = WebclassRecordsForm
-    success_url = '/admin/django/webclass/webclassrecord'
+    success_url = '/admin/webclass/webclassrecord'
 
     def get_form_kwargs(self):
         kwargs = super(WebclassRecordsFormView, self).get_form_kwargs()
@@ -169,7 +173,7 @@ class WebclassRecordsFormView(FormView):
     def form_valid(self, form):
         form.save_records()
         return super(WebclassRecordsFormView, self).form_valid(form)
-        
+
     @method_decorator(permission_required('is_superuser'))
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
