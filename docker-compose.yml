@@ -17,8 +17,6 @@ services:
       - ./var/static:/srv/static
       - ./var/log/app:/var/log/app
       - ./var/log/uwsgi:/var/log/uwsgi
-    ports:
-      - "9000:8000"
     links:
       - postgres
       - redis
