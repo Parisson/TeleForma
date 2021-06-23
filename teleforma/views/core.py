@@ -71,6 +71,7 @@ from ..models.chat import ChatMessage
 from ..models.core import (Conference, Course, CourseType, Department,
                            Document, DocumentType, Media, MediaTranscoded,
                            Organization, Period, Professor, WebClassGroup,
+                           StreamingServer, LiveStream,
                            get_user_role)
 from ..webclass.models import Webclass, WebclassRecord
 from .pages import get_page_content
@@ -729,7 +730,6 @@ class ConferenceView(CourseAccessMixin, DetailView):
                 conference = Conference()
                 conference.from_json_dict(conf_dict)
                 conference.save()
-
                 if conference.streaming:
                     for stream in conf_dict['streams']:
                         host = getattr(
