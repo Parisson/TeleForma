@@ -36,6 +36,10 @@ services:
     env_file:
       - env/prod.env
 
+  postgres:
+    image: postgres:13
+    env_file:
+      - env/prod.env
 
 volumes:
     app:

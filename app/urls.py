@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 
-import debug_toolbar
 from django.conf.urls import include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -13,6 +12,9 @@ admin.autodiscover()
 js_info_dict = ['teleforma']
 
 DEBUG_ENV = os.environ.get('DEBUG') == 'True'
+
+if DEBUG_ENV:
+    import debug_toolbar
 
 urlpatterns = [
     # Example:

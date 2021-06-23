@@ -28,4 +28,4 @@ pip-log.txt
 
 #python venv
 py_env
-env/prod.env
+prod.env

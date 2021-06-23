@@ -381,6 +381,7 @@ POSTMAN_SHOW_USER_AS = show_user_as
 
 ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net', 
     'staging.docker.e-learning.crfpa.pre-barreau.parisson.com', 
+    'e-learning.crfpa.pre-barreau.com',
 ]
 
 JAZZMIN_SETTINGS = {
