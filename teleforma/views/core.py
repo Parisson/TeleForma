@@ -720,6 +720,44 @@ class ConferenceView(CourseAccessMixin, DetailView):
             except:
                 pass
 
+
+    @jsonrpc_method('teleforma.create_conference')
+    def create(request, conf_dict):
+        if isinstance(conf_dict, dict):
+            conferences = Conference.objects.filter(public_id=conf_dict['id'])
+            if not conferences:
+                conference = Conference()
+                conference.from_json_dict(conf_dict)
+                conference.save()
+
+                if conference.streaming:
+                    for stream in conf_dict['streams']:
+                        host = getattr(
+                            settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+                        server_type = stream['server_type']
+                        stream_type = stream['stream_type']
+                        if server_type == 'icecast':
+                            port = getattr(
+                                settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", stream['port'])
+                        elif server_type == 'stream-m':
+                            port = getattr(
+                                settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", stream['port'])
+                        #site = Site.objects.all()[0]
+                        server, c = StreamingServer.objects.get_or_create(host=host,
+                                                                          port=port,
+                                                                          type=server_type)
+                        stream = LiveStream(conference=conference, server=server,
+                                            stream_type=stream_type, streaming=True)
+                        stream.save()
+
+                    if not conference.web_class_group:
+                        try:
+                            live_message(conference)
+                        except:
+                            pass
+        else:
+            raise 'Error : input must be a conference dictionnary'
+
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ConferenceView, self).dispatch(*args, **kwargs)
