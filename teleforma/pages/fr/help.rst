@@ -3,18 +3,20 @@ Recommandations
 
 Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
 
-Les flux vidéo en direct et en différé utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
+A partir du 25/6/2021, les vidéos en différé sont compatibles avec tous les navigateurs.
 
- * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_ (recommandé, version >=44)
- * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_
- * Internet Explorer (version > 9) avec `l'extension WebM <https://tools.google.com/dlpage/webmmf/>`_ (uniquement en différé)
+Les flux vidéo en direct et en différé avant 265/6/2021 utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
+
+ * `Firefox <https://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
+ * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
+ * Opera
 
 Les flux audio au format MP3 sont compatibles avec les navigateurs suivants :
 
- * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_ (recommandé)
- * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_
+ * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
+ * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
  * Safari
- * Internet Explorer
+ * Edge
  * Opera
 
 Sur les smartphones et tablettes, nous proposons différentes solutions selon les plateformes :
@@ -26,8 +28,7 @@ Sur les smartphones et tablettes, nous proposons différentes solutions selon le
 
  * Iphone / Ipad
 
-  * Safari : lecture des flux audio en direct et en différé.
-  * `OPlayer <https://itunes.apple.com/us/app/oplayer/id344784375?mt=8>`_ : lecture des vidéos en différé, mais vous devez faire `une demande au support technique <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_ pour ouvrir les liens vidéos. Une fois les boutons "Télécharger" disponibles, cliquer **longuement** sur celui-ci pour copier l'URL de la vidéo et copier le lien dans le lecteur Oplayer en tant que "lien URL". La lecture devrait alors démarrer.
+  * Safari : lecture des flux audio en direct et en différé et vidéo à partir du 25/06/2021.
 
  * Autres plateformes:
 
@@ -44,20 +45,6 @@ Comme expliqué plus haut dans les recommandations, rendu peut varier selon les 
 Si des coupures de streaming ont lieu lors de la lecture en direct ou en différé, vérifier votre connexion internet, de faire quelques tests un autre site de streaming et de réssayer quelques minutes plus tard. Si les problèmes persistes, veuillez `contacter le support technique <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_.
 
 Notez que les téléchargement des fichiers audio sont disponibles pour tous les utilisateurs.
-
-BUG Live vidéo Semestrielle 2019
----------------------------------
-
-Suite à des instabilités de streaming, les paramètres de la plateforme ont été corrigés. Néanmoins, votre navigateur peut contenir encore d'anciennes données en cache.
-Deux solutions :
-
-* A court terme, depuis Chrome ou FireFox, connectez-vous à la plateforme avec une "Nouvelle fenêtre de navigation privée" disponible depuis le menu du navigateur.
-* A long terme, videz votre cache de navigateur (voir les documentations depuis Google), puis :
-
-  * sur Chrome : dans un nouvel onglet entrez "chrome://net-internals/#hsts" puis dans le champ "Domain" du paragraphe "Delete domain curity policies", entrer "stream.parisson.com" puis cliquer sur "delete"
-  * sur Firefox : dans les préférences, menu "Sécurité et vie privée", cliquer sur "Effacer l'historique", sélectionner "tout" puis toutes les options, et cliquer sur "Effacer maintenant".
-
-Ceci devrait résoudre la majorités des cas rencontrés ces derniers jours. Sinon, merci de contacter "Admin-tech" depuis la messagerie privée.
 
 Comment puis-je télécharger un fichier audio ?
 ----------------------------------------------
