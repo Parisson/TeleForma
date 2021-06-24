@@ -72,7 +72,7 @@ profile_view = CRFPAProfileView()
 document = DocumentView()
 media = MediaView()
 home_view = HomeView()
-media_transcoded = MediaTranscodedView
+media_transcoded = MediaTranscodedView()
 
 urlpatterns = [
     # login / logout

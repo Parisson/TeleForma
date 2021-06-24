@@ -614,7 +614,7 @@ class MediaTranscodedView(CourseAccessMixin, DetailView):
     def stream(self, request, period_id, pk, streaming=True):
         courses = get_courses(request.user)
         media = MediaTranscoded.objects.get(id=pk)
-        if get_access(media, courses):
+        if get_access(media.item, courses):
             media_path = media.file.path
             return serve_media(media_path, content_type=media.mime_type, streaming=streaming)
         else:
