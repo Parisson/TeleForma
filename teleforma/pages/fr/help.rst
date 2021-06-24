@@ -3,9 +3,9 @@ Recommandations
 
 Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
 
-A partir du 25/6/2021, les vidéos en différé sont compatibles avec tous les navigateurs.
+**A partir du 25/6/2021, les vidéos en différé sont compatibles avec tous les navigateurs.**
 
-Les flux vidéo en direct et en différé avant 265/6/2021 utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
+Les flux vidéo **en différé avant 26/6/2021** et tous les flux **vidéo en direct** utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
 
  * `Firefox <https://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
  * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
