@@ -1427,7 +1427,7 @@ msgstr "Se connecter en tant que"
 
 #: templates/registration/login.html:9 templates/telemeta/login.html:19
 msgid "Your username and password didn't match. Please try again."
-msgstr ""
+msgstr "Votre login et mot de passe ne correspondent pas. Veuillez réessayer."
 
 #: templates/registration/login.html:23
 #, python-format
@@ -3381,7 +3381,7 @@ msgstr ""
 
 #: templates/telemeta/registration/logged_out.html:8
 msgid "Log in again"
-msgstr ""
+msgstr "Se reconnecter"
 
 #: templates/telemeta/registration/password_change_done.html:3
 #: templates/telemeta/registration/password_change_form.html:4
@@ -3395,11 +3395,11 @@ msgstr "Déconnexion"
 
 #: templates/telemeta/registration/password_change_done.html:5
 msgid "Password change successful"
-msgstr ""
+msgstr "Mot de passe modifié avec succès"
 
 #: templates/telemeta/registration/password_change_done.html:9
 msgid "Your password was changed."
-msgstr ""
+msgstr "Votre mot de passe a été modifié."
 
 #: templates/telemeta/registration/password_change_form.html:6
 msgid "Password change"
@@ -3408,22 +3408,22 @@ msgstr "Modification de mot de passe"
 #: templates/telemeta/registration/password_change_form.html:14
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Veuillez corriger l'erreur ci-dessous."
+msgstr[1] "Veuillez corriger les erreurs ci-dessous."
 
 #: templates/telemeta/registration/password_change_form.html:18
 msgid ""
 "Please enter your old password, for security's sake, and then enter your new "
 "password twice so we can verify you typed it in correctly."
-msgstr ""
+msgstr "Veuillez saisir votre ancien mot de passe pour des raisons de sécurité."
 
 #: templates/telemeta/registration/password_change_form.html:24
 msgid "Old password"
-msgstr ""
+msgstr "Ancien mot de passe"
 
 #: templates/telemeta/registration/password_change_form.html:29
 msgid "New password"
-msgstr ""
+msgstr "Nouveau mot de passe"
 
 #: templates/telemeta/registration/password_change_form.html:34
 msgid "Password (again)"
@@ -3432,39 +3432,39 @@ msgstr "Mot de passe (encore)"
 #: templates/telemeta/registration/password_change_form.html:42
 #: templates/telemeta/registration/password_reset_confirm.html:20
 msgid "Change my password"
-msgstr ""
+msgstr "Changer mon mot de passe"
 
 #: templates/telemeta/registration/password_reset_complete.html:7
 msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
+msgstr "Votre mot de passe a été rédéfini. Vous pouvez désormais vous connecter."
 
 #: templates/telemeta/registration/password_reset_complete.html:10
 msgid "Log in"
-msgstr ""
+msgstr "Se connecter"
 
 #: templates/telemeta/registration/password_reset_confirm.html:8
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr ""
+msgstr "Veuillez saisir votre nouveau mot de passe une seconde fois."
 
 #: templates/telemeta/registration/password_reset_confirm.html:14
 msgid "New password:"
-msgstr ""
+msgstr "Nouveau mot de passe"
 
 #: templates/telemeta/registration/password_reset_confirm.html:16
 msgid "Confirm password:"
-msgstr ""
+msgstr "Confirmez votre mot de passe:"
 
 #: templates/telemeta/registration/password_reset_confirm.html:24
 msgid "Password reset unsuccessful"
-msgstr ""
+msgstr "Echec de la réinitialisation de mot de passe"
 
 #: templates/telemeta/registration/password_reset_confirm.html:25
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr ""
+msgstr "Le lien de réinitialisation de mot de passe est invalide. Probablement parce qu'il a déja été utilisé. Veuillez faire une nouvelle demande de changement de mot de passe."
 
 #: templates/telemeta/registration/password_reset_done.html:4
 msgid "Password reset successful"
@@ -3474,7 +3474,7 @@ msgstr "Demande de réinitialisation de mot de passe envoyée"
 msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
-msgstr ""
+msgstr "Nous vous avons envoyé des instructions sur l'adresse mail que vous nous avez indiqué pour définir un nouveau mot de passe. Vous devriez le recevoir dans les prochaines minutes."
 
 #: templates/telemeta/registration/password_reset_email.html:3
 msgid "You're receiving this e-mail because you requested a password reset"
@@ -3489,25 +3489,25 @@ msgstr "de votre compte utilisateur du site %(site_name)s"
 
 #: templates/telemeta/registration/password_reset_email.html:6
 msgid "Please go to the following page and choose a new password:"
-msgstr ""
+msgstr "Veuillez suivre ce lien et choisir un nouveau mot de passe:"
 
 #: templates/telemeta/registration/password_reset_email.html:10
 msgid "Your username, in case you've forgotten:"
-msgstr ""
+msgstr "Votre login, au cas où vous l'auriez oublié:"
 
 #: templates/telemeta/registration/password_reset_form.html:7
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
+msgstr "Vous avez oubliez votre mot de passe ? Veuillez saisir votre adresse e-mail et nous vous enverrons un email avec les instructions pour définir un nouveau mot de passe."
 
 #: templates/telemeta/registration/password_reset_form.html:11
 msgid "E-mail address:"
-msgstr ""
+msgstr "Adresse e-mail:"
 
 #: templates/telemeta/registration/password_reset_form.html:11
 msgid "Reset my password"
-msgstr ""
+msgstr "Réinitialiser mon mot de passe"
 
 #: templatetags/telemeta_utils.py:259
 #, python-format
