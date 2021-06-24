@@ -13,8 +13,8 @@ Les flux vidéo en direct et en différé avant 265/6/2021 utilisent le format l
 
 Les flux audio au format MP3 sont compatibles avec les navigateurs suivants :
 
- * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
- * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
+ * Firefox (recommandé)
+ * Chrome / Chromium
  * Safari
  * Edge
  * Opera
