@@ -295,7 +295,7 @@ class CorrectorForm(ModelForm):
                               pay_status=data.get('pay_status'),
                               )
         corrector.save()
-        corrector.courses = data.get('courses')
+        corrector.courses.set(data.get('courses'))
         return user
 
 
