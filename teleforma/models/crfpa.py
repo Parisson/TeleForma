@@ -503,7 +503,7 @@ class NewsItem(models.Model):
     created = models.DateTimeField(_('date created'), auto_now_add=True)
     creator = models.ForeignKey(
         User, related_name='newsitems', verbose_name="Créateur", on_delete=models.CASCADE)
-    deleted = models.BooleanField('Supprimé')
+    deleted = models.BooleanField('Supprimé', default=False)
 
     class Meta(MetaCore):
         verbose_name = "Actualité"
