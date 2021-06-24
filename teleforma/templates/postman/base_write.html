@@ -29,15 +29,15 @@
 
 
                 {{ form.errors.recipients }}
-                <input type="radio" id="recipient_category-admin" name="recipient_category" value="admin" {% if request.POST.recipient_category == 'admin' %}checked="checked"{% endif %}/><label
+                <input type="radio" id="recipient_category-admin" name="recipient_category" value="admin" {% if recipient_category == 'admin' %}checked="checked"{% endif %}/><label
                     for="recipient_category-admin">A un administrateur</label>
-                <input type="radio" id="recipient_category-prof" name="recipient_category" value="prof" {% if request.POST.recipient_category == 'prof' %}checked="checked"{% endif %}/><label
+                <input type="radio" id="recipient_category-prof" name="recipient_category" value="prof" {% if recipient_category == 'prof' %}checked="checked"{% endif %}/><label
                     for="recipient_category-prof">A un professeur</label>
-                <input type="radio" id="recipient_category-corrector" name="recipient_category" value="corrector" {% if request.POST.recipient_category == 'corrector' %}checked="checked"{% endif %}/><label
+                <input type="radio" id="recipient_category-corrector" name="recipient_category" value="corrector" {% if recipient_category == 'corrector' %}checked="checked"{% endif %}/><label
                     for="recipient_category-corrector">A un correcteur</label>
 
                 {% if not user.student.all %}
-                    <input type="radio" id="recipient_category-other" name="recipient_category" value="other" {% if request.POST.recipient_category == 'other' %}checked="checked"{% endif %}/><label
+                    <input type="radio" id="recipient_category-other" name="recipient_category" value="other" {% if recipient_category == 'other' %}checked="checked"{% endif %}/><label
                         for="recipient_category-other">A un étudiant</label>
                 {% endif %}
 
@@ -135,7 +135,7 @@
             });
         }
 
-        function update_desk_messages(event) {
+        function update_desk_messages(event, noReset) {
 
             // reset values
             if(event){
@@ -156,7 +156,9 @@
 
             // show or hide field depending on what is selected
             var recipientCategory = $('[name="recipient_category"]:checked').val();
-            $("#id_recipients").val('');
+
+            if(!noReset)
+                $("#id_recipients").val('');
             $('#category-admin').hide();
             $('#category-prof').hide();
             $('#category-corrector').hide();
@@ -216,7 +218,7 @@
         $('[name="recipient_category"]').bind('change', update_desk_messages);
         $('[name="course"], [name="corrector_course"]').bind('change', update_desk_messages);
         $('#_professorSelect, #_correctorSelect, #_adminSelect').bind('change', update_desk_messages);
-        update_desk_messages();
+        update_desk_messages(null, true);
 
         document.getElementById("id_subject").focus();
         $('#send_button').click(function () {

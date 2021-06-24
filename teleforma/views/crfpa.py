@@ -1128,6 +1128,14 @@ class WriteView(PostmanWriteView):
     form_classes = (WriteForm, AnonymousWriteForm)
     success_url = "postman:sent"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipient_category'] = self.request.POST.get('recipient_category', None)
+        if self.kwargs.get('recipients') and not context['recipient_category']:
+            context['recipient_category'] = 'other'
+
+        return context
+
 class CRFPAProfileView(ProfileView):
     """Provide Collections web UI methods"""
 

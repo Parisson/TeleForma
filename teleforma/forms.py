@@ -319,5 +319,4 @@ class WriteForm(PostmanWriteForm):
     def clean_recipients(self):
         """compute recipient if 'auto' is set"""
         recipients = self.cleaned_data['recipients']
-        course = self.cleaned_data.get('course')
         return recipients
