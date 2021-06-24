@@ -50,16 +50,18 @@
     <a href="{% url 'teleforma-desk-period-course' period.id script.course.id %}">{{ script.title }}</a>
 
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url 'postman:write' script.author.username %}" class="component_icon button icon_ok">{% trans "Send a message" %}</a>
+        {% if user.quotas.all %}
+            <a href="{% url 'postman:write' script.author.username %}" class="component_icon button icon_next">{% trans "Send a message" %}</a>
+        {% endif %}
         {% if topic.file %}
-        <a id="topic" href="{% url 'teleforma-document-download' topic.id %}" class="component_icon button icon_download">&nbsp;{% trans "Topic" %}</a>
+            <a id="topic" href="{% url 'teleforma-document-download' topic.id %}" class="component_icon button icon_download">&nbsp;{% trans "Topic" %}</a>
         {% endif %}
         {% if script.score %}
-        <a id="score" href="#" class="component_icon button icon_ok"> {% trans "Score" %} : {{ script.score|floatformat }}/20</a>
-        <a id="opener_comments" href="#" class="component_icon button icon_ok"> {% trans "Comments" %}</a>
-{#        <a id="opener_print" href="#" class="component_icon button icon_download"> {% trans "Imprimer" %}</a>#}
+            <a id="score" href="#" class="component_icon button icon_ok"> {% trans "Score" %} : {{ script.score|floatformat }}/20</a>
+            <a id="opener_comments" href="#" class="component_icon button icon_ok"> {% trans "Comments" %}</a>
+{#          <a id="opener_print" href="#" class="component_icon button icon_download"> {% trans "Imprimer" %}</a>#}
         {% elif script.status == 0 %}
-        <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
+            <a href="#" class="component_icon button icon_delete">{% trans "Rejected" %}</a>
         {% else %}
          {% if user.quotas.all %}
         	<a id="opener_mark" href="#" class="component_icon button icon_edit"> {% trans "Scoring" %}</a>
