@@ -362,8 +362,6 @@ def newsitems_portlet(context, course_id, period_id):
     }
 
 
-##### FROM TELEMETA #####
-
 @register.simple_tag
 def description():
     return settings.TELEFORMA_DESCRIPTION
@@ -393,13 +391,13 @@ def render_flatpage(content):
             directive, urlname = match.groups()
             line = directive
             try:
-                i = urlname.index('telemeta-')
+                i = urlname.index('teleforma-')
             except ValueError:
                 i = -1
             if i == 0:
                 line += reverse(urlname)
             elif urlname[:1] != '/':
-                line += reverse('telemeta-flatpage',
+                line += reverse('teleforma-flatpage',
                                 args=[path + '/../' + urlname])
             else:
                 line += urlname
