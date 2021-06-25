@@ -22,7 +22,7 @@ $(document).ready(function(){
 {% if media_transcoded.file and media.is_published or user.is_superuser or user.is_staff %}
  {% if not "video" in media_transcoded.mime_type or request.user_agent.os.family == 'iOS' %}
   <div class="module_action">
-   <a href="{% url 'teleforma-media-transcoded-download' period.id media.id %}" class="component_icon button" id="action_red"><img src="/static/teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+   <a href="{% url 'teleforma-media-transcoded-download' period.id media_transcoded.id %}" class="component_icon button" id="action_red"><img src="/static/teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
   </div>
  {% endif %}
 {% endif %}
@@ -38,9 +38,6 @@ $(document).ready(function(){
         {% endif %}
         {% if "audio" in media_transcoded.mime_type %}
             <a href="{% url 'teleforma-media-detail' period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
-        {% endif %}
-        {% if user.is_staff %}
-            <a id="publish" href="#" class="{% if media_transcoded.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media_transcoded.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
 
