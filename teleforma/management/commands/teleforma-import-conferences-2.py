@@ -101,7 +101,7 @@ class Command(BaseCommand):
                                 filename, extension = os.path.splitext(file)
                                 if extension[1:] in self.transcoded_formats:
                                     r_path = dir + os.sep + file
-                                    t, c = MediaItemTranscoded.objects.get_or_create(item=media, file=r_path)
+                                    t, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
 
                             # POSTER
                             for file in files:
