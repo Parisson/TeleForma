@@ -653,10 +653,6 @@ class Document(MediaBase):
         'Course', related_name='document', verbose_name=_('course'), on_delete=models.CASCADE)
     course_type = models.ManyToManyField('CourseType', related_name='document',
                                          verbose_name=_('course type'), blank=True)
-    conference = models.ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
-                                   blank=True, null=True, on_delete=models.SET_NULL)
-    # period          = models.ForeignKey('Period', related_name='document', verbose_name=_('period'),
-    #                              null=True, blank=True, on_delete=models.SET_NULL)
     periods = models.ManyToManyField('Period', related_name='documents', verbose_name=_('periods'),
                                      blank=True)
     type = models.ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
@@ -808,9 +804,7 @@ class Media(MediaBase):
             self.save()
 
     def __str__(self):
-        if self.conference:
-            return self.conference.description
-        elif self.course:
+        if self.course:
             return self.course.title + ' ' + self.course_type.name
         else:
             return self.file
@@ -819,8 +813,6 @@ class Media(MediaBase):
         super(Media, self).save(**kwargs)
         if self.course:
             self.course.save()
-        elif self.conference:
-            self.conference.course.save()
 
     def poster_url(self, geometry='640'):
         url = ''
