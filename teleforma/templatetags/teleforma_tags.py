@@ -384,30 +384,32 @@ def render_flatpage(content):
     if isinstance(content, str):
         content = content.split("\n")
 
-    for line in content:
-        match = re.match(
-            '^(\.\. *(?:_[^:]*:|(?:\|\w+\|)? *image::) *)([^ ]+) *$', line)
-        if match:
-            directive, urlname = match.groups()
-            line = directive
-            try:
-                i = urlname.index('teleforma-')
-            except ValueError:
-                i = -1
-            if i == 0:
-                line += reverse(urlname)
-            elif urlname[:1] != '/':
-                line += reverse('teleforma-flatpage',
-                                args=[path + '/../' + urlname])
-            else:
-                line += urlname
+    if content:
+        for line in content:
+            match = re.match(
+                '^(\.\. *(?:_[^:]*:|(?:\|\w+\|)? *image::) *)([^ ]+) *$', line)
+            if match:
+                directive, urlname = match.groups()
+                line = directive
+                try:
+                    i = urlname.index('teleforma-')
+                except ValueError:
+                    i = -1
+                if i == 0:
+                    line += reverse(urlname)
+                elif urlname[:1] != '/':
+                    line += reverse('teleforma-flatpage',
+                                    args=[path + '/../' + urlname])
+                else:
+                    line += urlname
 
-        parsed += line + "\n"
+            parsed += line + "\n"
 
-    parts = publish_parts(source=smart_str(
-        parsed), writer_name="html4css1", settings_overrides={})
-    return mark_safe('<div class="rst-content">\n' + force_text(parts["html_body"]) + '</div>')
-
+        parts = publish_parts(source=smart_str(
+            parsed), writer_name="html4css1", settings_overrides={})
+        return mark_safe('<div class="rst-content">\n' + force_text(parts["html_body"]) + '</div>')
+    else:
+        return ""
 
 render_flatpage.is_safe = True
 

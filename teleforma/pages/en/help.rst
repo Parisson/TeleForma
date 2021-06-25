@@ -1,22 +1,72 @@
-.. image:: images/help.png
-    :align: left
+Recommandations
+================
 
-========================
-Help pages for Telemeta
-========================
+Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
 
-For technical assistance, please join our mailing list:
-    
-    `http://lists.parisson.com/cgi-bin/mailman/listinfo/telemeta <http://lists.parisson.com/cgi-bin/mailman/listinfo/telemeta>`_
-    
-or contact the hotline by email:
-        
-     support@parisson.com
-        
-or twitter:
-            
-    `http://twitter.com/telemeta <http://twitter.com/telemeta>`_
-            
-For more informations about the Telemeta system, see `telemeta.org <http://telemeta.org>`_
-            
-Telemeta uses the audio librairy TimeSide : `code.google.com/p/timeside/ <http://code.google.com/p/timeside/>`_
+**A partir du 25/6/2021, les vidéos en différé sont compatibles avec tous les navigateurs.**
+
+Les flux vidéo **en différé avant 26/6/2021** et tous les flux **vidéo en direct** utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
+
+ * `Firefox <https://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
+ * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
+ * Opera
+
+Les flux audio au format MP3 sont compatibles avec les navigateurs suivants :
+
+ * Firefox (recommandé)
+ * Chrome / Chromium
+ * Safari
+ * Edge
+ * Opera
+
+Sur les smartphones et tablettes, nous proposons différentes solutions selon les plateformes :
+
+ * Android
+
+  * `Firefox for Android <https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=fr>`_ (recommandé) : lecture des flux vidéos et audio en direct et en différé
+  * `Chrome for Android <https://play.google.com/store/apps/details?id=com.android.chrome&hl=fr>`_ : lecture des flux vidéos en différé, audio en direct et différé
+
+ * Iphone / Ipad
+
+  * Safari : lecture des flux audio en direct et en différé et vidéo à partir du 25/06/2021.
+
+ * Autres plateformes:
+
+   procéder comme sour Iphone / Ipad avec un lecteur compatible et si possible ouvert comme VLC
+
+FAQ
+====
+
+Pourquoi les flux vidéos ne s'affichent pas correctement dans mon navigateur ?
+-------------------------------------------------------------------------------
+
+Comme expliqué plus haut dans les recommandations, rendu peut varier selon les plateformes. Merci de suivre ces récommandations.
+
+Si des coupures de streaming ont lieu lors de la lecture en direct ou en différé, vérifier votre connexion internet, de faire quelques tests un autre site de streaming et de réssayer quelques minutes plus tard. Si les problèmes persistes, veuillez `contacter le support technique <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_.
+
+Notez que les téléchargement des fichiers audio sont disponibles pour tous les utilisateurs.
+
+Comment puis-je télécharger un fichier audio ?
+----------------------------------------------
+
+ * Sur Windows : cliquer sur l'icône "Télécharger" avec le bouton DROIT de la souris puis cliquer avec le bouton GAUCHE sur "Enregistrer la cible du lien sous" pour l'enregistrer dans un dossier.
+ * Sur Mac : appuyer sur CTRL avant de cliquer à l'aide du bouton de la souris sur le bouton "Télécharger"
+ * Sur Linux : procéder comme sur windows
+ * Sur smartphones et tablettes : un clic long ou court sur le bouton "Télécharger".
+
+Pour lire les fichiers téléchargés, utilisez n'importe quel lecteur MP3, `VLC <http://www.videolan.org/vlc/>`_ étant recommandé.
+
+
+J'ai perdu mon mot de passe, que dois-je faire ?
+-------------------------------------------------------------------------------
+
+Vous pouvez à tout moment réinitialiser votre mot de passe personnel depuis l'accueil du site en cliquant sur "mot de passe oublié".
+|
+
+Support
+========
+
+Pour les questions relatives à votre formation, vos supports de cours, vos agendas, veuillez `contacter un administrateur depuis la messagerie <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-CRFPA>`_ ou bien par mail à l'adresse suivante : `admin-crfpa@pre-bareau.com <mailto:admin-crfpa@pre-bareau.com>`_
+
+Pour obtenir une aide technique concernant **uniquement** les problèmes informatiques d'accès aux ressources, veuillez `contacter un technicien depuis la messagerie <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_. Les questions concernant votre formation ne sont pas prises en compte.
+
