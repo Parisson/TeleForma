@@ -276,9 +276,10 @@ BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-SESSION_ENGINE = "unique_session.backends.session_backend"
-UNIQUE_SESSION_WHITELIST = (1, 2042)
+#SESSION_ENGINE = "unique_session.backends.session_backend"
+#UNIQUE_SESSION_WHITELIST = (1, 2042)
 
 RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
 RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
