@@ -27,15 +27,15 @@ D_LOGO!/static/payment/logo/!
 #
 # fichier des  paramètres sherlocks
 #
-F_DEFAULT!/srv/sherlocks2/param/parmcom.sherlocks!
+F_DEFAULT!/srv/sherlocks/param/parmcom.sherlocks!
 #
 # fichier paramètre commercant
 #
-F_PARAM!/srv/sherlocks2/param/parmcom!
+F_PARAM!/srv/sherlocks/param/parmcom!
 #
 # certificat du commercant
 #
-F_CERTIFICATE!/srv/sherlocks2/param/certif!
+F_CERTIFICATE!/srv/sherlocks/param/certif!
 #
 # type du certificat
 #
