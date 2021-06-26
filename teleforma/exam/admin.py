@@ -34,7 +34,7 @@ class ScriptAdmin(admin.ModelAdmin):
     ordering = ['-date_added']
     search_fields = ['author__username', 'author__last_name', 'corrector__username',
                     'corrector__last_name', 'course__title', 'course__code']
-    readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
+    readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type', 'author']
     list_filter = ['period', 'course__title', 'session', 'type', 'status',
                     'date_submitted', 'date_marked', 'date_rejected',
                    'author__student__platform_only']
