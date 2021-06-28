@@ -246,11 +246,10 @@ def nginx_media_accel(media_path, content_type="", buffering=True, streaming=Fal
     return response
 
 
-def live_message(conference):
-    site = get_current_site()
+def live_message(site, conference):
     token = settings.ADMIN_TOKEN
     requests.post('https://' + site.domain + '/chat/messages',
-        headers={'Authorization': token},
+        headers={'Authorization' : 'Token ' + token},
         data={'conference_id': conference.id})
 
 
@@ -762,7 +761,8 @@ class ConferenceView(CourseAccessMixin, DetailView):
 
                     if not conference.web_class_group:
                         try:
-                            live_message(conference)
+                            site = get_current_site(request)
+                            live_message(site, conference)
                         except:
                             pass
         else:
