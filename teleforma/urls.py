@@ -148,11 +148,11 @@ urlpatterns = [
     url(r'^desk/$', HomeRedirectView.as_view(),
         name="teleforma-desk"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/$',
-        cache_page(CACHE_TIMEOUT)(CourseListView.as_view()), name="teleforma-desk-period-list"),
+        CourseListView.as_view(), name="teleforma-desk-period-list"),
     url(r'^desk/periods/(?P<period_id>.*)/courses_pending/$',
         CoursePendingListView.as_view(), name="teleforma-desk-period-pending"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', 
-        cache_page(CACHE_TIMEOUT)(CourseView.as_view()),
+        CourseView.as_view(),
         name="teleforma-desk-period-course"),
 
 
