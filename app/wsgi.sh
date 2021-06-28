@@ -3,7 +3,6 @@
 # paths
 app='/srv/app'
 manage=$app'/manage.py'
-wsgi=$app'/wsgi.py'
 static='/srv/static/'
 media='/srv/media/'
 src='/srv/src/'
@@ -53,7 +52,5 @@ else
 
     chown -R www-data: $debug_log
 
-    uwsgi --socket :$port --wsgi-file $wsgi --chdir $app --master \
-    --processes $processes \
-    --uid $uid --gid $gid --logto $uwsgi_log --touch-reload $wsgi
+    uwsgi /srv/app/wsgi.ini
 fi

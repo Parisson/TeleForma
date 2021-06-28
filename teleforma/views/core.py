@@ -55,6 +55,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.core.cache import cache
+
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
 from rest_framework.permissions import IsAuthenticated
