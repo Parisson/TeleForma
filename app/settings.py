@@ -286,12 +286,14 @@ RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
 RECAPTCHA_REQUIRED_SCORE = 0.85
 
 # Cache backend is optional, but recommended to speed up user agent parsing
-# CACHES = {
-#    'default': {
-#        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-#        'LOCATION': '127.0.0.1:11211',
-#    }
-# }
+CACHES = {
+   'default': {
+       'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+       'LOCATION': 'memcached:11211',
+   }
+}
+
+CACHE_TIMEOUT = 300
 
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.
