@@ -42,9 +42,9 @@ class Command(BaseCommand):
         message = render_to_string(self.message_template, ctx_dict)
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
 
-    def handle(self, *args, **options):
-        log_file = options['log_file']
-        period_name = options['period_name']
+    def handle(self, *args, **nargs):
+        log_file = args[-1]
+        period_name = args[-2]
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
