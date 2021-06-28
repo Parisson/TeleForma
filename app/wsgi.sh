@@ -13,6 +13,7 @@ debug_log='/var/log/app/debug.log'
 # uwsgi params
 port=8000
 processes=32
+http_timeout=120
 #threads=2
 autoreload=3
 uid='www-data'
@@ -55,5 +56,7 @@ else
 
     uwsgi --socket :$port --wsgi-file $wsgi --chdir $app --master \
     --processes $processes \
-    --uid $uid --gid $gid --logto $uwsgi_log --touch-reload $wsgi
+    --uid $uid --gid $gid --logto $uwsgi_log --touch-reload $wsgi \
+    --http-timeout $http_timeout
+
 fi
