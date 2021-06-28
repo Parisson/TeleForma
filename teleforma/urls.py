@@ -35,6 +35,7 @@
 import os.path
 
 from django.conf.urls import include, url
+from django.conf import settings
 from django.urls import path
 from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordChangeDoneView,
@@ -150,7 +151,8 @@ urlpatterns = [
         cache_page(CACHE_TIMEOUT)(CourseListView.as_view()), name="teleforma-desk-period-list"),
     url(r'^desk/periods/(?P<period_id>.*)/courses_pending/$',
         CoursePendingListView.as_view(), name="teleforma-desk-period-pending"),
-    url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
+    url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', 
+        cache_page(CACHE_TIMEOUT)(CourseView.as_view()),
         name="teleforma-desk-period-course"),
 
 
@@ -161,7 +163,8 @@ urlpatterns = [
     url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/stream/$',
         media_transcoded.stream, name="teleforma-media-transcoded-stream"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$',
-        MediaView.as_view(), name="teleforma-media-detail"),
+        cache_page(CACHE_TIMEOUT)(MediaView.as_view()), 
+        name="teleforma-media-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/embed/$',
         MediaViewEmbed.as_view(), name="teleforma-media-embed"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/download/$',
@@ -176,7 +179,8 @@ urlpatterns = [
     url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
         name="teleforma-document-view"),
 
-    url(r'^archives/annals/$', AnnalsView.as_view(),
+    url(r'^archives/annals/$', 
+        cache_page(CACHE_TIMEOUT)(AnnalsView.as_view()),
         name="teleforma-annals"),
     url(r'^archives/annals/by-iej/(\w+)/$',
         AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
@@ -187,7 +191,7 @@ urlpatterns = [
         cache_page(CACHE_TIMEOUT)(ConferenceView.as_view()),
         name="teleforma-conference-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/audio/$',
-        cache_page(CACHE_TIMEOUT)ConferenceView.as_view(
+        cache_page(CACHE_TIMEOUT)(ConferenceView.as_view(
             template_name="teleforma/course_conference_audio.html")
         ),
         name="teleforma-conference-audio"),
