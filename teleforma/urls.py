@@ -45,6 +45,7 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordResetDoneView,
                                        PasswordResetView)
 from django.views.generic.base import TemplateView
+from django.views.decorators.cache import cache_page
 from jsonrpc import jsonrpc_site
 
 from teleforma.views.home import HomeView
@@ -73,6 +74,9 @@ document = DocumentView()
 media = MediaView()
 home_view = HomeView()
 media_transcoded = MediaTranscodedView()
+
+CACHE_TIMEOUT = getattr(settings, 'CACHE_TIMEOUT', 300)
+
 
 urlpatterns = [
     # login / logout
@@ -143,7 +147,7 @@ urlpatterns = [
     url(r'^desk/$', HomeRedirectView.as_view(),
         name="teleforma-desk"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/$',
-        CourseListView.as_view(), name="teleforma-desk-period-list"),
+        cache_page(CACHE_TIMEOUT)(CourseListView.as_view()), name="teleforma-desk-period-list"),
     url(r'^desk/periods/(?P<period_id>.*)/courses_pending/$',
         CoursePendingListView.as_view(), name="teleforma-desk-period-pending"),
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', CourseView.as_view(),
@@ -180,10 +184,12 @@ urlpatterns = [
         AnnalsCourseView.as_view(), name="teleforma-annals-course"),
 
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/video/$',
-        ConferenceView.as_view(), name="teleforma-conference-detail"),
+        cache_page(CACHE_TIMEOUT)(ConferenceView.as_view()),
+        name="teleforma-conference-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/audio/$',
-        ConferenceView.as_view(
-            template_name="teleforma/course_conference_audio.html"),
+        cache_page(CACHE_TIMEOUT)ConferenceView.as_view(
+            template_name="teleforma/course_conference_audio.html")
+        ),
         name="teleforma-conference-audio"),
     url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
