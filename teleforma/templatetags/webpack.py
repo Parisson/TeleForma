@@ -1,6 +1,7 @@
 import requests
 from django import template
 from django.conf import settings
+import teleforma
 
 register = template.Library()
 
@@ -24,6 +25,8 @@ def webpack(bundle):
                     url = None
         except requests.ConnectionError:
             pass
+
+    url += '?v=' + teleforma.__version__
 
     return {
         'is_css': is_css,
