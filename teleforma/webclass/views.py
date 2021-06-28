@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, TemplateView, View
+from datetime import datetime
 
 from ..decorators import access_required
 from ..views.core import get_courses, get_periods
@@ -25,9 +26,9 @@ class WebclassProfessorAppointments(TemplateView):
         user = self.request.user
         if not user.professor:
             return HttpResponse('Unauthorized', status=401)
+        today = datetime.today()
         context['slots'] = WebclassSlot.published.filter(
-            professor=user.professor.get(), webclass__status=3).order_by('day', 'start_hour')
-        print(context['slots'])
+            professor=user.professor.get(), webclass__status=3, webclass__end_date__gte=today).order_by('day', 'start_hour')
         return context
 
 
