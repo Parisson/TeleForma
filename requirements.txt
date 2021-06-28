@@ -33,3 +33,4 @@ redis==3.5.3
 uwsgi==2.0.19
 daphne==3.0.2
 pymemcache==3.4.4
+django-debug-toolbar==3.2.1
