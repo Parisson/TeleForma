@@ -15,9 +15,7 @@
         let url = videoSource.attr("src");
         url = url + "?v=" + getRndInteger(1, 10000);
         videoSource.attr("src", url);
-        let autoplayVideo = $("#video");
-        autoplayVideo.load();
-        // autoplayVideo.play();
+        video.load();
     });
 </script>
 
