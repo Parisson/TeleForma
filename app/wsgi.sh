@@ -9,6 +9,7 @@ src='/srv/src/'
 uwsgi_log='/var/log/uwsgi/app.log'
 debug_log='/var/log/app/debug.log'
 
+<<<<<<< HEAD
 # uwsgi params
 port=8000
 processes=32
@@ -17,6 +18,8 @@ http_timeout=120
 autoreload=3
 uid='www-data'
 gid='www-data'
+=======
+>>>>>>> dev
 # patterns='*.js;*.css;*.jpg;*.jpeg;*.gif;*.png;*.svg;*.ttf;*.eot;*.woff;*.woff2'
 
 # Install a package in development mode
