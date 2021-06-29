@@ -163,7 +163,7 @@ urlpatterns = [
     url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/stream/$',
         media_transcoded.stream, name="teleforma-media-transcoded-stream"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/detail/$',
-        cache_page(CACHE_TIMEOUT)(MediaView.as_view()), 
+        MediaView.as_view(),
         name="teleforma-media-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/embed/$',
         MediaViewEmbed.as_view(), name="teleforma-media-embed"),
@@ -183,15 +183,17 @@ urlpatterns = [
         cache_page(CACHE_TIMEOUT)(AnnalsView.as_view()),
         name="teleforma-annals"),
     url(r'^archives/annals/by-iej/(\w+)/$',
-        AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
+        cache_page(CACHE_TIMEOUT)(AnnalsIEJView.as_view()),
+        name="teleforma-annals-iej"),
     url(r'^archives/annals/by-course/(\w+)/$',
-        AnnalsCourseView.as_view(), name="teleforma-annals-course"),
+        cache_page(CACHE_TIMEOUT)(AnnalsCourseView.as_view()),
+        name="teleforma-annals-course"),
 
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/video/$',
-        cache_page(CACHE_TIMEOUT)(ConferenceView.as_view()),
+        ConferenceView.as_view(),
         name="teleforma-conference-detail"),
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/audio/$',
-        cache_page(CACHE_TIMEOUT)(ConferenceView.as_view(
+        ConferenceView.as_view(
             template_name="teleforma/course_conference_audio.html")
         ),
         name="teleforma-conference-audio"),
