@@ -9,13 +9,6 @@ src='/srv/src/'
 uwsgi_log='/var/log/uwsgi/app.log'
 debug_log='/var/log/app/debug.log'
 
-# uwsgi params
-port=8000
-processes=32
-#threads=2
-autoreload=3
-uid='www-data'
-gid='www-data'
 # patterns='*.js;*.css;*.jpg;*.jpeg;*.gif;*.png;*.svg;*.ttf;*.eot;*.woff;*.woff2'
 
 # Install a package in development mode
