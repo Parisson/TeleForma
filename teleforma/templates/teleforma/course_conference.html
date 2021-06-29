@@ -10,12 +10,12 @@
     function getRndInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
     jQuery(window).ready(function() {
-        let video = $("#video");
-        let videoSource = $("#video source");
-        let url = videoSource.attr("src");
+        var video = $("#video");
+        var videoSource = $("#video source");
+        var url = videoSource.attr("src");
         url = url + "?v=" + getRndInteger(1, 10000);
         videoSource.attr("src", url);
-        let autoplayVideo = $("#videoclip").get(0);
+        var autoplayVideo = $("#videoclip").get(0);
         autoplayVideo.load();
         autoplayVideo.play();
     });
