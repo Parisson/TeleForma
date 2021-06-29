@@ -233,7 +233,6 @@ TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_contour_wh'
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 EMAIL_HOST = 'angus.parisson.com'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'

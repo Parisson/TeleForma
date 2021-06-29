@@ -46,6 +46,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 from django.template import loader
 from django.urls import reverse
@@ -259,15 +260,14 @@ class HomeRedirectView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            periods = get_periods(request.user)
-            if periods:
+            period_id = request.session.get('period')
+            if not period_id:
+                periods = request.session.get('periods')
+                if not periods:
+                    periods = get_periods(request.user)
                 period = get_default_period(periods)
-                if period in periods:
-                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period.id}))
-                else:
-                    return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': periods[0].id}))
-            else:
-                return HttpResponseRedirect(reverse('teleforma-login'))
+                period_id = period.id
+            return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period_id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
 
@@ -277,18 +277,17 @@ class PeriodAccessMixin(View):
     def get_context_data(self, **kwargs):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
         if 'period_id' in self.kwargs.keys():
-            period = Period.objects.filter(id=int(self.kwargs['period_id']))
-            if period:
-                self.period = period[0]
-            else:
-                periods = get_periods(self.request.user)
-                self.period = get_default_period(periods)
+            self.period = Period.objects.get_object_or_404(id=int(self.kwargs['period_id']))
+            if self.period in context['periods']:
+                self.request.session['period'] = self.period.id
+        else:
+            self.period = get_default_period(context['periods'])
         context['period'] = self.period
         return context
 
     def render_to_response(self, context):
         period = context['period']
-        if not period in get_periods(self.request.user):
+        if not period in context['periods']:
             messages.warning(self.request, _(
                 "You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-home')

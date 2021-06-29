@@ -34,15 +34,19 @@
 
 
 from teleforma.views.core import get_periods
+from teleforma.models.core import Period
 
 
 def periods(request):
     """return the periods assigned to the user """
-
-    user = request.user
-
-    if not user.is_authenticated:
+    if not request.user.is_authenticated:
         return {'periods': None}
     else:
-        return {'periods': get_periods(user)}
+        period_ids = request.session.get('periods')
+        if not periods:
+            periods = get_periods(request.user)
+            request.session['periods'] = [period.id for period in periods]
+        else:
+            periods = [Period.objects.get(id=period_id) for period_id in period_ids]
+        return {'periods': periods}
 
