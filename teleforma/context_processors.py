@@ -42,11 +42,5 @@ def periods(request):
     if not request.user.is_authenticated:
         return {'periods': None}
     else:
-        period_ids = request.session.get('periods')
-        if not periods:
-            periods = get_periods(request.user)
-            request.session['periods'] = [period.id for period in periods]
-        else:
-            periods = [Period.objects.get(id=period_id) for period_id in period_ids]
-        return {'periods': periods}
+        return {'periods': get_periods(request.user, request=request)}
 
