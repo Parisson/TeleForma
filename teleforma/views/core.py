@@ -142,7 +142,14 @@ def get_host(request):
     return host
 
 
-def get_periods(user):
+def get_periods(user, request=None):
+    if request:
+        period_ids = request.session.get('periods')
+            if not periods:
+                periods = get_periods(request.user)
+                request.session['periods'] = [period.id for period in periods]
+            else:
+                periods = [Period.objects.get(id=period_id) for period_id in period_ids]
     periods = []
     student = user.student.all()
     if student:
