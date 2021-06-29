@@ -275,8 +275,8 @@ BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-# SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+#SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 #SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
