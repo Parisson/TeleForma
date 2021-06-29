@@ -144,6 +144,7 @@ def get_host(request):
 
 def get_periods(request):
     period_ids = request.session.get('period_ids')
+    user = request.user
 
     if period_ids:
         periods = [Period.objects.get(id=period_id) for period_id in period_ids]
@@ -282,11 +283,13 @@ class PeriodAccessMixin(View):
 
     def get_context_data(self, **kwargs):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
+        periods = get_periods(self.request)
+        context['periods'] = periods
+
         if 'period_id' in self.kwargs.keys():
             period_id = int(self.kwargs['period_id'])
             self.period = get_object_or_404(Period, pk=period_id)
         else:
-            periods = get_periods(request)
             period = get_default_period(periods)
             period_id = period.id
             self.period = period
