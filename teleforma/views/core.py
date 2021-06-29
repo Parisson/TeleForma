@@ -142,36 +142,36 @@ def get_host(request):
     return host
 
 
-def get_periods(user, request=None):
-    if request:
-        period_ids = request.session.get('periods')
-            if not periods:
-                periods = get_periods(request.user)
-                request.session['periods'] = [period.id for period in periods]
-            else:
-                periods = [Period.objects.get(id=period_id) for period_id in period_ids]
-    periods = []
-    student = user.student.all()
-    if student:
-        student = user.student.get()
-        periods = [training.period for training in student.trainings.all()]
-        for period in periods:
-            for child in period.children.all():
-                periods.append(child)
+def get_periods(request):
+    period_ids = request.session.get('period_ids')
 
-    if user.is_superuser or user.is_staff:
-        periods = Period.objects.filter(is_open=True)
-
-    professor = user.professor.all()
-    if professor:
-        periods = Period.objects.filter(is_open=True)
-
-    quotas = user.quotas.all()
-    if quotas and not (user.is_superuser or user.is_staff) and not professor:
+    if period_ids:
+        periods = [Period.objects.get(id=period_id) for period_id in period_ids]
+    else:
         periods = []
-        for quota in quotas:
-            if not quota.period in periods:
-                periods.append(quota.period)
+        student = user.student.all()
+        if student:
+            student = user.student.get()
+            periods = [training.period for training in student.trainings.all()]
+            for period in periods:
+                for child in period.children.all():
+                    periods.append(child)
+
+        if user.is_superuser or user.is_staff:
+            periods = Period.objects.filter(is_open=True)
+
+        professor = user.professor.all()
+        if professor:
+            periods = Period.objects.filter(is_open=True)
+
+        quotas = user.quotas.all()
+        if quotas and not (user.is_superuser or user.is_staff) and not professor:
+            periods = []
+            for quota in quotas:
+                if not quota.period in periods:
+                    periods.append(quota.period)
+
+        request.session['period_ids'] = [period.id for period in periods]
 
     return periods
 
@@ -267,13 +267,12 @@ class HomeRedirectView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            period_id = request.session.get('period')
+            period_id = request.session.get('period_id')
             if not period_id:
-                periods = request.session.get('periods')
-                if not periods:
-                    periods = get_periods(request.user)
+                periods = get_periods(request)
                 period = get_default_period(periods)
                 period_id = period.id
+                request.session['period_id'] = period_id
             return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period_id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
@@ -284,11 +283,14 @@ class PeriodAccessMixin(View):
     def get_context_data(self, **kwargs):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
         if 'period_id' in self.kwargs.keys():
-            self.period = Period.objects.get_object_or_404(id=int(self.kwargs['period_id']))
-            if self.period in context['periods']:
-                self.request.session['period'] = self.period.id
+            period_id = int(self.kwargs['period_id'])
+            self.period = Period.objects.get_object_or_404(id=period_id)
         else:
-            self.period = get_default_period(context['periods'])
+            periods = get_periods(request)
+            period = get_default_period(periods)
+            period_id = period.id
+            self.period = period
+        request.session['period_id'] = period_id
         context['period'] = self.period
         return context
 

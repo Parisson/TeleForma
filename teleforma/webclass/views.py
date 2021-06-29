@@ -44,7 +44,7 @@ class WebclassAppointment(View):
         student = student[0]
         # check period
         period_id = webclass.period.id
-        periods = [p for p in get_periods(user) if int(p.id) == period_id]
+        periods = [p for p in get_periods(self.request) if int(p.id) == period_id]
         if not periods:
             return HttpResponse('Unauthorized', status=401)
         # check courses

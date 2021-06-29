@@ -26,7 +26,7 @@ class Appointments(View):
         if not student:
             return HttpResponse('Unauthorized', status=401)
         period_id = int(period_id)
-        periods = [ p for p in get_periods(user) if int(p.id) == period_id ]
+        periods = [ p for p in get_periods(self.request) if int(p.id) == period_id ]
         if not periods:
             return HttpResponse('Unauthorized', status=401)
         return
