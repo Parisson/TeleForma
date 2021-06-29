@@ -12,6 +12,7 @@ debug_log='/var/log/app/debug.log'
 # uwsgi params
 port=8000
 processes=32
+http_timeout=120
 #threads=2
 autoreload=3
 uid='www-data'
