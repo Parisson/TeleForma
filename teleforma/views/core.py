@@ -290,7 +290,7 @@ class PeriodAccessMixin(View):
             period = get_default_period(periods)
             period_id = period.id
             self.period = period
-        request.session['period_id'] = period_id
+        self.request.session['period_id'] = period_id
         context['period'] = self.period
         return context
 
