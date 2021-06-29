@@ -196,7 +196,7 @@ urlpatterns = [
         ConferenceView.as_view(
             template_name="teleforma/course_conference_audio.html")
         ),
-        name="teleforma-conference-audio"),
+        name="teleforma-conference-audio",
     url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
 
