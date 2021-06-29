@@ -17,7 +17,6 @@ services:
       - ./var/static:/srv/static
       - ./var/log/app:/var/log/app
       - ./var/log/uwsgi:/var/log/uwsgi
-      - ./app/wsgi.socket:/srv/app/wsgi.socket
     links:
       - postgres
       - redis
