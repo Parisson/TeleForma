@@ -284,7 +284,7 @@ class PeriodAccessMixin(View):
         context = super(PeriodAccessMixin, self).get_context_data(**kwargs)
         if 'period_id' in self.kwargs.keys():
             period_id = int(self.kwargs['period_id'])
-            self.period = Period.objects.get_object_or_404(id=period_id)
+            self.period = get_object_or_404(Period, pk=period_id)
         else:
             periods = get_periods(request)
             period = get_default_period(periods)
