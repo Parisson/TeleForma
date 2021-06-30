@@ -805,7 +805,10 @@ class Media(MediaBase):
 
     def __str__(self):
         if self.course:
-            return self.course.title + ' ' + self.course_type.name
+            if self.conference:
+                return self.conference + ' - ' + str(self.mime_type)
+            else:
+                return self.course.title + ' ' + self.course_type.name
         else:
             return self.file
 
