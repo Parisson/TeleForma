@@ -77,6 +77,14 @@ services:
     volumes:
       - ./var/redis:/data
 
+  apache:
+    image: httpd
+    volumes:
+      - ./etc/apache2-dev.conf:/usr/local/apache2/conf/httpd.conf
+    ports:
+       - "8080:80"
+    
+
 volumes:
     app:
     postgres:
