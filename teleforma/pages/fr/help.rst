@@ -17,11 +17,11 @@ FAQ
 Pourquoi les flux vidéos ne s'affichent pas correctement dans mon navigateur ?
 -------------------------------------------------------------------------------
 
-Comme expliqué plus haut dans les recommandations, rendu peut varier selon les plateformes. Merci de suivre ces récommandations.
+Comme expliqué plus haut dans les recommandations, le rendu peut varier selon les plateformes. Merci donc de suivre ces récommandations.
 
 Si des coupures de streaming ont lieu lors de la lecture en direct ou en différé, vérifier votre connexion internet, de faire quelques tests un autre site de streaming et de réssayer quelques minutes plus tard. Si les problèmes persistes, veuillez `contacter le support technique <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_.
 
-Notez que les téléchargement des fichiers audio sont disponibles pour tous les utilisateurs.
+Notez que la lecture et le téléchargement des flux audio sont disponibles pour tous les utilisateurs et tous les navigateurs.
 
 Comment puis-je télécharger un fichier audio ?
 ----------------------------------------------
