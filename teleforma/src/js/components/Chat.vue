@@ -119,10 +119,6 @@ export default class Chat extends Vue {
     }
   }
 
-  async mounted() {
-    await this.fetchMessages()
-  }
-
   async fetchMessages() {
     /** get messages from ajax */
     const roomId = this.rooms[0].roomId
