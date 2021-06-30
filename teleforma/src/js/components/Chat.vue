@@ -106,14 +106,13 @@ export default class Chat extends Vue {
   connect(roomName: string) {
     // connect to socket
     let protocol = "wss"
-    if (window.location.protocol != "https:")
-      protocol = "ws"
+    if (window.location.protocol != "https:") protocol = "ws"
     this.socket = new WebSocket(protocol + "://" + window.location.host + "/ws/chat/" + roomName + "/")
     this.fetchMessages()
 
     this.socket.onclose = () => {
-      console.error("Chat socket closed unexpectedly")
-      // retry to connect
+      console.log("Chat socket closed")
+      // try to reconnect
       setTimeout(() => {
         this.connect(roomName)
       }, 10000)
@@ -125,6 +124,7 @@ export default class Chat extends Vue {
   }
 
   async fetchMessages() {
+    /** get messages from ajax */
     const roomId = this.rooms[0].roomId
     this.messagesLoaded = false
     try {
@@ -145,6 +145,7 @@ export default class Chat extends Vue {
   }
 
   sendMessage({ content }: { content: Message }) {
+    /** send message to socket */
     this.socket!.send(
       JSON.stringify({
         message: content
