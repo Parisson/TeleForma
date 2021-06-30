@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        dev: 1
+    command: /bin/sh /srv/app/wsgi.sh --runserver
+    volumes:
+      - ./app/:/srv/app
+      - ./bin:/srv/bin
+      - ./lib:/srv/lib
+      - ./teleforma/:/srv/src/teleforma/teleforma
+      - ./var/media:/srv/media
+      - ./var/backup:/srv/backup
+      - ./var/static:/srv/static
+      - ./var/log/app:/var/log/app
+      - ./var/log/uwsgi:/var/log/uwsgi
+    links:
+      - postgres
+      - redis
+    ports:
+       - "9000:8000"
+    env_file:
+       - 'env/debug.env'
+
+  postgres:
+    image: postgres:13
+    env_file:
+      - env/debug.env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./var/lib/postgresql:/var/lib/postgresql/data:rw
+      - ./bin:/srv/bin
+      - ./var/backup/:/srv/backup
+      - /etc/localtime:/etc/localtime:ro
+
+  memcached:
+      image: memcached:alpine
+      entrypoint:
+          - memcached
+          - -m 1024
+          - -I 128m
+          - -v
+
+  redis:
+    image: redis
+    entrypoint:
+      - redis-server
+      - --appendonly yes
+    volumes:
+      - ./var/redis:/data
+
+volumes:
+    app:
+    postgres:
+    redis:
+
+
