@@ -1,23 +1,15 @@
 Recommandations
 ================
 
-Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
+Cette plateforme est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
 
-**A partir du 25/6/2021, les vidéos en différé sont compatibles avec tous les navigateurs.**
+Pour une navigation fluide dans tous les cas, nous vous recommandons d'utiliser le navigateur `Firefox <https://www.mozilla.org/fr/firefox/new/>`_.
 
-Les flux vidéo **en différé avant 26/6/2021** et tous les flux **vidéo en direct** utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
+Les vidéos en direct ne sont compatibles qu'avec Firefox_
 
- * `Firefox <https://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
- * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
- * Opera
+**A partir du 25/6/2021**, les vidéos en différé sont compatibles avec tous les navigateurs.
 
-Les flux audio au format MP3 sont compatibles avec les navigateurs suivants :
-
- * Firefox (recommandé)
- * Chrome / Chromium
- * Safari
- * Edge
- * Opera
+Les flux audio sont compatibles avec tous les navigateurs.
 
 Sur les smartphones et tablettes, nous proposons différentes solutions selon les plateformes :
 
@@ -28,11 +20,7 @@ Sur les smartphones et tablettes, nous proposons différentes solutions selon le
 
  * Iphone / Ipad
 
-  * Safari : lecture des flux audio en direct et en différé et vidéo à partir du 25/06/2021.
-
- * Autres plateformes:
-
-   procéder comme sour Iphone / Ipad avec un lecteur compatible et si possible ouvert comme VLC
+  * Safari : lecture des flux audio en direct et en différé à partir du 25/06/2021.
 
 FAQ
 ====
