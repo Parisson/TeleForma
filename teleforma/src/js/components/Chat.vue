@@ -11,7 +11,7 @@
     :show-audio="false"
     :messages="messages"
     :message-actions="[]"
-    :link-options="{ disabled: false, target: '_blank' }"
+    :link-options="{ disabled: false, target: '_self' }"
     :text-messages="{
       ROOMS_EMPTY: 'Aucune conversation',
       ROOM_EMPTY: 'Aucune conversation sélectionnée',
