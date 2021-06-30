@@ -11,17 +11,6 @@ Les vidéos en direct ne sont compatibles qu'avec Firefox_
 
 Les flux audio sont compatibles avec tous les navigateurs.
 
-Sur les smartphones et tablettes, nous proposons différentes solutions selon les plateformes :
-
- * Android
-
-  * `Firefox for Android <https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=fr>`_ (recommandé) : lecture des flux vidéos et audio en direct et en différé
-  * `Chrome for Android <https://play.google.com/store/apps/details?id=com.android.chrome&hl=fr>`_ : lecture des flux vidéos en différé, audio en direct et différé
-
- * Iphone / Ipad
-
-  * Safari : lecture des flux audio en direct et en différé à partir du 25/06/2021.
-
 FAQ
 ====
 
