@@ -17,6 +17,10 @@
         videoSource.attr("src", url);
         video.load();
     });
+
+    $(document).ready(function(){
+        $('#video').bind('contextmenu',function() { return false; });
+    });
 </script>
 
 {% endblock %}
