@@ -408,10 +408,10 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         scores.append({'name': 'Moyenne generale',
                        'data': by_session(all_scripts)})
 
-        for script_type in ScriptType.objects.all():
-            scripts = all_scripts.filter(type=script_type)
-            scores.append({'name': 'Moyenne ' + script_type.name,
-                           'data': by_session(scripts)})
+        # for script_type in ScriptType.objects.all():
+        #     scripts = all_scripts.filter(type=script_type)
+        #     scores.append({'name': 'Moyenne ' + script_type.name,
+        #                    'data': by_session(scripts)})
 
         context['data'] = self.score_data_setup(sessions_x, scores)
         context['course'] = course and course.title or ugettext('all courses')
