@@ -1,0 +1,23 @@
+
+{% comment %} {{ choices }} {% endcomment %}
+
+<div class="form-group" style="max-width: 100%;">
+    <select class="form-control {{ field_name }}_select2" name="{{ field_name }}" data-name="{{ field_name }}" style="width: 100%;max-width: 80%;" tabindex="-1" aria-hidden="true" multiple>
+
+    {% for choice in choices %}
+        <option value="{{ choice.value }}" {% if choice.selected %}selected{% endif %}>{{ choice.display }}</option>
+    {% endfor %}
+</select>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        jQuery(".{{ field_name }}_select2").select2({
+            placeholder: "{{ title }}",
+            width: 'resolve',
+            closeOnSelect: false,
+            dropdownAutoWidth: true,
+        });
+    });
+</script>
+
+</div>

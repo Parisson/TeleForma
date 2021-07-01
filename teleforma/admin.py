@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import datetime
+from teleforma.admin_filter import MultipleChoiceListFilter
 from teleforma.models.chat import ChatMessage
 
 from django.contrib import admin
@@ -121,7 +122,12 @@ class BalanceFilter(admin.SimpleListFilter):
             return queryset.filter(balance__gt=0)
         else:
             return queryset
+class TrainingsFilter(MultipleChoiceListFilter):
+    title = 'Formations'
+    parameter_name = 'trainings__in'
 
+    def lookups(self, request, model_admin):
+        return [(training.id, str(training)) for training in Training.objects.all()]
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
@@ -131,7 +137,7 @@ class StudentAdmin(admin.ModelAdmin):
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
     search_fields = ['user__first_name', 'user__last_name', 'user__username']
     list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
-                   'trainings', 'iej', 'procedure', 'written_speciality', 'oral_speciality',
+                   TrainingsFilter, 'iej', 'procedure', 'written_speciality', 'oral_speciality',
                    'oral_1', 'oral_2', 'fascicule', BalanceFilter]
     list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance', 'balance_intermediary']

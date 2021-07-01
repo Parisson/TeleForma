@@ -3,6 +3,8 @@ import os
 
 from django.contrib import admin
 from django.template.defaultfilters import filesizeformat
+from django.contrib.auth.models import User
+from django.db.models import Q
 
 from ..exam.models import Quota, Script, ScriptPage, ScriptType
 
@@ -43,6 +45,11 @@ class ScriptAdmin(admin.ModelAdmin):
 
     class Media:
         js = ("exam/js/admin.js",)
+
+
+    def render_change_form(self, request, context, *args, **kwargs):
+         context['adminform'].form.fields['corrector'].queryset = User.objects.filter(is_active=True).filter(Q(corrector__isnull=False) | Q(is_superuser=True))
+         return super(ScriptAdmin, self).render_change_form(request, context, *args, **kwargs)
 
     def author_name(self, instance):
         return instance.author.username
