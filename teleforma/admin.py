@@ -286,6 +286,7 @@ class MediaAdmin(admin.ModelAdmin):
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
     inlines = [MediaTranscodedInline]
+    save_as = True
 
 
 class ConferenceAdmin(admin.ModelAdmin):
