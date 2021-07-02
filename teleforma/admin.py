@@ -281,93 +281,67 @@ class MediaTranscodedInline(admin.TabularInline):
     model = MediaTranscoded
 
 
-def duplicate_object(obj):
+def duplicate(obj, value=None, field=None, duplicate_order=None):
     """
-    Duplicate a model instance, making copies of all foreign keys pointing to it.
-    There are 3 steps that need to occur in order:
-
-        1.  Enumerate the related child objects and m2m relations, saving in lists/dicts
-        2.  Copy the parent object per django docs (doesn't copy relations)
-        3a. Copy the child objects, relating to the copied parent object
-        3b. Re-create the m2m relations on the copied parent object
-
+    Duplicate all related objects of obj setting
+    field to value. If one of the duplicate
+    objects has an FK to another duplicate object
+    update that as well. Return the duplicate copy
+    of obj.
+    duplicate_order is a list of models which specify how
+    the duplicate objects are saved. For complex objects
+    this can matter. Check to save if objects are being
+    saved correctly and if not just pass in related objects
+    in the order that they should be saved.
     """
-    related_objects_to_copy = []
-    relations_to_set = {}
-    # Iterate through all the fields in the parent object looking for related fields
-    for field in obj._meta.get_fields():
-        if field.one_to_many:
-            # One to many fields are backward relationships where many child
-            # objects are related to the parent. Enumerate them and save a list
-            # so we can copy them after duplicating our parent object.
-            print(f'Found a one-to-many field: {field.name}')
+    from django.db.models.deletion import Collector
+    from django.db.models.fields.related import ForeignKey
 
-            # 'field' is a ManyToOneRel which is not iterable, we need to get
-            # the object attribute itobj.
-            related_object_manager = getattr(obj, field.name)
-            related_objects = list(related_object_manager.all())
-            if related_objects:
-                print(f' - {len(related_objects)} related objects to copy')
-                related_objects_to_copy += related_objects
+    collector = Collector(using='default')
+    collector.collect([obj])
+    collector.sort()
+    related_models = collector.data.keys()
+    data_snapshot = {}
+    for key in collector.data.keys():
+        data_snapshot.update(
+            {key: dict(zip([item.pk for item in collector.data[key]], [item for item in collector.data[key]]))})
+    root_obj = None
 
-        elif field.many_to_one:
-            # In testing, these relationships are preserved when the parent
-            # object is copied, so they don't need to be copied separately.
-            print(f'Found a many-to-one field: {field.name}')
+    # Sometimes it's good enough just to save in reverse deletion order.
+    if duplicate_order is None:
+        duplicate_order = reversed(related_models)
 
-        elif field.many_to_many:
-            # Many to many fields are relationships where many parent objects
-            # can be related to many child objects. Because of this the child
-            # objects don't need to be copied when we copy the parent, we just
-            # need to re-create the relationship to them on the copied parent.
-            print(f'Found a many-to-many field: {field.name}')
-            related_object_manager = getattr(obj, field.name)
-            relations = list(related_object_manager.all())
-            if relations:
-                print(f' - {len(relations)} relations to set')
-                relations_to_set[field.name] = relations
-
-    # Duplicate the parent object
-    obj.pk = None
-    obj.save()
-    print(f'Copied parent object ({str(obj)})')
-
-    # Copy the one-to-many child objects and relate them to the copied parent
-    for related_object in related_objects_to_copy:
-        # Iterate through the fields in the related object to find the one that
-        # relates to the parent model.
-        for related_object_field in related_object._meta.fields:
-            if related_object_field.related_model == obj.__class__:
-                # If the related_model on this field matches the parent
-                # object's class, perform the copy of the child object and set
-                # this field to the parent object, creating the new
-                # child -> parent relationship.
-                related_object.pk = None
-                setattr(related_object, related_object_field.name, obj)
-                related_object.save()
-
-                text = str(related_object)
-                text = (text[:40] + '..') if len(text) > 40 else text
-                print(f'|- Copied child object ({text})')
-
-    # Set the many-to-many relations on the copied parent
-    for field_name, relations in relations_to_set.items():
-        # Get the field by name and set the relations, creating the new
-        # relationships.
-        field = getattr(obj, field_name)
-        field.set(relations)
-        text_relations = []
-        for relation in relations:
-            text_relations.append(str(relation))
-        print(f'|- Set {len(relations)} many-to-many relations on {field_name} {text_relations}')
-
-    return obj
-
+    for model in duplicate_order:
+        # Find all FKs on model that point to a related_model.
+        fks = []
+        for f in model._meta.fields:
+            if isinstance(f, ForeignKey) and f.remote_field.related_model in related_models:
+                fks.append(f)
+        # Replace each `sub_obj` with a duplicate.
+        if model not in collector.data:
+            continue
+        sub_objects = collector.data[model]
+        for obj in sub_objects:
+            for fk in fks:
+                fk_value = getattr(obj, "%s_id" % fk.name)
+                # If this FK has been duplicated then point to the duplicate.
+                fk_rel_to = data_snapshot[fk.remote_field.related_model]
+                if fk_value in fk_rel_to:
+                    dupe_obj = fk_rel_to[fk_value]
+                    setattr(obj, fk.name, dupe_obj)
+            # Duplicate the object and save it.
+            obj.id = None
+            if field is not None:
+                setattr(obj, field, value)
+            obj.save()
+            if root_obj is None:
+                root_obj = obj
+    return root_obj
 
 @admin.action(description='Duplicate selected objects')
-def duplicate(modeladmin, request, queryset):
+def duplicate_objects(modeladmin, request, queryset):
     for obj in queryset:
-        duplicate_object(obj)
+        duplicate(obj)
 
 
 class MediaAdmin(admin.ModelAdmin):
@@ -376,7 +350,7 @@ class MediaAdmin(admin.ModelAdmin):
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
     inlines = [MediaTranscodedInline]
-    actions = [duplicate,]
+    actions = [duplicate_objects,]
 
 
 class ConferenceAdmin(admin.ModelAdmin):
