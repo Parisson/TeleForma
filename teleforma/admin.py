@@ -26,6 +26,13 @@ from .models.messages import GroupedMessage, StudentGroup
 from .views.crfpa import CorrectorXLSBook, UserXLSBook
 
 
+@admin.action(description='Duplicate selected objects')
+def duplicate(modeladmin, request, queryset):
+    for object in queryset:
+        object.id = None
+        object.save()
+
+
 class PeriodListFilter(SimpleListFilter):
 
     title = _('period')
@@ -286,7 +293,7 @@ class MediaAdmin(admin.ModelAdmin):
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
     inlines = [MediaTranscodedInline]
-    save_as = True
+    actions = [duplicate,]
 
 
 class ConferenceAdmin(admin.ModelAdmin):
