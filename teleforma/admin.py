@@ -326,7 +326,7 @@ class MediaAdmin(admin.ModelAdmin):
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
     inlines = [MediaTranscodedInline]
-    actions = [duplicate_objects,]
+    actions = [duplicate_medias,]
 
 
 class ConferenceAdmin(admin.ModelAdmin):
