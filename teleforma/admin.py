@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+from collections import OrderedDict
 
 from .exam.admin import QuotaInline
 from .models.appointment import (Appointment, AppointmentJury,
@@ -281,67 +282,42 @@ class MediaTranscodedInline(admin.TabularInline):
     model = MediaTranscoded
 
 
-def duplicate(obj, value=None, field=None, duplicate_order=None):
-    """
-    Duplicate all related objects of obj setting
-    field to value. If one of the duplicate
-    objects has an FK to another duplicate object
-    update that as well. Return the duplicate copy
-    of obj.
-    duplicate_order is a list of models which specify how
-    the duplicate objects are saved. For complex objects
-    this can matter. Check to save if objects are being
-    saved correctly and if not just pass in related objects
-    in the order that they should be saved.
-    """
-    from django.db.models.deletion import Collector
-    from django.db.models.fields.related import ForeignKey
+def duplicate_model_with_descendants(obj, whitelist, _new_parent_pk=None):
+    kwargs = {}
+    children_to_clone = OrderedDict()
+    for field in obj._meta.get_fields():
+        if field.name == "id":
+            pass
+        elif field.one_to_many:
+            if field.name in whitelist:
+                these_children = list(getattr(obj, field.name).all())
+                if children_to_clone.has_key(field.name):
+                    children_to_clone[field.name] |= these_children
+                else:
+                    children_to_clone[field.name] = these_children
+            else:
+                pass
+        elif field.many_to_one:
+            if _new_parent_pk:
+                kwargs[field.name + '_id'] = _new_parent_pk
+        elif field.concrete:
+            kwargs[field.name] = getattr(obj, field.name)
+        else:
+            pass
+    new_instance = obj.__class__(**kwargs)
+    new_instance.save()
+    new_instance_pk = new_instance.pk
+    for ky in children_to_clone.keys():
+        child_collection = getattr(new_instance, ky)
+        for child in children_to_clone[ky]:
+            child_collection.add(duplicate_model_with_descendants(child, whitelist=whitelist, _new_parent_pk=new_instance_pk))
+    return new_instance
 
-    collector = Collector(using='default')
-    collector.collect([obj])
-    collector.sort()
-    related_models = collector.data.keys()
-    data_snapshot = {}
-    for key in collector.data.keys():
-        data_snapshot.update(
-            {key: dict(zip([item.pk for item in collector.data[key]], [item for item in collector.data[key]]))})
-    root_obj = None
 
-    # Sometimes it's good enough just to save in reverse deletion order.
-    if duplicate_order is None:
-        duplicate_order = reversed(related_models)
-
-    for model in duplicate_order:
-        # Find all FKs on model that point to a related_model.
-        fks = []
-        for f in model._meta.fields:
-            if isinstance(f, ForeignKey) and f.remote_field.related_model in related_models:
-                fks.append(f)
-        # Replace each `sub_obj` with a duplicate.
-        if model not in collector.data:
-            continue
-        sub_objects = collector.data[model]
-        for obj in sub_objects:
-            for fk in fks:
-                fk_value = getattr(obj, "%s_id" % fk.name)
-                # If this FK has been duplicated then point to the duplicate.
-                fk_rel_to = data_snapshot[fk.remote_field.related_model]
-                if fk_value in fk_rel_to:
-                    dupe_obj = fk_rel_to[fk_value]
-                    setattr(obj, fk.name, dupe_obj)
-            # Duplicate the object and save it.
-            obj.id = None
-            if field is not None:
-                setattr(obj, field, value)
-            obj.save()
-            if root_obj is None:
-                root_obj = obj
-    return root_obj
-
-@admin.action(description='Duplicate selected objects')
-def duplicate_objects(modeladmin, request, queryset):
+@admin.action(description='Duplicate selected medias')
+def duplicate_medias(modeladmin, request, queryset):
     for obj in queryset:
-        duplicate(obj)
+        duplicate_model_with_descendants(obj, [MediaTranscoded,])
 
 
 class MediaAdmin(admin.ModelAdmin):
