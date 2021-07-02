@@ -286,9 +286,12 @@ def duplicate_media(modeladmin, request, queryset):
     for media in queryset:
         transcodeds = media.transcoded.all()
         media.id = None
+        media.pk = None
         media.save()
         for transcoded in transcodeds:
             transcoded.id = None
+            transcoded.pk = None
+            transcoded.save()
             transcoded.item = media
             transcoded.save()
 
