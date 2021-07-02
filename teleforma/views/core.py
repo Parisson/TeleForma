@@ -829,7 +829,8 @@ class ChatMessageView(APIView):
         You need to provide a room_name in request
         """
         messages = [message.to_dict() for message in ChatMessage.objects.filter(
-            room_name=request.GET['room_name']).order_by('created')[:100]]
+            room_name=request.GET['room_name']).order_by('-created')[:100]]
+        messages = messages[::-1]
         return Response(messages)
 
     def post(self, request):
