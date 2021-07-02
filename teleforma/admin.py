@@ -281,19 +281,93 @@ class MediaTranscodedInline(admin.TabularInline):
     model = MediaTranscoded
 
 
-@admin.action(description='Duplicate selected medias')
-def duplicate_media(modeladmin, request, queryset):
-    for media in queryset:
-        transcodeds = media.transcoded.all()
-        media.id = None
-        media.pk = None
-        media.save()
-        for transcoded in transcodeds:
-            transcoded.id = None
-            transcoded.pk = None
-            transcoded.save()
-            transcoded.item = media
-            transcoded.save()
+def duplicate_object(obj):
+    """
+    Duplicate a model instance, making copies of all foreign keys pointing to it.
+    There are 3 steps that need to occur in order:
+
+        1.  Enumerate the related child objects and m2m relations, saving in lists/dicts
+        2.  Copy the parent object per django docs (doesn't copy relations)
+        3a. Copy the child objects, relating to the copied parent object
+        3b. Re-create the m2m relations on the copied parent object
+
+    """
+    related_objects_to_copy = []
+    relations_to_set = {}
+    # Iterate through all the fields in the parent object looking for related fields
+    for field in obj._meta.get_fields():
+        if field.one_to_many:
+            # One to many fields are backward relationships where many child
+            # objects are related to the parent. Enumerate them and save a list
+            # so we can copy them after duplicating our parent object.
+            print(f'Found a one-to-many field: {field.name}')
+
+            # 'field' is a ManyToOneRel which is not iterable, we need to get
+            # the object attribute itobj.
+            related_object_manager = getattr(obj, field.name)
+            related_objects = list(related_object_manager.all())
+            if related_objects:
+                print(f' - {len(related_objects)} related objects to copy')
+                related_objects_to_copy += related_objects
+
+        elif field.many_to_one:
+            # In testing, these relationships are preserved when the parent
+            # object is copied, so they don't need to be copied separately.
+            print(f'Found a many-to-one field: {field.name}')
+
+        elif field.many_to_many:
+            # Many to many fields are relationships where many parent objects
+            # can be related to many child objects. Because of this the child
+            # objects don't need to be copied when we copy the parent, we just
+            # need to re-create the relationship to them on the copied parent.
+            print(f'Found a many-to-many field: {field.name}')
+            related_object_manager = getattr(obj, field.name)
+            relations = list(related_object_manager.all())
+            if relations:
+                print(f' - {len(relations)} relations to set')
+                relations_to_set[field.name] = relations
+
+    # Duplicate the parent object
+    obj.pk = None
+    obj.save()
+    print(f'Copied parent object ({str(obj)})')
+
+    # Copy the one-to-many child objects and relate them to the copied parent
+    for related_object in related_objects_to_copy:
+        # Iterate through the fields in the related object to find the one that
+        # relates to the parent model.
+        for related_object_field in related_object._meta.fields:
+            if related_object_field.related_model == obj.__class__:
+                # If the related_model on this field matches the parent
+                # object's class, perform the copy of the child object and set
+                # this field to the parent object, creating the new
+                # child -> parent relationship.
+                related_object.pk = None
+                setattr(related_object, related_object_field.name, obj)
+                related_object.save()
+
+                text = str(related_object)
+                text = (text[:40] + '..') if len(text) > 40 else text
+                print(f'|- Copied child object ({text})')
+
+    # Set the many-to-many relations on the copied parent
+    for field_name, relations in relations_to_set.items():
+        # Get the field by name and set the relations, creating the new
+        # relationships.
+        field = getattr(obj, field_name)
+        field.set(relations)
+        text_relations = []
+        for relation in relations:
+            text_relations.append(str(relation))
+        print(f'|- Set {len(relations)} many-to-many relations on {field_name} {text_relations}')
+
+    return obj
+
+
+@admin.action(description='Duplicate selected objects')
+def duplicate(modeladmin, request, queryset):
+    for obj in queryset:
+        duplicate_object(obj)
 
 
 class MediaAdmin(admin.ModelAdmin):
@@ -302,7 +376,7 @@ class MediaAdmin(admin.ModelAdmin):
     search_fields = ['id', 'title', 'course__title', 'course__code']
     list_filter = (ConferenceDateBeginFilter, )
     inlines = [MediaTranscodedInline]
-    actions = [duplicate_media,]
+    actions = [duplicate,]
 
 
 class ConferenceAdmin(admin.ModelAdmin):
