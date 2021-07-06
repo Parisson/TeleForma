@@ -71,9 +71,27 @@
     {% for livestream in livestreams %}
         {% if "webm" == livestream.stream_type %}
             <div class="video">
-                <video id="video" width="100%" height="auto" controls>
-                    <source id="videosource" src="{{ livestream.url|get_host:host }}" type="video/webm" />
+                <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+                <link href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css" rel="stylesheet">
+                <video
+                    id="video"
+                    class="video-js vjs-theme-forest"
+                    controls
+                    preload="auto"
+                    width="100%"
+                    height="auto"
+                    data-setup="{}">
+
+                  <source id="videosource" src="{{ livestream.url|get_host:host }}" type="video/webm" />
+                    <p class="vjs-no-js">
+                      To view this video please enable JavaScript, and consider upgrading to a
+                      web browser that
+                      <a href="https://videojs.com/html5-video-support/" target="_blank"
+                        >supports HTML5 video</a
+                      >
+                    </p>
                 </video>
+                <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
             </div>
         {% endif %}
     {% endfor %}
