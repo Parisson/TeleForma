@@ -361,6 +361,9 @@ class Corrector(models.Model):
         except:
             return ''
 
+    def get_absolute_url(self):
+        return reverse_lazy('teleforma-profile-detail', kwargs={'username': self.user.username})
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'corrector'
         verbose_name = _('Correcteur')
