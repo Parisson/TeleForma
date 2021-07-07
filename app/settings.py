@@ -30,6 +30,11 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
+    'staging.docker.e-learning.crfpa.pre-barreau.parisson.com',
+    'e-learning.crfpa.pre-barreau.com',
+]
+
 ASGI_APPLICATION = "teleforma.ws.routing.application"
 
 REDIS_HOST = "redis"
@@ -165,24 +170,12 @@ INSTALLED_APPS = (
     'teleforma.exam',
     'jsonrpc',
     'sorl.thumbnail',
-    # 'django_extensions',
     'dj_pagination',
     'postman',
-    # 'timezones',
-    # 'googletools',
-    # 'extra_views',
     'captcha',
     'django_nvd3',
-    # 'bootstrap3',
-    # 'bootstrap_pagination',
-    # 'django_user_agents',
     'tinymce',
-    # 'multichoice',
-    # 'true_false',
-    # 'essay',
-    # 'quiz',
     'pdfannotator',
-    # 'telemeta',
     'rest_framework',
     'rest_framework.authtoken',
 )
@@ -215,21 +208,6 @@ TEMPLATES = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-TELEMETA_ORGANIZATION = 'Pré-Barreau - CRFPA'
-TELEMETA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
-TELEMETA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
-TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
-TELEMETA_CACHE_DIR = MEDIA_ROOT + 'cache'
-TELEMETA_EXPORT_CACHE_DIR = TELEMETA_CACHE_DIR + "/export"
-TELEMETA_DATA_CACHE_DIR = TELEMETA_CACHE_DIR + "/data"
-
-TELEMETA_DOWNLOAD_ENABLED = True
-TELEMETA_STREAMING_FORMATS = ('mp3', 'webm')
-TELEMETA_DOWNLOAD_FORMATS = ('wav', 'mp3', 'webm')
-TELEMETA_PUBLIC_ACCESS_PERIOD = 51
-TELEMETA_DEFAULT_GRAPHER_SIZES = ['360x130', '640x130']
-TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_contour_wh'
-
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
@@ -240,8 +218,6 @@ SERVER_EMAIL = 'crfpa@pre-barreau.com'
 EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
 #if DEBUG:
 #    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-
 
 POSTMAN_AUTO_MODERATE_AS = True
 POSTMAN_DISALLOW_ANONYMOUS = True
@@ -262,10 +238,13 @@ TELEFORMA_EXAM_MAX_SESSIONS = 15
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 
-TELECASTER_LIVE_STREAMING_SERVER = 'stream4.parisson.com'
+TELECASTER_LIVE_STREAMING_PROTOCOL = 'https'
+TELECASTER_LIVE_STREAMING_SERVER = 'stream7.parisson.com'
 TELECASTER_LIVE_STREAMING_PORT = 443
-TELECASTER_LIVE_ICECAST_STREAMING_PORT = 8000
-TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8080
+TELECASTER_LIVE_ICECAST_STREAMING_PORT = 443
+TELECASTER_LIVE_ICECAST_STREAMING_PATH = '/stream/audio/'
+TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 443
+TELECASTER_LIVE_STREAM_M_STREAMING_PATH = '/stream/video/'
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -372,11 +351,6 @@ def show_user_as(user):
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
-
-ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net', 
-    'staging.docker.e-learning.crfpa.pre-barreau.parisson.com', 
-    'e-learning.crfpa.pre-barreau.com',
-]
 
 JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",

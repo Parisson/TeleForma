@@ -754,20 +754,23 @@ class ConferenceView(CourseAccessMixin, DetailView):
                 conference.save()
                 if conference.streaming:
                     for stream in conf_dict['streams']:
-                        host = getattr(
-                            settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+                        host = getattr(settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+                        protocol = getattr(settings, "TELECASTER_LIVE_STREAMING_PROTOCOL", 'http')
                         server_type = stream['server_type']
                         stream_type = stream['stream_type']
                         if server_type == 'icecast':
-                            port = getattr(
-                                settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", stream['port'])
+                            port = getattr(settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", '8000')
+                            path = getattr(settings, "TELECASTER_LIVE_ICECAST_STREAMING_PATH", '/')
                         elif server_type == 'stream-m':
-                            port = getattr(
-                                settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", stream['port'])
+                            port = getattr(settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", '8080')
+                            path = getattr(settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PATH", '/')
                         #site = Site.objects.all()[0]
-                        server, c = StreamingServer.objects.get_or_create(host=host,
-                                                                          port=port,
-                                                                          type=server_type)
+                        server, c = StreamingServer.objects.get_or_create(
+                                        protocol=protocol,
+                                        host=host,
+                                        port=port,
+                                        path=path,
+                                        type=server_type)
                         stream = LiveStream(conference=conference, server=server,
                                             stream_type=stream_type, streaming=True)
                         stream.save()
