@@ -32,7 +32,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import ChatWindow, { Message, Messages, Rooms } from "vue-advanced-chat"
-import axios from "axios"
 
 import "vue-advanced-chat/dist/vue-advanced-chat.css"
 
@@ -120,23 +119,14 @@ export default class Chat extends Vue {
   }
 
   async fetchMessages() {
-    /** get messages from ajax */
-    const roomId = this.rooms[0].roomId
-    this.messagesLoaded = false
-    try {
-      const response = await axios.get("/chat/messages", {
-        params: {
-          room_name: roomId
-        }
-      })
-      this.messages = response.data
-      this.messagesLoaded = true
-    } catch (error) {
-      console.error(error)
-    }
     this.socket!.onmessage = (e) => {
-      const data = JSON.parse(e.data) as Message
-      this.messages = [...this.messages, data]
+      const data = JSON.parse(e.data)
+      const type = data.type
+      // do not load messages in case of socket reconnect
+      if (type == "initial" && this.messagesLoaded) return
+      const newMessages = data.messages as Message[]
+      this.messages = [...this.messages, ...newMessages]
+      if (type == "initial") this.messagesLoaded = true
     }
   }
 
