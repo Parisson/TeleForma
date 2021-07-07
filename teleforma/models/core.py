@@ -532,8 +532,10 @@ class StreamingServer(models.Model):
 
     element_type = 'streamingserver'
 
+    protocol = models.CharField(_('protocol'), max_length=16, blank=True)
     host = models.CharField(_('host'), max_length=255)
     port = models.CharField(_('port'), max_length=32)
+    path = models.CharField(_('path'), max_length=256, blank=True)
     type = models.CharField(_('type'), choices=server_choices, max_length=32)
     description = models.CharField(
         _('description'), max_length=255, blank=True)
@@ -542,7 +544,7 @@ class StreamingServer(models.Model):
         _('admin password'), max_length=32, blank=True)
 
     def __str__(self):
-        return self.host + ':' + self.port + ' - ' + self.type
+        return self.protocol + '://' + self.host + ':' + self.port + self.path + ' - ' + self.type
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'streaming_server'
@@ -567,7 +569,7 @@ class LiveStream(models.Model):
         if self.conference:
             return self.conference.slug
         else:
-            return self.server.host + self.server.port
+            return 'None'
 
     @property
     def mount_point(self):
@@ -583,13 +585,15 @@ class LiveStream(models.Model):
     def snapshot_url(self):
         url = ''
         if self.server.type == 'stream-m':
-            url = 'http://' + self.server.host + ':' + self.server.port + \
+            url = self.server.protocol + '://' + self.server.host + ':' + \
+                self.server.port + self.server.path + \
                 '/snapshot/' + self.slug
         return url
 
     @property
     def url(self):
-        return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
+        return self.server.protocol + '://' + self.server.host + ':' + self.server.port + \
+                self.server.path + self.mount_point
 
     def __str__(self):
         if self.conference:
