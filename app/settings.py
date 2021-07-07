@@ -212,10 +212,6 @@ AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 
-EMAIL_HOST = 'angus.parisson.com'
-DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
-SERVER_EMAIL = 'crfpa@pre-barreau.com'
-EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
 #if DEBUG:
 #    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -237,6 +233,11 @@ TELEFORMA_PERIOD_DEFAULT_ID = 21
 TELEFORMA_EXAM_MAX_SESSIONS = 15
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
+
+EMAIL_HOST = 'angus.parisson.com'
+DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
+SERVER_EMAIL = 'crfpa@pre-barreau.com'
+EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
 
 TELECASTER_LIVE_STREAMING_PROTOCOL = 'https'
 TELECASTER_LIVE_STREAMING_SERVER = 'stream7.parisson.com'
