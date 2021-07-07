@@ -586,7 +586,7 @@ class LiveStream(models.Model):
         url = ''
         if self.server.type == 'stream-m':
             url = self.server.protocol + '://' + self.server.host + ':' + \
-                + self.server.port + self.server.path + \
+                self.server.port + self.server.path + \
                 '/snapshot/' + self.slug
         return url
 
