@@ -26,7 +26,8 @@ def webpack(bundle):
         except requests.ConnectionError:
             pass
 
-    url += '?v=' + teleforma.__version__
+    if url:
+        url += '?v=' + teleforma.__version__
 
     return {
         'is_css': is_css,
