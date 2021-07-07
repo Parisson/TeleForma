@@ -237,7 +237,7 @@ TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 EMAIL_HOST = 'angus.parisson.com'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
 SERVER_EMAIL = 'crfpa@pre-barreau.com'
-EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION + '] '
+EMAIL_SUBJECT_PREFIX = '[' + TELEFORMA_ORGANIZATION + '] '
 
 TELECASTER_LIVE_STREAMING_PROTOCOL = 'https'
 TELECASTER_LIVE_STREAMING_SERVER = 'stream7.parisson.com'
