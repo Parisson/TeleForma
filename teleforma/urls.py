@@ -180,12 +180,12 @@ urlpatterns = [
         name="teleforma-document-view"),
 
     url(r'^archives/annals/$', 
-        cache_page(CACHE_TIMEOUT)(AnnalsView.as_view()),
+        AnnalsView.as_view(),
         name="teleforma-annals"),
     url(r'^archives/annals/by-iej/(\w+)/$',
-        cache_page(CACHE_TIMEOUT)(AnnalsIEJView.as_view()), name="teleforma-annals-iej"),
+        AnnalsIEJView.as_view(), name="teleforma-annals-iej"),
     url(r'^archives/annals/by-course/(\w+)/$',
-        cache_page(CACHE_TIMEOUT)(AnnalsCourseView.as_view()), name="teleforma-annals-course"),
+        AnnalsCourseView.as_view(), name="teleforma-annals-course"),
 
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/video/$',
         ConferenceView.as_view(),
