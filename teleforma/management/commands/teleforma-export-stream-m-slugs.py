@@ -22,7 +22,8 @@ class Command(BaseCommand):
 
 # server.port
 # listening port
-server.port=8080
+http.port=8080
+rtmp.port=8081
 
 streams.safe=true
 streams.safe.password=source2parisson
@@ -40,7 +41,7 @@ streams.monitor.limit=100
         for course in courses:
             for type in types:
                 slug = course.slug + '-' + type.name.lower()
-                slug = course.department.name.lower() + '-' + slug
+                slug = course.department.name.lower() + '-' + slug.replace(' ', '-')
                 self.data += '\nstreams.' + slug + '=true\n'
                 self.data += 'streams.' + slug + '.password=' + self.passwd + '\n'
                 self.data += 'streams.' + slug + '.limit=1000\n'
