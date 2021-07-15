@@ -17,8 +17,15 @@ class QuotaAdmin(admin.ModelAdmin):
     list_filter = ['course__title', 'period', 'session']
     search_fields = ['corrector__username', 'corrector__last_name']
 
+    def render_change_form(self, request, context, *args, **kwargs):
+         context['adminform'].form.fields['corrector'].queryset = User.objects.filter(is_active=True).filter(Q(corrector__isnull=False) | Q(is_superuser=True))
+         return super(QuotaAdmin, self).render_change_form(request, context, *args, **kwargs)
+
     def corrector_name(self, instance):
-        return instance.corrector.last_name + ' ' + instance.corrector.first_name
+        if instance.corrector:
+            return instance.corrector.last_name + ' ' + instance.corrector.first_name
+        else:
+            return "Aucun"
 
 
 class ScriptPageInline(admin.StackedInline):
