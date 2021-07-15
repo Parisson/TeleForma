@@ -826,7 +826,6 @@ class ConferenceListView(View):
 class ChatMessageView(APIView):
     permission_classes = [IsAuthenticated]
 
-    # deprecated
     def get(self, request):
         """
         Get last 100 messages, in json

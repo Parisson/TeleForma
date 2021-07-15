@@ -15,6 +15,8 @@ def log_exceptions(f):
         except (AcceptConnection, DenyConnection, StopConsumer):
             raise
         except Exception as exception:
+            import pdb
+            pdb.set_trace()
             if not getattr(exception, "logged_by_wrapper", False):
                 logger.error(
                     "Unhandled exception occurred in {}:".format(
