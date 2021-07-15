@@ -4,6 +4,7 @@ from teleforma.models.chat import ChatMessage
 from django.conf import settings 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
+
 @log_consumer_exceptions
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -18,16 +19,13 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )
 
         await self.accept()
-
-        # send initial messages
-        data = await self.get_messages_list()
-        await self.send_json(content={'type':'initial', 'messages':data})
+        
 
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard(
             self.room_group_name,
-            self.channel_name 
+            self.channel_name
         )
 
     # Receive message from user
@@ -49,16 +47,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     def add_message_to_db(self, user, room_name, message):
         return ChatMessage.add_message(user, room_name, message)
         
-    @database_sync_to_async
-    def get_messages_list(self):
-        messages = [message.to_dict() for message in ChatMessage.objects.filter(
-            room_name=self.room_name).order_by('-created')[:100]]
-        messages = messages[::-1]
-        return messages
-    
     # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
 
         # Send message to WebSocket
-        await self.send_json(content={'type':'new', 'messages':[message]})
+        await self.send_json(content=message)
