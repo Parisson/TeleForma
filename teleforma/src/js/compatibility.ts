@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (testVideo.canPlayType) {
         // Check for Webm support
         const webm = "" !== testVideo.canPlayType('video/webm; codecs="vp8, vorbis"');
-        if (webm){
+        if (!webm){
             const container = document.getElementById("content");
             if(container){
                 const p = document.createElement("p");
