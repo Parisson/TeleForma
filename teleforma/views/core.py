@@ -492,12 +492,14 @@ class CourseView(CourseAccessMixin, DetailView):
         context['webclass'] = webclass
         context['webclass_slot'] = webclass_slot
 
+        records = {}
         try:
-            context['webclass_records'] = WebclassRecord.get_records(
-                context['period'], course)
+            records = WebclassRecord.get_records(context['period'], course)
         except Exception as e:
             print(e)
             context['webclass_error'] = True
+        context['webclass_records'] = records.get(WebclassRecord.WEBCLASS)
+        context['webclass_corrections_records'] = records.get(WebclassRecord.CORRECTION)
         return context
 
     @method_decorator(access_required)

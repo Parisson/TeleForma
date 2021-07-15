@@ -78,6 +78,16 @@
     {% block webclass %}
     {% include "webclass/inc/webclass_list.html" %}
     {% endblock %}
+    
+  </div>
+
+  <div class="course">
+    <div class="course_title">{{ course.title }} - Corrections de copies{% if course.description %} -
+      {{ course.description }}{% endif %}
+    </div>
+    {% block webclass_corrections %}
+    {% include "webclass/inc/webclass_corrections_list.html" %}
+    {% endblock %}
   </div>
   {% endwith %}
   {% endfor %}
