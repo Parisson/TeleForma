@@ -270,7 +270,13 @@ CACHES = {
    'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
         'LOCATION': 'memcached:11211',
-        'TIMEOUT': 604800,
+        'TIMEOUT': None,
+        'OPTIONS': {
+            'no_delay': True,
+            'ignore_exc': True,
+            'max_pool_size': 16,
+            'use_pooling': True,
+        }
    }
 }
 
