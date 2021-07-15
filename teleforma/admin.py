@@ -282,42 +282,14 @@ class MediaTranscodedInline(admin.TabularInline):
     model = MediaTranscoded
 
 
-def duplicate_model_with_descendants(obj, whitelist, _new_parent_pk=None):
-    kwargs = {}
-    children_to_clone = OrderedDict()
-    for field in obj._meta.get_fields():
-        if field.name == "id":
-            pass
-        elif field.one_to_many:
-            if field.name in whitelist:
-                these_children = list(getattr(obj, field.name).all())
-                if children_to_clone.has_key(field.name):
-                    children_to_clone[field.name] |= these_children
-                else:
-                    children_to_clone[field.name] = these_children
-            else:
-                pass
-        elif field.many_to_one:
-            if _new_parent_pk:
-                kwargs[field.name + '_id'] = _new_parent_pk
-        elif field.concrete:
-            kwargs[field.name] = getattr(obj, field.name)
-        else:
-            pass
-    new_instance = obj.__class__(**kwargs)
-    new_instance.save()
-    new_instance_pk = new_instance.pk
-    for ky in children_to_clone.keys():
-        child_collection = getattr(new_instance, ky)
-        for child in children_to_clone[ky]:
-            child_collection.add(duplicate_model_with_descendants(child, whitelist=whitelist, _new_parent_pk=new_instance_pk))
-    return new_instance
-
-
 @admin.action(description='Duplicate selected medias')
 def duplicate_medias(modeladmin, request, queryset):
-    for obj in queryset:
-        duplicate_model_with_descendants(obj, [MediaTranscoded,])
+    for media in queryset:
+        transcoded_files = list(media.transcoded.values_list('file', flat=True))
+        media.id = None
+        media.save()
+        transcoded = [MediaTranscoded(file=file, item_id=media.id) for file in transcoded_files]
+        MediaTranscoded.objects.bulk_create(transcoded)
 
 
 class MediaAdmin(admin.ModelAdmin):

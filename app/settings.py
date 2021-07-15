@@ -230,7 +230,7 @@ TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
 TELEFORMA_EXAM_SCRIPT_UPLOAD = True
 TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
 TELEFORMA_PERIOD_DEFAULT_ID = 21
-TELEFORMA_EXAM_MAX_SESSIONS = 15
+TELEFORMA_EXAM_MAX_SESSIONS = 99
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 
@@ -255,8 +255,8 @@ BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
-#SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 #SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
