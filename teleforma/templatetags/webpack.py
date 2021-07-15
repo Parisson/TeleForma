@@ -20,13 +20,15 @@ def webpack(bundle):
             WEBPACK_APP_URL = '{}{}'.format(settings.WEBPACK_DEV_SERVER_URL, bundle)
             request = requests.get(WEBPACK_APP_URL)
             if request.status_code == 200:
-                url = WEBPACK_APP_URL
+                # host.docker.internal is only available in the context of the container, not in the browser
+                url = WEBPACK_APP_URL.replace('host.docker.internal', 'localhost')
                 if is_css:
                     url = None
         except requests.ConnectionError:
             pass
 
-    url += '?v=' + teleforma.__version__
+    if url:
+        url += '?v=' + teleforma.__version__
 
     return {
         'is_css': is_css,
