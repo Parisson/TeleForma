@@ -268,8 +268,12 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 # Cache backend is optional, but recommended to speed up user agent parsing
 CACHES = {
    'default': {
-       'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-       'LOCATION': 'memcached:11211',
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': 'memcached:11211',
+        'TIMEOUT': 604800,
+        'OPTIONS': {
+            'MAX_ENTRIES': 36000,
+        }
    }
 }
 
