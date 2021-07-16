@@ -931,7 +931,7 @@ class ReceiptPDFViewDownload(ReceiptPDFView):
         prefix = "crfpa_facture"
         filename = '_'.join([prefix, self.receipt_id, student.user.first_name, student.user.last_name])
         filename += '.pdf'
-        return filename.encode('utf-8')
+        return filename
 
 
 class CorrectorRegistrationPDFView(PDFTemplateResponseMixin, TemplateView):
