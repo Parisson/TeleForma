@@ -11,7 +11,7 @@ setup(
   long_description = open('README.rst').read(),
   author = "Guillaume Pellerin",
   author_email = "yomguy@parisson.com",
-  version = '2.4.0',
+  version = '2.4.2',
   platforms=['OS Independent'],
   license='CeCILL v2',
   classifiers = CLASSIFIERS,
