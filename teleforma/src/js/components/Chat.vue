@@ -113,9 +113,9 @@ export default class Chat extends Vue {
     this.socket.onclose = () => {
       console.log("Chat socket closed")
       // try to reconnect
-      setTimeout(() => {
-        this.connect(roomName)
-      }, 10000)
+      // setTimeout(() => {
+      //   this.connect(roomName)
+      // }, 10000)
     }
   }
 
