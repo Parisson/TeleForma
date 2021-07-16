@@ -15,6 +15,8 @@ services:
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
     ports:
       - "9001:8000"
+    networks:
+      - teleforma-staging
   
   channels:
     build:
@@ -35,10 +37,30 @@ services:
       - redis
     env_file:
       - env/staging.env
+    networks:
+      - teleforma-staging
 
+  postgres:
+    image: postgres:13
+    env_file:
+      - env/staging.env
+    networks:
+      - teleforma-staging
+
+  redis:
+    networks:
+      - teleforma-staging
+
+  memcached:
+    networks:
+      - teleforma-staging
 
 volumes:
     app:
     channels:
     postgres:
     redis:
+
+networks:
+  teleforma-staging:
+    driver: bridge
