@@ -35,3 +35,4 @@ daphne==3.0.2
 pymemcache==3.4.4
 django-debug-toolbar==3.2.1
 ipython
+uvicorn==0.14.0
