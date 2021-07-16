@@ -49,6 +49,8 @@ CHANNEL_LAYERS = {
     },
 }
 
+ENABLE_CHAT = True
+
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.

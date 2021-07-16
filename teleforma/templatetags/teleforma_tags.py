@@ -416,14 +416,15 @@ render_flatpage.is_safe = True
 def chat_room(context, period=None, course=None):
     """ display chat room """
     # conditionnaly show chat
-    show = True
+    if not getattr(settings, 'ENABLE_CHAT', True):
+        return {'show':False}
     room_name = ChatMessage.get_room_name(period, course)
     if course:
         room_title = course.title_tweeter or course.title
     else:
         room_title = period.name
     return {
-        'show': show,
+        'show': True,
         'data': {
             'room_name': room_name,
             'room_title': room_title,
