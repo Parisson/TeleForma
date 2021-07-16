@@ -9,7 +9,7 @@ U{http://parisson.com/products/teleforma}
 """
 
 __docformat__ = 'epytext en'
-__version__ = '2.3'
+__version__ = '2.4.0'
 __url__ = 'http://parisson.com/products/teleforma'
 __copyright__ = '(C) 2011-2017 Parisson'
 __license__ = 'CeCILL-v2'
