@@ -18,8 +18,8 @@
   {% block stylesheets %}
 
 
-  <link rel="stylesheet" type="text/css" href="/static/teleforma/css/base.css?v={% teleforma_version %}" />
-  <link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma.css?v={% teleforma_version %}"ta />
+  <link rel="stylesheet" type="text/css" href="/static/teleforma/css/base.css?v={% teleforma_tags %}" />
+  <link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma.css?v={% teleforma_tags %}" />
 
   {% webpack 'app.css' %}
 
@@ -41,7 +41,7 @@
   <script src="/static/teleforma/js/messi.min.js" type="text/javascript"></script>
   <script src="/static/teleforma/js/rainbowvis.js" type="text/javascript"></script>
   <script src="/static/teleforma/js/locale.js" type="text/javascript"></script>
-  <script src="/static/teleforma/js/application.js?v={% teleforma_version %}" type="text/javascript"></script>
+  <script src="/static/teleforma/js/application.js?v={% teleforma_tags %}" type="text/javascript"></script>
 
   {% if user.is_authenticated %}
   <script type='text/javascript'>
