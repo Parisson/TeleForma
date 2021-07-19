@@ -99,6 +99,7 @@ $(document).ready(function(){
         width="100%"
         height="auto"
         data-setup="{}"
+        {% if media.poster_file %}{% thumbnail media.poster_file 640 as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}
         >
         <source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
         <p class="vjs-no-js">
