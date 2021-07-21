@@ -112,6 +112,7 @@
         </div>
     </div>
 
+    {% block extra_javascript %}
 
     <script type="text/javascript">
         function update_admin_recipient() {
@@ -225,5 +226,7 @@
             $('#_messageForm').submit();
         });
     </script>
+
+    {% endblock %}
 
 {% endblock %}

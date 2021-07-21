@@ -49,6 +49,8 @@ CHANNEL_LAYERS = {
     },
 }
 
+ENABLE_CHAT = True
+
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -255,7 +257,7 @@ BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 #SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
@@ -268,12 +270,19 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 # Cache backend is optional, but recommended to speed up user agent parsing
 CACHES = {
    'default': {
-       'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-       'LOCATION': 'memcached:11211',
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': 'memcached:11211',
+        'TIMEOUT': None,
+        'OPTIONS': {
+            'no_delay': True,
+            'ignore_exc': True,
+            'max_pool_size': 16,
+            'use_pooling': True,
+        }
    }
 }
 
-CACHE_TIMEOUT = 120
+CACHE_TIMEOUT = None
 
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.

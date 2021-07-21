@@ -15,6 +15,8 @@ services:
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
     ports:
       - "9003:8000"
+    networks:
+      - teleforma-prod
   
   channels:
     build:
@@ -35,14 +37,32 @@ services:
       - redis
     env_file:
       - env/prod.env
+    networks:
+      - teleforma-prod
 
   postgres:
     image: postgres:13
     env_file:
       - env/prod.env
+    networks:
+      - teleforma-prod
+
+  redis:
+    networks:
+      - teleforma-prod
+
+  memcached:
+    networks:
+      - teleforma-prod
+
 
 volumes:
     app:
     channels:
     postgres:
     redis:
+
+
+networks:
+  teleforma-prod:
+    driver: bridge

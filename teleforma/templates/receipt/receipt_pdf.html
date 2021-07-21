@@ -5,50 +5,52 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+  <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
 
-    <title>Le Pré-Barreau - Préparation au CRFPA - Facture</title>
+  <title>Le Pré-Barreau - Préparation au CRFPA - Facture</title>
 
-    {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="https://{{ site.domain }}/static/teleforma/css/teleforma_receipt_pdf.css" />
-    {% endblock %}
+  {% block stylesheets %}
+  <link rel="stylesheet" type="text/css"
+    href="https://{{ site.domain }}/static/teleforma/css/teleforma_receipt_pdf.css" />
+  {% endblock %}
 
-    {% block extra_stylesheets %}{% endblock %}
+  {% block extra_stylesheets %}{% endblock %}
 
 </head>
 
 <body class="receipt" id="receipt">
-    {% block layout %}
-    {% with student.user.profile.all.0 as profile %}
+  {% block layout %}
+  {% with student.user.profile.all.0 as profile %}
 
-    <div id="layout">
+  <div id="layout">
 
-      <div id="header">
-        <h2 style=" font-size: 15px">LE PRÉ-BARREAU <img src="https://{{ site.domain }}/static/teleforma/images/receip_logo.jpg" alt="" width="30px"> </h2>
+    <div id="header">
+      <h2 style=" font-size: 15px">LE PRÉ-BARREAU <img
+          src="https://{{ site.domain }}/static/teleforma/images/receip_logo.jpg" alt="" width="30px"> </h2>
+      <p style="line-height: 15px; font-size: 10px; font-weight: bold;">
+        3, rue de Nesle<br />
+        75006 Paris<br />
+        Tel : 01.56.81.00.22<br />
+        Fax : 01.72.34.92.58<br />
+      </p>
+    </div>
+
+    <div id="content">
+
+      <div class="address" style="margin-left: 320pt;">
         <p style="line-height: 15px; font-size: 10px; font-weight: bold;">
-          3, rue de Nesle<br />
-          75006 Paris<br />
-          Tel : 01.56.81.00.22<br />          
-          Fax : 01.72.34.92.58<br />
+          {{ student.user.first_name }}
+          {{ student.user.last_name }}
+          <br />
+          {{ profile.address }}
+          <br />
+          {{ profile.postal_code }} {{ profile.city }}
+          <br />
+          {{ profile.country }}
         </p>
       </div>
 
-      <div id="content">
-        
-        <div class="address" style="margin-left: 320pt;">
-          <p style="line-height: 15px; font-size: 10px; font-weight: bold;">
-            {{ student.user.first_name }}
-            {{ student.user.last_name }}
-            <br />
-            {{ profile.address }}
-            <br />
-            {{ profile.postal_code }} {{ profile.city }}
-            <br />
-            {{ profile.country }}
-          </p>
-        </div>
-
-        <div class="title" style= "margin-top: 30pt;
+      <div class="title" style="margin-top: 30pt;
                                   margin-bottom: 15pt;
                                   font-size: 12px;
                                   font-weight: bold;
@@ -57,59 +59,63 @@
                                   text-align: center;
                                   border: 1px solid #000;
                                   padding: 5pt 0 0pt 0;">
-          FACTURE N° {{ receipt_id }}
-        </div>
+        FACTURE N° {{ receipt_id }}
+      </div>
 
-        <div class="dates">
-          <p style="line-height: 15px; font-size: 10px; font-weight: bold;">
-            Date: {{ receipt_date }} <br />
-            Échéance: {{ receipt_last }}
-          </p>
-        </div>
+      <div class="dates">
+        <p style="line-height: 15px; font-size: 10px; font-weight: bold;">
+          Date: {{ receipt_date }} <br />
+          Échéance: {{ receipt_last }}
+        </p>
+      </div>
 
 
-        <table style="margin-top: 15pt; border-spacing : 0; border-collapse : collapse; table-layout: fixed;">
-          <thead>
-            <tr style="border: 1px solid #000;">
-              <th style="padding-top: 3pt; width: 350pt;">DESCRIPTION</th>
-              <th style="padding-top: 3pt;">PRIX UNITAIRE</th>
-              <th style="padding-top: 3pt;">QUANTITÉ</th>
-              <th style="padding-top: 3pt;">REMISE</th>
-              <th style="padding-top: 3pt;">TOTAL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in receipt_items %}
-            <tr style="border-left: 1px solid #000; border-right: 1px solid #000;">
-              <td style="padding: 3pt; width: 350pt; ">{{ item.label|safe }}</td>
-              <td style="padding: 3pt;">{{ item.unit_price|payment_format_amount }}</td>
-              <td style="padding: 3pt;">{{ item.amount|default_if_none:"" }}</td>
-              <td style="padding: 3pt;">{{ item.discount|payment_format_amount }}</td>
-              <td style="padding: 3pt;">{{ item.total|payment_format_amount }}</td>
-            </tr>
-            {% endfor %}
-            <tr style="border: 1px solid #000; text-align: left;">
-              <th style="padding: 3pt 3pt 0 3pt;text-align: left; width: 350pt;">Non assujetti à TVA</th>
-              <th style="padding: 3pt;"></th>
-              <th style="padding: 3pt;"></th>
-              <th style="padding: 3pt;"></th>
-              <th style="padding: 3pt;text-align: left;">{{ receipt_total|payment_format_amount }}&nbsp;&euro;</th>
-            </tr>
-          </tbody>
-        </table>
+      <table style="margin-top: 15pt; border-spacing : 0; border-collapse : collapse; table-layout: fixed;">
+        <thead>
+          <tr style="border: 1px solid #000;">
+            <th style="padding-top: 3pt; width: 350pt;">DESCRIPTION</th>
+            <th style="padding-top: 3pt;">PRIX UNITAIRE</th>
+            <th style="padding-top: 3pt;">QUANTITÉ</th>
+            <th style="padding-top: 3pt;">REMISE</th>
+            <th style="padding-top: 3pt;">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in receipt_items %}
+          <tr style="border-left: 1px solid #000; border-right: 1px solid #000;">
+            <td style="padding: 3pt; width: 350pt; ">{{ item.label|safe }}</td>
+            <td style="padding: 3pt;">{{ item.unit_price|payment_format_amount }}</td>
+            <td style="padding: 3pt;">{{ item.amount|default_if_none:"" }}</td>
+            <td style="padding: 3pt;">{{ item.discount|payment_format_amount }}</td>
+            <td style="padding: 3pt;">{{ item.total|payment_format_amount }}</td>
+          </tr>
+          {% endfor %}
+          <tr style="border: 1px solid #000; text-align: left;">
+            <th style="padding: 3pt 3pt 0 3pt;text-align: left; width: 350pt;">Non assujetti à TVA</th>
+            <th style="padding: 3pt;"></th>
+            <th style="padding: 3pt;"></th>
+            <th style="padding: 3pt;"></th>
+            <th style="padding: 3pt;text-align: left;">{{ receipt_total|payment_format_amount }}&nbsp;&euro;</th>
+          </tr>
+        </tbody>
+      </table>
 
-        {% block footer %}
-        <div id="footer" style="line-height: 15px; font-size: 10px; color: #000">
-          <hr />
-          <p>
-            <strong>SARL LE PRE-BARREAU -</strong> 3, rue de Nesle - 75006 PARIS    Tél. : + 33 (0)1 56 81 00 22 - Fax : + 33 (0)1 72 34 92 58 <br />
-N° SIRET : 401 094 172 000 53 - Code APE : 8559A - N° d’agrément formation : 11 75 32 693 75
-          </p>
-        </div>
-        {% endblock %}
+
 
     </div>
+
     {% endwith %}
+
+    {% block footer %}
+    <div id="footer" style="line-height: 15px; font-size: 10px; color: #000;position: fixed;bottom: -1cm;margin:auto;right:0;left:0">
+      <hr />
+      <p>
+        <strong>SARL LE PRE-BARREAU -</strong> 3, rue de Nesle - 75006 PARIS Tél. : + 33 (0)1 56 81 00 22 - Fax : + 33
+        (0)1 72 34 92 58 <br />
+        N° SIRET : 401 094 172 000 53 - Code APE : 8559A - N° d’agrément formation : 11 75 32 693 75
+      </p>
+    </div>
+    {% endblock %}
     {% endblock layout %}
 
 </body>

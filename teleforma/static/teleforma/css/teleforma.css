@@ -1771,17 +1771,6 @@ form.add_actus #id_text_parent{
 	height: auto;
 }
 
-.course_media .video-js .vjs-poster{
-	position: absolute;
-	left: 0;
-	width: 100%;
-	height: auto;
-	  top: 50%; /* poussé de la moitié de hauteur du référent */
-	  -ms-transform: translateY(-50%); /* IE 9 */
-	  -webkit-transform: translateY(-50%); /* Chrome, Safari, Opera */
-	  transform: translateY(-50%); /* tiré de la moitié de sa propre hauteur */
-}
-
 #media_infos {
     background-color: #FFF;
     padding: 0.3em 0.8em 0.3em 0.8em;
@@ -3232,7 +3221,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 		max-width: 100%;
 	}
 	.content_video table.listing tbody td:first-child{
-		width: 32%!important;
+		width: 100%!important;
 	}
 	.content_video table.listing tbody td:nth-child(2){
 		width: 100%!important;

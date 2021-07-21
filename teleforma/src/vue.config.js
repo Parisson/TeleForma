@@ -3,13 +3,15 @@ const outputDir = '../static/teleforma/dist';
 
 
 module.exports = {
-    publicPath: 'http://172.24.104.152:3000/',
+    // publicPath: 'http://172.24.104.152:3000/',
     css: {
         sourceMap: true
     },
     configureWebpack: {
         devServer: {
-            host: '0.0.0.0',
+            host: "npm3000.dockdev.pilotsystems.net",
+            public: "https://npm3000.dockdev.pilotsystems.net",
+            https: false,
             port: 3000,
             headers: {
                 'Access-Control-Allow-Origin': '*'

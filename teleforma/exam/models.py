@@ -142,7 +142,7 @@ class Quota(models.Model):
     course = models.ForeignKey(Course, related_name="quotas", verbose_name=_(
         'course'), null=True, blank=True, on_delete=models.SET_NULL)
     corrector = models.ForeignKey(User, related_name="quotas", verbose_name=_(
-        'corrector'), null=True, blank=True, on_delete=models.SET_NULL)
+        'corrector'), null=True, blank=False, on_delete=models.SET_NULL)
     period = models.ForeignKey(Period, related_name='quotas', verbose_name=_(
         'period'), null=True, blank=True, on_delete=models.SET_NULL)
     session = models.CharField(

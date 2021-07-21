@@ -5,11 +5,6 @@
 
 {% block extra_javascript %}
 
-{% if "video" in media.mime_type %}
-<script src="/static/teleforma/video-js/video.js"></script>
-<link href="/static/teleforma/video-js/video-js.css" rel="stylesheet">
-{% endif %}
-
 <script type="text/javascript">
 $(document).ready(function(){
     $('#my_video_1').bind('contextmenu',function() { return false; });
@@ -94,9 +89,28 @@ $(document).ready(function(){
 
 {% if "video" in media.mime_type %}
 <div class="video">
-    <video id="my_video_1" class="video-js vjs-default-skin" width="864" height="480" controls preload="auto" data-setup='{}' {% if media.poster_file %}{% thumbnail media.poster_file "640" as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}>
+    <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+    <link href="https://unpkg.com/@videojs/themes@1/dist/fantasy/index.css" rel="stylesheet">
+    <video
+        id="my_video_1"
+        class="video-js vjs-theme-fantasy"
+        controls
+        preload="auto"
+        width="100%"
+        height="auto"
+        data-setup="{}"
+        {% if media.poster_file %}{% thumbnail media.poster_file 640 as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}
+        >
         <source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
+        <p class="vjs-no-js">
+          To view this video please enable JavaScript, and consider upgrading to a
+          web browser that
+          <a href="https://videojs.com/html5-video-support/" target="_blank"
+            >supports HTML5 video</a
+          >
+        </p>
     </video>
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
 </div>
 
 {% elif "audio" in media.mime_type %}

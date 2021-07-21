@@ -1,3 +1,4 @@
+import "./compatibility"
 import Vue from "vue"
 import Chat from "./components/Chat.vue"
 

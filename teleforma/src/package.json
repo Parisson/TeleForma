@@ -14,7 +14,7 @@
     "extract-css": "^2.0.0",
     "path": "^0.12.7",
     "vue": "^2.6.11",
-    "vue-advanced-chat": "^0.8.6",
+    "vue-advanced-chat": "^0.8.7",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^9.1.2",
     "webpack-manifest-plugin": "^3.1.1"
@@ -51,6 +51,7 @@
       "ecmaVersion": 2020
     },
     "rules": {
+      "prettier/prettier": 0,
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
