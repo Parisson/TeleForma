@@ -62,9 +62,9 @@ DATABASES = {
         # Not used with sqlite3.
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'postgres',
+        'HOST': os.environ.get('DB_HOST'),
         # Set to empty string for default. Not used with sqlite3.
-        'PORT': '',
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
