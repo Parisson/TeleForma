@@ -18,8 +18,13 @@ services:
       - ./var/log/app:/var/log/app
       - ./var/log/uwsgi:/var/log/uwsgi
     links:
+      - db:db
+      - redis
+      - memcached
+    depends_on:
       - db
       - redis
+      - memcached
     env_file:
       - env/debug.env
 
