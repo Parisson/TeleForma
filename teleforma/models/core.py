@@ -367,7 +367,7 @@ class Room(models.Model):
 
 class Conference(models.Model):
 
-    public_id = models.CharField(_('public_id'), max_length=255, blank=True)
+    public_id = models.CharField(_('public_id'), max_length=255, blank=True, unique=True)
     department = models.ForeignKey('Department', related_name='conference', verbose_name=_('department'),
                                    null=True, blank=True, on_delete=models.SET_NULL)
     period = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
