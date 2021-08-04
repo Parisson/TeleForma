@@ -26,6 +26,8 @@ from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
 from .models.messages import GroupedMessage, StudentGroup
 from .views.crfpa import CorrectorXLSBook, UserXLSBook
 
+from django.contrib.admin.helpers import ActionForm
+from django import forms
 
 
 class PeriodListFilter(SimpleListFilter):
@@ -81,9 +83,8 @@ class StudentInline(admin.StackedInline):
     model = Student
     extra = 1
 
-# TODO fix max_length
-# class StudentGroupForm(ActionForm):
-#     group_name = forms.CharField(_('Group'), required=False)
+class StudentGroupForm(ActionForm):
+    group_name = forms.CharField(label=_('Group'), max_length=255, required=False)
 
 
 class StudentGroupAdmin(admin.ModelAdmin):
@@ -145,7 +146,7 @@ class StudentAdmin(admin.ModelAdmin):
                     'total_payments', 'total_fees', 'balance', 'balance_intermediary']
     readonly_fields = ['balance', 'balance_intermediary']
     actions = ['export_xls', 'write_message', 'add_to_group']
-    # action_form = StudentGroupForm
+    action_form = StudentGroupForm
 
     def get_trainings(self, instance):
         return ' - '.join([str(training) for training in instance.trainings.all()])
