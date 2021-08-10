@@ -386,6 +386,8 @@ class CourseListView(CourseAccessMixin, ListView):
                     continue
                 if not student.platform_only and not webclass.allow_presentiel:
                     continue
+                if not webclass.is_not_over():
+                    continue
                 slot = webclass.get_slot(user)
                 if slot and slot.status in ('almost', 'ingoing'):
                     slots.append(slot)
@@ -491,6 +493,7 @@ class CourseView(CourseAccessMixin, DetailView):
                     webclass_slot = webclass.get_slot(self.request.user)
         context['webclass'] = webclass
         context['webclass_slot'] = webclass_slot
+        context['webclass_not_over'] = webclass.is_not_over()
 
         try:
             context['webclass_records'] = WebclassRecord.get_records(
