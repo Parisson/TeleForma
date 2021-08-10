@@ -493,7 +493,7 @@ class CourseView(CourseAccessMixin, DetailView):
                     webclass_slot = webclass.get_slot(self.request.user)
         context['webclass'] = webclass
         context['webclass_slot'] = webclass_slot
-        context['webclass_not_over'] = webclass.is_not_over()
+        context['webclass_not_over'] = webclass and webclass.is_not_over()
 
         try:
             context['webclass_records'] = WebclassRecord.get_records(
