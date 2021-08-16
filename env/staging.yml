@@ -33,15 +33,14 @@ services:
     ports:
       - "9002:8000"
     links:
-      - postgres
+      - db
       - redis
     env_file:
       - env/staging.env
     networks:
       - teleforma-staging
 
-  postgres:
-    image: postgres:13
+  db:
     env_file:
       - env/staging.env
     networks:
@@ -58,7 +57,7 @@ services:
 volumes:
     app:
     channels:
-    postgres:
+    db:
     redis:
 
 networks:

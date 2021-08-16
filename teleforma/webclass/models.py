@@ -168,6 +168,14 @@ class Webclass(models.Model):
         except WebclassSlot.DoesNotExist:
             return None
 
+    def is_not_over(self):
+        """
+        Check if the webclass is not over yet
+        """
+        if self.end_date and self.end_date < datetime.date.today():
+            return False
+        return True
+        
 
 class SlotPublishedManager(models.Manager):
     def get_query_set(self):

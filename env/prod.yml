@@ -32,16 +32,20 @@ services:
       - ./var/log/app:/var/log/app
     ports:
       - "9004:8000"
-    links:
-      - postgres
-      - redis
     env_file:
       - env/prod.env
     networks:
       - teleforma-prod
+    links:
+      - db:db
+      - redis
+      - memcached
+    depends_on:
+      - db
+      - redis
+      - memcached
 
-  postgres:
-    image: postgres:13
+  db:
     env_file:
       - env/prod.env
     networks:
@@ -59,7 +63,7 @@ services:
 volumes:
     app:
     channels:
-    postgres:
+    db:
     redis:
 
 

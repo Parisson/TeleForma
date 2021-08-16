@@ -18,12 +18,17 @@ services:
       - ./var/log/app:/var/log/app
       - ./var/log/uwsgi:/var/log/uwsgi
     links:
-      - postgres
+      - db:db
       - redis
+      - memcached
+    depends_on:
+      - db
+      - redis
+      - memcached
     env_file:
       - env/debug.env
 
-  postgres:
+  db:
     image: postgres:13
     env_file:
       - env/debug.env
@@ -53,5 +58,5 @@ services:
 
 volumes:
     app:
-    postgres:
+    db:
     redis:
