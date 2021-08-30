@@ -51,6 +51,7 @@ from telemeta.models import *
 from teleforma.fields import *
 import django.db.models as models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.functional import cached_property
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes import generic
@@ -442,6 +443,10 @@ class Document(MediaBase):
         self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
     def __unicode__(self):
+        return self.full_title
+
+    @cached_property
+    def full_title(self):
         strings = []
         if self.period:
             strings.append(self.period.name)
@@ -499,6 +504,10 @@ class Media(MediaBase):
                 self.mime_type = mime_type
 
     def __unicode__(self):
+        return self.full_title
+
+    @cached_property
+    def full_title(self):
         strings = []
         if self.period:
             strings.append(self.period.name)
