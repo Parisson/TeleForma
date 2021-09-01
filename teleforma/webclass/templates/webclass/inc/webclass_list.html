@@ -15,7 +15,9 @@
                         <strong>{{webclass_slot.get_day_display}} de
                             {{webclass_slot.start_hour|date:"H\hi"}} à
                             {{webclass_slot.end_hour|date:"H\hi"}}</strong>
-                        avec le professeur <strong>{{webclass_slot.professor.user.last_name}}</strong>.</p>
+                        avec le professeur <strong>{{webclass_slot.professor.user.last_name}}</strong>.
+                    </p>
+                    <p><a href="{% url 'teleforma-webclass-unregister' pk=webclass_slot.id %}" class="component_icon button icon_next">Se désinscrire</a> Vous pourrez ensuite vous inscrire sur un autre créneau.</p>
 
                     {% if webclass_slot.status == 'past' %}
                     <p>

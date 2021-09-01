@@ -151,6 +151,7 @@ class WebclassAppointment(View):
     #     return data
 
 
+
 class WebclassRecordView(TemplateView):
     template_name = 'webclass/record.html'
 
@@ -207,3 +208,20 @@ def join_webclass(request, pk):
         return redirect(webclass_slot.get_join_webclass_url(request, user))
     else:
         return HttpResponse('Unauthorized', status=401)
+
+
+@access_required
+def unregister(request, pk):
+    """
+    Unregister to a webclass
+    """
+    webclass_slot = WebclassSlot.objects.get(pk=int(pk))
+    user = request.user
+
+    if user in webclass_slot.participants.all():
+        webclass_slot.participants.remove(user)
+
+    messages.add_message(request, messages.INFO,
+                                 "Votre réservation a été annulé.")
+    # redirect to register form
+    return redirect(reverse("teleforma-webclass-appointments", kwargs={'pk':webclass_slot.webclass.id}))

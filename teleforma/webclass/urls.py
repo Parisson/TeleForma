@@ -37,7 +37,7 @@ from django.conf.urls import url
 from ..webclass.views import (WebclassAppointment,
                               WebclassProfessorAppointments,
                               WebclassRecordsFormView, WebclassRecordView,
-                              join_webclass)
+                              join_webclass, unregister)
 
 urlpatterns = [
     url(r'^desk/webclass_appointments/(?P<pk>.*)$', WebclassAppointment.as_view(),
@@ -48,7 +48,11 @@ urlpatterns = [
         name="teleforma-webclass-record"),
     url(r'^webclass/periods/(?P<period_id>.*)/webclass_records_form/$',
         WebclassRecordsFormView.as_view(), name="teleforma-webclass-records-form"),
+    url(r'^desk/webclass/(?P<pk>.*)/unregister/$',
+        unregister,
+        name="teleforma-webclass-unregister"),
     url(r'^desk/webclass/(?P<pk>.*)/join/$',
         join_webclass,
         name="teleforma-webclass-join")
+    
 ]
