@@ -122,7 +122,7 @@
           {% endif %}
           {% endif %}
 
-          {% if user.professor.count %}
+          {% if user.professor.count or user.is_superuser %}
           <li><a href="{% url 'teleforma-webclass-professor' %}" class="yellow">Webclass</a></li>
           {% endif %}
 

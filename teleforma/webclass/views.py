@@ -24,11 +24,17 @@ class WebclassProfessorAppointments(TemplateView):
                         self).get_context_data(**kwargs)
 
         user = self.request.user
-        if not user.professor:
+        if not user.professor.all() and not user.is_superuser:
             return HttpResponse('Unauthorized', status=401)
         today = datetime.today()
-        context['slots'] = WebclassSlot.published.filter(
-            professor=user.professor.get(), webclass__status=3, webclass__end_date__gte=today).order_by('day', 'start_hour')
+        query = {
+            'webclass__status': 3,
+            'webclass__end_date__gte': today
+        }
+        if user.professor.all():
+            query['professor'] = user.professor.get()
+        context['slots'] = WebclassSlot.published.filter(**query).order_by('day', 'start_hour')
+        context['is_superuser'] = user.is_superuser
         return context
 
 
