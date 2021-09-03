@@ -472,6 +472,8 @@ PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "014295303911111",
 }
 
 
+ORAL_OPTION_PRICE = 250
+
 if DEBUG_TOOLBAR:
     def show_toolbar(request):
         return True

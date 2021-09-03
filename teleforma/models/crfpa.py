@@ -36,6 +36,7 @@
 
 import datetime
 
+from django.conf import settings
 import django.db.models as models
 from django.contrib.auth.models import User
 from django.db.models import signals
@@ -207,6 +208,8 @@ class Student(models.Model):
     receipt_id = models.IntegerField('numéro de facture', blank=True, null=True,
                                      unique=True)
 
+    payment_generated = models.BooleanField(_('échances générées'), default=False)
+
     def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -280,6 +283,106 @@ class Student(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('teleforma-profile-detail', kwargs={'username': self.user.username})
 
+    def create_payment_objects(self):
+        """
+        Create the payment objects if the account is activated
+        """
+        if not self.is_subscribed:
+            return
+
+        if self.payment_generated:
+            return
+
+        # If we already have some payments, then forget about it
+        if self.payments.count():
+            self.payment_generated = True
+            self.save()
+            return
+
+        total = self.total_fees
+        oneday = datetime.timedelta(days = 1)
+        tomorrow = datetime.date.today() + oneday
+        period = self.period
+
+        oral_1 = self.oral_1 and self.oral_1.title != 'Aucune'
+        oral_price = settings.ORAL_OPTION_PRICE if oral_1 else 0
+        total -= oral_price
+        
+        def endofmonth(year, month):
+            """
+            Get the last day of a month. To avoid quirky varying month length,
+            we look at 01/m+1 and then remove one day
+            """
+            month = month + 1
+            if month > 12:
+                year += 1
+                month -= 12
+            return datetime.date(year, month + 1, 1) - oneday
+
+        oral_date = None
+        payments = None
+        # Full or partial ?
+        if self.payment_schedule == 'split':
+            if period.name == 'Semestrielle':
+                part = int(total * 0.25)
+                remaining = total - 3 * part
+                payments = ((remaining, tomorrow),)
+                if tomorrow.month <= 6:                    
+                    # Late registration, so next three end of month
+                    for i in range(3):                        
+                        date = endofmonth(tomorrow.year, tomorrow.month + 1 + i)
+                        payments += ((part, date),)
+                    oral_date = endofmonth(tomorrow.year, 6)
+                else:
+                    # Normal registration, so first three months of next year
+                    for month in (1, 2, 3):
+                        # To avoid quirky varying month length, we
+                        # look at 01/m+1 and then remove one day
+                        date = endofmonth(tomorrow.year + 1, month)
+                        payments += ((part, date),)
+                    oral_date = endofmonth(tomorrow.year + 1, 6)
+            elif period.name == 'Estivale':
+                part = int(total * 0.35)
+                remaining = total - 2 * part
+                payments = ((remaining, tomorrow),)
+                if tomorrow.month >= 6:
+                    # Late registration, so next two end of month
+                    for i in range(2):
+                        # To avoid quirky varying month length, we
+                        # look at 01/m+1 and then remove one day
+                        date = endofmonth(tomorrow.year, tomorrow.month + 1 + i)
+                        payments += ((part, date),)
+                    oral_date = endofmonth(tomorrow.year, 8)
+                else:
+                    # Normal registration, so end of june and end of
+                    # july
+                    for month in (6, 7):
+                        # To avoid quirky varying month length, we
+                        # look at 01/m+1 and then remove one day
+                        date = endofmonth(tomorrow.year, month)
+                        payments += ((part, date),)
+                    oral_date = endofmonth(tomorrow.year, 8)
+        elif self.payment_schedule == 'once':
+            payments = ((total, tomorrow), )
+
+        if not payments:
+            return
+
+        if oral_price and oral_date:
+            payments += ((oral_price, oral_date), )
+        
+        self.payment_generated = True
+        self.save()
+
+        for amount, date in payments:
+            payment = Payment(student = self,
+                              value = amount,
+                              month = date.month,
+                              scheduled = date,
+                              online_paid = False,
+                              type = self.payment_type)
+            payment.save()
+    
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
         verbose_name = _('Student')
@@ -294,7 +397,11 @@ def update_balance_signal(sender, instance, *args, **kwargs):
         instance.student.update_balance()
 
 
+def create_payment_objects(sender, instance, *args, **kwargs):
+    instance.create_payment_objects()
+        
 signals.post_save.connect(update_balance_signal)
+signals.post_save.connect(create_payment_objects, sender=Student)
 signals.post_delete.connect(update_balance_signal)
 
 
@@ -462,7 +569,7 @@ class Home(models.Model):
         verbose_name = "Page d'accueil"
         verbose_name_plural = "Page d'accueil"
 
-    def is_for_period(self, period):
+    def is_for_period(self, period):        
         """
         Check if it's available for given period
         """

@@ -57,6 +57,7 @@ from django.views.generic.list import ListView
 from postman.forms import AnonymousWriteForm
 from postman.views import WriteView as PostmanWriteView
 from xlwt import Workbook
+from django.conf import settings
 
 from ..decorators import access_required
 from ..forms import (CorrectorForm, NewsItemForm, UserForm, WriteForm,
@@ -67,8 +68,6 @@ from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
 from ..views.core import (PDFTemplateResponseMixin, format_courses,
                           get_courses, get_periods)
 from ..views.profile import ProfileView
-
-ORAL_OPTION_PRICE = 250
 
 def get_course_code(obj):
     if obj:
@@ -877,7 +876,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         oral_1 = student.oral_1 and student.oral_1.title != 'Aucune'
 
         if oral_1:
-            substract += ORAL_OPTION_PRICE
+            substract += settings.ORAL_OPTION_PRICE
 
         items.append({ 'label': label,
                        'unit_price': student.total_fees - substract - student.total_discount,
@@ -885,7 +884,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
                        'discount': student.total_discount, }, )
         if oral_1:
             items.append({ 'label': "<b>Option langue</b>",
-                           'unit_price': ORAL_OPTION_PRICE,
+                           'unit_price': settings.ORAL_OPTION_PRICE,
                            'amount': 1,
                            'discount': 0, }, )
         for item in items:
