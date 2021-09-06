@@ -317,7 +317,7 @@ class Student(models.Model):
             if month > 12:
                 year += 1
                 month -= 12
-            return datetime.date(year, month + 1, 1) - oneday
+            return datetime.date(year, month, 1) - oneday
 
         oral_date = None
         payments = None
@@ -352,7 +352,7 @@ class Student(models.Model):
                         # look at 01/m+1 and then remove one day
                         date = endofmonth(tomorrow.year, tomorrow.month + 1 + i)
                         payments += ((part, date),)
-                    oral_date = endofmonth(tomorrow.year, 8)
+                    oral_date = endofmonth(tomorrow.year, max(tomorrow.month, 8))
                 else:
                     # Normal registration, so end of june and end of
                     # july
