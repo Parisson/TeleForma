@@ -124,7 +124,7 @@ python-openid==2.2.5
 python-slugify==0.0.9
 pytz==2013.9
 pyxdg==0.19
-PyYAML==3.12
+PyYAML==5.4
 pyzmq==13.1.0
 redis==2.10.3
 reportlab==3.3.0
