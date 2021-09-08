@@ -60,7 +60,7 @@ ipaddress==1.0.17
 ipython==5.1.0
 ipython-genutils==0.1.0
 iso8601==0.1.11
-Jinja2==2.7.2
+Jinja2==2.11.3
 jsonpatch==1.12
 jsonpointer==1.10
 jsonschema==2.5.1
