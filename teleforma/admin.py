@@ -9,8 +9,11 @@ from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.core import serializers
+from django.urls import reverse
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import format_html
+
 from collections import OrderedDict
 
 from .exam.admin import QuotaInline
@@ -220,6 +223,17 @@ class ProfileInline(admin.StackedInline):
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfileInline, StudentInline, QuotaInline]
     search_fields = ['username', 'email']
+    list_display = UserAdmin.list_display + (
+        'user_actions', 
+    )
+    def user_actions(self, obj):
+        return format_html(
+            '<a class="btn btn-primary btn-sm" href="{}">Se connecter en tant que</a>',
+            reverse('teleforma-user-login', args=[obj.pk]),
+            reverse('teleforma-user-login', args=[obj.pk]),
+        )
+    user_actions.short_description = 'Actions'
+    user_actions.allow_tags = True
 
 
 class TrainingAdmin(admin.ModelAdmin):
