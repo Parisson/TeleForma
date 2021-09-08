@@ -162,7 +162,7 @@ else:
         filter_horizontal = ['courses']
         inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
         search_fields = ['user__first_name', 'user__last_name', 'user__username']
-        list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
+        list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', 'period',
                         'fascicule', BalanceFilter ]
         list_display = ['student_name', 'restricted', 'platform_only',
                         'total_payments', 'total_fees', 'balance', 'balance_intermediary']
@@ -425,7 +425,7 @@ admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Student, StudentAdmin)
 # admin.site.register(Corrector, CorrectorAdmin)
-# admin.site.register(Professor, ProfessorAdmin)
+admin.site.register(Professor, ProfessorAdmin)
 # admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
