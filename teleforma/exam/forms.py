@@ -18,11 +18,12 @@ class ScriptForm(ModelForm):
     def __init__(self, *args, **kwargs):
         period = kwargs.pop('period')
         super(ScriptForm, self).__init__(*args, **kwargs)
-        self.fields['score'].localize = True
+        self.fields['score'].localize = False
         nb = period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         self.fields['session'] = forms.ChoiceField(choices=get_n_choices(nb + 1),
                                                    validators=[validate_session(nb)])
         self.fields['file'].required = True
+        self.fields['score'].widget.attrs['onkeydown'] = "return event.key != 'Enter';"
 
     class Meta:
         model = Script
