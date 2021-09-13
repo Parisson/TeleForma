@@ -20,7 +20,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from teleforma.decorators import access_required
+from teleforma.decorators import access_required, staff_required
 from teleforma.models.crfpa import Student
 from teleforma.views.core import CourseAccessMixin, get_courses
 
@@ -526,7 +526,7 @@ class MassScoreCreateView(ScoreCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(MassScoreCreateView, self).get_context_data(**kwargs)
-        context['create_fields'] = ['course', 'session', 'type']
+        context['create_fields'] = ['course', 'session']
         context['rows'] = [{'student_name': 'student%d' % i,
                             'score_name': 'score%d' % i} for i in range(20)]
         for row in context['rows']:
@@ -544,9 +544,9 @@ class MassScoreCreateView(ScoreCreateView):
                 row['student_name'], None)
         return context
 
-    @method_decorator(permission_required('is_superuser'))
-    def dispatch(self, *args, **kwargs):
-        return super(ScoreCreateView, self).dispatch(*args, **kwargs)
+    @staff_required
+    def dispatch(self, request, *args, **kwargs):
+        return super(ScoreCreateView, self).dispatch(request, *args, **kwargs)
 
 
 def get_mass_students(request):

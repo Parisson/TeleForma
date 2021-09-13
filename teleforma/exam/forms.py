@@ -41,6 +41,7 @@ class ScoreForm(ScriptForm):
 
 
 class MassScoreForm(ScoreForm):
+
     def __init__(self, *args, **kwargs):
         super(MassScoreForm, self).__init__(*args, **kwargs)
         self.table_errors = {}
@@ -58,7 +59,7 @@ class MassScoreForm(ScoreForm):
                 if student:
                     score = self.data[key.replace('student', 'score')]
                     try:
-                        score = int(score)
+                        score = float(score.replace(',', '.'))
                     except ValueError:
                         errors[key] = u"Note invalide"
                         continue

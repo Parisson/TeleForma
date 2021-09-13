@@ -2,6 +2,7 @@ import urllib.parse as urlparse
 from functools import wraps
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.shortcuts import redirect
 
@@ -61,6 +62,19 @@ def access_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, logi
         return actual_decorator(function)
     return actual_decorator
 
+
+def staff_required(view):
+    """
+    Allow only correctors, professor or admins
+    """
+    @wraps(view)
+    def _view(self, request, *args, **kwargs):
+        user = request.user
+        if not user.quotas.all() and not user.professor.all() and not user.is_superuser:
+            raise PermissionDenied
+        return view(self, request, *args, **kwargs)
+    return _view
+    
 
 # def access_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
 #     """

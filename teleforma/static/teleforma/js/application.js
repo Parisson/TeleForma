@@ -39,7 +39,8 @@ $(document).ready(function(){
              });
          })
      }
-     $('.tabs').tabs();
+     if($('.tabs').size())
+        $('.tabs').tabs();
 });
 
 
