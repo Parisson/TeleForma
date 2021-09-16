@@ -30,8 +30,8 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     args = 'organization period_name log_file media_dir'
     spacer = '_-_'
-    original_format = 'webm'
-    transcoded_formats = ['mp4', 'ogg', 'mp3']
+    original_format = 'mp4'
+    transcoded_formats = ['mp3']
     image_formats = ['png', 'jpg']
     media_rank_dict = {'bis': 2, 'ter': 3, 'quarter': 4, 'quinquies': 5, 'quater': 4}
     site = Site.objects.get_current()
