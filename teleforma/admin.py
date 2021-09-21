@@ -242,6 +242,11 @@ class TrainingAdmin(admin.ModelAdmin):
                          'written_speciality', 'oral_1', 'oral_2', 'magistral']
     exclude = ['options']
 
+class CourseTypeAdmin(admin.ModelAdmin):
+    model = CourseType
+    list_display = ('name', 'order')
+    ordering = ('order',)
+
 
 class CourseAdmin(admin.ModelAdmin):
     model = Course
@@ -444,7 +449,7 @@ admin.site.register(Media, MediaAdmin)
 admin.site.register(Room)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(Training, TrainingAdmin)
-admin.site.register(CourseType)
+admin.site.register(CourseType, CourseTypeAdmin)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Student, StudentAdmin)

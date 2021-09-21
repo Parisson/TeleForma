@@ -204,6 +204,7 @@ class CourseType(models.Model):
     name = models.CharField(_('name'), max_length=255)
     description = models.CharField(
         _('description'), max_length=255, blank=True)
+    order = models.IntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
         return self.name

@@ -88,7 +88,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
     if professor:
         professor = user.professor.get()
         courses = format_courses(courses, queryset=professor.courses.all(),
-                                  types=CourseType.objects.all())
+                                  types=CourseType.objects.order_by('order').all())
 
     elif quotas and not user.is_staff:
         corrector_courses = set()
@@ -96,7 +96,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
             corrector_courses.add(quota.course)
         for course in corrector_courses:
             courses = format_courses(courses, course=course,
-                    types=CourseType.objects.all())
+                    types=CourseType.objects.order_by('order').all())
 
     elif student:
         student = user.student.get()
@@ -138,7 +138,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     elif user.is_staff or user.is_superuser:
         courses = format_courses(courses, queryset=Course.objects.all(),
-                    types=CourseType.objects)
+                    types=CourseType.objects.order_by('order').all())
     else:
         courses = None
 
