@@ -167,18 +167,18 @@ class ConferenceAdmin(admin.ModelAdmin):
             Q(period__name__in=years) | 
             Q(id__in=current_values)
         )
-        if instance:
-            current_values = [doc.id for doc in instance.suggested_seminars.all()]
-        context['adminform'].form.fields['suggested_seminars'].queryset = Seminar.objects.filter(
-            Q(private=2) | 
-            Q(id__in=current_values)
-        )
-        if instance:
-            current_values = [doc.id for doc in instance.suggested_conferences.all()]
-        context['adminform'].form.fields['suggested_conferences'].queryset = Conference.objects.filter(
-            Q(status=2) | 
-            Q(id__in=current_values)
-        )
+        # if instance:
+        #     current_values = [doc.id for doc in instance.suggested_seminars.all()]
+        # context['adminform'].form.fields['suggested_seminars'].queryset = Seminar.objects.filter(
+        #     Q(private=2) | 
+        #     Q(id__in=current_values)
+        # )
+        # if instance:
+        #     current_values = [doc.id for doc in instance.suggested_conferences.all()]
+        # context['adminform'].form.fields['suggested_conferences'].queryset = Conference.objects.filter(
+        #     Q(status=2) | 
+        #     Q(id__in=current_values)
+        # )
         return super(ConferenceAdmin, self).render_change_form(request, context, *args, **kwargs)
 
     def export_conference(self, request, queryset):
@@ -257,18 +257,18 @@ class SeminarAdmin(admin.ModelAdmin):
         )
         
         # Suggested seminars / conferences
-        if instance:
-            current_values = [doc.id for doc in instance.suggested_seminars.all()]
-        context['adminform'].form.fields['suggested_seminars'].queryset = Seminar.objects.filter(
-            Q(private=2) | 
-            Q(id__in=current_values)
-        )
-        if instance:
-            current_values = [doc.id for doc in instance.suggested_conferences.all()]
-        context['adminform'].form.fields['suggested_conferences'].queryset = Conference.objects.filter(
-            Q(status=2) | 
-            Q(id__in=current_values)
-        )
+        # if instance:
+        #     current_values = [doc.id for doc in instance.suggested_seminars.all()]
+        # context['adminform'].form.fields['suggested_seminars'].queryset = Seminar.objects.filter(
+        #     Q(private=2) | 
+        #     Q(id__in=current_values)
+        # )
+        # if instance:
+        #     current_values = [doc.id for doc in instance.suggested_conferences.all()]
+        # context['adminform'].form.fields['suggested_conferences'].queryset = Conference.objects.filter(
+        #     Q(status=2) | 
+        #     Q(id__in=current_values)
+        # )
         return super(SeminarAdmin, self).render_change_form(request, context, *args, **kwargs)
 
     def clone_seminars(self, request, queryset):
