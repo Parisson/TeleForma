@@ -71,20 +71,27 @@ class AppointmentPeriod(models.Model):
         """
         return self.start <= datetime.date.today() <= self.end and self.enable_appointment
 
-    @cached_property
+    # @cached_property
     # @timing
-    def days(self):
+    def days(self, platform_only=False):
         days = {}
         delay = self.book_delay
         today = datetime.date.today()
-
-        for slot in AppointmentSlot.objects.filter(appointment_period=self).order_by('start'):
-            cache_key = '%s_%s_%s-%s' % (CACHE_KEY,
-                                         self.id, slot.date, slot.mode)
+        queryset = AppointmentSlot.objects.filter(appointment_period=self).order_by('-date')
+        if platform_only:
+            queryset = queryset.filter(mode='distance', allow_elearning=True)
+        else:
+            queryset = queryset.filter(allow_presentiel=True)
+        for slot in queryset:
+            cache_key = '%s_%s_%s-%s-%s' % (CACHE_KEY,
+                                         self.id, slot.date, slot.mode, platform_only)
             dayData = cache.get(cache_key)
             # dayData = None
             slot_key = str(slot.date) + "-" + slot.mode
+
+            # some slots are reserved to elearning or presentiel students
             if not dayData:
+                
                 slotData = {'instance': slot,
                             'slots': slot.slots,
                             'mode': slot.mode,
@@ -110,7 +117,7 @@ class AppointmentPeriod(models.Model):
 
         for day in days:
             if not days[day]['from_cache']:
-                cache_key = '%s_%s_%s' % (CACHE_KEY, self.id, day)
+                cache_key = '%s_%s_%s-%s' % (CACHE_KEY, self.id, day, platform_only)
                 cache.set(cache_key, days[day], 1800)
 
         # print days
@@ -119,7 +126,7 @@ class AppointmentPeriod(models.Model):
     @cached_property
     def modes(self):
         modes = set()
-        for day in self.days:
+        for day in self.days(platform_only=None):
             if day['mode'] not in modes:
                 for MODE in APPOINTMENT_MODE:
                     if MODE[0] == day['mode']:
@@ -179,6 +186,9 @@ class AppointmentSlot(models.Model):
                                            verbose_name=u"Période de prise de rendez-vous", null=True, blank=False, on_delete=models.CASCADE)
     mode = models.CharField('Mode', choices=APPOINTMENT_MODE,
                             default='presentiel', max_length=20)
+
+    allow_elearning = models.BooleanField('Autoriser e-learning', default=True)
+    allow_presentiel = models.BooleanField('Autoriser présentiel', default=True)
 
     date = models.DateField('date', null=True, blank=False)
 
@@ -241,7 +251,7 @@ class AppointmentSlot(models.Model):
                 'slot_nb': i,
                 'start': start,
                 'end': end,
-                'arrival': arrival,
+                'arrival': arrival
             }
 
             # compute if a slot is available for each jury
