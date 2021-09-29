@@ -212,6 +212,7 @@ class CourseType(models.Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
+        ordering = ['order']
 
     def to_dict(self):
         dict = {'name': self.name,
