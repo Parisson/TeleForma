@@ -121,7 +121,6 @@ class AppointmentPeriod(models.Model):
                 cache.set(cache_key, days[day], 1800)
 
         # print days
-        print(days.values())
         return sorted(days.values(), key=lambda d: d['date'])
 
     @cached_property
