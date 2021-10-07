@@ -337,7 +337,7 @@ class HomeAdmin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(HomeAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['video'].queryset = Media.objects.filter(type='webm')
+        form.base_fields['video'].queryset = Media.objects.filter(type__in=('webm', 'mp4'), is_published=True, )
         return form
 
 
