@@ -464,6 +464,8 @@ JAZZMIN_UI_TWEAKS = {
 PAYMENT_SHERLOCKS_PATH='/srv/sherlocks'
 
 PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "014295303911111",
+                                         'Annuelle': "014295303911111",
+                                         'Pré-annuelle': "014295303911111",
                                          'Estivale': "014295303911111",
                                          'Pré-estivale': "014295303911111", },
                        'merchant_country': 'fr',

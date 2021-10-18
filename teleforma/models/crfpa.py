@@ -323,7 +323,7 @@ class Student(models.Model):
         payments = None
         # Full or partial ?
         if self.payment_schedule == 'split':
-            if period.name == 'Semestrielle':
+            if period.name in ('Semestrielle', 'Annuelle'):
                 part = int(total * 0.25)
                 remaining = total - 3 * part
                 payments = ((remaining, tomorrow),)
