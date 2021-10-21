@@ -30,8 +30,8 @@ class Command(BaseCommand):
     admin_email = 'webmaster@parisson.com'
     args = 'organization period_name log_file media_dir'
     spacer = '_-_'
-    original_format = 'webm'
-    transcoded_formats = ['mp4', 'ogg', 'mp3']
+    original_format = ['mp4']
+    transcoded_formats = ['mp3',]
     image_formats = ['png', 'jpg']
     media_rank_dict = {'bis': 2, '1bis': 2, '1ter': 3, 'ter': 3, 'quarter': 4, '1quater': 4, 'quinquies': 5, 'quater': 4, 'sexies': 6, 'septies': 7, 'sexsies': 6, 'octies': 8}
 
@@ -138,7 +138,7 @@ class Command(BaseCommand):
                         and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.' \
                         and statinfo.st_size > self.size_limit:
 
-                    print path
+                    #print path
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
 
@@ -186,13 +186,17 @@ class Command(BaseCommand):
                     id = '_'.join([period.name, self.id_incr, collection_id, ext, str(media_rank)])
                     item = self.get_item(collection, id)
                     item.title = name
+                    
+                    id_webm = '_'.join([period.name, self.id_incr, collection_id, 'webm', str(media_rank)])
+                    items_webm = MediaItem.objects.filter(collection=collection, code=id_webm)
+
 
                     # cleanup old media
                     for media in seminar.medias.all():
                         if not period.name in media.item.code:
                             seminar.medias.remove(media)
-
-                    if not item.file == path:
+                    
+                    if not item.file == path and not items_webm:
                         logger.logger.info(seminar.public_url())
                         logger.logger.info(path)
                         if not seminar in seminars:
@@ -213,7 +217,7 @@ class Command(BaseCommand):
                                 related.set_mime_type()
                                 related.save()
                                 logger.logger.info(r_path)
-                            elif extension[1:] in self.transcoded_formats:
+                            elif extension[1:] in self.transcoded_formats and not extension[1:] in self.original_format:
                                 t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
                                 logger.logger.info(r_path)
                             elif extension[1:] == 'kdenlive':
