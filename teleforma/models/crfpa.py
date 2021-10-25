@@ -38,6 +38,7 @@ import datetime
 
 from django.conf import settings
 import django.db.models as models
+from django.db import transaction
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.urls.base import reverse_lazy
@@ -398,8 +399,8 @@ def update_balance_signal(sender, instance, *args, **kwargs):
 
 
 def create_payment_objects(sender, instance, *args, **kwargs):
-    instance.create_payment_objects()
-        
+    transaction.on_commit(instance.create_payment_objects)
+
 signals.post_save.connect(update_balance_signal)
 signals.post_save.connect(create_payment_objects, sender=Student)
 signals.post_delete.connect(update_balance_signal)
