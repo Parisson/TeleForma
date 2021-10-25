@@ -320,7 +320,6 @@ class Student(models.Model):
                 month -= 12
             return datetime.date(year, month, 1) - oneday
 
-        oral_date = None
         payments = None
         # Full or partial ?
         if self.payment_schedule == 'split':
@@ -333,7 +332,6 @@ class Student(models.Model):
                     for i in range(3):                        
                         date = endofmonth(tomorrow.year, tomorrow.month + 1 + i)
                         payments += ((part, date),)
-                    oral_date = endofmonth(tomorrow.year, 6)
                 else:
                     # Normal registration, so first three months of next year
                     for month in (1, 2, 3):
@@ -341,7 +339,6 @@ class Student(models.Model):
                         # look at 01/m+1 and then remove one day
                         date = endofmonth(tomorrow.year + 1, month)
                         payments += ((part, date),)
-                    oral_date = endofmonth(tomorrow.year + 1, 6)
             elif period.name == 'Estivale':
                 part = int(total * 0.35)
                 remaining = total - 2 * part
@@ -353,7 +350,6 @@ class Student(models.Model):
                         # look at 01/m+1 and then remove one day
                         date = endofmonth(tomorrow.year, tomorrow.month + 1 + i)
                         payments += ((part, date),)
-                    oral_date = endofmonth(tomorrow.year, max(tomorrow.month, 8))
                 else:
                     # Normal registration, so end of june and end of
                     # july
@@ -362,10 +358,26 @@ class Student(models.Model):
                         # look at 01/m+1 and then remove one day
                         date = endofmonth(tomorrow.year, month)
                         payments += ((part, date),)
-                    oral_date = endofmonth(tomorrow.year, 8)
         elif self.payment_schedule == 'once':
             payments = ((total, tomorrow), )
 
+        # Handle oral date
+        oral_date = None
+        if period.name in ('Semestrielle', 'Annuelle'):
+            if tomorrow.month <= 6:                    
+                # Late registration
+                oral_date = endofmonth(tomorrow.year, 6)
+            else:
+                # Normal registration
+                oral_date = endofmonth(tomorrow.year + 1, 6)
+        elif period.name == 'Estivale':
+            if tomorrow.month >= 6:
+                # Late registration
+                oral_date = endofmonth(tomorrow.year, max(tomorrow.month, 8))
+            else:
+                # Normal registration
+                oral_date = endofmonth(tomorrow.year, 8)
+            
         if not payments:
             return
 
