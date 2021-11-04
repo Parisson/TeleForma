@@ -42,11 +42,11 @@ class Appointments(View):
             if ap_period.is_open:
                 modes = ap_period.modes
                 # platformonly student can't subscribe to presentiel appointments
-                if platform_only:
-                    try:
-                        modes.remove(('presentiel', 'Presentiel'))
-                    except KeyError:
-                        pass
+                # if platform_only:
+                #     try:
+                #         modes.remove(('presentiel', 'Presentiel'))
+                #     except KeyError:
+                #         pass
                 ap_periods.append({
                     'days':ap_period.days(platform_only),
                     'name': ap_period.name,
