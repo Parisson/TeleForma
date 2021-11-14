@@ -243,6 +243,7 @@ def duplicate_trainings(modeladmin, request, queryset):
     for training in queryset:
         t = deepcopy(training)
         t.pk = None
+        t.code = training.code + ' - ' + 'COPY'
         t.save()
         t.synthesis_note.add(*training.synthesis_note.all())
         t.obligation.add(*training.obligation.all())
