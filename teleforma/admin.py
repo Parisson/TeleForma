@@ -237,6 +237,7 @@ class UserProfileAdmin(UserAdmin):
 
 @admin.action(description='Duplicate selected trainings')
 def duplicate_trainings(modeladmin, request, queryset):
+    from copy import deepcopy
     properties = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
                          'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral']
     for training in queryset:
