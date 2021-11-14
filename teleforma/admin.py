@@ -261,6 +261,7 @@ class TrainingAdmin(admin.ModelAdmin):
                          'written_speciality', 'oral_1', 'oral_2', 'magistral']
     exclude = ['options']
     actions = [duplicate_trainings,]
+    list_display = ['__str__', 'code' ]
 
 class CourseTypeAdmin(admin.ModelAdmin):
     model = CourseType
