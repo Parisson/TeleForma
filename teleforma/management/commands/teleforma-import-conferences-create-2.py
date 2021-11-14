@@ -64,10 +64,12 @@ class Command(BaseCommand):
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
 
+                    courses = Course.objects.filter(code=course_id)
                     conferences = Conference.objects.filter(public_id=public_id)
                     if conferences:
                         conference = conferences[0]
                     else:
+                        course = courses[0]
                         conference = Conference(public_id=public_id)
                         conference.course = course_obj
                         conference.course_type = course_type_obj
