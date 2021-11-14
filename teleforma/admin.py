@@ -235,12 +235,30 @@ class UserProfileAdmin(UserAdmin):
     user_actions.short_description = 'Actions'
     user_actions.allow_tags = True
 
+@admin.action(description='Duplicate selected trainings')
+def duplicate_trainings(modeladmin, request, queryset):
+    properties = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+                         'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral']
+    for training in queryset:
+        t = deepcopy(training)
+        t.pk = None
+        t.save()
+        t.synthesis_note.add(*training.synthesis_note.all())
+        t.obligation.add(*training.obligation.all())
+        t.procedure.add(*training.procedure.all())
+        t.oral_speciality.add(*training.oral_speciality.all())
+        t.written_speciality.add(*training.written_speciality.all())
+        t.oral_1.add(*training.oral_1.all())
+        t.oral_2.add(*training.oral_2.all())
+        t.options.add(*training.options.all())
+        t.magistral.add(*training.magistral.all())
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
                          'written_speciality', 'oral_1', 'oral_2', 'magistral']
     exclude = ['options']
+    actions = [duplicate_trainings,]
 
 class CourseTypeAdmin(admin.ModelAdmin):
     model = CourseType
