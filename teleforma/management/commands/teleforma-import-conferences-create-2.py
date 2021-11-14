@@ -35,7 +35,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         organization_name = args[0]
         department_name = args[1]
-        log_file = args[2]
+        period_name = args[2]
+        log_file = args[3]
         logger = Logger(log_file)
 
         organization = Organization.objects.get(name=organization_name)
@@ -64,12 +65,17 @@ class Command(BaseCommand):
                     path = dir + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
 
-                    courses = Course.objects.filter(code=course_id)
                     conferences = Conference.objects.filter(public_id=public_id)
                     if conferences:
                         conference = conferences[0]
                     else:
-                        course = courses[0]
+                        courses = Course.objects.filter(code=course_id)
+                        course_type_obj = CourseType.objects.get(name=course_type)
+                        period_obj = Period.objects.get(name=period_name)
+                        mtime = os.path.getmtime(path)
+                        conf_datetime = datetime.datetime.fromtimestamp(mtime)
+
+                        course_obj = courses[0]
                         conference = Conference(public_id=public_id)
                         conference.course = course_obj
                         conference.course_type = course_type_obj
