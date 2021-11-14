@@ -38,6 +38,7 @@ class Command(BaseCommand):
         period_name = args[2]
         log_file = args[3]
         logger = Logger(log_file)
+        datetime_limit = datetime.datetime(year=2021, month=8, day=1)
 
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name,
@@ -57,24 +58,26 @@ class Command(BaseCommand):
                     public_id = root_list[-1]
                     course = root_list[-2]
                     course_id = course.split(self.spacer)[0]
-                    course_type = course.split(self.spacer)[1].lower()
+                    course_type = course.split(self.spacer)[1].lower().capitalize()
                     date = root_list[-3]
                     department_name = root_list[-4]
                     organization_name = root_list[-5]
                     dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
+                    abs_path = root + os.sep + filename
                     collection_id = '_'.join([department_name, course_id, course_type])
+                    mtime = os.path.getmtime(abs_path)
+                    conf_datetime = datetime.datetime.fromtimestamp(mtime)
 
                     conferences = Conference.objects.filter(public_id=public_id)
                     if conferences:
                         conference = conferences[0]
-                    else:
+                    elif conf_datetime > datetime_limit:
                         courses = Course.objects.filter(code=course_id)
+                        print(course_id)
+                        print(path)
                         course_type_obj = CourseType.objects.get(name=course_type)
                         period_obj = Period.objects.get(name=period_name)
-                        mtime = os.path.getmtime(path)
-                        conf_datetime = datetime.datetime.fromtimestamp(mtime)
-
                         course_obj = courses[0]
                         conference = Conference(public_id=public_id)
                         conference.course = course_obj
@@ -83,7 +86,7 @@ class Command(BaseCommand):
                         conference.date_begin = conf_datetime
                         conference.save()
 
-                    if department:
+                    if department and conf_datetime > datetime_limit:
                         conference = Conference.objects.get(public_id=public_id)
                         department = Department.objects.get(name=department_name,
                                                             organization=organization)
