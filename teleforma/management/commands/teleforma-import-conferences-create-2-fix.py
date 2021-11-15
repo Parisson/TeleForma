@@ -74,9 +74,9 @@ class Command(BaseCommand):
                     conferences = Conference.objects.filter(public_id=public_id)
                     if conferences:
                         conference = conferences[0]
-                        if not conference.period == period_obj:
+                        if not conference.period == period_obj and conf_datetime > datetime_limit:
                             conference.delete()
-                            conf_datetime > datetime_limit:
+
                             courses = Course.objects.filter(code=course_id)
                             print(course_id)
                             print(path)
