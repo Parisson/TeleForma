@@ -340,10 +340,12 @@ class MediaAdmin(admin.ModelAdmin):
     list_filter = ['course', 'course_type', 'period', 'type', 'date_added', ConferenceDateBeginFilter, ]
     inlines = [MediaTranscodedInline]
     actions = [duplicate_medias,]
+    exlude = ['readers', ]
 
 
 class MediaInline(admin.StackedInline):
     model = Media
+    exclude = ['readers', ]
 
 
 @admin.action(description='Publish selected conferences')
