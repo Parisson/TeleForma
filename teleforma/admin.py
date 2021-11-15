@@ -346,6 +346,14 @@ class MediaInline(admin.StackedInline):
     model = Media
 
 
+@admin.action(description='Publish selected conferences')
+def publish_conferences(modeladmin, request, queryset):
+    for conference in queryset:
+        for media in conference.medias.all():
+            media.is_published = True
+            media.save()
+
+
 class ConferenceAdmin(admin.ModelAdmin):
     inlines = [MediaInline, ]
     exclude = ['readers']
@@ -353,6 +361,7 @@ class ConferenceAdmin(admin.ModelAdmin):
     list_filter = ('course', 'period', 'date_begin', 'session')
     search_fields = ['public_id', 'id',
                      'course__code', 'course__title', 'session']
+    actions = [publish_conferences, ]
 
 
 class HomeAdmin(admin.ModelAdmin):
