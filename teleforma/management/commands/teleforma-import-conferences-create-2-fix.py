@@ -90,55 +90,55 @@ class Command(BaseCommand):
                             conference.date_begin = conf_datetime
                             conference.save()
 
-                    if department and conf_datetime > datetime_limit:
-                        conference = Conference.objects.get(public_id=public_id)
-                        department = Department.objects.get(name=department_name,
-                                                            organization=organization)
-                        exist = False
-                        medias = conference.media.all()
-                        for media in medias:
-                            if media.file == path:
-                                exist = True
-                                break
+                            if department and conf_datetime > datetime_limit:
+                                conference = Conference.objects.get(public_id=public_id)
+                                department = Department.objects.get(name=department_name,
+                                                                    organization=organization)
+                                exist = False
+                                medias = conference.media.all()
+                                for media in medias:
+                                    if media.file == path:
+                                        exist = True
+                                        break
 
-                        streaming = False
-                        try:
-                            stations = conference.station.filter(started=True, public_id=public_id)
-                            if stations:
-                                streaming = True
-                        except:
-                            pass
+                                streaming = False
+                                try:
+                                    stations = conference.station.filter(started=True, public_id=public_id)
+                                    if stations:
+                                        streaming = True
+                                except:
+                                    pass
 
-                        if not exist and not streaming:
-                            # ORIGINAL MEDIA
-                            media = Media(conference=conference)
-                            media.file = path
-                            media.course = conference.course
-                            media.period = conference.period
-                            media.course_type = conference.course_type
-                            media.type = ext
-                            media.is_published = False
-                            media.set_mime_type()
+                                if not exist and not streaming:
+                                    # ORIGINAL MEDIA
+                                    media = Media(conference=conference)
+                                    media.file = path
+                                    media.course = conference.course
+                                    media.period = conference.period
+                                    media.course_type = conference.course_type
+                                    media.type = ext
+                                    media.is_published = False
+                                    media.set_mime_type()
 
-                            files = os.listdir(root)
+                                    files = os.listdir(root)
 
-                            # TRANSCODED MEDIA
-                            for file in files:
-                                filename, extension = os.path.splitext(file)
-                                if extension[1:] in self.transcoded_formats:
-                                    r_path = dir + os.sep + file
-                                    t, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
+                                    # TRANSCODED MEDIA
+                                    for file in files:
+                                        filename, extension = os.path.splitext(file)
+                                        if extension[1:] in self.transcoded_formats:
+                                            r_path = dir + os.sep + file
+                                            t, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
 
-                            # POSTER
-                            for file in files:
-                                filename, extension = os.path.splitext(file)
-                                if extension[1:] in self.image_formats:
-                                    media.poster_file = dir + os.sep + file
-                                    break
+                                    # POSTER
+                                    for file in files:
+                                        filename, extension = os.path.splitext(file)
+                                        if extension[1:] in self.image_formats:
+                                            media.poster_file = dir + os.sep + file
+                                            break
 
-                            media.save()
-                            conference.save()
+                                    media.save()
+                                    conference.save()
 
-                            logger.logger.info(path)
-                            i += 1
+                                    logger.logger.info(path)
+                                    i += 1
 
