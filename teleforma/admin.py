@@ -22,7 +22,7 @@ from .models.appointment import (Appointment, AppointmentJury,
 from .models.core import (Conference, Course, CourseType, Department, Document,
                           DocumentSimple, DocumentType, LiveStream, Media,
                           MediaTranscoded, Organization, Period, Professor,
-                          Room, StreamingServer)
+                          Room, StreamingServer, get_default_period)
 from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
                            OptionalFee, Parameters, Payback, Payment, Profile,
                            Student, Training)
