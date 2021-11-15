@@ -337,7 +337,7 @@ class MediaAdmin(admin.ModelAdmin):
     list_per_page = 30
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
-    list_filter = (ConferenceDateBeginFilter, )
+    list_filter = [course, course_type, period, type, date_added, ConferenceDateBeginFilter, ]
     inlines = [MediaTranscodedInline]
     actions = [duplicate_medias,]
 
