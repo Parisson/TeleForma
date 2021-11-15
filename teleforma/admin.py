@@ -334,6 +334,14 @@ def duplicate_medias(modeladmin, request, queryset):
 
 
 class MediaAdmin(admin.ModelAdmin):
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(MediaAdmin, self).get_form(request, obj, **kwargs)
+        periods = Period.objects.all()
+        period = get_default_period(periods)
+        form.base_fields['conference'].queryset = Conference.objects.filter(period=period)
+        return form
+
     list_per_page = 30
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
