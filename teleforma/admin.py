@@ -349,7 +349,7 @@ class MediaInline(admin.StackedInline):
 @admin.action(description='Publish selected conferences')
 def publish_conferences(modeladmin, request, queryset):
     for conference in queryset:
-        for media in conference.medias.all():
+        for media in conference.media.all():
             media.is_published = True
             media.save()
 
