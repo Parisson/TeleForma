@@ -342,7 +342,12 @@ class MediaAdmin(admin.ModelAdmin):
     actions = [duplicate_medias,]
 
 
+class MediaInline(admin.StackedInline):
+    model = Media
+
+
 class ConferenceAdmin(admin.ModelAdmin):
+    inlines = [MediaInline, ]
     exclude = ['readers']
     list_per_page = 30
     list_filter = ('course', 'period', 'date_begin', 'session')
