@@ -22,12 +22,13 @@ from .models.appointment import (Appointment, AppointmentJury,
 from .models.core import (Conference, Course, CourseType, Department, Document,
                           DocumentSimple, DocumentType, LiveStream, Media,
                           MediaTranscoded, Organization, Period, Professor,
-                          Room, StreamingServer, get_default_period)
+                          Room, StreamingServer)
 from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
                            OptionalFee, Parameters, Payback, Payment, Profile,
                            Student, Training)
 from .models.messages import GroupedMessage, StudentGroup
 from .views.crfpa import CorrectorXLSBook, UserXLSBook
+from .views.core import get_default_period
 
 from django.contrib.admin.helpers import ActionForm
 from django import forms
