@@ -24,23 +24,35 @@ class Logger:
 
 class Command(BaseCommand):
     help = "Copy conferences from one period to another"
-    courses = ['OB','PAC','PC','PP','DA','Civil','Fiscal','Affaires','DIE','Penal','Social']
-    period_1_name = u'Semestrielle'
-    period_2_name = u'Pré-estivale'
-    course_type = 'Cours'
+    # courses = ['OB','PAC','PC','PP','DA','Civil','Fiscal','Affaires','DIE','Penal','Social']
+    course_codes = ['Libertes', 'Anglais']
+    period_from_name = 'Estivale'
+    period_to_name = 'Semestrielle'
+    course_types = ['Corrections', 'Capsules']
 
     def handle(self, *args, **options):
-        period_1 = Period.objects.get(name=self.period_1_name)
-        period_2 = Period.objects.get(name=self.period_2_name)
-        course_type = CourseType.objects.get(name=self.course_type)
+        period_from = Period.objects.get(name=self.period_from_name)
+        period_to = Period.objects.get(name=self.period_to_name)
 
-        for course_code in self.courses:
+        for course_code in self.course_codes:
             course = Course.objects.get(code=course_code)
-            medias = Media.objects.filter(period=period_1, course=course, course_type=course_type)
-            for media in medias:
-                if not Media.objects.filter(period=period_2, course=course, course_type=course_type, item=media.item):
-                    media.pk = None
-                    media.save()
-                    media.period = period_2
-                    media.is_published = False
-                    media.save()
+            for course_type in self.course_types:
+                course_type = CourseType.objects.get(name=self.course_type)
+                medias = Media.objects.filter(course=course, course_type=course_type, is_published=True)
+                conferences = course.conference.filter(period=period_from, course_type=course_type)
+                conference_published_list = []
+
+                for conference in conferences:
+                    if conference.media.all()[0].is_published:
+                        conference_published_list.append(conference)
+
+                for conference in conference_published_list:
+                    medias = conference.media.all()
+                    conference.pk = None
+                    conference.period = period_to
+                    conference.save()
+                    for media in medias:
+                        media.pk = None
+                        media.period = period_to
+                        media.conference = conference
+                        media.save()
