@@ -25,7 +25,7 @@ class Logger:
 class Command(BaseCommand):
     help = "Copy conferences from one period to another"
     # courses = ['OB','PAC','PC','PP','DA','Civil','Fiscal','Affaires','DIE','Penal','Social']
-    course_codes = ['Libertes', 'Anglais']
+    course_codes = ['Libertes',]
     period_from_name = 'Estivale'
     period_to_name = 'Semestrielle'
     course_types = ['Cours', 'Corrections', 'Capsules']
