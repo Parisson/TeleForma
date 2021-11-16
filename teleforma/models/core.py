@@ -38,6 +38,7 @@ import datetime
 import mimetypes
 import os
 import string
+import random
 from teleforma.utils import guess_mimetypes
 
 import django.db.models as models
@@ -46,7 +47,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import InvalidPage
 from django.db import models
 from django.forms.fields import FileField
-from django.template.defaultfilters import random, slugify
+from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 # from quiz.models import Quiz
