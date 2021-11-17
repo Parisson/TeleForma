@@ -461,6 +461,7 @@ class UserXLSBook(object):
             profile = Profile(user=user)
             profile.save()
             student = Student(user=user)
+            student.platform_only = False
             student.save()
 
         profiles = Profile.objects.filter(user=user)
