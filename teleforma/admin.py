@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import csv
 import datetime
+from copy import deepcopy
+
 from teleforma.admin_filter import MultipleChoiceListFilter
 from teleforma.models.chat import ChatMessage
 
@@ -129,12 +131,15 @@ class BalanceFilter(admin.SimpleListFilter):
             return queryset.filter(balance__gt=0)
         else:
             return queryset
+
+
 class TrainingsFilter(MultipleChoiceListFilter):
     title = 'Formations'
     parameter_name = 'trainings__in'
 
     def lookups(self, request, model_admin):
         return [(training.id, str(training)) for training in Training.objects.all()]
+
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
@@ -235,6 +240,7 @@ class UserProfileAdmin(UserAdmin):
         )
     user_actions.short_description = 'Actions'
     user_actions.allow_tags = True
+
 
 @admin.action(description='Duplicate selected trainings')
 def duplicate_trainings(modeladmin, request, queryset):
@@ -365,6 +371,22 @@ def publish_conferences(modeladmin, request, queryset):
             media.save()
 
 
+@admin.action(description='Duplicate selected conferences')
+def duplicate_conferences(modeladmin, request, queryset):
+    for conference in queryset:
+        original_pid = conference.public_id
+        medias = deepcopy(conference.media.all())
+        conference.pk = None
+        conference.public_id = None
+        conference.comment += '\nCopy of ' + original_pid
+        conference.save()
+        for media in medias:
+            media.pk = None
+            media.save()
+            media.conference = conference
+            media.save()
+
+
 class ConferenceAdmin(admin.ModelAdmin):
     inlines = [MediaInline, ]
     exclude = ['readers']
@@ -372,7 +394,8 @@ class ConferenceAdmin(admin.ModelAdmin):
     list_filter = ('course', 'period', 'date_begin', 'session')
     search_fields = ['public_id', 'id',
                      'course__code', 'course__title', 'session']
-    actions = [publish_conferences, ]
+    actions = [publish_conferences, duplicate_conferences]
+    list_display = ['__str__', 'public_id', 'comment']
 
 
 class HomeAdmin(admin.ModelAdmin):
