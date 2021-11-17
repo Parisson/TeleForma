@@ -44,7 +44,7 @@ function gettrans(str){
  */
 
 /**
- * Class for managing translations in telemeta.
+ * Class for managing translations in teleforma.
  */
 
 

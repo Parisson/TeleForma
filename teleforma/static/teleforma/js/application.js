@@ -227,7 +227,7 @@ function setSelectedMenu(){
  *       If dictionary or array, it must contain only the above mentioned recognized types.
  *       So, eg, {[" a string"]} is fine, {[/asd/]} not
  *
- * method: the json method, eg "telemeta.update_marker". See base.py
+ * method: the json method, eg "teleforma.update_marker". See base.py
  *
  * onSuccesFcn(data, textStatus, jqXHR) OPTIONAL --IF MISSING, NOTHING HAPPENS --
  *    A function to be called if the request succeeds with the same syntax of jQuery's ajax onSuccess function.

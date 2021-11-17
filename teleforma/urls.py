@@ -55,8 +55,8 @@ media_transcoded = MediaTranscodedView
 urlpatterns = patterns('',
 
     # login / logout
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
-        name="telemeta-login"),
+    url(r'^loginteleforma 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
+        name="teleforma-login"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
         name="teleforma-login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', name="teleforma-logout"),

@@ -9,8 +9,6 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
 from django.core.urlresolvers import reverse
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import datetime

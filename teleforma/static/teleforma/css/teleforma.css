@@ -519,7 +519,7 @@ form.login .submit {
 /* Main navigation bar  (borrowed from Trac) */
 #menu {
     background-color: #000000 ;
-    background:no-repeat url(/static/telemeta/images/tw_hd.png) 0 0;
+    background:no-repeat url(/static/teleforma/images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
@@ -615,7 +615,7 @@ color:#FFF;
     width: 100%;
     float:left;
     border-bottom:0px solid #fff;
-    background: repeat-x url(/static/telemeta/images/tw_hd.png) 0 0;
+    background: repeat-x url(/static/teleforma/images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat;
 }

@@ -1,5 +1,4 @@
 {% extends "teleforma/course_media.html" %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load i18n %}
 
@@ -79,7 +78,7 @@
             <dt>Niveau</dt>
             <dd>{{ conference.level }}</dd>
             <dt>{% trans "Professor" %}</dt>
-            <dd><a href="{% url telemeta-profile-detail conference.professor.user.username %}"
+            <dd><a href="{% url teleforma-profile-detail conference.professor.user.username %}"
                     target="_blank">{{ conference.professor }}</a></dd>
             {% endif %}
             {% if conference.comment %}<dt>{% trans "Comment" %}</dt>

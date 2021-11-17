@@ -3,7 +3,6 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
-from telemeta.models import *
 from teleforma.models import *
 import datetime
 import csv

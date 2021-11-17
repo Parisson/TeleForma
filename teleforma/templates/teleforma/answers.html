@@ -1,6 +1,5 @@
-{% extends "telemeta/base.html" %}
+{% extends "teleforma/base.html" %}
 {% load i18n %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 
 {% block head_title %}{% trans "Answers" %} - {{ block.super }}{% endblock %}
@@ -36,7 +35,7 @@ var answerUtils = {
 
 {% block modules %}
 <div class="module">
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Answers" %}</a></h3>
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Answers" %}</a></h3>
  <div style="background: white;">
   <ul>
   {% block courses %}

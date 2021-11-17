@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from telemeta.util.unicode import UnicodeWriter
+from teleforma.utils.unicode import UnicodeWriter
 from teleforma.models import *
 from teleforma.templatetags.teleforma_tags import fancy_duration_shop_like, fancy_seconds
 from django.contrib import admin
@@ -408,6 +408,3 @@ admin.site.register(Room)
 
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
-
-# TELEMETA
-admin.site.register(MediaItemMarker, MediaItemMarkerAdmin)

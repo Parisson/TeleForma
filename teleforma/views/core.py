@@ -80,7 +80,6 @@ from jsonrpc.proxy import ServiceProxy
 
 from teleforma.models import *
 from teleforma.forms import *
-from telemeta.views import *
 from teleforma.context_processors import *
 import pages
 import jqchat.models

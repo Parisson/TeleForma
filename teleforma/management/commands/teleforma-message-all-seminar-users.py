@@ -10,8 +10,6 @@ from django.core.mail import send_mail, mail_admins
 from django.utils import translation
 
 from teleforma.views.pro import get_seminar_delta
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 import datetime
