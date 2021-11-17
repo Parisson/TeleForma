@@ -56,7 +56,7 @@ import os, datetime
 from cgi import escape
 from cStringIO import StringIO
 
-from xhtml2pdf import pisa
+import weasyprint
 
 import time
 import json
@@ -77,10 +77,11 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    from xhtml2pdf import pisa
+    print("Write PDF 2")
     src = StringIO(content.encode(encoding))
-    pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
-    return not pdf.err
+    src = weasyprint.HTML(string=content.encode(encoding), encoding=encoding)
+    dest.write_pdf(result)
+    return True
 
 def content_to_response(content, filename=None):
     """
@@ -694,7 +695,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
             template_name = 'myapp/myview.html'
             pdf_filename = 'report.pdf'
 
-    The pdf generation is automatically done by *xhtml2pdf* using
+    The pdf generation is automatically done by *weasyprint* using
     the *myapp/myview_pdf.html* template.
 
     Note that the pdf template takes the same context as the normal template.

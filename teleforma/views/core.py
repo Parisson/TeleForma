@@ -84,7 +84,6 @@ from telemeta.views import *
 from teleforma.context_processors import *
 import jqchat.models
 from xlwt import Workbook
-from xhtml2pdf import pisa
 
 try:
     from telecaster.models import *
