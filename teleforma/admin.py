@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import csv
 import datetime
+from copy import deepcopy
+
 from teleforma.admin_filter import MultipleChoiceListFilter
 from teleforma.models.chat import ChatMessage
 
