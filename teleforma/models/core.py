@@ -833,7 +833,7 @@ class Media(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
-        ordering = ['-conference__session', '-conference__date_begin',]
+        ordering = ['-date_modified', '-conference__session',]
 
 
 class NamePaginator(object):
