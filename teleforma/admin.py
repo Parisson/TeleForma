@@ -395,6 +395,7 @@ class ConferenceAdmin(admin.ModelAdmin):
     search_fields = ['public_id', 'id',
                      'course__code', 'course__title', 'session']
     actions = [publish_conferences, duplicate_conferences]
+    list_display = ['__str__', 'code', 'comment']
 
 
 class HomeAdmin(admin.ModelAdmin):
