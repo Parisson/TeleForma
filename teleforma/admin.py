@@ -369,9 +369,9 @@ class ConferenceAdmin(admin.ModelAdmin):
     inlines = [MediaInline, ]
     exclude = ['readers']
     list_per_page = 30
-    list_filter = ('course', 'period', 'date_begin', 'session')
+    list_filter = ('course', 'period', 'date_begin', 'session', 'course_type')
     search_fields = ['public_id', 'id',
-                     'course__code', 'course__title', 'session']
+                     'course__code', 'course__title', 'session',]
     actions = [publish_conferences, ]
 
 
