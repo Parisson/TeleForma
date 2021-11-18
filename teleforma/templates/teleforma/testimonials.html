@@ -1,6 +1,5 @@
-{% extends "telemeta/base.html" %}
+{% extends "teleforma/base.html" %}
 {% load i18n %}
-{% load telemeta_utils %}
 {% load teleforma_tags %}
 {% load pagination_tags %}
 
@@ -20,7 +19,7 @@
 {% block modules %}
 <div class="module">
 
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
@@ -53,7 +52,7 @@
  {% for testimonial in object_list %}
   <div class="course_content">
     <div class="course_subtitle">
-      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% if testimonial.seminar %}{{ testimonial.seminar.title }}{% else %}{{ testimonial.title }}{% endif %}</h3>
+      <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% if testimonial.seminar %}{{ testimonial.seminar.title }}{% else %}{{ testimonial.title }}{% endif %}</h3>
     </div>
 
    <table class="listing" width="100%">

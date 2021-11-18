@@ -33,29 +33,26 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import os.path
-from django.conf.urls.defaults import *
-from django.views.generic import *
-from django.views.generic.base import *
-from teleforma.models import *
-from teleforma.views import *
-from teleforma.forms import *
-from registration.views import *
-import forms_builder.forms.urls
+from django.conf.urls.defaults import patterns, url, include
 from jsonrpc import jsonrpc_site
-from longerusername.forms import AuthenticationForm
+from teleforma.views.core import ConferenceRecordView, ConferenceView, CourseView, HelpView, MediaTranscodedView, MediaView, join_webclass
+from teleforma.views.crfpa import UserLoginView, UsersCourseView, UsersIejView, UsersTrainingView, UsersView, UsersXLSExport
+from teleforma.views.pro import AnswerDetailView, AnswerDetailViewTest, AnswerView, AnswersPendingView, AnswersTreatedView, QuizQuestionView, SeminarDocumentDownloadView, SeminarDocumentView, SeminarMediaView, SeminarView, SeminarsView, TestimonialDownloadView, TestimonialKnowledgeView, TestimonialListView, TestimonialPaybackView, TestimonialView, evaluation_form_detail, webclass_bbb_webhook
+from teleforma.views.profile import ProfileView
+from teleforma.views.home import HomeView
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 user_export = UsersXLSExport()
 profile_view = ProfileView()
-document = SeminarDocumentView()
 media = MediaView()
 home_view = HomeView()
 media_transcoded = MediaTranscodedView
 
 urlpatterns = patterns('',
 
+    url(r'^$', SeminarsView.as_view(), name="home"),
     # login / logout
-    url(r'^loginteleforma 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
         name="teleforma-login"),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
         name="teleforma-login"),
@@ -81,6 +78,8 @@ urlpatterns = patterns('',
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
+    # Flat pages
+    url(r'^pages/(?P<path>.*)$', home_view.render_flatpage, name="teleforma-flatpage"),
 
     # Desk
     url(r'^desk/$', SeminarsView.as_view(), name="teleforma-desk"),

@@ -176,3 +176,7 @@ class DurationField(models.Field):
         defaults = {'form_class': forms.CharField}
         defaults.update(kwargs)
         return super(DurationField, self).formfield(**defaults)
+
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^teleforma\.fields\.DurationField"])

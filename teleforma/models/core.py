@@ -35,10 +35,6 @@
 """
 
 import os
-import re
-import pwd
-import time
-import urllib
 import string
 import datetime
 import mimetypes
@@ -70,6 +66,7 @@ from django.dispatch import receiver
 from jxmlease import XMLListNode, XMLDictNode
 
 from teleforma.bbb_utils import bbb, register_web_hook
+from telemeta.models.location import Location
 
 HAS_TELEMETA = False
 try:
@@ -816,8 +813,8 @@ class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin)
     
     concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
     level           = models.CharField(_('level'), max_length=255, blank=True)
-    location        = WeakForeignKey(Location, related_name='location', verbose_name=_('location'))
-    city            = WeakForeignKey(Location, related_name='city', verbose_name=_('city'))
+    location        = models.ForeignKey(Location, related_name='location', verbose_name=_('location'), on_delete=models.SET_NULL, blank=True, null=True)
+    city            = models.ForeignKey(Location, related_name='city', verbose_name=_('city'), on_delete=models.SET_NULL, blank=True, null=True)
     room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
                                  null=True, blank=True)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)

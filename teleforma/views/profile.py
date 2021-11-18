@@ -34,12 +34,15 @@
 # # Authors: Olivier Guilyardi <olivier@samalyse.com>
 # #          Guillaume Pellerin <yomguy@parisson.com>
 
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from teleforma.models.crfpa import Profile as UserProfile
+from teleforma.models.profile import UserProfile
 from teleforma.forms import UserProfileForm
+from django.utils.translation import ugettext
 
 class ProfileView(object):
     """Provide Collections web UI methods"""

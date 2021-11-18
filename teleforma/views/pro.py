@@ -218,6 +218,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = context['seminar']
+
         user = self.request.user
 
         validated = seminar_validated(user, seminar)

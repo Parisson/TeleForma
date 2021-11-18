@@ -411,22 +411,10 @@ else:
     set_dynamic_settings(globals())
 
 
-TELEMETA_ORGANIZATION = 'Pro-Barreau'
-TELEMETA_SUBJECTS = ('test', 'telemeta', 'sandbox')
-TELEMETA_DESCRIPTION = "Telemeta TEST sandbox"
-TELEMETA_GMAP_KEY = 'ABQIAAAArg7eSfnfTkBRma8glnGrlxRVbMrhnNNvToCbZQtWdaMbZTA_3RRGObu5PDoiBImgalVnnLU2yN4RMA'
-TELEMETA_CACHE_DIR = MEDIA_ROOT + 'cache'
-TELEMETA_EXPORT_CACHE_DIR = TELEMETA_CACHE_DIR + "/export"
-TELEMETA_DATA_CACHE_DIR = TELEMETA_CACHE_DIR + "/data"
+TELEFORMA_ORGANIZATION = 'Pro-Barreau'
+TELEFORMA_DESCRIPTION = "E-learning Pro-Barreau"
 
-TELEMETA_DOWNLOAD_ENABLED = True
-TELEMETA_STREAMING_FORMATS = ('mp3', 'webm')
-TELEMETA_DOWNLOAD_FORMATS = ('wav', 'ogg', 'webm')
-TELEMETA_PUBLIC_ACCESS_PERIOD = 51
-TELEMETA_DEFAULT_GRAPHER_SIZES = ['360x130', '640x130']
-TELEMETA_DEFAULT_GRAPHER_ID = 'waveform_contour_wh'
-
-AUTH_PROFILE_MODULE = 'telemeta.userprofile'
+AUTH_PROFILE_MODULE = 'teleforma.models.profile.UserProfile'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -435,7 +423,7 @@ EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'webmaster@parisson.com'
 SERVER_EMAIL = 'webmaster@parisson.com'
 ADMIN_USERNAME = 'admin'
-EMAIL_SUBJECT_PREFIX = '[' + TELEMETA_ORGANIZATION.decode('utf8') + '] '
+EMAIL_SUBJECT_PREFIX = '[' + TELEFORMA_ORGANIZATION.decode('utf8') + '] '
 
 POSTMAN_AUTO_MODERATE_AS = True
 

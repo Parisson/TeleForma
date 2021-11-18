@@ -181,7 +181,6 @@ textarea {
     background:no-repeat url(/static/teleforma/images/tw_hd.png) 0 0;
     background-color:#ebebeb;
     background-repeat:repeat; 
-	border-top: .25em solid #6a0307;
 }
 
 #content_header, #header{
@@ -528,6 +527,7 @@ form.login .submit {
 }
 
 #menu a, #menu a:visited{
+    color: #fff;
     display:inline-block;
     text-decoration:none;
     border-bottom-width:.5em;
