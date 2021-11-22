@@ -24,11 +24,17 @@ class WebclassProfessorAppointments(TemplateView):
                         self).get_context_data(**kwargs)
 
         user = self.request.user
-        if not user.professor:
+        if not user.professor.all() and not user.is_superuser:
             return HttpResponse('Unauthorized', status=401)
         today = datetime.today()
-        context['slots'] = WebclassSlot.published.filter(
-            professor=user.professor.get(), webclass__status=3, webclass__end_date__gte=today).order_by('day', 'start_hour')
+        query = {
+            'webclass__status': 3,
+            'webclass__end_date__gte': today
+        }
+        if user.professor.all():
+            query['professor'] = user.professor.get()
+        context['slots'] = WebclassSlot.published.filter(**query).order_by('day', 'start_hour')
+        context['is_superuser'] = user.is_superuser
         return context
 
 
@@ -151,6 +157,7 @@ class WebclassAppointment(View):
     #     return data
 
 
+
 class WebclassRecordView(TemplateView):
     template_name = 'webclass/record.html'
 
@@ -207,3 +214,20 @@ def join_webclass(request, pk):
         return redirect(webclass_slot.get_join_webclass_url(request, user))
     else:
         return HttpResponse('Unauthorized', status=401)
+
+
+@access_required
+def unregister(request, pk):
+    """
+    Unregister to a webclass
+    """
+    webclass_slot = WebclassSlot.objects.get(pk=int(pk))
+    user = request.user
+
+    if user in webclass_slot.participants.all():
+        webclass_slot.participants.remove(user)
+
+    messages.add_message(request, messages.INFO,
+                                 "Votre réservation a été annulé.")
+    # redirect to register form
+    return redirect(reverse("teleforma-webclass-appointments", kwargs={'pk':webclass_slot.webclass.id}))

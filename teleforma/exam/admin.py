@@ -55,7 +55,7 @@ class ScriptAdmin(admin.ModelAdmin):
 
 
     def render_change_form(self, request, context, *args, **kwargs):
-         context['adminform'].form.fields['corrector'].queryset = User.objects.filter(is_active=True).filter(Q(corrector__isnull=False) | Q(is_superuser=True))
+         context['adminform'].form.fields['corrector'].queryset = User.objects.filter(is_active=True).filter(Q(corrector__isnull=False) | Q(is_superuser=True) | Q(corrector__isnull=False))
          return super(ScriptAdmin, self).render_change_form(request, context, *args, **kwargs)
 
     def author_name(self, instance):

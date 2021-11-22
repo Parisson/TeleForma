@@ -215,6 +215,7 @@
 
                 {% if ap_period.appointment.slot.mode == 'distance' %}
                     <p>Vous avez choisi de participer à ce rendez-vous <strong>à distance</strong>.</p>
+                    <p>Lien vers la conférence : <a href="{{ ap_period.appointment.jury.bbb_room }}">{{ ap_period.appointment.jury.bbb_room }}</a>
                 {% endif %}
             </p>
 

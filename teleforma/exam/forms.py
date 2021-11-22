@@ -18,11 +18,12 @@ class ScriptForm(ModelForm):
     def __init__(self, *args, **kwargs):
         period = kwargs.pop('period')
         super(ScriptForm, self).__init__(*args, **kwargs)
-        self.fields['score'].localize = True
+        self.fields['score'].localize = False
         nb = period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         self.fields['session'] = forms.ChoiceField(choices=get_n_choices(nb + 1),
                                                    validators=[validate_session(nb)])
         self.fields['file'].required = True
+        self.fields['score'].widget.attrs['onkeydown'] = "return event.key != 'Enter';"
 
     class Meta:
         model = Script
@@ -40,6 +41,7 @@ class ScoreForm(ScriptForm):
 
 
 class MassScoreForm(ScoreForm):
+
     def __init__(self, *args, **kwargs):
         super(MassScoreForm, self).__init__(*args, **kwargs)
         self.table_errors = {}
@@ -57,7 +59,7 @@ class MassScoreForm(ScoreForm):
                 if student:
                     score = self.data[key.replace('student', 'score')]
                     try:
-                        score = int(score)
+                        score = float(score.replace(',', '.'))
                     except ValueError:
                         errors[key] = u"Note invalide"
                         continue

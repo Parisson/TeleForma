@@ -33,6 +33,7 @@ MANAGERS = ADMINS
 ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
     'staging.docker.e-learning.crfpa.pre-barreau.parisson.com',
     'e-learning.crfpa.pre-barreau.com',
+    'prod.docker.e-learning.crfpa.pre-barreau.parisson.com',
 ]
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
@@ -463,14 +464,16 @@ JAZZMIN_UI_TWEAKS = {
 # Sherlock's online payment
 PAYMENT_SHERLOCKS_PATH='/srv/sherlocks'
 
-PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "014295303911111",
-                                         'Estivale': "014295303911111",
-                                         'Pré-estivale': "014295303911111", },
+PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "040109417200053",
+                                  'Annuelle': "040109417200053",
+                                  'Estivale': "040109417200054", },                                         
                        'merchant_country': 'fr',
                        'currency_code': '978',
                        'language': 'fr'
 }
 
+
+ORAL_OPTION_PRICE = 250
 
 if DEBUG_TOOLBAR:
     def show_toolbar(request):

@@ -289,15 +289,17 @@ class Script(BaseResource):
 
     @property
     def title(self):
-        if self.type:
+        if self.type and self.course:
             title = [self.course.title, self.type.name, _(
                 "Session") + ' ' + self.session, str(self.date_added)]
-        else:
+        elif self.course:
             title = [self.course.title, _(
                 "Session") + ' ' + self.session, str(self.date_added)]
+        else:
+            title = [self.session, str(self.date_added)]
         if self.author:
             title.append(str(self.author.first_name) +
-                         ' ' + str(self.author.last_name))
+                        ' ' + str(self.author.last_name))
         return ' - '.join(title)
 
     def __str__(self):

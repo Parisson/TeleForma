@@ -337,8 +337,21 @@ class CourseListView(CourseAccessMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         context['list_view'] = True
-        context['courses'] = sorted(
-            context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
+
+        courses = [course['course'] for course in context['all_courses']]
+
+        # get last published media / document
+        last_published = sorted([
+            Media.objects.filter(period=self.period, is_published=True, course__in=courses).order_by("-date_added")[0],
+            Document.objects.filter(periods=self.period, is_published=True, course__in=courses).order_by("-date_added")[0],
+        ], key=lambda k: k.date_added, reverse=True)[0]
+
+        # get course with the latest published media / document
+        for course in context['all_courses']:
+            if course['course'].id == last_published.course.id:
+                break
+        context['courses'] = [course]
+
         user = self.request.user
         is_student = user.student.all().count()
         # appointments_open = False

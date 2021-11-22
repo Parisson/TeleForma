@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http.response import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext
@@ -20,7 +20,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from teleforma.decorators import access_required
+from teleforma.decorators import access_required, staff_required
 from teleforma.models.crfpa import Student
 from teleforma.views.core import CourseAccessMixin, get_courses
 
@@ -318,12 +318,50 @@ class ScriptUpdateView(UpdateView):
 
 class QuotasView(ListView):
 
-    model = Quota
     template_name = 'exam/quotas.html'
 
-    @method_decorator(access_required)
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.professor = self.request.user.professor.get()
+        self.courses = self.professor.courses.all()
+        self.period = get_object_or_404(
+            Period, id=int(self.kwargs['period_id']))
+        self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
+        self.session = self.request.GET.get('session')
+        self.course = self.request.GET.get('course')
+        self.corrector = self.request.GET.get('corrector')
+
+    def get_base_queryset(self):
+        return Quota.objects.filter(period=self.period, course__in=self.courses)
+
+    def get_queryset(self):
+        query = self.get_base_queryset()
+        if self.session:
+            query = query.filter(session=self.session)
+        if self.course:
+            query = query.filter(course__id=self.course)
+        if self.corrector:
+            query = query.filter(corrector__id=self.corrector)
+        return query.order_by('course', 'session', 'corrector', 'date_start')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        correctors = User.objects.filter(
+            quotas__in=self.get_base_queryset()).order_by('last_name').distinct()
+        context['correctors_list'] = [
+            (str(corrector.id), corrector.get_full_name()) for corrector in correctors]
+        context['corrector_selected'] = self.corrector
+        session_choices = get_n_choices(self.nb_script + 1)
+        context['sessions_list'] = session_choices
+        context['session_selected'] = self.session
+        context['courses_list'] = [
+            (str(course.id), course.title) for course in self.courses]
+        context['course_selected'] = self.course
+        return context
+
+    @staff_required
     def dispatch(self, *args, **kwargs):
-        return super(QuotasView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
 
 class ScriptsScoreAllView(ScriptsTreatedView):
@@ -526,7 +564,7 @@ class MassScoreCreateView(ScoreCreateView):
 
     def get_context_data(self, **kwargs):
         context = super(MassScoreCreateView, self).get_context_data(**kwargs)
-        context['create_fields'] = ['course', 'session', 'type']
+        context['create_fields'] = ['course', 'session']
         context['rows'] = [{'student_name': 'student%d' % i,
                             'score_name': 'score%d' % i} for i in range(20)]
         for row in context['rows']:
@@ -544,9 +582,9 @@ class MassScoreCreateView(ScoreCreateView):
                 row['student_name'], None)
         return context
 
-    @method_decorator(permission_required('is_superuser'))
-    def dispatch(self, *args, **kwargs):
-        return super(ScoreCreateView, self).dispatch(*args, **kwargs)
+    @staff_required
+    def dispatch(self, request, *args, **kwargs):
+        return super(ScoreCreateView, self).dispatch(request, *args, **kwargs)
 
 
 def get_mass_students(request):

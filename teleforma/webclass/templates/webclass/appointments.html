@@ -60,7 +60,7 @@
             <tr>
                 <th>Horaire</th>
                 <th>Professeur</th>
-                <th>Places restantes</th>
+                {% comment %} <th>Places restantes</th> {% endcomment %}
                 <th>Inscription</th>
             </tr>
         </thead>
@@ -73,9 +73,9 @@
                 <td>
                 {{slot.professor}}
                 </td>
-                <td>
+                {% comment %} <td>
                 {{slot.remaining_participant_slot}}
-                </td>
+                </td> {% endcomment %}
 
                 <td>
                     <form class="booking_form" method="POST">

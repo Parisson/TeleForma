@@ -38,6 +38,7 @@ import datetime
 import mimetypes
 import os
 import string
+import random
 from teleforma.utils import guess_mimetypes
 
 import django.db.models as models
@@ -46,7 +47,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import InvalidPage
 from django.db import models
 from django.forms.fields import FileField
-from django.template.defaultfilters import random, slugify
+from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 # from quiz.models import Quiz
@@ -204,6 +205,7 @@ class CourseType(models.Model):
     name = models.CharField(_('name'), max_length=255)
     description = models.CharField(
         _('description'), max_length=255, blank=True)
+    order = models.IntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
         return self.name
@@ -211,6 +213,7 @@ class CourseType(models.Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'course_type'
         verbose_name = _('course type')
+        ordering = ['order']
 
     def to_dict(self):
         dict = {'name': self.name,
@@ -830,7 +833,7 @@ class Media(MediaBase):
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
-        ordering = ['-date_modified', '-conference__session']
+        ordering = ['-date_modified', '-conference__session',]
 
 
 class NamePaginator(object):

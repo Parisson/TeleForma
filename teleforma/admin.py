@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import csv
 import datetime
+from copy import deepcopy
+
 from teleforma.admin_filter import MultipleChoiceListFilter
 from teleforma.models.chat import ChatMessage
 
@@ -9,8 +11,11 @@ from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.core import serializers
+from django.urls import reverse
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import format_html
+
 from collections import OrderedDict
 
 from .exam.admin import QuotaInline
@@ -25,6 +30,7 @@ from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
                            Student, Training)
 from .models.messages import GroupedMessage, StudentGroup
 from .views.crfpa import CorrectorXLSBook, UserXLSBook
+from .views.core import get_default_period
 
 from django.contrib.admin.helpers import ActionForm
 from django import forms
@@ -125,12 +131,15 @@ class BalanceFilter(admin.SimpleListFilter):
             return queryset.filter(balance__gt=0)
         else:
             return queryset
+
+
 class TrainingsFilter(MultipleChoiceListFilter):
     title = 'Formations'
     parameter_name = 'trainings__in'
 
     def lookups(self, request, model_admin):
         return [(training.id, str(training)) for training in Training.objects.all()]
+
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
@@ -220,13 +229,51 @@ class ProfileInline(admin.StackedInline):
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfileInline, StudentInline, QuotaInline]
     search_fields = ['username', 'email']
+    list_display = UserAdmin.list_display + (
+        'user_actions', 
+    )
+    def user_actions(self, obj):
+        return format_html(
+            '<a class="btn btn-primary btn-sm" href="{}">Se connecter en tant que</a>',
+            reverse('teleforma-user-login', args=[obj.pk]),
+            reverse('teleforma-user-login', args=[obj.pk]),
+        )
+    user_actions.short_description = 'Actions'
+    user_actions.allow_tags = True
 
+
+@admin.action(description='Duplicate selected trainings')
+def duplicate_trainings(modeladmin, request, queryset):
+    from copy import deepcopy
+    properties = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
+                         'written_speciality', 'oral_1', 'oral_2', 'options', 'magistral']
+    for training in queryset:
+        t = deepcopy(training)
+        t.pk = None
+        t.code = training.code + ' - ' + 'COPY'
+        t.save()
+        t.synthesis_note.add(*training.synthesis_note.all())
+        t.obligation.add(*training.obligation.all())
+        t.procedure.add(*training.procedure.all())
+        t.oral_speciality.add(*training.oral_speciality.all())
+        t.written_speciality.add(*training.written_speciality.all())
+        t.oral_1.add(*training.oral_1.all())
+        t.oral_2.add(*training.oral_2.all())
+        t.options.add(*training.options.all())
+        t.magistral.add(*training.magistral.all())
 
 class TrainingAdmin(admin.ModelAdmin):
     model = Training
     filter_horizontal = ['synthesis_note', 'obligation', 'procedure', 'oral_speciality',
                          'written_speciality', 'oral_1', 'oral_2', 'magistral']
     exclude = ['options']
+    actions = [duplicate_trainings,]
+    list_display = ['__str__', 'code' ]
+
+class CourseTypeAdmin(admin.ModelAdmin):
+    model = CourseType
+    list_display = ('name', 'order')
+    ordering = ('order',)
 
 
 class CourseAdmin(admin.ModelAdmin):
@@ -294,20 +341,61 @@ def duplicate_medias(modeladmin, request, queryset):
 
 
 class MediaAdmin(admin.ModelAdmin):
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(MediaAdmin, self).get_form(request, obj, **kwargs)
+        periods = Period.objects.all()
+        period = get_default_period(periods)
+        form.base_fields['conference'].queryset = Conference.objects.filter(period=period)
+        return form
+
     list_per_page = 30
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code']
-    list_filter = (ConferenceDateBeginFilter, )
+    list_filter = ['course', 'course_type', 'period', 'type', 'date_added', ConferenceDateBeginFilter, ]
     inlines = [MediaTranscodedInline]
     actions = [duplicate_medias,]
+    exlude = ['readers', ]
+
+
+class MediaInline(admin.StackedInline):
+    model = Media
+    exclude = ['readers', ]
+
+
+@admin.action(description='Publish selected conferences')
+def publish_conferences(modeladmin, request, queryset):
+    for conference in queryset:
+        for media in conference.media.all():
+            media.is_published = True
+            media.save()
+
+
+@admin.action(description='Duplicate selected conferences')
+def duplicate_conferences(modeladmin, request, queryset):
+    for conference in queryset:
+        original_pid = conference.public_id
+        medias = deepcopy(conference.media.all())
+        conference.pk = None
+        conference.public_id = None
+        conference.comment += '\nCopy of ' + original_pid
+        conference.save()
+        for media in medias:
+            media.pk = None
+            media.save()
+            media.conference = conference
+            media.save()
 
 
 class ConferenceAdmin(admin.ModelAdmin):
+    inlines = [MediaInline, ]
     exclude = ['readers']
     list_per_page = 30
-    list_filter = ('course', 'period', 'date_begin', 'session')
+    list_filter = ('course', 'period', 'date_begin', 'session', 'course_type')
     search_fields = ['public_id', 'id',
                      'course__code', 'course__title', 'session']
+    actions = [publish_conferences, duplicate_conferences]
+    list_display = ['__str__', 'date_begin', 'public_id', 'comment']
 
 
 class HomeAdmin(admin.ModelAdmin):
@@ -318,7 +406,7 @@ class HomeAdmin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(HomeAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['video'].queryset = Media.objects.filter(type='webm')
+        form.base_fields['video'].queryset = Media.objects.filter(type__in=('webm', 'mp4'), is_published=True, )
         return form
 
 
@@ -430,7 +518,7 @@ admin.site.register(Media, MediaAdmin)
 admin.site.register(Room)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(Training, TrainingAdmin)
-admin.site.register(CourseType)
+admin.site.register(CourseType, CourseTypeAdmin)
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
 admin.site.register(Student, StudentAdmin)

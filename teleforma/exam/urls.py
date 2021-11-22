@@ -32,7 +32,7 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-from teleforma.exam.views import MassScoreCreateView, ScoreCreateView, ScriptCreateView, ScriptView, ScriptsPendingView, ScriptsRejectedView, ScriptsScoreAllView, ScriptsScoreCourseView, ScriptsTreatedView, ScriptsView, get_correctors, get_mass_students
+from teleforma.exam.views import MassScoreCreateView, ScoreCreateView, ScriptCreateView, ScriptView, ScriptsPendingView, ScriptsRejectedView, ScriptsScoreAllView, ScriptsScoreCourseView, ScriptsTreatedView, ScriptsView, get_correctors, get_mass_students, QuotasView
 from django.conf.urls import url
 
 
@@ -51,4 +51,9 @@ urlpatterns = [
 
     url(r'^scripts/get-correctors/$', get_correctors, name="teleforma-exam-get-correctors"),
     url(r'^scripts/get-mass-students/$', get_mass_students, name="teleforma-exam-get-mass-students"),
+
+    url(r'^quotas/periods/(?P<period_id>.*)/list/$',
+        QuotasView.as_view(),
+        name="teleforma-exam-quotas"),
+
 ]

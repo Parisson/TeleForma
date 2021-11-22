@@ -1,3 +1,13 @@
 {
-    "python.pythonPath": "py_env/bin/python3"
+    "python.pythonPath": "py_env/bin/python3",
+    "prettier.disableLanguages": ["django-html"],
+    "beautify.language": {
+        "html": [
+            "django-html"
+        ]
+    },
+    "[django-html]": {
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": "HookyQR.beautify"
+    }
 }

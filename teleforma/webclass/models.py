@@ -72,7 +72,7 @@ def get_records_from_bbb(**kwargs):
                         pk=int(recording['metadata'].get('slotid', -1)))
                 except WebclassSlot.DoesNotExist:
                     # this happen if the slot is deleted in django admin
-                    continue
+                    pass
                 data.update({
                     'period_id': int(recording['metadata'].get('periodid', -1)),
                     'course_id': int(recording['metadata'].get('courseid', -1)),

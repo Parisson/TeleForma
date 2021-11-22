@@ -36,6 +36,8 @@ class WebclassRecordsForm(Form):
                 # for each bbb record for the current course, add an option to the field
 
                 for record in records:
+                    if not record['slot']:
+                        continue
                     webclass_slot = WebclassSlot.objects.get(
                         pk=record['slot'].id)
                     label = u"%s à %s - %s" % (record['start_date'].strftime(

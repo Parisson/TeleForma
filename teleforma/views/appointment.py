@@ -37,13 +37,21 @@ class Appointments(View):
 
         # Get info
         ap_periods = []
+        platform_only = user.student.get().platform_only
         for ap_period in AppointmentPeriod.objects.filter(periods__id=period_id, course_id=course_id).order_by('id'):
             if ap_period.is_open:
+                modes = ap_period.modes
+                # platformonly student can't subscribe to presentiel appointments
+                # if platform_only:
+                #     try:
+                #         modes.remove(('presentiel', 'Presentiel'))
+                #     except KeyError:
+                #         pass
                 ap_periods.append({
-                    'days':ap_period.days,
+                    'days':ap_period.days(platform_only),
                     'name': ap_period.name,
                     'appointment':ap_period.get_appointment(user),
-                    'modes':ap_period.modes,
+                    'modes':modes,
                     'course': ap_period.course,
                     'show_modes':len(ap_period.modes) > 1
                 })
@@ -102,7 +110,9 @@ class Appointments(View):
             ap.student = user
             try:
                 ap.save()
-                cache.delete('%s_%s_%s-%s' % (CACHE_KEY, ap.slot.appointment_period.id, ap.slot.date, ap.slot.mode))
+                cache.delete('%s_%s_%s-%s-True' % (CACHE_KEY, ap.slot.appointment_period.id, ap.slot.date, ap.slot.mode))
+                cache.delete('%s_%s_%s-%s-None' % (CACHE_KEY, ap.slot.appointment_period.id, ap.slot.date, ap.slot.mode))
+                cache.delete('%s_%s_%s-%s-False' % (CACHE_KEY, ap.slot.appointment_period.id, ap.slot.date, ap.slot.mode))
                 self.send_ap_mail(ap)
             except IntegrityError:
                 # Duplicate appointment caught by the db
@@ -162,7 +172,9 @@ def cancel_appointment(request):
         messages.add_message(request, messages.ERROR, 'Il est trop tard pour annuler ce rendez-vous.')
         return redirect('teleforma-appointments', period_id=period_id, course_id=course_id)
 
-    cache.delete('%s_%s_%s-%s' % (CACHE_KEY, app.slot.appointment_period.id, app.slot.date, app.slot.mode))
+    cache.delete('%s_%s_%s-%s-True' % (CACHE_KEY, app.slot.appointment_period.id, app.slot.date, app.slot.mode))
+    cache.delete('%s_%s_%s-%s-None' % (CACHE_KEY, app.slot.appointment_period.id, app.slot.date, app.slot.mode))
+    cache.delete('%s_%s_%s-%s-False' % (CACHE_KEY, app.slot.appointment_period.id, app.slot.date, app.slot.mode))
     app.delete()
     messages.add_message(request, messages.INFO, 'Votre réservation a été annulé.')
     return redirect('teleforma-appointments', period_id=period_id, course_id=course_id)

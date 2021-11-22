@@ -121,10 +121,23 @@
           </li>
           {% endif %}
           {% endif %}
-
+          
           {% if user.professor.count %}
+          <li><a href="#quotas#" class="green">&nbsp;{% trans "Quotas" %}</a>
+            <ul>
+              {% for period in periods %}
+              <li><a href="{% url 'teleforma-exam-quotas' period.id %}" class="green">{{ period.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endif %}
+
+          {% if user.professor.count or user.is_superuser %}
           <li><a href="{% url 'teleforma-webclass-professor' %}" class="yellow">Webclass</a></li>
           {% endif %}
+
+
 
           {% if periods|length == 1 %}
           <li><a href="{% url 'teleforma-exam-scripts-scores-all' periods.0.id %}"

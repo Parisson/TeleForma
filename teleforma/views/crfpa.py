@@ -57,6 +57,7 @@ from django.views.generic.list import ListView
 from postman.forms import AnonymousWriteForm
 from postman.views import WriteView as PostmanWriteView
 from xlwt import Workbook
+from django.conf import settings
 
 from ..decorators import access_required
 from ..forms import (CorrectorForm, NewsItemForm, UserForm, WriteForm,
@@ -67,8 +68,6 @@ from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
 from ..views.core import (PDFTemplateResponseMixin, format_courses,
                           get_courses, get_periods)
 from ..views.profile import ProfileView
-
-ORAL_OPTION_PRICE = 250
 
 def get_course_code(obj):
     if obj:
@@ -139,7 +138,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
 
     elif user.is_staff or user.is_superuser:
         courses = format_courses(courses, queryset=Course.objects.all(),
-                    types=CourseType.objects)
+                    types=CourseType.objects.all())
     else:
         courses = None
 
@@ -450,18 +449,19 @@ class UserXLSBook(object):
             for user in users:
                 students = Student.objects.filter(user=user, period=period)
                 if students:
-                    print(last_name.encode('utf8') + ' : updating')
+                    print(last_name + ' : updating')
                     student = students[0]
                     break
 
         if not student:
-            print(last_name.encode('utf8') + ' : creating')
+            print(last_name + ' : creating')
             username = get_unique_username(first_name, last_name)
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
             user.save()
             profile = Profile(user=user)
             profile.save()
             student = Student(user=user)
+            student.platform_only = False
             student.save()
 
         profiles = Profile.objects.filter(user=user)
@@ -526,7 +526,7 @@ class UserXLSBook(object):
             payments = Payment.objects.filter(student=student, month=month[0])
             if not payments and amount:
                 payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type, online_paid=True)
-                print(last_name.encode('utf8') + ' : add payment')
+                print(last_name + ' : add payment')
                 payment.save()
                 student.restricted = False
             i += 2
@@ -877,7 +877,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         oral_1 = student.oral_1 and student.oral_1.title != 'Aucune'
 
         if oral_1:
-            substract += ORAL_OPTION_PRICE
+            substract += settings.ORAL_OPTION_PRICE
 
         items.append({ 'label': label,
                        'unit_price': student.total_fees - substract - student.total_discount,
@@ -885,7 +885,7 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
                        'discount': student.total_discount, }, )
         if oral_1:
             items.append({ 'label': "<b>Option langue</b>",
-                           'unit_price': ORAL_OPTION_PRICE,
+                           'unit_price': settings.ORAL_OPTION_PRICE,
                            'amount': 1,
                            'discount': 0, }, )
         for item in items:
