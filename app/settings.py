@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
     'staging.docker.e-learning.crfpa.pre-barreau.parisson.com',
     'e-learning.crfpa.pre-barreau.com',
     'prod.docker.e-learning.crfpa.pre-barreau.parisson.com',
+    'recovery.docker.e-learning.crfpa.pre-barreau.parisson.com',
 ]
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
