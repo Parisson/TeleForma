@@ -40,8 +40,8 @@ class Command(BaseCommand):
 
         user_tmp, c = User.objects.using(self.db_to).get_or_create(username='tmp')
 
-        self.logger.logger.info('Number of student in from ' + str(students_from.count()))
-        self.logger.logger.info('Number of student in to' + str(students_to.count()))
+        self.logger.logger.info('Number of student in from : ' + str(students_from.count()))
+        self.logger.logger.info('Number of student in to : ' + str(students_to.count()))
 
         students_to_email = [student.user.email for student in students_to if (hasattr(student, 'user') and hasattr(student.user, 'email'))]
 
@@ -54,7 +54,7 @@ class Command(BaseCommand):
                     if not student.user.email in students_to_email:
                         new_students.append(student)
 
-        self.logger.logger.info('Number of new students to copy' + str(len(new_students)) + '\n')
+        self.logger.logger.info('Number of new students to copy : ' + str(len(new_students)) + '\n')
 
         for student in new_students[100:]:
             user = deepcopy(student.user)

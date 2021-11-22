@@ -138,7 +138,7 @@ class Student(models.Model):
     "A student profile"
 
     user = models.ForeignKey(User, related_name='student',
-                             verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
+                             verbose_name=_('user'), unique=True, on_delete=models.CASCADE, null=True)
     restricted = models.BooleanField(
         "Accès restreint", help_text="Cocher cette case lorsque vous voulez que l'étudiant puisse se connecter, mais ne pas avoir accès aux cours.", default=False)
     portrait = models.ImageField(
