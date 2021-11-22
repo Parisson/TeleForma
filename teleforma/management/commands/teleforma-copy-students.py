@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
         self.logger.logger.info('Number of new students to copy : ' + str(len(new_students)) + '\n')
 
-        for student in new_students[100:]:
+        for student in new_students:
             user = deepcopy(student.user)
             payments = deepcopy(student.payments.all())
             discounts = deepcopy(student.discounts.all())
