@@ -418,7 +418,7 @@ class WebclassRecord(models.Model):
             record_ids.add(record.record_id)
             category_mapping[record.record_id] = record.category
         if not record_ids:
-            return []
+            return {}
         records = get_records_from_bbb(recording_id=','.join(record_ids))
 
         # group records by category
