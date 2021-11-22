@@ -22,7 +22,7 @@ version: '3'
 
 services:
   app:
-      command: /bin/sh bin/app.sh --runserver
+      command: /bin/sh /srv/app/wsgi.sh --runserver
       env_file:
         - 'env/debug.env'
       ports:

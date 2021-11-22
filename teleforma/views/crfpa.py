@@ -449,18 +449,19 @@ class UserXLSBook(object):
             for user in users:
                 students = Student.objects.filter(user=user, period=period)
                 if students:
-                    print(last_name.encode('utf8') + ' : updating')
+                    print(last_name + ' : updating')
                     student = students[0]
                     break
 
         if not student:
-            print(last_name.encode('utf8') + ' : creating')
+            print(last_name + ' : creating')
             username = get_unique_username(first_name, last_name)
             user = User(first_name=first_name, last_name=last_name, email=email, username=username)
             user.save()
             profile = Profile(user=user)
             profile.save()
             student = Student(user=user)
+            student.platform_only = False
             student.save()
 
         profiles = Profile.objects.filter(user=user)
@@ -525,7 +526,7 @@ class UserXLSBook(object):
             payments = Payment.objects.filter(student=student, month=month[0])
             if not payments and amount:
                 payment = Payment(student=student, value=float(amount), month=month[0], type=payment_type, online_paid=True)
-                print(last_name.encode('utf8') + ' : add payment')
+                print(last_name + ' : add payment')
                 payment.save()
                 student.restricted = False
             i += 2

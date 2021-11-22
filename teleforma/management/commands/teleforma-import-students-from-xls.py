@@ -3,8 +3,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from telemeta.util.unaccent import unaccent
-from teleforma.views import *
+from teleforma.views import UserXLSBook
 import logging
 import json
 
