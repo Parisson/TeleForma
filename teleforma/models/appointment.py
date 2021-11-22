@@ -79,7 +79,7 @@ class AppointmentPeriod(models.Model):
         today = datetime.date.today()
         queryset = AppointmentSlot.objects.filter(appointment_period=self).order_by('-date')
         if platform_only:
-            queryset = queryset.filter(mode='distance', allow_elearning=True)
+            queryset = queryset.filter(allow_elearning=True)
         else:
             queryset = queryset.filter(allow_presentiel=True)
         for slot in queryset:
