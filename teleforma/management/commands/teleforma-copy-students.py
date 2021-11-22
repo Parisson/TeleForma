@@ -30,7 +30,7 @@ class Command(BaseCommand):
     period_name = 'Annuelle'
     db_from = 'recovery'
     db_to = 'default'
-    logger = Logger('/var/log/app/sudent_import_recovery.log')
+    logger = Logger('/var/log/app/student_import_recovery.log')
 
     def handle(self, *args, **options):
         period = Period.objects.get(name=self.period_name)
@@ -63,6 +63,7 @@ class Command(BaseCommand):
             optional_fees = deepcopy(student.optional_fees.all())
             paybacks = deepcopy(student.paybacks.all())
             trainings = student.trainings.all()
+            profile = deepcopy(Profile.objects.using(self.db_from).get(user=student.user))
 
             user.pk = None
             user.username = get_unique_username(user.first_name, user.last_name)
@@ -73,6 +74,11 @@ class Command(BaseCommand):
             student.save(using=self.db_to)
             student.user = user
             student.save(using=self.db_to)
+            profile.pk = None
+            profile.user = None
+            profile.save(using=self.db_to)
+            profile.user = user
+            profile.save(using=self.db_to)
 
             for training in trainings:
                 training_to = Training.objects.using(self.db_to).get(name=training.name, period=period)

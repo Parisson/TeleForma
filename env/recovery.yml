@@ -9,7 +9,7 @@ services:
     command: /bin/sh /srv/app/wsgi.sh
     restart: unless-stopped
     env_file:
-      - env/prod.env
+      - env/recovery.env
     volumes:
       - /mnt/crfpa-videos:/mnt/crfpa-videos
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
@@ -33,7 +33,7 @@ services:
     ports:
       - "9006:8000"
     env_file:
-      - env/prod.env
+      - env/recovery.env
     networks:
       - teleforma-recovery
     links:
@@ -47,7 +47,21 @@ services:
 
   db:
     env_file:
-      - env/prod.env
+      - env/recovery.env
+    networks:
+      - teleforma-recovery
+
+  db-recovery:
+    image: postgres:13
+    env_file:
+      - env/recovery.env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./var/lib/postgresql-recovery:/var/lib/postgresql/data:rw
+      - ./bin:/srv/bin
+      - ./var/backup/:/srv/backup
+      - /etc/localtime:/etc/localtime:ro
     networks:
       - teleforma-recovery
 
@@ -64,6 +78,7 @@ volumes:
     app:
     channels:
     db:
+    db-recovery:
     redis:
 
 

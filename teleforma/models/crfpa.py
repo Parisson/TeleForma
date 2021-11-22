@@ -422,7 +422,7 @@ class Profile(models.Model):
     "User profile extension"
 
     user = models.ForeignKey(User, related_name='profile',
-                             verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
+                             verbose_name=_('user'), unique=True, on_delete=models.CASCADE, null=True)
     address = models.CharField(_('Address'), max_length=255, blank=True)
     address_detail = models.CharField(
         _('Address detail'), max_length=255, blank=True, null=True)
