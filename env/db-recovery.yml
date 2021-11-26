@@ -12,6 +12,8 @@ services:
       - ./bin:/srv/bin
       - ./var/backup/:/srv/backup
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - teleforma-prod
 
 volumes:
   db-recovery:
