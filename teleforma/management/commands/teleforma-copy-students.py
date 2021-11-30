@@ -75,7 +75,11 @@ class Command(BaseCommand):
                     for s in students_to[1:]:
                         s.delete()
                         self.logger.logger.info('duplicated student deleted: ' + s.user.username)
-                student = students_to[0]
+                student_to = students_to[0]
+                if student_to.is_subscribed != student.is_subscribed:
+                    student_to.is_subscribed = student.is_subscribed
+                    students_to.save()
+                student = students_to
 
             for payment in payments:
                 date_created = deepcopy(payment.date_created)
@@ -87,12 +91,13 @@ class Command(BaseCommand):
                     ', date created:' + str(date_created) + \
                      ', value: ' + str(payment.value))
 
-            for discount in discounts:
-                discount.pk = None
-                discount.save(using=self.db_to)
-                discount.student = student
-                discount.save(using=self.db_to)
-                self.logger.logger.info('discount added: ' + str(discount.value))
+            if new:
+                for discount in discounts:
+                    discount.pk = None
+                    discount.save(using=self.db_to)
+                    discount.student = student
+                    discount.save(using=self.db_to)
+                    self.logger.logger.info('discount added: ' + str(discount.value))
 
             for optional_fee in optional_fees:
                 optional_fee.pk = None
@@ -124,7 +129,7 @@ class Command(BaseCommand):
         students_to_email = [student.user.email for student in students_to if (hasattr(student, 'user') and hasattr(student.user, 'email'))]
 
         new_students = []
-        re_registered_students = []
+        existing_students = []
 
         for student in students_from:
             # print(student)
@@ -133,17 +138,18 @@ class Command(BaseCommand):
                     if not student.user.email in students_to_email:
                         new_students.append(student)
                     else:
-                        re_registered_students.append(student)
+                        existing_students.append(student)
 
-        # print(len(new_students))
-        # print(len(re_registered_students))
+        # print('new_students: ', len(new_students))
+        # print('existing_students: ', len(existing_students))
 
         self.logger.logger.info('Number of new students to copy : ' + str(len(new_students)) + '\n')
-        self.logger.logger.info('Number of new students to update : ' + str(len(re_registered_students)) + '\n')
+        self.logger.logger.info('Number of new students to update : ' + str(len(existing_students)) + '\n')
 
-        for student in new_students:
-            self.process_student(student)
-        for student in re_registered_students:
+        # for student in new_students:
+        #     self.process_student(student)
+
+        for student in existing_students:
             self.process_student(student, new=False)
 
 
