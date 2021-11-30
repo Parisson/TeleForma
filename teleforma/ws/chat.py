@@ -4,8 +4,11 @@ from teleforma.models.chat import ChatMessage
 from django.conf import settings 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
+
+
 @log_consumer_exceptions
 class ChatConsumer(AsyncJsonWebsocketConsumer):
+
     async def connect(self):
 
         self.room_name = self.scope['url_route']['kwargs']['room_name']

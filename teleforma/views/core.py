@@ -341,16 +341,24 @@ class CourseListView(CourseAccessMixin, ListView):
         courses = [course['course'] for course in context['all_courses']]
 
         # get last published media / document
-        last_published = sorted([
-            Media.objects.filter(period=self.period, is_published=True, course__in=courses).order_by("-date_added")[0],
-            Document.objects.filter(periods=self.period, is_published=True, course__in=courses).order_by("-date_added")[0],
-        ], key=lambda k: k.date_added, reverse=True)[0]
-
-        # get course with the latest published media / document
-        for course in context['all_courses']:
-            if course['course'].id == last_published.course.id:
-                break
-        context['courses'] = [course]
+        last_published = []
+        last_media = Media.objects.filter(period=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
+        if last_media:
+            last_published.append(last_media)
+        last_document = Document.objects.filter(periods=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
+        if last_document:
+            last_published.append(last_document)
+        if last_published:
+            last_published = sorted(last_published, key=lambda k: k.date_added, reverse=True)[0]
+            # get course with the latest published media / document
+            for course in context['all_courses']:
+                if course['course'].id == last_published.course.id:
+                    break
+            context['courses'] = [course]
+        else:
+            # get course with the latest "date"
+            context['courses'] = sorted(
+                 context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
 
         user = self.request.user
         is_student = user.student.all().count()
