@@ -66,7 +66,11 @@ $(document).ready(function(){
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
         {% if "video" in media.mime_type %}
-            <a href="{% url 'teleforma-media-transcoded' period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+            {% if media.transcoded.all %}
+              <a href="{% url 'teleforma-media-transcoded' period.id media|get_transcoded_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+            {% else %}
+               <a href="{% url 'teleforma-media-detail' period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+            {% endif %}
         {% endif %}
         {% if "audio" in media.mime_type %}
             <a href="{% url 'teleforma-media-detail' period.id media|get_video_id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
