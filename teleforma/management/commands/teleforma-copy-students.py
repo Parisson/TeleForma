@@ -85,7 +85,7 @@ class Command(BaseCommand):
 
             for payment in payments:
                 date_created = deepcopy(payment.date_created)
-                if date_created >= date_limit:
+                if date_created >= self.date_limit:
                     payment.pk = None
                     payment.save(using=self.db_to)
                     payment.student = student
