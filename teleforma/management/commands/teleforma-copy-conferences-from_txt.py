@@ -38,6 +38,8 @@ class Command(BaseCommand):
         period_to = Period.objects.get(name=self.period_to_name)
 
         for public_id in public_ids:
+            public_id = public_id.replace('\n', '').replace(' ', '')
+            print(public_id)
             conference = Conference.objects.get(public_id=public_id)
             medias = deepcopy(conference.media.all())
             conference.pk = None
