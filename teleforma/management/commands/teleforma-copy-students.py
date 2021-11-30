@@ -28,11 +28,11 @@ class Logger:
 
 class Command(BaseCommand):
     help = "Copy students from one DB to another"
-    period_name = 'Estivale'
+    period_name = 'Semestrielle'
     db_from = 'recovery'
     db_to = 'default'
     logger = Logger('/var/log/app/student_update_from_recovery-' + period_name + '.log')
-    date_limit = datetime.datetime(year=2021, month=8, day=7, hour=6)
+    date_limit = datetime.date(year=2021, month=8, day=7)
 
     def process_student(self, student, new=True):
             self.logger.logger.info('----------------------------------------------------------------')
@@ -84,15 +84,18 @@ class Command(BaseCommand):
                 #print(student)
 
             for payment in payments:
-                date_created = deepcopy(payment.date_created)
-                if date_created >= self.date_limit:
-                    payment.pk = None
-                    payment.save(using=self.db_to)
-                    payment.student = student
-                    payment.save(using=self.db_to)
-                    self.logger.logger.info('payment added: ' + student.user.username + \
-                       ', date created:' + str(date_created) + \
-                       ', value: ' + str(payment.value))
+                date_created = deepcopy(payment.date_modified)
+                date_paid = deepcopy(payment.date_paid)
+                if date_paid:
+                    if date_paid >= self.date_limit:
+                        payment.pk = None
+                        payment.save(using=self.db_to)
+                        payment.student = student
+                        payment.save(using=self.db_to)
+                        self.logger.logger.info('payment added: ' + student.user.username + \
+                         ', date created:' + str(date_created) + \
+                         ', date paid:' + str(date_paid) + \
+                         ', value: ' + str(payment.value))
 
             if new:
                 for discount in discounts:
