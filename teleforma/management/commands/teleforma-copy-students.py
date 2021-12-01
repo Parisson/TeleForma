@@ -92,15 +92,16 @@ class Command(BaseCommand):
                 if date_paid:
                     if payments_to:
                         payment_to = payments_to[0]
-                        payment_to.online_paid = payment.online_paid
-                        payment_to.date_paid = payment.date_paid
-                        payment_to.save()
-                        self.logger.logger.info('payment updated: ' + student.user.username + \
-                                 ', mois:' + str(month) + \
-                                 ', date de création:' + str(date_created) + \
-                                 ', date échéance:' + str(scheduled) + \
-                                 ', date paid:' + str(date_paid) + \
-                                 ', value: ' + str(payment.value))
+                        if date_paid != payment_to.date_paid:
+                            payment_to.online_paid = payment.online_paid
+                            payment_to.date_paid = payment.date_paid
+                            payment_to.save()
+                            self.logger.logger.info('payment updated: ' + student.user.username + \
+                                     ', mois:' + str(month) + \
+                                     ', date de création:' + str(date_created) + \
+                                     ', date échéance:' + str(scheduled) + \
+                                     ', date paid:' + str(date_paid) + \
+                                     ', value: ' + str(payment.value))
 
             if new:
                 for discount in discounts:
