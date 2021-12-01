@@ -93,7 +93,7 @@ class Command(BaseCommand):
                     if payments_to:
                         payment_to = payments_to[0]
                         payment_to.online_paid = payment.online_paid
-                        payement_to.date_paid = payment.date_paid
+                        payment_to.date_paid = payment.date_paid
                         payments_to.save()
                         self.logger.logger.info('payment updated: ' + student.user.username + \
                                  ', mois:' + str(month) + \
