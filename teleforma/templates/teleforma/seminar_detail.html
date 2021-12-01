@@ -170,7 +170,7 @@
   </div>
   {% endwith %}
 
-  {% if seminar.conference.webclass and not seminar.medias.all.count %}
+  {% if seminar.conference.webclass and seminar.conference in user.auditor.get.conferences.all %}
     {% with seminar.conference as webclass %}
     <div class="course_content">
       <div class="course_subtitle">
@@ -216,7 +216,6 @@
   </div>
   {% endwith %}
 
-  {% if seminar.conference.webclass or not seminar.conference in user.auditor.get.conferences.all %}
 
   {% with seminar.question as questions %}
   <div class="course_content">
@@ -242,27 +241,25 @@
 
   {% if seminar_progress == 100 %}
 
-  {% with seminar.form as form %}
-  <div class="course_content">
-    <div class="course_subtitle">
-      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 :
-        {% trans "evaluate the seminar" %}</h3>
+    {% with seminar.form as form %}
+    <div class="course_content">
+      <div class="course_subtitle">
+        <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 :
+          {% trans "evaluate the seminar" %}</h3>
+      </div>
+      {% include "teleforma/inc/evaluation_form.html" %}
     </div>
-    {% include "teleforma/inc/evaluation_form.html" %}
-  </div>
-  {% endwith %}
+    {% endwith %}
   {% endif %}
 
   {% if seminar_validated and seminar_progress == 100 and delta_sec >= 0 %}
-  <div class="course_content">
-    <div class="course_subtitle">
-      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7 :
-        {% trans "download your testimonial" %}</h3>
+    <div class="course_content">
+      <div class="course_subtitle">
+        <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7 :
+          {% trans "download your testimonial" %}</h3>
+      </div>
+      {% include "teleforma/inc/testimonial_list.html" %}
     </div>
-    {% include "teleforma/inc/testimonial_list.html" %}
-  </div>
-  {% endif %}
-
   {% endif %}
 
   {% endblock course_content %}
