@@ -148,7 +148,7 @@ class MediaAdmin(admin.ModelAdmin):
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']
-    search_fields = ['public_id', 'id']
+    search_fields = ['public_id', 'id', 'title']
     filter_vertical = ['docs_description',
                        'suggested_seminars', 'suggested_conferences']
     actions = ['export_conference']
