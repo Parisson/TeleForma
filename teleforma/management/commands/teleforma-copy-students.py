@@ -31,7 +31,7 @@ class Command(BaseCommand):
     periods_name = ['Estivale', 'Semestrielle']
     db_from = 'recovery'
     db_to = 'default'
-    logger = Logger('/var/log/app/student_update_from_recovery.log')
+    logger = Logger('/var/log/app/student_update_from_recovery-' + str(datetime.datetime.now) + '.log')
     date_limit_end = datetime.date(year=2021, month=8, day=6)
     date_limit_start = datetime.date(year=2021, month=8, day=1)
 
