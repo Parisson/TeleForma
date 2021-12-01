@@ -28,10 +28,10 @@ class Logger:
 
 class Command(BaseCommand):
     help = "Copy students from one DB to another"
-    period_name = 'Semestrielle'
+    periods_name = ['Estivale', 'Semestrielle']
     db_from = 'recovery'
     db_to = 'default'
-    logger = Logger('/var/log/app/student_update_from_recovery-' + period_name + '.log')
+    logger = Logger('/var/log/app/student_update_from_recovery.log')
     date_limit = datetime.date(year=2021, month=8, day=7)
 
     def process_student(self, student, new=True):
@@ -86,16 +86,22 @@ class Command(BaseCommand):
             for payment in payments:
                 date_created = deepcopy(payment.date_modified)
                 date_paid = deepcopy(payment.date_paid)
+                month = deepcopy(payment.month)
+                scheduled = deepcopy(payment.scheduled)
+                payments_to = Payment.objects.using(self.db_to).filter(student=student, month=month, scheduled=scheduled)
                 if date_paid:
-                    if date_paid >= self.date_limit:
-                        payment.pk = None
-                        payment.save(using=self.db_to)
-                        payment.student = student
-                        payment.save(using=self.db_to)
-                        self.logger.logger.info('payment added: ' + student.user.username + \
-                         ', date created:' + str(date_created) + \
-                         ', date paid:' + str(date_paid) + \
-                         ', value: ' + str(payment.value))
+                    if payments_to:
+                        payment_to = payments_to[0]
+                        if date_paid != payment_to.date_paid and date_paid >= self.date_limit:
+                            payment_to.online_paid = payment.online_paid
+                            payment_to.date_paid = payment.date_paid
+                            payment_to.save()
+                            self.logger.logger.info('payment updated: ' + student.user.username + \
+                                     ', mois:' + str(month) + \
+                                     ', date de création:' + str(date_created) + \
+                                     ', date échéance:' + str(scheduled) + \
+                                     ', date paid:' + str(date_paid) + \
+                                     ', value: ' + str(payment.value))
 
             if new:
                 for discount in discounts:
@@ -130,47 +136,51 @@ class Command(BaseCommand):
             self.logger.logger.info('END of processing: ' + str(student) + ' ' + student.user.username)
 
     def handle(self, *args, **options):
-        self.period = Period.objects.get(name=self.period_name)
+        for period_name in self.periods_name:
 
-        students_from = Student.objects.using(self.db_from).filter(period=self.period)
-        students_to = Student.objects.using(self.db_to).filter(period=self.period)
+            self.period = Period.objects.get(name=period_name)
+            self.logger.logger.info('================================================================')
+            self.logger.logger.info('PERIOD: ' + period_name)
 
-        user_tmp, c = User.objects.using(self.db_to).get_or_create(username='tmp')
+            students_from = Student.objects.using(self.db_from).filter(period=self.period)
+            students_to = Student.objects.using(self.db_to).filter(period=self.period)
 
-        self.logger.logger.info('Number of student in from : ' + str(students_from.count()))
-        self.logger.logger.info('Number of student in to : ' + str(students_to.count()))
+            user_tmp, c = User.objects.using(self.db_to).get_or_create(username='tmp')
 
-        students_to_email = []
-        for student in students_to:
-            try:
-                if hasattr(student, 'user'):
-                    if student.user.email:
-                        students_to_email.append(student.user.email)
-            except:
-                continue
+            self.logger.logger.info('Number of student in from : ' + str(students_from.count()))
+            self.logger.logger.info('Number of student in to : ' + str(students_to.count()))
 
-        new_students = []
-        existing_students = []
+            students_to_email = []
+            for student in students_to:
+                try:
+                    if hasattr(student, 'user'):
+                        if student.user.email:
+                            students_to_email.append(student.user.email)
+                except:
+                    continue
 
-        for student in students_from:
-            # print(student)
-            if student.trainings.all():
-                if hasattr(student, 'user'):
-                    if not student.user.email in students_to_email:
-                        new_students.append(student)
-                    else:
-                        existing_students.append(student)
+            new_students = []
+            existing_students = []
 
-        # print('new_students: ', len(new_students))
-        # print('existing_students: ', len(existing_students))
+            for student in students_from:
+                # print(student)
+                if student.trainings.all():
+                    if hasattr(student, 'user'):
+                        if not student.user.email in students_to_email:
+                            new_students.append(student)
+                        else:
+                            existing_students.append(student)
 
-        self.logger.logger.info('Number of new students to copy : ' + str(len(new_students)) + '\n')
-        self.logger.logger.info('Number of new students to update : ' + str(len(existing_students)) + '\n')
+            # print('new_students: ', len(new_students))
+            # print('existing_students: ', len(existing_students))
 
-        # for student in new_students:
-        #     self.process_student(student)
+            self.logger.logger.info('Number of new students to copy : ' + str(len(new_students)) + '\n')
+            self.logger.logger.info('Number of new students to update : ' + str(len(existing_students)) + '\n')
 
-        for student in existing_students:
-            self.process_student(student, new=False)
+            # for student in new_students:
+            #     self.process_student(student)
+
+            for student in existing_students:
+                self.process_student(student, new=False)
 
 
