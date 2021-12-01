@@ -183,7 +183,10 @@ def get_default_period(periods):
     elif len(periods) == 1:
         return periods[0]
     else:
-        return Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
+        default_period = Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
+        if default_period not in periods:
+            return periods[0]
+        return default_period
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -302,6 +305,8 @@ class PeriodAccessMixin(View):
         if not period in context['periods']:
             messages.warning(self.request, _(
                 "You do NOT have access to this resource and then have been redirected to your desk."))
+            if self.request.session['period_id'] == period.id:
+                del self.request.session['period_id']
             return redirect('teleforma-home')
         return super(PeriodAccessMixin, self).render_to_response(context)
 
