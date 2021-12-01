@@ -32,7 +32,8 @@ class Command(BaseCommand):
     db_from = 'recovery'
     db_to = 'default'
     logger = Logger('/var/log/app/student_update_from_recovery.log')
-    date_limit = datetime.date(year=2021, month=8, day=7)
+    date_limit_end = datetime.date(year=2021, month=8, day=6)
+    date_limit_start = datetime.date(year=2021, month=8, day=1)
 
     def process_student(self, student, new=True):
             self.logger.logger.info('----------------------------------------------------------------')
@@ -92,7 +93,7 @@ class Command(BaseCommand):
                 if date_paid:
                     if payments_to:
                         payment_to = payments_to[0]
-                        if date_paid != payment_to.date_paid and date_paid >= self.date_limit:
+                        if date_paid != payment_to.date_paid and date_paid >= self.date_limit_start and date_paid <= self.date_limit_end:
                             payment_to.online_paid = payment.online_paid
                             payment_to.date_paid = payment.date_paid
                             payment_to.save()
