@@ -26,7 +26,7 @@ class Command(BaseCommand):
     help = "Copy conferences from one period to another from a text file containing conf IDs"
     period_from_name = 'Estivale'
     period_to_name = 'Semestrielle'
-    logger = Logger('/var/log/app/student_update_from_recovery.log')
+    logger = Logger('/var/log/app/conference-copy.log')
 
     def add_arguments(self, parser):
         parser.add_argument('args', nargs='*')
