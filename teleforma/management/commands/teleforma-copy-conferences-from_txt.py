@@ -26,6 +26,7 @@ class Command(BaseCommand):
     help = "Copy conferences from one period to another from a text file containing conf IDs"
     period_from_name = 'Estivale'
     period_to_name = 'Semestrielle'
+    logger = Logger('/var/log/app/student_update_from_recovery.log')
 
     def add_arguments(self, parser):
         parser.add_argument('args', nargs='*')
@@ -39,17 +40,16 @@ class Command(BaseCommand):
 
         for public_id in public_ids:
             public_id = public_id.replace('\n', '').replace(' ', '')
-            print(public_id)
             conference = Conference.objects.get(public_id=public_id)
             medias = deepcopy(conference.media.all())
             conference.pk = None
             conference.public_id = None
             conference.period = period_to
             conference.save()
-            print(conference.public_id)
             for media in medias:
                 media.pk = None
                 media.save()
                 media.period = period_to
                 media.conference = conference
                 media.save()
+            self.logger.logger.info('Conference ' + public_id + ' duplicated to ' + conference.public_id)
