@@ -13,7 +13,7 @@ services:
       - ./var/backup/:/srv/backup
       - /etc/localtime:/etc/localtime:ro
     networks:
-      - teleforma-prod
+      - teleforma-staging
 
 volumes:
   db-recovery:

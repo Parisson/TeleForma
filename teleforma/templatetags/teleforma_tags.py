@@ -256,8 +256,16 @@ def get_googletools():
 
 
 @register.filter
-def get_audio_id(media):
+def get_transcoded_audio_id(media):
     for m in media.transcoded.all():
+        if 'audio' in m.mime_type:
+            return m.id
+    return
+
+
+@register.filter
+def get_audio_id(media):
+    for m in media.conference.media.all():
         if 'audio' in m.mime_type:
             return m.id
     return
