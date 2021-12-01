@@ -87,25 +87,18 @@ class Command(BaseCommand):
                 date_created = deepcopy(payment.date_modified)
                 date_paid = deepcopy(payment.date_paid)
                 month = deepcopy(payment.month)
-                payments_to = Payment.objects.using(self.db_to).filter(student=student, month=month)
+                scheduled = deepcopy(payment.scheduled)
+                payments_to = Payment.objects.using(self.db_to).filter(student=student, month=month, scheduled=scheduled)
                 if date_paid:
-                    if date_paid >= self.date_limit:
-                        if payments_to:
-                            payment_to = payments_to[0]
-                            if not payment_to.date_paid:
-                                payment_to.value = payment.value
-                                payment_to.type = payment.type
-                                payment_to.scheduled = payment.scheduled
-                                payment_to.online_paid = payment.online_paid
-                                payement_to.date_paid = payment.date_paid
-                        else:
-                            if date_paid >= self.date_limit:
-                                payment.pk = None
-                                payment.save(using=self.db_to)
-                                payment.student = student
-                                payment.save(using=self.db_to)
-                                self.logger.logger.info('payment added: ' + student.user.username + \
-                                 ', date created:' + str(date_created) + \
+                    if payments_to:
+                        payment_to = payments_to[0]
+                        payment_to.online_paid = payment.online_paid
+                        payement_to.date_paid = payment.date_paid
+                        payments_to.save()
+                        self.logger.logger.info('payment updated: ' + student.user.username + \
+                                 ', mois:' + str(month) + \
+                                 ', date de création:' + str(date_created) + \
+                                 ', date échéance:' + str(scheduled) + \
                                  ', date paid:' + str(date_paid) + \
                                  ', value: ' + str(payment.value))
 
