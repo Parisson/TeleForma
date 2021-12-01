@@ -86,7 +86,16 @@ class Command(BaseCommand):
             for payment in payments:
                 date_created = deepcopy(payment.date_modified)
                 date_paid = deepcopy(payment.date_paid)
-                if date_paid:
+                month = deepcopy(payment.month)
+                payments_to = Payment.objects.using(self.db_to).filter(student=student, month=month)
+                if payments_to:
+                    payment_to = payments_to[0]
+                    payment_to.value = payment.value
+                    payment_to.type = payment.type
+                    payment_to.scheduled = payment.scheduled
+                    payment_to.online_paid = payment.online_paid
+                    payement_to.date_paid = payment.date_paid
+                elif date_paid:
                     if date_paid >= self.date_limit:
                         payment.pk = None
                         payment.save(using=self.db_to)
