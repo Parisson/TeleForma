@@ -157,6 +157,9 @@ class Webclass(models.Model):
         db_table = app_label + '_' + 'webclass'
         verbose_name = _('webclass')
         verbose_name_plural = _('webclass')
+        indexes = [
+            models.Index(fields=['status', 'period', 'course', ]),
+         ]
 
     def __str__(self):
         return "Webclass %d : %s" % (self.id, self.course.title)
