@@ -270,9 +270,7 @@ class UserXLSBook(object):
         # if counter >= 419:
         #     import pdb;pdb.set_trace()
         user = student.user
-        if student.training:
-            training = student.training
-        elif student.trainings.all():
+        if student.trainings.all():
             training = student.trainings.all()[0]
         else:
             training = None
