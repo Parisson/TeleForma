@@ -157,6 +157,11 @@ class StudentAdmin(admin.ModelAdmin):
     actions = ['export_xls', 'write_message', 'add_to_group']
     action_form = StudentGroupForm
 
+    class Media:
+        js = (
+            'admin/js/admin-teleforma.js',
+        )
+
     def get_trainings(self, instance):
         return ' - '.join([str(training) for training in instance.trainings.all()])
 
