@@ -11,9 +11,9 @@
             	{% if question|submitted:user and not question|validated:user %}
             		<img src="{{ STATIC_URL }}teleforma/images/chronometer.png" style="vertical-align:middle" alt="" title="{% trans "Waiting for validation" %}" />
             	{% elif question|saved:user and not question|submitted:user %}
-            		<img src="{{ STATIC_URL }}telemeta/images/media-record.png" style="vertical-align:middle" alt="" title="{% trans "Saved" %}" />
+            		<img src="{{ STATIC_URL }}teleforma/images/media-record.png" style="vertical-align:middle" alt="" title="{% trans "Saved" %}" />
             	{% elif question|submitted:user and question|validated:user %}
-            		<img src="{{ STATIC_URL }}telemeta/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
+            		<img src="{{ STATIC_URL }}teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
             	{% endif %}
             </td>
             </tr>

@@ -224,8 +224,8 @@ class SeminarAdmin(admin.ModelAdmin):
     search_fields = ['course__title', 'title', 'sub_title']
     list_filter = ('period', 'publish_date', 'expiry_date')
     actions = ['clone_seminars', 'export_seminar']
-    # raw_id_fields = [ 'media_preview',
-    #                   'quiz', 'conference']
+    raw_id_fields = [ 'media_preview',
+                      'quiz', 'conference']
 
     def render_change_form(self, request, context, *args, **kwargs):
         """
@@ -260,19 +260,6 @@ class SeminarAdmin(admin.ModelAdmin):
             Q(id=preview_id)
         )
         
-        # Suggested seminars / conferences
-        # if instance:
-        #     current_values = [doc.id for doc in instance.suggested_seminars.all()]
-        # context['adminform'].form.fields['suggested_seminars'].queryset = Seminar.objects.filter(
-        #     Q(private=2) | 
-        #     Q(id__in=current_values)
-        # )
-        # if instance:
-        #     current_values = [doc.id for doc in instance.suggested_conferences.all()]
-        # context['adminform'].form.fields['suggested_conferences'].queryset = Conference.objects.filter(
-        #     Q(status=2) | 
-        #     Q(id__in=current_values)
-        # )
         return super(SeminarAdmin, self).render_change_form(request, context, *args, **kwargs)
 
     def clone_seminars(self, request, queryset):

@@ -53,7 +53,7 @@ $(function() {
 </div>
 
 <div class="module">
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}telemeta/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Mes conférences" %}</a></h3>
+<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Mes conférences" %}</a></h3>
 <div style="background: white;">
 <ul id="seminars">
 {% block conferences %}
@@ -78,19 +78,6 @@ $(function() {
 {% endblock module-action %}
 
 {% block notes %}
-<!--<div class="module">
-<h3><img src="{{ STATIC_URL }}telemeta/images/view-pim-notes.png" alt="playlists" style="vertical-align:middle" />{% trans "My notes" %}</h3>
-<div style="background: white;">
-<ul>
-{% for note in notes %}
-<li>{{ note.content }}</li>
-{% endfor %}
-</ul>
-</div>
-</div>
-<div class="module_action">
-<a href="#" class="component_icon button" id="action_violet">{% trans "New note" %}</a>
-</div>-->
 {% endblock notes %}
 
 </div>
@@ -108,7 +95,7 @@ $(function() {
          <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
          <div style="float: right; font-size: 0.9em;">
           {% if seminar|progress:user == 100 %}
-          <img src="{{ STATIC_URL }}telemeta/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
+          <img src="{{ STATIC_URL }}teleforma/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
           {% else %}
           {{ seminar|progress:user }}%
           {% endif %}

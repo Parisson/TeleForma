@@ -66,7 +66,6 @@ from django.dispatch import receiver
 from jxmlease import XMLListNode, XMLDictNode
 
 from teleforma.bbb_utils import bbb, register_web_hook
-from telemeta.models.location import Location
 
 HAS_TELEMETA = False
 try:
@@ -163,6 +162,47 @@ class Department(Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'department'
         verbose_name = _('department')
+
+
+
+class Location(Model):
+    "Locations"
+    OTHER_TYPE  = 0
+    CONTINENT   = 1
+    COUNTRY     = 2
+    TYPE_CHOICES     = ((COUNTRY, _('country')), (CONTINENT, _('continent')), (OTHER_TYPE, _('other')))
+
+    name             = models.CharField(_('name'), unique=True, max_length=150)
+    type             = models.IntegerField(_('type'), choices=TYPE_CHOICES, default=OTHER_TYPE, db_index=True, null=True, blank=True)
+    complete_type    = models.ForeignKey('LocationType', related_name="locations", verbose_name=_('complete type'))
+    current_location = models.ForeignKey('self', related_name="past_names",
+                                      verbose_name=_('current location'), null=True, blank=True)
+    latitude         = models.FloatField(null=True)
+    longitude        = models.FloatField(null=True)
+    is_authoritative = models.BooleanField(_('authoritative'), default=False)
+
+    class Meta(MetaCore):
+        db_table = 'locations'
+        verbose_name = _('location')
+        verbose_name_plural = _('locations')
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+class LocationType(Model):
+    "Location types"
+    code = models.CharField(_('identifier'), max_length=64, unique=True)
+    name = models.CharField(_('name'), max_length=150)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta(MetaCore):
+        db_table = 'location_types'
+        ordering = ['name']
+        verbose_name_plural = _('location types')
 
 
 class Period(Model):
@@ -542,7 +582,7 @@ class Media(MediaBase):
     poster_file     = models.FileField(_('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
 
     def set_mime_type(self):
-        if self.item.file:
+        if self.file:
             mime_type = mimetypes.guess_type(self.file.path)[0]
             if mime_type == 'audio/mpeg':
                 self.mime_type = 'audio/mp3'
@@ -561,9 +601,7 @@ class Media(MediaBase):
             strings.append(self.course.code)
         if self.course_type:
             strings.append(self.course_type.name)
-        if self.item.title:
-            strings.append(self.item.title)
-        else:
+        if self.file:
             strings.append(os.path.basename(self.file.path))
         if self.rank:
             strings.append(str(self.rank))
@@ -1055,3 +1093,4 @@ class NamePage(object):
             return self.start_letter
         else:
             return '%c-%c' % (self.start_letter, self.end_letter)
+

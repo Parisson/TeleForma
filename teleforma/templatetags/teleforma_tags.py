@@ -272,7 +272,7 @@ def progress(seminar, user):
 @register.filter
 def in_download_formats(file):
     ext = os.path.splitext(file)[1][1:]
-    return ext in settings.TELEMETA_DOWNLOAD_FORMATS
+    return ext in settings.TELEFORMA_DOWNLOAD_FORMATS
 
 @register.filter
 def user_seminars(user):
@@ -409,13 +409,13 @@ def render_flatpage(content):
             directive, urlname = match.groups()
             line = directive
             try:
-                i = urlname.index('telemeta-')
+                i = urlname.index('teleforma-')
             except ValueError:
                 i = -1
             if i == 0:
                 line += reverse(urlname)
             elif urlname[:1] != '/':
-                line += reverse('telemeta-flatpage', args=[path + '/../' + urlname])
+                line += reverse('teleforma-flatpage', args=[path + '/../' + urlname])
             else:
                 line += urlname
 
