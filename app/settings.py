@@ -177,28 +177,46 @@ ROOT_URLCONF = 'urls'
 
 
 INSTALLED_APPS = (
+
+    # 'south',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_comments',
+    "mezzanine.boot",
+    "mezzanine.conf",
+    "mezzanine.core",
+    "mezzanine.generic",
+    "mezzanine.blog",
+#    "mezzanine.forms",
+    "mezzanine.pages",
+    "mezzanine.galleries",
+    "mezzanine.twitter",
     'teleforma',
     'jazzmin',
     'django.contrib.admin',
-    'channels',
-    'teleforma.webclass',
-    'teleforma.exam',
     'jsonrpc',
     'sorl.thumbnail',
+    # 'django_extensions',
     'dj_pagination',
     'postman',
-    'captcha',
-    'django_nvd3',
+    # 'markup_mixin',
+    # 'notes',
+    # 'timezones',
+    # 'googletools',
+    # 'jqchat',
     'tinymce',
-    'pdfannotator',
-    'rest_framework',
-    'rest_framework.authtoken',
+    'pbcart',
+    # 'telemeta',
+    # 'telecaster',
+    # 'forms_builder.forms',
+    'quiz',
+    'multichoice',
+    'true_false',
+    'essay',
 )
 
 
@@ -492,6 +510,8 @@ PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "040109417200053",
 
 
 ORAL_OPTION_PRICE = 250
+
+PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 
 if DEBUG_TOOLBAR:
     def show_toolbar(request):
