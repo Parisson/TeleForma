@@ -34,7 +34,7 @@
 # Authors: Olivier Guilyardi <olivier@samalyse.com>
 #          Guillaume Pellerin <yomguy@parisson.com>
 
-import pages
+from . import pages
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.http import HttpResponse

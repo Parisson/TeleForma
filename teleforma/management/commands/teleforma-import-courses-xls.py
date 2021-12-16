@@ -39,5 +39,5 @@ class Command(BaseCommand):
                                                             )
 
             if created:
-                print 'imported: ' + course.title
+                print('imported: ' + course.title)
 

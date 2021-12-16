@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Testimonial.template'
         db.add_column('teleforma_testimonial', 'template',
-                      self.gf('django.db.models.fields.related.ForeignKey')(default=1, related_name=u'testimonial', to=orm['teleforma.TestimonialTemplate']),
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=1, related_name='testimonial', to=orm['teleforma.TestimonialTemplate']),
                       keep_default=False)
 
     def backwards(self, orm):

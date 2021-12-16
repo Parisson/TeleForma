@@ -59,12 +59,12 @@ class Command(BaseCommand):
                     clone.status = 1
                     clone.quiz = seminar.quiz
                     clone.save()
-                    log = 'new seminar:' + unicode(clone)
+                    log = 'new seminar:' + str(clone)
                     logger.logger.info(log)
-                    print log
+                    print(log)
                     log = 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': clone.id})
                     logger.logger.info(log)
-                    print log
+                    print(log)
 
                     for field in seminar._meta.many_to_many:
 

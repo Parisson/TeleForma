@@ -203,7 +203,7 @@ class UsersCourseView(UsersView):
 
 def get_course_code(obj):
     if obj:
-        return unicode(obj.code)
+        return str(obj.code)
     else:
         return ''
 
@@ -219,11 +219,11 @@ class UsersXLSExport(object):
             row.write(0, user.last_name)
             row.write(1, user.first_name)
             row.write(9, user.email)
-            row.write(2, unicode(student.iej))
+            row.write(2, str(student.iej))
             code = student.training.code
             if student.platform_only:
                 code = 'I - ' + code
-            row.write(3, unicode(code))
+            row.write(3, str(code))
             row.write(4, get_course_code(student.procedure))
             row.write(5, get_course_code(student.written_speciality))
             row.write(6, get_course_code(student.oral_speciality))

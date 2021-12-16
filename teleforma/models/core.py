@@ -499,8 +499,8 @@ class Document(MediaBase):
         if self.course:
             strings.append(self.course.code)
         if self.course_type.all():
-            types = ' - '.join([unicode(t) for t in self.course_type.all()])
-            strings.append(unicode(types))
+            types = ' - '.join([str(t) for t in self.course_type.all()])
+            strings.append(str(types))
         if self.type:
             strings.append(self.type.name)
         strings.append(self.title)

@@ -37,8 +37,6 @@ from teleforma.views.core import *
 from teleforma.context_processors import *
 from django.core.exceptions import PermissionDenied
 
-from teleforma.utils.unicode import UnicodeWriter
-
 from django.utils.translation import ugettext_lazy as _
 from django.template import loader, Context, RequestContext
 from django.views.generic.base import TemplateResponseMixin
@@ -54,7 +52,7 @@ from django.template.loader import render_to_string
 
 import os, datetime
 from cgi import escape
-from cStringIO import StringIO
+from io import StringIO
 
 import weasyprint
 
@@ -481,7 +479,7 @@ class AnswersView(ListView):
             testimonial.save()
             # url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':seminar.id}) + '?format=pdf'
             text = render_to_string('teleforma/messages/seminar_validated.txt', context)
-            subject = seminar.title + ' : ' + unicode(_('all your answers has been validated'))
+            subject = seminar.title + ' : ' + str(_('all your answers has been validated'))
 
         else:
             text = render_to_string('teleforma/messages/answer_validated.txt', context)
@@ -537,7 +535,7 @@ class AnswersView(ListView):
 
         sender = request.user
         text = render_to_string('teleforma/messages/answer_rejected.txt', context)
-        subject = seminar.title + ' : ' + unicode(_('validation conditions for an answer'))
+        subject = seminar.title + ' : ' + str(_('validation conditions for an answer'))
         mess = Message(sender=sender, recipient=user, subject=subject, body=text)
         mess.moderation_status = 'a'
         mess.save()
@@ -728,7 +726,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         """
         if self.pdf_template_name is None:
             names = super(PDFTemplateResponseMixin, self).get_template_names()
-            return map(self._get_pdf_template_name, names)
+            return list(map(self._get_pdf_template_name, names))
         return [self.pdf_template_name]
 
     def get_pdf_filename(self):
@@ -805,7 +803,7 @@ class TestimonialDownloadView(TestimonialView):
     def get_pdf_filename(self):
         super(TestimonialDownloadView, self).get_pdf_filename()
         seminar = self.get_object()
-        prefix = unicode(_('Testimonial'))
+        prefix = str(_('Testimonial'))
         filename = '_'.join([prefix, seminar.title.replace(',', ' '),
                             self.request.user.first_name, self.request.user.last_name,])
         filename += '.pdf'
@@ -966,13 +964,13 @@ def process_webclass_bbb_webhook(request, event):
     mixin = SeminarRevisionMixin()
 
     if event["id"] == "user-joined":
-        print("JOIN", seminar, conf, user)
+        print(("JOIN", seminar, conf, user))
         mixin.seminar_do_load(request, seminar.pk, user.username)
-        print("JOIN DONE", seminar, conf, user)
+        print(("JOIN DONE", seminar, conf, user))
     else:
-        print("LEAVE", seminar, conf, user)            
+        print(("LEAVE", seminar, conf, user))            
         mixin.seminar_do_unload(request, seminar.pk, user.username)
-        print("LEAVE DONE", seminar, conf, user)            
+        print(("LEAVE DONE", seminar, conf, user))            
     
 @csrf_exempt
 def webclass_bbb_webhook(request):
@@ -989,7 +987,7 @@ def webclass_bbb_webhook(request):
     event = event[0]["data"]
     if event["type"] != "event":
         raise PermissionDenied
-    print(event["id"])
+    print((event["id"]))
     if event["id"] not in ('user-joined', 'user-left'):
         return HttpResponse("ok")
 

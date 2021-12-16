@@ -12,5 +12,5 @@ class Command(BaseCommand):
         media_file = args[0]
         session = KDEnLiveSession(media_file)
         for mark in session.markers():
-            print mark['session_timecode'], mark['time'], mark['comment']
+            print(mark['session_timecode'], mark['time'], mark['comment'])
         

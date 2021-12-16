@@ -24,7 +24,7 @@ class Command(BaseCommand):
                          'email': user.email,
                          'courses': courses,
                          })
-            print 'exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
+            print('exported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username)
         return json.dumps(list)
 
 

@@ -27,8 +27,8 @@ class Migration(SchemaMigration):
         # Adding model 'Answer'
         db.create_table('teleforma_answer', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'answer', to=orm['auth.User'])),
-            ('question', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'answer', to=orm['teleforma.Question'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='answer', to=orm['auth.User'])),
+            ('question', self.gf('django.db.models.fields.related.ForeignKey')(related_name='answer', to=orm['teleforma.Question'])),
             ('answer', self.gf('django.db.models.fields.TextField')()),
             ('status', self.gf('django.db.models.fields.IntegerField')(default=1)),
             ('validated', self.gf('django.db.models.fields.BooleanField')(default=False)),

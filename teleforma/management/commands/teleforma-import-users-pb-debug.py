@@ -84,7 +84,7 @@ class Command(BaseCommand):
             profile.telephone = row[13].value
             profile.save()
             student.save()
-            print 'imported: ' + first_name + ' ' + last_name + ' ' + username
+            print('imported: ' + first_name + ' ' + last_name + ' ' + username)
 
     def handle(self, *args, **options):
         file = args[0]

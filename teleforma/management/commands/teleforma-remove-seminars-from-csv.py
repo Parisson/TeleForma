@@ -40,7 +40,7 @@ class Command(BaseCommand):
             elif key in ('commentaires', 'commentaire') and seminar:
                 if val == 'non':
                     if not '(' in seminar or not seminar.endswith(')'):
-                        print("WARNING: malformed seminar %s" % seminar)
+                        print(("WARNING: malformed seminar %s" % seminar))
                         continue
                     title, sid = seminar.rsplit('(', 1)
                     sid = sid[:-1]
@@ -48,10 +48,10 @@ class Command(BaseCommand):
                     seminar = list(Seminar.objects.filter(pk = sid)[:1])
                     seminar = seminar and seminar[0]
                     if not seminar:
-                        print('WARNING: Seminar %s not found' % sid)
+                        print(('WARNING: Seminar %s not found' % sid))
                     wanted_title = str(seminar).strip()
                     if title != wanted_title:
-                        print("WARNING: Seminar %s: mismatched title %r %r" % (sid, title, wanted_title))
+                        print(("WARNING: Seminar %s: mismatched title %r %r" % (sid, title, wanted_title)))
                     todel.append(seminar)
             else:
                 seminar = None
@@ -62,22 +62,22 @@ class Command(BaseCommand):
         user = list(User.objects.filter(email = email)[:1])
         user = user and user[0]
         if not user:
-            print("WARNING: user %s not found" % email)
+            print(("WARNING: user %s not found" % email))
             return
         auditor = list(user.auditor.all()[:1])
         auditor = auditor and auditor[0]
         if not auditor:
-            print("WARNING: auditor for user %s not found" % email)
+            print(("WARNING: auditor for user %s not found" % email))
             return
 
         existing = auditor.seminars.all().values('id')
         existing = set([ sem['id'] for sem in existing ])
         
-        print("===> ", email)
+        print(("===> ", email))
         for seminar in todel:
             if seminar.pk in existing:
-                print seminar
+                print(seminar)
                 auditor.seminars.remove(seminar)
             else:
-                print("WARNING: seminar %d for user %s not found" % (seminar.pk, email))
+                print(("WARNING: seminar %d for user %s not found" % (seminar.pk, email)))
                     

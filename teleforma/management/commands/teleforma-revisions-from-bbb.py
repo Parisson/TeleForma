@@ -21,14 +21,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if len(args) != 1 or not args[0].isdigit():            
-            print("Syntax: %s %s <duration in seconds>" % (sys.argv[0],
-                                                           sys.argv[1]))
+            print(("Syntax: %s %s <duration in seconds>" % (sys.argv[0],
+                                                           sys.argv[1])))
             sys.exit(1)
 
         duration = int(args[0])
         end = datetime.datetime.now()
         start = end - datetime.timedelta(seconds = duration)
-        print("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S'))
+        print(("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S')))
         meetings = bbb.get_meetings()
         meetings = meetings.get_field("meetings")
         # no conference in BBB
@@ -37,7 +37,7 @@ class Command(BaseCommand):
             return
         meetings = as_list(meetings["meeting"])
 
-        print("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S'))
+        print(("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S')))
 
         done = set()
         
@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 conf = Conference.objects.get(webclass_id = meeting_id)
                 seminar = Seminar.objects.get(conference = conf)
             except:
-                print("Warning, can't find Seminar for %s" % meeting_id)
+                print(("Warning, can't find Seminar for %s" % meeting_id))
                 continue
 
             sem_txt = "%s (%s)" % (seminar, seminar.pk)
@@ -56,23 +56,23 @@ class Command(BaseCommand):
                 user_id = str(attendee['userID'])
                 key = (meeting_id, user_id) 
                 if key in done:
-                    print("Warning, user %s duplicate for %s" % (user_id, sem_txt))
+                    print(("Warning, user %s duplicate for %s" % (user_id, sem_txt)))
                     continue
                 done.add(key)
                 
                 try:
                     user = User.objects.get(username = user_id)
                 except:
-                    print("Warning, can't find user %s for seminar %s" % (user_id, sem_txt))
+                    print(("Warning, can't find user %s for seminar %s" % (user_id, sem_txt)))
                     continue
                 user_txt = "%s (%s)" % (user, user.pk)
                 rev = SeminarRevision.objects.filter(seminar = seminar,
                                                      user = user,
                                                      date_modified = None)
                 if rev.count():
-                    print("User %s already has an open revision on %s" % (user_txt, sem_txt))
+                    print(("User %s already has an open revision on %s" % (user_txt, sem_txt)))
                 else:                    
-                    print("Crediting %d seconds to %s on %s" % (duration, user_txt, sem_txt))
+                    print(("Crediting %d seconds to %s on %s" % (duration, user_txt, sem_txt)))
                     sr = SeminarRevision(seminar = seminar,
                                          user = user,
                                          date = start,

@@ -51,7 +51,7 @@ from django.conf import settings
 from django.template.defaultfilters import stringfilter
 import django.utils.timezone as timezone
 from django.utils.translation import ugettext_lazy as _
-from urlparse import urlparse
+from urllib.parse import urlparse
 from docutils.core import publish_parts
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
@@ -59,7 +59,7 @@ from django.utils.safestring import mark_safe
 from teleforma.models.crfpa import Course
 from teleforma.views import get_courses
 from teleforma.context_processors import *
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 register = template.Library()
 
@@ -94,7 +94,7 @@ def value_from_settings(parser, token):
         # split_contents() knows not to split quoted strings.
         tag_name, var = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, "%r tag requires a single argument" % token.contents.split()[0]
+        raise template.TemplateSyntaxError("%r tag requires a single argument" % token.contents.split()[0])
     return ValueFromSettings(var)
 
 class ValueFromSettings(template.Node):
@@ -127,10 +127,10 @@ def or_me(value, arg):
     Typical usage: sender|or_me:user
 
     """
-    if not isinstance(value, (unicode, str)):
-        value = unicode(value)
-    if not isinstance(arg, (unicode, str)):
-        arg = unicode(arg)
+    if not isinstance(value, str):
+        value = str(value)
+    if not isinstance(arg, str):
+        arg = str(arg)
     return _('me') if value == arg else value
 
 @register.filter
@@ -312,7 +312,7 @@ def preview(related):
 @register.filter
 def fancy_duration(duration):
     time = ''
-    d = unicode(duration).split(':')
+    d = str(duration).split(':')
     hours = int(d[0])
     minutes = int(d[1])
     if hours:
@@ -329,7 +329,7 @@ def fancy_duration_shop_like(duration):
     if not duration:
         return ""
     time = ''
-    d = unicode(duration).split(':')
+    d = str(duration).split(':')
     hours = int(d[0])
     minutes = int(d[1])
     if hours:
@@ -400,7 +400,7 @@ def current_year():
 def render_flatpage(content):
     parsed = ""
     path = getattr(content, 'path', '')
-    if isinstance(content, basestring):
+    if isinstance(content, str):
         content = content.split("\n")
 
     for line in content:

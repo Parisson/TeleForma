@@ -50,7 +50,7 @@ class Duration(object):
     def __add__(self, other):
         return self.__decorate(self._delta.__add__, other)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self._delta.__nonzero__()
 
     def __str__(self):
@@ -79,7 +79,7 @@ class Duration(object):
 
                 return Duration(hours=hours, minutes=minutes, seconds=seconds)
             except TypeError:
-                print groups
+                print(groups)
                 raise
         else:
             raise ValueError("Malformed duration string: " + str)
@@ -97,14 +97,14 @@ def normalize_field(args, default_value=None):
        The default value can also be overriden with the default=value argument.
        """
     required = False
-    if args.has_key('required'):
+    if 'required' in args:
         required = args['required']
         args.pop('required')
 
     args['blank'] = not required
 
     if not required:
-        if not args.has_key('default'):
+        if 'default' not in args:
             if args.get('null'):
                 args['default'] = None
             elif default_value is not None:
@@ -114,7 +114,7 @@ def normalize_field(args, default_value=None):
 
 
 # The following is based on Django TimeField
-class DurationField(models.Field):
+class DurationField(models.Field, metaclass=models.SubfieldBase):
     """Duration Django model field. Essentially the same as a TimeField, but
     with values over 24h allowed.
 
@@ -122,8 +122,6 @@ class DurationField(models.Field):
     """
 
     description = _("Duration")
-
-    __metaclass__ = models.SubfieldBase
 
     default_error_messages = {
         'invalid': _('Enter a valid duration in HH:MM[:ss] format.'),
@@ -138,7 +136,7 @@ class DurationField(models.Field):
     def to_python(self, value):
         if value is None:
             return None
-        if isinstance(value, int) or isinstance(value, long):
+        if isinstance(value, int):
             return Duration(seconds=value)
         if isinstance(value, datetime.time):
             return Duration(hours=value.hour, minutes=value.minute, seconds=value.second)
@@ -169,7 +167,7 @@ class DurationField(models.Field):
         if val is None:
             data = ''
         else:
-            data = unicode(val)
+            data = str(val)
         return data
 
     def formfield(self, **kwargs):

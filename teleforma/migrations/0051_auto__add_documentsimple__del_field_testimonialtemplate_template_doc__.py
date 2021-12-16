@@ -29,7 +29,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'TestimonialTemplate.document'
         db.add_column('teleforma_testimonial_template', 'document',
-                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'testimonial_template', null=True, to=orm['teleforma.DocumentSimple']),
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='testimonial_template', null=True, to=orm['teleforma.DocumentSimple']),
                       keep_default=False)
 
 
@@ -50,7 +50,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'TestimonialTemplate.template_doc'
         db.add_column('teleforma_testimonial_template', 'template_doc',
-                      self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'testimonial_template', null=True, to=orm['teleforma.Document'], blank=True),
+                      self.gf('django.db.models.fields.related.ForeignKey')(related_name='testimonial_template', null=True, to=orm['teleforma.Document'], blank=True),
                       keep_default=False)
 
         # Deleting field 'TestimonialTemplate.document'

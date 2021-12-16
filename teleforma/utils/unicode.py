@@ -35,10 +35,10 @@
 # Author: jdunck
 # taken from https://github.com/jdunck/python-unicodecsv.git
 
-import csv, codecs, cStringIO
+import csv, codecs, io
 
 def _stringify(s, encoding):
-    if type(s)==unicode:
+    if type(s)==str:
         return s.encode(encoding)
     elif isinstance(s, (int , float)):
         pass #let csv.QUOTE_NONNUMERIC do its thing.

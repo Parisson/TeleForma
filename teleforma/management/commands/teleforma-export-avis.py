@@ -9,7 +9,7 @@ from pbcart.models import Cart
 import logging
 from datetime import datetime, timedelta, date
 import csv
-import StringIO
+import io
 from ftplib import FTP
 
 from teleforma.context_processors import seminar_validated
@@ -41,7 +41,7 @@ class Command(BaseCommand):
         print(dry_run)
         logging.info('Generate csv file...')
 
-        output = StringIO.StringIO()
+        output = io.StringIO()
         writer = csv.writer(output, delimiter=';')
         
         writer.writerow([

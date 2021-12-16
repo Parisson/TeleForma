@@ -40,5 +40,5 @@ class Command(BaseCommand):
                         self.init_password_email(user)
                         profile.init_password = True
                         profile.save()
-                        print user.username
+                        print(user.username)
 

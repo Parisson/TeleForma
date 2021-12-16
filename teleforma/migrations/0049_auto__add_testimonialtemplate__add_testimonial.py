@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('organization', self.gf('django.db.models.fields.related.ForeignKey')(related_name='testimonial_template', to=orm['teleforma.Organization'])),
             ('text', self.gf('django.db.models.fields.TextField')()),
-            ('template_doc', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'testimonial_template', null=True, to=orm['teleforma.Document'])),
+            ('template_doc', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='testimonial_template', null=True, to=orm['teleforma.Document'])),
         ))
         db.send_create_signal('teleforma', ['TestimonialTemplate'])
 
@@ -21,8 +21,8 @@ class Migration(SchemaMigration):
         db.create_table('teleforma_testimonial', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('seminar', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['teleforma.Seminar'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'testimonial', to=orm['auth.User'])),
-            ('document', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name=u'testimonial', null=True, to=orm['teleforma.Document'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='testimonial', to=orm['auth.User'])),
+            ('document', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='testimonial', null=True, to=orm['teleforma.Document'])),
         ))
         db.send_create_signal('teleforma', ['Testimonial'])
 

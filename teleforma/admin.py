@@ -5,8 +5,7 @@ from teleforma.templatetags.teleforma_tags import fancy_duration_shop_like, fanc
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from longerusername.forms import UserCreationForm, UserChangeForm
-from django.contrib.contenttypes.generic import GenericInlineModelAdmin
+# from longerusername.forms import UserCreationForm, UserChangeForm
 from django.http import HttpResponse
 import time
 from datetime import date
@@ -44,8 +43,8 @@ class ProfessorAdmin(admin.ModelAdmin):
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ProfessorProfileInline, AuditorProfileInline]
-    add_form = UserCreationForm
-    form = UserChangeForm
+    # add_form = UserCreationForm
+    # form = UserChangeForm
     list_filter = ['is_staff', 'is_superuser', 'is_active', 'date_joined']
 
     actions = ['export_user_profiles']
@@ -198,11 +197,11 @@ class ConferenceAdmin(admin.ModelAdmin):
             title = conference.pretty_title
             
             if conference.webclass:
-                title = u"Webconférence - " + title
+                title = "Webconférence - " + title
             if conference.duration:
-                title += u" - Durée : %s" % (fancy_duration_shop_like(conference.duration))
+                title += " - Durée : %s" % (fancy_duration_shop_like(conference.duration))
             if conference.webclass:
-                title += u" (%s live + %s de validation des acquis)" % (fancy_seconds(conference.webclass_duration), fancy_seconds(conference.webclass_hours_complementary.as_seconds()))
+                title += " (%s live + %s de validation des acquis)" % (fancy_seconds(conference.webclass_duration), fancy_seconds(conference.webclass_hours_complementary.as_seconds()))
             row = (conference.id, title, conference.price, conference.product_code)
             writer.writerow(row)
         return response
@@ -342,10 +341,10 @@ class SeminarRevisionAdmin(admin.ModelAdmin):
 
         writer = UnicodeWriter(response, delimiter=";")
         writer.writerow(["seminaire", "email", "duree total", "date debut", "date fin", "duree"])
-        for seminar in data.keys():
+        for seminar in list(data.keys()):
             title = data[seminar]['title']
             users = data[seminar]['users']
-            for user in users.keys():
+            for user in list(users.keys()):
                 l = [title, user]
                 revs = users[user]
                 duration = datetime.timedelta()

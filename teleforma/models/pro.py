@@ -154,7 +154,7 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
         pretty_title = self.pretty_title
         if self.duration:
             from teleforma.templatetags.teleforma_tags import fancy_duration_shop_like
-            pretty_title += u" - Durée : %s" % (fancy_duration_shop_like(self.duration))
+            pretty_title += " - Durée : %s" % (fancy_duration_shop_like(self.duration))
         return pretty_title
 
     def public_url(self):
@@ -244,7 +244,7 @@ class Question(ClonableMixin, models.Model):
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=3)
 
     def __unicode__(self):
-        return ' - '.join([unicode(self.seminar), self.title, str(self.rank)])
+        return ' - '.join([str(self.seminar), self.title, str(self.rank)])
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'question'
@@ -265,7 +265,7 @@ class Answer(models.Model):
     date_added     = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
 
     def __unicode__(self):
-        return ' - '.join([unicode(self.question), self.user.username, unicode(self.date_submitted)])
+        return ' - '.join([str(self.question), self.user.username, str(self.date_submitted)])
 
     def validate(self):
         self.validated = True
@@ -428,7 +428,7 @@ class QuizValidation(models.Model):
     date_validated = models.DateTimeField(_('date validated'), auto_now_add=True, null=True)
 
     def __unicode__(self):
-        return ' - '.join([unicode(self.quiz), self.user.username, unicode(self.date_validated)])
+        return ' - '.join([str(self.quiz), self.user.username, str(self.date_validated)])
 
     def validate(self):
         self.validated = True

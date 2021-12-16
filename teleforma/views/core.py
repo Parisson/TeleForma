@@ -36,11 +36,11 @@ import mimetypes
 import datetime
 from datetime import timedelta
 import random
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import json
 import os
-import StringIO
+import io
 import datetime
 
 from jsonrpc import jsonrpc_method
@@ -81,7 +81,7 @@ from jsonrpc.proxy import ServiceProxy
 from teleforma.models import *
 from teleforma.forms import *
 from teleforma.context_processors import *
-import pages
+from . import pages
 import jqchat.models
 from xlwt import Workbook
 
@@ -246,12 +246,12 @@ class CourseListView(ListView):
     @jsonrpc_method('teleforma.get_dep_courses')
     def get_dep_courses(request, id):
         department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.course.all()]
+        return [{'id': str(c.id), 'name': str(c)} for c in department.course.all()]
 
     @jsonrpc_method('teleforma.get_dep_periods')
     def get_dep_periods(request, id):
         department = Department.objects.get(id=id)
-        return [{'id': str(c.id), 'name': unicode(c)} for c in department.period.all()]
+        return [{'id': str(c.id), 'name': str(c)} for c in department.period.all()]
 
 
 class CourseView(DetailView):
@@ -289,9 +289,9 @@ class CourseView(DetailView):
         media_list = []
         for media in course.media.all():
             if media.is_published and media.file and media.conference and 'video' in media.mime_type:
-                urls = [ {'url': settings.MEDIA_URL + unicode(media.file), 'mime_type': media.mime_type} ]
+                urls = [ {'url': settings.MEDIA_URL + str(media.file), 'mime_type': media.mime_type} ]
                 for transcoded in media.transcoded.all():
-                    urls.append({'url':settings.MEDIA_URL + unicode(transcoded.file), 'mime_type': transcoded.mime_type})
+                    urls.append({'url':settings.MEDIA_URL + str(transcoded.file), 'mime_type': transcoded.mime_type})
                 media_list.append({'session': media.conference.session, 'urls': urls, 'poster': media.poster_url()})
         return media_list
 
@@ -548,7 +548,7 @@ class ConferenceView(DetailView):
                 context['seminar'] = None
             context['record'] = None
             # debug -> test links
-            context['range'] = range(0,15)
+            context['range'] = list(range(0,15))
             webclass_status = ""
 
             now = datetime.datetime.now()
@@ -718,7 +718,7 @@ class ConferenceRecordView(FormView):
     def snapshot(self, url, dir):
         width = 160
         height = 90
-        img = urllib.urlopen(url)
+        img = urllib.request.urlopen(url)
         path = dir + os.sep + 'preview.webp'
         f = open(path, 'w')
         f.write(img.read())
@@ -778,7 +778,7 @@ class ConferenceRecordView(FormView):
                                         stream_type=stream_type, streaming=True)
                     stream.save()
         else:
-            raise 'Error : Bad Conference dictionnary'
+            raise Exception('Error : Bad Conference dictionnary')
 
     def push(self, conference):
         url = 'http://' + conference.department.domain + '/json/'

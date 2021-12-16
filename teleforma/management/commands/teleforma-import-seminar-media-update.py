@@ -136,7 +136,7 @@ class Command(BaseCommand):
                         and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.' \
                         and statinfo.st_size > self.size_limit:
 
-                    print path
+                    print(path)
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
 
@@ -265,4 +265,4 @@ class Command(BaseCommand):
                                 seminar.save()
 
         for s in seminars:
-            print 'http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
+            print('http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id}))

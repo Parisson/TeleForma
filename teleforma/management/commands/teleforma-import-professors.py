@@ -30,7 +30,7 @@ class Command(BaseCommand):
                     course = Course.objects.filter(code=code)
                     if course:
                         p.courses.add(course[0])
-                print 'imported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username
+                print('imported: ' + user.first_name + ' ' + user.last_name + ' ' + user.username)
 
     def handle(self, *args, **options):
         file = args[0]
