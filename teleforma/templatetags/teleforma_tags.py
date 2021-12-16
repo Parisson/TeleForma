@@ -33,13 +33,13 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 from django import template
-from django.utils.http import urlquote
+from urllib.parse import quote
 from teleforma.models import *
 from django.core.urlresolvers import reverse
 from django.utils import html
 from django import template
 from django.utils.text import capfirst
-from django.utils.translation import ungettext
+from django.utils.translation import ngettext
 from docutils.core import publish_parts
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
@@ -50,7 +50,7 @@ import datetime
 from django.conf import settings
 from django.template.defaultfilters import stringfilter
 import django.utils.timezone as timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from urllib.parse import urlparse
 from docutils.core import publish_parts
 from django.utils.encoding import smart_str, force_unicode

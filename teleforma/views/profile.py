@@ -42,7 +42,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from teleforma.models.profile import UserProfile
 from teleforma.forms import UserProfileForm
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 class ProfileView(object):
     """Provide Collections web UI methods"""
@@ -68,9 +68,9 @@ class ProfileView(object):
 
         user = User.objects.get(username=username)
         if user != request.user and not request.user.is_staff:
-            mess = ugettext('Access not allowed')
-            title = ugettext('User profile') + ' : ' + username + ' : ' + mess
-            description = ugettext('Please login or contact the website administator to get a private access.')
+            mess = gettext('Access not allowed')
+            title = gettext('User profile') + ' : ' + username + ' : ' + mess
+            description = gettext('Please login or contact the website administator to get a private access.')
             messages.error(request, title)
             return render(request, 'teleforma/messages.html', {'description' : description})
 

@@ -45,7 +45,7 @@ from django.conf import settings
 from django.db.models import *
 from teleforma.fields import *
 import django.db.models as models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.functional import cached_property
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError

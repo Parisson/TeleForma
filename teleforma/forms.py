@@ -2,7 +2,7 @@
 from django.forms import ModelForm, HiddenInput
 from teleforma.models import *
 from django.forms import ModelForm
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from teleforma.models.profile import UserProfile
 
