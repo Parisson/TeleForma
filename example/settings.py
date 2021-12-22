@@ -194,7 +194,7 @@ DATABASES = {
 #########
 
 import os, sys
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 sys.dont_write_bytecode = True
 
 

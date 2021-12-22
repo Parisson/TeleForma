@@ -63,10 +63,10 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     private         = models.BooleanField(_('private'), default=False)
     upcoming        = models.BooleanField("A venir (shop)", default=False)
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     period          = ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'))
+    course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'), on_delete=models.CASCADE)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
     sub_title       = models.CharField(_('sub title'), max_length=1024, blank=True)
     concerned       = models.CharField(_('public concerned'), max_length=1024, blank=True)
@@ -77,27 +77,27 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     index           = tinymce.models.HTMLField(_('index'), blank=True)
     duration        = DurationField(_('approximative duration'))
     professor       = models.ManyToManyField('Professor', related_name='seminar',
-                                            verbose_name=_('professor'), blank=True, null=True)
+                                            verbose_name=_('professor'), blank=True)
     docs_description = models.ManyToManyField(Document, related_name="seminar_docs_description",
                                         verbose_name=_('description documents'),
-                                        blank=True, null=True)
+                                        blank=True)
     docs_1          = models.ManyToManyField(Document, related_name="seminar_docs_1",
                                         verbose_name=_('documents 1'),
-                                        blank=True, null=True)
+                                        blank=True)
     medias          = models.ManyToManyField(Media, related_name="seminar",
                                         verbose_name=_('media'),
-                                        blank=True, null=True)
+                                        blank=True)
     media_preview  = models.ForeignKey(Media, related_name="seminar_preview",
                                         verbose_name=_('media_preview'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
     docs_2          = models.ManyToManyField(Document, related_name="seminar_docs_2",
                                         verbose_name=_('documents 2'),
-                                        blank=True, null=True)
+                                        blank=True)
     docs_correct    = models.ManyToManyField(Document, related_name="seminar_docs_correct",
                                         verbose_name=_('corrected documents'),
-                                        blank=True, null=True)
+                                        blank=True)
     form            = models.ForeignKey(Form, related_name='seminar', verbose_name=_('form'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     conference      = models.ForeignKey('Conference', related_name='seminar',
                                         verbose_name=_('conference'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
@@ -234,7 +234,7 @@ class Question(ClonableMixin, models.Model):
 
     element_type = 'question'
 
-    seminar     = models.ForeignKey(Seminar, related_name="question", verbose_name=_('seminar'))
+    seminar     = models.ForeignKey(Seminar, related_name="question", verbose_name=_('seminar'), on_delete=models.CASCADE)
     title       = models.CharField(_('title'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=1024, blank=True)
     question    = tinymce.models.HTMLField(_('question'), blank=True)
@@ -254,8 +254,8 @@ class Question(ClonableMixin, models.Model):
 
 class Answer(models.Model):
 
-    user        = models.ForeignKey(User, related_name="answer", verbose_name=_('user'))
-    question    = models.ForeignKey(Question, related_name="answer", verbose_name=_('question'))
+    user        = models.ForeignKey(User, related_name="answer", verbose_name=_('user'), on_delete=models.CASCADE)
+    question    = models.ForeignKey(Question, related_name="answer", verbose_name=_('question'), on_delete=models.CASCADE)
     answer      = models.TextField(_('answer'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
     treated     = models.BooleanField(_('treated'))
@@ -288,11 +288,11 @@ class Answer(models.Model):
 class TestimonialTemplate(models.Model):
 
     organization = models.ForeignKey(Organization, related_name='testimonial_template',
-                                 verbose_name=_('organization'))
+                                 verbose_name=_('organization'), on_delete=models.CASCADE)
     description  = models.TextField(_('description'), blank=True)
     comments     = models.TextField(_('comments'), blank=True)
     document     = models.ForeignKey(Document, related_name="testimonial_template",
-                                verbose_name=_('template'))
+                                verbose_name=_('template'), on_delete=models.CASCADE)
 
     def __unicode__(self):
         return ' - '.join([self.organization.name, self.description])
@@ -309,7 +309,7 @@ class Testimonial(models.Model):
     user        = models.ForeignKey(User, related_name="testimonial", verbose_name=_('user'),
                                     blank=True, null=True, on_delete=models.SET_NULL)
     template    = models.ForeignKey(TestimonialTemplate, related_name="testimonial",
-                                    verbose_name=_('template'), blank=True, null=True)
+                                    verbose_name=_('template'), blank=True, null=True, on_delete=models.SET_NULL)
     file        = models.FileField(_('file'), upload_to='testimonials/%Y/%m',
                                  blank=True, max_length=1024)
     date_added  = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
@@ -350,13 +350,13 @@ class Testimonial(models.Model):
 
 class Auditor(models.Model):
 
-    user            = models.ForeignKey(User, related_name='auditor', verbose_name=_('user'), unique=True)
+    user            = models.ForeignKey(User, related_name='auditor', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     seminars        = models.ManyToManyField('Seminar', related_name="auditor",
                                         verbose_name=_('seminars'),
-                                        blank=True, null=True)
+                                        blank=True)
     conferences     = models.ManyToManyField(Conference, related_name="auditor",
                                         verbose_name=_('conferences'),
-                                        blank=True, null=True)
+                                        blank=True)
 
     platform_only   = models.BooleanField(_('platform only'))
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
@@ -398,8 +398,8 @@ class Auditor(models.Model):
 
 class SeminarRevision(models.Model):
 
-    seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'))
-    user        = models.ForeignKey(User, related_name="revision", verbose_name=_('user'))
+    seminar     = models.ForeignKey(Seminar, related_name="revision", verbose_name=_('seminar'), on_delete=models.CASCADE)
+    user        = models.ForeignKey(User, related_name="revision", verbose_name=_('user'), on_delete=models.CASCADE)
     date        = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
     date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
 
@@ -421,7 +421,7 @@ class SeminarRevision(models.Model):
 
 class QuizValidation(models.Model):
 
-    user        = models.ForeignKey(User, related_name="quiz_validation", verbose_name=_('user'))
+    user        = models.ForeignKey(User, related_name="quiz_validation", verbose_name=_('user'), on_delete=models.CASCADE)
     quiz        = models.ForeignKey(Quiz, related_name="quiz_validation", verbose_name=_('quiz'),
                     blank=True, null=True, on_delete=models.SET_NULL)
     validated   = models.BooleanField(_('validated'))
@@ -443,5 +443,3 @@ class QuizValidation(models.Model):
         verbose_name = _('Quiz validation')
         ordering = ['-date_validated']
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^tinymce\.models\.HTMLField"])

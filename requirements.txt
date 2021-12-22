@@ -3,13 +3,19 @@ docutils==0.17.1
 Django==3.2.3
 # south
 dj_pagination==2.5.0 # used by postman
+-e git+https://github.com/pilot-systems/django-forms-builder.git@master#egg=django-forms-builder       
+django-forms-builder==0.14.0
 django-jazzmin==2.4.7
 django-json-rpc==0.7.1
 django-nvd3==0.8.2
 django-postman==4.2
+django-utils-six==2.0 # for Django 3 forward compatibility
 django-tinymce==3.3.0
 -e git+https://git.parisson.com/git/django-unique-session.git@master#egg=django-unique-session
 django-user-agents==0.4.0
+django-extensions==2.1.3
+-e git+https://github.com/pilot-systems/django-notes.git@master#egg=notes     
+# -e git+https://github.com/powellc/django-notes.git@master#egg=django-notes
 django-recaptcha==2.0.6
 dj_pagination==2.5.0 
 -e git+https://github.com/pilot-systems/Django-Quiz.git@master#egg=django-quiz-app
@@ -25,3 +31,4 @@ uwsgi==2.0.19
 pymemcache==3.4.4
 ipython
 Mezzanine==5.0.0
+# south

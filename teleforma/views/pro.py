@@ -43,22 +43,16 @@ from django.views.generic.base import TemplateResponseMixin
 from django.http import HttpResponse
 from django.conf import settings
 from django.shortcuts import render
-from django.template.loader import get_template
 from django.template.context import Context
 from django.utils.html import escape
-from django.views.generic.detail import SingleObjectMixin
-from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 import os, datetime
-from cgi import escape
 from io import StringIO
 
 import weasyprint
 
-import time
 import json
-import csv
 
 from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
@@ -78,7 +72,7 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     print("Write PDF 2")
     src = StringIO(content.encode(encoding))
     src = weasyprint.HTML(string=content.encode(encoding), encoding=encoding)
-    dest.write_pdf(result)
+    dest.write_pdf(src)
     return True
 
 def content_to_response(content, filename=None):

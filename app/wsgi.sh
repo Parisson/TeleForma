@@ -35,7 +35,7 @@ sh $app/wait.sh
 
 # app start
 if [ "$1" = "--runserver" ]; then
-    python $manage runserver 0.0.0.0:8000 --noasgi
+    python $manage runserver 0.0.0.0:8000
 else
     # static files auto update
     # watchmedo shell-command --patterns="$patterns" --recursive \

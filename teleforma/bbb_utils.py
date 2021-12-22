@@ -1,6 +1,6 @@
 from django.conf import settings
 from bigbluebutton_api_python import BigBlueButton
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 bbb = BigBlueButton(settings.BBB_SERVER, settings.BBB_SECRET)
 

@@ -9,15 +9,19 @@ from teleforma.models.profile import UserProfile
 class ConferenceForm(ModelForm):
     class Meta:
         model = Conference
+        fields = "__all__"
+
 
 class QuestionForm(ModelForm):
     class Meta:
         model = Question
+        fields = "__all__"
         # exclude = ['user', 'question', 'status', 'validated', 'date_submitted']
 
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
+        fields = "__all__"
 
 class AnswerForm(ModelForm):
 

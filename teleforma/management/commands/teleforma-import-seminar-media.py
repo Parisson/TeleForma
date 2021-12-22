@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from teleforma.models import *
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 import logging
 import os, sys, time, datetime

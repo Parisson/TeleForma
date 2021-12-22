@@ -7,12 +7,12 @@ class UserProfile(models.Model):
     "User profile extension"
 
     user            = models.ForeignKey(User, on_delete=models.CASCADE,  unique=True, related_name="profile")
-    institution     = models.CharField(_('Institution'))
-    department      = models.CharField(_('Department'))
-    attachment      = models.CharField(_('Attachment'))
-    function        = models.CharField(_('Function'))
+    institution     = models.CharField(_('Institution'), max_length=255)
+    department      = models.CharField(_('Department'), max_length=255)
+    attachment      = models.CharField(_('Attachment'), max_length=255)
+    function        = models.CharField(_('Function'), max_length=255)
     address         = models.TextField(_('Address'))
-    telephone       = models.CharField(_('Telephone'))
+    telephone       = models.CharField(_('Telephone'), max_length=255)
     expiration_date = models.DateField(_('Expiration_date'))
 
     class Meta(MetaCore):

@@ -33,8 +33,17 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import os.path
-from django.conf.urls.defaults import patterns, url, include
+from django.conf.urls import url, include
 from jsonrpc import jsonrpc_site
+from django.contrib.auth.views import (LoginView, LogoutView,
+                                       PasswordChangeDoneView,
+                                       PasswordChangeView,
+                                       PasswordContextMixin,
+                                       PasswordResetCompleteView,
+                                       PasswordResetConfirmView,
+                                       PasswordResetDoneView,
+                                       PasswordResetView)
+from django.views import static
 from teleforma.views.core import ConferenceRecordView, ConferenceView, CourseView, HelpView, MediaTranscodedView, MediaView, join_webclass
 from teleforma.views.crfpa import UserLoginView, UsersCourseView, UsersIejView, UsersTrainingView, UsersView, UsersXLSExport
 from teleforma.views.pro import AnswerDetailView, AnswerDetailViewTest, AnswerView, AnswersPendingView, AnswersTreatedView, QuizQuestionView, SeminarDocumentDownloadView, SeminarDocumentView, SeminarMediaView, SeminarView, SeminarsView, TestimonialDownloadView, TestimonialKnowledgeView, TestimonialListView, TestimonialPaybackView, TestimonialView, evaluation_form_detail, webclass_bbb_webhook
@@ -48,15 +57,15 @@ media = MediaView()
 home_view = HomeView()
 media_transcoded = MediaTranscodedView
 
-urlpatterns = patterns('',
-
+urlpatterns = [
     url(r'^$', SeminarsView.as_view(), name="home"),
     # login / logout
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'teleforma/login.html'},
+    url(r'^login/$', LoginView.as_view(template_name='registration/login.html'),
         name="teleforma-login"),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'},
+    url(r'^accounts/login/$', LoginView.as_view(template_name='registration/login.html'),
         name="teleforma-login"),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', name="teleforma-logout"),
+    url(r'^logout/$', LogoutView.as_view(),
+        name="teleforma-logout"),
 
     url(r'^users/(?P<username>[A-Za-z0-9+@._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
@@ -64,17 +73,23 @@ urlpatterns = patterns('',
     url(r'^accounts/(?P<username>[A-Za-z0-9+@._-]+)/profile/edit/$', profile_view.profile_edit, name="teleforma-profile-edit"),
     
     # Registration
-    url(r'^accounts/password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'registration/password_change_form.html'}, name="teleforma-password-change"),
-    url(r'^accounts/password_change_done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'registration/password_change_done.html'}, name="teleforma-password-change-done"),
 
-    url(r'^accounts/password_reset/$', 'django.contrib.auth.views.password_reset', {'template_name': 'registration/password_reset_form.html', 'email_template_name': 'registration/password_reset_email.html'}, name="teleforma-password-reset"),
-    url(r'^accounts/password_reset_done/$', 'django.contrib.auth.views.password_reset_done', {'template_name': 'registration/password_reset_done.html'}, name="teleforma-password-reset-done"),
-    url(r'^accounts/password_reset_confirm/(?P<uidb36>[A-Za-z0-9._-]+)/(?P<token>[A-Za-z0-9._-]+)/$', 'django.contrib.auth.views.password_reset_confirm', {'template_name': 'registration/password_reset_confirm.html'}, name="teleforma-password-reset-confirm"),
-    url(r'^accounts/password_reset_complete/$', 'django.contrib.auth.views.password_reset_complete', {'template_name': 'registration/password_reset_complete.html'}, name="teleforma-password-reset-complete"),
-    url(r'^accounts/password_reset_complete/$', 'django.contrib.auth.views.password_reset_complete', {'template_name': 'registration/password_reset_complete.html'}, name="teleforma-password-reset-complete"),
+    # Registration
+    url(r'^accounts/password_change/$', PasswordChangeView.as_view(template_name='registration/password_change_form.html'),
+        name="teleforma-password-change"),
+    url(r'^accounts/password_change_done/$', PasswordChangeDoneView.as_view(
+        template_name='registration/password_change_done.html'), name="password_change_done"),
 
+    url(r'^accounts/password_reset/$', PasswordResetView.as_view(template_name='registration/password_reset_form.html',
+                                                                 email_template_name='registration/password_reset_email.html'), name="teleforma-password-reset"),
+    url(r'^accounts/password_reset_done/$', PasswordResetDoneView.as_view(
+        template_name='registration/password_reset_done.html'), name="password_reset_done"),
+    url(r'accounts/password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
+        template_name='registration/password_reset_confirm.html'), name="teleforma-password-reset-confirm"),
+    url(r'^accounts/password_reset_complete/$', PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
+        name="password_reset_complete"),
 
-    url(r'^captcha/', include('captcha.urls')),
+    # url(r'^captcha/', include('captcha.urls')),
 
     # Help
     url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
@@ -165,13 +180,13 @@ urlpatterns = patterns('',
 
 
 # CSS+Images (FIXME: for developement only)
-    url(r'^teleforma/css/(?P<path>.*)$', 'django.views.static.serve',
+    url(r'^teleforma/css/(?P<path>.*)$', static.serve,
         {'document_root': htdocs_forma+'css'},
         name="teleforma-css"),
-    url(r'images/(?P<path>.*)$', 'django.views.static.serve',
+    url(r'images/(?P<path>.*)$', static.serve,
         {'document_root': htdocs_forma+'images'},
         name="teleforma-images"),
-    url(r'^js/(?P<path>.*)$', 'django.views.static.serve',
+    url(r'^js/(?P<path>.*)$', static.serve,
         {'document_root': htdocs_forma+'js'},
         name="teleforma-js"),
 
@@ -181,7 +196,7 @@ urlpatterns = patterns('',
 #    url(r'^private_files/', include('private_files.urls')),
 
     # JQCHAT
-    url(r'^', include('jqchat.urls')),
+    # url(r'^', include('jqchat.urls')),
 
     url(r'^tinymce/', include('tinymce.urls')),
 
@@ -190,4 +205,4 @@ urlpatterns = patterns('',
     # Webclass hook
     url(r'^webclass_bbb_webhook/', webclass_bbb_webhook,
         name="webclass_bbb_webhook"),
-)
+]

@@ -61,34 +61,34 @@ class Training(Model):
     code            = CharField(_('code'), max_length=255)
     name            = CharField(_('name'), max_length=255, blank=True)
     period          = ForeignKey('Period', related_name='training', verbose_name=_('period'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     synthesis_note  = ManyToManyField('CourseType', related_name="training_synthesis_note",
                                         verbose_name=_('synthesis note'),
-                                        blank=True, null=True)
+                                        blank=True)
     obligation      = ManyToManyField('CourseType', related_name="training_obligation",
                                         verbose_name=_('obligations'),
-                                        blank=True, null=True)
+                                        blank=True)
     procedure       = ManyToManyField('CourseType', related_name="training_procedure",
                                         verbose_name=_('procedure'),
-                                        blank=True, null=True)
+                                        blank=True)
     written_speciality = ManyToManyField('CourseType', related_name="training_written_speciality",
                                         verbose_name=_('written speciality'),
-                                        blank=True, null=True)
+                                        blank=True)
     oral_speciality = ManyToManyField('CourseType', related_name="training_oral_speciality",
                                         verbose_name=_('oral speciality'),
-                                        blank=True, null=True)
+                                        blank=True)
     oral_1          = ManyToManyField('CourseType', related_name="training_oral_1",
                                         verbose_name=_('oral 1'),
-                                        blank=True, null=True)
+                                        blank=True)
     oral_2          = ManyToManyField('CourseType', related_name="training_oral_2",
                                         verbose_name=_('oral 2'),
-                                        blank=True, null=True)
+                                        blank=True)
     options         = ManyToManyField('CourseType', related_name="training_options",
                                         verbose_name=_('options'),
-                                        blank=True, null=True)
+                                        blank=True)
     magistral       = ManyToManyField('CourseType', related_name="training_magistral",
                                         verbose_name=_('magistral'),
-                                        blank=True, null=True)
+                                        blank=True)
     cost            = FloatField(_('cost'), blank=True, null=True)
 
     def __unicode__(self):
@@ -104,28 +104,28 @@ class Training(Model):
 
 class Student(Model):
 
-    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True )
+    user            = ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
-                                  blank=True, null=True)
+                                  blank=True)
     iej             = ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
-    training        = ForeignKey('Training', related_name='student', verbose_name=_('training'))
+    training        = ForeignKey('Training', related_name='student', verbose_name=_('training'), on_delete=models.CASCADE)
     platform_only   = BooleanField(_('platform only'))
     procedure       = ForeignKey('Course', related_name="procedure",
                                         verbose_name=_('procedure'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     written_speciality = ForeignKey('Course', related_name="written_speciality",
                                         verbose_name=_('written speciality'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     oral_speciality = ForeignKey('Course', related_name="oral_speciality",
                                         verbose_name=_('oral speciality'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     oral_1          = ForeignKey('Course', related_name="oral_1", verbose_name=_('oral 1'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     oral_2          = ForeignKey('Course', related_name="oral_2", verbose_name=_('oral 2'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
     options         = ForeignKey('Course', related_name="options", verbose_name=_('options'),
-                                        blank=True, null=True)
+                                        blank=True, null=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
         try:
@@ -139,21 +139,21 @@ class Student(Model):
         ordering = ['user__last_name']
 
 
-class Profile(models.Model):
-    "User profile extension"
+# class Profile(models.Model):
+#     "User profile extension"
 
-    user            = ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True)
-    address         = TextField(_('Address'), blank=True)
-    postal_code     = CharField(_('Postal code'), max_length=255, blank=True)
-    city            = CharField(_('City'), max_length=255, blank=True)
-    country         = CharField(_('Country'), max_length=255, blank=True)
-    language        = CharField(_('Language'), max_length=255, blank=True)
-    telephone       = CharField(_('Telephone'), max_length=255, blank=True)
-    expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
-    init_password   = BooleanField(_('Password initialized'))
+#     user            = ForeignKey(User, related_name='profile', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
+#     address         = TextField(_('Address'), blank=True)
+#     postal_code     = CharField(_('Postal code'), max_length=255, blank=True)
+#     city            = CharField(_('City'), max_length=255, blank=True)
+#     country         = CharField(_('Country'), max_length=255, blank=True)
+#     language        = CharField(_('Language'), max_length=255, blank=True)
+#     telephone       = CharField(_('Telephone'), max_length=255, blank=True)
+#     expiration_date = DateField(_('Expiration_date'), blank=True, null=True)
+#     init_password   = BooleanField(_('Password initialized'))
 
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'profiles'
-        verbose_name = _('profile')
+#     class Meta(MetaCore):
+#         db_table = app_label + '_' + 'profiles'
+#         verbose_name = _('profile')
 
 

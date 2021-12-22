@@ -49,16 +49,15 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.functional import cached_property
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.sites.models import Site
 from notes.models import Note
-import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 import tinymce.models
 from mezzanine.core.models import Displayable
 from mezzanine.core.managers import DisplayableManager
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.template.defaultfilters import date
 from bigbluebutton_api_python.exception import BBBException
 from django.db.models.signals import pre_save
@@ -146,7 +145,7 @@ class Department(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     organization    = ForeignKey('Organization', related_name='department',
-                                 verbose_name=_('organization'))
+                                 verbose_name=_('organization'), on_delete=models.CASCADE)
     domain          = CharField(_('Master domain'), max_length=255, blank=True)
     address         = tinymce.models.HTMLField(_('address'), blank=True)
     signature       = models.ImageField(_('Signature image'), upload_to='images/%Y/%m/%d',
@@ -174,9 +173,9 @@ class Location(Model):
 
     name             = models.CharField(_('name'), unique=True, max_length=150)
     type             = models.IntegerField(_('type'), choices=TYPE_CHOICES, default=OTHER_TYPE, db_index=True, null=True, blank=True)
-    complete_type    = models.ForeignKey('LocationType', related_name="locations", verbose_name=_('complete type'))
+    complete_type    = models.ForeignKey('LocationType', related_name="locations", verbose_name=_('complete type'), on_delete=models.CASCADE)
     current_location = models.ForeignKey('self', related_name="past_names",
-                                      verbose_name=_('current location'), null=True, blank=True)
+                                      verbose_name=_('current location'), null=True, blank=True, on_delete=models.SET_NULL)
     latitude         = models.FloatField(null=True)
     longitude        = models.FloatField(null=True)
     is_authoritative = models.BooleanField(_('authoritative'), default=False)
@@ -233,7 +232,7 @@ class CourseType(Model):
 class Course(Model):
 
     department      = ForeignKey('Department', related_name='course',
-                                 verbose_name=_('department'))
+                                 verbose_name=_('department'), on_delete=models.CASCADE)
     title           = CharField(_('title'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
     code            = CharField(_('code'), max_length=255)
@@ -244,11 +243,11 @@ class Course(Model):
     magistral       = BooleanField(_('magistral'))
     types           = ManyToManyField('CourseType', related_name="course",
                                         verbose_name=_('types'),
-                                        blank=True, null=True)
+                                        blank=True)
     private         = models.BooleanField(_('private'), help_text="Hide in shop", default=False)
     
 
-    notes = generic.GenericRelation(Note)
+    notes = GenericRelation(Note)
 
     def __unicode__(self):
         return self.title
@@ -290,7 +289,7 @@ class CourseDomain(Model):
     name            = CharField(_('name'), max_length=255)
     courses         = ManyToManyField('Course', related_name="domain",
                                         verbose_name=_('courses'),
-                                        blank=True, null=True)
+                                        blank=True)
 
     def __unicode__(self):
         return self.name
@@ -303,10 +302,10 @@ class CourseDomain(Model):
 class Professor(Model):
 
     user            = ForeignKey(User, related_name='professor',
-                                 verbose_name=_('user'), unique=True)
+                                 verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     courses         = ManyToManyField('Course', related_name="professor",
                                         verbose_name=_('courses'),
-                                        blank=True, null=True)
+                                        blank=True)
     title           = CharField(_('title'), max_length=255)
     portrait = models.ImageField(verbose_name=_("portrait"),
                                     upload_to="professors",
@@ -336,7 +335,7 @@ class Professor(Model):
 
 class Room(Model):
 
-    organization    = ForeignKey('Organization', related_name='room', verbose_name=_('organization'))
+    organization    = ForeignKey('Organization', related_name='room', verbose_name=_('organization'), on_delete=models.CASCADE)
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
@@ -376,7 +375,7 @@ class LiveStream(Model):
                                 verbose_name=_('conference'),
                                 blank=True, null=True, on_delete=models.SET_NULL)
     server       = ForeignKey('StreamingServer', related_name='livestream',
-                                verbose_name=_('streaming server'))
+                                verbose_name=_('streaming server'), on_delete=models.CASCADE)
     stream_type  = CharField(_('Streaming type'),
                             choices=streaming_choices, max_length=32)
     streaming    = BooleanField(_('streaming'))
@@ -431,7 +430,7 @@ class MediaBase(ClonableMixin, Model):
     is_published    = BooleanField(_('published'))
     mime_type       = CharField(_('mime type'), max_length=255, blank=True)
     weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, null=True, blank=True)
-    notes = generic.GenericRelation(Note)
+    notes = GenericRelation(Note)
 
     def get_fields(self):
         return self._meta.fields
@@ -462,19 +461,19 @@ class Document(MediaBase):
     course          = ForeignKey('Course', related_name='document', verbose_name=_('course'),
                                       blank=True, null=True, on_delete=models.SET_NULL)
     course_type     = ManyToManyField('CourseType', related_name='document',
-                                      verbose_name=_('course type'), blank=True, null=True)
+                                      verbose_name=_('course type'), blank=True)
     conference      = ForeignKey('Conference', related_name='document', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     period          = ForeignKey('Period', related_name='document', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
     type            = ForeignKey('DocumentType', related_name='document', verbose_name=_('type'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     is_annal        = BooleanField(_('annal'))
     rank            = models.IntegerField(_('rank'), blank=True, null=True)
     file            = FileField(_('file'), upload_to='items/%Y/%m/%d', db_column="filename",
                                  blank=True, max_length=1024)
     readers         = ManyToManyField(User, related_name="document", verbose_name=_('readers'),
-                                        blank=True, null=True)
+                                        blank=True)
 
     def is_image(self):
         is_url_image = False
@@ -527,7 +526,7 @@ class MediaTranscoded(Model):
 
     element_type = 'transcoded item'
 
-    item            = models.ForeignKey('Media', related_name="transcoded", verbose_name=_('item'))
+    item            = models.ForeignKey('Media', related_name="transcoded", verbose_name=_('item'), on_delete=models.CASCADE)
     mimetype        = models.CharField(_('mime_type'), max_length=255, blank=True)
     date_added      = DateTimeField(_('date'), auto_now_add=True)
     status          = models.IntegerField(_('status'), choices=ITEM_TRANSODING_STATUS, default=1)
@@ -566,18 +565,18 @@ class Media(MediaBase):
     conference      = ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     course          = ForeignKey('Course', related_name='media', verbose_name=_('course'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     course_type     = ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
-                                 blank=True, null=True)
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     period          = ForeignKey('Period', related_name='media', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
     if HAS_TELEMETA:
         item            = models.ForeignKey(MediaItem, related_name='media',
-                                    verbose_name='item', blank=True, null=True)                                 
+                                    verbose_name='item', blank=True, null=True, on_delete=models.SET_NULL)                                 
     type            = CharField(_('type'), choices=streaming_choices, max_length=32)
     rank            = IntegerField(_('rank'), blank=True, null=True)
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
-                                        blank=True, null=True)
+                                        blank=True)
     file            = models.FileField(_('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
     poster_file     = models.FileField(_('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
 
@@ -633,10 +632,10 @@ class Media(MediaBase):
 class SuggestionsMixin(Model):
     suggested_seminars = models.ManyToManyField('Seminar', related_name="%(class)ss_related",
                                                 verbose_name=_('suggested seminars'),
-                                                blank=True, null=True)
+                                                blank=True)
     suggested_conferences = models.ManyToManyField('Conference', related_name="%(class)ss_related",
                                                    verbose_name=_('suggested conferences'),
-                                                   blank=True, null=True)
+                                                   blank=True)
                                                    
     class Meta(MetaCore):
         abstract = True
@@ -841,9 +840,9 @@ class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin)
                                  null=True, blank=True, on_delete=models.SET_NULL)
     period          = models.ForeignKey('Period', related_name='conference', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
-    course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'))
+    course          = models.ForeignKey('Course', related_name='conference', verbose_name=_('course'), on_delete=models.CASCADE)
     course_type     = models.ForeignKey('CourseType', related_name='conference', verbose_name=_('course type'),
-                                 null=True, blank=True)
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     professor       = models.ForeignKey('Professor', related_name='conference', verbose_name=_('professor'),
                                  blank=True, null=True, on_delete=models.SET_NULL)
     session         = models.CharField(_('session'), choices=session_choices,
@@ -854,7 +853,7 @@ class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin)
     location        = models.ForeignKey(Location, related_name='location', verbose_name=_('location'), on_delete=models.SET_NULL, blank=True, null=True)
     city            = models.ForeignKey(Location, related_name='city', verbose_name=_('city'), on_delete=models.SET_NULL, blank=True, null=True)
     room            = models.ForeignKey('Room', related_name='conference', verbose_name=_('room'),
-                                 null=True, blank=True)
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     comment         = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin      = models.DateTimeField(_('begin date'), null=True, blank=True)
     date_end        = models.DateTimeField(_('end date'), null=True, blank=True)
@@ -862,12 +861,12 @@ class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin)
     price           = models.FloatField(_('price'), blank=True, null=True)
     approved        = models.BooleanField(_('approved'), default=True)
     readers         = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
-                                        blank=True, null=True)
+                                        blank=True)
     docs_description = models.ManyToManyField(Document, related_name="conference_docs_description",
                                         verbose_name=_('description documents'),
-                                        blank=True, null=True)
+                                        blank=True)
 
-    notes           = generic.GenericRelation(Note)
+    notes           = GenericRelation(Note)
 
     additional_info         = tinymce.models.HTMLField(
                                     "Informations complémentaires", 

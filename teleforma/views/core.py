@@ -32,58 +32,37 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-import mimetypes
 import datetime
-from datetime import timedelta
-import random
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
-import json
-import os
 import io
-import datetime
+import json
+import mimetypes
+import os
+import random
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import timedelta
 
-from jsonrpc import jsonrpc_method
-
-from django.utils.decorators import method_decorator
-from django.contrib.auth import authenticate, login, get_backends
-from django.template import RequestContext, loader
-from django import template
-from django.http import HttpResponse, HttpResponseRedirect
-from django.http import Http404
-from django.shortcuts import render_to_response, redirect, get_object_or_404, render
-from django.views.generic import *
-from django.views.generic.base import *
 from django.conf import settings
-from django.contrib import auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.context_processors import csrf
-from django.forms.models import modelformset_factory, inlineformset_factory
 from django.contrib.auth.models import User
-from django.utils.translation import gettext
-from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.forms import UserChangeForm
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.syndication.views import Feed
-from django.core.paginator import Paginator
-from django.core.urlresolvers import resolve
-from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect
+from django.urls import resolve, reverse
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import *
+from django.views.generic.base import *
 from django.views.generic.edit import FormView
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.template.loader import get_template
-from django.template.context import Context
-from django.utils.html import escape
-
+from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
-
-from teleforma.models import *
-from teleforma.forms import *
 from teleforma.context_processors import *
+from teleforma.forms import *
+from teleforma.models import *
+
 from . import pages
-import jqchat.models
-from xlwt import Workbook
 
 try:
     from telecaster.models import *
@@ -223,7 +202,7 @@ class CourseListView(ListView):
 
     @jsonrpc_method('teleforma.get_course_list')
     def get_course_list(request, organization_name, department_name):
-        from teleforma.models import Organization, Department
+        from teleforma.models import Department, Organization
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(organization=organization, name=department_name)
         return [course.to_dict() for course in Course.objects.filter(department=department)]

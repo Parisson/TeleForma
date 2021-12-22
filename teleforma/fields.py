@@ -1,19 +1,11 @@
 
 import django.db.models as models
-from django.forms import ModelForm, TextInput, Textarea
-from south.modelsinspector import add_introspection_rules
-from django.core.exceptions import ValidationError
+from django.forms import Textarea
 from django.core import exceptions
 from django import forms
 import datetime
 from django.utils.translation import gettext_lazy as _
 import re
-
-try:
-    from django.contrib.auth import get_user_model  # Django 1.5
-except ImportError:
-    from postman.future_1_5 import get_user_model
-
 
 class ShortTextField(models.TextField):
 
@@ -23,7 +15,7 @@ class ShortTextField(models.TextField):
          )
          return super(ShortTextField, self).formfield(**kwargs)
 
-add_introspection_rules([], ["^teleforma\.fields\.ShortTextField"])
+# add_introspection_rules([], ["^teleforma\.fields\.ShortTextField"])
 
 
 
@@ -114,7 +106,7 @@ def normalize_field(args, default_value=None):
 
 
 # The following is based on Django TimeField
-class DurationField(models.Field, metaclass=models.SubfieldBase):
+class DurationField(models.Field):
     """Duration Django model field. Essentially the same as a TimeField, but
     with values over 24h allowed.
 
@@ -128,7 +120,7 @@ class DurationField(models.Field, metaclass=models.SubfieldBase):
     }
 
     def __init__(self, *args, **kwargs):
-        super(DurationField, self).__init__(*args, **normalize_field(kwargs, '0'))
+        super().__init__(*args, **normalize_field(kwargs, '0'))
 
     def db_type(self):
         return 'int'
@@ -170,11 +162,14 @@ class DurationField(models.Field, metaclass=models.SubfieldBase):
             data = str(val)
         return data
 
+    def from_db_value(self, value, expression, connection):
+        return self.to_python(value)
+
     def formfield(self, **kwargs):
         defaults = {'form_class': forms.CharField}
         defaults.update(kwargs)
         return super(DurationField, self).formfield(**defaults)
 
 
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^teleforma\.fields\.DurationField"])
+# from south.modelsinspector import add_introspection_rules
+# add_introspection_rules([], ["^teleforma\.fields\.DurationField"])

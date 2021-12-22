@@ -12,6 +12,7 @@ sys.dont_write_bytecode = True
 
 DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
+TESTING = False # mezzanine 
 TEMPLATE_DEBUG = DEBUG
 
 RECOVERY = True
@@ -169,8 +170,8 @@ MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOL
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'dj_pagination.middleware.PaginationMiddleware',
-    'teleforma.middleware.XsSharing',
     'django_user_agents.middleware.UserAgentMiddleware',
+    'mezzanine.core.middleware.SitePermissionMiddleware'
 )
 
 ROOT_URLCONF = 'urls'
@@ -185,6 +186,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.redirects',
     'django_comments',
     "mezzanine.boot",
     "mezzanine.conf",
@@ -194,17 +196,17 @@ INSTALLED_APPS = (
 #    "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-    "mezzanine.twitter",
+    # "mezzanine.twitter",
     'teleforma',
     'jazzmin',
     'django.contrib.admin',
     'jsonrpc',
     'sorl.thumbnail',
-    # 'django_extensions',
+    'django_extensions',
     'dj_pagination',
     'postman',
     # 'markup_mixin',
-    # 'notes',
+    'notes',
     # 'timezones',
     # 'googletools',
     # 'jqchat',
@@ -212,7 +214,7 @@ INSTALLED_APPS = (
     'pbcart',
     # 'telemeta',
     # 'telecaster',
-    # 'forms_builder.forms',
+    'forms_builder.forms',
     'quiz',
     'multichoice',
     'true_false',
@@ -238,8 +240,8 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
+                'mezzanine.pages.context_processors.page',
                 'teleforma.context_processors.periods',
-
             ],
         },
     },
@@ -300,9 +302,9 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
-RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
-RECAPTCHA_REQUIRED_SCORE = 0.85
+# RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
+# RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
+# RECAPTCHA_REQUIRED_SCORE = 0.85
 
 # Cache backend is optional, but recommended to speed up user agent parsing
 CACHES = {
@@ -422,7 +424,7 @@ JAZZMIN_SETTINGS = {
 
     "hide_apps": [],
     "hide_models": [],
-    "order_with_respect_to": ["auth", "teleforma", "teleforma.webclass", "teleforma.exam", "pdfannotator"],
+    "order_with_respect_to": ["auth", "teleforma", "teleforma.webclass"],
 
     # Custom links to append to app groups, keyed on app name
     # "custom_links": {
@@ -519,11 +521,21 @@ if DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
     }
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+
+FORMS_LABEL_MAX_LENGTH = 1024
+FORMS_FIELD_MAX_LENGTH = 255
+FORMS_BUILDER_USE_SITES = False
+
+
+BBB_SERVER = "https://bbb2.parisson.com/bigbluebutton/"
+# BBB_SECRET = "uOzkrTnWly1jusr0PYcrlwhvKhZG1ZYDOrSvxgP70" # bbb1
+BBB_SECRET = "3q3t6GCsv4wZmQlaT1pPX5ijysxeXOn8Vtn9svZEyU" # bbb2
+BBB_USE_WEBHOOKS = False
 
 USE_WEBPACK_DEV_SERVER = False
 WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"
-
 
 ##################
 # LOCAL SETTINGS #

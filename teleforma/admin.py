@@ -10,9 +10,6 @@ from django.http import HttpResponse
 import time
 from datetime import date
 
-class ProfileInline(admin.StackedInline):
-    model = Profile
-
 class CRFPAStudentProfileInline(admin.StackedInline):
     model = Student
     filter_horizontal = ['period']

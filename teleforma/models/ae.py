@@ -42,13 +42,13 @@ from teleforma.models.core import *
 
 class AEStudent(Model):
 
-    user            = ForeignKey(User, related_name='ae_student', verbose_name=_('user'), unique=True )
+    user            = ForeignKey(User, related_name='ae_student', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     period          = ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
-                                  blank=True, null=True)
+                                  blank=True)
     platform_only   = BooleanField(_('platform only'))
     courses       	= ManyToManyField('Course', related_name="ae_student",
                                         verbose_name=_('courses'),
-                                        blank=True, null=True)
+                                        blank=True)
     
     def __unicode__(self):
         try:

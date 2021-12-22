@@ -33,29 +33,18 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 from django import template
-from urllib.parse import quote
 from teleforma.models import *
-from django.core.urlresolvers import reverse
-from django.utils import html
+from django.urls import reverse
 from django import template
-from django.utils.text import capfirst
-from django.utils.translation import ngettext
 from docutils.core import publish_parts
-from django.utils.encoding import smart_str, force_unicode
+from django.utils.encoding import smart_str, force_text
 from django.utils.safestring import mark_safe
-from django import db
 import re
 import os
 import datetime
 from django.conf import settings
-from django.template.defaultfilters import stringfilter
-import django.utils.timezone as timezone
 from django.utils.translation import gettext_lazy as _
 from urllib.parse import urlparse
-from docutils.core import publish_parts
-from django.utils.encoding import smart_str, force_unicode
-from django.utils.safestring import mark_safe
-
 from teleforma.models.crfpa import Course
 from teleforma.views import get_courses
 from teleforma.context_processors import *
@@ -155,31 +144,31 @@ def from_periods(contents, periods):
     if contents:
         return contents.filter(period__in=periods)
 
-@register.assignment_tag
+@register.simple_tag
 def get_all_professors():
     return Professor.objects.all().order_by('user__first_name')
 
-@register.assignment_tag
+@register.simple_tag
 def get_all_admins():
     return User.objects.filter(is_superuser=True).order_by('first_name')
 
-@register.assignment_tag
+@register.simple_tag
 def get_all_trainings():
     return Training.objects.all()
 
-@register.assignment_tag
+@register.simple_tag
 def get_all_iejs():
     return IEJ.objects.all()
 
-@register.assignment_tag
+@register.simple_tag
 def get_all_courses():
     return Course.objects.all()
 
-@register.assignment_tag
+@register.simple_tag
 def get_telecaster():
     return 'telecaster' in settings.INSTALLED_APPS
 
-@register.assignment_tag
+@register.simple_tag
 def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
 
@@ -422,5 +411,5 @@ def render_flatpage(content):
         parsed += line + "\n"
 
     parts = publish_parts(source=smart_str(parsed), writer_name="html4css1", settings_overrides={})
-    return mark_safe('<div class="rst-content">\n' + force_unicode(parts["html_body"]) + '</div>')
+    return mark_safe('<div class="rst-content">\n' + force_text(parts["html_body"]) + '</div>')
 render_flatpage.is_safe = True
