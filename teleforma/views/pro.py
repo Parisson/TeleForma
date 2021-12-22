@@ -646,7 +646,7 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
     seminar = Seminar.objects.get(pk=pk)
     published = Form.objects.published(for_user=user)
     form = seminar.form
-    if form.login_required and not user.is_authenticated():
+    if form.login_required and not user.is_authenticated:
         return redirect("%s?%s=%s" % (settings.LOGIN_URL, REDIRECT_FIELD_NAME,
                         urlquote(request.get_full_path())))
     request_context = RequestContext(request)

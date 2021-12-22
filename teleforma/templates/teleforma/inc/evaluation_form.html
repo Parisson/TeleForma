@@ -6,7 +6,7 @@
 <table class="listing" width="100%">
     <tbody>
         <tr>
-        <td class="border-top"><a href="{% url teleforma-seminar-form seminar.id %}" title="{% trans "Form" %}"><img src="{{ STATIC_URL }}/teleforma/images/playlist.png" style="vertical-align:middle" alt="" /> {{ form.title }}</a></td>
+        <td class="border-top"><a href="{% url 'teleforma-seminar-form' seminar.id %}" title="{% trans "Form" %}"><img src="{{ STATIC_URL }}/teleforma/images/playlist.png" style="vertical-align:middle" alt="" /> {{ form.title }}</a></td>
         </tr>
     </tbody>
 </table>

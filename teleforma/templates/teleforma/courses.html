@@ -3,14 +3,6 @@
 {% load i18n %}
 
 
-{% block extra_javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-    });
-</script>
-{% endblock extra_javascript %}
-
 
 {% block content %}
 
@@ -19,13 +11,13 @@ $(document).ready(function(){
 {% block modules %}
 <div class="module">
 
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
+<h3><a href="{% url 'teleforma-desk' %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My courses" %}</a></h3>
 <div style="background: white;">
 <ul>
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url 'teleforma-course-detail' course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}
@@ -37,7 +29,7 @@ $(document).ready(function(){
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module_action">
-<a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
+<a href="{% url 'teleforma-conference-record' %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
 </div>
 {% endif %}
 {% endblock module-action %}
@@ -56,7 +48,7 @@ $(document).ready(function(){
       {% for type in c.types %}
       <div class="course">
         <div class="course_title">
-         <a href="{% url teleforma-course-detail course.id %}" style="color: #000;">{{ course.title }}{% if type.name != "None" %} - {{ type }}{% endif %}{% if course.description %} - {{ course.description }}{% endif %}</a>
+         <a href="{% url 'teleforma-course-detail' course.id %}" style="color: #000;">{{ course.title }}{% if type.name != "None" %} - {{ type }}{% endif %}{% if course.description %} - {{ course.description }}{% endif %}</a>
         </div>
 
         {% block conference %}

@@ -15,7 +15,7 @@
 {% if user.is_superuser %}
 <dt>{% trans "code" %}</dt><dd>{{ seminar.code }}</dd>
 {% if seminar.media_preview %}
-<dt>{% trans "preview" %}</dt><dd><a href="{% url teleforma-media-video seminar.id seminar.media_preview.id %}">{% trans "play" %}</a></dd>
+<dt>{% trans "preview" %}</dt><dd><a href="{% url 'teleforma-media-video' seminar.id seminar.media_preview.id %}">{% trans "play" %}</a></dd>
 {% endif %}
 {% endif %}
 </dl>

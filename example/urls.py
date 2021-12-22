@@ -5,7 +5,7 @@ from django.contrib import admin
 from mezzanine.core.views import direct_to_template
 
 js_info_dict = {
-    'packages': ('telemeta', 'teleforma'),
+    'packages': ('teleforma',),
 }
 
 

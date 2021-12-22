@@ -33,7 +33,13 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-from teleforma.views.core import *
+import datetime
+
+from django.contrib.auth.models import User
+from django.db.models.query_utils import Q
+from teleforma.models.core import Conference, Course
+from teleforma.models.pro import (Answer, Question, QuizValidation,
+                                            Seminar, SeminarRevision)
 
 
 def seminar_progress(user, seminar, more=False):
@@ -143,7 +149,7 @@ def all_seminars(request, progress_order=False, date_order=False):
     else:
         user = request.user
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return {}
 
     professor = user.professor.all()
@@ -204,7 +210,7 @@ def all_conferences(request, progress_order=False, date_order=False):
     else:
         user = request.user
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return {}
 
     professor = user.professor.all()
@@ -235,7 +241,7 @@ def total_progress(request):
     user = request.user
     progress = 0
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return {'total_progress': 0}
 
     #TOFIX

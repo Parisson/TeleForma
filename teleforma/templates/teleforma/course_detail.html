@@ -1,18 +1,11 @@
 {% extends "teleforma/courses.html" %}
 {% load i18n %}
 
-{% block extra_javascript %}
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-    });
-</script>
-{% endblock extra_javascript %}
 
 {% block courses %}
 {% for c in all_courses %}
   {% with c.course as course %}
-   <li><a href="{% url teleforma-course-detail course.id %}">{{ course.title }}</a></li>
+   <li><a href="{% url 'teleforma-course-detail' course.id %}">{{ course.title }}</a></li>
   {% endwith %}
  {% endfor %}
 {% endblock courses %}

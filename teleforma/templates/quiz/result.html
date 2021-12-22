@@ -30,10 +30,10 @@
          {% endif %}
          {% if percent >= quiz.pass_mark %}
           <span>Votre quiz est validé.</span><br><br>
-          <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_next">&nbsp;{% trans "Back" %} au séminaire</a>
+          <a href="{% url 'teleforma-seminar-detail' seminar.id %}" class="component_icon button icon_next">&nbsp;{% trans "Back" %} au séminaire</a>
          {% else %}
           <span>Vous devez revalider l'étape 1, puis recommencer le quiz.</span><br><br>
-          <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_next">&nbsp;{% trans "Back" %} au séminaire</a>
+          <a href="{% url 'teleforma-seminar-detail' seminar.id %}" class="component_icon button icon_next">&nbsp;{% trans "Back" %} au séminaire</a>
          {% endif %}
 	{% endif %}
 

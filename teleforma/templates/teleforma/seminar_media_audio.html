@@ -4,7 +4,7 @@
 
 {% block module-action %}
 <div class="module_action">
- <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+ <a href="{% url 'teleforma-seminar-detail' seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
 </div>
 {% endblock module-action %}
 
@@ -14,7 +14,7 @@
 <div class="course_title">
 
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-media-video seminar.id media.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
+        <a href="{% url 'teleforma-media-video' seminar.id media.id %}" class="component_icon button icon_clap">&nbsp;{% trans "Video" %}</a>
 
         {% if user.is_staff %}
         <a id="publish" href="#" class="{% if media.is_published %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.is_published %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
@@ -22,7 +22,7 @@
     </div>
 
     <div style="text-align: left;">
-      <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
+      <a href="{% url 'teleforma-seminar-detail' seminar.id %}">{{ seminar.title }}</a>
     </div>
 
 </div>

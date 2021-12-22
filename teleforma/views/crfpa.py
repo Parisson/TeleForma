@@ -52,7 +52,7 @@ def format_crfpa_courses(courses, course=None, queryset=None, types=None, admin=
 def get_crfpa_courses(user, date_order=False, num_order=False):
     courses = []
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return courses
 
     professor = user.professor.all()

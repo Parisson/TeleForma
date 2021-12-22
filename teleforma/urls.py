@@ -60,9 +60,9 @@ media_transcoded = MediaTranscodedView
 urlpatterns = [
     url(r'^$', SeminarsView.as_view(), name="home"),
     # login / logout
-    url(r'^login/$', LoginView.as_view(template_name='registration/login.html'),
+    url(r'^login/$', LoginView.as_view(template_name='teleforma/login.html'),
         name="teleforma-login"),
-    url(r'^accounts/login/$', LoginView.as_view(template_name='registration/login.html'),
+    url(r'^accounts/login/$', LoginView.as_view(template_name='teleforma/login.html'),
         name="teleforma-login"),
     url(r'^logout/$', LogoutView.as_view(),
         name="teleforma-logout"),

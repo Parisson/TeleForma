@@ -31,6 +31,6 @@ urlpatterns = [
 
     # Languages
     url(r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^jsi18n/$', JavaScriptCatalog, js_info_dict),
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(packages=js_info_dict), name="js_catalog"),
 ] + ([url(r'^__debug__/', include(debug_toolbar.urls)),] if DEBUG_ENV else [])
 

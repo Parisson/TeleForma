@@ -4,12 +4,6 @@
 
 {% block extra_javascript %}
 
-<script type="text/javascript">
-$(document).ready(function(){
-    InitChatWindow("{% url jqchat_ajax room.id %}", null);
-    });
-</script>
-
 <script type="text/javascript" src="{{ STATIC_URL }}teleforma/js/pdf-min.js"></script>
 
 <script type="text/javascript">
@@ -22,7 +16,7 @@ $(document).ready(function(){
 //
 // Fetch the PDF document from the URL using promices
 //
-PDFJS.getDocument('{% url teleforma-document-download seminar.id document.id %}').then(function(pdf) {
+PDFJS.getDocument('{% url 'teleforma-document-download' seminar.id document.id %}').then(function(pdf) {
   // Using promise to fetch the page
   pdf.getPage(1).then(function(page) {
     var scale = 1.5;

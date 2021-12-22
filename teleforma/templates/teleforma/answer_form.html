@@ -69,7 +69,7 @@ $(document).ready(function(){
 
 {% block module-action %}
 <div class="module_action">
- <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
+ <a href="{% url 'teleforma-seminar-detail' seminar.id %}" class="component_icon button icon_previous">&nbsp;{% trans "Back" %}</a>
 </div>
 {% endblock module-action %}
 

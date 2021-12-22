@@ -6,7 +6,7 @@
             <tr>
             <td class="border-top" width="35%">
                 {% if seminar.quiz %}
-            	<a href="{% url teleforma-quiz seminar.id  seminar.quiz.url %}">{{ seminar.quiz.title }}</a>
+            	<a href="{% url 'teleforma-quiz' seminar.id  seminar.quiz.url %}">{{ seminar.quiz.title }}</a>
                 {% endif %}
             </td>
             <td class="border-top"width="60%">

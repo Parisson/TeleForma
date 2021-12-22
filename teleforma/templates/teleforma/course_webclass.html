@@ -10,7 +10,7 @@
 <div class="course_media">
 
     <div class="course_title">
-        <a href="{% url teleforma-course-detail course.id %}" style="color: #000;">
+        <a href="{% url 'teleforma-course-detail' course.id %}" style="color: #000;">
             Webconférence - {{ conference.title }}
         </a>
     </div>
@@ -25,18 +25,18 @@
     {% if webclass_status == 'past' %}
         {% if record %}
         <p>La conférence est terminée, vous pouvez la revoir ci-dessous.</p>
-        <a href="{% url teleforma-conference-webclass-record conference.id%}"
+        <a href="{% url 'teleforma-conference-webclass-record' conference.id%}"
             class="conference-big-button component_icon button icon_next">Voir l'enregistrement</a>
         {% else %}
         <p>La conférence est terminée. L'enregistrement n'est pas encore ligne.</p>
         {% endif %}
     {% elif webclass_status == 'ingoing' %}
         <p>La conférence est en cours.</p>
-        <a href="{% url teleforma-conference-join conference.id %}" target="_blank"
+        <a href="{% url 'teleforma-conference-join' conference.id %}" target="_blank"
             class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
     {% elif webclass_status == 'almost' %}
         <p>Le salon « Pro-Barreau Live » est accessible.</p>
-        <a href="{% url teleforma-conference-join conference.id %}" target="_blank"
+        <a href="{% url 'teleforma-conference-join' conference.id %}" target="_blank"
             class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la conférence</a>
     {% elif webclass_status == 'future' %}
         <p>
@@ -52,13 +52,13 @@
         <div style="border:1px solid grey">
             <h3>Liens d'invitation</h3>
             <p>
-                Se connecter en tant qu'admin : <a href="{% url teleforma-conference-join conference.id %}"
+                Se connecter en tant qu'admin : <a href="{% url 'teleforma-conference-join' conference.id %}"
                     target="_blank">Cliquez ici pour rejoindre la conférence en tant que
                     <strong>{{ request.user.username }}</strong></a>
             </p>
             <ul>
                 {% for i in range %}
-                <li><a href="{% url teleforma-conference-join conference.id %}?username=utilisateur{{i}}"
+                <li><a href="{% url 'teleforma-conference-join' conference.id %}?username=utilisateur{{i}}"
                         target="_blank">Cliquez ici pour rejoindre la conférence en tant que
                         <strong>utilisateur{{i}}</strong></a></li>
                 {% endfor %}
@@ -73,12 +73,12 @@
 
             {% if conference.professor %}
             <dt>{% trans "Course" %}</dt>
-            <dd><a href="{% url teleforma-course-detail course.id %}">{{ conference.course.title }}{% if conference.course_type != None %}
+            <dd><a href="{% url 'teleforma-course-detail' course.id %}">{{ conference.course.title }}{% if conference.course_type != None %}
                     - {{ conference.course_type }}{% endif %}</a></dd>
             <dt>Niveau</dt>
             <dd>{{ conference.level }}</dd>
             <dt>{% trans "Professor" %}</dt>
-            <dd><a href="{% url teleforma-profile-detail conference.professor.user.username %}"
+            <dd><a href="{% url 'teleforma-profile-detail' conference.professor.user.username %}"
                     target="_blank">{{ conference.professor }}</a></dd>
             {% endif %}
             {% if conference.comment %}<dt>{% trans "Comment" %}</dt>

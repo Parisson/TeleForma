@@ -9,7 +9,7 @@
     var conferenceUtils = {
         stop : function(id){
             json([id],'teleforma.stop_conference',function(){
-                location.href = '{% url teleforma-conference-record %}';
+                location.href = '{% url 'teleforma-conference-record' %}';
                 }
                 );
         }}
@@ -33,10 +33,10 @@
 
 <div class="course_title">
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url teleforma-conference-audio conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+        <a href="{% url 'teleforma-conference-audio' conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
     </div>
 
-<a href="{% url teleforma-course-detail course.id %}" style="color: #000;">{{ course.title }}</a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
+<a href="{% url 'teleforma-course-detail' course.id %}" style="color: #000;">{{ course.title }}</a>{% if type.name != "None" %} - {{ type }}{% endif %}{% if conference.session %} - {% trans "Session" %} {{ conference.session }}{% endif %}
 
 </div>
 
@@ -60,10 +60,10 @@
 <dl class="listing">
 
 {% if conference.professor %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url teleforma-course-detail course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
+<dt>{% trans "Course" %}</dt><dd><a href="{% url 'teleforma-course-detail' course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
 <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
 <dt>{% trans "Professor" %}</dt>
-    <dd><a href="{% url teleforma-profile-detail conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
+    <dd><a href="{% url 'teleforma-profile-detail' conference.professor.user.username %}" target="_blank">{{ conference.professor }}</a></dd>
 {% endif %}
 {% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}
 <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>

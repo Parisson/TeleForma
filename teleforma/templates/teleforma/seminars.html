@@ -40,12 +40,12 @@ $(function() {
 {% block modules %}
 <div class="module">
 
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
+<h3><a href="{% url 'teleforma-desk' %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "My seminars" %}</a></h3>
 <div style="background: white;">
 <ul id="seminars">
 {% block courses %}
 {% for seminar in all_seminars %}
-   <li {% if user.is_staff and seminar.status == 2 %}class="link_green"{% endif %}><a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a></li>
+   <li {% if user.is_staff and seminar.status == 2 %}class="link_green"{% endif %}><a href="{% url 'teleforma-seminar-detail' seminar.id %}">{{ seminar.title }}</a></li>
  {% endfor %}
 {% endblock courses %}
 </ul>
@@ -53,12 +53,12 @@ $(function() {
 </div>
 
 <div class="module">
-<h3><a href="{% url teleforma-desk %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Mes conférences" %}</a></h3>
+<h3><a href="{% url 'teleforma-desk' %}"><img src="{{ STATIC_URL }}teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% trans "Mes conférences" %}</a></h3>
 <div style="background: white;">
 <ul id="seminars">
 {% block conferences %}
 {% for conference in conferences %}
-   <li {% if user.is_staff and seminar.status == 2 %}class="link_green"{% endif %}><a href="{% url teleforma-conference-detail conference.id %}">{{ conference.title }}</a></li>
+   <li {% if user.is_staff and seminar.status == 2 %}class="link_green"{% endif %}><a href="{% url 'teleforma-conference-detail' conference.id %}">{{ conference.title }}</a></li>
  {% endfor %}
 {% endblock conferences %}
 </ul>
@@ -72,7 +72,7 @@ $(function() {
 {% get_telecaster as telecaster %}
 {%  if telecaster %}
 <div class="module_action">
-<a href="{% url teleforma-conference-record %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
+<a href="{% url 'teleforma-conference-record' %}" class="component_icon button" id="action_red">{% trans "New conference" %}</a>
 </div>
 {% endif %}
 {% endblock module-action %}
@@ -92,7 +92,7 @@ $(function() {
 
       <div class="course">
         <div class="course_title">
-         <a href="{% url teleforma-seminar-detail seminar.id %}">{{ seminar.title }}</a>
+         <a href="{% url 'teleforma-seminar-detail' seminar.id %}">{{ seminar.title }}</a>
          <div style="float: right; font-size: 0.9em;">
           {% if seminar|progress:user == 100 %}
           <img src="{{ STATIC_URL }}teleforma/images/ok.png" title="{% trans "validated" %}" alt="{% trans "validated" %}"/>
@@ -106,13 +106,13 @@ $(function() {
             <div class="course_subtitle">
             </div>
             <div class="course_description">
-              <a href="{% url teleforma-seminar-detail seminar.id %}">
+              <a href="{% url 'teleforma-seminar-detail' seminar.id %}">
              <table>
               <tr><td width="97%">
                {% include "teleforma/inc/seminar_description.html" %}
               </td>
               <td>
-               <a href="{% url teleforma-seminar-detail seminar.id %}" class="component_icon button icon_next"> {% trans "Access" %}</a>
+               <a href="{% url 'teleforma-seminar-detail' seminar.id %}" class="component_icon button icon_next"> {% trans "Access" %}</a>
               </td>
               </tr>
              </table>

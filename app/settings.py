@@ -33,28 +33,13 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
-    'staging.docker.e-learning.crfpa.pre-barreau.parisson.com',
-    'e-learning.crfpa.pre-barreau.com',
-    'prod.docker.e-learning.crfpa.pre-barreau.parisson.com',
-    'recovery.docker.e-learning.crfpa.pre-barreau.parisson.com',
+ALLOWED_HOSTS = [
+    'localhost', 
+    'el.pro-barreau.dockdev.pilotsystems.net',
+    'e-learning.pro-barreau.com',    
 ]
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
-
-REDIS_HOST = "redis"
-REDIS_PORT = 6379
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [(REDIS_HOST, REDIS_PORT)],
-        },
-    },
-}
-
-ENABLE_CHAT = True
 
 DATABASES = {
     'default': {
@@ -240,8 +225,11 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
-                'mezzanine.pages.context_processors.page',
-                'teleforma.context_processors.periods',
+                "mezzanine.conf.context_processors.settings",
+                "mezzanine.pages.context_processors.page",
+                "teleforma.context_processors.all_seminars",
+                "teleforma.context_processors.total_progress",
+                'postman.context_processors.inbox', 
             ],
         },
     },
@@ -400,6 +388,7 @@ def show_user_as(user):
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
+GRAPPELLI_INSTALLED = False
 
 JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",
