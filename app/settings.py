@@ -163,7 +163,7 @@ ROOT_URLCONF = 'urls'
 
 
 INSTALLED_APPS = (
-
+    'jazzmin',
     # 'south',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -183,7 +183,6 @@ INSTALLED_APPS = (
     "mezzanine.galleries",
     # "mezzanine.twitter",
     'teleforma',
-    'jazzmin',
     'django.contrib.admin',
     'jsonrpc',
     'sorl.thumbnail',
@@ -249,10 +248,10 @@ POSTMAN_DISALLOW_ANONYMOUS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
-TELEFORMA_ORGANIZATION = 'Pré-Barreau - CRFPA'
-TELEFORMA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
-TELEFORMA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
-TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
+TELEFORMA_ORGANIZATION = 'Pro-Barreau'
+TELEFORMA_SUBJECTS = ('Barreau', 'e-learning')
+TELEFORMA_DESCRIPTION = "E-learning Pro-Barreau"
+TELEFORMA_E_LEARNING_TYPE = 'Pro-Barreau'
 TELEFORMA_GLOBAL_TWEETER = False
 TELEFORMA_PERIOD_TWEETER = True
 TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
@@ -264,8 +263,10 @@ TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 
 EMAIL_HOST = 'angus.parisson.com'
-DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
-SERVER_EMAIL = 'crfpa@pre-barreau.com'
+DEFAULT_FROM_EMAIL = 'e-learning@pro-barreau.com'
+SERVER_EMAIL = 'webmaster@parisson.com'
+REPORT_TO_EMAIL = ('kostya.rilov@pre-barreau.com', 'alexia.dcruz@pro-barreau.com')
+ADMIN_USERNAME = 'Pro-Barreau'
 EMAIL_SUBJECT_PREFIX = '[' + TELEFORMA_ORGANIZATION + '] '
 
 TELECASTER_LIVE_STREAMING_PROTOCOL = 'https'
@@ -387,12 +388,13 @@ def show_user_as(user):
 
 POSTMAN_SHOW_USER_AS = show_user_as
 
-#THUMBNAIL_FORCE_OVERWRITE = True
+# MEZZANINE
 GRAPPELLI_INSTALLED = False
+COMMENTS_NUM_LATEST = 5
 
 JAZZMIN_SETTINGS = {
-    "site_title": "CRFPA",
-    "site_header": "CRFPA",
+    "site_title": "Probarreau - E-learning",
+    "site_header": "Probarreau",
     "site_logo": "teleforma/images/logo_pb.png",
 
     # # Links to put along the top menu

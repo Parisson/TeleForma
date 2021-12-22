@@ -47,7 +47,7 @@ class SeminarType(models.Model):
 
     name            = models.CharField(_('name'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -133,7 +133,7 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
 
     search_fields = {'description': 1, 'sub_title':2, 'index':1}
 
-    def __unicode__(self):
+    def __str__(self):
         if self.publish_date:
             return ' - '.join([str(self.publish_date.year), self.course.title, str(self.rank), self.title])
         else:
@@ -243,7 +243,7 @@ class Question(ClonableMixin, models.Model):
     min_nchar   = models.IntegerField(_('minimum numbers of characters'))
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=3)
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([str(self.seminar), self.title, str(self.rank)])
 
     class Meta(MetaCore):
@@ -264,7 +264,7 @@ class Answer(models.Model):
     date_validated = models.DateTimeField(_('date validated'), null=True)
     date_added     = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([str(self.question), self.user.username, str(self.date_submitted)])
 
     def validate(self):
@@ -294,7 +294,7 @@ class TestimonialTemplate(models.Model):
     document     = models.ForeignKey(Document, related_name="testimonial_template",
                                 verbose_name=_('template'), on_delete=models.CASCADE)
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([self.organization.name, self.description])
 
     class Meta(MetaCore):
@@ -336,7 +336,7 @@ class Testimonial(models.Model):
             self.title = self.get_title()
         super(Testimonial, self).save(**kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.title:
             return self.title
         else:
@@ -375,7 +375,7 @@ class Auditor(models.Model):
     expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
     init_password   = models.BooleanField(_('Password initialized'))
 
-    def __unicode__(self):
+    def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:
@@ -403,7 +403,7 @@ class SeminarRevision(models.Model):
     date        = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
     date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([self.seminar.title, self.user.username, str(self.date), str(self.date_modified)])
 
     class Meta(MetaCore):
@@ -427,7 +427,7 @@ class QuizValidation(models.Model):
     validated   = models.BooleanField(_('validated'))
     date_validated = models.DateTimeField(_('date validated'), auto_now_add=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return ' - '.join([str(self.quiz), self.user.username, str(self.date_validated)])
 
     def validate(self):

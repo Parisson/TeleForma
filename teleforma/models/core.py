@@ -133,7 +133,7 @@ class Organization(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -151,7 +151,7 @@ class Department(Model):
     signature       = models.ImageField(_('Signature image'), upload_to='images/%Y/%m/%d',
                                         blank=True, null=True, max_length=1024)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -186,7 +186,7 @@ class Location(Model):
         verbose_name_plural = _('locations')
         ordering = ['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -195,7 +195,7 @@ class LocationType(Model):
     code = models.CharField(_('identifier'), max_length=64, unique=True)
     name = models.CharField(_('name'), max_length=150)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -209,7 +209,7 @@ class Period(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -221,7 +221,7 @@ class CourseType(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -249,7 +249,7 @@ class Course(Model):
 
     notes = GenericRelation(Note)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     @property
@@ -291,7 +291,7 @@ class CourseDomain(Model):
                                         verbose_name=_('courses'),
                                         blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -313,7 +313,7 @@ class Professor(Model):
                                     blank=True)
 
 
-    def __unicode__(self):
+    def __str__(self):
         if self.user.first_name or self.user.last_name:
             return self.user.last_name + ' ' + self.user.first_name
         else:
@@ -339,7 +339,7 @@ class Room(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.organization.name + ' - ' + self.name
 
     class Meta(MetaCore):
@@ -359,7 +359,7 @@ class StreamingServer(Model):
     source_password = CharField(_('source password'), max_length=32)
     admin_password  = CharField(_('admin password'), max_length=32, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.host + ':' + self.port + ' - ' + self.type
 
     class Meta(MetaCore):
@@ -407,7 +407,7 @@ class LiveStream(Model):
         url = 'https://' + self.server.host + ':' + str(self.server.port) + '/' + self.mount_point
         return url
 
-    def __unicode__(self):
+    def __str__(self):
         if self.conference:
             return self.conference.title
         else:
@@ -445,7 +445,7 @@ class DocumentType(Model):
     description     = CharField(_('description'), max_length=255, blank=True)
     number          = IntegerField(_('number'), blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -487,7 +487,7 @@ class Document(MediaBase):
     def set_mime_type(self):
         self.mime_type = mimetypes.guess_type(self.file.path)[0]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.full_title
 
     @cached_property
@@ -547,7 +547,7 @@ class MediaTranscoded(Model):
         else:
             return self.mimetype
 
-    def __unicode__(self):
+    def __str__(self):
         if self.item.title:
             return self.item.title + ' - ' + self.mime_type
         else:
@@ -588,7 +588,7 @@ class Media(MediaBase):
             else:
                 self.mime_type = mime_type
 
-    def __unicode__(self):
+    def __str__(self):
         return self.full_title
 
     @cached_property
@@ -901,7 +901,7 @@ class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin)
     def get_absolute_url(self):
         return reverse('conference-view', kwargs={"pk": self.id})
 
-    def __unicode__(self):
+    def __str__(self):
         if self.professor:
             list = [self.title, self.course.title,
                            self.session,
@@ -995,15 +995,14 @@ class NamePaginator(object):
 
         # chunk up the objects so we don't need to iterate over the whole list for each letter
         chunks = {}
-
         for obj in self.object_list:
             if on:
-                obj_str = getattr(obj, on).encode('utf8')
+                obj_str = getattr(obj, on)
             else:
-                obj_str = obj.encode('utf8')
+                obj_str = obj
 
             if len(obj_str):
-                letter = str.upper(obj_str[0])
+                letter = str.upper(str(obj_str[0]))
             else:
                 letter = ''
 

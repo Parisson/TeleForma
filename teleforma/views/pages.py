@@ -17,7 +17,7 @@ class PageTextContent(object):
             yield line.rstrip('\r\n')
         file.close()
 
-    def __unicode__(self):
+    def __str__(self):
         file = open(self.filename, 'r')
         data = file.read()
         file.close()

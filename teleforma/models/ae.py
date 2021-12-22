@@ -50,7 +50,7 @@ class AEStudent(Model):
                                         verbose_name=_('courses'),
                                         blank=True)
     
-    def __unicode__(self):
+    def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:

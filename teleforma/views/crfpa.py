@@ -117,7 +117,7 @@ class UsersView(ListView):
     #paginate_by = 12
 
     def get_queryset(self):
-        return User.objects.all().select_related(depth=1).order_by('last_name')
+        return User.objects.all().select_related().order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(UsersView, self).get_context_data(**kwargs)

@@ -46,7 +46,7 @@ class IEJ(Model):
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta(MetaCore):
@@ -91,7 +91,7 @@ class Training(Model):
                                         blank=True)
     cost            = FloatField(_('cost'), blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         code = self.code
         if self.period:
             code += ' - ' + self.period.name
@@ -127,7 +127,7 @@ class Student(Model):
     options         = ForeignKey('Course', related_name="options", verbose_name=_('options'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
 
-    def __unicode__(self):
+    def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
         except:
