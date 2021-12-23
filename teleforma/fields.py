@@ -43,7 +43,7 @@ class Duration(object):
         return self.__decorate(self._delta.__add__, other)
 
     def __bool__(self):
-        return self._delta.__nonzero__()
+        return bool(self._delta)
 
     def __str__(self):
         hours   = self._delta.days * 24 + self._delta.seconds / 3600

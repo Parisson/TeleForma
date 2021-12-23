@@ -39,8 +39,6 @@ ALLOWED_HOSTS = [
     'e-learning.pro-barreau.com',    
 ]
 
-ASGI_APPLICATION = "teleforma.ws.routing.application"
-
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -137,7 +135,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'a8l7%06wr2k+3=%#*#@#rvop2mmzko)44%7k(zx%lls^ihm9^5'
+SECRET_KEY = "46a9a380-8a68-490f-86ce-e10730211dfb5a37d4a6-0b20-4ef4-85c4-c0ecac63af79cab06d89-3705-4271-8b20-9bca99b84c29"
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -196,8 +194,6 @@ INSTALLED_APPS = (
     # 'jqchat',
     'tinymce',
     'pbcart',
-    # 'telemeta',
-    # 'telecaster',
     'forms_builder.forms',
     'quiz',
     'multichoice',
@@ -220,7 +216,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'postman.context_processors.inbox',
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
@@ -252,15 +247,6 @@ TELEFORMA_ORGANIZATION = 'Pro-Barreau'
 TELEFORMA_SUBJECTS = ('Barreau', 'e-learning')
 TELEFORMA_DESCRIPTION = "E-learning Pro-Barreau"
 TELEFORMA_E_LEARNING_TYPE = 'Pro-Barreau'
-TELEFORMA_GLOBAL_TWEETER = False
-TELEFORMA_PERIOD_TWEETER = True
-TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
-TELEFORMA_EXAM_SCRIPT_UPLOAD = True
-TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
-TELEFORMA_PERIOD_DEFAULT_ID = 21
-TELEFORMA_EXAM_MAX_SESSIONS = 99
-TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
-TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 
 EMAIL_HOST = 'angus.parisson.com'
 DEFAULT_FROM_EMAIL = 'e-learning@pro-barreau.com'
@@ -269,19 +255,9 @@ REPORT_TO_EMAIL = ('kostya.rilov@pre-barreau.com', 'alexia.dcruz@pro-barreau.com
 ADMIN_USERNAME = 'Pro-Barreau'
 EMAIL_SUBJECT_PREFIX = '[' + TELEFORMA_ORGANIZATION + '] '
 
-TELECASTER_LIVE_STREAMING_PROTOCOL = 'https'
-TELECASTER_LIVE_STREAMING_SERVER = 'stream7.parisson.com'
-TELECASTER_LIVE_STREAMING_PORT = 443
-TELECASTER_LIVE_ICECAST_STREAMING_PORT = 443
-TELECASTER_LIVE_ICECAST_STREAMING_PATH = '/stream/audio/'
-TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 443
-TELECASTER_LIVE_STREAM_M_STREAMING_PATH = '/stream/video/'
-
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
 ]
-
-BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
@@ -490,19 +466,6 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": True
 }
-# Sherlock's online payment
-PAYMENT_SHERLOCKS_PATH='/srv/sherlocks'
-
-PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "040109417200053",
-                                  'Annuelle': "040109417200053",
-                                  'Estivale': "040109417200054", },                                         
-                       'merchant_country': 'fr',
-                       'currency_code': '978',
-                       'language': 'fr'
-}
-
-
-ORAL_OPTION_PRICE = 250
 
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 

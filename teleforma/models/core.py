@@ -156,7 +156,7 @@ class Department(Model):
 
     @property
     def slug(self):
-        return slugify(self.__unicode__())
+        return slugify(str(self))
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'department'
@@ -254,7 +254,7 @@ class Course(Model):
 
     @property
     def slug(self):
-        return slugify(self.__unicode__())
+        return slugify(str(self))
 
     def to_dict(self):
         dict = {'organization' : self.department.organization.name,
@@ -630,10 +630,10 @@ class Media(MediaBase):
 
 
 class SuggestionsMixin(Model):
-    suggested_seminars = models.ManyToManyField('Seminar', related_name="%(class)ss_related",
+    suggested_seminars = models.ManyToManyField('teleforma.Seminar', related_name="%(class)ss_related",
                                                 verbose_name=_('suggested seminars'),
                                                 blank=True)
-    suggested_conferences = models.ManyToManyField('Conference', related_name="%(class)ss_related",
+    suggested_conferences = models.ManyToManyField('teleforma.Conference', related_name="%(class)ss_related",
                                                    verbose_name=_('suggested conferences'),
                                                    blank=True)
                                                    
