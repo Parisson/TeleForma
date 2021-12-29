@@ -548,7 +548,10 @@ class LiveStream(Model):
 
     @property
     def url(self):
-        return 'http://' + self.server.host + ':' + self.server.port + '/' + self.mount_point
+        if self.server.type == 'stream-m':
+	    return 'https://' + self.server.host + '/stream/video/consume/' + self.slug
+        else:
+            return 'https://' + self.server.host + '/stream/audio/' + self.slug
 
     def __unicode__(self):
         if self.conference:
