@@ -49,11 +49,4 @@
 {% endwith %}
 {% endif %}
 
-{% if seminar|validated:user %}
-<div class="course_subtitle">
-  <h4><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7</h4>
-</div>
-{% include "teleforma/inc/testimonial_step.html" %}
-{% endif %}
-
 {% endif %}

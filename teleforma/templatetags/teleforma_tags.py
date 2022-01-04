@@ -291,14 +291,6 @@ def point(time):
     return str(time)
 
 @register.filter
-def preview(related):
-    media = related.filter(title='preview')
-    if media:
-        return media[0]
-    else:
-        return None
-
-@register.filter
 def fancy_duration(duration):
     time = ''
     d = str(duration).split(':')

@@ -248,12 +248,6 @@ class CourseView(DetailView):
         context['courses'] = courses
         context['all_courses'] = all_courses
         context['notes'] = course.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="course")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=course.title, content_type=content_type,
-                                   id=course.id)
         context['doc_types'] = DocumentType.objects.all()
         context['periods'] = get_periods(self.request.user)
         return context
@@ -317,12 +311,6 @@ class MediaView(DetailView):
         context['course'] = media.course
         context['type'] = media.course_type
         context['notes'] = media.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="media")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=media.item.title, content_type=content_type,
-                                   id=media.id)
         context['periods'] = get_periods(self.request.user)
         return context
 
@@ -456,12 +444,6 @@ class DocumentView(DetailView):
         document = self.get_object()
         context['course'] = document.course
         context['notes'] = document.notes.all().filter(author=self.request.user)
-        content_type = ContentType.objects.get(app_label="teleforma", model="document")
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=document.title, content_type=content_type,
-                                   id=document.id)
         access = get_seminar_doc_access(document, seminars)
         if not access:
             context['access_error'] = access_error
@@ -554,7 +536,6 @@ class ConferenceView(DetailView):
                 conference.set_as_read(self.request.user)
             
         else:
-            content_type = ContentType.objects.get(app_label="teleforma", model="conference")
             context['livestreams'] = conference.livestream.all()
             context['host'] = get_host(self.request)
             all_courses = get_courses(self.request.user)
@@ -570,11 +551,6 @@ class ConferenceView(DetailView):
         context['course'] = conference.course
         context['periods'] = get_periods(self.request.user)
         context['conferences'] = all_conferences(self.request)
-        if settings.TELEFORMA_GLOBAL_TWEETER:
-            context['room'] = get_room(name='site')
-        else:
-            context['room'] = get_room(name=conference.course.title, content_type=content_type,
-                                       id=conference.id)
         return context
 
     @jsonrpc_method('teleforma.stop_conference')
