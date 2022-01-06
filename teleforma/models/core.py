@@ -624,6 +624,12 @@ class Media(MediaBase):
             url = sorl_default.backend.get_thumbnail(self.poster_file, geometry).url
         return url
 
+    # TODO : return appropriate value
+    # probably need to store it in a field
+    @property
+    def approx_duration(self):
+        return Duration(seconds=100)
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
         ordering = ['rank']

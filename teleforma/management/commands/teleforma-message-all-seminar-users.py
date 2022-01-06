@@ -1,20 +1,15 @@
 from optparse import make_option
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.contrib.sites.models import Site
+from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.tokens import default_token_generator
-from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
-from django.core.mail import send_mail, mail_admins
 from django.utils import translation
+from postman.models import Message
 
 from teleforma.views.pro import get_seminar_delta
-from teleforma.models import *
-import logging
 import datetime
-from postman.models import *
-from postman.utils import email_visitor, notify_user
+from postman.utils import notify_user
 from teleforma.context_processors import seminar_validated
 
 
@@ -72,5 +67,6 @@ class Command(BaseCommand):
                     mess.save()
 
                     if not settings.DEBUG:
-                        notify_user(mess, 'acceptance')
+                        site = Site.objects.all()[0]
+                        notify_user(mess, 'acceptance', site)
                 #

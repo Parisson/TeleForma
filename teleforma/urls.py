@@ -45,13 +45,12 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordResetView)
 from django.views import static
 from teleforma.views.core import ConferenceRecordView, ConferenceView, CourseView, HelpView, MediaTranscodedView, MediaView, join_webclass
-from teleforma.views.crfpa import UserLoginView, UsersCourseView, UsersIejView, UsersTrainingView, UsersView, UsersXLSExport
+from teleforma.views.crfpa import UserLoginView, UsersCourseView, UsersIejView, UsersTrainingView, UsersView
 from teleforma.views.pro import AnswerDetailView, AnswerDetailViewTest, AnswerView, AnswersPendingView, AnswersTreatedView, QuizQuestionView, SeminarDocumentDownloadView, SeminarDocumentView, SeminarMediaView, SeminarView, SeminarsView, TestimonialDownloadView, TestimonialKnowledgeView, TestimonialListView, TestimonialPaybackView, TestimonialView, evaluation_form_detail, webclass_bbb_webhook
 from teleforma.views.profile import ProfileView
 from teleforma.views.home import HomeView
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
-user_export = UsersXLSExport()
 profile_view = ProfileView()
 media = MediaView()
 home_view = HomeView()
@@ -134,11 +133,11 @@ urlpatterns = [
     
 
     # Questions
-    url(r'^desk/seminars/(?P<id>.*)/questions/(?P<pk>.*)/$', AnswerView.as_view(),
+    url(r'^desk/seminars/(?P<id>.*)/questions/(?P<pk>\d+)/$', AnswerView.as_view(),
         name="teleforma-question-answer"),
     url(r'^desk/answers_pending/$', AnswersPendingView.as_view(), name="teleforma-answers-pending"),
     url(r'^desk/answers_treated/$', AnswersTreatedView.as_view(), name="teleforma-answers-treated"),
-    url(r'^desk/answers/(?P<pk>.*)/$', AnswerDetailView.as_view(), name="teleforma-answer-detail"),
+    url(r'^desk/answers/(?P<pk>\d+)/$', AnswerDetailView.as_view(), name="teleforma-answer-detail"),
 
     # Evaluations
     url(r'^forms/', include('forms_builder.forms.urls')),
@@ -165,18 +164,18 @@ urlpatterns = [
     url(r'^users/(?P<username>[A-Za-z0-9@+._-]+)/profile/$', profile_view.profile_detail,
                                name="teleforma-profile-detail"),
     url(r'^users/(?P<id>.*)/login/$', UserLoginView.as_view(), name="teleforma-user-login"),
-    url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
+    # url(r'^users/all/export/$', user_export.all, name="teleforma-users-xls-export"),
 
     url(r'^users/by_training/(\w+)/$', UsersTrainingView.as_view(), name="teleforma-training-users"),
-    url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training,
-        name="teleforma-training-users-export"),
+    # url(r'^users/by_training/(?P<id>.*)/export/$', user_export.by_training,
+    #     name="teleforma-training-users-export"),
 
     url(r'^users/by_iej/(\w+)/$', UsersIejView.as_view(), name="teleforma-iej-users"),
-    url(r'^users/by_iej/(?P<id>.*)/export/$', user_export.by_iej, name="teleforma-iej-users-export"),
+    # url(r'^users/by_iej/(?P<id>.*)/export/$', user_export.by_iej, name="teleforma-iej-users-export"),
 
     url(r'^users/by_course/(\w+)/$', UsersCourseView.as_view(), name="teleforma-course-users"),
-    url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course,
-        name="teleforma-course-users-export"),
+    # url(r'^users/by_course/(?P<id>.*)/export/$', user_export.by_course,
+    #     name="teleforma-course-users-export"),
 
 
 # CSS+Images (FIXME: for developement only)

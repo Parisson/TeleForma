@@ -32,8 +32,16 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-
-from teleforma.views.core import *
+from django.contrib.auth import get_backends, login
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
+from django.core.paginator import InvalidPage
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.views.generic.base import View
+from django.views.generic.list import ListView
+from teleforma.models.core import Course, CourseType, NamePaginator
+from teleforma.models.crfpa import IEJ, Training
 
 
 def format_crfpa_courses(courses, course=None, queryset=None, types=None, admin=False):
@@ -41,11 +49,11 @@ def format_crfpa_courses(courses, course=None, queryset=None, types=None, admin=
         for c in queryset:
             if c and (c.code != 'X' or admin == True):
                 courses.append({'course': c, 'types': types.all(),
-                'date': c.date_modified, 'number': c.number})
+                                'date': c.date_modified, 'number': c.number})
     elif course:
         if course.code != 'X' or admin == True:
             courses.append({'course': course, 'types': types.all(),
-            'date': course.date_modified, 'number': course.number})
+                            'date': course.date_modified, 'number': course.number})
     return courses
 
 
@@ -61,43 +69,46 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
     if professor:
         professor = user.professor.get()
         courses = format_crfpa_courses(courses, queryset=professor.courses.all(),
-                                  types=CourseType.objects.all())
+                                       types=CourseType.objects.all())
 
     elif student:
         student = user.student.get()
-        s_courses = {student.procedure:student.training.procedure,
-                           student.written_speciality:student.training.written_speciality,
-                           student.oral_speciality:student.training.oral_speciality,
-                           student.oral_1:student.training.oral_1,
-                           student.oral_2:student.training.oral_2,
-                           student.options:student.training.options,
-                        }
+        s_courses = {student.procedure: student.training.procedure,
+                     student.written_speciality: student.training.written_speciality,
+                     student.oral_speciality: student.training.oral_speciality,
+                     student.oral_1: student.training.oral_1,
+                     student.oral_2: student.training.oral_2,
+                     student.options: student.training.options,
+                     }
 
         for course in s_courses:
             courses = format_crfpa_courses(courses, course=course,
-                               types=s_courses[course])
+                                           types=s_courses[course])
 
         synthesis_note = student.training.synthesis_note
         if synthesis_note:
             courses = format_crfpa_courses(courses,
-                            queryset=Course.objects.filter(synthesis_note=True),
-                            types=synthesis_note)
+                                           queryset=Course.objects.filter(
+                                               synthesis_note=True),
+                                           types=synthesis_note)
 
         obligation = student.training.obligation
         if obligation:
             courses = format_crfpa_courses(courses,
-                            queryset=Course.objects.filter(obligation=True),
-                            types=obligation)
+                                           queryset=Course.objects.filter(
+                                               obligation=True),
+                                           types=obligation)
 
         magistral = student.training.magistral
         if magistral:
             courses = format_crfpa_courses(courses,
-                            queryset=Course.objects.filter(magistral=True),
-                            types=magistral)
+                                           queryset=Course.objects.filter(
+                                               magistral=True),
+                                           types=magistral)
 
     elif user.is_staff or user.is_superuser:
         courses = format_crfpa_courses(courses, queryset=Course.objects.all(),
-                    types=CourseType.objects, admin=True)
+                                       types=CourseType.objects, admin=True)
     else:
         courses = None
 
@@ -112,7 +123,7 @@ def get_crfpa_courses(user, date_order=False, num_order=False):
 class UsersView(ListView):
 
     model = User
-    template_name='teleforma/users.html'
+    template_name = 'teleforma/users.html'
     context_object_name = 'users'
     #paginate_by = 12
 
@@ -124,7 +135,8 @@ class UsersView(ListView):
         context['trainings'] = Training.objects.all()
         context['iejs'] = IEJ.objects.all()
         context['courses'] = Course.objects.all()
-        paginator = NamePaginator(self.object_list, on="last_name", per_page=10)
+        paginator = NamePaginator(
+            self.object_list, on="last_name", per_page=10)
         try:
             page = int(self.request.GET.get('page', '1'))
         except ValueError:
@@ -147,7 +159,8 @@ class UserLoginView(View):
     def get(self, request, id):
         user = User.objects.get(id=id)
         backend = get_backends()[0]
-        user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+        user.backend = "%s.%s" % (
+            backend.__module__, backend.__class__.__name__)
         login(self.request, user)
         return redirect('teleforma-desk')
 
@@ -171,6 +184,7 @@ class UsersTrainingView(UsersView):
     def dispatch(self, *args, **kwargs):
         return super(UsersTrainingView, self).dispatch(*args, **kwargs)
 
+
 class UsersIejView(UsersView):
 
     def get_queryset(self):
@@ -185,6 +199,7 @@ class UsersIejView(UsersView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UsersIejView, self).dispatch(*args, **kwargs)
+
 
 class UsersCourseView(UsersView):
 
@@ -201,120 +216,9 @@ class UsersCourseView(UsersView):
     def dispatch(self, *args, **kwargs):
         return super(UsersCourseView, self).dispatch(*args, **kwargs)
 
+
 def get_course_code(obj):
     if obj:
         return str(obj.code)
     else:
         return ''
-
-class UsersXLSExport(object):
-
-    first_row = 2
-
-    def export_user(self, counter, user):
-        student = Student.objects.filter(user=user)
-        if student:
-            student = Student.objects.get(user=user)
-            row = self.sheet.row(counter + self.first_row)
-            row.write(0, user.last_name)
-            row.write(1, user.first_name)
-            row.write(9, user.email)
-            row.write(2, str(student.iej))
-            code = student.training.code
-            if student.platform_only:
-                code = 'I - ' + code
-            row.write(3, str(code))
-            row.write(4, get_course_code(student.procedure))
-            row.write(5, get_course_code(student.written_speciality))
-            row.write(6, get_course_code(student.oral_speciality))
-            row.write(7, get_course_code(student.oral_1))
-            row.write(8, get_course_code(student.oral_2))
-
-            profile = Profile.objects.filter(user=user)
-            if profile:
-                profile = Profile.objects.get(user=user)
-                row.write(10, profile.address)
-                row.write(11, profile.postal_code)
-                row.write(12, profile.city)
-                row.write(13, profile.telephone)
-                row.write(14, user.date_joined.strftime("%d/%m/%Y"))
-            return counter + 1
-        else:
-            return counter
-
-    @method_decorator(permission_required('is_staff'))
-    def export(self, request):
-        self.users = self.users.order_by('last_name')
-        self.book = Workbook()
-        self.sheet = self.book.add_sheet('Etudiants')
-
-        row = self.sheet.row(0)
-        cols = [{'name':'NOM', 'width':5000},
-                {'name':'PRENOM', 'width':5000},
-                {'name':'IEJ', 'width':2500},
-                {'name':'FORMATION', 'width':6000},
-                {'name':'PROC', 'width':2500},
-                {'name':'Ecrit Spe', 'width':3000},
-                {'name':'Oral Spe', 'width':3000},
-                {'name':'ORAL 1', 'width':3000},
-                {'name':'ORAL 2', 'width':3000},
-                {'name':'MAIL', 'width':7500},
-                {'name':'ADRESSE', 'width':7500},
-                {'name':'CP', 'width':2500},
-                {'name':'VILLE', 'width':5000},
-                {'name':'TEL', 'width':5000},
-                {'name':"Date d'inscription", 'width':5000}
-                ]
-        i = 0
-        for col in cols:
-            row.write(i, col['name'])
-            self.sheet.col(i).width = col['width']
-            i += 1
-
-        counter = 0
-        for user in self.users:
-            counter = self.export_user(counter, user)
-        response = HttpResponse(mimetype="application/vnd.ms-excel")
-        response['Content-Disposition'] = 'attachment; filename=users.xls'
-        self.book.save(response)
-        return response
-
-    @method_decorator(permission_required('is_staff'))
-    def all(self, request):
-        self.users = User.objects.all()
-        return self.export(request)
-
-    @method_decorator(permission_required('is_staff'))
-    def by_training(self, request, id):
-        training = Training.objects.filter(id=id)
-        self.users = User.objects.filter(student__training__in=training)
-        return self.export(request)
-
-    @method_decorator(permission_required('is_staff'))
-    def by_iej(self, request, id):
-        iej = IEJ.objects.filter(id=id)
-        self.users = User.objects.filter(student__iej__in=iej)
-        return self.export(request)
-
-    @method_decorator(permission_required('is_staff'))
-    def by_course(self, request, id):
-        course = Course.objects.filter(id=id)
-        self.users = User.objects.filter(student__training__courses__in=course)
-        return self.export(request)
-
-    @method_decorator(login_required)
-    def profile_detail(self, request, username, template='teleforma/profile_detail.html'):
-        user = User.objects.get(username=username)
-        try:
-            profile = user.get_profile()
-        except:
-            profile = None
-        student = user.student.all()
-        payment = None
-        if student and (user.username == request.user.username or request.user.is_superuser):
-            student = user.student.get()
-            payment = student.payments.order_by('-id').all()
-            if payment:
-                payment = payment[0]
-
-        return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})

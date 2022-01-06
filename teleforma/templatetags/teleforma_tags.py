@@ -251,7 +251,7 @@ def quiz_validated(seminar, user):
 def summary(text, N):
     t = text[:N]
     if not ' ' in t:
-        t = text[:N/2]
+        t = text[:int(N/2)]
     return t + '...'
 
 @register.filter

@@ -1,9 +1,10 @@
 {% load i18n %}
-{% load teleforma_tags %}
-{% load pagination_tags %}
+{% load teleforma_tags pagination_tags %}
 
-{% autopaginate object_list 8 %}
+{% autopaginate object_list %}
 {% paginate %}
+
+{{ object_list.count }}
 
 <div id="users">
   <table class="listing" width="100%">

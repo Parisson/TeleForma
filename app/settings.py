@@ -18,7 +18,7 @@ TEMPLATE_DEBUG = DEBUG
 RECOVERY = True
 
 # disable to debug websocket and improve performance
-DEBUG_TOOLBAR = False
+DEBUG_TOOLBAR = True
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -185,8 +185,8 @@ INSTALLED_APPS = (
     'jsonrpc',
     'sorl.thumbnail',
     'django_extensions',
-    'dj_pagination',
     'postman',
+    'dj_pagination',
     # 'markup_mixin',
     'notes',
     # 'timezones',
@@ -199,6 +199,7 @@ INSTALLED_APPS = (
     'multichoice',
     'true_false',
     'essay',
+
 )
 
 
