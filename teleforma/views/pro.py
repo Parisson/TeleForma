@@ -33,35 +33,50 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 
-from teleforma.views.core import *
-from teleforma.context_processors import *
-from django.core.exceptions import PermissionDenied
-
-from django.utils.translation import gettext_lazy as _
-from django.template import loader, Context, RequestContext
-from django.views.generic.base import TemplateResponseMixin
-from django.http import HttpResponse
-from django.conf import settings
-from django.shortcuts import render
-from django.template.context import Context
-from django.utils.html import escape
-from django.template.loader import render_to_string
-
-import os, datetime
-from io import StringIO
+import datetime
+import json
+import logging
+import os
+from io import BytesIO, StringIO
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.urls.base import reverse
+from django.utils.decorators import method_decorator
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+from jsonrpc import jsonrpc_method
+from postman.models import Message
+from postman.utils import notify_user
 
 import weasyprint
-
-import json
-
+from django.conf import settings
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.template import Context, RequestContext, loader
+from django.template.context import Context
+from django.template.loader import render_to_string
+from django.utils.html import escape
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import TemplateResponseMixin
 from forms_builder.forms.forms import FormForForm
 from forms_builder.forms.models import Form
 from forms_builder.forms.signals import form_invalid, form_valid
 from pbcart.models import Cart
 from quiz.views import QuizTake
-from django.views.decorators.csrf import csrf_exempt
 
-REVISION_DATE_FILTER = datetime.datetime(2015,2,2)
+from teleforma.context_processors import all_conferences, all_seminars, seminar_progress, seminar_validated
+from teleforma.models.core import Conference
+from teleforma.models.pro import Answer, Question, QuizValidation, Seminar, SeminarRevision, Testimonial
+from teleforma.forms import AnswerForm
+from teleforma.views.core import DocumentDownloadView, DocumentReadView, MediaView
+
+REVISION_DATE_FILTER = datetime.datetime(2015, 2, 2)
+logger = logging.getLogger('teleforma')
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -69,31 +84,30 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    print("Write PDF 2")
-    src = StringIO(content.encode(encoding))
     src = weasyprint.HTML(string=content.encode(encoding), encoding=encoding)
-    dest.write_pdf(src)
+    site = Site.objects.get_current()
+    src.write_pdf(dest, stylesheets=[f'https://{site.domain}/{settings.STATIC_URL}teleforma/css/teleforma_pdf.css',])
     return True
+
 
 def content_to_response(content, filename=None):
     """
     Return a pdf response using given *content*.
     """
-    response = HttpResponse(content, mimetype='application/pdf')
+    response = HttpResponse(content, content_type='application/pdf')
     if filename is not None:
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
+
 def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
-    **kwargs):
+                  **kwargs):
     """
     Render a pdf response using given *request*, *template* and *context*.
     """
-    if not isinstance(context, Context):
-        context = RequestContext(request, context)
 
     content = loader.render_to_string(template, context)
-    buffer = StringIO()
+    buffer = BytesIO()
 
     succeed = content_to_pdf(content, buffer, encoding, **kwargs)
     if succeed:
@@ -107,11 +121,11 @@ def get_seminar_timer(user, seminar):
         t += r.delta()
     return t
 
+
 def get_seminar_delta(user, seminar):
     timer = get_seminar_timer(user, seminar)
     delta = timer - datetime.timedelta(seconds=seminar.duration.as_seconds())
     return delta.total_seconds()
-
 
 
 class SeminarAccessMixin(object):
@@ -120,7 +134,8 @@ class SeminarAccessMixin(object):
         context = super(SeminarAccessMixin, self).get_context_data(**kwargs)
         seminar = context.get('seminar')
         if not seminar:
-            seminar = Seminar.objects.get(pk=self.kwargs.get('id', self.kwargs.get('pk')))
+            seminar = Seminar.objects.get(
+                pk=self.kwargs.get('id', self.kwargs.get('pk')))
         context['seminar'] = seminar
         user = self.request.user
 
@@ -129,29 +144,29 @@ class SeminarAccessMixin(object):
         context['delta_sec'] = delta_sec
         totsec = timer.total_seconds()
         h = totsec//3600
-        m = (totsec%3600) // 60
-        sec =(totsec%3600)%60
-        context['timer'] = "%d:%d:%d" %(h,m,sec)
+        m = (totsec % 3600) // 60
+        sec = (totsec % 3600) % 60
+        context['timer'] = "%d:%d:%d" % (h, m, sec)
         context['conferences'] = all_conferences(self.request)
         return context
 
     def render_to_response(self, context):
         seminar = context['seminar']
         if not seminar in all_seminars(self.request)['all_seminars']:
-            messages.warning(self.request, _("You do NOT have access to this resource and then have been redirected to your desk."))
+            messages.warning(self.request, _(
+                "You do NOT have access to this resource and then have been redirected to your desk."))
             return redirect('teleforma-desk')
         return super(SeminarAccessMixin, self).render_to_response(context)
 
 
-
-    
 class SeminarRevisionMixin(object):
 
     @staticmethod
     def seminar_do_load(request, id, username):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
-        all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
+        all_revisions = SeminarRevision.objects.filter(
+            user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
         now = datetime.datetime.now()
         if seminar.expiry_date < now:
             return
@@ -168,12 +183,13 @@ class SeminarRevisionMixin(object):
     @jsonrpc_method('teleforma.seminar_load')
     def seminar_load(request, id, username):
         return SeminarRevisionMixin.seminar_do_load(request, id, username)
-    
+
     @staticmethod
     def seminar_do_unload(request, id, username):
         seminar = Seminar.objects.get(id=id)
         user = User.objects.get(username=username)
-        all_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
+        all_revisions = SeminarRevision.objects.filter(
+            user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
         now = datetime.datetime.now()
         if seminar.expiry_date < now:
             now = seminar.expiry_date
@@ -181,11 +197,12 @@ class SeminarRevisionMixin(object):
             revisions = all_revisions.filter(seminar=seminar)
             if revisions:
                 r = revisions[0]
-                if (now - r.date) > datetime.timedelta(seconds = 1):
+                if (now - r.date) > datetime.timedelta(seconds=1):
                     r.date_modified = now
                     r.save()
                     return
-        seminar_revisions = SeminarRevision.objects.filter(user=user, date__gte=REVISION_DATE_FILTER, seminar=seminar)
+        seminar_revisions = SeminarRevision.objects.filter(
+            user=user, date__gte=REVISION_DATE_FILTER, seminar=seminar)
         if seminar_revisions:
             revision = seminar_revisions.latest('date')
 
@@ -197,11 +214,12 @@ class SeminarRevisionMixin(object):
     def seminar_unload(request, id, username):
         return SeminarRevisionMixin.seminar_do_unload(request, id, username)
 
+
 class SeminarView(SeminarAccessMixin, DetailView):
 
     context_object_name = "seminar"
     model = Seminar
-    template_name='teleforma/seminar_detail.html'
+    template_name = 'teleforma/seminar_detail.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -216,7 +234,8 @@ class SeminarView(SeminarAccessMixin, DetailView):
         validated = seminar_validated(user, seminar)
         if validated:
             # check if testimonial exists and create it
-            testimonials = Testimonial.objects.filter(user=user, seminar=seminar)
+            testimonials = Testimonial.objects.filter(
+                user=user, seminar=seminar)
             if not testimonials:
                 testimonial = Testimonial(user=user, seminar=seminar)
                 now = datetime.datetime.now()
@@ -237,18 +256,22 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['seminar_validated'] = validated
         delta_sec = context['delta_sec']
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
-            messages.info(self.request, _("You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
+            messages.info(self.request, _(
+                "You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html' and missing_steps == set('5'):
-            messages.info(self.request, _("All your answers have been validated. You can now read the corrected documents (step 5)."))
+            messages.info(self.request, _(
+                "All your answers have been validated. You can now read the corrected documents (step 5)."))
         elif progress == 100 and validated and delta_sec >= 0 and self.template_name == 'teleforma/seminar_detail.html':
-            messages.info(self.request, _("You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
+            messages.info(self.request, _(
+                "You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
         elif len(missing_steps) == 1:
-            
+
             if missing_steps == set(['4.5']):
                 messages.warning(self.request,
                                  _("Yours submissions have been submitted. They will be processed within 48 hours."))
             else:
-                messages.warning(self.request, _("You still need to complete step %(step)s in order to get yout testimonial.") % {'step':missing_steps.pop()})
+                messages.warning(self.request, _(
+                    "You still need to complete step %(step)s in order to get yout testimonial.") % {'step': missing_steps.pop()})
         if progress == 100 and validated and delta_sec < 0:
             minutes = -delta_sec / 60
             hours = minutes / 60
@@ -256,9 +279,9 @@ class SeminarView(SeminarAccessMixin, DetailView):
             if hours >= 1:
                 missing = "%dh%02d" % (hours, minutes % 60)
             messages.warning(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you "
-                                           "still have to work at least %(time)s.") % {'time':missing})
+                                             "still have to work at least %(time)s.") % {'time': missing})
             context['popup_message'] = _("Your connexion time is not sufficient. In order to get your testimonial, you "
-                                           "still have to work at least %(time)s.") % {'time':missing}
+                                         "still have to work at least %(time)s.") % {'time': missing}
         return context
 
     @jsonrpc_method('teleforma.publish_seminar')
@@ -277,7 +300,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
 class SeminarsView(ListView):
 
     model = Seminar
-    template_name='teleforma/seminars.html'
+    template_name = 'teleforma/seminars.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -296,7 +319,7 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
 
     model = Answer
     form_class = AnswerForm
-    template_name='teleforma/answer_form.html'
+    template_name = 'teleforma/answer_form.html'
 
     def get_user(self):
         user_id = self.request.user.id
@@ -314,7 +337,7 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
         conference = self.question.seminar.conference
         if conference in self.user.auditor.get().conferences.all() and not conference.webclass:
             raise PermissionDenied
-        
+
         answers = Answer.objects.filter(user=self.user,
                                         question=self.question).order_by('-date_submitted')
         if answers:
@@ -332,15 +355,18 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
         answer.question = self.question
         answer.save()
         if answer.status <= 2:
-            messages.info(self.request, _("You have successfully saved your answer."))
+            messages.info(self.request, _(
+                "You have successfully saved your answer."))
         elif answer.status == 3:
-            messages.info(self.request, _("You have successfully submitted your answer."))
+            messages.info(self.request, _(
+                "You have successfully submitted your answer."))
             if answer.question.seminar.course.code == 'demo':
                 answer.validate()
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request,_("Your submission has not been saved correctly. Please try again."))
+        messages.error(self.request, _(
+            "Your submission has not been saved correctly. Please try again."))
         return super(AnswerView, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -349,12 +375,13 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
         context['question'] = self.question
         context['status'] = self.status
         context['seminar'] = self.question.seminar
-        context['seminar_progress'] = seminar_progress(user, self.question.seminar)
+        context['seminar_progress'] = seminar_progress(
+            user, self.question.seminar)
         # set_revision(user, self.question.seminar)
         return context
 
     def get_success_url(self):
-        return reverse('teleforma-seminar-detail', kwargs={'pk':self.question.seminar.id})
+        return reverse('teleforma-seminar-detail', kwargs={'pk': self.question.seminar.id})
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -370,7 +397,8 @@ class SeminarMediaView(SeminarAccessMixin, SeminarRevisionMixin, MediaView):
         user = self.request.user
         # seminar = Seminar.objects.get(pk=self.kwargs['id'])
         # context['seminar'] = seminar
-        context['seminar_progress'] = seminar_progress(user, context['seminar'])
+        context['seminar_progress'] = seminar_progress(
+            user, context['seminar'])
         # set_revision(user, seminar)
         return context
 
@@ -412,7 +440,7 @@ class SeminarDocumentDownloadView(SeminarAccessMixin, DocumentDownloadView):
 class AnswersView(ListView):
 
     model = Answer
-    template_name='teleforma/answers.html'
+    template_name = 'teleforma/answers.html'
 
     def get_queryset(self):
         return Answer.objects.filter(status=3)
@@ -443,7 +471,7 @@ class AnswersView(ListView):
         organization = seminar.course.department.name
         site = Site.objects.get_current()
 
-        path = reverse('teleforma-seminar-detail', kwargs={'pk':seminar.id})
+        path = reverse('teleforma-seminar-detail', kwargs={'pk': seminar.id})
 
         if seminar.sub_title:
             title = seminar.sub_title + ' : ' + seminar.title
@@ -463,7 +491,7 @@ class AnswersView(ListView):
         context['path'] = path
         context['title'] = title
         context['organization'] = organization
-        context['date'] =  answer.question.seminar.expiry_date
+        context['date'] = answer.question.seminar.expiry_date
 
         if seminar_validated(user, seminar):
             testimonial = Testimonial(user=user, seminar=seminar)
@@ -472,19 +500,24 @@ class AnswersView(ListView):
                 testimonial.date_modified = context['date']
             testimonial.save()
             # url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':seminar.id}) + '?format=pdf'
-            text = render_to_string('teleforma/messages/seminar_validated.txt', context)
-            subject = seminar.title + ' : ' + str(_('all your answers has been validated'))
+            text = render_to_string(
+                'teleforma/messages/seminar_validated.txt', context)
+            subject = seminar.title + ' : ' + \
+                str(_('all your answers has been validated'))
 
         else:
-            text = render_to_string('teleforma/messages/answer_validated.txt', context)
+            text = render_to_string(
+                'teleforma/messages/answer_validated.txt', context)
             a = _('answer')
             v = _('validated')
-            subject = '%s : %s - %s %s' % (seminar.title, a, str(context['rank']), v)
+            subject = '%s : %s - %s %s' % (seminar.title,
+                                           a, str(context['rank']), v)
 
-        mess = Message(sender=sender, recipient=user, subject=subject[:511], body=text)
+        mess = Message(sender=sender, recipient=user,
+                       subject=subject[:511], body=text)
         mess.moderation_status = 'a'
         mess.save()
-        notify_user(mess, 'acceptance')
+        notify_user(mess, 'acceptance', site)
         return
 
     @method_decorator(permission_required('is_superuser'))
@@ -525,15 +558,18 @@ class AnswersView(ListView):
         context['path'] = path
         context['title'] = title
         context['organization'] = organization
-        context['date'] =  answer.question.seminar.expiry_date
+        context['date'] = answer.question.seminar.expiry_date
 
         sender = request.user
-        text = render_to_string('teleforma/messages/answer_rejected.txt', context)
-        subject = seminar.title + ' : ' + str(_('validation conditions for an answer'))
-        mess = Message(sender=sender, recipient=user, subject=subject, body=text)
+        text = render_to_string(
+            'teleforma/messages/answer_rejected.txt', context)
+        subject = seminar.title + ' : ' + \
+            str(_('validation conditions for an answer'))
+        mess = Message(sender=sender, recipient=user,
+                       subject=subject, body=text)
         mess.moderation_status = 'a'
         mess.save()
-        notify_user(mess, 'acceptance')
+        notify_user(mess, 'acceptance', site)
 
 
 class AnswersPendingView(AnswersView):
@@ -553,7 +589,7 @@ class AnswerDetailViewTest(DetailView):
 
     context_object_name = "answer"
     model = Answer
-    template_name='teleforma/messages/answer_rejected.txt'
+    template_name = 'teleforma/messages/answer_rejected.txt'
 
     def get_context_data(self, **kwargs):
         context = super(AnswerDetailViewTest, self).get_context_data(**kwargs)
@@ -562,7 +598,8 @@ class AnswerDetailViewTest(DetailView):
         user = answer.user
         sender = self.request.user
         site = Site.objects.get_current()
-        path= reverse('teleforma-question-answer', kwargs={'id': seminar.id, 'pk': answer.question.id})
+        path = reverse('teleforma-question-answer',
+                       kwargs={'id': seminar.id, 'pk': answer.question.id})
         organization = seminar.course.department.name
 
         if answer.question.seminar.sub_title:
@@ -582,14 +619,14 @@ class AnswerDetailViewTest(DetailView):
         context['path'] = path
         context['title'] = title
         context['organization'] = organization
-        context['date'] =  answer.question.seminar.expiry_date
+        context['date'] = answer.question.seminar.expiry_date
         return context
 
 
 class AnswerDetailView(DetailView):
 
     model = Answer
-    template_name='teleforma/answer_detail.html'
+    template_name = 'teleforma/answer_detail.html'
 
     @method_decorator(permission_required('is_superuser'))
     @method_decorator(login_required)
@@ -602,6 +639,7 @@ class AjaxableResponseMixin(object):
     Mixin to add AJAX support to a form.
     Must be used with an object-based FormView (e.g. CreateView)
     """
+
     def render_to_json_response(self, context, **response_kwargs):
         data = json.dumps(context)
         response_kwargs['content_type'] = 'application/json'
@@ -658,14 +696,15 @@ def evaluation_form_detail(request, pk, template='teleforma/evaluation_form.html
         else:
             entry = form_for_form.save()
             form_valid.send(sender=request, form=form_for_form, entry=entry)
-            messages.info(request, _("You have successfully submitted your evaluation"))
+            messages.info(request, _(
+                "You have successfully submitted your evaluation"))
             return redirect('teleforma-seminar-detail', seminar.id)
 
     context['seminar'] = seminar
     context['form'] = form
     context['seminar_progress'] = seminar_progress(user, seminar)
     # set_revision(user, seminar)
-    return render_to_response(template, context, request_context)
+    return render(request, template, context)
 
 
 class PDFTemplateResponseMixin(TemplateResponseMixin):
@@ -703,7 +742,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
     pdf_kwargs = {}
 
     def is_pdf(self):
-        value = self.request.REQUEST.get(self.pdf_querydict_key, '')
+        value = self.request.GET.get(self.pdf_querydict_key, '')
         return value.lower() == self.pdf_querydict_value.lower()
 
     def _get_pdf_template_name(self, name):
@@ -728,7 +767,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         Return the pdf attachment filename.
         If the filename is None, the pdf will not be an attachment.
         """
-        return self.pdf_filename
+        return str(self.pdf_filename)
 
     def get_pdf_url(self):
         """
@@ -757,6 +796,10 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         return super(PDFTemplateResponseMixin, self).render_to_response(
             context, **response_kwargs)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['site_url'] = Site.objects.get_current().domain
+        return context
 
 class TestimonialView(PDFTemplateResponseMixin, SeminarView):
 
@@ -768,12 +811,14 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     def get_context_data(self, **kwargs):
         context = super(TestimonialView, self).get_context_data(**kwargs)
         seminar = context['seminar']
-        
-        revisions = SeminarRevision.objects.filter(seminar=seminar, user=self.request.user).order_by('date')
+
+        revisions = SeminarRevision.objects.filter(
+            seminar=seminar, user=self.request.user).order_by('date')
         if revisions:
             context['first_revision'] = revisions[0]
 
-        testimonials = Testimonial.objects.filter(seminar=seminar, user=self.request.user)
+        testimonials = Testimonial.objects.filter(
+            seminar=seminar, user=self.request.user)
         if testimonials:
             context['testimonial'] = testimonials[0]
 
@@ -799,15 +844,15 @@ class TestimonialDownloadView(TestimonialView):
         seminar = self.get_object()
         prefix = str(_('Testimonial'))
         filename = '_'.join([prefix, seminar.title.replace(',', ' '),
-                            self.request.user.first_name, self.request.user.last_name,])
+                            self.request.user.first_name, self.request.user.last_name, ])
         filename += '.pdf'
-        return filename.encode('utf-8')
+        return filename
 
 
 class TestimonialListView(ListView):
 
     model = Testimonial
-    template_name='teleforma/testimonials.html'
+    template_name = 'teleforma/testimonials.html'
 
     def get_queryset(self):
         t = []
@@ -844,7 +889,8 @@ class TestimonialKnowledgeView(TestimonialView):
     pdf_template_name = template_name
 
     def get_context_data(self, **kwargs):
-        context = super(TestimonialKnowledgeView, self).get_context_data(**kwargs)
+        context = super(TestimonialKnowledgeView,
+                        self).get_context_data(**kwargs)
         seminar = context['seminar']
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
@@ -863,16 +909,18 @@ class TestimonialPaybackView(TestimonialView):
     pdf_template_name = template_name
 
     def get_context_data(self, **kwargs):
-        context = super(TestimonialPaybackView, self).get_context_data(**kwargs)
+        context = super(TestimonialPaybackView,
+                        self).get_context_data(**kwargs)
         seminar = context['seminar']
         context['price'] = seminar.price
         # recompute price if use has used a promo code
         for cart in Cart.objects.filter(user=self.request.user, status=Cart.STATE_PAYMENT_ACCEPTED):
             if cart.has_item(seminar):
                 if cart.promo_code and seminar in cart.promo_code.seminars.all():
-                    context['price'] = seminar.price - (seminar.price * cart.promo_code.reduction / 100.0)
+                    context['price'] = seminar.price - \
+                        (seminar.price * cart.promo_code.reduction / 100.0)
                     break
-        
+
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
                                                    validated=True).order_by('question__rank')
@@ -887,7 +935,7 @@ class TestimonialPaybackView(TestimonialView):
 
 class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
 
-    template_name='quiz/question.html'
+    template_name = 'quiz/question.html'
 
     def get_user(self):
         user_id = self.request.user.id
@@ -938,7 +986,8 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
             self.sitting.delete()
 
         if self.sitting.get_percent_correct >= self.quiz.pass_mark:
-            validation = QuizValidation(user=user, quiz=self.seminar.quiz, validated=True)
+            validation = QuizValidation(
+                user=user, quiz=self.seminar.quiz, validated=True)
             validation.save()
         else:
             # revert step 1 validation
@@ -948,12 +997,13 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
 
         return render(self.request, 'quiz/result.html', results)
 
+
 def process_webclass_bbb_webhook(request, event):
     meeting = event["attributes"]["meeting"]["external-meeting-id"]
     user = event["attributes"]["user"]["external-user-id"]
-    conf = Conference.objects.get(webclass_id = meeting)
-    user = User.objects.get(username = user)
-    seminar = Seminar.objects.get(conference = conf)
+    conf = Conference.objects.get(webclass_id=meeting)
+    user = User.objects.get(username=user)
+    seminar = Seminar.objects.get(conference=conf)
 
     mixin = SeminarRevisionMixin()
 
@@ -962,10 +1012,11 @@ def process_webclass_bbb_webhook(request, event):
         mixin.seminar_do_load(request, seminar.pk, user.username)
         print(("JOIN DONE", seminar, conf, user))
     else:
-        print(("LEAVE", seminar, conf, user))            
+        print(("LEAVE", seminar, conf, user))
         mixin.seminar_do_unload(request, seminar.pk, user.username)
-        print(("LEAVE DONE", seminar, conf, user))            
-    
+        print(("LEAVE DONE", seminar, conf, user))
+
+
 @csrf_exempt
 def webclass_bbb_webhook(request):
     """
@@ -973,7 +1024,7 @@ def webclass_bbb_webhook(request):
     """
     if not settings.BBB_USE_WEBHOOKS:
         return HttpResponse("Web hooks disabled")
-    
+
     if request.method != "POST":
         raise PermissionDenied
 
@@ -988,7 +1039,7 @@ def webclass_bbb_webhook(request):
     try:
         process_webclass_bbb_webhook(request, event)
     except Exception as e:
-        logger.exception("Error processing event %s from BBB for %s on %s" % (event["id"], user.username, seminar.pk))
-    
+        logger.exception(
+            "Error processing event %s from BBB for %s on %s" % (event["id"]))
+
     return HttpResponse("ok")
-    
