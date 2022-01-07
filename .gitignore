@@ -30,3 +30,5 @@ pip-log.txt
 #python venv
 py_env
 prod.env
+
+README_pilot.rst

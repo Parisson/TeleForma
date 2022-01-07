@@ -530,6 +530,9 @@ class Conference(models.Model):
         verbose_name = _('conference')
         ordering = ['-date_begin']
 
+        indexes = [
+            models.Index(fields=['course', 'course_type', 'period', 'streaming', '-date_begin' ]),
+         ]
 
 class StreamingServer(models.Model):
 
@@ -700,6 +703,9 @@ class Document(MediaBase):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document'
         ordering = ['-date_added']
+        indexes = [
+            models.Index(fields=['course', 'is_published', '-date_added' ]),
+         ]
 
 
 class DocumentSimple(MediaBase):
@@ -834,6 +840,9 @@ class Media(MediaBase):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
         ordering = ['-date_modified', '-conference__session',]
+        indexes = [
+            models.Index(fields=['course', 'course_type', 'period', 'is_published', '-date_modified' ]),
+         ]
 
 
 class NamePaginator(object):

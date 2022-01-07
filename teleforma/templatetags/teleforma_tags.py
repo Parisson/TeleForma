@@ -54,6 +54,8 @@ from ..models.core import Document, Professor
 from ..models.crfpa import IEJ, Course, NewsItem, Training
 from ..views import get_courses
 
+from collections import defaultdict
+
 register = template.Library()
 
 # more translations for template variables
@@ -439,3 +441,37 @@ def chat_room(context, period=None, course=None):
             'user_id': context.request.user.id
         }
     }
+
+
+@register.simple_tag(takes_context=True)
+def course_docs_by_type(context):
+    course = context['course']
+    docs = course.document.filter(is_published=True,
+                                  periods__in=(context['period'],),
+                                  course_type=context['type'])
+    res = []
+    by_types = defaultdict(list)
+    for doc in docs:
+        by_types[doc.type].append(doc)
+    for doc_type in context['doc_types']:
+        docs = by_types[doc_type]
+        if docs:
+            res.append((doc_type, docs))
+    return res
+
+@register.simple_tag(takes_context=True)
+def course_conferences(context):
+    course = context['course']
+    confs = course.conference.filter(streaming=True,
+                                     period=context['period'],
+                                     course_type=context['type'])
+    return list(confs)
+
+@register.simple_tag(takes_context=True)
+def course_media(context):
+    course = context['course']
+    media = course.media.filter(period=context['period'],
+                                course_type=context['type'])
+    if not context['user'].is_staff or context['list_view']:
+        media = media.filter(is_published = True)
+    return list(media)
