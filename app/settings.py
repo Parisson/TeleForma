@@ -14,6 +14,8 @@ DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
 TEMPLATE_DEBUG = DEBUG
 
+RECOVERY = True
+
 # disable to debug websocket and improve performance
 DEBUG_TOOLBAR = False
 
@@ -34,6 +36,7 @@ ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
     'staging.docker.e-learning.crfpa.pre-barreau.parisson.com',
     'e-learning.crfpa.pre-barreau.com',
     'prod.docker.e-learning.crfpa.pre-barreau.parisson.com',
+    'recovery.docker.e-learning.crfpa.pre-barreau.parisson.com',
 ]
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
@@ -66,9 +69,24 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST'),
         # Set to empty string for default. Not used with sqlite3.
         'PORT': os.environ.get('DB_PORT'),
-    }
+    },
 }
 
+if RECOVERY:
+    DATABASES['recovery'] = {
+        # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Or path to database file if using sqlite3.
+        'NAME': os.environ.get('POSTGRES_DATABASE'),
+        # Not used with sqlite3.
+        'USER': os.environ.get('POSTGRES_USER'),
+        # Not used with sqlite3.
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD_RECOVERY'),
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': os.environ.get('DB_HOST_RECOVERY'),
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': os.environ.get('DB_PORT'),
+        }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

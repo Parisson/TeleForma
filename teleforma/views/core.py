@@ -183,7 +183,10 @@ def get_default_period(periods):
     elif len(periods) == 1:
         return periods[0]
     else:
-        return Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
+        default_period = Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
+        if default_period not in periods:
+            return periods[0]
+        return default_period
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -302,6 +305,8 @@ class PeriodAccessMixin(View):
         if not period in context['periods']:
             messages.warning(self.request, _(
                 "You do NOT have access to this resource and then have been redirected to your desk."))
+            if self.request.session['period_id'] == period.id:
+                del self.request.session['period_id']
             return redirect('teleforma-home')
         return super(PeriodAccessMixin, self).render_to_response(context)
 
@@ -341,16 +346,24 @@ class CourseListView(CourseAccessMixin, ListView):
         courses = [course['course'] for course in context['all_courses']]
 
         # get last published media / document
-        last_published = sorted([
-            Media.objects.filter(period=self.period, is_published=True, course__in=courses).order_by("-date_added")[0],
-            Document.objects.filter(periods=self.period, is_published=True, course__in=courses).order_by("-date_added")[0],
-        ], key=lambda k: k.date_added, reverse=True)[0]
-
-        # get course with the latest published media / document
-        for course in context['all_courses']:
-            if course['course'].id == last_published.course.id:
-                break
-        context['courses'] = [course]
+        last_published = []
+        last_media = Media.objects.filter(period=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
+        if last_media:
+            last_published.append(last_media)
+        last_document = Document.objects.filter(periods=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
+        if last_document:
+            last_published.append(last_document)
+        if last_published:
+            last_published = sorted(last_published, key=lambda k: k.date_added, reverse=True)[0]
+            # get course with the latest published media / document
+            for course in context['all_courses']:
+                if course['course'].id == last_published.course.id:
+                    break
+            context['courses'] = [course]
+        else:
+            # get course with the latest "date"
+            context['courses'] = sorted(
+                 context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
 
         user = self.request.user
         is_student = user.student.all().count()

@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db-recovery:
+    image: postgres:13
+    env_file:
+      - env/recovery.env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./var/lib/postgresql-recovery:/var/lib/postgresql/data:rw
+      - ./bin:/srv/bin
+      - ./var/backup/:/srv/backup
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - teleforma-staging
+
+volumes:
+  db-recovery:

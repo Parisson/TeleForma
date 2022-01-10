@@ -1,0 +1,87 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        dev: 0
+    command: /bin/sh /srv/app/wsgi.sh
+    restart: unless-stopped
+    env_file:
+      - env/recovery.env
+    volumes:
+      - /mnt/crfpa-videos:/mnt/crfpa-videos
+      - /mnt/crfpa-scripts:/mnt/crfpa-scripts
+    ports:
+      - "9005:8000"
+    networks:
+      - teleforma-recovery
+  
+  channels:
+    build:
+      context: .
+      args:
+        dev: 0
+    command: /bin/sh /srv/app/asgi.sh
+    volumes:
+      - ./app/:/srv/app
+      - ./bin:/srv/bin
+      - ./lib:/srv/lib
+      - ./teleforma/:/srv/src/teleforma/teleforma
+      - ./var/log/app:/var/log/app
+    ports:
+      - "9006:8000"
+    env_file:
+      - env/recovery.env
+    networks:
+      - teleforma-recovery
+    links:
+      - db:db
+      - redis
+      - memcached
+    depends_on:
+      - db
+      - redis
+      - memcached
+
+  db:
+    env_file:
+      - env/recovery.env
+    networks:
+      - teleforma-recovery
+
+  db-recovery:
+    image: postgres:13
+    env_file:
+      - env/recovery.env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./var/lib/postgresql-recovery:/var/lib/postgresql/data:rw
+      - ./bin:/srv/bin
+      - ./var/backup/:/srv/backup
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - teleforma-recovery
+
+  redis:
+    networks:
+      - teleforma-recovery
+
+  memcached:
+    networks:
+      - teleforma-recovery
+
+
+volumes:
+    app:
+    channels:
+    db:
+    db-recovery:
+    redis:
+
+
+networks:
+  teleforma-recovery:
+    driver: bridge
