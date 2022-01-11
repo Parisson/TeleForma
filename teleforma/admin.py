@@ -21,7 +21,7 @@ class PeriodListFilter(SimpleListFilter):
     title = _('period')
 
     # Parameter for the filter that will be used in the URL query.
-    parameter_name = 'period'
+    parameter_name = 'period__id'
 
     def lookups(self, request, model_admin):
         """
@@ -32,7 +32,7 @@ class PeriodListFilter(SimpleListFilter):
         in the right sidebar.
         """
 
-        return ( (period.name, period.name) for period in Period.objects.all() )
+        return ( (period.id, period.name) for period in Period.objects.all() )
 
     def queryset(self, request, queryset):
         """
@@ -41,7 +41,11 @@ class PeriodListFilter(SimpleListFilter):
         `self.value()`.
         """
         if self.value():
-            return queryset.filter(trainings__period__name=self.value())
+            try:
+                value = int(self.value())
+            except ValueError:
+                return queryset
+            return queryset.filter(period__id=value)
         else:
             return queryset
 
@@ -162,7 +166,7 @@ else:
         filter_horizontal = ['courses']
         inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
         search_fields = ['user__first_name', 'user__last_name', 'user__username']
-        list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', 'period',
+        list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
                         'fascicule', BalanceFilter ]
         list_display = ['student_name', 'restricted', 'platform_only',
                         'total_payments', 'total_fees', 'balance', 'balance_intermediary']
