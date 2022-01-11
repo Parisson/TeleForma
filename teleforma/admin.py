@@ -142,9 +142,9 @@ class DocumentAdmin(admin.ModelAdmin):
     list_filter = ('period', 'date_added')
 
 class MediaAdmin(admin.ModelAdmin):
+    date_hierarchy = 'date_added'
     exclude = ['readers']
-    search_fields = ['id', 'title', 'course__title', 'course__code']
-    list_filter = ('period', 'date_added')
+    search_fields = ['id', 'title', 'course__title', 'course__code', 'item__title']
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']
