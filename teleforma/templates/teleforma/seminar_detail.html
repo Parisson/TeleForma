@@ -170,7 +170,7 @@
   </div>
   {% endwith %}
 
-  {% if seminar.conference.webclass and seminar.conference in user.auditor.get.conferences.all %}
+  {% if show_webclass %}
     {% with seminar.conference as webclass %}
     <div class="course_content">
       <div class="course_subtitle">

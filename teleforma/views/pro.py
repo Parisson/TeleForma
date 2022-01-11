@@ -219,7 +219,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context = super(SeminarView, self).get_context_data(**kwargs)
         seminar = context['seminar']
         user = self.request.user
-
+        context['show_webclass'] = seminar.use_webclass(user)
         validated = seminar_validated(user, seminar)
         if validated:
             # check if testimonial exists and create it

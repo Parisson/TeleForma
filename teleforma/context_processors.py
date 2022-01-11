@@ -63,7 +63,8 @@ def seminar_progress(user, seminar, more=False):
             'step': '5'
         }
     ]
-    if seminar.conference and seminar.conference.webclass and seminar.conference in user.auditor.get().conferences.all():
+
+    if seminar.use_webclass(user):
         objects[1]['obj'] = seminar.conference
     for item in objects:
         

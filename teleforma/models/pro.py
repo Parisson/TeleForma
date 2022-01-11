@@ -176,6 +176,14 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     def suggestions(self):
         return (list(self.suggested_seminars.all())+list(self.suggested_conferences.all()))[:3]
 
+    def use_webclass(self, user):
+        """
+        Should we show the webclass or the media ?
+        If the user subscribe to the conference, then show the webclass
+        If the user subscribe to the seminar and there are no medias, then show the webclass, else show the media.
+        """
+        return self.conference and self.conference.webclass and (self.conference in user.auditor.get().conferences.all() or not self.medias.count())
+
     def clone_to_next_year(self):
         """ copy the seminar for next year """
         log = ""
