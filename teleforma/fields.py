@@ -115,6 +115,8 @@ class DurationField(models.Field):
 
     description = _("Duration")
 
+    # __metaclass__ = models.SubfieldBase
+
     default_error_messages = {
         'invalid': _('Enter a valid duration in HH:MM[:ss] format.'),
     }
@@ -122,9 +124,9 @@ class DurationField(models.Field):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **normalize_field(kwargs, '0'))
 
-    def db_type(self):
+    def db_type(self, connection):
         return 'int'
-
+        
     def to_python(self, value):
         if value is None:
             return None
@@ -169,7 +171,6 @@ class DurationField(models.Field):
         defaults = {'form_class': forms.CharField}
         defaults.update(kwargs)
         return super(DurationField, self).formfield(**defaults)
-
 
 # from south.modelsinspector import add_introspection_rules
 # add_introspection_rules([], ["^teleforma\.fields\.DurationField"])

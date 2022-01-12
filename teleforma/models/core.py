@@ -64,7 +64,7 @@ from django.dispatch import receiver
 from jxmlease import XMLListNode, XMLDictNode
 
 from teleforma.bbb_utils import bbb, register_web_hook
-from teleforma.fields import Duration, ShortTextField
+from teleforma.fields import Duration, DurationField, ShortTextField
 
 HAS_TELEMETA = False
 try:
