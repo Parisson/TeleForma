@@ -18,7 +18,7 @@ TEMPLATE_DEBUG = DEBUG
 RECOVERY = True
 
 # disable to debug websocket and improve performance
-DEBUG_TOOLBAR = True
+DEBUG_TOOLBAR = False
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
