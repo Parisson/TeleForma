@@ -67,15 +67,19 @@ def seminar_progress(user, seminar, more=False):
         {
             'obj': seminar.docs_correct,
             'step': '5'
-        }]
-    if seminar.conference and seminar.conference.webclass:
-        objects[2]['obj'] = seminar.conference
+        }
+    ]
+
+    if seminar.use_webclass(user):
+        objects[1]['obj'] = seminar.conference
     for item in objects:
+        
         obj = item['obj']
         step = item['step']
         items = [obj]
         if hasattr(obj, 'all'):
             items = obj.all()
+
         for item in items:
             if item.weight:
                 total += item.weight
@@ -115,6 +119,7 @@ def seminar_progress(user, seminar, more=False):
         progress = int(progress*100/total)
     else:
         progress = 0
+
     if not more:
         return progress
     else:
