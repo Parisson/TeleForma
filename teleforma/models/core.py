@@ -580,6 +580,8 @@ class Media(MediaBase):
                                         blank=True, null=True)
     file            = models.FileField(_('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
     poster_file     = models.FileField(_('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
+    approx_duration = DurationField(_('approximative duration'))
+
 
     def set_mime_type(self):
         if self.file:

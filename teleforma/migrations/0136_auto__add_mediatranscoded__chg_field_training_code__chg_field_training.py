@@ -4,6 +4,8 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+from teleforma.models.core import MediaTranscoded
+
 
 class Migration(SchemaMigration):
 
@@ -330,6 +332,11 @@ class Migration(SchemaMigration):
         # Changing field 'LiveStream.server'
         db.alter_column('teleforma_live_stream', 'server_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['teleforma.StreamingServer']))
 
+        # Adding field 'Media.approx_duration'
+        db.add_column('teleforma_media', 'approx_duration',
+                      self.gf('teleforma.fields.DurationField')(default='0', blank=True),
+                      keep_default=False)
+
         if not db.dry_run:
             from teleforma.models.core import Media
 
@@ -341,10 +348,23 @@ class Migration(SchemaMigration):
                     media_item.poster_file = media_item.item.related.filter(title="preview")[0].file
                 except IndexError:
                     pass
+                media_item.approx_duration = media_item.item.approx_duration
+                if not media_item.title:
+                    media_item.title = media_item.item.title
 
                 media_item.save()
 
-                # # add media transcoded
+                for transcode_item in media_item.item.transcoded.filter():
+                    transcoded = MediaTranscoded(
+                        item=media_item, 
+                        mimetype=transcode_item.mime_type, 
+                        date_added=transcode_item.date_added, 
+                        status=transcode_item.status,
+                        file=transcode_item.file
+                        )
+                    transcoded.save()
+
+                # # add media transcoded : original CRFPA code
                 # for item in Media.objects.filter(conference=media_item.conference, course=media_item.course, course_type=media_item.course_type, period=media_item.period):
                 #     if item.id == media_item.id:
                 #         continue
@@ -672,6 +692,9 @@ class Migration(SchemaMigration):
         # Changing field 'LiveStream.server'
         db.alter_column('teleforma_live_stream', 'server_id', self.gf('telemeta.models.core.ForeignKey')(to=orm['teleforma.StreamingServer']))
 
+        # Deleting field 'Media.approx_duration'
+        db.delete_column('teleforma_media', 'approx_duration')
+
     models = {
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -973,6 +996,7 @@ class Migration(SchemaMigration):
         },
         'teleforma.media': {
             'Meta': {'ordering': "['rank']", 'object_name': 'Media'},
+            'approx_duration': ('teleforma.fields.DurationField', [], {'default': "'0'", 'blank': 'True'}),
             'code': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'conference': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'media'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['teleforma.Conference']"}),
             'course': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'media'", 'null': 'True', 'to': "orm['teleforma.Course']"}),
