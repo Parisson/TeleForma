@@ -68,6 +68,8 @@ class Command(BaseCommand):
             seminar = testimonial.seminar
             if testimonial.seminar.course.code == "demo":
                 continue
+            # https://mattermost.pilotsystems.net/pro-barreau/pl/twdx8ro6mfbimyr7n31tkpstac
+            # testimonials are created before being accessible
             if not seminar_validated(user, seminar) or not (get_seminar_delta(user, seminar) >= 0):
                 testimonial_not_ok.append(user)
                 continue

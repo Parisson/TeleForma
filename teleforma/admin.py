@@ -145,14 +145,14 @@ class MediaTranscodedInline(admin.TabularInline):
     model = MediaTranscoded
 
 class MediaAdmin(admin.ModelAdmin):
+    date_hierarchy = 'date_added'
     exclude = ['readers']
-    search_fields = ['id', 'title', 'course__title', 'course__code']
-    list_filter = ('period', 'date_added')
+    search_fields = ['id', 'title', 'course__title', 'course__code', 'item__title']
     inlines = [MediaTranscodedInline]
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']
-    search_fields = ['public_id', 'id']
+    search_fields = ['public_id', 'id', 'title']
     filter_vertical = ['docs_description',
                        'suggested_seminars', 'suggested_conferences']
     actions = ['export_conference']

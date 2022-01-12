@@ -77,11 +77,11 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    print("Write PDF 2")
+    from xhtml2pdf import pisa
     src = StringIO(content.encode(encoding))
-    src = weasyprint.HTML(string=content.encode(encoding), encoding=encoding)
-    dest.write_pdf(result)
-    return True
+    pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
+    return not pdf.err
+
 
 def content_to_response(content, filename=None):
     """
@@ -220,7 +220,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         seminar = context['seminar']
 
         user = self.request.user
-
+        context['show_webclass'] = seminar.use_webclass(user)
         validated = seminar_validated(user, seminar)
         if validated:
             # check if testimonial exists and create it
