@@ -34,22 +34,29 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
+from django.contrib.auth.models import User
 import django.db.models as models
+from django.db.models.base import Model
+from django.db.models.fields import BooleanField
+from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.utils.translation import gettext_lazy as _
-from teleforma.models.core import *
 
+from teleforma.models.core import MetaCore
+
+from .core import app_label
 
 
 class AEStudent(Model):
 
-    user            = ForeignKey(User, related_name='ae_student', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
-    period          = ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
-                                  blank=True)
-    platform_only   = BooleanField(_('platform only'))
-    courses       	= ManyToManyField('Course', related_name="ae_student",
-                                        verbose_name=_('courses'),
-                                        blank=True)
-    
+    user = ForeignKey(User, related_name='ae_student', verbose_name=_(
+        'user'), unique=True, on_delete=models.CASCADE)
+    period = ManyToManyField('Period', related_name='ae_student', verbose_name=_('period'),
+                             blank=True)
+    platform_only = BooleanField(_('platform only'))
+    courses = ManyToManyField('Course', related_name="ae_student",
+                              verbose_name=_('courses'),
+                              blank=True)
+
     def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name

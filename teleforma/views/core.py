@@ -33,36 +33,40 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import datetime
-import io
-import json
-import mimetypes
-import os
-import random
-import urllib.error
-import urllib.parse
-import urllib.request
 from datetime import timedelta
+import os
+import mimetypes
+import random
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.http import Http404, HttpResponse
+from django.http.response import Http404, HttpResponse
 from django.shortcuts import redirect
-from django.urls import resolve, reverse
+from django.urls import reverse
+from django.urls.base import resolve
 from django.utils.decorators import method_decorator
-from django.utils.translation import gettext_lazy as _
-from django.views.generic import *
-from django.views.generic.base import *
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic.base import TemplateView, View
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
-from teleforma.context_processors import *
-from teleforma.forms import *
-from teleforma.models import *
+from notes.models import Note
+from django.contrib.sites.models import Site
 
-from . import pages
+from teleforma.context_processors import all_conferences, all_seminars
+from teleforma.forms import ConferenceForm
+
+from ..models.core import (Conference, Course, CourseType, Department,
+                           Document, DocumentType, Media, MediaTranscoded,
+                           Organization, Period, Professor, Room,
+                           StreamingServer, LiveStream)
+from .pages import get_page_content
 
 try:
     from telecaster.models import *
@@ -70,8 +74,6 @@ try:
 except:
     pass
 
-from postman.models import *
-from postman.utils import email_visitor, notify_user
 
 access_error = _('Access not allowed.')
 contact_message = _('Please login or contact the website administator to get a private access.')
@@ -106,17 +108,6 @@ def stream_from_file(__file):
             break
         yield __chunk
 
-
-def get_room(content_type=None, id=None, name=None):
-    rooms = jqchat.models.Room.objects.filter(content_type=content_type,
-                                                object_id=id)
-    if not rooms:
-        room = jqchat.models.Room.objects.create(content_type=content_type,
-                                          object_id=id,
-                                          name=name[:20])
-    else:
-        room = rooms[0]
-    return room
 
 
 def get_course_access(obj, courses):
@@ -179,7 +170,6 @@ def get_periods(user):
         periods = Period.objects.all()
 
     return periods
-
 
 class CourseAccessMixin(object):
 
@@ -318,27 +308,8 @@ class MediaView(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(MediaView, self).dispatch(*args, **kwargs)
 
-    def download(self, request, pk):
-        courses = get_courses(request.user)
-        media = Media.objects.get(id=pk)
-        if get_course_access(media, courses):
-            path = media.item.file.path
-            filename, ext = os.path.splitext(path)
-            filename = filename.split(os.sep)[-1]
-            fsock = open(media.item.file.path, 'r')
-            view = ItemView()
-            mimetype = view.item_analyze(media.item)
-            extension = mimetypes.guess_extension(mimetype)
-            if not extension:
-                extension = ext
-            response = HttpResponse(fsock, mimetype=mimetype)
-
-            response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                             (filename.encode('utf8'), extension)
-            return response
-        else:
-            return redirect('teleforma-media-detail', media.id)
-
+    def download(self, request, period_id, pk):
+        return self.stream(request, period_id, pk, streaming=False)
 
     @jsonrpc_method('teleforma.publish_media')
     def publish(request, id):
@@ -747,7 +718,7 @@ class HelpView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HelpView, self).get_context_data(**kwargs)
-        context['page_content'] = pages.get_page_content(self.request, 'help',
+        context['page_content'] = get_page_content(self.request, 'help',
                                                          ignore_slash_issue=True)
         return context
 

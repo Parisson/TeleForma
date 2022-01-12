@@ -43,7 +43,6 @@ from unidecode import unidecode
 
 from django.conf import settings
 from django.db.models import *
-from teleforma.fields import *
 import django.db.models as models
 from django.utils.translation import gettext_lazy as _
 from django.utils.functional import cached_property
@@ -65,6 +64,7 @@ from django.dispatch import receiver
 from jxmlease import XMLListNode, XMLDictNode
 
 from teleforma.bbb_utils import bbb, register_web_hook
+from teleforma.fields import Duration, ShortTextField
 
 HAS_TELEMETA = False
 try:

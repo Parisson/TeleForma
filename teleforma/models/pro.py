@@ -34,15 +34,21 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
+import datetime
 import os
 from django.conf import settings
+from django.contrib.auth.models import User
 import django.db.models as models
+from django.db.models.fields.related import ForeignKey
+from django.urls.base import reverse
 from django.utils.translation import gettext_lazy as _
-from teleforma.models.core import *
+from mezzanine.core.models import Displayable
+from teleforma.fields import DurationField
+from teleforma.models.core import GENDER_CHOICES, STATUS_CHOICES, WEIGHT_CHOICES, ClonableMixin, Conference, Course, Document, Media, MetaCore, Organization, Period, ProductCodeMixin, SuggestionsMixin, app_label
 from forms_builder.forms.models import Form
 from mezzanine.core.managers import DisplayableManager
 from quiz.models import Quiz
-
+import tinymce
 class SeminarType(models.Model):
 
     name            = models.CharField(_('name'), max_length=255, blank=True)
