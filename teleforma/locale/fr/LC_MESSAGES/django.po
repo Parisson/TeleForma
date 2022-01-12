@@ -886,11 +886,6 @@ msgstr ""
 msgid "The previous question"
 msgstr "Réalisation de consultations juridiques fictives"
 
-#: templates/quiz/question.html:24
-#, fuzzy
-msgid "Your answer was"
-msgstr "Aucune réponse"
-
 #: templates/quiz/question.html:37 templates/quiz/result.html:78
 #, fuzzy
 msgid "Explanation"
@@ -999,10 +994,6 @@ msgstr "catégories"
 
 #: templates/quiz/quiz/quiz_detail.html:11
 msgid "You will only get one attempt at this quiz"
-msgstr ""
-
-#: templates/quiz/quiz/quiz_detail.html:16
-msgid "Start quiz"
 msgstr ""
 
 #: templates/quiz/quiz/quiz_list.html:6
@@ -1147,10 +1138,6 @@ msgstr "réaliser cette consultation fictive"
 #: templates/teleforma/answer_form.html:80
 msgid "minimum"
 msgstr "minimum"
-
-#: templates/teleforma/answer_form.html:94
-msgid "Save"
-msgstr ""
 
 #: templates/teleforma/answer_form.html:95
 msgid "Submit it"
@@ -1864,10 +1851,6 @@ msgstr ""
 #: templates/telemeta/base.html:126
 msgid "Profile"
 msgstr "Profil"
-
-#: templates/telemeta/base.html:130
-msgid "Sign out"
-msgstr ""
 
 #: templates/telemeta/base.html:178
 msgid "Powered by"
@@ -2613,11 +2596,6 @@ msgstr "lieu actuel"
 #: models/location.py:58 models/location.py:172 models/location.py:188
 msgid "authoritative"
 msgstr "officiel"
-
-#: models/location.py:112 models/location.py:170 models/location.py:185
-#: models/media.py:363
-msgid "location"
-msgstr "lieu"
 
 #: models/location.py:113
 msgid "locations"
@@ -3777,9 +3755,6 @@ msgstr "Dernières modifications"
 #~ msgid "lieux types"
 #~ msgstr "lieux types"
 
-#~ msgid "domain"
-#~ msgstr "discipline"
-
 #, fuzzy
 #~ msgid "channel number"
 #~ msgstr "n° de l'item"
@@ -3814,9 +3789,6 @@ msgstr "Dernières modifications"
 
 #~ msgid "username"
 #~ msgstr "nom d'utilisateur"
-
-#~ msgid "level"
-#~ msgstr "niveau"
 
 #~ msgid "first name"
 #~ msgstr "prénom"
