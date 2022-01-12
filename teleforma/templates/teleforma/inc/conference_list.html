@@ -1,15 +1,16 @@
 {% load teleforma_tags %}
 {% load i18n %}
 
-{% with course.conference.all|from_course_type:type|streaming_only as conferences %}
-{% if conferences|from_period:period %}
+{% course_conferences as conference %}
+
+{% if conferences %}
 <div class="course_content content_video">
 <div class="course_subtitle">
     <h3><img src="/static/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Live conferences"%}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
-       {% for conference in conferences|from_period:period %}
+       {% for conference in conferences %}
         {% for stream in conference.livestream.all %}
          {% if stream.stream_type == 'webm' %}
             <tr>
@@ -50,4 +51,3 @@
     </table>
 </div>
 {% endif %}
-{% endwith %}
