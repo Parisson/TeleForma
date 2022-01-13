@@ -8,7 +8,7 @@ django-json-rpc==0.7.1
 django-nvd3==0.8.2
 django-postman==4.2
 django-utils-six==2.0 # for Django 3 forward compatibility
-django-tinymce==3.3.0
+django-tinymce==3.4.0
 -e git+https://git.parisson.com/git/django-unique-session.git@master#egg=django-unique-session
 django-user-agents==0.4.0
 django-extensions==2.1.3
