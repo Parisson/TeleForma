@@ -70,7 +70,7 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     upcoming        = models.BooleanField("A venir (shop)", default=False)
     type            = models.ForeignKey(SeminarType, related_name='seminar', verbose_name=_('type'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
-    period          = ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
+    period          = models.ForeignKey('Period', related_name='seminar', verbose_name=_('period'),
                                  null=True, blank=True, on_delete=models.SET_NULL)
     course          = models.ForeignKey(Course, related_name='seminar', verbose_name=_('course'), on_delete=models.CASCADE)
     rank            = models.IntegerField(_('rank'), blank=True, null=True)

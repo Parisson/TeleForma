@@ -184,6 +184,7 @@ class Migration(migrations.Migration):
                 ('conference', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='media', to='teleforma.conference', verbose_name='conference')),
                 ('course', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='media', to='teleforma.course', verbose_name='course')),
                 ('course_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='media', to='teleforma.coursetype', verbose_name='course type')),
+                ('approx_duration', teleforma.fields.DurationField(blank=True, default='0', verbose_name='approximative duration')),
             ],
             options={
                 'db_table': 'teleforma_media',
@@ -278,6 +279,7 @@ class Migration(migrations.Migration):
                 ('site', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.CASCADE, to='sites.site')),
                 ('suggested_conferences', models.ManyToManyField(blank=True, related_name='seminars_related', to='teleforma.Conference', verbose_name='suggested conferences')),
                 ('suggested_seminars', models.ManyToManyField(blank=True, related_name='seminars_related', to='teleforma.Seminar', verbose_name='suggested seminars')),
+                
             ],
             options={
                 'verbose_name': 'Seminar',
