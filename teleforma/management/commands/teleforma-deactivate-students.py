@@ -28,25 +28,8 @@ class Logger:
 
 
 class Command(BaseCommand):
-    help = "Deactivate student user and send an email"
+    help = "Deactivate student user for a given period"
     language_code = 'fr_FR'
-
-    def email(self, student):
-        site = Site.objects.get_current()
-        if student.platform_only:
-            mode = 'E-learning'
-            message = student.period.message_platform
-        else:
-            mode = 'Presentielle'
-            message = student.period.message_local
-
-        ctx_dict = {'site': site, 'organization': settings.TELEMETA_ORGANIZATION, 'student': student, 'mode': mode}
-        subject_template = 'teleforma/messages/email_deactivate_subject.txt'
-        subject = render_to_string(subject_template, ctx_dict)
-        subject = ''.join(subject.splitlines())
-        message_template = 'teleforma/messages/email_deactivate_body.txt'
-        message = render_to_string(message_template, ctx_dict)
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [student.user.email], fail_silently=False)
 
     def handle(self, *args, **options):
         log_file = args[-1]
@@ -63,7 +46,6 @@ class Command(BaseCommand):
             if student.is_subscribed and student.confirmation_sent and student.user.email and student.user.is_active:
                 student.user.is_active = False
                 student.user.save()
-                self.email(student)
-                logger.logger.info('deactivated and email sent : ' + student.user.username)
+                logger.logger.info('deactivated : ' + student.user.username)
 
         logger.logger.info('############## Done #################')
