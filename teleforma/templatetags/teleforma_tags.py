@@ -472,6 +472,6 @@ def course_media(context):
     course = context['course']
     media = course.media.filter(period=context['period'],
                                 course_type=context['type'])
-    if not context['user'].is_staff or context['list_view']:
+    if not context['user'].is_staff or context.get('list_view', None):
         media = media.filter(is_published = True)
     return list(media)
