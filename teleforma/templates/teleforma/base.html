@@ -100,7 +100,7 @@ alt="logo" />
 
  {% if user.is_authenticated %}
   {% if user.is_staff %}
-   <li><a target="_blank" href="/admin/django/" class="blue">{% trans "Admin" %}</a></li>
+   <li><a target="_blank" href="/admin" class="blue">{% trans "Admin" %}</a></li>
   {% endif %}
 
   <li style="a.active{background-image:{{ STATIC_URL }}teleforma/images/user_tr_bk.png; background-repeat: no-repeat;
