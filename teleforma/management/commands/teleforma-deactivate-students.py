@@ -29,6 +29,9 @@ class Command(BaseCommand):
     help = "Deactivate student user for a given period"
     language_code = 'fr_FR'
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         log_file = args[-1]
         period_name = args[-2]
