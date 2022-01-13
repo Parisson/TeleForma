@@ -21,7 +21,7 @@ class AEStudentProfileInline(admin.StackedInline):
 
 class AuditorProfileInline(admin.StackedInline):
     model = Auditor
-    filter_vertical = ['seminars', 'conferences']
+    # filter_vertical = ['seminars', 'conferences']
 
     class Media:
         css = { 'all': ('admin/extra.css',) }
@@ -149,8 +149,8 @@ class MediaAdmin(admin.ModelAdmin):
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']
     search_fields = ['public_id', 'id', 'title']
-    filter_vertical = ['docs_description',
-                       'suggested_seminars', 'suggested_conferences']
+    # filter_vertical = ['docs_description',
+    #                    'suggested_seminars', 'suggested_conferences']
     actions = ['export_conference']
 
     def render_change_form(self, request, context, *args, **kwargs):
@@ -213,9 +213,9 @@ class SeminarAdmin(admin.ModelAdmin):
     exclude = ['keywords']
     inlines = [SeminarQuestionInline,]
     filter_horizontal = ['professor',]
-    filter_vertical = ['docs_description', 'docs_1',
-                       'docs_2', 'docs_correct', 'medias',
-                       'suggested_seminars', 'suggested_conferences']
+    # filter_vertical = ['docs_description', 'docs_1',
+    #                    'docs_2', 'docs_correct', 'medias',
+    #                    'suggested_seminars', 'suggested_conferences']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
     list_filter = ('period', 'publish_date', 'expiry_date')
