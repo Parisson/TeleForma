@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-{% load i18n %}
-{% load teleforma_tags %}
-{% load postman_tags %}
+{% load i18n teleforma_tags postman_tags static %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
@@ -56,6 +54,35 @@
 {% endblock %}
 
 {% block extra_javascript %}{% endblock %}
+
+<script type="text/javascript" src="{% static 'teleforma/tarteaucitron/tarteaucitron.js' %}"></script>
+
+<script type="text/javascript">
+   tarteaucitron.init({
+   "privacyUrl": "/pages/legal_notices",
+   "hashtag": "#tarteaucitron",
+   "cookieName": "tarteaucitron",
+   "orientation": "bottom",
+   "groupServices": false,
+   "showAlertSmall": false,
+   "cookieslist": false,
+   "closePopup": false,
+   "showIcon": false,
+   "iconPosition": "BottomRight",
+   "adblocker": false,
+   "DenyAllCta": true,
+   "AcceptAllCta": true,
+   "highPrivacy": true,
+   "handleBrowserDNTRequest": false,
+   "removeCredit": false,
+   "moreInfoLink": true,
+   "useExternalCss": false,
+   "useExternalJs": false,
+   "readmoreLink": "",
+   "mandatory": true,
+   });
+</script>
+
 {% block infra_javascript %}{% endblock %}
 
 </head>
@@ -181,6 +208,13 @@ alt="logo" />
 
 
 <script type='text/javascript'>window.scrollTo(0, 1);</script>
+
+
+<script type="text/javascript">
+   tarteaucitron.user.gajsUa = 'UA-38692951-1';
+   tarteaucitron.user.gajsMore = function () {};
+   (tarteaucitron.job = tarteaucitron.job || []).push('gajs');
+</script>
 
 </body>
 </html>
