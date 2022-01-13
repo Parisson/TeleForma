@@ -8,8 +8,6 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 from postman import *
@@ -30,6 +28,9 @@ class Logger:
 class Command(BaseCommand):
     help = "Deactivate student user for a given period"
     language_code = 'fr_FR'
+
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
         log_file = args[-1]
