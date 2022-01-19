@@ -232,7 +232,7 @@ def get_all_admins():
     users = User.objects.filter(is_superuser=True).order_by('last_name')
     # only from the "hotline" group
     admins = [user for user in users if user.groups.filter(name='hotline').exists()]
-    return
+    return admins
 
 
 @register.simple_tag
