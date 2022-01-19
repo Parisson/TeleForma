@@ -14,7 +14,7 @@ DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
 TEMPLATE_DEBUG = DEBUG
 
-RECOVERY = True
+RECOVERY = False
 
 # disable to debug websocket and improve performance
 DEBUG_TOOLBAR = False
