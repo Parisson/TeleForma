@@ -391,6 +391,19 @@ class WebclassRecord(models.Model):
         'BBBServer', related_name='webclass_records', verbose_name='Serveur BBB', on_delete=models.CASCADE)
     created = models.DateTimeField("Date de la conférence", auto_now_add=True)
 
+    WEBCLASS = 'WC'
+    CORRECTION = 'CC'
+    CATEGORY_CHOICES = [
+        (WEBCLASS, 'Webclass'),
+        (CORRECTION, 'Correction de copie'),
+    ]
+    category = models.CharField(
+        "Catégorie",
+        max_length=2,
+        choices=CATEGORY_CHOICES,
+        default=WEBCLASS,
+    )
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass_record'
         verbose_name = 'enregistrement'
@@ -402,9 +415,21 @@ class WebclassRecord(models.Model):
     @staticmethod
     def get_records(period, course):
         record_ids = set()
+        # id : category mapping
+        category_mapping = {}
         for record in WebclassRecord.objects.filter(period=period, course=course):
             record_ids.add(record.record_id)
+            category_mapping[record.record_id] = record.category
         if not record_ids:
-            return []
+            return {}
         records = get_records_from_bbb(recording_id=','.join(record_ids))
-        return records
+
+        # group records by category
+        categories = {}
+        for record in records:
+            category = category_mapping[record['id']]
+            if category not in categories:
+                categories[category] = []
+            categories[category].append(record)
+
+        return categories

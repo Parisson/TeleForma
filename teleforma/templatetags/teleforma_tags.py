@@ -229,7 +229,10 @@ def get_all_correctors_with_courses():
 
 @register.simple_tag
 def get_all_admins():
-    return User.objects.filter(is_superuser=True).order_by('last_name')
+    users = User.objects.filter(is_superuser=True).order_by('last_name')
+    # only from the "hotline" group
+    admins = [user for user in users if user.groups.filter(name='hotline').exists()]
+    return admins
 
 
 @register.simple_tag
