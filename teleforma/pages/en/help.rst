@@ -1,38 +1,15 @@
 Recommandations
 ================
 
-Ce site est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
+Cette plateforme est conforme aux standards ouverts du web comme le HTML5. Il est donc accessible depuis n'importe quel navigateur de bureau ou mobile.
 
-**A partir du 25/6/2021, les vidéos en différé sont compatibles avec tous les navigateurs.**
+Pour une navigation fluide dans tous les cas, nous vous recommandons d'utiliser le navigateur `Firefox <https://www.mozilla.org/fr/firefox/new/>`_.
 
-Les flux vidéo **en différé avant 26/6/2021** et tous les flux **vidéo en direct** utilisent le format libre et ouvert WebM n'est compatible sur les systèmes bureautique (Windows, OSX, GNU/Linux) qu'avec les navigateurs gratuits suivants :
+Les vidéos en direct ne sont compatibles qu'avec Firefox_
 
- * `Firefox <https://www.mozilla.org/fr/firefox/new/>`_ (recommandé)
- * `Chrome / Chromium <https://www.google.com/chrome?hl=fr>`_
- * Opera
+Les vidéos en différé sont compatibles avec tous les navigateurs.
 
-Les flux audio au format MP3 sont compatibles avec les navigateurs suivants :
-
- * Firefox (recommandé)
- * Chrome / Chromium
- * Safari
- * Edge
- * Opera
-
-Sur les smartphones et tablettes, nous proposons différentes solutions selon les plateformes :
-
- * Android
-
-  * `Firefox for Android <https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=fr>`_ (recommandé) : lecture des flux vidéos et audio en direct et en différé
-  * `Chrome for Android <https://play.google.com/store/apps/details?id=com.android.chrome&hl=fr>`_ : lecture des flux vidéos en différé, audio en direct et différé
-
- * Iphone / Ipad
-
-  * Safari : lecture des flux audio en direct et en différé et vidéo à partir du 25/06/2021.
-
- * Autres plateformes:
-
-   procéder comme sour Iphone / Ipad avec un lecteur compatible et si possible ouvert comme VLC
+Les flux audio sont compatibles avec tous les navigateurs.
 
 FAQ
 ====
@@ -40,11 +17,11 @@ FAQ
 Pourquoi les flux vidéos ne s'affichent pas correctement dans mon navigateur ?
 -------------------------------------------------------------------------------
 
-Comme expliqué plus haut dans les recommandations, rendu peut varier selon les plateformes. Merci de suivre ces récommandations.
+Comme expliqué plus haut dans les recommandations, le rendu peut varier selon les plateformes. Merci donc de suivre ces recommandations.
 
-Si des coupures de streaming ont lieu lors de la lecture en direct ou en différé, vérifier votre connexion internet, de faire quelques tests un autre site de streaming et de réssayer quelques minutes plus tard. Si les problèmes persistes, veuillez `contacter le support technique <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_.
+Si des coupures de streaming ont lieu lors de la lecture en direct ou en différé, vérifier votre connexion internet, de faire quelques tests un autre site de streaming et de réssayer quelques minutes plus tard. Si les problèmes persistes, veuillez contacter l'administration (admin-CRFPA dans la messagerie).
 
-Notez que les téléchargement des fichiers audio sont disponibles pour tous les utilisateurs.
+Notez que la lecture et le téléchargement des flux audio sont disponibles pour tous les utilisateurs et tous les navigateurs.
 
 Comment puis-je télécharger un fichier audio ?
 ----------------------------------------------
@@ -66,7 +43,4 @@ Vous pouvez à tout moment réinitialiser votre mot de passe personnel depuis l'
 Support
 ========
 
-Pour les questions relatives à votre formation, vos supports de cours, vos agendas, veuillez `contacter un administrateur depuis la messagerie <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-CRFPA>`_ ou bien par mail à l'adresse suivante : `admin-crfpa@pre-bareau.com <mailto:admin-crfpa@pre-bareau.com>`_
-
-Pour obtenir une aide technique concernant **uniquement** les problèmes informatiques d'accès aux ressources, veuillez `contacter un technicien depuis la messagerie <http://e-learning.crfpa.pre-barreau.com/messages/write/admin-tech>`_. Les questions concernant votre formation ne sont pas prises en compte.
-
+Pour les questions relatives à votre formation, vos supports de cours, vos agendas, des problèmes techniques veuillez contacter l'administration (admin-CRFPA dans la messagerie) ou bien par mail à l'adresse suivante : `admin-crfpa@pre-bareau.com <mailto:admin-crfpa@pre-barreau.com>`_
