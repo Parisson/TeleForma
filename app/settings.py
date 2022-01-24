@@ -53,8 +53,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-ENABLE_CHAT = True
-
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -503,6 +501,9 @@ if DEBUG_TOOLBAR:
 
 USE_WEBPACK_DEV_SERVER = False
 WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"
+
+ENABLE_CHAT = True
+CHAT_LIMIT_HOURS = 72
 
 
 ##################

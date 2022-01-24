@@ -4,6 +4,7 @@ from teleforma.models.chat import ChatMessage
 from django.conf import settings 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
+from datetime import datetime, timedelta
 
 
 @log_consumer_exceptions
@@ -54,8 +55,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         
     @database_sync_to_async
     def get_messages_list(self):
+        limit_hours = getattr(settings, 'CHAT_LIMIT_HOURS', 72)
+        limit_datetime = datetime.now() - timedelta(hours=limit_hours)
         messages = [message.to_dict() for message in ChatMessage.objects.filter(
-            room_name=self.room_name).order_by('-created')[:100]]
+            room_name=self.room_name).filter(created__gte=limit_datetime).order_by('-created')]
         messages = messages[::-1]
         return messages
     
