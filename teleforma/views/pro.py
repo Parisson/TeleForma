@@ -168,7 +168,7 @@ class SeminarRevisionMixin(object):
         all_revisions = SeminarRevision.objects.filter(
             user=user, date__gte=REVISION_DATE_FILTER, date_modified=None)
         now = datetime.datetime.now()
-        if seminar.expiry_date < now:
+        if not seminar.expiry_date or seminar.expiry_date < now:
             return
         if all_revisions:
             if not all_revisions[0].seminar == seminar:

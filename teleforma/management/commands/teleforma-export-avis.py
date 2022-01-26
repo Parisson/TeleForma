@@ -17,17 +17,19 @@ from teleforma.views.pro import get_seminar_delta
 
 class Command(BaseCommand):
     help = "Send orders to avis-verifies ftp"
-    args = 'days'
-    option_list = BaseCommand.option_list + (
-        make_option('--dry-run', action='store_true',
-            help='Do not send to ftp / mail'),
-    )
     FTP_HOST = "global-ftp.netreviews.eu"
     FTP_PORT = 22
     FTP_LOGIN = "fr_pro-barreau.com"
     FTP_PASSWORD = "pd8ExNC3"
     FTP_PATH = "/orders/"
 
+    def add_arguments(self, parser):
+        parser.add_argument('days', type=int)
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Do not send to ftp / mail',
+        )
     
     def log(self, message):
         print(message)
@@ -36,7 +38,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.logs = ""
-        days = int(args[0])
+        days = options['days']
         dry_run = options['dry_run']
         print(dry_run)
         logging.info('Generate csv file...')

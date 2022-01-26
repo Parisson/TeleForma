@@ -773,7 +773,7 @@ class WebclassMixin(Model):
     def is_webclass_running(self):
         """ Is webclass currently running ? """
         # print(self.get_webclass_info())
-        return bbb.is_meeting_running(self.webclass_id).get_field('running').decode() == 'true' or False
+        return str(bbb.is_meeting_running(self.webclass_id).get_field('running')) == 'true' or False
 
     def get_webclass_info(self):
         """ """
@@ -791,12 +791,12 @@ class WebclassMixin(Model):
         for recording in recordings:
             url = recording.get('playback', {}).get('format', {}).get('url')
             if url:
-                url = url.decode()
+                url = str(url)
             data = {
-                'start': int(recording['startTime'].decode()),
-                'end': int(recording['endTime'].decode()),
+                'start': int(str(recording['startTime'])),
+                'end': int(str(recording['endTime'])),
                 'url': url,
-                'state': recording['state'].decode(),
+                'state': str(recording['state']),
             }
             data['duration'] = data['end'] - data['start']
             all_records.append(data)

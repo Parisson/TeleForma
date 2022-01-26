@@ -34,6 +34,7 @@
 
 import os.path
 from django.conf.urls import url, include
+from django.urls import path
 from jsonrpc import jsonrpc_site
 from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordChangeDoneView,
@@ -83,7 +84,7 @@ urlpatterns = [
                                                                  email_template_name='registration/password_reset_email.html'), name="teleforma-password-reset"),
     url(r'^accounts/password_reset_done/$', PasswordResetDoneView.as_view(
         template_name='registration/password_reset_done.html'), name="password_reset_done"),
-    url(r'accounts/password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
+    path('accounts/password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
         template_name='registration/password_reset_confirm.html'), name="teleforma-password-reset-confirm"),
     url(r'^accounts/password_reset_complete/$', PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
         name="password_reset_complete"),

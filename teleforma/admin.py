@@ -306,6 +306,8 @@ class AnswerAdmin(admin.ModelAdmin):
 class SeminarRevisionAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'seminar__title']
     date_hierarchy = 'date_modified'
+    readonly_fields=('date',)
+
 
     actions = ['export_seminar_revisions']
 

@@ -1909,7 +1909,7 @@ msgstr ""
 
 #: templates/telemeta/login.html:29
 msgid "Password forgotten"
-msgstr "Mot de passe oublié ?"
+msgstr "Mot de passe oublié"
 
 #: templates/telemeta/login.html:30
 msgid "Sign in"
@@ -3692,15 +3692,15 @@ msgstr ""
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
+msgstr "Mot de passe perdu ? Saisissez votre adresse électronique ci-dessous et nous vous enverrons les instructions pour en créer un nouveau."
 
 #: templates/telemeta/registration/password_reset_form.html:11
 msgid "E-mail address:"
-msgstr ""
+msgstr "Adresse électronique"
 
 #: templates/telemeta/registration/password_reset_form.html:11
 msgid "Reset my password"
-msgstr ""
+msgstr "Réinitialiser mon mot de passe"
 
 #: templatetags/telemeta_utils.py:259
 #, python-format

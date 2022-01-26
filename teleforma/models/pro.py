@@ -372,7 +372,7 @@ class Auditor(models.Model):
                                         verbose_name=_('conferences'),
                                         blank=True)
 
-    platform_only   = models.BooleanField(_('platform only'))
+    platform_only   = models.BooleanField(_('platform only'), default=False)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
     gender          = models.CharField(_('gender'), choices=GENDER_CHOICES, max_length=8, blank=True)
     company         = models.CharField(_('Company'), max_length=255, blank=True)
@@ -387,7 +387,7 @@ class Auditor(models.Model):
     block_fifpl     = models.BooleanField(_('Block FIFPL'), default=False)
     block_testimonials  = models.BooleanField(_('Block attestations'), default=False)
     expiration_date = models.DateField(_('Expiration_date'), blank=True, null=True)
-    init_password   = models.BooleanField(_('Password initialized'))
+    init_password   = models.BooleanField(_('Password initialized'), default=False)
 
     def __str__(self):
         try:

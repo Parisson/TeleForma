@@ -83,6 +83,6 @@ def get_ae_courses(user, date_order=False, num_order=False):
     if date_order:
         courses = sorted(courses, key=lambda k: k['date'], reverse=True)
     if num_order:
-        courses = sorted(courses, key=lambda k: k['number'])
+        courses = sorted(courses, key=lambda k: k['number'] or 0)
 
     return courses

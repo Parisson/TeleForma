@@ -322,7 +322,7 @@ def fancy_duration_shop_like(duration):
 def fancy_seconds(seconds):
     time = ''
     hours = int(seconds / 3600)
-    minutes_int = (seconds % 3600) / 60
+    minutes_int = int((seconds % 3600) / 60)
     if hours:
         if minutes_int:
             time += str(hours) + 'h'

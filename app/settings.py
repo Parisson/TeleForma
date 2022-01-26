@@ -17,9 +17,7 @@ TEMPLATE_DEBUG = DEBUG
 
 RECOVERY = True
 
-# disable to debug websocket and improve performance
 DEBUG_TOOLBAR = False
-
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -156,6 +154,7 @@ MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOL
     'django_user_agents.middleware.UserAgentMiddleware',
     'mezzanine.core.middleware.SitePermissionMiddleware'
 )
+print(MIDDLEWARE)
 
 ROOT_URLCONF = 'urls'
 
@@ -247,7 +246,7 @@ POSTMAN_DISALLOW_ANONYMOUS = True
 TELEFORMA_ORGANIZATION = 'Pro-Barreau'
 TELEFORMA_SUBJECTS = ('Barreau', 'e-learning')
 TELEFORMA_DESCRIPTION = "E-learning Pro-Barreau"
-TELEFORMA_E_LEARNING_TYPE = 'Pro-Barreau'
+TELEFORMA_E_LEARNING_TYPE = 'AE'
 
 EMAIL_HOST = 'angus.parisson.com'
 DEFAULT_FROM_EMAIL = 'e-learning@pro-barreau.com'
