@@ -517,7 +517,10 @@ class MassScoreCreateView(ScoreCreateView):
 
         res = []
         for student in students:
-            user = student.user
+            try:
+                user = student.user
+            except User.DoesNotExist:
+                continue
             # FIXME : Filter those who access the course, but that's very slow,
             # so I disable it for now - we'll see if we can do that faster later
             # courses = get_courses(user)
