@@ -143,21 +143,22 @@ def get_host(request):
 
 
 def get_periods(request):
-    period_ids = request.session.get('period_ids')
     user = request.user
+    periods = []
 
-    if period_ids:
-        periods = [Period.objects.get(id=period_id) for period_id in period_ids]
-    else:
-        periods = []
-        student = user.student.all()
-        if student:
+    student = user.student.all()
+    if student:
+        period_ids = request.session.get('period_ids')
+        if period_ids:
+            periods = [Period.objects.get(id=period_id) for period_id in period_ids]
+        else:
             student = user.student.get()
             periods = [training.period for training in student.trainings.all()]
             for period in periods:
                 for child in period.children.all():
                     periods.append(child)
-
+            request.session['period_ids'] = [period.id for period in periods]
+    else:
         if user.is_superuser or user.is_staff:
             periods = Period.objects.filter(is_open=True)
 
@@ -171,8 +172,6 @@ def get_periods(request):
             for quota in quotas:
                 if not quota.period in periods:
                     periods.append(quota.period)
-
-        request.session['period_ids'] = [period.id for period in periods]
 
     return periods
 
