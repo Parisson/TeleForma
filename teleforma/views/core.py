@@ -177,14 +177,11 @@ def get_periods(request):
 
 
 def get_default_period(periods):
-    if not periods:
-        return None
-    elif len(periods) == 1:
+    if periods:
         return periods[0]
     else:
-        default_period = Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
-        if default_period not in periods:
-            return periods[0]
+        period_id = getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1)
+        default_period = Period.objects.get(id=period_id)
         return default_period
 
 
