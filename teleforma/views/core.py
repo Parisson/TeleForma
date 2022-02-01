@@ -147,7 +147,7 @@ def get_periods(request):
     periods = []
     professor = user.professor.all()
     quotas = user.quotas.all()
-    student = user.student.get()
+    students = user.student.all()
 
     if user.is_superuser or user.is_staff:
         periods = Period.objects.filter(is_open=True)
@@ -161,11 +161,12 @@ def get_periods(request):
             if not quota.period in periods:
                 periods.append(quota.period)
 
-    elif student:
+    elif students:
         period_ids = request.session.get('period_ids')
         if period_ids:
             periods = [Period.objects.get(id=period_id) for period_id in period_ids]
         else:
+            student = user.student.get()
             periods = [training.period for training in student.trainings.all()]
             for period in periods:
                 for child in period.children.all():
