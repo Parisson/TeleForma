@@ -145,9 +145,23 @@ def get_host(request):
 def get_periods(request):
     user = request.user
     periods = []
+    professor = user.professor.all()
+    quotas = user.quotas.all()
+    students = user.student.all()
 
-    student = user.student.all()
-    if student:
+    if user.is_superuser or user.is_staff:
+        periods = Period.objects.filter(is_open=True)
+
+    elif professor:
+        periods = Period.objects.filter(is_open=True)
+
+    elif quotas and not (user.is_superuser or user.is_staff) and not professor:
+        periods = []
+        for quota in quotas:
+            if not quota.period in periods:
+                periods.append(quota.period)
+
+    elif students:
         period_ids = request.session.get('period_ids')
         if period_ids:
             periods = [Period.objects.get(id=period_id) for period_id in period_ids]
@@ -159,32 +173,17 @@ def get_periods(request):
                     periods.append(child)
             request.session['period_ids'] = [period.id for period in periods]
     else:
-        if user.is_superuser or user.is_staff:
-            periods = Period.objects.filter(is_open=True)
-
-        professor = user.professor.all()
-        if professor:
-            periods = Period.objects.filter(is_open=True)
-
-        quotas = user.quotas.all()
-        if quotas and not (user.is_superuser or user.is_staff) and not professor:
-            periods = []
-            for quota in quotas:
-                if not quota.period in periods:
-                    periods.append(quota.period)
+        return []
 
     return periods
 
 
 def get_default_period(periods):
-    if not periods:
-        return None
-    elif len(periods) == 1:
+    if periods:
         return periods[0]
     else:
-        default_period = Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
-        if default_period not in periods:
-            return periods[0]
+        period_id = getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1)
+        default_period = Period.objects.get(id=period_id)
         return default_period
 
 
