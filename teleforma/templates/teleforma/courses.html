@@ -178,9 +178,7 @@
       {% endif %}
 
       {% block document %}
-      {% with forloop.counter as type_counter %}
       {% include "teleforma/inc/document_list.html" %}
-      {% endwith %}
       {% endblock %}
     </div>
     {% endfor %}
