@@ -61,7 +61,7 @@ def get_records_from_bbb(**kwargs):
                 'end': end,
                 'end_date': datetime.datetime.fromtimestamp(end),
                 'url': url,
-                'preview': str(recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])[0]),
+                'preview': str(recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])),
                 'state': str(recording['state']),
             }
             if recording['metadata'].get('periodid'):

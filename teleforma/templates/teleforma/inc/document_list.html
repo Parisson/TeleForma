@@ -10,7 +10,8 @@
 </div>
 
 {% for doc_type, docs in documents %}
-{% if docs and not type_counter > 2 %}
+
+{% if docs  %}
 <span class="doc_type_title">{{ doc_type }}</span>
 <table class="listing" width="100%">
     <tbody>
