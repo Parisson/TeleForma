@@ -102,7 +102,7 @@ $(document).ready(function(){
         preload="auto"
         width="100%"
         height="auto"
-        data-setup="{}"
+        data-setup='{"playbackRates": [1, 1.25, 1.5, 2]}'
         {% if media.poster_file %}{% thumbnail media.poster_file '640' as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}
         >
         <source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
