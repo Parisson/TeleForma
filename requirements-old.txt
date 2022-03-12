@@ -99,7 +99,7 @@ pathlib2==2.1.0
 pbr==1.8.1
 pexpect==4.2.1
 pickleshare==0.7.4
-Pillow==2.5.0
+Pillow==9.0.1
 prettytable==0.7.2
 prompt-toolkit==1.0.7
 psutil==5.8.0
