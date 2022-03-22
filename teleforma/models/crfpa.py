@@ -395,6 +395,11 @@ class Student(models.Model):
                               online_paid = False,
                               type = self.payment_type)
             payment.save()
+
+    @property
+    def expiration_date(self):
+        """ closing date of student period """
+        return self.period.date_close_accounts
     
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'

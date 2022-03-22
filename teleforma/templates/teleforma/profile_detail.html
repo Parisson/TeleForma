@@ -78,14 +78,20 @@
 
       {% if user.is_staff or user.is_superuser or usr == user %}
       <dt>{% trans "Email" %}</dt><dd>{{ usr.email }}</dd>
-          <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }}{% if usr.profile.get.address_detail %}, {% endif %}</span>{{ usr.profile.get.address_detail }}{% if usr.profile.get.postal_code or usr.profile.get.city %}, {% endif %}{{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
+      <dt>{% trans "Address" %}</dt><dd>{{ usr.profile.get.address }}{% if usr.profile.get.address_detail %}, {{ usr.profile.get.address_detail }}{% endif %}{% if usr.profile.get.postal_code or usr.profile.get.city %}, {% endif %}{{ usr.profile.get.postal_code }} {{ usr.profile.get.city }}</dd>
+      {% endif %}
+      {% if user.is_staff or user.is_superuser or user.professor.get or usr == user %}
       <dt>{% trans "Telephone" %}</dt><dd>{{ usr.profile.get.telephone }}</dd>
+      {% endif %}
+      {% if user.is_staff or user.is_superuser or usr == user %}
       <dt>{% trans "WiFi login" %}</dt><dd>{{ usr.profile.get.wifi_login }}</dd>
       <dt>{% trans "WiFi password" %}</dt><dd>{{ usr.profile.get.wifi_pass }}</dd>
       {% endif %}
 
       <dt>{% trans "Date added" %}</dt><dd>{{ usr.date_joined }}</dd>
-      <dt>{% trans "Expiration date" %}</dt><dd>{{ usr.profile.get.expiration_date }}</dd>
+      {% if usr.student.get %}
+        <dt>{% trans "Expiration date" %}</dt><dd>{{ usr.student.get.expiration_date }}</dd>
+      {% endif %}
       <dt>{% trans "Last login" %}</dt><dd>{{ usr.last_login }}</dd>
 
       {% if user.is_authenticated and user.username == usr.username %}
