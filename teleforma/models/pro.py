@@ -363,7 +363,13 @@ class Testimonial(models.Model):
 
 
 class Auditor(models.Model):
-
+    ACTIVITY_CHOICES = [
+        ('AVO', 'Avocat'),
+        ('JUR', 'Juriste'),
+        ('FP', 'Fonction publique'),
+        ('NOT', 'Notaire'),
+        ('OTHER', 'Autre'),
+    ]
     user            = models.ForeignKey(User, related_name='auditor', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     seminars        = models.ManyToManyField('Seminar', related_name="auditor",
                                         verbose_name=_('seminars'),
@@ -383,6 +389,7 @@ class Auditor(models.Model):
     language        = models.CharField(_('Language'), max_length=255, blank=True)
     telephone       = models.CharField(_('Telephone'), max_length=255, blank=True)
     fax             = models.CharField(_('Fax'), max_length=255, blank=True)
+    activity        = models.CharField('Activité professionelle', choices=ACTIVITY_CHOICES, blank=True, null=True, max_length=10)
     fifpl           = models.BooleanField(_('FIFPL'), default=False)
     block_fifpl     = models.BooleanField(_('Block FIFPL'), default=False)
     block_testimonials  = models.BooleanField(_('Block attestations'), default=False)

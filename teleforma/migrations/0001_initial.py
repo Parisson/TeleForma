@@ -669,6 +669,13 @@ class Migration(migrations.Migration):
                 ('language', models.CharField(blank=True, max_length=255, verbose_name='Language')),
                 ('telephone', models.CharField(blank=True, max_length=255, verbose_name='Telephone')),
                 ('fax', models.CharField(blank=True, max_length=255, verbose_name='Fax')),
+                ('activity', models.CharField(choices=[
+                    ('AVO', 'Avocat'),
+                    ('JUR', 'Juriste'),
+                    ('FP', 'Fonction publique'),
+                    ('NOT', 'Notaire'),
+                    ('OTHER', 'Autre'),
+                ], blank=True, null=True, max_length=10, verbose_name='Activité professionelle')),
                 ('fifpl', models.BooleanField(default=False, verbose_name='FIFPL')),
                 ('block_fifpl', models.BooleanField(default=False, verbose_name='Block FIFPL')),
                 ('block_testimonials', models.BooleanField(default=False, verbose_name='Block attestations')),
