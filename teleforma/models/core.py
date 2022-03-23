@@ -823,7 +823,7 @@ class Media(MediaBase):
             else:
                 return self.course.title + ' ' + self.course_type.name
         else:
-            return self.file
+            return str(self.file)
 
     def save(self, **kwargs):
         super(Media, self).save(**kwargs)
