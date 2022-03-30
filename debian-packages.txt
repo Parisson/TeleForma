@@ -2,7 +2,7 @@ git
 netcat
 vim
 locales
-ipython
+python3-ipython
 python3-setuptools
 python3-mysqldb
 python3-psycopg2
