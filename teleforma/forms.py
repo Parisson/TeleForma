@@ -34,6 +34,11 @@ TRUE_FALSE_CHOICES = (
     (False, 'Non')
 )
 
+TRAINING_TYPE = (
+    ('', '---------'),
+    (False, 'Formation sur place'),
+    (True, 'Formation e-learning')
+)
 
 def get_unique_username(first_name, last_name):
     username = slugify(first_name)[0] + '.' + slugify(last_name)
@@ -86,13 +91,14 @@ class UserForm(ModelForm):
     level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
     iej = ModelChoiceField(label='IEJ',
                            queryset=IEJ.objects.all())
-    platform_only = forms.ChoiceField(choices=TRUE_FALSE_CHOICES,
-                                      label='E-learning uniquement',
-                                      widget=forms.Select())
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
                                                              date_inscription_start__lte=datetime.datetime.now(),
                                                              date_inscription_end__gte=datetime.datetime.now()))
+    platform_only = forms.ChoiceField(choices=TRAINING_TYPE,
+                                      label='Type de formation',
+                                      widget=forms.Select())
+
     training = ModelChoiceField(label='Formation',
                                 queryset=Training.objects.filter(available=True))
     procedure = ModelChoiceField(label=_('Procedure'),
@@ -132,8 +138,8 @@ class UserForm(ModelForm):
         self.fields['email'].required = True
         self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail',
                             'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
-        self.training_fields = ['level', 'iej', 'platform_only', 'fascicule',
-                                'period', 'training', 'procedure', 'written_speciality', 'oral_1']
+        self.training_fields = ['level', 'iej', 'period', 'platform_only', 'fascicule',
+                                'training', 'procedure', 'written_speciality', 'oral_1']
 
     def clean_portrait(self):
         image = self.cleaned_data['portrait']

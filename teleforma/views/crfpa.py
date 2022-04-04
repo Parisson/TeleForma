@@ -900,8 +900,11 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
             if payment.type == "online" and not payment.online_paid:
                 continue
             receipt_date = max(date, receipt_date)
-            date = date.strftime('%d/%m/%Y')
+
+            paid_date = payment.date_paid or date
+            date = paid_date.strftime('%d/%m/%Y')
             kind = payment.get_type_display()
+
             items.append({ 'label': '<b>Paiement %s du %s</b>' % (kind, date),
                            'unit_price': None,
                            'amount': None,
