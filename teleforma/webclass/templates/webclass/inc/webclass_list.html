@@ -11,8 +11,8 @@
             {% if webclass_slot %}
             <tr>
                 <td colspan="2">
-                    <p>Vous êtes inscrit pour les webclasses du
-                        <strong>{{webclass_slot.get_day_display}} de
+                    <p>Vous êtes inscrit pour la webclass du
+                        <strong>{{webclass_slot.get_day_display}} {{webclass_slot.date}} de
                             {{webclass_slot.start_hour|date:"H\hi"}} à
                             {{webclass_slot.end_hour|date:"H\hi"}}</strong>
                         avec le professeur <strong>{{webclass_slot.professor.user.last_name}}</strong>.
