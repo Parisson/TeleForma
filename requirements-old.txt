@@ -11,7 +11,7 @@ configparser==4.0.2
 crocodoc==0.1.1
 debtcollector==1.22.0
 decorator==4.0.10
-Django==1.11.29
+Django==3.2.13
 django-bootstrap-pagination==1.5.1
 django-bootstrap3==6.1.0
 django-cacheops==2.1.1
