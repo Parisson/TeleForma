@@ -113,7 +113,7 @@ pylint==0.25.1
 pymemcache==3.4.1
 pyparsing==2.0.2
 pyPdf==1.13
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 python-bidi==0.4.2
 python-dateutil==1.5
 python-ebml==0.2.1
