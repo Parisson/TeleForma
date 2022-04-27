@@ -211,6 +211,21 @@ class WebclassSlot(models.Model):
         return "Webclass slot : " + str(self.id)
 
     @property
+    def date(self):
+        """
+        Compute the last date (from weekday) before the end of webclass.
+        This is the webclass date. Before, webclass were every "monday" for example.
+        Now there is only one date per webclass.
+        This is not ideal. We should have a "date" field on the webclass slot instead of "day". 
+        But we're waiting to see how PB use webclasses in the future.
+        """
+        end_day = self.webclass.end_date
+        next_day = end_day + datetime.timedelta(days=7 - end_day.weekday() + self.day, weeks=-1)
+        if next_day > end_day:
+            next_day = next_day - datetime.timedelta(weeks=1)
+        return next_day
+
+    @property
     def remaining_participant_slot(self):
         """
         get remaining participant slot
