@@ -102,6 +102,10 @@
           {% if not user.student or not user.student.get.restricted %}
           <li><a href="{% url 'teleforma-annals' %}" class="yellow">{% trans "Annals" %}</a></li>
 
+          {% if user.professor.count or user.is_superuser %}
+          <li><a href="{% url 'teleforma-webclass-professor' %}" class="yellow">Webclass</a></li>
+          {% endif %}
+
           {% if periods|length == 1 %}
           <li><a href="{% url 'teleforma-exam-scripts-pending' periods.0.id %}"
               class="green">&nbsp;{% trans "Scripts" %}
@@ -132,12 +136,6 @@
             </ul>
           </li>
           {% endif %}
-
-          {% if user.professor.count or user.is_superuser %}
-          <li><a href="{% url 'teleforma-webclass-professor' %}" class="yellow">Webclass</a></li>
-          {% endif %}
-
-
 
           {% if periods|length == 1 %}
           <li><a href="{% url 'teleforma-exam-scripts-scores-all' periods.0.id %}"
