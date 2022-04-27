@@ -1,0 +1,13 @@
+Bonjour,
+
+Dans le cadre de votre inscription à la formation {{ period }}
+et suite à trois relances infructueuses dans le paiement de
+votre échéance, nous vous informons que votre compte est désormais
+restreint.
+
+Pour accéder à nouveau au contenu de votre formation, nous vous
+invitons à procéder au règlement depuis le dernier lien de paiement
+que vous avez reçu par mail.
+
+Cordialement,
+L’équipe du Pré-Barreau

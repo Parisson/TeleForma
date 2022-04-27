@@ -8,6 +8,7 @@ from django.utils import translation
 from teleforma.models import *
 import logging
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 class Logger:
     """A logging object"""
@@ -52,16 +53,29 @@ class Command(BaseCommand):
         today = datetime.date.today()
 
         for student in students:
-            if student.is_subscribed and student.user.email and student.period == period and student.user.is_active :
+            try:
+                user = student.user
+            except ObjectDoesNotExist:
+                logger.logger.warning('missing user object for %s' % student.pk)
+                continue
+            
+            if student.is_subscribed and user.email and student.period == period and user.is_active :
                 for payment in student.payments.filter(type = 'online').exclude(online_paid = True).filter(scheduled__lte = today):
                     if payment.scheduled == today:
                         self.email(student, 'initial', payment)
-                        logger.logger.info('initial email send for %s on %d' % (student.user.username, payment.id))
+                        logger.logger.info('initial email send for %s on %d' % (user.username, payment.id))
                     else:
                         delta = today - payment.scheduled
                         delta = delta.days
                         if delta % 7 == 0:
                             self.email(student, 'reminder', payment)
-                            logger.logger.info('reminder email send for %s on %d' % (student.user.username, payment.id))
+                            logger.logger.info('reminder email send for %s on %d' % (user.username, payment.id))
+                        elif delta == 16:
+                            self.email(student, 'close', payment)
+                            student.restricted = True
+                            student.save()
+                            logger.logger.info('closing account for %s on %d' % (user.username, payment.id))
+                            
+                            
 
         logger.logger.info('############## Done #################')
