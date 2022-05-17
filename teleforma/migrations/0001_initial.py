@@ -493,6 +493,24 @@ class Migration(migrations.Migration):
                 'db_table': 'teleforma_media_transcoded',
             },
         ),
+        
+        migrations.CreateModel(
+            name='MediaItemMarker',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('public_id', models.CharField(max_length=255, verbose_name='public_id')),
+                ('time', models.FloatField(blank=True, null=True, verbose_name='time (s)')),
+                ('title', models.CharField(blank=True, null=True, max_length=255, verbose_name='title')),
+                ('date', models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name='date')),
+                ('description', models.TextField(verbose_name='description', blank=True, null=True)),
+                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='markers', to='teleforma.media', verbose_name='item')),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name="markers", verbose_name='author', blank=True, null=True, on_delete=models.SET_NULL)),
+            ],
+            options={
+                'db_table': 'teleforma_media_markers', 
+                'ordering': ['time']
+            },
+        ),
         migrations.AddField(
             model_name='media',
             name='period',

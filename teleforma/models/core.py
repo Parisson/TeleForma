@@ -556,6 +556,29 @@ class MediaTranscoded(Model):
     class Meta(MetaCore):
         db_table = app_label + '_media_transcoded'
 
+class MediaItemMarker(Model):
+    "2D marker object : text value vs. time (in seconds)"
+
+    element_type = 'marker'
+
+    item            = ForeignKey('Media', related_name="markers", verbose_name=_('item'), on_delete=models.CASCADE)
+    public_id       = CharField(_('public_id'), max_length=255)
+    time            = FloatField(_('time (s)'), blank=True, null=True)
+    title           = CharField(_('title'), blank=True, null=True, max_length=255)
+    date            = DateTimeField(_('date'), auto_now=True, blank=True, null=True)
+    description     = TextField(_('description'), blank=True, null=True)
+    author          = ForeignKey(User, related_name="markers", verbose_name=_('author'),
+                                 blank=True, null=True, on_delete=models.SET_NULL)
+
+    class Meta(MetaCore):
+        db_table = app_label + '_media_markers'
+        ordering = ['time']
+
+    def __str__(self):
+        if self.title:
+            return self.title
+        else:
+            return self.public_id
 
 class Media(MediaBase):
     "Describe a media resource linked to a conference"
