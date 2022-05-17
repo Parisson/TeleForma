@@ -36,6 +36,7 @@ RUN apt-get update && \
     apt-get clean
 
 RUN pip3 install -U pip
+RUN pip3 install setuptools==58
 
 ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr

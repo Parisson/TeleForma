@@ -24,7 +24,6 @@ weasyprint==52.5
 xlrd==2.0.1
 xlwt==1.3.0
 psycopg2==2.8.6 
-uwsgi==2.0.19
+uwsgi
 pymemcache==3.4.4
-ipython
 Mezzanine==5.0.0
