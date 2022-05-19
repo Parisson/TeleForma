@@ -234,7 +234,7 @@ class CorrectorForm(ModelForm):
     ss_number = CharField(label='N° de sécurité sociale',
                           max_length=15)
     siret = CharField(label='N° SIRET',
-                      max_length=13, required=False)
+                      max_length=14, required=False)
     # corrector
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
@@ -244,7 +244,7 @@ class CorrectorForm(ModelForm):
                                    label='Statut',
                                    widget=forms.Select())
     courses = ModelMultipleChoiceField(label='Matière',
-                                       queryset=Course.objects.all().exclude(title="Aucune").order_by('title'),
+                                       queryset=Course.objects.filter(has_exam_scripts=True).exclude(title="Aucune").order_by('title'),
                                        widget=forms.CheckboxSelectMultiple())
     # no model
     captcha = ReCaptchaField()
