@@ -451,7 +451,7 @@ class Profile(models.Model):
     ss_number = models.CharField('Sécurité sociale',
                                  max_length=15, blank=True, null=True)
     siret = models.CharField('Siret',
-                             max_length=13, blank=True, null=True)
+                             max_length=14, blank=True, null=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
