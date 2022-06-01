@@ -435,7 +435,7 @@ class DocumentDownloadView(DocumentView):
         fsock = open(document.file.path, 'r')
         mimetype = mimetypes.guess_type(document.file.path)[0]
         extension = mimetypes.guess_extension(mimetype)
-        response = HttpResponse(fsock, mimetype=mimetype)
+        response = HttpResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = "attachment; filename=%s%s" % \
                                              (document.title.encode('utf8'), extension)
         return response
@@ -450,7 +450,7 @@ class DocumentReadView(DocumentView):
         fsock = open(document.file.path, 'r')
         mimetype = mimetypes.guess_type(document.file.path)[0]
         extension = mimetypes.guess_extension(mimetype)
-        response = HttpResponse(fsock, mimetype=mimetype)
+        response = HttpResponse(fsock, content_type=mimetype)
         return response
 
 
