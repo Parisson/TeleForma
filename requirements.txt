@@ -3,7 +3,7 @@ docutils==0.17.1
 Django==3.2.3
 dj_pagination==2.5.0 # used by postman
 -e git+https://github.com/pilot-systems/django-forms-builder.git@master#egg=django-forms-builder       
-django-jazzmin==2.4.7
+django-jazzmin==2.5.0
 django-json-rpc==0.7.1
 django-nvd3==0.8.2
 django-postman==4.2
