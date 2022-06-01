@@ -413,7 +413,7 @@ JAZZMIN_SETTINGS = {
         "teleforma.professor": "fas fa-user-tie",
         "webclass.webclass": "fas fa-phone",
     },
-    "related_modal_active": True,
+    "related_modal_active": False,
 
     "custom_css": None,
     "custom_js": None,
