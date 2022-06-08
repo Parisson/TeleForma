@@ -35,7 +35,27 @@
 
 import time
 from .xmltodict2 import *
+import json
+from collections import defaultdict
+import pprint
 
+def parse_timecode(value, fps):
+    """
+    Parse a timestamp, either new HH:MM:SS.mmm format or old frames format
+    """
+    if ':' in value:
+        if '.' in value:
+            value, decimal = value.split('.')
+        comps = value.split(':')
+        comps = [ int(c) for c in comps ]
+        res = 0
+        for comp in comps:
+            res = res * 60 + comp
+        res += float(decimal) / 10**len(decimal)
+    else:
+        res = float(value)  / fps
+    return res
+    
 
 class KDEnLiveSession(object):
 
@@ -54,8 +74,11 @@ class KDEnLiveSession(object):
     def video_entries(self):
         entries = []
         for attr in self.session['children']:
-            if 'playlist' in attr['name'] and 'children' in attr and not 'main' in attr['attributes']['id']:
-                for att in attr['children']:
+            if 'playlist' in attr['name'] and 'children' in attr:
+                plid = attr['attributes'].get('id', '')
+                if 'main_bin' in plid:
+                    continue
+                for att in attr['children']:                    
                     if 'entry' in att['name'] and att['attributes']['producer'] != 'black' \
                             and not 'audio' in att['attributes']['producer']:
                         entries.append(att['attributes'])
@@ -64,18 +87,21 @@ class KDEnLiveSession(object):
     def entries_sorted(self):
         return sorted(self.entries(), key=lambda k: int(k['in']), reverse=False)
 
-    def entries_video_seconds(self):
+    def get_fps(self):
         profile = self.profile()
         fps = float(profile['frame_rate_num'])/float(profile['frame_rate_den'])
-        #fps= 25
+        return fps
+    
+    def entries_video_seconds(self):
+        fps = self.get_fps()
         res = []
         start = 0
         entries = self.video_entries()
 
         for entry in entries:
             id = entry['producer'].split('_')[0]
-            t_in = int(entry['in'])/fps
-            t_out = int(entry['out'])/fps
+            t_in = parse_timecode(entry['in'], fps)
+            t_out = parse_timecode(entry['out'], fps)
             t_len = t_out - t_in
             end = start + t_len
             res.append({ 'id': str(id), 't': start, 'in': t_in, 'out': t_out })
@@ -108,6 +134,30 @@ class KDEnLiveSession(object):
         except:
             return text
 
+    def get_producer_altids(self):
+        """
+        Get the alternate ids of producers if any
+        """
+        by_names = defaultdict(list)
+        for attr in self.session['children']:
+            if 'producer' in attr['name'] and 'children' in attr:
+                if "id" in attr['attributes']:
+                    entry_id = attr['attributes']['id']
+                    for att in attr['children']:
+                        name = att['attributes']['name']
+                        if 'resource' in name and 'cdata' in att:
+                            by_names[att['cdata']].append(entry_id)
+
+        alt_ids = {}
+        for vals in by_names.values():
+            if len(vals) > 1:
+                vals = set(vals)
+                for val in vals:
+                    alt_ids[val] = vals
+
+        return alt_ids
+        
+        
     def markers(self, offset=0, from_first_marker=False):
         """ by default return a dict of markers with timecodes relative to an origin
 
@@ -116,17 +166,45 @@ class KDEnLiveSession(object):
 
             offset: general origin offset
         """
-
-        abs_time = 0
         markers = []
-        i = 0
         entries = self.entries_video_seconds()
+        #print("=> Video entries")
+        #pprint.pprint(entries)
         title = ''
+        fps = self.get_fps()
+        alternate_ids = self.get_producer_altids()
+        #print("=> Alternate ids")
+        #pprint.pprint(alternate_ids)
+
+        def add_marker(rel_time, comment):
+            """
+            Add a marker to the list from it's id, timestamp and comment
+            """
+            marker = {}
+            marker['time'] = rel_time
+            marker['session_timecode'] = time.strftime('%H:%M:%S', time.gmtime(rel_time))
+            if ":" in comment:
+                pre, post = comment.split(':', 1)
+                if pre.isdigit():
+                    comment = post
+            marker['comment'] = comment
+            markers.append(marker)
+
+        def get_reltime(entry_id, marker_time, alt_ids = []):
+            """
+            Get the relative time of a marker linked to an entry
+            """
+            rel_time = 0
+
+            for entry in entries:
+                if entry['in'] <= marker_time <= entry['out'] and (entry_id == entry['id'] or entry['id'] in alt_ids):
+                    rel_time = entry['t'] + (marker_time - entry['in']) + offset
+                    return rel_time            
 
         for attr in self.session['children']:
-            if 'playlist' in attr['name']:
+            if 'playlist' in attr['name'] and 'children' in attr:
+                # Old v 6.4 file format, markers in playlist
                 for att in attr['children']:
-                    marker = {}
                     if 'name' in att['attributes']:
                         name = att['attributes']['name']
                         if 'docmetadata.meta.attr.title.markup' in name:
@@ -134,28 +212,36 @@ class KDEnLiveSession(object):
                         if 'marker' in name:
                             name = name.encode('utf8')
                             marker_time = float(name.split(':')[-1].replace(',','.').replace(' ', ''))
-                            id = str(name.split(':')[-2].split('.')[-1])
-                            rel_time = 0
-
-                            for entry in entries:
-                                if entry['in'] <= marker_time <= entry['out'] and id == entry['id']:
-                                    if i == 0 and from_first_marker:
-                                        abs_time = entry['t']
-                                    rel_time = entry['t'] + (marker_time - entry['in']) - abs_time + offset
-                                    break
-                            else:
-                                continue
-
-                            marker['time'] = rel_time
-                            marker['session_timecode'] = time.strftime('%H:%M:%S', time.gmtime(rel_time))
+                            entry_id = str(name.split(':')[-2].split('.')[-1])
                             comment = self.fix_text(att['cdata'])
-                            if ":" in comment:
-                                pre, post = comment.split(':', 1)
-                                if pre.isdigit():
-                                    comment = post
-                            marker['comment'] = comment
-                            markers.append(marker)
+                            rel_time = get_reltime(entry_id, marker_time)
+                            if rel_time is not None:
+                                add_marker(rel_time, comment)
+            elif 'producer' in attr['name'] and 'children' in attr:                
+                # New v 6.24 file format, markers in producers
+                if "id" in attr['attributes']:
+                    entry_id = attr['attributes']['id']
+                    alt_ids = alternate_ids.get(entry_id, [])
+                    for att in attr['children']:
+                        name = att['attributes']['name']
+                        if 'markers' in name:
+                            items = json.loads(self.fix_text(att['cdata']))
+                            #print("=> Marker items")
+                            #pprint.pprint(items)                            
+                            for marker in items:
+                                marker_time = float(marker['pos'] / fps)
+                                rel_time = get_reltime(entry_id, marker_time,
+                                                       alt_ids)
+                                if rel_time is not None:
+                                    add_marker(rel_time, marker['comment'])
 
-                        i += 1
+
+        #print("=> Markers")
+        #pprint.pprint(markers)
+                                    
+        if markers and from_first_marker:
+            delta = min([ marker['time'] for marker in markers ])
+            for marker in markers:
+                marker['time'] -= delta
         return title, markers
 
