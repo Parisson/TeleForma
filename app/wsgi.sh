@@ -41,7 +41,7 @@ else
     # watchmedo shell-command --patterns="$patterns" --recursive \
     #     --command='python '$manage' collectstatic --noinput' $app &
 
-    python $manage collectstatic --noinput
+    #python $manage collectstatic --noinput
 
     chown -R www-data: $debug_log
 
