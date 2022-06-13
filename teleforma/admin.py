@@ -139,12 +139,13 @@ class DocumentAdmin(admin.ModelAdmin):
 
 class MediaTranscodedInline(admin.TabularInline):
     model = MediaTranscoded
-
+class MediaItemMarkerInline(admin.StackedInline):
+    model = MediaItemMarker
 class MediaAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_added'
     exclude = ['readers']
     search_fields = ['id', 'title', 'course__title', 'course__code', 'item__title']
-    inlines = [MediaTranscodedInline]
+    inlines = [MediaTranscodedInline, MediaItemMarkerInline]
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']

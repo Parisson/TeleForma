@@ -42,7 +42,7 @@
 
 <div class="audio">
 <audio id="audio_1" controls preload="auto">
-    {% for transcoded in media.item.transcoded.all %}
+    {% for transcoded in media.transcoded.all %}
      {% if "audio" in transcoded.mime_type %}
         <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
      {% endif %}
@@ -58,7 +58,7 @@
 <dl class="listing">
 
 
-<dt>{% trans "Title" %}</dt><dd>{% if media.title %}{{ media.title }}{% else %}{{ media.item.title }}{% endif %}</dd>
+<dt>{% trans "Title" %}</dt><dd>{{ media.title }}</dd>
 
 {% with seminar.professor.all as professors %}
   {% if professors %}
@@ -89,7 +89,7 @@
   <h3><img src="{{STATIC_URL}}teleforma/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Audio index" %}</h3>
  <div id="index">
   <ul>
-  {% for marker in media.item.markers.all %}
+  {% for marker in media.markers.all %}
   {% if not forloop.first %}
    <li><a href="#" onclick="jumpToTimeoffset({{ marker.time|point }});">{{ marker.title }}</a></li>
   {% endif %}
@@ -119,9 +119,9 @@ $(document).ready(function(){
 {% endblock index %}
 
 {% block module-action-right %}
-{% if media.item.file and media.is_published and media.item.file.path|in_download_formats and user.is_superuser %}
+{% if media.file and media.is_published and media.file.path|in_download_formats and user.is_superuser %}
  <div class="module_action">
-   <a href="{{ MEDIA_URL }}{{ media.item.transcoded.all.0.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+   <a href="{{ MEDIA_URL }}{{ media.transcoded.all.0.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
  </div>
 {% endif %}
 {% endblock module-action-right %}

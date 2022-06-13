@@ -95,13 +95,13 @@ $(window).ready(function(){
 <div class="media">
 
 <div class="video">
-<video id="my_video_1" class="video-js vjs-default-skin" width="864" height="480" controls preload="none" {% if media.item.related.all %}{% for related in media.item.related.all %}{% if related.title == "preview" %}poster="{{ MEDIA_URL }}{{ related.file }}"{% endif %}{% endfor %}{% endif %} data-setup='{}'>
-  {% for transcoded in media.item.transcoded.all %}
+<video id="my_video_1" class="video-js vjs-default-skin" width="864" height="480" controls preload="none" {% if media.poster_file %}poster="{{ MEDIA_URL }}{{ media.poster_file }}"{% endif %} data-setup='{}'>
+  {% for transcoded in media.transcoded.all %}
    {% if "video" in transcoded.mime_type %}
     <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
    {% endif %}
   {% endfor %}
-    <source src="{{ MEDIA_URL }}{{ media.item.file }}#t=0" type="{{ media.mime_type }}" />
+    <source src="{{ MEDIA_URL }}{{ media.file }}#t=0" type="{{ media.mime_type }}" />
 </video>
 </div>
 
@@ -113,7 +113,7 @@ $(window).ready(function(){
 <div class="course_content" id="media_infos">
 <dl class="listing">
 
-<dt>{% trans "Title" %}</dt><dd>{% if media.title %}{{ media.title }}{% else %}{{ media.item.title }}{% endif %}</dd>
+<dt>{% trans "Title" %}</dt><dd>{% if media.title %}{{ media.title }}{% else %}{{ media.title }}{% endif %}</dd>
 {% with seminar.professor.all as professors %}
   {% if professors %}
     <dt>{% if professors.count > 1 %}{% trans "Professors" %}{% else %}{% trans "Professor" %}{% endif %}</dt>
@@ -125,7 +125,7 @@ $(window).ready(function(){
 <dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
 <dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
 <dt>{% trans "Seminar ID" %}</dt><dd>{{ seminar.code }}</dd>
-<dt>{% trans "Idem ID" %}</dt><dd>{{ media.item.public_id }}</dd>
+<dt>{% trans "Idem ID" %}</dt><dd>{{ media.public_id }}</dd>
 {% endif %}
 
 </dl>
@@ -144,7 +144,7 @@ $(window).ready(function(){
   <h3><img src="{{STATIC_URL}}teleforma/images/module_playlist.png" alt="status" style="vertical-align:middle" /> {% trans "Video index" %}</h3>
  <div id="index">
   <ul>
-  {% for marker in media.item.markers.all %}
+  {% for marker in media.markers.all %}
   {% if not forloop.first and marker.time|point != '0.0' %}
    <li><a href="#" onclick="jumpToTimeoffset({{ marker.time|point }});">{{ marker.title }}</a></li>
   {% endif %}
@@ -171,9 +171,9 @@ $(document).ready(function(){
 {% endblock index %}
 
 {% block module-action-right %}
-{% if media.item.file and media.is_published and media.item.file.path|in_download_formats and user.is_superuser %}
+{% if media.file and media.is_published and media.file.path|in_download_formats and user.is_superuser %}
  <div class="module_action">
-   <a href="{{ MEDIA_URL }}{{ media.item.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
+   <a href="{{ MEDIA_URL }}{{ media.file }}" class="component_icon button" id="action_red"><img src="{{STATIC_URL}}teleforma/images/download_media.png" alt="" style="vertical-align:middle" />&nbsp;{% trans "Download" %}</a>
  </div>
 {% endif %}
 {% endblock module-action-right %}
