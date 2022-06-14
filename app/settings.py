@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
     'localhost', 
     'el.pro-barreau.dockdev.pilotsystems.net',
     'e-learning.pro-barreau.com',    
+    'staging.el.pro-barreau.parisson.com'
 ]
 
 DATABASES = {
@@ -266,6 +267,8 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 #SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+SESSION_COOKIE_DOMAIN=".pro-barreau.com"
 
 # RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
 # RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
