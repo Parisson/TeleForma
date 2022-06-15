@@ -9,9 +9,9 @@
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
             <a href="{% url 'teleforma-media-video' seminar.id media.id %}" title="{% trans "Play" %}">
-             {% if im.poster_file %}
-               {% thumbnail related.file "168x98" as im %}
-                <div style="background: no-repeat url('{{ im.poster_file }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
+             {% if media.poster_file %}
+               {% thumbnail media.poster_file "168x98" as im %}
+                <div style="background: no-repeat url('{{ media.poster_file }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
                  <img src="{{ STATIC_URL }}teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
                {% endthumbnail %}

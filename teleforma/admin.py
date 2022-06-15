@@ -144,7 +144,7 @@ class MediaItemMarkerInline(admin.StackedInline):
 class MediaAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_added'
     exclude = ['readers']
-    search_fields = ['id', 'title', 'course__title', 'course__code', 'item__title']
+    search_fields = ['id', 'title', 'course__title', 'course__code', 'title']
     inlines = [MediaTranscodedInline, MediaItemMarkerInline]
 
 class ConferenceAdmin(admin.ModelAdmin):
