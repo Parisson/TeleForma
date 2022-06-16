@@ -388,6 +388,7 @@ class Conference(models.Model):
     comment = ShortTextField(_('comment'), max_length=255, blank=True)
     date_begin = models.DateTimeField(_('begin date'), null=True, blank=True)
     date_end = models.DateTimeField(_('end date'), null=True, blank=True)
+    date_publish = models.DateTimeField(_('publishing date'), null=True, blank=True)
     readers = models.ManyToManyField(User, related_name="conference", verbose_name=_('readers'),
                                      blank=True)
     status = models.IntegerField(
