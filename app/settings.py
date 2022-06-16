@@ -279,6 +279,9 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 #SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_SAMESITE="None"
+SESSION_COOKIE_SECURE=True
+
 
 RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
 RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
@@ -477,16 +480,27 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": True
 }
-# Sherlock's online payment
-PAYMENT_SHERLOCKS_PATH='/srv/sherlocks'
 
-PAYMENT_PARAMETERS = { 'merchant_id' : { 'Semestrielle': "040109417200053",
-                                  'Annuelle': "040109417200053",
-                                  'Estivale': "040109417200054", },                                         
-                       'merchant_country': 'fr',
-                       'currency_code': '978',
-                       'language': 'fr'
-}
+SHERLOKS_URL = "https://sherlocks-payment-webinit-simu.secure.lcl.fr/paymentInit"
+
+PAYMENT_PARAMETERS = { 'Semestrielle': { 'merchantId' : "002001000000003",
+                                         '_key': "002001000000003_KEY1",
+                                         'keyVersion': '1',
+                                         'currencyCode': '978',
+                                        },
+                       'Annuelle': { 'merchantId' : "002001000000003",
+                                     '_key': "002001000000003_KEY1",
+                                     'keyVersion': '1',
+                                     'currencyCode': '978',
+                                    },
+                       'Estivale': { 'merchantId' : "002001000000003",
+                                     '_key': "002001000000003_KEY1",
+                                     'keyVersion': '1',
+                                     'currencyCode': '978',
+                                    },
+                      }
+SHERLOKS_USE_TRANSACTION_ID = True
+
 
 
 ORAL_OPTION_PRICE = 250

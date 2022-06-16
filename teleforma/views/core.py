@@ -300,6 +300,7 @@ class PeriodAccessMixin(View):
 
     def render_to_response(self, context):
         period = context['period']
+        print(period, context['periods'])
         if not period in context['periods']:
             messages.warning(self.request, _(
                 "You do NOT have access to this resource and then have been redirected to your desk."))
