@@ -20,9 +20,12 @@ class Command(BaseCommand):
             if not row['public_id']:
                 raise "no public id"
             try:
-                marker = MediaItemMarker.objects.get(public_id=row['public_id'], item_id=row['item_id'])
+                marker = MediaItemMarker.objects.get(public_id=row['public_id'])
             except MediaItemMarker.DoesNotExist:
                 continue
+            except MediaItemMarker.MultipleObjectsReturned:
+                continue
+            
             marker.time = row['time']
             marker.save()
             
