@@ -11,24 +11,39 @@ from teleforma.views.pro import get_seminar_delta
 import datetime
 from postman.utils import notify_user
 from teleforma.context_processors import seminar_validated
-
+import sys
 
 class Command(BaseCommand):
     help = """Send a reminder to all users when their subscripted seminars 
             expire before a given number of days"""
-    args = ['days',]
     message_template = 'teleforma/messages/seminar_remind.txt'
     subject_template = 'teleforma/messages/seminar_remind_subject.txt'
     language_code = 'fr_FR'
 
+    def add_arguments(self, parser):
+        parser.add_argument('days', type=int,
+                            help='number of days')
+        parser.add_argument('logfile', type=str, 
+                            help='log file to use')
+
+    def log(self, msg):
+        today = datetime.datetime.now()
+        print(today.strftime('%Y-%m-%d %H:%M'), msg)
+        
     def handle(self, *args, **kwargs):
-        days = int(args[-1])
+        days = kwargs['days']
+        logpath = kwargs['logfile']
+        sys.stdout = open(logpath, 'a', encoding='utf-8')
+
+        self.log("Starting run")
+        
         users = User.objects.all()
         translation.activate(self.language_code)
         sender_email = settings.DEFAULT_FROM_EMAIL
         sender = User.objects.get(email=sender_email)
         today = datetime.datetime.now()
 
+        
         for user in users:
             auditor = user.auditor.all()
             professor = user.professor.all()
@@ -47,6 +62,7 @@ class Command(BaseCommand):
                         enough_time = get_seminar_delta(user, seminar)
                         validated = completed and enough_time > 0
                         if delta.days < days and delta.days >= 0 and not validated:
+                            self.log("Seminar %s is about to expire" % seminar)
                             seminars.append(seminar)
 
 
@@ -62,6 +78,8 @@ class Command(BaseCommand):
                     subject = render_to_string(self.subject_template, context)
                     # subject = '%s : %s' % (seminar.title, subject)
                     mess = Message(sender=sender, recipient=user, subject=subject[:119], body=text)
+                    self.log("Sending mail to %s about %d seminars" % (user, len(seminars)))
+                    
                     # mess = Message(sender=sender, recipient='yoanl@pilotsystems.net', subject=subject[:119], body=text)
                     mess.moderation_status = 'a'
                     mess.save()
