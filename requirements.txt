@@ -19,7 +19,7 @@ django-user-agents==0.4.0
 django-recaptcha==2.0.6
 jxmlease==1.0.3
 mysqlclient==2.0.3
-numpy==1.20.3
+numpy==1.21.0
 # django-user-agents==0.3.0
 # html5lib==1.1
 requests

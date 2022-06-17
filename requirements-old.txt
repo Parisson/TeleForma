@@ -85,7 +85,7 @@ mysqlclient==1.4.6
 NavAdd==0.1.1
 netaddr==0.7.18
 netifaces==0.10.4
-numpy==1.7.0
+numpy==1.21.0
 oauth==1.0.1
 oauth2==1.5.211
 oauthlib==0.6.0
