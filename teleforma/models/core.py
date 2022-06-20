@@ -396,7 +396,7 @@ class Conference(models.Model):
     streaming = models.BooleanField(_('streaming'), default=True)
     web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
-    notified = models.BooleanField(_('notified'))
+    notified = models.BooleanField(_('notified'), default=False)
 
     @property
     def description(self):
