@@ -5,6 +5,7 @@ from copy import deepcopy
 
 from teleforma.admin_filter import MultipleChoiceListFilter
 from teleforma.models.chat import ChatMessage
+from teleforma.models.notification import Notification
 
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
@@ -508,6 +509,11 @@ class ChatMessageAdmin(admin.ModelAdmin):
     ordering = ['-created']
     raw_id_fields = ['user',]
 
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('message', 'user', 'created')
+    ordering = ['-created']
+    raw_id_fields = ['user',]
+
 
 admin.site.unregister(User)
 admin.site.register(Organization)
@@ -540,3 +546,4 @@ admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
 admin.site.register(AppointmentJury, AppointmentJuryAdmin)
 admin.site.register(Appointment, AppointmentAdmin)
 admin.site.register(ChatMessage, ChatMessageAdmin)
+admin.site.register(Notification, NotificationAdmin)

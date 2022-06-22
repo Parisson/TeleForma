@@ -482,6 +482,7 @@ form.login .submit {
     margin:0;
     padding:0;
     list-style:none;
+    max-width: 84vw;
 }
 
 /* make the LI display inline */
