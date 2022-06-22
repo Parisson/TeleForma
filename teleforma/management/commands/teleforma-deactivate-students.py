@@ -44,7 +44,7 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
 
         for student in students:
-            if hasattr(student, 'user'):
+            if student.user:
                 if student.is_subscribed and student.confirmation_sent and student.user.email and student.user.is_active:
                     student.user.is_active = False
                     student.user.save()

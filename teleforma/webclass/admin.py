@@ -16,8 +16,8 @@ class WebclassSlotInline(admin.StackedInline):
 
 class WebclassAdmin(admin.ModelAdmin):
     inlines = [WebclassSlotInline]
-    list_filter = ('course', 'period', 'iej', 'bbb_server', 'status')
-    list_display = ('course', 'period', 'bbb_server', 'status')
+    list_filter = ('course', 'period', 'iej', 'session', 'bbb_server', 'status')
+    list_display = ('course', 'period', 'session', 'bbb_server', 'status')
     filter_horizontal = ('iej',)
     search_fields = ['id', 'course__code', 'course__title']
 
