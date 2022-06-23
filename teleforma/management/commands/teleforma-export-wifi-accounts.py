@@ -39,10 +39,6 @@ class Command(BaseCommand):
                     data.append(p.wifi_pass)
                     data.append('\n')
                     s = ','.join(data)
-<<<<<<< HEAD
-                    f.write(s)
-=======
         f.write(s)
->>>>>>> dev
         f.close()
 
