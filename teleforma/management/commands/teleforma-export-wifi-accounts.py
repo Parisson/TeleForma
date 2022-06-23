@@ -30,18 +30,19 @@ class Command(BaseCommand):
             if profile and students:
                 p = profile[0]
                 student = students[0]
-                if student.is_subscribed and user.is_active and student.period == period:
+                if student.is_subscribed and user.is_active and \
+                        student.period == period and student.platform_only:
                     data = []
                     data.append(user.first_name)
                     data.append(user.last_name)
-                    data.append(str(period.date_begin))
-                    data.append(str(period.date_end))
-                    data.append(str(period.date_begin))
-                    data.append(str(period.date_end))
                     data.append(p.wifi_login)
                     data.append(p.wifi_pass)
                     data.append('\n')
                     s = ','.join(data)
+<<<<<<< HEAD
                     f.write(s)
+=======
+        f.write(s)
+>>>>>>> dev
         f.close()
 
