@@ -4,6 +4,9 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from teleforma.exam.models import *
+from teleforma.models.core import *
+from teleforma.models.crfpa import *
+
 import logging
 import codecs
 import random, string
@@ -27,12 +30,14 @@ class Command(BaseCommand):
         for user in User.objects.all():
             try:
                 profile = user.profile.get()
+                student = user.student
                 if not profile.wifi_pass:
                     profile.wifi_login = user.username
                     profile.wifi_pass = id_generator(8)
                     profile.save()
-                f.write(user.first_name + ',' + user.last_name + ',' + 
-                     profile.wifi_login + ',' + profile.wifi_pass + '\n')
+                if not student.platform_only:
+                    f.write(user.first_name + ',' + user.last_name + ',' + 
+                         profile.wifi_login + ',' + profile.wifi_pass + '\n')
             except:
                 continue
 
