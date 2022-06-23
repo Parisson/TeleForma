@@ -42,6 +42,6 @@ class Command(BaseCommand):
                     data.append(p.wifi_pass)
                     data.append('\n')
                     s = ','.join(data)
-                    f.write(s.encode('utf8'))
+                    f.write(s)
         f.close()
 
