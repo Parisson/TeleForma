@@ -23,6 +23,7 @@ class Command(BaseCommand):
 
         f = open(path, 'w')
         period = Period.objects.get(name=period_name)
+        s = ''
 
         for user in User.objects.all():
             profile = Profile.objects.filter(user=user)
@@ -38,7 +39,7 @@ class Command(BaseCommand):
                     data.append(p.wifi_login)
                     data.append(p.wifi_pass)
                     data.append('\n')
-                    s = ','.join(data)
+                    s += ','.join(data)
         f.write(s)
         f.close()
 
