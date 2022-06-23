@@ -4,6 +4,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from teleforma.exam.models import *
+from teleforma.models.core import *
+from teleforma.models.crfpa import *
 import logging
 import codecs
 
@@ -36,8 +38,8 @@ class Command(BaseCommand):
                     data.append(str(period.date_end))
                     data.append(period.date_begin)
                     data.append(period.date_end)
-                    # data.append(p.wifi_login)
-                    # data.append(p.wifi_pass)
+                    data.append(p.wifi_login)
+                    data.append(p.wifi_pass)
                     data.append('\n')
                     s = ','.join(data)
                     f.write(s.encode('utf8'))
