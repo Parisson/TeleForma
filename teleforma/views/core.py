@@ -68,6 +68,7 @@ from rest_framework.response import Response
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 from rest_framework.views import APIView
 from teleforma.models.crfpa import Home
+from teleforma.models.notification import Notification
 from teleforma.utils import guess_mimetypes
 
 from ..decorators import access_required
@@ -881,6 +882,20 @@ class ChatMessageView(APIView):
             ChatMessage.live_conference_message(conference=conference)
         else:
             ChatMessage.add_message(room_name, message, system=True)
+        return Response({'status': 'ok'})
+
+class NotificationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """
+        Update a notification (set as read)
+        """
+        id = request.data.get('id')
+        viewed = request.data.get('viewed')
+        notif = Notification.objects.get(pk=id)
+        notif.viewed = viewed
+        notif.save()
         return Response({'status': 'ok'})
 
 

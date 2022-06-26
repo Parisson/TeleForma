@@ -65,8 +65,6 @@ class ChatMessage(models.Model):
             'content': self.message,
             'senderId': self.user and self.user.id or "system",
             'username': self.user and self.user.username or "Système",
-            'date': '13 November',
-            'timestamp': '10:20',
             'date': self.created.strftime('%d/%m/%Y'),
             'timestamp': self.created.strftime('%H:%M'),
             'system': self.system
