@@ -1,9 +1,9 @@
 bigbluebutton-api-python==0.0.11
-channels==3.0.3
-channels_redis==3.2.0
+channels==3.0.4
+channels_redis==3.4.0
 docutils==0.17.1
-Django==3.2.3
-djangorestframework==3.12.4
+Django==3.2.13
+djangorestframework==3.13.1
 # django-extensions==1.2.1
 # django-timezones==0.2
 # django-registration==3.1.2
@@ -35,3 +35,4 @@ daphne==3.0.2
 pymemcache==3.4.4
 django-debug-toolbar==3.2.1
 ipython
+uvicorn==0.18.1
