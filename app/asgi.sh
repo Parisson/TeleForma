@@ -13,8 +13,8 @@ else
     # static files auto update
     # watchmedo shell-command --patterns="$patterns" --recursive \
     #     --command='python '$manage' collectstatic --noinput' $app &
-    # daphne -b 0.0.0.0 -p 8000 asgi:application
-    uvicorn asgi:application --log-level warning --workers 8
+    #daphne -b 0.0.0.0 -p 8000 asgi:application
+    uvicorn asgi:application --host 0.0.0.0 --log-level info --workers 8 --ws websockets
 fi
 
 
