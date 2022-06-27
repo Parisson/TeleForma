@@ -142,7 +142,7 @@ export default class Chat extends Vue {
     this.socket!.send(
       JSON.stringify({
         message: content,
-        replyTo: replyMessage._id || null
+        replyTo: replyMessage ? replyMessage._id : null
       })
     )
   }
