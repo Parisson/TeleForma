@@ -101,9 +101,17 @@ def format_courses(courses, course=None, queryset=None, types=None):
 
 
 def get_courses(user, date_order=False, num_order=False, num_courses=False, period=None):
+    cache_key = f"get_courses-{user.id}-{date_order}-{num_order}-{num_courses}-{period.id}"
+    cached_value = cache.get(cache_key)
+    if cached_value:
+        return cache.get(cache_key)
+
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
-        return get_crfpa_courses(user, date_order, num_order, period)
+        result = get_crfpa_courses(user, date_order, num_order, period)
+        # cache for one hour
+        cache.set(cache_key, result, 60 * 60)
+        return result
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
