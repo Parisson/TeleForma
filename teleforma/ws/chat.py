@@ -37,8 +37,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     # Receive message from user
     async def receive_json(self, content):
         message_content = content['message'][:255]
-
-        message = await self.add_message_to_db(self.scope['user'], self.room_name, message_content)
+        reply_to = await self.get_message_from_id(content.get('replyTo'))
+        message = await self.add_message_to_db(self.scope['user'], self.room_name, message_content, reply_to=reply_to)
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -47,11 +47,23 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 'message': message
             }
         )
+
+    @database_sync_to_async
+    def get_message_from_id(self, message_id):
+        if not message_id:
+            return None
+        message = None
+        try:
+            message = ChatMessage.objects.get(pk=message_id)
+        except ChatMessage.DoesNotExist:
+            print("does not exists")
+            pass
+        return message
         
 
     @database_sync_to_async
-    def add_message_to_db(self, user, room_name, message):
-        return ChatMessage.add_message(user, room_name, message)
+    def add_message_to_db(self, user, room_name, message, reply_to=None):
+        return ChatMessage.add_message(user, room_name, message, system=False, reply_to=reply_to)
         
     @database_sync_to_async
     def get_messages_list(self):
