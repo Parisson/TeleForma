@@ -127,7 +127,7 @@ pyxdg==0.19
 PyYAML==3.12
 pyzmq==13.1.0
 redis==2.10.3
-reportlab==3.3.0
+reportlab==3.5.55
 requests==2.11.1
 requests-oauthlib==0.3.3
 scipy==0.10.1
