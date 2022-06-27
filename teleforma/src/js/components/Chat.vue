@@ -10,7 +10,12 @@
     :show-reaction-emojis="false"
     :show-audio="false"
     :messages="messages"
-    :message-actions="[]"
+    :message-actions="[
+      {
+        name: 'replyMessage',
+        title: 'Répondre'
+      }
+    ]"
     :link-options="{ disabled: false, target: '_self' }"
     :text-messages="{
       ROOMS_EMPTY: 'Aucune conversation',
@@ -46,6 +51,7 @@ export default class Chat extends Vue {
     {
       roomId: "global",
       roomName: "",
+      avatar: "",
       users: []
     }
   ]
@@ -66,6 +72,7 @@ export default class Chat extends Vue {
       {
         roomId: roomInfo.room_name,
         roomName: roomInfo.room_title,
+        avatar: "",
         // add fake users to make sure username are displayed in the chat (if less than two, name are not displayed)
         users: [
           {
@@ -130,11 +137,12 @@ export default class Chat extends Vue {
     }
   }
 
-  sendMessage({ content }: { content: Message }) {
+  sendMessage({ content, replyMessage }: Message) {
     /** send message to socket */
     this.socket!.send(
       JSON.stringify({
-        message: content
+        message: content,
+        replyTo: replyMessage ? replyMessage._id : null
       })
     )
   }

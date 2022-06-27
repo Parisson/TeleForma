@@ -28,3 +28,22 @@ services:
       ports:
         - "9000:8000"
 
+  channels:
+    build:
+      context: .
+      args:
+        dev: 0
+    command: /bin/sh /srv/app/asgi.sh
+    volumes:
+      - ./app/:/srv/app
+      - ./bin:/srv/bin
+      - ./lib:/srv/lib
+      - ./teleforma/:/srv/src/teleforma/teleforma
+      - ./var/log/app:/var/log/app
+    ports:
+      - "9002:8000"
+    links:
+      - db
+      - redis
+    env_file:
+      - env/staging.env

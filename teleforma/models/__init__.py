@@ -4,3 +4,4 @@ from .ae import *
 from .messages import *
 from .appointment import *
 from .chat import *
+from .notification import *

@@ -20,6 +20,7 @@ class ChatMessage(models.Model):
         User, related_name='chat_messages', verbose_name=_('user'), on_delete=models.CASCADE, blank=True, null=True)
     created = models.DateTimeField('Creation date', auto_now_add=True)
     system = models.BooleanField(default=False)
+    reply_to = models.ForeignKey("ChatMessage", on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'chat_messages'
@@ -28,9 +29,9 @@ class ChatMessage(models.Model):
         return f"{str(self.user)} - {self.room_name} - {self.message[:20]}"
 
     @classmethod
-    def add_message(cls, user, room_name, message, system=False):
+    def add_message(cls, user, room_name, message, system=False, reply_to=None):
         message = ChatMessage(user=user, message=message,
-                              room_name=room_name, system=system)
+                              room_name=room_name, system=system, reply_to=reply_to)
         message.save()
         return message.to_dict()
 
@@ -59,14 +60,19 @@ class ChatMessage(models.Model):
         })
 
     def to_dict(self):
-        return {
+        message = {
             '_id': self.id,
             'content': self.message,
             'senderId': self.user and self.user.id or "system",
             'username': self.user and self.user.username or "Système",
-            'date': '13 November',
-            'timestamp': '10:20',
             'date': self.created.strftime('%d/%m/%Y'),
             'timestamp': self.created.strftime('%H:%M'),
             'system': self.system
         }
+        if self.reply_to:
+            message.update(
+                {
+                    'replyMessage': self.reply_to.to_dict()
+                }
+            )
+        return message

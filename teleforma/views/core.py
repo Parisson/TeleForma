@@ -68,6 +68,7 @@ from rest_framework.response import Response
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 from rest_framework.views import APIView
 from teleforma.models.crfpa import Home
+from teleforma.models.notification import Notification
 from teleforma.utils import guess_mimetypes
 
 from ..decorators import access_required
@@ -100,9 +101,17 @@ def format_courses(courses, course=None, queryset=None, types=None):
 
 
 def get_courses(user, date_order=False, num_order=False, num_courses=False, period=None):
+    cache_key = f"get_courses-{user.id}-{date_order}-{num_order}-{num_courses}-{period and period.id or None}"
+    cached_value = cache.get(cache_key)
+    if cached_value:
+        return cache.get(cache_key)
+
     if settings.TELEFORMA_E_LEARNING_TYPE == 'CRFPA':
         from teleforma.views.crfpa import get_crfpa_courses
-        return get_crfpa_courses(user, date_order, num_order, period)
+        result = get_crfpa_courses(user, date_order, num_order, period)
+        # cache for one hour
+        cache.set(cache_key, result, 60 * 60)
+        return result
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
@@ -880,6 +889,20 @@ class ChatMessageView(APIView):
             ChatMessage.live_conference_message(conference=conference)
         else:
             ChatMessage.add_message(room_name, message, system=True)
+        return Response({'status': 'ok'})
+
+class NotificationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """
+        Update a notification (set as read)
+        """
+        id = request.data.get('id')
+        viewed = request.data.get('viewed')
+        notif = Notification.objects.get(pk=id)
+        notif.viewed = viewed
+        notif.save()
         return Response({'status': 'ok'})
 
 

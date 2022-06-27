@@ -55,7 +55,7 @@ from .views.appointment import Appointments, cancel_appointment
 from .views.core import (ChatMessageView, ConferenceListView, ConferenceView, CourseListView,
                          CoursePendingListView, CourseView, DocumentView,
                          HelpView, HomeRedirectView, MediaTranscodedView,
-                         MediaView, MediaViewEmbed)
+                         MediaView, MediaViewEmbed, NotificationView)
 from .views.crfpa import (AnnalsCourseView, AnnalsIEJView, AnnalsView,
                           CorrectorAddView, CorrectorCompleteView,
                           CorrectorRegistrationPDFView,
@@ -271,4 +271,7 @@ urlpatterns = [
     # chat
     path('chat/messages',
          ChatMessageView.as_view(), name='teleforma-chat-messages'),
+    # notification
+    path('notification',
+         NotificationView.as_view(), name='teleforma-notification'),
 ]
