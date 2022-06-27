@@ -86,6 +86,8 @@ from .pages import get_page_content
 #     return django_render(template, data, context_instance=RequestContext(request),
 #                          mimetype=mimetype)
 
+# CACHE_TIMEOUT = getattr(settings, 'CACHE_TIMEOUT', 60*60)
+
 
 def format_courses(courses, course=None, queryset=None, types=None):
     if queryset:
@@ -110,7 +112,7 @@ def get_courses(user, date_order=False, num_order=False, num_courses=False, peri
         from teleforma.views.crfpa import get_crfpa_courses
         result = get_crfpa_courses(user, date_order, num_order, period)
         # cache for one hour
-        cache.set(cache_key, result, 60 * 60)
+        cache.set(cache_key, result, settings.CACHE_TIMEOUT)
         return result
 
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':

@@ -76,8 +76,6 @@ media = MediaView()
 home_view = HomeView()
 media_transcoded = MediaTranscodedView()
 
-CACHE_TIMEOUT = getattr(settings, 'CACHE_TIMEOUT', 300)
-
 
 urlpatterns = [
     # login / logout
