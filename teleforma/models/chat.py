@@ -31,7 +31,6 @@ class ChatMessage(models.Model):
     def add_message(cls, user, room_name, message, system=False):
         message = ChatMessage(user=user, message=message,
                               room_name=room_name, system=system)
-        print("message added", message)
         message.save()
         return message.to_dict()
 

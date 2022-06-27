@@ -300,7 +300,6 @@ class WebclassSlot(models.Model):
                     'slotid': self.id,
                     'professor': self.professor.user.username,
                 }
-                print(params)
                 try:
                     result = self.bbb.create_meeting(
                         self.room_id, params=params, meta=meta)

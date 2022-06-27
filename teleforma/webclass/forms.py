@@ -30,7 +30,6 @@ class WebclassRecordsForm(Form):
 
                 field_name = 'course_%d' % course.id
                 records = all_records.get(course.id, [])
-                print(records)
 
                 vocabulary = [('none', 'Aucun')]
                 # for each bbb record for the current course, add an option to the field
