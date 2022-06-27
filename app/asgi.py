@@ -8,10 +8,12 @@ django_asgi_app = get_asgi_application()
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.urls import re_path
-from teleforma.ws import chat
+from teleforma.ws import chat, notification
+
 
 websocket_urlpatterns = [
     re_path(r'ws/chat/(?P<room_name>\w+)/$', chat.ChatConsumer.as_asgi()),
+    re_path(r'ws/notification/(?P<user_id>\w+)/$', notification.NotificationConsumer.as_asgi()),
 ]
 
 
@@ -23,8 +25,3 @@ application = ProtocolTypeRouter({
         )
     ),
 })
-
-
-
-
-

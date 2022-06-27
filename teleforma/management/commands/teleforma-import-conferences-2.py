@@ -62,7 +62,6 @@ class Command(BaseCommand):
                     organization_name = root_list[-5]
                     dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
-                    collection_id = '_'.join([department_name, course_id, course_type])
 
                     if Conference.objects.filter(public_id=public_id) and department:
                         conference = Conference.objects.get(public_id=public_id)
