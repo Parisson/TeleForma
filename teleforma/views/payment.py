@@ -4,7 +4,7 @@ import datetime
 import logging
 import os
 import pprint
-import subprocess
+import hashlib
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -26,65 +26,92 @@ from ..models.crfpa import Payment
 log = logging.getLogger('payment')
 
 
-def call_scherlocks(what, data, merchant_id):
+def compute_sherlocks_seal(data, key):
     """
-    Perform a Scherlock's call, with parameters in data
-    what is either 'request' or 'response', the program to call
+    Compute the seal for Sherlock's
     """
-    log.info('call_scherlocks %r %r' % (what, data))
-    requestbin = os.path.join(
-        settings.PAYMENT_SHERLOCKS_PATH, 'bin/static', what)
-    params = dict(data)
-    params['pathfile'] = os.path.join(settings.PAYMENT_SHERLOCKS_PATH,
-                                      'param/pathfile.' + merchant_id)
-    params = ' '.join(['%s=%s' % (k, v) for k, v in params.items()])
-    cmdline = requestbin + ' ' + params
+    data = data.encode('utf-8')
+    seal = hashlib.sha256(data + key.encode('utf-8')).hexdigest()
+    return seal
 
-    status, out = subprocess.getstatusoutput(cmdline)
-    if status:
-        raise OSError("error calling %s" % cmdline)
-    res = out.split('!')[1:-1]
-    if int(res[0]):
-        raise ValueError("Scherlock's returned %s" % res[1])
-    return res[2:]
-
-
-def check_payment_info(data):
+def encode_sherlocks_data(params, key):
+    """
+    Encode data for Sherlock's
+    """
+    data = []
+    for k, v in params.items():
+        v = v.replace('|', '_').replace(',', '_').replace('=', '_')
+        data.append('%s=%s' % (k, v))
+    data = '|'.join(data)
+    seal = compute_sherlocks_seal(data, key)
+    return data, seal
+    
+def check_payment_info(post_data):
     """
     Check that the payment info are valid
     """
-    response_code = data[8]
-    cvv_response_code = data[14]
+    seal = post_data.get('Seal', None)
+    data = post_data.get('Data', None)
+    keys = [ p['_key'] for p in settings.PAYMENT_PARAMETERS.values() ]
 
-    log.info('check_payment_info %s %s' % (response_code, cvv_response_code))
+    if not seal or not data:
+        log.warning('Missing seal or data')
+        raise SuspiciousOperation('Missing data')
 
-    return response_code == '00'
+    for key in keys:
+        wanted_seal = compute_sherlocks_seal(data, key)
+        if seal == wanted_seal:
+            break
+    else:
+        log.warning('Invalid seal')
+        raise SuspiciousOperation('Invalid seal')
+
+    words = data.split('|')
+    values = {}
+    for word in words:
+        if "=" in word:
+            key, value = word.split('=', 1)
+            values[key] = value
+
+    order_id = values.get('orderId', None)
+    code = values.get('responseCode', None)
+    if not order_id or not code:
+        log.warning('Missing order_id or code')
+        raise SuspiciousOperation('Missing value in data')
+    
+    res = { 'order_id': order_id,
+            'valid': code == '00' }
+
+    log.debug('check_payment_info %s %s' % (order_id, code))
+
+    return res
 
 
 def process_payment(request, payment):
     """
     Process a payment to Sherlocks
     """
-    params = dict(settings.PAYMENT_PARAMETERS)
     period = payment.student.period
     period_short_name = period.name.split()[0]
-    params['merchant_id'] = params['merchant_id'][period_short_name]
-    merchant_id = params['merchant_id']
+    params = dict(settings.PAYMENT_PARAMETERS[period_short_name])
+    key = params.pop('_key')    
+    merchant_id = params['merchantId']
     params['amount'] = str(int(payment.value*100))
-    params['order_id'] = str(payment.pk)
+    params['orderId'] = str(payment.pk)
+    if settings.SHERLOKS_USE_TRANSACTION_ID:
+        params['s10TransactionReference.s10TransactionId'] = '%06d' % payment.pk
+    else:
+        params['transactionReference'] = str(payment.pk)
     current_site = get_current_site(request)
     root = 'https://%s' % (current_site.domain)
 
     kwargs = {'merchant_id': merchant_id}
-    params['normal_return_url'] = root + reverse('teleforma-bank-success',
-                                                 kwargs=kwargs)
-    params['cancel_return_url'] = root + reverse('teleforma-bank-cancel',
-                                                 kwargs=kwargs)
-    params['automatic_response_url'] = root + reverse('teleforma-bank-auto',
-                                                      kwargs=kwargs)
-    pprint.pprint(params)
-    res = call_scherlocks('request', params, merchant_id=merchant_id)
-    return res[0]
+    params['normalReturnUrl'] = root + reverse('teleforma-bank-success',
+                                               kwargs=kwargs)
+    params['automaticResponseURL'] = root + reverse('teleforma-bank-auto',
+                                                    kwargs=kwargs)
+    data, seal = encode_sherlocks_data(params, key)
+    return data, settings.SHERLOKS_URL, seal
 
 
 class PaymentStartView(DetailView):
@@ -100,7 +127,10 @@ class PaymentStartView(DetailView):
         if payment.student.user_id != self.request.user.pk and not self.request.user.is_superuser:
             raise PermissionDenied
         context['payment'] = payment
-        context['sherlock_info'] = process_payment(self.request, payment)
+        data, url, seal = process_payment(self.request, payment)
+        context['sherlock_url'] = url
+        context['sherlock_data'] = data
+        context['sherlock_seal'] = seal
         return context
 
     @method_decorator(login_required)
@@ -113,11 +143,11 @@ def bank_auto(request, merchant_id):
     """
     Bank automatic callback
     """
-    res = call_scherlocks('response', {'message': request.POST['DATA']},
-                          merchant_id=merchant_id)
-    order_id = res[24]
+    log.info("bank_auto %r" % request.POST)
+    info = check_payment_info(request.POST)
+    order_id = info['order_id']
     payment = Payment.objects.get(pk=order_id)
-    if check_payment_info(res) and payment.type == 'online' and not payment.online_paid:
+    if info['valid'] and payment.type == 'online' and not payment.online_paid:
         payment.online_paid = True
         payment.date_paid = datetime.datetime.now()
         if payment.student.restricted:
@@ -167,11 +197,10 @@ def bank_success(request, merchant_id):
     """
     Bank success callback
     """
-    log.info("bank_success %r" % request.POST)
-    res = call_scherlocks('response', {'message': request.POST['DATA']},
-                          merchant_id=merchant_id)
-    if check_payment_info(res):
-        order_id = res[24]
+    log.info("bank_auto %r" % request.POST)
+    info = check_payment_info(request.POST)
+    order_id = info['order_id']
+    if info['valid']:
         payment = Payment.objects.get(pk=order_id)
         if payment.type == 'online' and payment.online_paid:
             return render(request, 'payment/payment_validate.html',

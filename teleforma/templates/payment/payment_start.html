@@ -8,8 +8,22 @@
 
 {% payment_summary payment %}
 
-    {% autoescape off %}
-    {{ sherlock_info }}
-    {% endautoescape %}
+<div class="container">
+  <div align="center">
+    Vous utilisez le formulaire sécurisé standard SSL, choisissez une carte ci-dessous <img src="/static/payment/logo/CLEF.gif" border="0" /> :
+  </div>
+  <form method="post" action="{{ sherlock_url }}">
+    <input type="hidden" name="Data" value="{{ sherlock_data }}" />
+    <input type="hidden" name="InterfaceVersion" value="HP_2.41" />
+    <input type="hidden" name="Seal" value="{{ sherlock_seal }}" />
+    <div align="center">
+      <input type="image" name="CB" src="/static/payment/logo/CB.gif" border="0" />
+      &nbsp;
+      <input type="image" name="VISA" src="/static/payment/logo/VISA.gif" border="0" />
+      &nbsp;
+      <input type="image" name="MASTERCARD" src="/static/payment/logo/MASTERCARD.gif" border="0" />
+      <br /
+    </div>
+  </form>
 
 {% endblock %}

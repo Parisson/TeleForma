@@ -3,6 +3,7 @@
 import calendar
 import datetime
 from datetime import date, timedelta
+from unidecode import unidecode
 
 import django.db.models as models
 from bigbluebutton_api_python import BigBlueButton
@@ -15,8 +16,9 @@ from django.template.defaultfilters import slugify
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from jxmlease import XMLDictNode, XMLListNode
-from teleforma.fields import DurationField
-from unidecode import unidecode
+from teleforma.fields import DurationField, ShortTextField
+from teleforma.models import session_choices
+
 
 translation.activate('fr')
 app_label = 'teleforma'
@@ -147,8 +149,11 @@ class Webclass(models.Model):
     max_participants = models.IntegerField(
         'Nombre maxium de participants par créneau', blank=True, null=True, default=80)
     end_date = models.DateField('date de fin', blank=True, null=True)
+    session = models.CharField(_('session'), choices=session_choices,
+                               max_length=16, default="1")
     status = models.IntegerField(
         _('status'), choices=STATUS_CHOICES, default=2)
+    comment = ShortTextField(_('comment'), max_length=255, blank=True)
 
     objects = models.Manager()
     published = PublishedManager()

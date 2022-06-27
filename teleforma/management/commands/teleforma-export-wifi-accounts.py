@@ -4,6 +4,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from teleforma.exam.models import *
+from teleforma.models.core import *
+from teleforma.models.crfpa import *
 import logging
 import codecs
 
@@ -28,18 +30,15 @@ class Command(BaseCommand):
             if profile and students:
                 p = profile[0]
                 student = students[0]
-                if student.is_subscribed and user.is_active and student.period == period:
+                if student.is_subscribed and user.is_active and \
+                        student.period == period and student.platform_only:
                     data = []
                     data.append(user.first_name)
                     data.append(user.last_name)
-                    data.append(str(period.date_begin))
-                    data.append(str(period.date_end))
-                    data.append(period.date_begin)
-                    data.append(period.date_end)
-                    # data.append(p.wifi_login)
-                    # data.append(p.wifi_pass)
+                    data.append(p.wifi_login)
+                    data.append(p.wifi_pass)
                     data.append('\n')
                     s = ','.join(data)
-                    f.write(s.encode('utf8'))
+        f.write(s)
         f.close()
 
