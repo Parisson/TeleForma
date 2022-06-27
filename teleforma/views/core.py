@@ -101,7 +101,7 @@ def format_courses(courses, course=None, queryset=None, types=None):
 
 
 def get_courses(user, date_order=False, num_order=False, num_courses=False, period=None):
-    cache_key = f"get_courses-{user.id}-{date_order}-{num_order}-{num_courses}-{period.id}"
+    cache_key = f"get_courses-{user.id}-{date_order}-{num_order}-{num_courses}-{period and period.id or None}"
     cached_value = cache.get(cache_key)
     if cached_value:
         return cache.get(cache_key)
