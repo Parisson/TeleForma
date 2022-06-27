@@ -9,9 +9,12 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-
-from teleforma.models import *
+from django.urls import reverse
+from teleforma.models.core import Conference
+from teleforma.models.crfpa import Student
 from teleforma.models.notification import notify
+from teleforma.views.core import get_courses
+import datetime
 
 
 class Logger:
