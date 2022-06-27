@@ -2,7 +2,7 @@
   <div id="notifications" @focus="open" @focusout="close" tabindex="0">
     <div class="bell">
       <img src="/static/teleforma/images/bell.svg" alt="Notifications" title="Notifications" class="bell-image" />
-      <span class="bell-count">{{ numberOfUnread }}</span>
+      <span v-if="numberOfUnread > 0" class="bell-count">{{ numberOfUnread }}</span>
     </div>
     <div v-if="opened" class="notifications-list">
       <!-- <h1 v-if="currentUserId">{{ currentUserId }}</h1>

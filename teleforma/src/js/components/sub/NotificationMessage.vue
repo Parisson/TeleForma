@@ -1,6 +1,6 @@
 <template>
   <li @click="onClick()" @click.middle="onMiddleClick()">
-    <span :class="{ 'unviewed': !viewed, text: true }">{{ id }} - {{ content }} - {{ viewed }}</span>
+    <span :class="{ 'unviewed': !viewed, text: true }">{{ content }}</span>
     <span class="date">{{ relativeCreationDate }} </span>
   </li>
 </template>
