@@ -6,7 +6,7 @@ manage=$app'/manage.py'
 static='/srv/static/'
 media='/srv/media/'
 src='/srv/src/'
-worker=8
+workers=8
 sock=/var/run/app/asgi.sock
 
 
