@@ -17,15 +17,19 @@ def as_list(what):
 
 class Command(BaseCommand):
     help = "Credit time to students connected to a Big Blue Button webclass"
-    args = "duration"
 
+    def add_arguments(self, parser):
+        parser.add_argument('duration', type=int,
+                            help='duration in seconds')
+        parser.add_argument('--logfile', type=str, required=True,
+                            help='log file to use')
+        
+    
     def handle(self, *args, **options):
-        if len(args) != 1 or not args[0].isdigit():            
-            print(("Syntax: %s %s <duration in seconds>" % (sys.argv[0],
-                                                           sys.argv[1])))
-            sys.exit(1)
+        duration = options['duration']
+        logpath = options['logfile']
+        sys.stdout = open(logpath, 'a', encoding='utf-8')
 
-        duration = int(args[0])
         end = datetime.datetime.now()
         start = end - datetime.timedelta(seconds = duration)
         print(("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S')))
@@ -37,7 +41,7 @@ class Command(BaseCommand):
             return
         meetings = as_list(meetings["meeting"])
 
-        print(("=== Starting at %s" % end.strftime('%Y-%m-%d %H:%M:%S')))
+        print(("=== Starting at %s (with duration %d)" % (end.strftime('%Y-%m-%d %H:%M:%S'), duration)))
 
         done = set()
         

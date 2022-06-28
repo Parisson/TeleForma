@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
     'localhost', 
     'el.pro-barreau.dockdev.pilotsystems.net',
     'e-learning.pro-barreau.com',    
+    'staging.el.pro-barreau.parisson.com'
 ]
 
 DATABASES = {
@@ -248,7 +249,9 @@ TELEFORMA_SUBJECTS = ('Barreau', 'e-learning')
 TELEFORMA_DESCRIPTION = "E-learning Pro-Barreau"
 TELEFORMA_E_LEARNING_TYPE = 'AE'
 
-EMAIL_HOST = 'angus.parisson.com'
+EMAIL_HOST = 'pb-smtp.pilotsystems.net'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'e-learning@pro-barreau.com'
 SERVER_EMAIL = 'webmaster@parisson.com'
 REPORT_TO_EMAIL = ('kostya.rilov@pre-barreau.com', 'alexia.dcruz@pro-barreau.com')
@@ -261,11 +264,15 @@ PASSWORD_HASHERS = [
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 #SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+SESSION_COOKIE_DOMAIN=".pro-barreau.com"
+SESSION_COOKIE_SAMESITE="None"
+SESSION_COOKIE_SECURE=True
 
 # RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
 # RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
