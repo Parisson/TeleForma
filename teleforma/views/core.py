@@ -43,7 +43,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.http.response import Http404, HttpResponse
+from django.http.response import Http404, HttpResponse, FileResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.urls.base import resolve
@@ -432,10 +432,10 @@ class DocumentDownloadView(DocumentView):
     def render_to_response(self, context):
         document = self.get_object()
         document.readers.add(self.request.user)
-        fsock = open(document.file.path, 'r')
+        fsock = open(document.file.path, 'rb')
         mimetype = mimetypes.guess_type(document.file.path)[0]
         extension = mimetypes.guess_extension(mimetype)
-        response = HttpResponse(fsock, content_type=mimetype)
+        response = FileResponse(fsock, content_type=mimetype)
         response['Content-Disposition'] = "attachment; filename=%s%s" % \
                                              (document.title.encode('utf8'), extension)
         return response
@@ -447,10 +447,9 @@ class DocumentReadView(DocumentView):
         courses = get_courses(self.request.user)
         document = self.get_object()
         document.readers.add(self.request.user)
-        fsock = open(document.file.path, 'r')
+        fsock = open(document.file.path, 'rb')
         mimetype = mimetypes.guess_type(document.file.path)[0]
-        extension = mimetypes.guess_extension(mimetype)
-        response = HttpResponse(fsock, content_type=mimetype)
+        response = FileResponse(fsock, content_type=mimetype)
         return response
 
 

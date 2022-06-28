@@ -27,11 +27,11 @@
 
 <div class="desk_messages">
 
-{% if user.is_staff %}
+{% comment %} {% if user.is_staff %}
 <div style="float:right;">
 <a href="{% if training %}{% url 'teleforma-training-users-export' training.id %}{% elif iej %}{% url 'teleforma-iej-users-export' iej.id %}{% elif course %}{% url 'teleforma-course-users-export' course.id %}{% else %}{% url 'teleforma-users-xls-export' %}{% endif %}" class="component_icon button icon_csv">XLS Export</a>
 </div>
-{% endif %}
+{% endif %} {% endcomment %}
 
 <div class="course_title">{% trans "Users" %}{% if training %} - {{ training }}{% elif iej %} - {{ iej }}{% elif course %} - {{ course }}{% endif %}</div>
 <br />
