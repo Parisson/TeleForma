@@ -21,7 +21,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('duration', type=int,
                             help='duration in seconds')
-        parser.add_argument('logfile', type=str, 
+        parser.add_argument('--logfile', type=str, required=True,
                             help='log file to use')
         
     

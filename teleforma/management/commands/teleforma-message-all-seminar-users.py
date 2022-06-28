@@ -23,7 +23,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('days', type=int,
                             help='number of days')
-        parser.add_argument('logfile', type=str, 
+        parser.add_argument('--logfile', type=str, required=True,
                             help='log file to use')
 
     def log(self, msg):
