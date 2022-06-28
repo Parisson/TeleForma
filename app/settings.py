@@ -106,7 +106,7 @@ MEDIA_ROOT = '/srv/media/'
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 #MEDIA_URL = 'http://pre-barreau.com/archives/'
-MEDIA_URL = 'https://e-learning.pro-barreau.com/media/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
