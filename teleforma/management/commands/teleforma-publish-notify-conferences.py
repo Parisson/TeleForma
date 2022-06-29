@@ -66,13 +66,17 @@ class Command(BaseCommand):
 
             students = Student.objects.filter(period=conference.period)
             for student in students:
-                if student.user:
-                    courses = get_courses(student.user, period=conference.period)
-                    for course in courses:
-                        if conference.course == course['course'] and \
-                                conference.course_type in course['types']:
-                            notify(student.user, message, url)
-                            logger.logger.info("Student notified: " + student.user.username)
+                try:
+                    if student.user:
+                        courses = get_courses(student.user, period=conference.period)
+                        for course in courses:
+                            if conference.course == course['course'] and \
+                                    conference.course_type in course['types']:
+                                notify(student.user, message, url)
+                                logger.logger.info("Student notified: " + student.user.username)
+                except:
+                    logger.logger.info("Student NOT notified: " + student.user.username)
+                    continue
 
             conference.notified = True
             conference.save()
