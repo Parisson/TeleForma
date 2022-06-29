@@ -10,7 +10,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-from teleforma.models.core import Conference
+from teleforma.models.core import Conference, Period
 from teleforma.models.crfpa import Student
 from teleforma.models.notification import notify
 from teleforma.views.core import get_courses
@@ -43,13 +43,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         logpath = options['logfile']
-        logfile = Logger(logpath)
+        logger = Logger(logpath)
 
         period_name = options['period']
-        period + Period.objects.get(name=period_name)
+        period = Period.objects.get(name=period_name)
 
         conferences = Conference.objects.filter(
                         period=period,
+                        status=2,
                         notified=False,
                         date_publish__lte=datetime.datetime.now()
                         )
@@ -58,19 +59,20 @@ class Command(BaseCommand):
             conference.status = 3
             conference.save()
             logger.logger.info("Conference published: " + conference.public_id)
-
-            media = conference.media.filter(mime_type__in='video')[0]
+         
+            media = conference.media.filter(mime_type='video/mp4')[0]
             url = reverse('teleforma-media-detail', args=[conference.period.id, media.id])
             message = "Nouvelle conférence publiée : " + str(conference)
 
             students = Student.objects.filter(period=conference.period)
             for student in students:
-                courses = get_courses(student.user, period=conference.period)
-                for course in courses:
-                    if conference.course == course['course'] and \
-                            conference.course_type in course['types']:
-                        notify(student.user, message, url)
-                        logger.logger.info("Student notified: " + student.user.username)
+                if student.user:
+                    courses = get_courses(student.user, period=conference.period)
+                    for course in courses:
+                        if conference.course == course['course'] and \
+                                conference.course_type in course['types']:
+                            notify(student.user, message, url)
+                            logger.logger.info("Student notified: " + student.user.username)
 
             conference.notified = True
             conference.save()
