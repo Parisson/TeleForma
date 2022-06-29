@@ -34,25 +34,43 @@ class Command(BaseCommand):
             conference.date_publish is equal or greater \
             than current date """
 
-    message = "Nouvelle conférence"
+    def add_arguments(self, parser):
+        parser.add_argument('--logfile', type=str, required=True,
+                            help='log file to use')
+
+        parser.add_argument('--period', type=str, required=True,
+                            help='period to process')
 
     def handle(self, *args, **options):
-        conferences = Conference.objects.filter(notified=False,
-                        date_publish__lte=datetime.datetime.now())
+        logpath = options['logfile']
+        logfile = Logger(logpath)
+
+        period_name = options['period']
+        period + Period.objects.get(name=period_name)
+
+        conferences = Conference.objects.filter(
+                        period=period,
+                        notified=False,
+                        date_publish__lte=datetime.datetime.now()
+                        )
 
         for conference in conferences:
             conference.status = 3
             conference.save()
+            logger.logger.info("Conference published: " + conference.public_id)
+
+            media = conference.media.filter(mime_type__in='video')[0]
+            url = reverse('teleforma-media-detail', args=[conference.period.id, media.id])
+            message = "Nouvelle conférence publiée : " + str(conference)
 
             students = Student.objects.filter(period=conference.period)
             for student in students:
                 courses = get_courses(student.user, period=conference.period)
                 for course in courses:
                     if conference.course == course['course'] and \
-                        conference.course_type in course['types']:
-                        media = conference.media.filter(mime_type__in='video')[0]
-                        url = reverse('teleforma-media-detail', args=[conference.period.id, media.id])
-                        notify(student.user, self.message, url)
+                            conference.course_type in course['types']:
+                        notify(student.user, message, url)
+                        logger.logger.info("Student notified: " + student.user.username)
 
             conference.notified = True
             conference.save()

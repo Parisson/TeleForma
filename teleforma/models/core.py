@@ -410,16 +410,21 @@ class Conference(models.Model):
         return slug
 
     def __str__(self):
+        if self.date_publish:
+            date = self.date_publish
+        else:
+            date = self.date_begin
+
         if self.professor:
             list = [self.course.title,
                     self.course_type.name, self.session,
                     self.professor.user.first_name,
                     self.professor.user.last_name,
-                    str(self.date_begin)]
+                    str(date)]
         else:
             list = [self.course.title,
                     self.course_type.name, self.session,
-                    str(self.date_begin)]
+                    str(date)]
         return ' - '.join(list)
 
     def save(self, *args, **kwargs):
