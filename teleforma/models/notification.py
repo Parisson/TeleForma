@@ -46,7 +46,6 @@ class Notification(models.Model):
         """
         broadcast a notification to socket
         """
-        print("broadcast")
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(f"notifications_{self.user.id}", {
             'type': 'notify',
