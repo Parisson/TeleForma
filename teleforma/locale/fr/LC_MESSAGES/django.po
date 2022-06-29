@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-13 15:58+0100\n"
+"POT-Creation-Date: 2022-06-29 19:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -16,329 +16,400 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: admin.py:20 exam/models.py:122 exam/models.py:225 models/ae.py:47
-#: models/core.py:113 models/core.py:148 models/core.py:288 models/core.py:547
-#: models/core.py:593 models/core.py:635 models/crfpa.py:81 models/crfpa.py:160
+#: teleforma/admin.py:42 teleforma/exam/models.py:147
+#: teleforma/exam/models.py:264 teleforma/models/ae.py:49
+#: teleforma/models/core.py:150 teleforma/models/core.py:199
+#: teleforma/models/core.py:376 teleforma/models/core.py:717
+#: teleforma/models/core.py:798 teleforma/models/crfpa.py:81
+#: teleforma/models/crfpa.py:174 teleforma/models/crfpa.py:472
+#: teleforma/models/crfpa.py:628 teleforma/webclass/models.py:139
+#: teleforma/webclass/models.py:404
 msgid "period"
 msgstr "période"
 
-#: admin.py:67
+#: teleforma/admin.py:94
 msgid "Group"
 msgstr "Groupe"
 
-#: exam/models.py:62 exam/models.py:454
+#: teleforma/admin.py:103
+#, fuzzy
+#| msgid "Cancel"
+msgid "balance"
+msgstr "Annuler"
+
+#: teleforma/admin.py:299
+#, fuzzy
+#| msgid "date added"
+msgid "date de début"
+msgstr "date d'ajout"
+
+#: teleforma/exam/models.py:86 teleforma/exam/models.py:491
 msgid "rejected"
 msgstr "rejetée"
 
-#: exam/models.py:62
+#: teleforma/exam/models.py:86
 msgid "draft"
 msgstr "brouillon"
 
-#: exam/models.py:62
+#: teleforma/exam/models.py:86
 msgid "submitted"
 msgstr "soumise"
 
-#: exam/models.py:63
+#: teleforma/exam/models.py:87 teleforma/models/core.py:80
 msgid "pending"
 msgstr "en attente"
 
-#: exam/models.py:63 exam/models.py:439
+#: teleforma/exam/models.py:87 teleforma/exam/models.py:475
 msgid "marked"
 msgstr "corrigée"
 
-#: exam/models.py:63
+#: teleforma/exam/models.py:87
 msgid "read"
 msgstr "lu"
 
-#: exam/models.py:63
+#: teleforma/exam/models.py:88
 msgid "backup"
 msgstr "sauvegardé"
 
-#: exam/models.py:65
+#: teleforma/exam/models.py:88
+#, fuzzy
+#| msgid "status"
+msgid "stat"
+msgstr "status"
+
+#: teleforma/exam/models.py:90
 msgid "unreadable"
 msgstr "illisible"
 
-#: exam/models.py:66
+#: teleforma/exam/models.py:91
 msgid "bad orientation"
 msgstr "mauvaise orientation"
 
-#: exam/models.py:67
+#: teleforma/exam/models.py:92
 msgid "bad framing"
 msgstr "mauvais cadrage"
 
-#: exam/models.py:68
+#: teleforma/exam/models.py:93
 msgid "incomplete"
 msgstr "incomplet"
 
-#: exam/models.py:69
+#: teleforma/exam/models.py:94
 msgid "wrong course"
 msgstr "mauvaise matière"
 
-#: exam/models.py:70
+#: teleforma/exam/models.py:95
 msgid "duplicate"
 msgstr "doublon"
 
-#: exam/models.py:71
+#: teleforma/exam/models.py:96
 msgid "other"
 msgstr "autre"
 
-#: exam/models.py:72
+#: teleforma/exam/models.py:97
 msgid "wrong format"
 msgstr "mauvais format"
 
-#: exam/models.py:73
+#: teleforma/exam/models.py:98
 msgid "unreadable file"
 msgstr "fichier illisible"
 
-#: exam/models.py:74
+#: teleforma/exam/models.py:99
 msgid "no file"
 msgstr "pas de fichier"
 
-#: exam/models.py:75
-msgid "file too large"
-msgstr "fichier trop gros"
-
-#: exam/models.py:76
+#: teleforma/exam/models.py:100
 msgid "error retrieving file"
 msgstr "erreur de lecture de fichier"
 
-#: exam/models.py:120 exam/models.py:224 models/core.py:215 models/core.py:290
-#: models/core.py:542 models/core.py:631 models/pro.py:45
+#: teleforma/exam/models.py:101
+msgid "file too large"
+msgstr "fichier trop gros"
+
+#: teleforma/exam/models.py:143 teleforma/exam/models.py:263
+#: teleforma/models/core.py:301 teleforma/models/core.py:379
+#: teleforma/models/core.py:665 teleforma/models/core.py:794
+#: teleforma/models/crfpa.py:626 teleforma/models/pro.py:50
+#: teleforma/webclass/models.py:141 teleforma/webclass/models.py:406
 msgid "course"
 msgstr "matière"
 
-#: exam/models.py:121 exam/models.py:231
+#: teleforma/exam/models.py:145 teleforma/exam/models.py:272
 msgid "corrector"
 msgstr "correcteur"
 
-#: exam/models.py:123 exam/models.py:227 models/core.py:294 models/core.py:551
+#: teleforma/exam/models.py:149 teleforma/exam/models.py:266
+#: teleforma/models/core.py:384 teleforma/models/core.py:672
+#: teleforma/webclass/models.py:152
 msgid "session"
 msgstr "séance"
 
-#: exam/models.py:124
+#: teleforma/exam/models.py:150
 msgid "value"
 msgstr "valeur"
 
-#: exam/models.py:125 exam/templates/exam/quotas.html:22
+#: teleforma/exam/models.py:151 teleforma/exam/templates/exam/quotas.html:48
 msgid "date start"
 msgstr "date de début"
 
-#: exam/models.py:126 exam/templates/exam/quotas.html:23
+#: teleforma/exam/models.py:152 teleforma/exam/templates/exam/quotas.html:49
 msgid "date end"
 msgstr "date de fin"
 
-#: exam/models.py:127 exam/models.py:229 models/core.py:440 models/core.py:549
-#: models/core.py:639
+#: teleforma/exam/models.py:154 teleforma/exam/models.py:268
+#: teleforma/models/core.py:547 teleforma/models/core.py:670
+#: teleforma/models/core.py:804
 msgid "type"
 msgstr "type"
 
-#: exam/models.py:130
+#: teleforma/exam/models.py:157
 msgid "Quota"
 msgstr ""
 
-#: exam/models.py:131 exam/templates/exam/quotas.html:12
+#: teleforma/exam/models.py:158 teleforma/exam/templates/exam/quotas.html:11
+#: teleforma/templates/teleforma/base.html:130
 msgid "Quotas"
 msgstr ""
 
-#: exam/models.py:180 models/core.py:509 models/pro.py:67
+#: teleforma/exam/models.py:213 teleforma/models/core.py:625
+#: teleforma/models/pro.py:74
 msgid "date added"
 msgstr "date d'ajout"
 
-#: exam/models.py:181 models/core.py:172 models/core.py:510 models/crfpa.py:263
-#: models/pro.py:68
+#: teleforma/exam/models.py:215 teleforma/models/core.py:240
+#: teleforma/models/core.py:627 teleforma/models/crfpa.py:510
+#: teleforma/models/pro.py:75
 msgid "date modified"
 msgstr "date de modification"
 
-#: exam/models.py:182
+#: teleforma/exam/models.py:216
 msgid "UUID"
 msgstr ""
 
-#: exam/models.py:183
+#: teleforma/exam/models.py:218
 msgid "MIME type"
 msgstr "Type MIME"
 
-#: exam/models.py:184
+#: teleforma/exam/models.py:219
 msgid "sha1"
 msgstr ""
 
-#: exam/models.py:200
+#: teleforma/exam/models.py:236
 msgid "script"
 msgstr "copie"
 
-#: exam/models.py:201
+#: teleforma/exam/models.py:238
 msgid "Page file"
 msgstr "Fichier de page"
 
-#: exam/models.py:202
+#: teleforma/exam/models.py:240
 msgid "Image file"
 msgstr "Fichier image"
 
-#: exam/models.py:203 models/pro.py:49 models/pro.py:85
+#: teleforma/exam/models.py:241 teleforma/models/pro.py:55
+#: teleforma/models/pro.py:92
 msgid "rank"
 msgstr "rang"
 
-#: exam/models.py:206
+#: teleforma/exam/models.py:244
 msgid "Page"
 msgstr "Page"
 
-#: exam/models.py:207
+#: teleforma/exam/models.py:245
 msgid "Pages"
 msgstr "Pages"
 
-#: exam/models.py:212 models/core.py:96 models/core.py:109 models/core.py:129
-#: models/core.py:153 models/core.py:222 models/core.py:272 models/core.py:525
-#: models/crfpa.py:45 models/crfpa.py:60 models/crfpa.py:79
-#: models/messages.py:12
+#: teleforma/exam/models.py:250 teleforma/models/appointment.py:32
+#: teleforma/models/appointment.py:290 teleforma/models/core.py:129
+#: teleforma/models/core.py:143 teleforma/models/core.py:166
+#: teleforma/models/core.py:205 teleforma/models/core.py:308
+#: teleforma/models/core.py:359 teleforma/models/core.py:643
+#: teleforma/models/core.py:966 teleforma/models/crfpa.py:60
+#: teleforma/models/crfpa.py:77 teleforma/models/messages.py:22
 msgid "name"
 msgstr "nom"
 
-#: exam/models.py:215
+#: teleforma/exam/models.py:253
 msgid "ScriptType"
 msgstr "Type de copie"
 
-#: exam/models.py:216
+#: teleforma/exam/models.py:254
 msgid "ScriptTypes"
 msgstr "Types de copies"
 
-#: exam/models.py:230
+#: teleforma/exam/models.py:270
 msgid "author"
 msgstr "auteur"
 
-#: exam/models.py:232
+#: teleforma/exam/models.py:274
 msgid "PDF file"
 msgstr "Fichier PDF"
 
-#: exam/models.py:233
+#: teleforma/exam/models.py:275
 msgid "Box UUID"
 msgstr ""
 
-#: exam/models.py:234
+#: teleforma/exam/models.py:276
 msgid "score"
 msgstr "note"
 
-#: exam/models.py:235 models/pro.py:125
+#: teleforma/exam/models.py:278 teleforma/models/pro.py:136
 msgid "comments"
 msgstr "commentaires"
 
-#: exam/models.py:236 models/core.py:303 models/pro.py:48 models/pro.py:88
-#: models/pro.py:104
+#: teleforma/exam/models.py:280 teleforma/models/core.py:395
+#: teleforma/models/core.py:758 teleforma/models/pro.py:54
+#: teleforma/models/pro.py:97 teleforma/models/pro.py:115
+#: teleforma/webclass/models.py:155
 msgid "status"
 msgstr "status"
 
-#: exam/models.py:237
+#: teleforma/exam/models.py:282
 msgid "reason"
 msgstr "raison"
 
-#: exam/models.py:238
+#: teleforma/exam/models.py:284
 msgid "date submitted"
 msgstr "date de soumission"
 
-#: exam/models.py:239
+#: teleforma/exam/models.py:285
 msgid "date marked"
 msgstr "date de correction"
 
-#: exam/models.py:240
+#: teleforma/exam/models.py:287
 msgid "date rejected"
 msgstr "date de rejet"
 
-#: exam/models.py:241
+#: teleforma/exam/models.py:288
 msgid "URL"
 msgstr ""
 
-#: exam/models.py:245 exam/templates/exam/inc/script_list.html:14
-#: templates/teleforma/course.html:50
-#: templates/teleforma/course_conference.html:39
-#: templates/teleforma/course_conference.html:67
-#: templates/teleforma/course_conference_audio.html:68
-#: templates/teleforma/course_media.html:86
-#: templates/teleforma/course_media.html:138
-#: templates/teleforma/course_media_video_embed.html:34
-#: templates/teleforma/inc/conference_list.html:26
-#: templates/teleforma/inc/media_list.html:37
-#: templates/teleforma/inc/media_list_pending.html:37
+#: teleforma/exam/models.py:294 teleforma/exam/models.py:297
+#: teleforma/exam/templates/exam/inc/script_list.html:13
+#: teleforma/exam/templates/exam/quotas.html:30
+#: teleforma/exam/templates/exam/quotas.html:47
+#: teleforma/exam/templates/exam/scripts.html:82
+#: teleforma/templates/teleforma/course.html:53
+#: teleforma/templates/teleforma/course_conference.html:62
+#: teleforma/templates/teleforma/course_conference.html:108
+#: teleforma/templates/teleforma/course_conference_audio.html:67
+#: teleforma/templates/teleforma/course_media.html:83
+#: teleforma/templates/teleforma/course_media.html:160
+#: teleforma/templates/teleforma/course_media_transcoded.html:44
+#: teleforma/templates/teleforma/course_media_transcoded.html:94
+#: teleforma/templates/teleforma/course_media_video_embed.html:33
+#: teleforma/templates/teleforma/inc/conference_list.html:27
+#: teleforma/templates/teleforma/inc/media_list.html:36
+#: teleforma/templates/teleforma/inc/media_list_pending.html:34
 msgid "Session"
 msgstr "Séance"
 
-#: exam/models.py:258 exam/models.py:438 exam/models.py:453
+#: teleforma/exam/models.py:316 teleforma/exam/models.py:474
+#: teleforma/exam/models.py:490
 msgid "Script"
 msgstr "Copie"
 
-#: exam/models.py:259 exam/templates/exam/scripts.html:21
-#: templates/telemeta/base.html:116 templates/telemeta/base.html:121
+#: teleforma/exam/models.py:317 teleforma/exam/templates/exam/scripts.html:20
+#: teleforma/templates/teleforma/base.html:111
+#: teleforma/templates/teleforma/base.html:116
+#: teleforma/templates/telemeta/base.html:119
+#: teleforma/templates/telemeta/base.html:124
 msgid "Scripts"
 msgstr "Copies"
 
-#: exam/templates/exam/inc/script_list.html:13
-#: exam/templates/exam/quotas.html:21
-#: templates/teleforma/course_conference.html:66
-#: templates/teleforma/course_media.html:137
-#: templates/teleforma/course_media_video_embed.html:33
+#: teleforma/exam/templates/exam/inc/script_list.html:12
+#: teleforma/exam/templates/exam/quotas.html:23
+#: teleforma/exam/templates/exam/quotas.html:46
+#: teleforma/exam/templates/exam/scripts.html:75
+#: teleforma/models/appointment.py:35 teleforma/models/crfpa.py:475
+#: teleforma/templates/teleforma/course_conference.html:107
+#: teleforma/templates/teleforma/course_media.html:159
+#: teleforma/templates/teleforma/course_media_transcoded.html:93
+#: teleforma/templates/teleforma/course_media_video_embed.html:32
 msgid "Course"
 msgstr "Matière"
 
-#: exam/templates/exam/inc/script_list.html:15
-#: templates/telemeta/inc/module_revisions.html:18
-#: templates/telemeta/lists.html:70
+#: teleforma/exam/templates/exam/inc/script_list.html:14
+#: teleforma/exam/templates/exam/scripts.html:89
+#: teleforma/templates/teleforma/lists.html:70
+#: teleforma/templates/telemeta/inc/module_revisions.html:18
 msgid "Type"
 msgstr "Type"
 
-#: exam/templates/exam/inc/script_list.html:16
-#: templates/telemeta/inc/user_list.html:19
-#: templates/telemeta/profile_detail.html:60
+#: teleforma/exam/templates/exam/inc/script_list.html:15
+#: teleforma/templates/teleforma/inc/user_list.html:19
+#: teleforma/templates/teleforma/profile_detail.html:64
 msgid "Last Name"
 msgstr "Nom"
 
-#: exam/templates/exam/inc/script_list.html:17
-#: templates/telemeta/inc/user_list.html:20
-#: templates/telemeta/profile_detail.html:59
+#: teleforma/exam/templates/exam/inc/script_list.html:16
+#: teleforma/templates/teleforma/inc/user_list.html:20
+#: teleforma/templates/teleforma/profile_detail.html:63
 msgid "First Name"
 msgstr "Prénom"
 
-#: exam/templates/exam/inc/script_list.html:18
+#: teleforma/exam/templates/exam/inc/script_list.html:17
 msgid "Submission date"
 msgstr "Date de soumission"
 
-#: exam/templates/exam/inc/script_list.html:19
+#: teleforma/exam/templates/exam/inc/script_list.html:18
 msgid "Mark date"
 msgstr "Date de correction"
 
-#: exam/templates/exam/inc/script_list.html:20
-#: exam/templates/exam/quotas.html:20
+#: teleforma/exam/templates/exam/inc/script_list.html:19
+#: teleforma/exam/templates/exam/quotas.html:16
+#: teleforma/exam/templates/exam/quotas.html:44
+#: teleforma/exam/templates/exam/scripts.html:67
 msgid "Corrector"
 msgstr "Correcteur"
 
-#: exam/templates/exam/inc/script_list.html:21
-#: exam/templates/exam/script_detail.html:36
+#: teleforma/exam/templates/exam/inc/script_list.html:20
+#: teleforma/exam/templates/exam/script_detail.html:60
+#: teleforma/exam/templates/exam/script_detail2.html:41
+#: teleforma/templates/quiz/progress.html:60
+#: teleforma/templates/quiz/sitting_detail.html:15
+#: teleforma/templates/quiz/sitting_list.html:16
 msgid "Score"
 msgstr "Note"
 
-#: exam/templates/exam/messages/script_fix.txt:9
-#: exam/templates/exam/messages/script_marked.txt:9
-#: exam/templates/exam/messages/script_rejected.txt:7
-#: templates/postman/email_user_init.txt:24
+#: teleforma/exam/templates/exam/mass_score_form.html:138
+#: teleforma/exam/templates/exam/score_form.html:81
+#: teleforma/exam/templates/exam/script_form.html:90
+#: teleforma/templates/registration/registration_form.html:123
+msgid "Submit"
+msgstr "Soumettre"
+
+#: teleforma/exam/templates/exam/messages/script_fix.txt:9
+#: teleforma/exam/templates/exam/messages/script_marked.txt:9
+#: teleforma/exam/templates/exam/messages/script_rejected.txt:7
+#: teleforma/templates/postman/email_user_init.txt:23
+#: teleforma/templates/registration/password_reset_email.html:12
 msgid "Best regards"
 msgstr "Cordialement"
 
-#: exam/templates/exam/messages/script_fix.txt:10
-#: exam/templates/exam/messages/script_marked.txt:10
-#: exam/templates/exam/messages/script_rejected.txt:8
-#: templates/postman/email_user.txt:20 templates/postman/email_user_init.txt:25
-#: templates/postman/email_visitor.txt:16
+#: teleforma/exam/templates/exam/messages/script_fix.txt:10
+#: teleforma/exam/templates/exam/messages/script_marked.txt:10
+#: teleforma/exam/templates/exam/messages/script_rejected.txt:8
+#: teleforma/templates/postman/email_user.txt:20
+#: teleforma/templates/postman/email_user_init.txt:24
+#: teleforma/templates/postman/email_visitor.txt:16
+#: teleforma/templates/registration/password_reset_email.html:13
 msgid "The site administrator"
 msgstr "L'administrateur du site"
 
-#: exam/templates/exam/messages/script_fix.txt:10
-#: exam/templates/exam/messages/script_marked.txt:10
-#: exam/templates/exam/messages/script_rejected.txt:8
-#: templates/postman/email_user_init.txt:25
+#: teleforma/exam/templates/exam/messages/script_fix.txt:10
+#: teleforma/exam/templates/exam/messages/script_marked.txt:10
+#: teleforma/exam/templates/exam/messages/script_rejected.txt:8
+#: teleforma/templates/postman/email_user_init.txt:24
+#: teleforma/templates/registration/password_reset_email.html:13
 msgid "of the"
 msgstr "du"
 
-#: exam/templates/exam/messages/script_fix.txt:13
-#: exam/templates/exam/messages/script_marked.txt:13
-#: exam/templates/exam/messages/script_rejected.txt:11
-#: templates/postman/email_user.txt:22 templates/postman/email_user_init.txt:28
-#: templates/postman/email_visitor.txt:18
+#: teleforma/exam/templates/exam/messages/script_fix.txt:13
+#: teleforma/exam/templates/exam/messages/script_marked.txt:13
+#: teleforma/exam/templates/exam/messages/script_rejected.txt:11
+#: teleforma/templates/postman/email_user.txt:22
+#: teleforma/templates/postman/email_user_init.txt:26
+#: teleforma/templates/postman/email_visitor.txt:18
 msgid ""
 "Note: This message is issued by an automated system.\n"
 "Do not reply, this would not be taken into account."
@@ -346,119 +417,152 @@ msgstr ""
 "NB: Ce message est émis par un automate. Ne faites pas de réponse, elle ne "
 "serait pas prise en compte."
 
-#: exam/templates/exam/quotas.html:24 exam/templates/exam/scripts.html:25
-#: templates/teleforma/courses.html:48
+#: teleforma/exam/templates/exam/quotas.html:45
+#, fuzzy
+#| msgid "period"
+msgid "Period"
+msgstr "période"
+
+#: teleforma/exam/templates/exam/quotas.html:50
+#: teleforma/exam/templates/exam/scripts.html:24
+#: teleforma/templates/teleforma/courses.html:42
 msgid "Pending"
 msgstr "En attente"
 
-#: exam/templates/exam/quotas.html:25 exam/templates/exam/scripts.html:26
+#: teleforma/exam/templates/exam/quotas.html:51
+#: teleforma/exam/templates/exam/scripts.html:25
 msgid "Marked"
 msgstr "Corrigées"
 
-#: exam/templates/exam/quotas.html:26
+#: teleforma/exam/templates/exam/quotas.html:52
 msgid "Value"
 msgstr "Valeur"
 
-#: exam/templates/exam/quotas.html:27
+#: teleforma/exam/templates/exam/quotas.html:53
 msgid "Level"
 msgstr "Niveau"
 
-#: exam/templates/exam/score_form.html:32 exam/templates/exam/scores.html:37
+#: teleforma/exam/templates/exam/score_form.html:31
+#: teleforma/exam/templates/exam/scores.html:32
 msgid "New score"
 msgstr "Nouvelle note"
 
-#: exam/templates/exam/score_form.html:60
-#: exam/templates/exam/script_form.html:78
-#: templates/registration/registration_form.html:22
-msgid "Submit"
-msgstr "Soumettre"
-
-#: exam/templates/exam/scores.html:20 templates/teleforma/annals.html:15
-#: templates/telemeta/profile_detail.html:16
+#: teleforma/exam/templates/exam/scores.html:19
+#: teleforma/templates/teleforma/annals.html:14
+#: teleforma/templates/teleforma/profile_detail.html:16
 msgid "My courses"
 msgstr "Mes matières"
 
-#: exam/templates/exam/scores.html:48 templates/telemeta/base.html:133
-#: templates/telemeta/base.html:135
+#: teleforma/exam/templates/exam/scores.html:48
+#: teleforma/templates/teleforma/base.html:142
+#: teleforma/templates/teleforma/base.html:144
+#: teleforma/templates/telemeta/base.html:140
+#: teleforma/templates/telemeta/base.html:142
 msgid "Scores"
 msgstr "Notes"
 
-#: exam/templates/exam/script_detail.html:33
+#: teleforma/exam/templates/exam/script_detail.html:54
+#: teleforma/templates/teleforma/profile_detail.html:36
+msgid "Send a message"
+msgstr "Envoyer un message"
+
+#: teleforma/exam/templates/exam/script_detail.html:57
+#: teleforma/exam/templates/exam/script_detail2.html:38
 msgid "Topic"
 msgstr "Sujet"
 
-#: exam/templates/exam/script_detail.html:37
-#: exam/templates/exam/script_detail.html:54
+#: teleforma/exam/templates/exam/script_detail.html:61
+#: teleforma/exam/templates/exam/script_detail.html:81
+#: teleforma/exam/templates/exam/script_detail2.html:42
+#: teleforma/exam/templates/exam/script_detail2.html:59
 msgid "Comments"
 msgstr "Commentaire"
 
-#: exam/templates/exam/script_detail.html:38
-msgid "Imprimer"
-msgstr ""
-
-#: exam/templates/exam/script_detail.html:40
-#: exam/templates/exam/scripts.html:27 templates/postman/view.html:25
+#: teleforma/exam/templates/exam/script_detail.html:67
+#: teleforma/exam/templates/exam/script_detail2.html:45
+#: teleforma/exam/templates/exam/scripts.html:26
+#: teleforma/templates/postman/view.html:33
 msgid "Rejected"
 msgstr "Rejeté"
 
-#: exam/templates/exam/script_detail.html:43
+#: teleforma/exam/templates/exam/script_detail.html:70
+#: teleforma/exam/templates/exam/script_detail2.html:48
 msgid "Scoring"
 msgstr "Noter"
 
-#: exam/templates/exam/script_detail.html:44
-#: exam/templates/exam/script_detail.html:85
-#: exam/templates/exam/script_detail.html:103
+#: teleforma/exam/templates/exam/script_detail.html:71
+#: teleforma/exam/templates/exam/script_detail.html:112
+#: teleforma/exam/templates/exam/script_detail.html:130
+#: teleforma/exam/templates/exam/script_detail2.html:49
+#: teleforma/exam/templates/exam/script_detail2.html:90
+#: teleforma/exam/templates/exam/script_detail2.html:108
 msgid "Reject"
 msgstr "Rejeter"
 
-#: exam/templates/exam/script_detail.html:46
+#: teleforma/exam/templates/exam/script_detail.html:73
+#: teleforma/exam/templates/exam/script_detail2.html:51
 msgid "Submitted"
 msgstr "Soumise"
 
-#: exam/templates/exam/script_detail.html:58
+#: teleforma/exam/templates/exam/script_detail.html:85
+#: teleforma/exam/templates/exam/script_detail2.html:63
 msgid "Mark"
 msgstr "Note"
 
-#: exam/templates/exam/script_detail.html:80
-#: templates/postman/base_write.html:63
-#: templates/teleforma/inc/chat_room.html:13
+#: teleforma/exam/templates/exam/script_detail.html:107
+#: teleforma/exam/templates/exam/script_detail2.html:85
+#: teleforma/templates/postman/base_write.html:111
 msgid "Send"
 msgstr "Envoyé"
 
-#: exam/templates/exam/script_detail.html:108 templates/teleforma/help.html:11
-#: templates/telemeta/base.html:148 templates/telemeta/base.html:157
+#: teleforma/exam/templates/exam/script_detail.html:135
+#: teleforma/exam/templates/exam/script_detail2.html:113
+#: teleforma/templates/teleforma/base.html:158
+#: teleforma/templates/teleforma/base.html:170
+#: teleforma/templates/teleforma/help.html:10
+#: teleforma/templates/telemeta/base.html:155
+#: teleforma/templates/telemeta/base.html:165
 msgid "Help"
 msgstr "Aide"
 
-#: exam/templates/exam/script_form.html:32 exam/templates/exam/scripts.html:36
+#: teleforma/exam/templates/exam/script_detail2.html:43
+msgid "Imprimer"
+msgstr ""
+
+#: teleforma/exam/templates/exam/script_form.html:31
+#: teleforma/exam/templates/exam/scripts.html:35
 msgid "New script"
 msgstr "Nouvelle copie"
 
-#: exam/templates/exam/script_form.html:35
+#: teleforma/exam/templates/exam/script_form.html:34
 msgid "Blank script"
 msgstr "Copie vierge"
 
-#: exam/templates/exam/scripts.html:6
+#: teleforma/exam/templates/exam/scripts.html:5
 msgid "Answers"
 msgstr "Réponses"
 
-#: exam/templates/exam/scripts.html:67
+#: teleforma/exam/templates/exam/scripts.html:97
+msgid "E-learning uniquement"
+msgstr ""
+
+#: teleforma/exam/templates/exam/scripts.html:112
 msgid "No scripts"
 msgstr "Aucune copie"
 
-#: exam/views.py:106
+#: teleforma/exam/views.py:245
 msgid "Pending scripts"
 msgstr "Copies en attente"
 
-#: exam/views.py:132
+#: teleforma/exam/views.py:256
 msgid "Treated scripts"
 msgstr "Copie traitées"
 
-#: exam/views.py:154
+#: teleforma/exam/views.py:265
 msgid "Rejected scripts"
 msgstr "Copies rejetées"
 
-#: exam/views.py:173
+#: teleforma/exam/views.py:283
 msgid ""
 "Error: you have already submitted a script for this session, the same course "
 "and the same type!"
@@ -466,7 +570,7 @@ msgstr ""
 "Erreur : vous avez déjà soumis une copie du même type pour la même matière "
 "et la même séance."
 
-#: exam/views.py:177
+#: teleforma/exam/views.py:288
 msgid ""
 "You have successfully submitted your script. It will be processed in the "
 "next hours."
@@ -474,7 +578,7 @@ msgstr ""
 "Vous avez correctement soumis votre copie. Elle sera traitée dans les "
 "prochaines heures puis corrigée."
 
-#: exam/views.py:181
+#: teleforma/exam/views.py:293
 msgid ""
 "There was a problem with your submission. Please try again, later if "
 "possible."
@@ -482,771 +586,953 @@ msgstr ""
 "Il y a une une erreur lors de votre soumission de copie. Merci de vérifier "
 "votre fichier ou de réessayer plus tard."
 
-#: exam/views.py:218
+#: teleforma/exam/views.py:376
 msgid "You must add your score to access to the statistics."
 msgstr "Vous devez ajouter votre note pour accéder aux statistiques."
 
-#: exam/views.py:282
+#: teleforma/exam/views.py:455
 msgid "all courses"
 msgstr "toutes les matières"
 
-#: models/ae.py:46 models/core.py:237 models/crfpa.py:132 models/crfpa.py:230
-#: models/pro.py:101 models/pro.py:140
-msgid "user"
-msgstr "utilisateur"
-
-#: models/ae.py:49
-msgid "platform only"
-msgstr "plateforme seulement"
-
-#: models/ae.py:51 models/core.py:223 models/core.py:239
-msgid "courses"
-msgstr "matières"
-
-#: models/ae.py:62
-msgid "AE student"
-msgstr "Etudiant AE"
-
-#: models/core.py:75
-msgid "check"
-msgstr ""
-
-#: models/core.py:75
-msgid "transfer"
-msgstr ""
-
-#: models/core.py:75
-msgid "credit card"
-msgstr "carte de crédit"
-
-#: models/core.py:75
-msgid "money"
-msgstr ""
-
-#: models/core.py:78
-msgid "Hidden"
-msgstr "Caché"
-
-#: models/core.py:79
-msgid "Private"
-msgstr "Privé"
-
-#: models/core.py:80
-msgid "Draft"
-msgstr "Brouillon"
-
-#: models/core.py:81
-msgid "Public"
-msgstr "Publié"
-
-#: models/core.py:97 models/core.py:110 models/core.py:130 models/core.py:154
-#: models/core.py:169 models/core.py:273 models/core.py:441 models/core.py:507
-#: models/core.py:526 models/crfpa.py:46 models/crfpa.py:80 models/crfpa.py:277
-#: models/crfpa.py:290 models/crfpa.py:303 models/pro.py:124
-msgid "description"
-msgstr "description"
-
-#: models/core.py:104 models/core.py:111 models/core.py:271 models/pro.py:123
-msgid "organization"
-msgstr "organisation"
-
-#: models/core.py:112
-msgid "Master domain"
-msgstr ""
-
-#: models/core.py:124 models/core.py:133 models/core.py:167 models/core.py:242
-#: models/core.py:286
-msgid "department"
-msgstr "département"
-
-#: models/core.py:131 models/crfpa.py:82
-msgid "parent"
-msgstr ""
-
-#: models/core.py:135 models/core.py:299
-msgid "begin date"
-msgstr "date de début"
-
-#: models/core.py:136 models/core.py:300
-msgid "end date"
-msgstr "date de fin"
-
-#: models/core.py:137
-msgid "date d'init de mot de passe"
-msgstr ""
-
-#: models/core.py:138
-msgid "message pour internaute"
-msgstr ""
-
-#: models/core.py:139
-msgid "message pour presentielle"
-msgstr ""
-
-#: models/core.py:140
-msgid "is open"
-msgstr ""
-
-#: models/core.py:141
-msgid "date de fin d'examens"
-msgstr ""
-
-#: models/core.py:161 models/core.py:291 models/core.py:544 models/core.py:633
-msgid "course type"
-msgstr "type de matière"
-
-#: models/core.py:168 models/core.py:506 models/pro.py:46 models/pro.py:83
-msgid "title"
-msgstr "titre"
-
-#: models/core.py:170 models/core.py:511 models/crfpa.py:78
-msgid "code"
-msgstr "cote"
-
-#: models/core.py:171
-msgid "tweeter title"
-msgstr "titre tweeter"
-
-#: models/core.py:173 models/core.py:527
-msgid "number"
-msgstr "nombre"
-
-#: models/core.py:174 models/crfpa.py:83
-msgid "synthesis note"
-msgstr "note de synthèse"
-
-#: models/core.py:175 models/crfpa.py:86
-msgid "obligations"
-msgstr "obligations"
-
-#: models/core.py:176 models/crfpa.py:107
-msgid "magistral"
-msgstr "magistral"
-
-#: models/core.py:177 models/crfpa.py:89 models/crfpa.py:140
-msgid "procedure"
-msgstr "procédure"
-
-#: models/core.py:178
-msgid "written_speciality"
-msgstr "spécialité écrit"
-
-#: models/core.py:179
-msgid "oral_speciality"
-msgstr "spécialité orale"
-
-#: models/core.py:180
-msgid "oral_1"
-msgstr ""
-
-#: models/core.py:181
-msgid "oral_2"
-msgstr ""
-
-#: models/core.py:182
-msgid "copies d'examen"
-msgstr ""
-
-#: models/core.py:231
-msgid "course group"
-msgstr "groupe de matière"
-
-#: models/core.py:265 models/core.py:292
-msgid "professor"
-msgstr "professeur"
-
-#: models/core.py:280 models/core.py:296
-msgid "room"
-msgstr "salle"
-
-#: models/core.py:285
-msgid "public_id"
-msgstr "public id"
-
-#: models/core.py:298
-msgid "comment"
-msgstr "commentaire"
-
-#: models/core.py:301 models/core.py:559 models/core.py:597 models/core.py:640
-msgid "readers"
-msgstr ""
-
-#: models/core.py:304 models/crfpa.py:65 models/crfpa.py:66
-msgid "web class group"
-msgstr ""
-
-#: models/core.py:430 models/core.py:458 models/core.py:545 models/core.py:629
-msgid "conference"
-msgstr "conférence"
-
-#: models/core.py:438
-msgid "host"
-msgstr "hôte"
-
-#: models/core.py:439
-msgid "port"
-msgstr "port"
-
-#: models/core.py:442
-msgid "source password"
-msgstr ""
-
-#: models/core.py:443
-msgid "admin password"
-msgstr ""
-
-#: models/core.py:450 models/core.py:461
-msgid "streaming server"
-msgstr "serveur de diffusion"
-
-#: models/core.py:462
-msgid "Streaming type"
-msgstr "Type de flux"
-
-#: models/core.py:464
-msgid "streaming"
-msgstr "diffusion"
-
-#: models/core.py:500
-msgid "live stream"
-msgstr "stream en direct"
-
-#: models/core.py:508
-msgid "credits"
-msgstr "crédits"
-
-#: models/core.py:512
-msgid "published"
-msgstr "publié"
-
-#: models/core.py:513
-msgid "mime type"
-msgstr "Type mime"
-
-#: models/core.py:514 models/pro.py:86
-msgid "weight"
-msgstr "poids"
-
-#: models/core.py:534
-msgid "document type"
-msgstr "type de document"
-
-#: models/core.py:553 models/crfpa.py:133
-msgid "iej"
-msgstr "iej"
-
-#: models/core.py:555
-msgid "annal"
-msgstr "annale"
-
-#: models/core.py:556
-msgid "year"
-msgstr "année"
-
-#: models/core.py:557 models/core.py:595
-msgid "file"
-msgstr "fichier"
-
-#: models/crfpa.py:53 models/crfpa.py:54 models/crfpa.py:61
-#: templates/registration/registration_pdf.html:48
-#: templates/teleforma/annals.html:31 templates/telemeta/inc/user_list.html:21
-#: templates/telemeta/profile_detail.html:64 templates/telemeta/users.html:28
-msgid "IEJ"
-msgstr "IEJ"
-
-#: models/crfpa.py:92 models/crfpa.py:143 models/crfpa.py:146
-msgid "written speciality"
-msgstr "spécialité écrit"
-
-#: models/crfpa.py:95 models/crfpa.py:149
-msgid "oral speciality"
-msgstr "spécialité orale"
-
-#: models/crfpa.py:98
-msgid "oral 1"
-msgstr ""
-
-#: models/crfpa.py:101
-msgid "oral 2"
-msgstr ""
-
-#: models/crfpa.py:104 models/crfpa.py:158
-msgid "options"
-msgstr "options"
-
-#: models/crfpa.py:109
-msgid "cost"
-msgstr "coût"
-
-#: models/crfpa.py:110
-msgid "available"
-msgstr ""
-
-#: models/crfpa.py:126 models/crfpa.py:137
-msgid "training"
-msgstr "formation"
-
-#: models/crfpa.py:135
-msgid "trainings"
-msgstr "formations"
-
-#: models/crfpa.py:152
-msgid "oral de langue (option)"
-msgstr ""
-
-#: models/crfpa.py:155
-msgid "oral 2 (option)"
-msgstr ""
-
-#: models/crfpa.py:162
-msgid "e-learning platform only"
-msgstr "formation e-learning uniquement"
-
-#: models/crfpa.py:163
-msgid "application fees"
-msgstr "frais de dossier"
-
-#: models/crfpa.py:165
-msgid "subscription fees"
-msgstr "frais d'inscription"
-
-#: models/crfpa.py:166
-msgid "promo code"
-msgstr ""
-
-#: models/crfpa.py:167
-msgid "registration date"
-msgstr "date de pré-inscription"
-
-#: models/crfpa.py:168
-msgid "subscription date"
-msgstr "date d'inscription"
-
-#: models/crfpa.py:169
-msgid "subscribed"
-msgstr "inscrit"
-
-#: models/crfpa.py:170
-msgid "confirmation sent"
-msgstr "confirmation envoyée"
-
-#: models/crfpa.py:171
-msgid "studying level"
-msgstr "niveau d'étude"
-
-#: models/crfpa.py:222
-msgid "Student"
-msgstr "Etudiant"
-
-#: models/crfpa.py:223
-msgid "Students"
-msgstr "Etudiants"
-
-#: models/crfpa.py:231 templates/registration/registration_pdf.html:41
-#: templates/telemeta/profile_detail.html:77
+#: teleforma/fields.py:114
+msgid "Duration"
+msgstr "Durée"
+
+#: teleforma/fields.py:119
+msgid "Enter a valid duration in HH:MM[:ss] format."
+msgstr "Entrez une durée valide au format HH:MM[:ss]"
+
+#: teleforma/forms.py:80 teleforma/forms.py:224 teleforma/models/crfpa.py:431
+#: teleforma/templates/registration/registration_corrector_pdf.html:43
+#: teleforma/templates/registration/registration_pdf.html:48
+#: teleforma/templates/teleforma/profile_detail.html:81
 msgid "Address"
 msgstr "Adresse"
 
-#: models/crfpa.py:232
+#: teleforma/forms.py:82 teleforma/forms.py:226 teleforma/models/crfpa.py:433
 msgid "Address detail"
 msgstr "Adresse (detail)"
 
-#: models/crfpa.py:233
+#: teleforma/forms.py:83 teleforma/forms.py:227 teleforma/models/crfpa.py:435
 msgid "Postal code"
 msgstr "Code postal"
 
-#: models/crfpa.py:234
+#: teleforma/forms.py:84 teleforma/forms.py:228 teleforma/models/crfpa.py:436
 msgid "City"
 msgstr "Ville"
 
-#: models/crfpa.py:235
+#: teleforma/forms.py:85 teleforma/forms.py:229 teleforma/models/crfpa.py:437
 msgid "Country"
 msgstr "Pays"
 
-#: models/crfpa.py:236 templates/telemeta/profile_detail.html:88
-msgid "Language"
-msgstr "Langue"
-
-#: models/crfpa.py:237 templates/registration/registration_pdf.html:42
-#: templates/telemeta/profile_detail.html:78
+#: teleforma/forms.py:86 teleforma/forms.py:230 teleforma/models/crfpa.py:439
+#: teleforma/templates/registration/registration_corrector_pdf.html:47
+#: teleforma/templates/registration/registration_pdf.html:52
+#: teleforma/templates/teleforma/profile_detail.html:84
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: models/crfpa.py:238
+#: teleforma/forms.py:87 teleforma/forms.py:231
+#: teleforma/templates/registration/registration_corrector_pdf.html:59
+#: teleforma/templates/registration/registration_pdf.html:64
+msgid "Birthday"
+msgstr "Date de naissance"
+
+#: teleforma/forms.py:91
+#: teleforma/templates/registration/registration_pdf.html:69
+msgid "Studying level"
+msgstr "Niveau d'étude"
+
+#: teleforma/forms.py:104 teleforma/templates/teleforma/inc/user_list.html:23
+#: teleforma/templates/teleforma/profile_detail.html:71
+msgid "Procedure"
+msgstr "Procédure"
+
+#: teleforma/forms.py:114
+msgid "Code promo"
+msgstr ""
+
+#: teleforma/forms.py:117
+msgid "Échéancier de paiement"
+msgstr ""
+
+#: teleforma/forms.py:319
+#, fuzzy
+#| msgid "scientist"
+msgid "Recipients"
+msgstr "reponsable scientifique"
+
+#: teleforma/forms.py:319 teleforma/templates/postman/base_folder.html:42
+#: teleforma/templates/postman/reply.html:4
+msgid "Recipient"
+msgstr ""
+
+#: teleforma/models/ae.py:48 teleforma/models/chat.py:20
+#: teleforma/models/core.py:323 teleforma/models/crfpa.py:141
+#: teleforma/models/crfpa.py:430 teleforma/models/crfpa.py:471
+#: teleforma/models/notification.py:34 teleforma/models/pro.py:110
+#: teleforma/models/pro.py:152
+msgid "user"
+msgstr "utilisateur"
+
+#: teleforma/models/ae.py:51
+msgid "platform only"
+msgstr "plateforme seulement"
+
+#: teleforma/models/ae.py:53 teleforma/models/core.py:309
+#: teleforma/models/core.py:325
+msgid "courses"
+msgstr "matières"
+
+#: teleforma/models/ae.py:64
+msgid "AE student"
+msgstr "Etudiant AE"
+
+#: teleforma/models/appointment.py:42
+msgid "activer la prise de rendez-vous"
+msgstr ""
+
+#: teleforma/models/chat.py:52
+msgid "A new live conference has started : "
+msgstr "Une nouvelle conférence en direct a commencé : "
+
+#: teleforma/models/core.py:80
+msgid "broken"
+msgstr "cassé"
+
+#: teleforma/models/core.py:80
+msgid "processing"
+msgstr "en cours"
+
+#: teleforma/models/core.py:81
+msgid "done"
+msgstr "fait"
+
+#: teleforma/models/core.py:81
+msgid "ready"
+msgstr "prêt"
+
+#: teleforma/models/core.py:98
+msgid "Hidden"
+msgstr "Caché"
+
+#: teleforma/models/core.py:99
+msgid "Private"
+msgstr "Privé"
+
+#: teleforma/models/core.py:100 teleforma/webclass/models.py:30
+msgid "Draft"
+msgstr "Brouillon"
+
+#: teleforma/models/core.py:101 teleforma/webclass/models.py:31
+msgid "Public"
+msgstr "Publié"
+
+#: teleforma/models/core.py:131 teleforma/models/core.py:145
+#: teleforma/models/core.py:168 teleforma/models/core.py:207
+#: teleforma/models/core.py:236 teleforma/models/core.py:361
+#: teleforma/models/core.py:549 teleforma/models/core.py:622
+#: teleforma/models/core.py:645 teleforma/models/crfpa.py:62
+#: teleforma/models/crfpa.py:79 teleforma/models/crfpa.py:533
+#: teleforma/models/crfpa.py:548 teleforma/models/crfpa.py:563
+#: teleforma/models/pro.py:135
+msgid "description"
+msgstr "description"
+
+#: teleforma/models/core.py:138 teleforma/models/core.py:147
+#: teleforma/models/core.py:358 teleforma/models/pro.py:134
+msgid "organization"
+msgstr "organisation"
+
+#: teleforma/models/core.py:148
+msgid "Master domain"
+msgstr ""
+
+#: teleforma/models/core.py:161 teleforma/models/core.py:172
+#: teleforma/models/core.py:233 teleforma/models/core.py:328
+#: teleforma/models/core.py:374 teleforma/webclass/models.py:137
+msgid "department"
+msgstr "département"
+
+#: teleforma/models/core.py:170 teleforma/models/crfpa.py:83
+msgid "parent"
+msgstr ""
+
+#: teleforma/models/core.py:174 teleforma/models/core.py:389
+msgid "begin date"
+msgstr "date de début"
+
+#: teleforma/models/core.py:175 teleforma/models/core.py:390
+msgid "end date"
+msgstr "date de fin"
+
+#: teleforma/models/core.py:177
+msgid "date d'init de mot de passe"
+msgstr ""
+
+#: teleforma/models/core.py:179
+msgid "message pour internaute"
+msgstr ""
+
+#: teleforma/models/core.py:181
+msgid "message pour presentielle"
+msgstr ""
+
+#: teleforma/models/core.py:182
+msgid "is open"
+msgstr ""
+
+#: teleforma/models/core.py:184
+msgid "date de fin d'examens"
+msgstr ""
+
+#: teleforma/models/core.py:186
+msgid "nombre maximal de copies"
+msgstr ""
+
+#: teleforma/models/core.py:215 teleforma/models/core.py:381
+#: teleforma/models/core.py:667 teleforma/models/core.py:796
+msgid "course type"
+msgstr "type de matière"
+
+#: teleforma/models/core.py:234 teleforma/models/core.py:620
+#: teleforma/models/pro.py:51 teleforma/models/pro.py:90
+msgid "title"
+msgstr "titre"
+
+#: teleforma/models/core.py:237 teleforma/models/core.py:628
+#: teleforma/models/crfpa.py:76
+msgid "code"
+msgstr "cote"
+
+#: teleforma/models/core.py:238
+msgid "tweeter title"
+msgstr "titre tweeter"
+
+#: teleforma/models/core.py:241 teleforma/models/core.py:646
+msgid "number"
+msgstr "nombre"
+
+#: teleforma/models/core.py:242 teleforma/models/crfpa.py:84
+msgid "synthesis note"
+msgstr "note de synthèse"
+
+#: teleforma/models/core.py:243 teleforma/models/crfpa.py:87
+msgid "obligations"
+msgstr "obligations"
+
+#: teleforma/models/core.py:244 teleforma/models/crfpa.py:109
+msgid "magistral"
+msgstr "magistral"
+
+#: teleforma/models/core.py:245 teleforma/models/crfpa.py:90
+#: teleforma/models/crfpa.py:154
+msgid "procedure"
+msgstr "procédure"
+
+#: teleforma/models/core.py:246
+msgid "written_speciality"
+msgstr "spécialité écrit"
+
+#: teleforma/models/core.py:247
+msgid "oral_speciality"
+msgstr "spécialité orale"
+
+#: teleforma/models/core.py:248
+msgid "oral_1"
+msgstr ""
+
+#: teleforma/models/core.py:249
+msgid "oral_2"
+msgstr ""
+
+#: teleforma/models/core.py:250
+msgid "copies d'examen"
+msgstr ""
+
+#: teleforma/models/core.py:317
+msgid "course group"
+msgstr "groupe de matière"
+
+#: teleforma/models/core.py:351 teleforma/models/core.py:382
+#: teleforma/webclass/models.py:199
+msgid "professor"
+msgstr "professeur"
+
+#: teleforma/models/core.py:368 teleforma/models/core.py:386
+msgid "room"
+msgstr "salle"
+
+#: teleforma/models/core.py:373
+msgid "public_id"
+msgstr "public id"
+
+#: teleforma/models/core.py:388 teleforma/webclass/models.py:156
+msgid "comment"
+msgstr "commentaire"
+
+#: teleforma/models/core.py:391
+msgid "publishing date"
+msgstr "date de publication"
+
+#: teleforma/models/core.py:392 teleforma/models/core.py:680
+#: teleforma/models/core.py:721 teleforma/models/core.py:805
+msgid "readers"
+msgstr ""
+
+#: teleforma/models/core.py:396 teleforma/models/core.py:573
+msgid "streaming"
+msgstr "diffusion"
+
+#: teleforma/models/core.py:397 teleforma/models/core.py:971
+#: teleforma/models/core.py:972
+msgid "web class group"
+msgstr ""
+
+#: teleforma/models/core.py:399
+#, fuzzy
+#| msgid "identifier"
+msgid "notified"
+msgstr "identifiant"
+
+#: teleforma/models/core.py:532 teleforma/models/core.py:567
+#: teleforma/models/core.py:792
+msgid "conference"
+msgstr "conférence"
+
+#: teleforma/models/core.py:543
+msgid "protocol"
+msgstr ""
+
+#: teleforma/models/core.py:544
+msgid "host"
+msgstr "hôte"
+
+#: teleforma/models/core.py:545
+msgid "port"
+msgstr "port"
+
+#: teleforma/models/core.py:546
+msgid "path"
+msgstr ""
+
+#: teleforma/models/core.py:550
+msgid "source password"
+msgstr ""
+
+#: teleforma/models/core.py:552
+msgid "admin password"
+msgstr ""
+
+#: teleforma/models/core.py:559 teleforma/models/core.py:570
+msgid "streaming server"
+msgstr "serveur de diffusion"
+
+#: teleforma/models/core.py:571
+msgid "Streaming type"
+msgstr "Type de flux"
+
+#: teleforma/models/core.py:614
+msgid "live stream"
+msgstr "stream en direct"
+
+#: teleforma/models/core.py:623
+msgid "credits"
+msgstr "crédits"
+
+#: teleforma/models/core.py:629
+msgid "published"
+msgstr "publié"
+
+#: teleforma/models/core.py:630
+msgid "mime type"
+msgstr "Type mime"
+
+#: teleforma/models/core.py:632 teleforma/models/pro.py:94
+msgid "weight"
+msgstr "poids"
+
+#: teleforma/models/core.py:656
+msgid "document type"
+msgstr "type de document"
+
+#: teleforma/models/core.py:668
+#, fuzzy
+#| msgid "period"
+msgid "periods"
+msgstr "période"
+
+#: teleforma/models/core.py:674 teleforma/models/crfpa.py:146
+#: teleforma/webclass/models.py:143
+msgid "iej"
+msgstr "iej"
+
+#: teleforma/models/core.py:676
+msgid "annal"
+msgstr "annale"
+
+#: teleforma/models/core.py:677
+msgid "year"
+msgstr "année"
+
+#: teleforma/models/core.py:678 teleforma/models/core.py:719
+#: teleforma/models/core.py:760 teleforma/models/core.py:808
+msgid "file"
+msgstr "fichier"
+
+#: teleforma/models/core.py:754
+msgid "item"
+msgstr "item"
+
+#: teleforma/models/core.py:755
+msgid "mime_type"
+msgstr "type mime"
+
+#: teleforma/models/core.py:756
+msgid "date"
+msgstr ""
+
+#: teleforma/models/core.py:810
+#, fuzzy
+#| msgid "User Profile"
+msgid "poster file"
+msgstr "Profil utilisateur"
+
+#: teleforma/models/core.py:967 teleforma/models/crfpa.py:69
+#: teleforma/models/crfpa.py:70
+#: teleforma/templates/registration/registration_pdf.html:73
+#: teleforma/templates/teleforma/annals.html:30
+#: teleforma/templates/teleforma/inc/user_list.html:21
+#: teleforma/templates/teleforma/profile_detail.html:68
+#: teleforma/templates/teleforma/users.html:27
+msgid "IEJ"
+msgstr "IEJ"
+
+#: teleforma/models/crfpa.py:94 teleforma/models/crfpa.py:157
+#: teleforma/models/crfpa.py:160
+msgid "written speciality"
+msgstr "spécialité écrit"
+
+#: teleforma/models/crfpa.py:97 teleforma/models/crfpa.py:163
+msgid "oral speciality"
+msgstr "spécialité orale"
+
+#: teleforma/models/crfpa.py:100
+msgid "oral 1"
+msgstr ""
+
+#: teleforma/models/crfpa.py:103
+msgid "oral 2"
+msgstr ""
+
+#: teleforma/models/crfpa.py:106 teleforma/models/crfpa.py:172
+msgid "options"
+msgstr "options"
+
+#: teleforma/models/crfpa.py:111
+msgid "cost"
+msgstr "coût"
+
+#: teleforma/models/crfpa.py:113
+msgid "e-learning cost with fascicle"
+msgstr ""
+
+#: teleforma/models/crfpa.py:115
+msgid "e-learning cost without fascicle"
+msgstr ""
+
+#: teleforma/models/crfpa.py:116
+msgid "available"
+msgstr ""
+
+#: teleforma/models/crfpa.py:117 teleforma/models/crfpa.py:176
+msgid "e-learning platform only"
+msgstr "formation e-learning uniquement"
+
+#: teleforma/models/crfpa.py:134 teleforma/models/crfpa.py:151
+msgid "training"
+msgstr "formation"
+
+#: teleforma/models/crfpa.py:148
+msgid "trainings"
+msgstr "formations"
+
+#: teleforma/models/crfpa.py:166
+msgid "oral de langue (option)"
+msgstr ""
+
+#: teleforma/models/crfpa.py:169
+msgid "oral 2 (option)"
+msgstr ""
+
+#: teleforma/models/crfpa.py:178
+msgid "application fees"
+msgstr "frais de dossier"
+
+#: teleforma/models/crfpa.py:181
+msgid "subscription fees"
+msgstr "frais d'inscription"
+
+#: teleforma/models/crfpa.py:182
+msgid "promo code"
+msgstr ""
+
+#: teleforma/models/crfpa.py:184 teleforma/models/crfpa.py:481
+msgid "registration date"
+msgstr "date de pré-inscription"
+
+#: teleforma/models/crfpa.py:186
+msgid "subscription date"
+msgstr "date d'inscription"
+
+#: teleforma/models/crfpa.py:187
+msgid "subscribed"
+msgstr "inscrit"
+
+#: teleforma/models/crfpa.py:188
+msgid "confirmation sent"
+msgstr "confirmation envoyée"
+
+#: teleforma/models/crfpa.py:190
+msgid "studying level"
+msgstr "niveau d'étude"
+
+#: teleforma/models/crfpa.py:193
+msgid "balance de paiement"
+msgstr ""
+
+#: teleforma/models/crfpa.py:197
+msgid "envoi des fascicules"
+msgstr ""
+
+#: teleforma/models/crfpa.py:200
+#, fuzzy
+#| msgid "department"
+msgid "type de paiement"
+msgstr "département"
+
+#: teleforma/models/crfpa.py:203
+msgid "échéancier de paiement"
+msgstr ""
+
+#: teleforma/models/crfpa.py:207
+#, fuzzy
+#| msgid "comment"
+msgid "commentaire"
+msgstr "commentaire"
+
+#: teleforma/models/crfpa.py:212
+msgid "échances générées"
+msgstr ""
+
+#: teleforma/models/crfpa.py:406
+msgid "Student"
+msgstr "Etudiant"
+
+#: teleforma/models/crfpa.py:407
+msgid "Students"
+msgstr "Etudiants"
+
+#: teleforma/models/crfpa.py:438
+#: teleforma/templates/teleforma/profile_detail.html:98
+msgid "Language"
+msgstr "Langue"
+
+#: teleforma/models/crfpa.py:441
 msgid "Expiration_date"
 msgstr "Date d'expiration"
 
-#: models/crfpa.py:239
+#: teleforma/models/crfpa.py:442
 msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
-#: models/crfpa.py:240 templates/telemeta/profile_detail.html:79
+#: teleforma/models/crfpa.py:443
+#: teleforma/templates/teleforma/profile_detail.html:87
 msgid "WiFi login"
 msgstr ""
 
-#: models/crfpa.py:241
+#: teleforma/models/crfpa.py:444
 msgid "WiFi pass"
 msgstr ""
 
-#: models/crfpa.py:242
+#: teleforma/models/crfpa.py:446
 msgid "birthday"
 msgstr "date de naissance"
 
-#: models/crfpa.py:246
+#: teleforma/models/crfpa.py:458
 msgid "profile"
 msgstr "profil"
 
-#: models/crfpa.py:257 models/crfpa.py:275 models/crfpa.py:288
-#: models/crfpa.py:301
+#: teleforma/models/crfpa.py:494
+#, fuzzy
+#| msgid "Corrector"
+msgid "Correcteur"
+msgstr "Correcteur"
+
+#: teleforma/models/crfpa.py:495
+#, fuzzy
+#| msgid "Correctors"
+msgid "Correcteurs"
+msgstr "Correcteurs"
+
+#: teleforma/models/crfpa.py:503 teleforma/models/crfpa.py:530
+#: teleforma/models/crfpa.py:545 teleforma/models/crfpa.py:560
 msgid "student"
 msgstr "étudiant"
 
-#: models/crfpa.py:258 models/crfpa.py:276 models/crfpa.py:289
-#: models/crfpa.py:302
+#: teleforma/models/crfpa.py:504 teleforma/models/crfpa.py:531
+#: teleforma/models/crfpa.py:546 teleforma/models/crfpa.py:561
 msgid "amount"
 msgstr "montant"
 
-#: models/crfpa.py:259
+#: teleforma/models/crfpa.py:505
 msgid "month"
 msgstr "mois"
 
-#: models/crfpa.py:260
-msgid "collected"
-msgstr "encaissé"
-
-#: models/crfpa.py:261
+#: teleforma/models/crfpa.py:507
 msgid "payment type"
 msgstr "type de paiement"
 
-#: models/crfpa.py:262
+#: teleforma/models/crfpa.py:509 teleforma/models/crfpa.py:631
 msgid "date created"
 msgstr "date de création"
 
-#: models/crfpa.py:267
+#: teleforma/models/crfpa.py:521
 msgid "Payment"
 msgstr "Paiement"
 
-#: models/crfpa.py:268
+#: teleforma/models/crfpa.py:522
 msgid "Payments"
 msgstr "Paiements"
 
-#: models/crfpa.py:281
+#: teleforma/models/crfpa.py:537
 msgid "Discount"
 msgstr "Réduction"
 
-#: models/crfpa.py:282
+#: teleforma/models/crfpa.py:538
 msgid "Discounts"
 msgstr "Réductions"
 
-#: models/crfpa.py:294 models/crfpa.py:295
+#: teleforma/models/crfpa.py:552 teleforma/models/crfpa.py:553
 msgid "Optional fees"
 msgstr "Frais optionnels"
 
-#: models/crfpa.py:307
+#: teleforma/models/crfpa.py:567
 msgid "Payback"
 msgstr "Remboursement"
 
-#: models/crfpa.py:308
+#: teleforma/models/crfpa.py:568
 msgid "Paybacks"
 msgstr ""
 
-#: models/messages.py:13
+#: teleforma/models/crfpa.py:576 teleforma/models/crfpa.py:624
+#: teleforma/templates/quiz/quiz_list.html:12
+#: teleforma/templates/teleforma/course.html:19
+#: teleforma/templates/teleforma/course.html:36
+#: teleforma/templates/teleforma/course_conference_audio.html:65
+#: teleforma/templates/teleforma/course_document.html:66
+#: teleforma/templates/teleforma/inc/conference_list.html:26
+#: teleforma/templates/teleforma/inc/media_list.html:35
+#: teleforma/templates/teleforma/inc/media_list_pending.html:33
+#: teleforma/templates/teleforma/lists.html:69
+#: teleforma/templates/teleforma/search_criteria.html:96
+#: teleforma/templates/telemeta/inc/module_revisions.html:17
+msgid "Title"
+msgstr "Titre"
+
+#: teleforma/models/messages.py:23
 msgid "students"
 msgstr "étudiants"
 
-#: models/messages.py:18
+#: teleforma/models/messages.py:28
 msgid "Student group"
 msgstr "Groupes étudiant"
 
-#: models/messages.py:28
+#: teleforma/models/messages.py:38
 msgid "group"
 msgstr "group"
 
-#: models/messages.py:31
+#: teleforma/models/messages.py:41
 msgid "sender"
 msgstr "expéditeur"
 
-#: models/messages.py:33
+#: teleforma/models/messages.py:43
 msgid "subject"
 msgstr "sujet"
 
-#: models/messages.py:34
+#: teleforma/models/messages.py:44
 msgid "message"
 msgstr "message"
 
-#: models/messages.py:35
+#: teleforma/models/messages.py:45
 msgid "to send"
 msgstr "à envoyer"
 
-#: models/messages.py:36
+#: teleforma/models/messages.py:46
 msgid "sent"
 msgstr "envoyé"
 
-#: models/messages.py:37
+#: teleforma/models/messages.py:47
 msgid "date sent"
 msgstr "date d'envoi"
 
-#: models/messages.py:41 templates/telemeta/users.html:55
+#: teleforma/models/messages.py:51 teleforma/templates/teleforma/users.html:54
 msgid "Grouped message"
 msgstr "Message groupé"
 
-#: models/pro.py:47
+#: teleforma/models/pro.py:52
 msgid "price"
 msgstr "prix"
 
-#: models/pro.py:50
+#: teleforma/models/pro.py:57
 msgid "public concerned"
 msgstr ""
 
-#: models/pro.py:53
+#: teleforma/models/pro.py:60
 msgid "document 1"
 msgstr "document 1"
 
-#: models/pro.py:56
+#: teleforma/models/pro.py:63
 msgid "media"
 msgstr "médias"
 
-#: models/pro.py:59
+#: teleforma/models/pro.py:66
 msgid "document 2"
 msgstr "document 2"
 
-#: models/pro.py:62
+#: teleforma/models/pro.py:69
 msgid "corrected document"
 msgstr "document corrigé"
 
-#: models/pro.py:64
+#: teleforma/models/pro.py:71
 msgid "suscribers"
 msgstr "inscrits"
 
-#: models/pro.py:69
+#: teleforma/models/pro.py:76
 msgid "approximative duration"
 msgstr "durée approximative"
 
-#: models/pro.py:70
+#: teleforma/models/pro.py:77
 msgid "keywords"
 msgstr "mots clés"
 
-#: models/pro.py:77
+#: teleforma/models/pro.py:84
 msgid "Seminar"
 msgstr "Sémimaire"
 
-#: models/pro.py:82 models/pro.py:139
+#: teleforma/models/pro.py:89 teleforma/models/pro.py:150
 msgid "seminar"
 msgstr "séminaire"
 
-#: models/pro.py:84 models/pro.py:102
+#: teleforma/models/pro.py:91 teleforma/models/pro.py:112
 msgid "question"
 msgstr "question"
 
-#: models/pro.py:87
+#: teleforma/models/pro.py:95
 msgid "minimum numbers of characters"
 msgstr "nombre de caractère minimum"
 
-#: models/pro.py:96
+#: teleforma/models/pro.py:104 teleforma/templates/quiz/question.html:47
+#: teleforma/templates/quiz/sitting_detail.html:21
 msgid "Question"
 msgstr "Questions"
 
-#: models/pro.py:101 models/pro.py:102 models/pro.py:103
+#: teleforma/models/pro.py:110 teleforma/models/pro.py:112
+#: teleforma/models/pro.py:113
 msgid "answer"
 msgstr "réponse"
 
-#: models/pro.py:105
+#: teleforma/models/pro.py:116
 msgid "validated"
 msgstr "validé"
 
-#: models/pro.py:117
+#: teleforma/models/pro.py:128
 msgid "Answer"
 msgstr "Réponse"
 
-#: models/pro.py:126 models/pro.py:142
+#: teleforma/models/pro.py:137 teleforma/models/pro.py:154
 msgid "testimonial_template"
 msgstr ""
 
-#: models/pro.py:127
+#: teleforma/models/pro.py:138
 msgid "template"
 msgstr "modèle"
 
-#: models/pro.py:134
+#: teleforma/models/pro.py:145
 msgid "Testimonial template"
 msgstr "Modèle d'attestation"
 
-#: models/pro.py:140 models/pro.py:141 models/pro.py:143
+#: teleforma/models/pro.py:152 teleforma/models/pro.py:153
+#: teleforma/models/pro.py:155
 msgid "testimonial"
 msgstr "attestation"
 
-#: models/pro.py:148
+#: teleforma/models/pro.py:160
 msgid "Testimonial"
 msgstr "Attestation"
 
-#: templates/404.html:10
+#: teleforma/templates/404.html:9
 msgid "Page not found"
 msgstr "Page non trouvée"
 
-#: templates/500.html:10
+#: teleforma/templates/500.html:9
 msgid "Server error"
 msgstr "Erreur du serveur"
 
-#: templates/postman/archives.html:3
+#: teleforma/templates/postman/archives.html:3
 #, fuzzy
 msgid "Archived Messages"
 msgstr "Messages"
 
-#: templates/postman/archives.html:7
+#: teleforma/templates/postman/archives.html:7
 msgid ""
 "Messages in this folder will never be removed. You can use this folder for "
 "long term storage."
 msgstr ""
 
-#: templates/postman/base.html:10
+#: teleforma/templates/postman/base.html:10
 msgid "Folders"
 msgstr "Dossiers"
 
-#: templates/postman/base.html:15
+#: teleforma/templates/postman/base.html:15
 msgid "Inbox"
 msgstr ""
 
-#: templates/postman/base.html:16 templates/postman/sent.html:3
+#: teleforma/templates/postman/base.html:16
+#: teleforma/templates/postman/sent.html:3
 #, fuzzy
 msgid "Sent Messages"
 msgstr "Messages"
 
-#: templates/postman/base.html:17
+#: teleforma/templates/postman/base.html:17
 msgid "Archives"
 msgstr ""
 
-#: templates/postman/base.html:18
+#: teleforma/templates/postman/base.html:18
 msgid "Trash"
 msgstr ""
 
-#: templates/postman/base.html:23
+#: teleforma/templates/postman/base.html:23
 msgid "New message"
 msgstr "Nouveau message"
 
-#: templates/postman/base_folder.html:12
+#: teleforma/templates/postman/base_folder.html:12
 msgid "by conversation"
 msgstr ""
 
-#: templates/postman/base_folder.html:13
+#: teleforma/templates/postman/base_folder.html:13
 #, fuzzy
 msgid "by message"
 msgstr "Messages"
 
-#: templates/postman/base_folder.html:18
+#: teleforma/templates/postman/base_folder.html:18
 msgid "Sorry, this page number is invalid."
 msgstr ""
 
-#: templates/postman/base_folder.html:39
-#: templates/teleforma/course_conference_record.html:69
-#: templates/telemeta/lists.html:75
+#: teleforma/templates/postman/base_folder.html:40
+#: teleforma/templates/teleforma/course_conference_record.html:62
+#: teleforma/templates/teleforma/lists.html:75
 msgid "Action"
 msgstr ""
 
-#: templates/postman/base_folder.html:40
+#: teleforma/templates/postman/base_folder.html:41
 msgid "Sender"
 msgstr ""
 
-#: templates/postman/base_folder.html:41 templates/postman/reply.html:4
-msgid "Recipient"
-msgstr ""
-
-#: templates/postman/base_folder.html:42
+#: teleforma/templates/postman/base_folder.html:43
 msgid "Subject"
 msgstr ""
 
-#: templates/postman/base_folder.html:43
-#: templates/telemeta/inc/module_revisions.html:16
+#: teleforma/templates/postman/base_folder.html:44
+#: teleforma/templates/telemeta/inc/module_revisions.html:16
 msgid "Date"
 msgstr "Date"
 
-#: templates/postman/base_folder.html:61
+#: teleforma/templates/postman/base_folder.html:62
 msgid "g:i A,M j,n/j/y"
 msgstr ""
 
-#: templates/postman/base_folder.html:69 templates/postman/view.html:39
-#: templates/telemeta/lists.html:58
+#: teleforma/templates/postman/base_folder.html:70
+#: teleforma/templates/postman/view.html:47
+#: teleforma/templates/teleforma/lists.html:58
 msgid "Delete"
 msgstr ""
 
-#: templates/postman/base_folder.html:72 templates/postman/view.html:43
+#: teleforma/templates/postman/base_folder.html:73
+#: teleforma/templates/postman/view.html:51
 msgid "Archive"
 msgstr ""
 
-#: templates/postman/base_folder.html:75
+#: teleforma/templates/postman/base_folder.html:76
 msgid "Undelete"
 msgstr ""
 
-#: templates/postman/base_folder.html:81
+#: teleforma/templates/postman/base_folder.html:82
 #, fuzzy
 msgid "No messages."
 msgstr "Messages"
 
-#: templates/postman/base_write.html:30
+#: teleforma/templates/postman/base_write.html:14
 msgid ""
 "Vous pouvez ici échanger des messages avec les professeurs et les "
 "administrateurs."
 msgstr ""
 
-#: templates/postman/base_write.html:32
+#: teleforma/templates/postman/base_write.html:16
 msgid ""
 "Pour les questions concernant l'organisation des cours, le planning, les "
 "documents de cours ou les copies, adressez-vous à <b>Admin-CRFPA</b>."
 msgstr ""
 
-#: templates/postman/base_write.html:34
+#: teleforma/templates/postman/base_write.html:18
 msgid ""
 "Pour les questions concernant uniquement l'accès à la plateforme et aux "
 "médias vidéo ou audio, lire d'abord"
 msgstr ""
 
-#: templates/postman/base_write.html:34
-msgid "puis adressez-vous à <b>Support technique</b>."
-msgstr ""
-
-#: templates/postman/base_write.html:38
-msgid "to an administrator"
-msgstr "à un administrateur"
-
-#: templates/postman/base_write.html:46
-msgid "to a professor"
-msgstr "à un professeur"
-
-#: templates/postman/email_user.txt:1 templates/postman/email_user_init.txt:1
+#: teleforma/templates/postman/email_user.txt:1
+#: teleforma/templates/postman/email_user_init.txt:1
+#: teleforma/templates/registration/password_reset_email.html:1
 msgid "Hello"
 msgstr "Bonjour"
 
-#: templates/postman/email_user.txt:3 templates/postman/email_visitor.txt:3
+#: teleforma/templates/postman/email_user.txt:3
+#: teleforma/templates/postman/email_visitor.txt:3
 #, python-format
 msgid "On %(date)s, you asked to send a message to the user '%(recipient)s'."
 msgstr ""
 
-#: templates/postman/email_user.txt:5 templates/postman/email_visitor.txt:5
+#: teleforma/templates/postman/email_user.txt:5
+#: teleforma/templates/postman/email_visitor.txt:5
 msgid "Your message has been rejected by the moderator"
 msgstr ""
 
-#: templates/postman/email_user.txt:5 templates/postman/email_visitor.txt:5
+#: teleforma/templates/postman/email_user.txt:5
+#: teleforma/templates/postman/email_visitor.txt:5
 msgid ", for the following reason:"
 msgstr ""
 
-#: templates/postman/email_user.txt:9 templates/postman/email_visitor.txt:10
+#: teleforma/templates/postman/email_user.txt:9
+#: teleforma/templates/postman/email_visitor.txt:10
 #, python-format
 msgid "On %(date)s, you sent a message to the user '%(sender)s'."
 msgstr ""
 
-#: templates/postman/email_user.txt:10
+#: teleforma/templates/postman/email_user.txt:10
 msgid "Your correspondent has given you an answer."
 msgstr ""
 
-#: templates/postman/email_user.txt:11
+#: teleforma/templates/postman/email_user.txt:11
 #, python-format
 msgid "You have received a copy of a response from the user '%(sender)s'."
 msgstr ""
 
-#: templates/postman/email_user.txt:13
+#: teleforma/templates/postman/email_user.txt:13
 #, python-format
 msgid "You have received a message from the user '%(sender)s'."
 msgstr ""
 
-#: templates/postman/email_user.txt:14
+#: teleforma/templates/postman/email_user.txt:14
 msgid ""
 "You can read and respond to this message from your e-learning desk following "
 "this link:"
@@ -1254,102 +1540,379 @@ msgstr ""
 "Vous pouvez lire et répondre à ce message depuis votre bureau e-learning en "
 "suivant ce lien :"
 
-#: templates/postman/email_user.txt:19 templates/postman/email_visitor.txt:14
+#: teleforma/templates/postman/email_user.txt:19
+#: teleforma/templates/postman/email_visitor.txt:14
 msgid "Thank you again for your interest in our services."
 msgstr ""
 
-#: templates/postman/email_user.txt:20
+#: teleforma/templates/postman/email_user.txt:20
+#: teleforma/templates/quiz/question.html:47
 msgid "of"
 msgstr "de"
 
-#: templates/postman/email_user_subject.txt:1
-#: templates/postman/email_visitor_subject.txt:1
+#: teleforma/templates/postman/email_user_subject.txt:1
+#: teleforma/templates/postman/email_visitor_subject.txt:1
 #, python-format
 msgid "Message \"%(subject)s\" on the site %(sitename)s"
 msgstr ""
 
-#: templates/postman/email_user_subject_init.txt:1
+#: teleforma/templates/postman/email_user_subject_init.txt:1
 #, python-format
 msgid "%(organization)s : initialization of your e-learning account"
 msgstr "%(organization)s : initialisation de votre compte e-learning"
 
-#: templates/postman/email_visitor.txt:1
+#: teleforma/templates/postman/email_visitor.txt:1
 msgid "Dear visitor,"
 msgstr ""
 
-#: templates/postman/email_visitor.txt:8
+#: teleforma/templates/postman/email_visitor.txt:8
 msgid "As a reminder, please find below the content of your message."
 msgstr ""
 
-#: templates/postman/email_visitor.txt:11
+#: teleforma/templates/postman/email_visitor.txt:11
 msgid "Please find below the answer from your correspondent."
 msgstr ""
 
-#: templates/postman/email_visitor.txt:15
+#: teleforma/templates/postman/email_visitor.txt:15
 msgid "For more comfort, we encourage you to open an account on the site."
 msgstr ""
 
-#: templates/postman/inbox.html:3
+#: teleforma/templates/postman/inbox.html:3
 #, fuzzy
 msgid "Received Messages"
 msgstr "Messages"
 
-#: templates/postman/inbox.html:6
+#: teleforma/templates/postman/inbox.html:6
 msgid "Received"
 msgstr ""
 
-#: templates/postman/reply.html:3 templates/postman/view.html:47
-#: templates/postman/view.html:50 templates/postman/view.html:53
+#: teleforma/templates/postman/reply.html:3
+#: teleforma/templates/postman/view.html:56
+#: teleforma/templates/postman/view.html:59
 msgid "Reply"
 msgstr ""
 
-#: templates/postman/sent.html:6
+#: teleforma/templates/postman/sent.html:6
 msgid "Sent"
 msgstr ""
 
-#: templates/postman/trash.html:3
+#: teleforma/templates/postman/trash.html:3
 #, fuzzy
 msgid "Deleted Messages"
 msgstr "Messages"
 
-#: templates/postman/trash.html:10
+#: teleforma/templates/postman/trash.html:10
 msgid ""
 "Messages in this folder can be removed from time to time. For long term "
 "storage, use instead the archive folder."
 msgstr ""
 
-#: templates/postman/view.html:9
+#: teleforma/templates/postman/view.html:9
 msgid "Conversation"
 msgstr ""
 
-#: templates/postman/view.html:9 templates/telemeta/inc/user_list.html:72
+#: teleforma/templates/postman/view.html:9
+#: teleforma/templates/teleforma/inc/user_list.html:72
 #, fuzzy
 msgid "Message"
 msgstr "Messages"
 
-#: templates/postman/view.html:25
+#: teleforma/templates/postman/view.html:33
 msgid ":"
 msgstr ""
 
-#: templates/postman/view.html:36
+#: teleforma/templates/postman/view.html:44
 msgid "Back"
 msgstr ""
 
-#: templates/postman/write.html:3 templates/telemeta/inc/user_list.html:28
+#: teleforma/templates/postman/write.html:3
+#: teleforma/templates/teleforma/inc/user_list.html:28
 msgid "Write"
 msgstr ""
 
-#: templates/registration/activate.html:3
-#: templates/registration/activation_complete.html:3
+#: teleforma/templates/quiz/category_list.html:3
+#: teleforma/templates/quiz/quiz_list.html:3
+#: teleforma/templates/quiz/sitting_list.html:3
+msgid "All Quizzes"
+msgstr ""
+
+#: teleforma/templates/quiz/category_list.html:6
+#, fuzzy
+#| msgid "categories"
+msgid "Category list"
+msgstr "catégories"
+
+#: teleforma/templates/quiz/correct_answer.html:6
+msgid "You answered the above question incorrectly"
+msgstr ""
+
+#: teleforma/templates/quiz/correct_answer.html:16
+msgid "This is the correct answer"
+msgstr ""
+
+#: teleforma/templates/quiz/correct_answer.html:23
+msgid "This was your answer."
+msgstr ""
+
+#: teleforma/templates/quiz/progress.html:6
+msgid "Progress Page"
+msgstr ""
+
+#: teleforma/templates/quiz/progress.html:7
+#, fuzzy
+#| msgid "User Profile"
+msgid "User Progress Page"
+msgstr "Profil utilisateur"
+
+#: teleforma/templates/quiz/progress.html:13
+msgid "Question Category Scores"
+msgstr ""
+
+#: teleforma/templates/quiz/progress.html:19
+#: teleforma/templates/quiz/quiz_detail.html:9
+#: teleforma/templates/quiz/quiz_list.html:13
+#: teleforma/templates/quiz/sitting_detail.html:10
+#, fuzzy
+#| msgid "category"
+msgid "Category"
+msgstr "catégorie"
+
+#: teleforma/templates/quiz/progress.html:20
+msgid "Correctly answererd"
+msgstr ""
+
+#: teleforma/templates/quiz/progress.html:21
+#, fuzzy
+#| msgid "corrector"
+msgid "Incorrect"
+msgstr "correcteur"
+
+#: teleforma/templates/quiz/progress.html:50
+msgid "Previous exam papers"
+msgstr ""
+
+#: teleforma/templates/quiz/progress.html:52
+msgid "Below are the results of exams that you have sat."
+msgstr ""
+
+#: teleforma/templates/quiz/progress.html:59
+#, fuzzy
+#| msgid "Title"
+msgid "Quiz Title"
+msgstr "Titre"
+
+#: teleforma/templates/quiz/progress.html:61
+msgid "Possible Score"
+msgstr ""
+
+#: teleforma/templates/quiz/question.html:13
+#: teleforma/templates/quiz/result.html:13
+msgid "The previous question"
+msgstr ""
+
+#: teleforma/templates/quiz/question.html:32
+#: teleforma/templates/quiz/result.html:21
+#: teleforma/templates/quiz/result.html:80
+#, fuzzy
+#| msgid "Enumeration"
+msgid "Explanation"
+msgstr "Enumération"
+
+#: teleforma/templates/quiz/question.html:52
+#, fuzzy
+#| msgid "Question"
+msgid "Question category"
+msgstr "Questions"
+
+#: teleforma/templates/quiz/question.html:74
+msgid "Check"
+msgstr ""
+
+#: teleforma/templates/quiz/quiz_detail.html:11
+msgid "You will only get one attempt at this quiz"
+msgstr ""
+
+#: teleforma/templates/quiz/quiz_detail.html:16
+msgid "Start quiz"
+msgstr "Démarrer le quiz"
+
+#: teleforma/templates/quiz/quiz_list.html:6
+msgid "List of quizzes"
+msgstr ""
+
+#: teleforma/templates/quiz/quiz_list.html:14
+msgid "Exam"
+msgstr ""
+
+#: teleforma/templates/quiz/quiz_list.html:15
+msgid "Single attempt"
+msgstr ""
+
+#: teleforma/templates/quiz/quiz_list.html:31
+#: teleforma/templates/quiz/sitting_list.html:42
+#, fuzzy
+#| msgid "location details"
+msgid "View details"
+msgstr "précisions lieu"
+
+#: teleforma/templates/quiz/quiz_list.html:41
+msgid "There are no available quizzes"
+msgstr ""
+
+#: teleforma/templates/quiz/result.html:7
+#, fuzzy
+#| msgid "Search Results"
+msgid "Exam Results for"
+msgstr "Résultats de recherche"
+
+#: teleforma/templates/quiz/result.html:32
+#, fuzzy
+#| msgid "Search Results"
+msgid "Exam results"
+msgstr "Résultats de recherche"
+
+#: teleforma/templates/quiz/result.html:34
+#, fuzzy
+#| msgid "title"
+msgid "Exam title"
+msgstr "titre"
+
+#: teleforma/templates/quiz/result.html:38
+#, fuzzy
+#| msgid "Your answer was"
+msgid "You answered"
+msgstr "Votre réponse est"
+
+#: teleforma/templates/quiz/result.html:38
+msgid "questions correctly out of"
+msgstr ""
+
+#: teleforma/templates/quiz/result.html:38
+msgid "giving you"
+msgstr ""
+
+#: teleforma/templates/quiz/result.html:38
+msgid "percent correct"
+msgstr ""
+
+#: teleforma/templates/quiz/result.html:59
+msgid "Your session score is"
+msgstr ""
+
+#: teleforma/templates/quiz/result.html:59
+msgid "out of a possible"
+msgstr ""
+
+#: teleforma/templates/quiz/result.html:77
+#, fuzzy
+#| msgid "Your answer was"
+msgid "Your answer"
+msgstr "Votre réponse est"
+
+#: teleforma/templates/quiz/single_complete.html:13
+msgid "You have already sat this exam and only one sitting is permitted"
+msgstr ""
+
+#: teleforma/templates/quiz/single_complete.html:15
+msgid "This exam is only accessible to signed in users"
+msgstr ""
+
+#: teleforma/templates/quiz/sitting_detail.html:5
+msgid "Result of"
+msgstr ""
+
+#: teleforma/templates/quiz/sitting_detail.html:5
+#, fuzzy
+#| msgid "format"
+msgid "for"
+msgstr "format"
+
+#: teleforma/templates/quiz/sitting_detail.html:9
+#, fuzzy
+#| msgid "title"
+msgid "Quiz title"
+msgstr "titre"
+
+#: teleforma/templates/quiz/sitting_detail.html:13
+#: teleforma/templates/quiz/sitting_list.html:13
+#: teleforma/templates/telemeta/inc/module_revisions.html:19
+msgid "User"
+msgstr ""
+
+#: teleforma/templates/quiz/sitting_detail.html:14
+#: teleforma/templates/quiz/sitting_list.html:15
+#, fuzzy
+#| msgid "incomplete"
+msgid "Completed"
+msgstr "incomplet"
+
+#: teleforma/templates/quiz/sitting_detail.html:22
+#, fuzzy
+#| msgid "answer"
+msgid "User answer"
+msgstr "réponse"
+
+#: teleforma/templates/quiz/sitting_detail.html:41
+#, fuzzy
+#| msgid "corrector"
+msgid "incorrect"
+msgstr "correcteur"
+
+#: teleforma/templates/quiz/sitting_detail.html:43
+#, fuzzy
+#| msgid "Corrector"
+msgid "Correct"
+msgstr "Correcteur"
+
+#: teleforma/templates/quiz/sitting_detail.html:49
+msgid "Toggle whether correct"
+msgstr ""
+
+#: teleforma/templates/quiz/sitting_list.html:6
+msgid "List of complete exams"
+msgstr ""
+
+#: teleforma/templates/quiz/sitting_list.html:14
+msgid "Quiz"
+msgstr ""
+
+#: teleforma/templates/quiz/sitting_list.html:28
+msgid "Filter"
+msgstr ""
+
+#: teleforma/templates/quiz/sitting_list.html:52
+msgid "There are no matching quizzes"
+msgstr ""
+
+#: teleforma/templates/quiz/view_quiz_category.html:3
+#, fuzzy
+#| msgid "item related media"
+msgid "Quizzes related to"
+msgstr "média associés à l'item"
+
+#: teleforma/templates/quiz/view_quiz_category.html:6
+msgid "Quizzes in the"
+msgstr ""
+
+#: teleforma/templates/quiz/view_quiz_category.html:6
+msgid "category"
+msgstr "catégorie"
+
+#: teleforma/templates/quiz/view_quiz_category.html:20
+msgid "There are no quizzes"
+msgstr ""
+
+#: teleforma/templates/registration/activate.html:3
+#: teleforma/templates/registration/activation_complete.html:3
 #, fuzzy
 msgid "Activation complete"
 msgstr "incomplet"
 
-#: templates/registration/activate.html:3
+#: teleforma/templates/registration/activate.html:3
 msgid "Activation problem"
 msgstr ""
 
-#: templates/registration/activate.html:7
+#: teleforma/templates/registration/activate.html:7
 #, python-format
 msgid ""
 "\n"
@@ -1358,13 +1921,13 @@ msgid ""
 "password you set at registration.\n"
 msgstr ""
 
-#: templates/registration/activate.html:12
+#: teleforma/templates/registration/activate.html:12
 msgid ""
 "Oops &ndash; it seems that your activation key is invalid.  Please check the "
 "url again."
 msgstr ""
 
-#: templates/registration/activation_complete.html:6
+#: teleforma/templates/registration/activation_complete.html:6
 #, python-format
 msgid ""
 "\n"
@@ -1373,7 +1936,7 @@ msgid ""
 "at registration.\n"
 msgstr ""
 
-#: templates/registration/activation_email.html:8
+#: teleforma/templates/registration/activation_email.html:8
 #, python-format
 msgid ""
 "<body>\n"
@@ -1386,10 +1949,10 @@ msgid ""
 "from our records.\n"
 "</p>\n"
 "<p>\n"
-"To activate this account, please click the following link within the next \n"
+"To activate this account, please click the following link within the next\n"
 "<b>%(expiration_days)s</b> days:<br/>\n"
-"<a href=\"http://%(sitedomain)s%(activation_key_url)s\">http://%(sitedomain)s"
-"%(activation_key_url)s</a>\n"
+"<a href=\"https://%(sitedomain)s%(activation_key_url)s\">https://"
+"%(sitedomain)s%(activation_key_url)s</a>\n"
 "</p>\n"
 "<p>\n"
 "Sincerely,<br/>\n"
@@ -1398,7 +1961,7 @@ msgid ""
 "</body>\n"
 msgstr ""
 
-#: templates/registration/activation_email.txt:3
+#: teleforma/templates/registration/activation_email.txt:3
 #, python-format
 msgid ""
 "\n"
@@ -1415,647 +1978,722 @@ msgid ""
 "%(sitename)s Management\n"
 msgstr ""
 
-#: templates/registration/activation_email_subject.txt:1
+#: teleforma/templates/registration/activation_email_subject.txt:1
 #, python-format
 msgid "Account registration for %(sitename)s"
 msgstr ""
 
-#: templates/registration/login.html:3
-#, fuzzy
-msgid "Login"
-msgstr "Se connecter en tant que"
-
-#: templates/registration/login.html:9 templates/telemeta/login.html:19
-msgid "Your username and password didn't match. Please try again."
-msgstr "Votre login et mot de passe ne correspondent pas. Veuillez réessayer."
-
-#: templates/registration/login.html:23
-#, python-format
-msgid ""
-"<a href=\"%(auth_pwd_reset_url)s\">Forgot</a> your password?\n"
-"    <a href=\"%(register_url)s\">Need an account</a>?"
+#: teleforma/templates/registration/logged_out.html:6
+msgid "Thanks for spending some quality time with the Web site today."
 msgstr ""
 
-#: templates/registration/login.html:26
-#, fuzzy
-msgid "login"
-msgstr "Se connecter en tant que"
+#: teleforma/templates/registration/logged_out.html:8
+msgid "Log in again"
+msgstr "Se reconnecter"
 
-#: templates/registration/logout.html:3
+#: teleforma/templates/registration/logout.html:3
 msgid "Logged out"
 msgstr ""
 
-#: templates/registration/logout.html:5
+#: teleforma/templates/registration/logout.html:5
 msgid "Successfully logged out!"
 msgstr ""
 
-#: templates/registration/password_change_done.html:3
-#, fuzzy
-msgid "Password changed"
-msgstr "Mot de passe initialisé"
+#: teleforma/templates/registration/password_change_done.html:3
+msgid "Documentation"
+msgstr "Documentation associée"
 
-#: templates/registration/password_change_done.html:5
-msgid "Password successfully changed!"
-msgstr ""
-
-#: templates/registration/password_change_form.html:3
-#: templates/registration/password_change_form.html:8
-#: templates/telemeta/profile_detail.html:49
+#: teleforma/templates/registration/password_change_done.html:3
+#: teleforma/templates/teleforma/profile_detail.html:49
 msgid "Change password"
 msgstr ""
 
-#: templates/registration/password_reset_complete.html:3
+#: teleforma/templates/registration/password_change_done.html:3
+msgid "Log out"
+msgstr "Déconnexion"
+
+#: teleforma/templates/registration/password_change_done.html:5
+msgid "Password change successful"
+msgstr "Mot de passe modifié avec succès"
+
+#: teleforma/templates/registration/password_change_done.html:9
+msgid "Your password was changed."
+msgstr "Votre mot de passe a été modifié."
+
+#: teleforma/templates/registration/password_change_form.html:3
+msgid "Password change"
+msgstr "Modification de mot de passe"
+
+#: teleforma/templates/registration/password_change_form.html:11
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Veuillez corriger l'erreur ci-dessous."
+msgstr[1] "Veuillez corriger les erreurs ci-dessous."
+
+#: teleforma/templates/registration/password_change_form.html:15
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+"Veuillez saisir votre ancien mot de passe pour des raisons de sécurité."
+
+#: teleforma/templates/registration/password_change_form.html:21
+msgid "Old password"
+msgstr "Ancien mot de passe"
+
+#: teleforma/templates/registration/password_change_form.html:26
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: teleforma/templates/registration/password_change_form.html:31
+msgid "Password (again)"
+msgstr "Mot de passe (encore)"
+
+#: teleforma/templates/registration/password_change_form.html:39
+#: teleforma/templates/registration/password_reset_confirm.html:20
+msgid "Change my password"
+msgstr "Changer mon mot de passe"
+
+#: teleforma/templates/registration/password_reset_complete.html:4
 #, fuzzy
 msgid "Password reset complete"
 msgstr "Réinitialisation du mot de passe"
 
-#: templates/registration/password_reset_complete.html:4
-#, python-format
-msgid ""
-"\n"
-"Your password has been reset!  You may now <a href=\"%(login_url)s\">log in</"
-"a>.\n"
+#: teleforma/templates/registration/password_reset_complete.html:7
+msgid "Your password has been set.  You may go ahead and log in now."
 msgstr ""
+"Votre mot de passe a été rédéfini. Vous pouvez désormais vous connecter."
 
-#: templates/registration/password_reset_confirm.html:3
-msgid "Confirm password reset"
-msgstr "Confirmation de la réinitialisation du mot de passe"
+#: teleforma/templates/registration/password_reset_complete.html:10
+msgid "Log in"
+msgstr "Se connecter"
 
-#: templates/registration/password_reset_confirm.html:5
-msgid "Enter your new password below to reset your password:"
-msgstr ""
-
-#: templates/registration/password_reset_confirm.html:9
-msgid "Set password"
-msgstr ""
-
-#: templates/registration/password_reset_done.html:3
-#: templates/telemeta/profile_detail.html:106
+#: teleforma/templates/registration/password_reset_confirm.html:4
+#: teleforma/templates/registration/password_reset_form.html:4
 msgid "Password reset"
 msgstr "Réinitialisation du mot de passe"
 
-#: templates/registration/password_reset_done.html:6
+#: teleforma/templates/registration/password_reset_confirm.html:8
 msgid ""
-"We have sent you an email with a link to reset your password.\n"
-"Please check your email and click the link to continue."
-msgstr ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr "Veuillez saisir votre nouveau mot de passe une seconde fois."
 
-#: templates/registration/password_reset_email.html:1
-msgid "Greetings"
-msgstr ""
+#: teleforma/templates/registration/password_reset_confirm.html:14
+msgid "New password:"
+msgstr "Nouveau mot de passe"
 
-#: templates/registration/password_reset_email.html:3
+#: teleforma/templates/registration/password_reset_confirm.html:16
+msgid "Confirm password:"
+msgstr "Confirmez votre mot de passe:"
+
+#: teleforma/templates/registration/password_reset_confirm.html:24
+msgid "Password reset unsuccessful"
+msgstr "Echec de la réinitialisation de mot de passe"
+
+#: teleforma/templates/registration/password_reset_confirm.html:25
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+"Le lien de réinitialisation de mot de passe est invalide. Probablement parce "
+"qu'il a déja été utilisé. Veuillez faire une nouvelle demande de changement "
+"de mot de passe."
+
+#: teleforma/templates/registration/password_reset_done.html:4
+msgid "Password reset successful"
+msgstr "Demande de réinitialisation de mot de passe envoyée"
+
+#: teleforma/templates/registration/password_reset_done.html:7
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
+msgstr ""
+"Nous vous avons envoyé des instructions sur l'adresse mail que vous nous "
+"avez indiqué pour définir un nouveau mot de passe. Vous devriez le recevoir "
+"dans les prochaines minutes."
+
+#: teleforma/templates/registration/password_reset_email.html:3
+msgid "You're receiving this e-mail because you requested a password reset"
+msgstr ""
+"Vous recevez cet e-mail car vous avez fait une demande de réinitialisation "
+"du mot de passe"
+
+#: teleforma/templates/registration/password_reset_email.html:4
 #, python-format
+msgid "for your user account at %(site_name)s"
+msgstr "de votre compte utilisateur du site %(site_name)s"
+
+#: teleforma/templates/registration/password_reset_email.html:6
+msgid "Please go to the following page and choose a new password:"
+msgstr "Veuillez suivre ce lien et choisir un nouveau mot de passe:"
+
+#: teleforma/templates/registration/password_reset_email.html:10
+msgid "Your username, in case you've forgotten:"
+msgstr "Votre login, au cas où vous l'auriez oublié:"
+
+#: teleforma/templates/registration/password_reset_form.html:7
 msgid ""
-"You are receiving this email because you (or someone pretending to be you)\n"
-"requested that your password be reset on the %(domain)s site.  If you do "
-"not \n"
-"wish to reset your password, please ignore this message.\n"
-"\n"
-"To reset your password, please click the following link, or copy and paste "
-"it\n"
-"into your web browser:"
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr ""
+"Vous avez oubliez votre mot de passe ? Veuillez saisir votre adresse e-mail "
+"et nous vous enverrons un email avec les instructions pour définir un "
+"nouveau mot de passe."
 
-#: templates/registration/password_reset_email.html:12
-#, python-format
-msgid ""
-"\n"
-"Your username, in case you've forgotten: %(username)s\n"
-"\n"
-"Best regards,\n"
-"%(site_name)s Management\n"
-msgstr ""
+#: teleforma/templates/registration/password_reset_form.html:11
+msgid "E-mail address:"
+msgstr "Adresse e-mail:"
 
-#: templates/registration/password_reset_form.html:3
-#: templates/registration/password_reset_form.html:10
-msgid "Reset password"
-msgstr ""
+#: teleforma/templates/registration/password_reset_form.html:11
+msgid "Reset my password"
+msgstr "Réinitialiser mon mot de passe"
 
-#: templates/registration/password_reset_form.html:4
-msgid ""
-"\n"
-"Forgot your password?  Enter your email in the form below and we'll send "
-"you\n"
-"instructions for creating a new one."
-msgstr ""
-
-#: templates/registration/registration_complete.html:6
-#: templates/registration/registration_pdf.html:13 views/crfpa.py:496
+#: teleforma/templates/registration/registration_complete.html:5
+#: teleforma/templates/registration/registration_corrector_complete.html:5
+#: teleforma/templates/registration/registration_corrector_pdf.html:13
+#: teleforma/templates/registration/registration_pdf.html:13
+#: teleforma/views/crfpa.py:806 teleforma/views/crfpa.py:972
+#: teleforma/views/crfpa.py:986
 msgid "Registration"
 msgstr "Inscription"
 
-#: templates/registration/registration_complete.html:23
-#: templates/teleforma/annals.html:73 templates/teleforma/course_media.html:64
-#: templates/teleforma/inc/document_list.html:22
-#: templates/teleforma/inc/media_list.html:56
-#: templates/teleforma/inc/media_list_pending.html:56
+#: teleforma/templates/registration/registration_complete.html:18
+#: teleforma/templates/teleforma/annals.html:72
+#: teleforma/templates/teleforma/course_media.html:57
+#: teleforma/templates/teleforma/course_media_transcoded.html:25
+#: teleforma/templates/teleforma/inc/document_list.html:23
+#: teleforma/templates/teleforma/inc/media_list.html:56
+#: teleforma/templates/teleforma/inc/media_list_pending.html:53
 msgid "Download"
 msgstr "Télécharger"
 
-#: templates/registration/registration_form.html:6
-msgid "Pre-registration"
-msgstr "Pré-inscription"
-
-#: templates/registration/registration_pdf.html:35
-msgid "Training registration"
-msgstr "Fiche d'inscription"
-
-#: templates/registration/registration_pdf.html:35
-#: templates/registration/registration_pdf.html:49
-msgid "Training"
-msgstr "Formation"
-
-#: templates/registration/registration_pdf.html:39
+#: teleforma/templates/registration/registration_corrector_pdf.html:35
+#: teleforma/templates/registration/registration_pdf.html:40
 msgid "First name"
 msgstr "Prénom"
 
-#: templates/registration/registration_pdf.html:40
+#: teleforma/templates/registration/registration_corrector_pdf.html:39
+#: teleforma/templates/registration/registration_pdf.html:44
 msgid "Last name"
 msgstr "Nom"
 
-#: templates/registration/registration_pdf.html:43
+#: teleforma/templates/registration/registration_corrector_pdf.html:51
+#: teleforma/templates/registration/registration_pdf.html:56
 msgid "E-mail"
 msgstr ""
 
-#: templates/registration/registration_pdf.html:44
-#: templates/telemeta/profile_detail.html:61
+#: teleforma/templates/registration/registration_corrector_pdf.html:55
+#: teleforma/templates/registration/registration_pdf.html:60
+#: teleforma/templates/teleforma/profile_detail.html:65
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: templates/registration/registration_pdf.html:45
-msgid "Birthday"
-msgstr "Date de naissance"
-
-#: templates/registration/registration_pdf.html:47
-msgid "Studying level"
-msgstr "Niveau d'étude"
-
-#: templates/registration/registration_pdf.html:50
-msgid "Training type"
-msgstr "Type de formation"
-
-#: templates/registration/registration_pdf.html:51
-msgid "Matière de procédure"
-msgstr ""
-
-#: templates/registration/registration_pdf.html:52
-msgid "Matière juridique de spécialité"
-msgstr ""
-
-#: templates/registration/registration_pdf.html:54
-msgid "Matière d'oral de langue"
-msgstr ""
-
-#: templates/registration/registration_pdf.html:57
+#: teleforma/templates/registration/registration_corrector_pdf.html:84
+#: teleforma/templates/registration/registration_pdf.html:105
 msgid "Registration date"
 msgstr "Date de pré-inscription"
 
-#: templates/registration/registration_pdf.html:58
+#: teleforma/templates/registration/registration_form.html:32
+msgid "Pre-registration"
+msgstr "Pré-inscription"
+
+#: teleforma/templates/registration/registration_pdf.html:35
+msgid "Training registration"
+msgstr "Fiche d'inscription"
+
+#: teleforma/templates/registration/registration_pdf.html:35
+#: teleforma/templates/registration/registration_pdf.html:77
+msgid "Training"
+msgstr "Formation"
+
+#: teleforma/templates/registration/registration_pdf.html:81
+msgid "Training type"
+msgstr "Type de formation"
+
+#: teleforma/templates/registration/registration_pdf.html:85
+msgid "Envoi postal des fascicules"
+msgstr ""
+
+#: teleforma/templates/registration/registration_pdf.html:89
+msgid "Matière de procédure"
+msgstr ""
+
+#: teleforma/templates/registration/registration_pdf.html:93
+msgid "Matière juridique de spécialité"
+msgstr ""
+
+#: teleforma/templates/registration/registration_pdf.html:98
+msgid "Matière d'oral de langue"
+msgstr ""
+
+#: teleforma/templates/registration/registration_pdf.html:109
 msgid "PROMO code"
 msgstr ""
 
-#: templates/teleforma/annals.html:6 templates/teleforma/annals.html:53
-#: templates/telemeta/base.html:113
+#: teleforma/templates/teleforma/annals.html:5
+#: teleforma/templates/teleforma/annals.html:52
+#: teleforma/templates/teleforma/base.html:103
+#: teleforma/templates/telemeta/base.html:116
 msgid "Annals"
 msgstr "Annales"
 
-#: templates/teleforma/annals.html:49
-#: templates/teleforma/inc/document_list.html:36
+#: teleforma/templates/teleforma/annals.html:48
+#: teleforma/templates/teleforma/inc/document_list.html:35
 msgid "No document"
 msgstr "Aucun document"
 
-#: templates/teleforma/annals.html:69
-#: templates/teleforma/inc/conference_list.html:18
-#: templates/teleforma/inc/document_list.html:20
+#: teleforma/templates/teleforma/annals.html:68
+#: teleforma/templates/teleforma/inc/conference_list.html:19
+#: teleforma/templates/teleforma/inc/document_list.html:21
+#: teleforma/webclass/templates/webclass/webclass_record.html:5
 msgid "View"
 msgstr "Voir"
 
-#: templates/teleforma/course.html:14
-#: templates/teleforma/inc/document_list.html:7
-msgid "Documents"
-msgstr "Supports écrits"
-
-#: templates/teleforma/course.html:17 templates/teleforma/course.html:33
-#: templates/teleforma/course_conference_audio.html:66
-#: templates/teleforma/course_document.html:73
-#: templates/teleforma/inc/conference_list.html:25
-#: templates/teleforma/inc/media_list.html:36
-#: templates/teleforma/inc/media_list_pending.html:36
-#: templates/telemeta/inc/module_revisions.html:17
-#: templates/telemeta/lists.html:69 templates/telemeta/search_criteria.html:97
-msgid "Title"
-msgstr "Titre"
-
-#: templates/teleforma/course.html:18 templates/teleforma/course.html:34
-msgid "Description"
-msgstr "Description"
-
-#: templates/teleforma/course.html:19 templates/teleforma/course.html:35
-#: templates/teleforma/course.html:52 templates/teleforma/course_media.html:149
-#: templates/telemeta/profile_detail.html:83
-msgid "Date added"
-msgstr "Date d'ajout"
-
-#: templates/teleforma/course.html:30
-msgid "Medias"
-msgstr "Médias"
-
-#: templates/teleforma/course.html:47
-msgid "Conferences"
-msgstr "Conférences"
-
-#: templates/teleforma/course.html:51
-#: templates/teleforma/course_conference.html:68
-#: templates/teleforma/course_conference_audio.html:67
-#: templates/teleforma/course_media.html:140
-#: templates/teleforma/course_media_video_embed.html:36
-#: templates/teleforma/inc/conference_list.html:28
-#: templates/teleforma/inc/media_list.html:39
-#: templates/teleforma/inc/media_list_pending.html:39
-#: templates/telemeta/inc/user_list.html:48
-msgid "Professor"
-msgstr "Professeur"
-
-#: templates/teleforma/course_conference.html:27
-#: templates/teleforma/course_conference_audio.html:25
-msgid "S T O P"
-msgstr "S T O P"
-
-#: templates/teleforma/course_conference.html:37
-#: templates/teleforma/course_media.html:76
-msgid "Audio"
-msgstr ""
-
-#: templates/teleforma/course_conference.html:72
-#: templates/teleforma/course_media.html:143
-#: templates/teleforma/course_media_video_embed.html:39
-#: templates/teleforma/inc/media_list.html:43
-#: templates/teleforma/inc/media_list_pending.html:43
-msgid "Comment"
-msgstr "Commentaire"
-
-#: templates/teleforma/course_conference.html:73
-#: templates/teleforma/course_media.html:144
-#: templates/teleforma/course_media_video_embed.html:40
-msgid "Begin date"
-msgstr "Date de début"
-
-#: templates/teleforma/course_conference.html:74
-#: templates/teleforma/course_media.html:145
-#: templates/teleforma/course_media_video_embed.html:41
-msgid "End date"
-msgstr "Date de fin"
-
-#: templates/teleforma/course_conference.html:75
-#: templates/teleforma/course_conference_audio.html:72
-msgid "Live"
-msgstr "Direct"
-
-#: templates/teleforma/course_conference.html:75
-#: templatetags/teleforma_tags.py:134
-msgid "Yes"
-msgstr "Oui"
-
-#: templates/teleforma/course_conference.html:76
-#: templates/teleforma/course_conference_audio.html:69
-#: templates/teleforma/course_media.html:146
-#: templates/teleforma/course_media_video_embed.html:42
-msgid "Room"
-msgstr "Salle"
-
-#: templates/teleforma/course_conference.html:78
-#: templates/teleforma/course_media.html:152
-msgid "Conference ID"
-msgstr "ID Conférence"
-
-#: templates/teleforma/course_conference_audio.html:36
-#: templates/teleforma/course_media.html:79
-msgid "Video"
-msgstr ""
-
-#: templates/teleforma/course_conference_audio.html:70
-#: templates/teleforma/inc/conference_list.html:30
-#: templates/teleforma/inc/media_list.html:41
-#: templates/teleforma/inc/media_list_pending.html:41
-msgid "Begin"
-msgstr "Début"
-
-#: templates/teleforma/course_conference_audio.html:71
-msgid "End"
-msgstr "Fin"
-
-#: templates/teleforma/course_conference_record.html:30
-#: templates/teleforma/courses.html:125
-msgid "Status"
-msgstr "Status"
-
-#: templates/teleforma/course_conference_record.html:41
-#: templates/teleforma/courses.html:42
-msgid "New conference"
-msgstr "Nouvelle conférence"
-
-#: templates/teleforma/course_conference_record.html:70
-msgid "Record and stream"
-msgstr "Enregistrer et diffuser"
-
-#: templates/teleforma/course_media.html:28
-#: templates/teleforma/course_media.html:82
-#: templates/teleforma/inc/media_list.html:50
-#: templates/teleforma/inc/media_list_pending.html:50
-msgid " published"
-msgstr " publié"
-
-#: templates/teleforma/course_media.html:35
-#: templates/teleforma/course_media.html:82
-#: templates/teleforma/inc/media_list.html:52
-#: templates/teleforma/inc/media_list_pending.html:52
-msgid " rejected"
-msgstr " rejeté"
-
-#: templates/teleforma/course_media.html:148
-msgid "Mime type"
-msgstr "Type mime"
-
-#: templates/teleforma/course_media.html:150
-msgid "Date modified"
-msgstr "Date de modification"
-
-#: templates/teleforma/course_media.html:151
-msgid "Media ID"
-msgstr "ID Média"
-
-#: templates/teleforma/course_media.html:153
-msgid "Web class group"
-msgstr ""
-
-#: templates/teleforma/courses.html:56
-msgid "My notes"
-msgstr "Mes notes"
-
-#: templates/teleforma/courses.html:66
-msgid "New note"
-msgstr "Nouvelle note"
-
-#: templates/teleforma/inc/conference_list.html:8
-msgid "Live conferences"
-msgstr "Conférences en direct"
-
-#: templates/teleforma/inc/conference_list.html:19
-#: templates/teleforma/inc/media_list.html:23
-#: templates/teleforma/inc/media_list.html:29
-#: templates/teleforma/inc/media_list_pending.html:23
-#: templates/teleforma/inc/media_list_pending.html:29
-msgid "Click here"
-msgstr "Cliquez ici"
-
-#: templates/teleforma/inc/media_list.html:17
-#: templates/teleforma/inc/media_list_pending.html:17
-msgid "Play"
-msgstr "Lire"
-
-#: templates/teleforma/inc/media_list_pending.html:8
-msgid "Passed conferences"
-msgstr "Conférences en différé"
-
-#: templates/telemeta/base.html:92 templates/telemeta/base.html:101
+#: teleforma/templates/teleforma/base.html:80
+#: teleforma/templates/teleforma/base.html:89
+#: teleforma/templates/telemeta/base.html:95
+#: teleforma/templates/telemeta/base.html:104
 msgid "Desk"
 msgstr "Bureau"
 
-#: templates/telemeta/base.html:106
+#: teleforma/templates/teleforma/base.html:94
+#: teleforma/templates/telemeta/base.html:109
 msgid "Home"
 msgstr "Accueil"
 
-#: templates/telemeta/base.html:111
+#: teleforma/templates/teleforma/base.html:99
+#: teleforma/templates/telemeta/base.html:114
 msgid "Messaging"
 msgstr "Messagerie"
 
-#: templates/telemeta/base.html:146
+#: teleforma/templates/teleforma/base.html:156
+#: teleforma/templates/telemeta/base.html:153
 msgid "Admin"
 msgstr ""
 
-#: templates/telemeta/base.html:154
+#: teleforma/templates/teleforma/base.html:167
+#: teleforma/templates/teleforma/base.html:176
+#: teleforma/templates/telemeta/base.html:162
+#: teleforma/templates/telemeta/base.html:171
 msgid "Profile"
 msgstr "Profil"
 
-#: templates/telemeta/base.html:156
-msgid "Lists"
-msgstr ""
-
-#: templates/telemeta/base.html:159
+#: teleforma/templates/teleforma/base.html:172
+#: teleforma/templates/teleforma/base.html:178
+#: teleforma/templates/telemeta/base.html:167
+#: teleforma/templates/telemeta/base.html:172
 msgid "Sign out"
 msgstr "Se déconnecter"
 
-#: templates/telemeta/base.html:201
+#: teleforma/templates/teleforma/base.html:236
+#: teleforma/templates/telemeta/base.html:222
 msgid "Powered by"
 msgstr ""
 
-#: templates/telemeta/base.html:211
+#: teleforma/templates/teleforma/base.html:247
+#: teleforma/templates/telemeta/base.html:232
 msgid "Legal notices"
 msgstr ""
 
-#: templates/telemeta/home.html:26
+#: teleforma/templates/teleforma/course.html:16
+#: teleforma/templates/teleforma/inc/document_list.html:9
+msgid "Documents"
+msgstr "Supports écrits"
+
+#: teleforma/templates/teleforma/course.html:20
+#: teleforma/templates/teleforma/course.html:37
+msgid "Description"
+msgstr "Description"
+
+#: teleforma/templates/teleforma/course.html:21
+#: teleforma/templates/teleforma/course.html:38
+#: teleforma/templates/teleforma/course.html:55
+#: teleforma/templates/teleforma/course_media.html:170
+#: teleforma/templates/teleforma/course_media_transcoded.html:105
+#: teleforma/templates/teleforma/profile_detail.html:91
+msgid "Date added"
+msgstr "Date d'ajout"
+
+#: teleforma/templates/teleforma/course.html:33
+msgid "Medias"
+msgstr "Médias"
+
+#: teleforma/templates/teleforma/course.html:50
+msgid "Conferences"
+msgstr "Conférences"
+
+#: teleforma/templates/teleforma/course.html:54
+#: teleforma/templates/teleforma/course_conference.html:109
+#: teleforma/templates/teleforma/course_conference_audio.html:66
+#: teleforma/templates/teleforma/course_media.html:162
+#: teleforma/templates/teleforma/course_media_transcoded.html:96
+#: teleforma/templates/teleforma/course_media_video_embed.html:35
+#: teleforma/templates/teleforma/inc/conference_list.html:29
+#: teleforma/templates/teleforma/inc/media_list.html:38
+#: teleforma/templates/teleforma/inc/media_list_pending.html:36
+#: teleforma/templates/teleforma/inc/user_list.html:48
+#: teleforma/webclass/templates/webclass/webclass_record.html:14
+msgid "Professor"
+msgstr "Professeur"
+
+#: teleforma/templates/teleforma/course_conference.html:50
+#: teleforma/templates/teleforma/course_conference_audio.html:24
+msgid "S T O P"
+msgstr "S T O P"
+
+#: teleforma/templates/teleforma/course_conference.html:60
+#: teleforma/templates/teleforma/course_media.html:70
+#: teleforma/templates/teleforma/course_media.html:72
+#: teleforma/templates/teleforma/course_media_transcoded.html:37
+msgid "Audio"
+msgstr ""
+
+#: teleforma/templates/teleforma/course_conference.html:112
+#: teleforma/templates/teleforma/course_media.html:164
+#: teleforma/templates/teleforma/course_media_transcoded.html:99
+#: teleforma/templates/teleforma/course_media_video_embed.html:37
+#: teleforma/templates/teleforma/inc/media_list.html:42
+#: teleforma/templates/teleforma/inc/media_list_pending.html:40
+msgid "Comment"
+msgstr "Commentaire"
+
+#: teleforma/templates/teleforma/course_conference.html:113
+#: teleforma/templates/teleforma/course_media.html:165
+#: teleforma/templates/teleforma/course_media_transcoded.html:100
+#: teleforma/templates/teleforma/course_media_video_embed.html:38
+msgid "Begin date"
+msgstr "Date de début"
+
+#: teleforma/templates/teleforma/course_conference.html:114
+#: teleforma/templates/teleforma/course_media.html:166
+#: teleforma/templates/teleforma/course_media_transcoded.html:101
+#: teleforma/templates/teleforma/course_media_video_embed.html:39
+msgid "End date"
+msgstr "Date de fin"
+
+#: teleforma/templates/teleforma/course_conference.html:115
+#: teleforma/templates/teleforma/course_conference_audio.html:71
+msgid "Live"
+msgstr "Direct"
+
+#: teleforma/templates/teleforma/course_conference.html:115
+#: teleforma/templatetags/teleforma_tags.py:146
+msgid "Yes"
+msgstr "Oui"
+
+#: teleforma/templates/teleforma/course_conference.html:116
+#: teleforma/templates/teleforma/course_conference_audio.html:68
+#: teleforma/templates/teleforma/course_media.html:167
+#: teleforma/templates/teleforma/course_media_transcoded.html:102
+#: teleforma/templates/teleforma/course_media_video_embed.html:40
+msgid "Room"
+msgstr "Salle"
+
+#: teleforma/templates/teleforma/course_conference.html:118
+#: teleforma/templates/teleforma/course_media.html:173
+#: teleforma/templates/teleforma/course_media_transcoded.html:108
+msgid "Conference ID"
+msgstr "ID Conférence"
+
+#: teleforma/templates/teleforma/course_conference_audio.html:35
+#: teleforma/templates/teleforma/course_media.html:76
+#: teleforma/templates/teleforma/course_media_transcoded.html:40
+msgid "Video"
+msgstr ""
+
+#: teleforma/templates/teleforma/course_conference_audio.html:69
+#: teleforma/templates/teleforma/inc/conference_list.html:31
+#: teleforma/templates/teleforma/inc/media_list.html:40
+#: teleforma/templates/teleforma/inc/media_list_pending.html:38
+#: teleforma/webclass/templates/webclass/webclass_record.html:17
+msgid "Begin"
+msgstr "Début"
+
+#: teleforma/templates/teleforma/course_conference_audio.html:70
+msgid "End"
+msgstr "Fin"
+
+#: teleforma/templates/teleforma/course_conference_record.html:23
+#: teleforma/templates/teleforma/courses.html:199
+msgid "Status"
+msgstr "Status"
+
+#: teleforma/templates/teleforma/course_conference_record.html:34
+#: teleforma/templates/teleforma/courses.html:35
+msgid "New conference"
+msgstr "Nouvelle conférence"
+
+#: teleforma/templates/teleforma/course_conference_record.html:63
+msgid "Record and stream"
+msgstr "Enregistrer et diffuser"
+
+#: teleforma/templates/teleforma/course_media.html:21
+#: teleforma/templates/teleforma/course_media.html:79
+#: teleforma/templates/teleforma/inc/media_list.html:49
+#: teleforma/templates/teleforma/inc/media_list_pending.html:47
+msgid " published"
+msgstr " publié"
+
+#: teleforma/templates/teleforma/course_media.html:28
+#: teleforma/templates/teleforma/course_media.html:79
+#: teleforma/templates/teleforma/inc/media_list.html:51
+#: teleforma/templates/teleforma/inc/media_list_pending.html:49
+msgid " rejected"
+msgstr " rejeté"
+
+#: teleforma/templates/teleforma/course_media.html:169
+#: teleforma/templates/teleforma/course_media_transcoded.html:104
+msgid "Mime type"
+msgstr "Type mime"
+
+#: teleforma/templates/teleforma/course_media.html:171
+#: teleforma/templates/teleforma/course_media_transcoded.html:106
+msgid "Date modified"
+msgstr "Date de modification"
+
+#: teleforma/templates/teleforma/course_media.html:172
+#: teleforma/templates/teleforma/course_media_transcoded.html:107
+msgid "Media ID"
+msgstr "ID Média"
+
+#: teleforma/templates/teleforma/course_media.html:174
+#: teleforma/templates/teleforma/course_media_transcoded.html:109
+msgid "Web class group"
+msgstr ""
+
+#: teleforma/templates/teleforma/courses.html:92
+#: teleforma/templates/teleforma/inc/media_list.html:18
+#: teleforma/templates/teleforma/inc/media_list_pending.html:17
+msgid "Play"
+msgstr "Lire"
+
+#: teleforma/templates/teleforma/courses.html:96
+#: teleforma/templates/teleforma/courses.html:100
+#: teleforma/templates/teleforma/inc/conference_list.html:20
+#: teleforma/templates/teleforma/inc/media_list.html:22
+#: teleforma/templates/teleforma/inc/media_list.html:26
+#: teleforma/templates/teleforma/inc/media_list_pending.html:21
+#: teleforma/templates/teleforma/inc/media_list_pending.html:25
+#: teleforma/templates/teleforma/inc/media_list_pending.html:27
+#: teleforma/webclass/templates/webclass/webclass_record.html:6
+msgid "Click here"
+msgstr "Cliquez ici"
+
+#: teleforma/templates/teleforma/home.html:25
+#: teleforma/templates/telemeta/home.html:26
 msgid "Connexion"
 msgstr ""
 
-#: templates/telemeta/inc/module_revisions.html:19
-msgid "User"
+#: teleforma/templates/teleforma/inc/conference_list.html:9
+msgid "Live conferences"
+msgstr "Conférences en direct"
+
+#: teleforma/templates/teleforma/inc/media_list.html:10
+msgid "Conférences en différé"
 msgstr ""
 
-#: templates/telemeta/inc/module_revisions.html:40
-#: templates/telemeta/lists.html:92
-msgid "deleted"
-msgstr ""
+#: teleforma/templates/teleforma/inc/media_list_pending.html:8
+msgid "Passed conferences"
+msgstr "Conférences en différé"
 
-#: templates/telemeta/inc/module_searches.html:12
+#: teleforma/templates/teleforma/inc/module_searches.html:11
 msgid "Criteria"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:22
-#: templates/telemeta/profile_detail.html:65 templates/telemeta/users.html:15
+#: teleforma/templates/teleforma/inc/user_list.html:22
+#: teleforma/templates/teleforma/profile_detail.html:69
+#: teleforma/templates/teleforma/users.html:14
 msgid "Trainings"
 msgstr "Formations"
 
-#: templates/telemeta/inc/user_list.html:23
-#: templates/telemeta/profile_detail.html:67
-msgid "Procedure"
-msgstr "Procédure"
-
-#: templates/telemeta/inc/user_list.html:24
-#: templates/telemeta/profile_detail.html:69
+#: teleforma/templates/teleforma/inc/user_list.html:24
+#: teleforma/templates/teleforma/profile_detail.html:73
 msgid "Written spe"
 msgstr "Ecrit Spé"
 
-#: templates/telemeta/inc/user_list.html:25
-#: templates/telemeta/profile_detail.html:68
+#: teleforma/templates/teleforma/inc/user_list.html:25
+#: teleforma/templates/teleforma/profile_detail.html:72
 msgid "Oral spe"
 msgstr "Oral Spé"
 
-#: templates/telemeta/inc/user_list.html:26
-#: templates/telemeta/profile_detail.html:70
+#: teleforma/templates/teleforma/inc/user_list.html:26
+#: teleforma/templates/teleforma/profile_detail.html:74
 msgid "Oral 1"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:27
-#: templates/telemeta/profile_detail.html:71
+#: teleforma/templates/teleforma/inc/user_list.html:27
+#: teleforma/templates/teleforma/profile_detail.html:75
 msgid "Oral 2"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:56
+#: teleforma/templates/teleforma/inc/user_list.html:56
 msgid "Administrator"
 msgstr ""
 
-#: templates/telemeta/inc/user_list.html:64
+#: teleforma/templates/teleforma/inc/user_list.html:64
 msgid "Unknown"
 msgstr ""
 
-#: templates/telemeta/lists.html:47
+#: teleforma/templates/teleforma/lists.html:47
 msgid "My playlists"
 msgstr ""
 
-#: templates/telemeta/lists.html:49
+#: teleforma/templates/teleforma/lists.html:49
 msgid "Add"
 msgstr ""
 
-#: templates/telemeta/lists.html:55
+#: teleforma/templates/teleforma/lists.html:55
 msgid "Edit"
 msgstr ""
 
-#: templates/telemeta/lists.html:71
+#: teleforma/templates/teleforma/lists.html:71
 msgid "Code"
 msgstr ""
 
-#: templates/telemeta/lists.html:72
+#: teleforma/templates/teleforma/lists.html:72
 msgid "Recordist"
 msgstr "Opérateur d'enregistrement"
 
-#: templates/telemeta/lists.html:73
+#: teleforma/templates/teleforma/lists.html:73
 msgid "Recording period"
 msgstr "période d'enregistrement"
 
-#: templates/telemeta/lists.html:74 templates/telemeta/search_criteria.html:149
+#: teleforma/templates/teleforma/lists.html:74
+#: teleforma/templates/teleforma/search_criteria.html:148
 msgid "Sound"
 msgstr "Sonore"
 
-#: templates/telemeta/login.html:29
+#: teleforma/templates/teleforma/lists.html:92
+#: teleforma/templates/telemeta/inc/module_revisions.html:40
+msgid "deleted"
+msgstr ""
+
+#: teleforma/templates/teleforma/login.html:19
+msgid "Your username and password didn't match. Please try again."
+msgstr "Votre login et mot de passe ne correspondent pas. Veuillez réessayer."
+
+#: teleforma/templates/teleforma/login.html:29
 msgid "Password forgotten"
 msgstr "Mot de passe oublié ?"
 
-#: templates/telemeta/login.html:30
+#: teleforma/templates/teleforma/login.html:30
 msgid "Sign in"
 msgstr "Connexion"
 
-#: templates/telemeta/profile_detail.html:6
+#: teleforma/templates/teleforma/profile_detail.html:6
 msgid "User Profile"
 msgstr "Profil utilisateur"
 
-#: templates/telemeta/profile_detail.html:16
+#: teleforma/templates/teleforma/profile_detail.html:16
 msgid "His courses"
 msgstr "Ses matières"
 
-#: templates/telemeta/profile_detail.html:36
-msgid "Send a message"
-msgstr "Envoyer un message"
-
-#: templates/telemeta/profile_detail.html:44
+#: teleforma/templates/teleforma/profile_detail.html:44
+#: teleforma/views/profile.py:75
 msgid "User profile"
 msgstr "Profil utilisateur"
 
-#: templates/telemeta/profile_detail.html:51
+#: teleforma/templates/teleforma/profile_detail.html:51
 msgid "Login as"
 msgstr "Se connecter en tant que"
 
-#: templates/telemeta/profile_detail.html:66
+#: teleforma/templates/teleforma/profile_detail.html:70
 msgid "Platform only"
 msgstr "Plateforme seulement"
 
-#: templates/telemeta/profile_detail.html:72
+#: teleforma/templates/teleforma/profile_detail.html:76
 msgid "Options"
 msgstr "Options"
 
-#: templates/telemeta/profile_detail.html:76
+#: teleforma/templates/teleforma/profile_detail.html:80
 msgid "Email"
 msgstr ""
 
-#: templates/telemeta/profile_detail.html:80
+#: teleforma/templates/teleforma/profile_detail.html:88
 msgid "WiFi password"
 msgstr "Mot de passe WiFi"
 
-#: templates/telemeta/profile_detail.html:84
+#: teleforma/templates/teleforma/profile_detail.html:93
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
-#: templates/telemeta/profile_detail.html:85
+#: teleforma/templates/teleforma/profile_detail.html:95
 msgid "Last login"
 msgstr "Dernière connexion"
 
-#: templates/telemeta/profile_detail.html:96
+#: teleforma/templates/teleforma/profile_detail.html:106
 msgid "Apply"
 msgstr "Appliquer"
 
-#: templates/telemeta/search_criteria.html:5
-#: templates/telemeta/search_criteria.html:76
+#: teleforma/templates/teleforma/search_criteria.html:4
+#: teleforma/templates/teleforma/search_criteria.html:75
 msgid "Advanced Search"
 msgstr ""
 
-#: templates/telemeta/search_criteria.html:69
+#: teleforma/templates/teleforma/search_criteria.html:68
 msgid "Search"
 msgstr "Recherche"
 
-#: templates/telemeta/search_criteria.html:113
+#: teleforma/templates/teleforma/search_criteria.html:112
 msgid "Year of recording"
 msgstr ""
 
-#: templates/telemeta/search_criteria.html:120
-#: templates/telemeta/search_criteria.html:139
+#: teleforma/templates/teleforma/search_criteria.html:119
+#: teleforma/templates/teleforma/search_criteria.html:138
 msgid "to"
 msgstr "à"
 
-#: templates/telemeta/search_criteria.html:132
+#: teleforma/templates/teleforma/search_criteria.html:131
 #, fuzzy
 msgid "Year of publication"
 msgstr "obligation"
 
-#: templates/telemeta/users.html:6 templates/telemeta/users.html:69
+#: teleforma/templates/teleforma/users.html:5
+#: teleforma/templates/teleforma/users.html:68
 msgid "Users"
 msgstr ""
 
-#: templates/telemeta/users.html:41
+#: teleforma/templates/teleforma/users.html:40
 msgid "Courses"
 msgstr "Matières"
 
-#: templates/telemeta/users.html:74
+#: teleforma/templates/teleforma/users.html:73
 msgid "No users"
 msgstr "Pas d'utilisateurs"
 
-#: templatetags/teleforma_tags.py:63
+#: teleforma/templates/telemeta/base.html:164
+msgid "Lists"
+msgstr ""
+
+#: teleforma/templatetags/teleforma_tags.py:62
 msgid "General tweeter"
 msgstr "Tweeter général"
 
-#: templatetags/teleforma_tags.py:64
+#: teleforma/templatetags/teleforma_tags.py:63
 msgid "Local tweeter"
 msgstr "Tweeter local"
 
-#: templatetags/teleforma_tags.py:129
+#: teleforma/templatetags/teleforma_tags.py:140
 msgid "me"
 msgstr "moi"
 
-#: templatetags/teleforma_tags.py:136
+#: teleforma/templatetags/teleforma_tags.py:148
 msgid "No"
 msgstr "Non"
 
-#: views/core.py:156
+#: teleforma/views/core.py:142
 msgid "Access not allowed."
 msgstr "Accès non autorisé."
 
-#: views/core.py:157
+#: teleforma/views/core.py:144 teleforma/views/profile.py:77
 msgid ""
 "Please login or contact the website administator to get a private access."
 msgstr ""
 "Merci de vous connecter ou bien contactez l'administateur du site pour "
 "obtenir un accès privé."
 
-#: views/core.py:270
+#: teleforma/views/core.py:316
 msgid ""
 "You do NOT have access to this resource and then have been redirected to "
 "your desk."
@@ -2063,13 +2701,62 @@ msgstr ""
 "Vous n'avez pas accès à cette ressource et avez été redirigé vers votre "
 "bureau."
 
-#: views/core.py:618
-msgid "A new live conference has started : "
-msgstr "Une nouvelle conférence en direct a commencé : "
+#: teleforma/views/profile.py:74
+msgid "Access not allowed"
+msgstr "Accès non autorisé"
 
-#: views/crfpa.py:423
-msgid "You have successfully register your account."
+#: teleforma/webclass/models.py:119
+msgid "BBB server"
 msgstr ""
+
+#: teleforma/webclass/models.py:120
+msgid "BBB servers"
+msgstr ""
+
+#: teleforma/webclass/models.py:163 teleforma/webclass/models.py:164
+msgid "webclass"
+msgstr ""
+
+#: teleforma/webclass/models.py:201
+msgid "participants"
+msgstr ""
+
+#: teleforma/webclass/models.py:213
+msgid "webclass slot"
+msgstr ""
+
+#~ msgid "credit card"
+#~ msgstr "carte de crédit"
+
+#~ msgid "collected"
+#~ msgstr "encaissé"
+
+#~ msgid "to an administrator"
+#~ msgstr "à un administrateur"
+
+#~ msgid "to a professor"
+#~ msgstr "à un professeur"
+
+#, fuzzy
+#~ msgid "Login"
+#~ msgstr "Se connecter en tant que"
+
+#, fuzzy
+#~ msgid "login"
+#~ msgstr "Se connecter en tant que"
+
+#, fuzzy
+#~ msgid "Password changed"
+#~ msgstr "Mot de passe initialisé"
+
+#~ msgid "Confirm password reset"
+#~ msgstr "Confirmation de la réinitialisation du mot de passe"
+
+#~ msgid "My notes"
+#~ msgstr "Mes notes"
+
+#~ msgid "New note"
+#~ msgstr "Nouvelle note"
 
 #, fuzzy
 #~| msgid "Grouped message"
@@ -2095,9 +2782,6 @@ msgstr ""
 
 #~ msgid "Validate"
 #~ msgstr "Validée"
-
-#~ msgid "Correctors"
-#~ msgstr "Correcteurs"
 
 #~ msgid "Treated"
 #~ msgstr "Traitées"
@@ -2127,9 +2811,6 @@ msgstr ""
 #~ msgid "to an IEJ"
 #~ msgstr "à un IEJ"
 
-#~ msgid "Duration"
-#~ msgstr "Durée"
-
 #~ msgid "obligation"
 #~ msgstr "obligation"
 
@@ -2144,12 +2825,6 @@ msgstr ""
 
 #~ msgid "Differed"
 #~ msgstr "Différé"
-
-#~ msgid "category"
-#~ msgstr "catégorie"
-
-#~ msgid "categories"
-#~ msgstr "catégories"
 
 #~ msgid "speciality"
 #~ msgstr "spécialité"
@@ -2181,1376 +2856,753 @@ msgstr ""
 #~ msgid "course types"
 #~ msgstr "types de matières"
 
-#: templates/quiz/quiz_detail.html:16
-msgid "Start quiz"
-msgstr "Démarrer le quiz"
-
-msgid "Your answer was"
-msgstr "Votre réponse est"
-
-#: models/core.py:150
-msgid "Enter a valid duration in HH:MM[:ss] format."
-msgstr "Entrez une durée valide au format HH:MM[:ss]"
-
-#: models/enum.py:59 models/media.py:261
-msgid "archive format"
-msgstr "format du support"
-
-#: models/enum.py:66 models/media.py:243
-msgid "secondary edition"
-msgstr "réédition"
-
-#: models/enum.py:73 models/media.py:237
-msgid "mode of acquisition"
-msgstr "mode d'acquisition"
-
-#: models/enum.py:81 models/media.py:240
-msgid "record author"
-msgstr "rédacteur fiche"
-
-#: models/enum.py:88 models/media.py:247
-msgid "record writer"
-msgstr "saisie fiche"
-
-#: models/enum.py:95 models/media.py:233
-msgid "legal rights"
-msgstr "droit d'utilisation"
-
-#: models/enum.py:102 models/media.py:211
-msgid "recording context"
-msgstr "contexte d'enregistrement"
-
-#: models/enum.py:109
-msgid "A/D conversion"
-msgstr "Conversion A/N"
-
-#: models/enum.py:116 models/media.py:377
-msgid "vernacular style"
-msgstr "style vernaculaire"
-
-#: models/enum.py:123 models/media.py:379
-msgid "generic style"
-msgstr "style générique"
-
-#: models/enum.py:130 models/media.py:534
-msgid "keyword"
-msgstr "Mot-clé"
-
-#: models/enum.py:137 models/media.py:222
-msgid "publisher / status"
-msgstr "éditeur / statut"
-
-#: models/enum.py:143
-msgid "publisher"
-msgstr "éditeur"
-
-#: models/enum.py:159 models/enum.py:165 models/media.py:367
-msgid "population / social group"
-msgstr "population / groupe social"
-
-#: models/enum.py:180 models/format.py:77
-msgid "tape wheel diameter (cm)"
-msgstr "diamètre de bobine (cm)"
-
-#: models/enum.py:187
-msgid "tape length (cm)"
-msgstr "longueur de bande (cm)"
-
-#: models/enum.py:194
-msgid "tape width (inch)"
-msgstr "largeur de bande (pouce)"
-
-#: models/enum.py:201 models/format.py:80
-msgid "tape speed (cm/s)"
-msgstr "vitesse de bande (cm/s)"
-
-#: models/enum.py:208 models/format.py:82
-msgid "tape vendor"
-msgstr "marque de bande"
-
-#: models/enum.py:215 models/format.py:71
-msgid "number of channels"
-msgstr "Nombre de pistes"
-
-#: models/enum.py:229 models/media.py:388
-msgid "rights"
-msgstr "droits"
-
-#: models/enum.py:236 models/media.py:358
-msgid "topic"
-msgstr "discipline"
-
-#: models/format.py:58 models/media.py:447 models/media.py:506
-#: models/media.py:533 models/media.py:544 models/media.py:560
-#: models/media.py:581 models/media.py:627 models/media.py:652
-#: models/media.py:686
-msgid "item"
-msgstr "item"
-
-#: models/format.py:61
-msgid "physical format"
-msgstr "nature du support original"
-
-#: models/format.py:62 models/media.py:393
-msgid "original code"
-msgstr "cote originale"
-
-#: models/format.py:63
-msgid "original number"
-msgstr "numéro de support"
-
-#: models/format.py:64
-msgid "original status"
-msgstr "statut de l'original"
-
-#: models/format.py:65
-msgid "technical properties / conservation state"
-msgstr "état de conservation"
-
-#: models/format.py:66
-msgid "comments / notes"
-msgstr "commentaires / notes"
-
-#: models/format.py:68
-msgid "original location"
-msgstr "lieu d'archivage"
-
-#: models/format.py:72
-msgid "audio quality"
-msgstr "qualité audio"
-
-#: models/format.py:73
-msgid "recording system"
-msgstr "système d'enregistrement"
-
-#: models/format.py:78
-msgid "tape thickness (um)"
-msgstr "épaisseur de bande (um)"
-
-#: models/format.py:83
-msgid "tape reference"
-msgstr "référence de bande"
-
-#: models/format.py:84
-msgid "sticker presence"
-msgstr "présence de collants"
-
-#: models/format.py:88
-msgid "format"
-msgstr "format"
-
-#: models/instrument.py:57
-msgid "instrument aliases"
-msgstr "instrument aliases"
-
-#: models/instrument.py:65 models/instrument.py:82
-msgid "instrument"
-msgstr "instrument"
-
-#: models/instrument.py:67
-msgid "parent instrument"
-msgstr "instrument parent"
-
-#: models/instrument.py:80 models/location.py:171
-msgid "alias"
-msgstr "alias"
-
-#: models/language.py:48 models/location.py:157
-msgid "identifier"
-msgstr "identifiant"
-
-#: models/language.py:49
-msgid "equivalent ISO 639-2 identifier (bibliographic)"
-msgstr "identifiant ISO 639-2 équivalent (bibliographique)"
-
-#: models/language.py:50
-msgid "equivalent ISO 639-2 identifier (terminologic)"
-msgstr "identifiant ISO 639-2 équivalent (terminologique)"
-
-#: models/language.py:51
-msgid "equivalent ISO 639-1 identifier"
-msgstr "identifiant ISO 639-1 équivalent"
-
-#: models/language.py:52
-msgid "scope"
-msgstr "cadre"
-
-#: models/language.py:63
-msgid "languages"
-msgstr "langues"
-
-#: models/location.py:49
-msgid "country"
-msgstr "état/nation"
-
-#: models/location.py:49
-msgid "continent"
-msgstr "continent"
-
-#: models/location.py:53
-msgid "complete type"
-msgstr "type complet"
-
-#: models/location.py:55
-msgid "current location"
-msgstr "lieu actuel"
-
-#: models/location.py:58 models/location.py:172 models/location.py:188
-msgid "authoritative"
-msgstr "officiel"
-
-#: models/location.py:112 models/location.py:170 models/location.py:185
-#: models/media.py:363
-msgid "location"
-msgstr "lieu"
-
-#: models/location.py:113
-msgid "locations"
-msgstr "lieux"
-
-#: models/location.py:166
-msgid "location types"
-msgstr "types de lieux"
-
-#: models/location.py:180
-msgid "location aliases"
-msgstr "lieux alias"
-
-#: models/location.py:186
-msgid "ancestor location"
-msgstr "lieu ancêtre"
-
-#: models/location.py:194
-msgid "location relations"
-msgstr "lieux relations"
-
-#: models/media.py:78 models/media.py:81 models/media.py:441
-msgid "none"
-msgstr "accès réservé"
-
-#: models/media.py:78 models/media.py:81
-msgid "metadata"
-msgstr "métadonnées"
-
-#: models/media.py:79
-msgid "mixed"
-msgstr "mixte"
-
-#: models/media.py:79 models/media.py:82
-msgid "full"
-msgstr "complet"
-
-#: models/media.py:84
-msgid "broken"
-msgstr "cassé"
-
-#: models/media.py:84
-msgid "processing"
-msgstr "en cours"
-
-#: models/media.py:85
-msgid "done"
-msgstr "fait"
-
-#: models/media.py:85
-msgid "ready"
-msgstr "prêt"
-
-#: models/media.py:102
-msgid "Metadata only"
-msgstr "Métadonnées uniquement"
-
-#: models/media.py:104
-msgid "Sound and metadata"
-msgstr "Son et métadonnées"
-
-#: models/media.py:106
-msgid "Private data"
-msgstr "Données privées"
-
-#: models/media.py:107 models/media.py:126
-msgid "public access"
-msgstr "accès public"
-
-#: models/media.py:153 models/media.py:631 models/media.py:654
-#: models/media.py:688 models/system.py:116
-msgid "date"
-msgstr ""
-
-#: models/media.py:155 models/media.py:653 models/media.py:687
-msgid "mime_type"
-msgstr "type mime"
-
-#: models/media.py:156
-msgid "url"
-msgstr ""
-
-#: models/media.py:206
-msgid "reference"
-msgstr "référence"
-
-#: models/media.py:208 models/media.py:351
-msgid "original title / translation"
-msgstr "titre original / traduction"
-
-#: models/media.py:209
-msgid "depositor / contributor"
-msgstr "déposant / contributeur"
-
-#: models/media.py:212 models/media.py:770
-msgid "recording year (from)"
-msgstr "année d'enregistrement (depuis)"
-
-#: models/media.py:213 models/media.py:771
-msgid "recording year (until)"
-msgstr "année d'enregistrement (jusqu'à)"
-
-#: models/media.py:214
-msgid "year published"
-msgstr "année de parution"
-
-#: models/media.py:220 models/media.py:395
-msgid "recordist"
-msgstr "collecteur"
-
-#: models/media.py:224
-msgid "publisher collection"
-msgstr "collection éditeur"
-
-#: models/media.py:225
-msgid "publisher serial number"
-msgstr "numéro dans la série"
-
-#: models/media.py:226
-msgid "author of published notice"
-msgstr "auteur de la notice éditée"
-
-#: models/media.py:227
-msgid "bibliographic references"
-msgstr "références bibliographiques"
-
-#: models/media.py:229 models/media.py:385
-msgid "access status"
-msgstr "statut d'accès"
-
-#: models/media.py:231 models/media.py:389
-msgid "automatic access after a rolling period"
-msgstr "Accès automatique après la data glissante"
-
-#: models/media.py:238
-msgid "CNRS depositor"
-msgstr "déposant CNRS"
-
-#: models/media.py:241
-msgid "related documentation"
-msgstr "documentation associée"
-
-#: models/media.py:244
-msgid "copies"
-msgstr "autres exemplaires"
-
-#: models/media.py:248
-msgid "archiver notes"
-msgstr "notes de l'archiviste"
-
-#: models/media.py:249
-msgid "items finished"
-msgstr "fiches items faites"
-
-#: models/media.py:250
-msgid "recordist identical to depositor"
-msgstr "collecteur identique au déposant"
-
-#: models/media.py:252
-msgid "conservation site"
-msgstr "lieu de conservation"
-
-#: models/media.py:257
-msgid "old code"
-msgstr "ancienne cote"
-
-#: models/media.py:259
-msgid "number of components (medium / piece)"
-msgstr "nb de composants (support / pièce)"
-
-#: models/media.py:263
-msgid "digitization"
-msgstr "numérisation"
-
-#: models/media.py:265
-msgid "a_informer_07_03"
-msgstr "a_informer_07_03"
-
-#: models/media.py:300
-msgid "states / nations"
-msgstr "états / nations"
-
-#: models/media.py:314
-msgid "populations / social groups"
-msgstr "populations / groupes sociaux"
-
-#: models/media.py:322 models/media.py:473
-msgid "computed duration"
-msgstr "durée calculée"
-
-#: models/media.py:330 models/media.py:336 models/media.py:353
-msgid "collection"
-msgstr "collection"
-
-#: models/media.py:340 models/media.py:341
-msgid "collection related media"
-msgstr "média associés à la collection"
-
-#: models/media.py:354
-msgid "recording date (from)"
-msgstr "date d'enregistrement (depuis)"
-
-#: models/media.py:355
-msgid "recording date (until)"
-msgstr "date d'enregistrement (jusqu'à)"
-
-#: models/media.py:357
-msgid "scientist"
-msgstr "reponsable scientifique"
-
-#: models/media.py:359
-msgid "summary"
-msgstr "résumé"
-
-#: models/media.py:360
-msgid "remarks"
-msgstr "remarques"
-
-#: models/media.py:364
-msgid "location details"
-msgstr "précisions lieu"
-
-#: models/media.py:365
-msgid "cultural area"
-msgstr "aire culturelle"
-
-#: models/media.py:368
-msgid "language"
-msgstr "langue"
-
-#: models/media.py:370
-msgid "ISO language"
-msgstr "Langue ISO"
-
-#: models/media.py:372
-msgid "comments / ethnographic context"
-msgstr "commentaires / contexte ethnographique"
-
-#: models/media.py:373
-msgid "moda_execut"
-msgstr "moda_execut"
-
-#: models/media.py:380
-msgid "author / compositor"
-msgstr "auteur / compositeur"
-
-#: models/media.py:381
-msgid "contributor"
-msgstr "intervenant"
-
-#: models/media.py:387
-msgid "depositor"
-msgstr "déposant"
-
-#: models/media.py:394
-msgid "item number"
-msgstr "n° de l'item"
-
-#: models/media.py:396
-msgid "digitalist"
-msgstr "opérateur de numérisation"
-
-#: models/media.py:397
-msgid "collector"
-msgstr "collecteur"
-
-#: models/media.py:398
-msgid "collector selection"
-msgstr "sélection collecteur"
-
-#: models/media.py:399
-msgid "collector as in collection"
-msgstr "collecteur identique à la collection"
-
-#: models/media.py:400
-msgid "digitization date"
-msgstr "date de numérisation"
-
-#: models/media.py:401
-msgid "publishing date"
-msgstr "date de création du support édité"
-
-#: models/media.py:402
-msgid "creator reference"
-msgstr "référence"
-
-#: models/media.py:403
-msgid "published references"
-msgstr "références éditées"
-
-#: models/media.py:405
-msgid "copy of"
-msgstr "copie de"
-
-#: models/media.py:500
-msgid "instruments"
-msgstr "instruments"
-
-#: models/media.py:527 models/media.py:528
-msgid "item related media"
-msgstr "média associés à l'item"
-
-#: models/media.py:546
-msgid "composition"
-msgstr "Voix / Instruments"
-
-#: models/media.py:548
-msgid "vernacular name"
-msgstr "nom vernaculaire"
-
-#: models/media.py:550
-msgid "interprets"
-msgstr "interprètes"
-
-#: models/media.py:561
-msgid "id"
-msgstr ""
-
-#: models/media.py:564
-msgid "unit"
-msgstr "unité"
-
-#: models/media.py:583
-msgid "start"
-msgstr "début"
-
-#: models/media.py:584
-msgid "end"
-msgstr "fin"
-
-#: models/media.py:588
-msgid "item part"
-msgstr "partie"
-
-#: models/media.py:614
-msgid "playlist"
-msgstr "liste de lecture"
-
-#: models/media.py:615
-msgid "resource_type"
-msgstr "type de ressource"
-
-#: models/media.py:616
-msgid "resource_id"
-msgstr "ressource"
-
-#: models/media.py:629
-msgid "time (s)"
-msgstr "temps (s)"
-
-#: models/media.py:689
-msgid "transcoded"
-msgstr "transcodé"
-
-#: models/media.py:769
-msgid "collections"
-msgstr "collections"
-
-#: models/media.py:781 models/media.py:782 models/media.py:792
-#: models/media.py:809
-msgid "corpus"
-msgstr "corpus"
-
-#: models/media.py:802 models/media.py:803 models/media.py:820
-msgid "fonds"
-msgstr "fonds"
-
-#: models/media.py:813 models/media.py:814
-msgid "corpus related media"
-msgstr "média associés"
-
-#: models/media.py:824 models/media.py:825
-msgid "fonds related media"
-msgstr "média associés"
-
-#: models/system.py:52
-msgid "element type"
-msgstr "type d'élément"
-
-#: models/system.py:53
-msgid "element identifier"
-msgstr "identifiant de l'élément"
-
-#: models/system.py:54
-msgid "modification type"
-msgstr "type de modification"
-
-#: models/system.py:55
-msgid "time"
-msgstr "heure"
-
-#: models/system.py:87 templates/telemeta/profile_detail.html:46
-msgid "Attachment"
-msgstr "Rattachement"
-
-#: models/system.py:88 templates/telemeta/profile_detail.html:45
-msgid "Function"
-msgstr "Fonction"
-
-#: models/system.py:103
-msgid "key"
-msgstr "clé"
-
-#: models/system.py:119
-msgid "criteria"
-msgstr "critères"
-
-#: templates/admin/base_site.html:4
-msgid "Telemta site admin"
-msgstr ""
-
-#: templates/admin/base_site.html:7
-msgid "Telemeta administration"
-msgstr "Administration Telemeta"
-
-#: templates/postman/email_user.txt:1
-msgid "Dear user,"
-msgstr ""
-
-#: templates/telemeta/admin_enumerations.html:6
-#: templates/telemeta/base.html:118 templates/telemeta/enumeration_edit.html:7
-msgid "Enumerations"
-msgstr "Énumérations"
-
-#: templates/telemeta/admin_enumerations.html:24
-msgid "No enumerations"
-msgstr "Aucune énumération"
-
-#: templates/telemeta/base.html:55
-msgid "Welcome"
-msgstr "Bienvenue"
-
-#: templates/telemeta/base.html:101 templates/telemeta/breadcrumbs.html:4
-#: templates/telemeta/inc/breadcrumbs.html:5
-msgid "Fonds"
-msgstr ""
-
-#: templates/telemeta/base.html:102 templates/telemeta/breadcrumbs.html:5
-#: templates/telemeta/inc/breadcrumbs.html:6
-msgid "Corpus"
-msgstr ""
-
-#: templates/telemeta/base.html:103 templates/telemeta/breadcrumbs.html:6
-#: templates/telemeta/inc/breadcrumbs.html:7
-msgid "Collections"
-msgstr "Collections"
-
-#: templates/telemeta/base.html:104 templates/telemeta/breadcrumbs.html:7
-#: templates/telemeta/inc/breadcrumbs.html:8
-msgid "Items"
-msgstr "Items"
-
-#: templates/telemeta/base.html:108 templates/telemeta/home.html:25
-msgid "Geo Navigator"
-msgstr "Géo-Navigateur"
-
-#: templates/telemeta/base.html:110
-msgid "Advanced search"
-msgstr "Recherche avancée"
-
-#: templates/telemeta/base.html:119 templates/telemeta/instrument_edit.html:4
-#: templates/telemeta/instrument_edit.html:7
-#: templates/telemeta/instrument_edit_value.html:24
-msgid "Instruments"
-msgstr "Instruments"
-
-#: templates/telemeta/base.html:156
-msgid "By"
-msgstr "Par"
-
-#: templates/telemeta/base.html:161
-msgid ""
-"Usage of the archives in the respect of cultural heritage of the original "
-"communities."
-msgstr ""
-"Usage des archives réservé dans le respect du patrimoine culturel des "
-"communautés d'origine."
-
-#: templates/telemeta/collection_add.html:10
-#: templates/telemeta/collection_add.html:32
-#: templates/telemeta/collection_edit.html:9
-#: templates/telemeta/collection_edit.html:35
-#: templates/telemeta/collection_related_edit.html:12
-#: templates/telemeta/collection_related_edit.html:41
-#: templates/telemeta/enumeration_edit_value.html:37
-#: templates/telemeta/enumeration_edit_value.html:59
-#: templates/telemeta/instrument_edit_value.html:38
-#: templates/telemeta/instrument_edit_value.html:60
-#: templates/telemeta/mediaitem_add.html:14
-#: templates/telemeta/mediaitem_add.html:50
-#: templates/telemeta/mediaitem_copy.html:16
-#: templates/telemeta/mediaitem_copy.html:58
-#: templates/telemeta/mediaitem_edit.html:11
-#: templates/telemeta/mediaitem_edit.html:70
-#: templates/telemeta/mediaitem_keywords_edit.html:12
-#: templates/telemeta/mediaitem_keywords_edit.html:40
-#: templates/telemeta/mediaitem_performances_edit.html:12
-#: templates/telemeta/mediaitem_performances_edit.html:44
-#: templates/telemeta/mediaitem_related_edit.html:12
-#: templates/telemeta/mediaitem_related_edit.html:40
-#: templates/telemeta/profile_edit.html:6
-#: templates/telemeta/profile_edit.html:29
-#: templates/telemeta/resource_add.html:10
-#: templates/telemeta/resource_add.html:35
-#: templates/telemeta/resource_edit.html:9
-#: templates/telemeta/resource_edit.html:36
-#: templates/telemeta/resource_related_edit.html:12
-#: templates/telemeta/resource_related_edit.html:40
-msgid "Cancel"
-msgstr "Annuler"
-
-#: templates/telemeta/collection_add.html:12
-#: templates/telemeta/collection_add.html:34
-#: templates/telemeta/collection_edit.html:11
-#: templates/telemeta/collection_edit.html:37
-#: templates/telemeta/collection_related_edit.html:14
-#: templates/telemeta/collection_related_edit.html:43
-#: templates/telemeta/enumeration_edit_value.html:35
-#: templates/telemeta/instrument_edit_value.html:36
-#: templates/telemeta/mediaitem_add.html:16
-#: templates/telemeta/mediaitem_add.html:53
-#: templates/telemeta/mediaitem_copy.html:18
-#: templates/telemeta/mediaitem_copy.html:59
-#: templates/telemeta/mediaitem_edit.html:13
-#: templates/telemeta/mediaitem_edit.html:72
-#: templates/telemeta/mediaitem_keywords_edit.html:13
-#: templates/telemeta/mediaitem_keywords_edit.html:41
-#: templates/telemeta/mediaitem_performances_edit.html:13
-#: templates/telemeta/mediaitem_performances_edit.html:45
-#: templates/telemeta/mediaitem_related_edit.html:13
-#: templates/telemeta/mediaitem_related_edit.html:41
-#: templates/telemeta/profile_edit.html:31
-#: templates/telemeta/resource_add.html:12
-#: templates/telemeta/resource_add.html:37
-#: templates/telemeta/resource_edit.html:11
-#: templates/telemeta/resource_edit.html:38
-#: templates/telemeta/resource_related_edit.html:13
-#: templates/telemeta/resource_related_edit.html:41
-msgid "Save"
-msgstr "Enregistrer"
-
-#: templates/telemeta/collection_detail.html:5
-#: templates/telemeta/collection_detail_dc.html:5 views/collection.py:50
-msgid "Collection"
-msgstr "Collection"
-
-#: templates/telemeta/collection_detail.html:45
-#: templates/telemeta/mediaitem_detail.html:96
-#: templates/telemeta/resource_detail.html:46
-msgid "Copy"
-msgstr "Copier"
-
-#: templates/telemeta/collection_detail.html:46
-msgid "Add item"
-msgstr "Ajouter item"
-
-#: templates/telemeta/collection_detail.html:49
-#: templates/telemeta/mediaitem_detail.html:99
-#: templates/telemeta/resource_detail.html:49
-msgid "Add to playlist"
-msgstr "Ajouter à la liste"
-
-#: templates/telemeta/collection_detail.html:60
-msgid "Listen to this collection"
-msgstr "Écouter la collection"
-
-#: templates/telemeta/collection_detail.html:109
-#: templates/telemeta/mediaitem_detail.html:216
-msgid "Geographic and cultural informations"
-msgstr "Indications géographiques et culturelles"
-
-#: templates/telemeta/collection_detail.html:136
-msgid "Bibliographic references"
-msgstr "Références bibliographiques"
-
-#: templates/telemeta/collection_detail.html:151
-#: templates/telemeta/mediaitem_detail.html:276
-msgid "Archiving data"
-msgstr "Données d'archivage"
-
-#: templates/telemeta/collection_detail.html:157
-msgid "Related documentation"
-msgstr "Documentation associée"
-
-#: templates/telemeta/collection_detail.html:175
-#: templates/telemeta/mediaitem_detail.html:293
-msgid "Technical data"
-msgstr "Données techniques"
-
-#: templates/telemeta/collection_detail.html:180
-#: templates/telemeta/mediaitem_detail.html:296
-msgid "Media type"
-msgstr "Type de media"
-
-#: templates/telemeta/collection_detail.html:185
-#: templates/telemeta/geo_countries.html:16
-msgid "Number of items"
-msgstr "Nombre d'items"
-
-#: templates/telemeta/collection_detail_dc.html:12
-#: templates/telemeta/collection_detail_dc.html:22
-#: templates/telemeta/mediaitem_detail_dc.html:17
-#: templates/telemeta/resource_detail_dc.html:14
-msgid "Normal View"
-msgstr "Vue normale"
-
-#: templates/telemeta/collection_detail_dc.html:30
-msgid "No such collection"
-msgstr "Aucune collection de ce type"
-
-#: templates/telemeta/collection_edit.html:30
-#: templates/telemeta/mediaitem_edit.html:61
-#: templates/telemeta/resource_edit.html:31
-#: templates/telemeta/inc/collection_related.html:6
-#: templates/telemeta/inc/mediaitem_related.html:6
-#: templates/telemeta/inc/resource_related.html:6
-msgid "Related media"
-msgstr "Média associés"
-
-#: templates/telemeta/collection_edit.html:31
-#: templates/telemeta/mediaitem_edit.html:62
-#: templates/telemeta/resource_edit.html:32
-msgid "related media"
-msgstr "média associés"
-
-#: templates/telemeta/collection_list.html:5
-#: templates/telemeta/collection_list.html:8
-msgid "Media Collections"
-msgstr "Collections"
-
-#: templates/telemeta/collection_list.html:13
-#: templates/telemeta/mediaitem_list.html:13
-msgid "Unpublished"
-msgstr "Inédites"
-
-#: templates/telemeta/collection_list.html:14
-#: templates/telemeta/mediaitem_list.html:14
-msgid "Published"
-msgstr "Éditées"
-
-#: templates/telemeta/collection_list.html:15
-#: templates/telemeta/mediaitem_list.html:15
-#: templates/telemeta/search_results.html:14
-#: templates/telemeta/search_results.html:18
-msgid "Sounds"
-msgstr "Sonores"
-
-#: templates/telemeta/collection_related_edit.html:25
-#: templates/telemeta/mediaitem_related_edit.html:24
-#: templates/telemeta/resource_related_edit.html:24
-#: templates/telemeta/inc/collection_related.html:12
-#: templates/telemeta/inc/mediaitem_related.html:12
-#: templates/telemeta/inc/resource_related.html:12
-msgid "Media"
-msgstr "Média"
-
-#: templates/telemeta/country_info.html:9
-msgid "in"
-msgstr "dans"
-
-#: templates/telemeta/country_info.html:18
-msgid "Populations / Social groups"
-msgstr "Populations / Groupes sociaux"
-
-#: templates/telemeta/enumeration_edit.html:4
-msgid "Enumeration"
-msgstr "Enumération"
-
-#: templates/telemeta/enumeration_edit.html:15
-#: templates/telemeta/instrument_edit.html:14
-msgid "Add entry"
-msgstr "Ajouter une entrée"
-
-#: templates/telemeta/enumeration_edit.html:51
-msgid "This enumeration is empty"
-msgstr "Cette énumération est vide"
-
-#: templates/telemeta/enumeration_edit_value.html:28
-#: templates/telemeta/instrument_edit_value.html:28
-msgid "Modify an entry"
-msgstr "Modification d'une entrée"
-
-#: templates/telemeta/enumeration_edit_value.html:45
-#: templates/telemeta/instrument_edit_value.html:46
-msgid "Replace by"
-msgstr "Remplacer par"
-
-#: templates/telemeta/enumeration_edit_value.html:52
-#: templates/telemeta/instrument_edit_value.html:53
-msgid "delete value after replacing"
-msgstr "effacer la valeur après remplacement"
-
-#: templates/telemeta/enumeration_edit_value.html:57
-#: templates/telemeta/instrument_edit_value.html:58
-msgid "Replace"
-msgstr "Remplacement"
-
-#: templates/telemeta/geo_continents.html:5
-#: templates/telemeta/geo_continents.html:20
-#: templates/telemeta/geo_countries.html:5
-#: templates/telemeta/geo_country_collections.html:5
-#: templates/telemeta/geo_country_items.html:5
-msgid "Geographic Navigator"
-msgstr "Navigateur géographique"
-
-#: templates/telemeta/geo_continents.html:25
-msgid "Map"
-msgstr "Carte"
-
-#: templates/telemeta/geo_continents.html:26
-msgid "List"
-msgstr "Liste"
-
-#: templates/telemeta/geo_countries.html:8
-#: templates/telemeta/geo_country_collections.html:8
-#: templates/telemeta/geo_country_items.html:8
-msgid "World"
-msgstr "Monde"
-
-#: templates/telemeta/geo_countries.html:15
-msgid "Number of collections"
-msgstr "Nombre de collections"
-
-#: templates/telemeta/geo_countries.html:24
-#, python-format
-msgid "1 collection"
-msgid_plural "%(counter)s collections"
-msgstr[0] "1 collection"
-msgstr[1] "%(counter)s collections"
-
-#: templates/telemeta/geo_countries.html:31
-#, python-format
-msgid "1 item"
-msgid_plural "%(counter)s items "
-msgstr[0] "1 item"
-msgstr[1] "%(counter)s items "
-
-#: templates/telemeta/home.html:14 templates/telemeta/home.html.py:62
-msgid "Musical selection"
-msgstr "Sélection musicale"
-
-#: templates/telemeta/home.html:28
-msgid "Open the geographic navigator"
-msgstr "Accéder au navigateur géographique"
-
-#: templates/telemeta/home.html:39
-msgid "Partners"
-msgstr "Partenaires"
-
-#: templates/telemeta/instrument_edit.html:16
-#: templates/telemeta/instrument_edit.html:30
-#: templates/telemeta/instrument_edit_value.html:30
-msgid "Name"
-msgstr "Nom"
-
-#: templates/telemeta/instrument_edit.html:48
-msgid "This instrument list is empty"
-msgstr "Cette énumération est vide"
-
-#: templates/telemeta/mediaitem_add.html:5
-#: templates/telemeta/mediaitem_copy.html:5
-#: templates/telemeta/mediaitem_detail.html:5 views/item.py:111
-msgid "Item"
-msgstr "Item"
-
-#: templates/telemeta/mediaitem_add.html:38
-#: templates/telemeta/mediaitem_copy.html:44
-#: templates/telemeta/mediaitem_edit.html:42
-msgid "Collection access status"
-msgstr "Statut d'accès de la collection"
-
-#: templates/telemeta/mediaitem_add.html:39
-#: templates/telemeta/mediaitem_copy.html:45
-#: templates/telemeta/mediaitem_edit.html:43
-msgid "Context access status"
-msgstr "Statut d'accès selon le profil"
-
-#: templates/telemeta/mediaitem_add.html:40
-#: templates/telemeta/mediaitem_copy.html:46
-#: templates/telemeta/mediaitem_edit.html:44
-msgid "Item access status"
-msgstr "Statut d'accès de l'item"
-
-#: templates/telemeta/mediaitem_detail.html:101
-#: templates/telemeta/paginator.html:5
-msgid "Previous"
-msgstr "Précédent"
-
-#: templates/telemeta/mediaitem_detail.html:102
-#: templates/telemeta/paginator.html:23
-msgid "Next"
-msgstr "Suivant"
-
-#: templates/telemeta/mediaitem_detail.html:152
-msgid "Analysis"
-msgstr "Analyse"
-
-#: templates/telemeta/mediaitem_detail.html:154
-msgid "Markers"
-msgstr "Marqueurs"
-
-#: templates/telemeta/mediaitem_detail.html:162
-msgid "Property"
-msgstr "Propriété"
-
-#: templates/telemeta/mediaitem_detail.html:164
-msgid "Unit"
-msgstr "Unité"
-
-#: templates/telemeta/mediaitem_detail.html:172
-msgid "Download:"
-msgstr "Téléchargement:"
-
-#: templates/telemeta/mediaitem_detail.html:185
-msgid "You don't have access to the media of this item."
-msgstr "Vous n'avez pas accès aux médias de cet item."
-
-#: templates/telemeta/mediaitem_detail.html:185
-msgid "Please contact the administrators to get more rights."
-msgstr "Contactez les administrateurs du site pour obtenir plus de droits."
-
-#: templates/telemeta/mediaitem_detail.html:201
-msgid "Recording date"
-msgstr "Date d'enregistrement"
-
-#: templates/telemeta/mediaitem_detail.html:218
-#: templates/telemeta/inc/mediaitem_list.html:18
-msgid "Location"
-msgstr "Lieu"
-
-#: templates/telemeta/mediaitem_detail.html:224
-msgid "Language ISO"
-msgstr "Langue ISO"
-
-#: templates/telemeta/mediaitem_detail.html:228
-msgid "Ethnographic context"
-msgstr "Contexte ethnographique"
-
-#: templates/telemeta/mediaitem_detail.html:239
-msgid "Musical informations"
-msgstr "Informations sur la musique"
-
-#: templates/telemeta/mediaitem_detail.html:282
-msgid "Published references"
-msgstr "Références éditées"
-
-#: templates/telemeta/mediaitem_detail.html:284
-msgid "Remarks"
-msgstr "Remarques"
-
-#: templates/telemeta/mediaitem_detail_dc.html:13
-msgid "No such item"
-msgstr "Item introuvable"
-
-#: templates/telemeta/mediaitem_edit.html:53
-msgid "Keywords"
-msgstr "Mots-clés"
-
-#: templates/telemeta/mediaitem_edit.html:57
-#: templates/telemeta/mediaitem_performances_edit.html:25
-msgid "Performance"
-msgstr "Composition"
-
-#: templates/telemeta/mediaitem_edit.html:58
-msgid "performance"
-msgstr "composition"
-
-#: templates/telemeta/mediaitem_keywords_edit.html:24
-msgid "Keyword"
-msgstr "Mot-clé"
-
-#: templates/telemeta/mediaitem_list.html:5
-#: templates/telemeta/mediaitem_list.html:8
-msgid "Media Items"
-msgstr "Items"
-
-#: templates/telemeta/profile_detail.html:16
-msgid "Playlists"
-msgstr "Listes de lecture"
-
-#: templates/telemeta/profile_detail.html:51
-msgid "Is staff"
-msgstr "Statut équipe"
-
-#: templates/telemeta/profile_detail.html:52
-msgid "Is superuser"
-msgstr "Statut super-utilisateur"
-
-#: templates/telemeta/resource_add.html:6
-msgid "New"
-msgstr "Nouveau"
-
-#: templates/telemeta/resource_detail.html:109
-#: templates/telemeta/resource_detail_dc.html:22
-msgid "No such resource"
-msgstr "Aucune ressource de ce type"
-
-#: templates/telemeta/search_results.html:5
-#: templates/telemeta/search_results.html:8
-msgid "Search Results"
-msgstr "Résultats de recherche"
-
-#: templates/telemeta/search_results.html:26
-msgid "Search pattern"
-msgstr "Mots clés"
-
-#: templates/telemeta/inc/children_list.html:8
-#, python-format
-msgid ""
-"%(resource.children_type|capitalize)s %(first_on_page)s to %(last_on_page)s "
-"on %(hits)s"
-msgstr ""
-"%(resource.children_type|capitalize)s %(first_on_page)s à %(last_on_page)s "
-"sur %(hits)s"
-
-#: templates/telemeta/inc/children_list.html:18
-#: templates/telemeta/inc/resource_list.html:16
-msgid "Reference"
-msgstr "Référence"
-
-#: templates/telemeta/inc/children_list.html:41
-#: templates/telemeta/inc/resource_list.html:30
-msgid "No resource"
-msgstr "Aucune ressource"
-
-#: templates/telemeta/inc/collection_list.html:7
-#, python-format
-msgid "Collections %(first_on_page)s to %(last_on_page)s on %(hits)s"
-msgstr "Collections %(first_on_page)s à %(last_on_page)s sur %(hits)s"
-
-#: templates/telemeta/inc/collection_list.html:47
-msgid "No collection"
-msgstr "Aucune collection"
-
-#: templates/telemeta/inc/collection_related.html:13
-#: templates/telemeta/inc/mediaitem_related.html:13
-#: templates/telemeta/inc/resource_related.html:13
-msgid "Preview"
-msgstr "Prévisualisation"
-
-#: templates/telemeta/inc/collection_related.html:41
-#: templates/telemeta/inc/mediaitem_related.html:41
-#: templates/telemeta/inc/resource_related.html:41
-msgid "Credits"
-msgstr "Crédits"
-
-#: templates/telemeta/inc/dublincore.html:4
-msgid "Dublin Core Metadata"
-msgstr "Métadonnées Dublin Core"
-
-#: templates/telemeta/inc/mediaitem_list.html:7
-#, python-format
-msgid "Items %(first_on_page)s to %(last_on_page)s on %(hits)s"
-msgstr "Items %(first_on_page)s à %(last_on_page)s sur %(hits)s"
-
-#: templates/telemeta/inc/mediaitem_list.html:20
-msgid "Country/Continent"
-msgstr "Etat/Continent"
-
-#: templates/telemeta/inc/mediaitem_list.html:58
-msgid "No item"
-msgstr "Aucun item"
-
-#: templates/telemeta/inc/resource_list.html:7
-#, python-format
-msgid " from %(first_on_page)s to %(last_on_page)s on %(hits)s"
-msgstr " de %(first_on_page)s à %(last_on_page)s sur %(hits)s"
-
-#: templates/telemeta/inc/user_list.html:10
-msgid "Groups"
-msgstr "Groupes"
-
-#: templates/telemeta/registration/logged_out.html:6
-msgid "Thanks for spending some quality time with the Web site today."
-msgstr ""
-
-#: templates/telemeta/registration/logged_out.html:8
-msgid "Log in again"
-msgstr "Se reconnecter"
-
-#: templates/telemeta/registration/password_change_done.html:3
-#: templates/telemeta/registration/password_change_form.html:4
-msgid "Documentation"
-msgstr "Documentation associée"
-
-#: templates/telemeta/registration/password_change_done.html:3
-#: templates/telemeta/registration/password_change_form.html:4
-msgid "Log out"
-msgstr "Déconnexion"
-
-#: templates/telemeta/registration/password_change_done.html:5
-msgid "Password change successful"
-msgstr "Mot de passe modifié avec succès"
-
-#: templates/telemeta/registration/password_change_done.html:9
-msgid "Your password was changed."
-msgstr "Votre mot de passe a été modifié."
-
-#: templates/telemeta/registration/password_change_form.html:6
-msgid "Password change"
-msgstr "Modification de mot de passe"
-
-#: templates/telemeta/registration/password_change_form.html:14
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "Veuillez corriger l'erreur ci-dessous."
-msgstr[1] "Veuillez corriger les erreurs ci-dessous."
-
-#: templates/telemeta/registration/password_change_form.html:18
-msgid ""
-"Please enter your old password, for security's sake, and then enter your new "
-"password twice so we can verify you typed it in correctly."
-msgstr "Veuillez saisir votre ancien mot de passe pour des raisons de sécurité."
-
-#: templates/telemeta/registration/password_change_form.html:24
-msgid "Old password"
-msgstr "Ancien mot de passe"
-
-#: templates/telemeta/registration/password_change_form.html:29
-msgid "New password"
-msgstr "Nouveau mot de passe"
-
-#: templates/telemeta/registration/password_change_form.html:34
-msgid "Password (again)"
-msgstr "Mot de passe (encore)"
-
-#: templates/telemeta/registration/password_change_form.html:42
-#: templates/telemeta/registration/password_reset_confirm.html:20
-msgid "Change my password"
-msgstr "Changer mon mot de passe"
-
-#: templates/telemeta/registration/password_reset_complete.html:7
-msgid "Your password has been set.  You may go ahead and log in now."
-msgstr "Votre mot de passe a été rédéfini. Vous pouvez désormais vous connecter."
-
-#: templates/telemeta/registration/password_reset_complete.html:10
-msgid "Log in"
-msgstr "Se connecter"
-
-#: templates/telemeta/registration/password_reset_confirm.html:8
-msgid ""
-"Please enter your new password twice so we can verify you typed it in "
-"correctly."
-msgstr "Veuillez saisir votre nouveau mot de passe une seconde fois."
-
-#: templates/telemeta/registration/password_reset_confirm.html:14
-msgid "New password:"
-msgstr "Nouveau mot de passe"
-
-#: templates/telemeta/registration/password_reset_confirm.html:16
-msgid "Confirm password:"
-msgstr "Confirmez votre mot de passe:"
-
-#: templates/telemeta/registration/password_reset_confirm.html:24
-msgid "Password reset unsuccessful"
-msgstr "Echec de la réinitialisation de mot de passe"
-
-#: templates/telemeta/registration/password_reset_confirm.html:25
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
-msgstr "Le lien de réinitialisation de mot de passe est invalide. Probablement parce qu'il a déja été utilisé. Veuillez faire une nouvelle demande de changement de mot de passe."
-
-#: templates/telemeta/registration/password_reset_done.html:4
-msgid "Password reset successful"
-msgstr "Demande de réinitialisation de mot de passe envoyée"
-
-#: templates/telemeta/registration/password_reset_done.html:7
-msgid ""
-"We've e-mailed you instructions for setting your password to the e-mail "
-"address you submitted. You should be receiving it shortly."
-msgstr "Nous vous avons envoyé des instructions sur l'adresse mail que vous nous avez indiqué pour définir un nouveau mot de passe. Vous devriez le recevoir dans les prochaines minutes."
-
-#: templates/telemeta/registration/password_reset_email.html:3
-msgid "You're receiving this e-mail because you requested a password reset"
-msgstr ""
-"Vous recevez cet e-mail car vous avez fait une demande de réinitialisation "
-"du mot de passe"
-
-#: templates/telemeta/registration/password_reset_email.html:4
-#, python-format
-msgid "for your user account at %(site_name)s"
-msgstr "de votre compte utilisateur du site %(site_name)s"
-
-#: templates/telemeta/registration/password_reset_email.html:6
-msgid "Please go to the following page and choose a new password:"
-msgstr "Veuillez suivre ce lien et choisir un nouveau mot de passe:"
-
-#: templates/telemeta/registration/password_reset_email.html:10
-msgid "Your username, in case you've forgotten:"
-msgstr "Votre login, au cas où vous l'auriez oublié:"
-
-#: templates/telemeta/registration/password_reset_form.html:7
-msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
-"instructions for setting a new one."
-msgstr "Vous avez oubliez votre mot de passe ? Veuillez saisir votre adresse e-mail et nous vous enverrons un email avec les instructions pour définir un nouveau mot de passe."
-
-#: templates/telemeta/registration/password_reset_form.html:11
-msgid "E-mail address:"
-msgstr "Adresse e-mail:"
-
-#: templates/telemeta/registration/password_reset_form.html:11
-msgid "Reset my password"
-msgstr "Réinitialiser mon mot de passe"
-
-#: templatetags/telemeta_utils.py:259
-#, python-format
-msgid "%(count)d item"
-msgid_plural "%(count)d items"
-msgstr[0] "%(count)d item"
-msgstr[1] "%(count)d items"
-
-#: templatetags/telemeta_utils.py:262
-#, python-format
-msgid "%(count)d collection"
-msgid_plural "%(count)d collections"
-msgstr[0] "%(count)d collection"
-msgstr[1] "%(count)d collections"
-
-#: util/locale_fix.py:5
-msgid "My last changes"
-msgstr "Mes dernières modifications"
-
-#: util/locale_fix.py:6
-msgid "All last changes"
-msgstr "Toutes les dernières modifications"
-
-#: util/locale_fix.py:7
-msgid "My searches"
-msgstr "Mes recherches"
-
-#: util/locale_fix.py:8
-msgid "Children"
-msgstr "Enfants"
-
-#: util/locale_fix.py:9
-msgid "pattern"
-msgstr "mots clés"
-
-#: views/collection.py:49 views/home.py:90 views/item.py:110 views/item.py:488
-#: views/profile.py:68
-msgid "Access not allowed"
-msgstr "Accès non autorisé"
-
-#: views/feed.py:45
-msgid "Last changes"
-msgstr "Dernières modifications"
+#~ msgid "archive format"
+#~ msgstr "format du support"
+
+#~ msgid "secondary edition"
+#~ msgstr "réédition"
+
+#~ msgid "mode of acquisition"
+#~ msgstr "mode d'acquisition"
+
+#~ msgid "record author"
+#~ msgstr "rédacteur fiche"
+
+#~ msgid "record writer"
+#~ msgstr "saisie fiche"
+
+#~ msgid "legal rights"
+#~ msgstr "droit d'utilisation"
+
+#~ msgid "recording context"
+#~ msgstr "contexte d'enregistrement"
+
+#~ msgid "A/D conversion"
+#~ msgstr "Conversion A/N"
+
+#~ msgid "vernacular style"
+#~ msgstr "style vernaculaire"
+
+#~ msgid "generic style"
+#~ msgstr "style générique"
+
+#~ msgid "keyword"
+#~ msgstr "Mot-clé"
+
+#~ msgid "publisher / status"
+#~ msgstr "éditeur / statut"
+
+#~ msgid "publisher"
+#~ msgstr "éditeur"
+
+#~ msgid "population / social group"
+#~ msgstr "population / groupe social"
+
+#~ msgid "tape wheel diameter (cm)"
+#~ msgstr "diamètre de bobine (cm)"
+
+#~ msgid "tape length (cm)"
+#~ msgstr "longueur de bande (cm)"
+
+#~ msgid "tape width (inch)"
+#~ msgstr "largeur de bande (pouce)"
+
+#~ msgid "tape speed (cm/s)"
+#~ msgstr "vitesse de bande (cm/s)"
+
+#~ msgid "tape vendor"
+#~ msgstr "marque de bande"
+
+#~ msgid "number of channels"
+#~ msgstr "Nombre de pistes"
+
+#~ msgid "rights"
+#~ msgstr "droits"
+
+#~ msgid "topic"
+#~ msgstr "discipline"
+
+#~ msgid "physical format"
+#~ msgstr "nature du support original"
+
+#~ msgid "original code"
+#~ msgstr "cote originale"
+
+#~ msgid "original number"
+#~ msgstr "numéro de support"
+
+#~ msgid "original status"
+#~ msgstr "statut de l'original"
+
+#~ msgid "technical properties / conservation state"
+#~ msgstr "état de conservation"
+
+#~ msgid "comments / notes"
+#~ msgstr "commentaires / notes"
+
+#~ msgid "original location"
+#~ msgstr "lieu d'archivage"
+
+#~ msgid "audio quality"
+#~ msgstr "qualité audio"
+
+#~ msgid "recording system"
+#~ msgstr "système d'enregistrement"
+
+#~ msgid "tape thickness (um)"
+#~ msgstr "épaisseur de bande (um)"
+
+#~ msgid "tape reference"
+#~ msgstr "référence de bande"
+
+#~ msgid "sticker presence"
+#~ msgstr "présence de collants"
+
+#~ msgid "instrument aliases"
+#~ msgstr "instrument aliases"
+
+#~ msgid "instrument"
+#~ msgstr "instrument"
+
+#~ msgid "parent instrument"
+#~ msgstr "instrument parent"
+
+#~ msgid "alias"
+#~ msgstr "alias"
+
+#~ msgid "equivalent ISO 639-2 identifier (bibliographic)"
+#~ msgstr "identifiant ISO 639-2 équivalent (bibliographique)"
+
+#~ msgid "equivalent ISO 639-2 identifier (terminologic)"
+#~ msgstr "identifiant ISO 639-2 équivalent (terminologique)"
+
+#~ msgid "equivalent ISO 639-1 identifier"
+#~ msgstr "identifiant ISO 639-1 équivalent"
+
+#~ msgid "scope"
+#~ msgstr "cadre"
+
+#~ msgid "languages"
+#~ msgstr "langues"
+
+#~ msgid "country"
+#~ msgstr "état/nation"
+
+#~ msgid "continent"
+#~ msgstr "continent"
+
+#~ msgid "complete type"
+#~ msgstr "type complet"
+
+#~ msgid "current location"
+#~ msgstr "lieu actuel"
+
+#~ msgid "authoritative"
+#~ msgstr "officiel"
+
+#~ msgid "location"
+#~ msgstr "lieu"
+
+#~ msgid "locations"
+#~ msgstr "lieux"
+
+#~ msgid "location types"
+#~ msgstr "types de lieux"
+
+#~ msgid "location aliases"
+#~ msgstr "lieux alias"
+
+#~ msgid "ancestor location"
+#~ msgstr "lieu ancêtre"
+
+#~ msgid "location relations"
+#~ msgstr "lieux relations"
+
+#~ msgid "none"
+#~ msgstr "accès réservé"
+
+#~ msgid "metadata"
+#~ msgstr "métadonnées"
+
+#~ msgid "mixed"
+#~ msgstr "mixte"
+
+#~ msgid "full"
+#~ msgstr "complet"
+
+#~ msgid "Metadata only"
+#~ msgstr "Métadonnées uniquement"
+
+#~ msgid "Sound and metadata"
+#~ msgstr "Son et métadonnées"
+
+#~ msgid "Private data"
+#~ msgstr "Données privées"
+
+#~ msgid "public access"
+#~ msgstr "accès public"
+
+#~ msgid "reference"
+#~ msgstr "référence"
+
+#~ msgid "original title / translation"
+#~ msgstr "titre original / traduction"
+
+#~ msgid "depositor / contributor"
+#~ msgstr "déposant / contributeur"
+
+#~ msgid "recording year (from)"
+#~ msgstr "année d'enregistrement (depuis)"
+
+#~ msgid "recording year (until)"
+#~ msgstr "année d'enregistrement (jusqu'à)"
+
+#~ msgid "year published"
+#~ msgstr "année de parution"
+
+#~ msgid "recordist"
+#~ msgstr "collecteur"
+
+#~ msgid "publisher collection"
+#~ msgstr "collection éditeur"
+
+#~ msgid "publisher serial number"
+#~ msgstr "numéro dans la série"
+
+#~ msgid "author of published notice"
+#~ msgstr "auteur de la notice éditée"
+
+#~ msgid "bibliographic references"
+#~ msgstr "références bibliographiques"
+
+#~ msgid "access status"
+#~ msgstr "statut d'accès"
+
+#~ msgid "automatic access after a rolling period"
+#~ msgstr "Accès automatique après la data glissante"
+
+#~ msgid "CNRS depositor"
+#~ msgstr "déposant CNRS"
+
+#~ msgid "related documentation"
+#~ msgstr "documentation associée"
+
+#~ msgid "copies"
+#~ msgstr "autres exemplaires"
+
+#~ msgid "archiver notes"
+#~ msgstr "notes de l'archiviste"
+
+#~ msgid "items finished"
+#~ msgstr "fiches items faites"
+
+#~ msgid "recordist identical to depositor"
+#~ msgstr "collecteur identique au déposant"
+
+#~ msgid "conservation site"
+#~ msgstr "lieu de conservation"
+
+#~ msgid "old code"
+#~ msgstr "ancienne cote"
+
+#~ msgid "number of components (medium / piece)"
+#~ msgstr "nb de composants (support / pièce)"
+
+#~ msgid "digitization"
+#~ msgstr "numérisation"
+
+#~ msgid "a_informer_07_03"
+#~ msgstr "a_informer_07_03"
+
+#~ msgid "states / nations"
+#~ msgstr "états / nations"
+
+#~ msgid "populations / social groups"
+#~ msgstr "populations / groupes sociaux"
+
+#~ msgid "computed duration"
+#~ msgstr "durée calculée"
+
+#~ msgid "collection"
+#~ msgstr "collection"
+
+#~ msgid "collection related media"
+#~ msgstr "média associés à la collection"
+
+#~ msgid "recording date (from)"
+#~ msgstr "date d'enregistrement (depuis)"
+
+#~ msgid "recording date (until)"
+#~ msgstr "date d'enregistrement (jusqu'à)"
+
+#~ msgid "summary"
+#~ msgstr "résumé"
+
+#~ msgid "remarks"
+#~ msgstr "remarques"
+
+#~ msgid "cultural area"
+#~ msgstr "aire culturelle"
+
+#~ msgid "language"
+#~ msgstr "langue"
+
+#~ msgid "ISO language"
+#~ msgstr "Langue ISO"
+
+#~ msgid "comments / ethnographic context"
+#~ msgstr "commentaires / contexte ethnographique"
+
+#~ msgid "moda_execut"
+#~ msgstr "moda_execut"
+
+#~ msgid "author / compositor"
+#~ msgstr "auteur / compositeur"
+
+#~ msgid "contributor"
+#~ msgstr "intervenant"
+
+#~ msgid "depositor"
+#~ msgstr "déposant"
+
+#~ msgid "item number"
+#~ msgstr "n° de l'item"
+
+#~ msgid "digitalist"
+#~ msgstr "opérateur de numérisation"
+
+#~ msgid "collector"
+#~ msgstr "collecteur"
+
+#~ msgid "collector selection"
+#~ msgstr "sélection collecteur"
+
+#~ msgid "collector as in collection"
+#~ msgstr "collecteur identique à la collection"
+
+#~ msgid "digitization date"
+#~ msgstr "date de numérisation"
+
+#~ msgid "creator reference"
+#~ msgstr "référence"
+
+#~ msgid "published references"
+#~ msgstr "références éditées"
+
+#~ msgid "copy of"
+#~ msgstr "copie de"
+
+#~ msgid "instruments"
+#~ msgstr "instruments"
+
+#~ msgid "composition"
+#~ msgstr "Voix / Instruments"
+
+#~ msgid "vernacular name"
+#~ msgstr "nom vernaculaire"
+
+#~ msgid "interprets"
+#~ msgstr "interprètes"
+
+#~ msgid "unit"
+#~ msgstr "unité"
+
+#~ msgid "start"
+#~ msgstr "début"
+
+#~ msgid "end"
+#~ msgstr "fin"
+
+#~ msgid "item part"
+#~ msgstr "partie"
+
+#~ msgid "playlist"
+#~ msgstr "liste de lecture"
+
+#~ msgid "resource_type"
+#~ msgstr "type de ressource"
+
+#~ msgid "resource_id"
+#~ msgstr "ressource"
+
+#~ msgid "time (s)"
+#~ msgstr "temps (s)"
+
+#~ msgid "transcoded"
+#~ msgstr "transcodé"
+
+#~ msgid "collections"
+#~ msgstr "collections"
+
+#~ msgid "corpus"
+#~ msgstr "corpus"
+
+#~ msgid "fonds"
+#~ msgstr "fonds"
+
+#~ msgid "corpus related media"
+#~ msgstr "média associés"
+
+#~ msgid "fonds related media"
+#~ msgstr "média associés"
+
+#~ msgid "element type"
+#~ msgstr "type d'élément"
+
+#~ msgid "element identifier"
+#~ msgstr "identifiant de l'élément"
+
+#~ msgid "modification type"
+#~ msgstr "type de modification"
+
+#~ msgid "time"
+#~ msgstr "heure"
+
+#~ msgid "Attachment"
+#~ msgstr "Rattachement"
+
+#~ msgid "Function"
+#~ msgstr "Fonction"
+
+#~ msgid "key"
+#~ msgstr "clé"
+
+#~ msgid "criteria"
+#~ msgstr "critères"
+
+#~ msgid "Telemeta administration"
+#~ msgstr "Administration Telemeta"
+
+#~ msgid "Enumerations"
+#~ msgstr "Énumérations"
+
+#~ msgid "No enumerations"
+#~ msgstr "Aucune énumération"
+
+#~ msgid "Welcome"
+#~ msgstr "Bienvenue"
+
+#~ msgid "Collections"
+#~ msgstr "Collections"
+
+#~ msgid "Items"
+#~ msgstr "Items"
+
+#~ msgid "Geo Navigator"
+#~ msgstr "Géo-Navigateur"
+
+#~ msgid "Advanced search"
+#~ msgstr "Recherche avancée"
+
+#~ msgid "Instruments"
+#~ msgstr "Instruments"
+
+#~ msgid "By"
+#~ msgstr "Par"
+
+#~ msgid ""
+#~ "Usage of the archives in the respect of cultural heritage of the original "
+#~ "communities."
+#~ msgstr ""
+#~ "Usage des archives réservé dans le respect du patrimoine culturel des "
+#~ "communautés d'origine."
+
+#~ msgid "Save"
+#~ msgstr "Enregistrer"
+
+#~ msgid "Collection"
+#~ msgstr "Collection"
+
+#~ msgid "Copy"
+#~ msgstr "Copier"
+
+#~ msgid "Add item"
+#~ msgstr "Ajouter item"
+
+#~ msgid "Add to playlist"
+#~ msgstr "Ajouter à la liste"
+
+#~ msgid "Listen to this collection"
+#~ msgstr "Écouter la collection"
+
+#~ msgid "Geographic and cultural informations"
+#~ msgstr "Indications géographiques et culturelles"
+
+#~ msgid "Bibliographic references"
+#~ msgstr "Références bibliographiques"
+
+#~ msgid "Archiving data"
+#~ msgstr "Données d'archivage"
+
+#~ msgid "Related documentation"
+#~ msgstr "Documentation associée"
+
+#~ msgid "Technical data"
+#~ msgstr "Données techniques"
+
+#~ msgid "Media type"
+#~ msgstr "Type de media"
+
+#~ msgid "Number of items"
+#~ msgstr "Nombre d'items"
+
+#~ msgid "Normal View"
+#~ msgstr "Vue normale"
+
+#~ msgid "No such collection"
+#~ msgstr "Aucune collection de ce type"
+
+#~ msgid "Related media"
+#~ msgstr "Média associés"
+
+#~ msgid "related media"
+#~ msgstr "média associés"
+
+#~ msgid "Media Collections"
+#~ msgstr "Collections"
+
+#~ msgid "Unpublished"
+#~ msgstr "Inédites"
+
+#~ msgid "Published"
+#~ msgstr "Éditées"
+
+#~ msgid "Sounds"
+#~ msgstr "Sonores"
+
+#~ msgid "Media"
+#~ msgstr "Média"
+
+#~ msgid "in"
+#~ msgstr "dans"
+
+#~ msgid "Populations / Social groups"
+#~ msgstr "Populations / Groupes sociaux"
+
+#~ msgid "Add entry"
+#~ msgstr "Ajouter une entrée"
+
+#~ msgid "This enumeration is empty"
+#~ msgstr "Cette énumération est vide"
+
+#~ msgid "Modify an entry"
+#~ msgstr "Modification d'une entrée"
+
+#~ msgid "Replace by"
+#~ msgstr "Remplacer par"
+
+#~ msgid "delete value after replacing"
+#~ msgstr "effacer la valeur après remplacement"
+
+#~ msgid "Replace"
+#~ msgstr "Remplacement"
+
+#~ msgid "Geographic Navigator"
+#~ msgstr "Navigateur géographique"
+
+#~ msgid "Map"
+#~ msgstr "Carte"
+
+#~ msgid "List"
+#~ msgstr "Liste"
+
+#~ msgid "World"
+#~ msgstr "Monde"
+
+#~ msgid "Number of collections"
+#~ msgstr "Nombre de collections"
+
+#~ msgid "1 collection"
+#~ msgid_plural "%(counter)s collections"
+#~ msgstr[0] "1 collection"
+#~ msgstr[1] "%(counter)s collections"
+
+#~ msgid "1 item"
+#~ msgid_plural "%(counter)s items "
+#~ msgstr[0] "1 item"
+#~ msgstr[1] "%(counter)s items "
+
+#~ msgid "Musical selection"
+#~ msgstr "Sélection musicale"
+
+#~ msgid "Open the geographic navigator"
+#~ msgstr "Accéder au navigateur géographique"
+
+#~ msgid "Partners"
+#~ msgstr "Partenaires"
+
+#~ msgid "Name"
+#~ msgstr "Nom"
+
+#~ msgid "This instrument list is empty"
+#~ msgstr "Cette énumération est vide"
+
+#~ msgid "Item"
+#~ msgstr "Item"
+
+#~ msgid "Collection access status"
+#~ msgstr "Statut d'accès de la collection"
+
+#~ msgid "Context access status"
+#~ msgstr "Statut d'accès selon le profil"
+
+#~ msgid "Item access status"
+#~ msgstr "Statut d'accès de l'item"
+
+#~ msgid "Previous"
+#~ msgstr "Précédent"
+
+#~ msgid "Next"
+#~ msgstr "Suivant"
+
+#~ msgid "Analysis"
+#~ msgstr "Analyse"
+
+#~ msgid "Markers"
+#~ msgstr "Marqueurs"
+
+#~ msgid "Property"
+#~ msgstr "Propriété"
+
+#~ msgid "Unit"
+#~ msgstr "Unité"
+
+#~ msgid "Download:"
+#~ msgstr "Téléchargement:"
+
+#~ msgid "You don't have access to the media of this item."
+#~ msgstr "Vous n'avez pas accès aux médias de cet item."
+
+#~ msgid "Please contact the administrators to get more rights."
+#~ msgstr "Contactez les administrateurs du site pour obtenir plus de droits."
+
+#~ msgid "Recording date"
+#~ msgstr "Date d'enregistrement"
+
+#~ msgid "Location"
+#~ msgstr "Lieu"
+
+#~ msgid "Language ISO"
+#~ msgstr "Langue ISO"
+
+#~ msgid "Ethnographic context"
+#~ msgstr "Contexte ethnographique"
+
+#~ msgid "Musical informations"
+#~ msgstr "Informations sur la musique"
+
+#~ msgid "Published references"
+#~ msgstr "Références éditées"
+
+#~ msgid "Remarks"
+#~ msgstr "Remarques"
+
+#~ msgid "No such item"
+#~ msgstr "Item introuvable"
+
+#~ msgid "Keywords"
+#~ msgstr "Mots-clés"
+
+#~ msgid "Performance"
+#~ msgstr "Composition"
+
+#~ msgid "performance"
+#~ msgstr "composition"
+
+#~ msgid "Keyword"
+#~ msgstr "Mot-clé"
+
+#~ msgid "Media Items"
+#~ msgstr "Items"
+
+#~ msgid "Playlists"
+#~ msgstr "Listes de lecture"
+
+#~ msgid "Is staff"
+#~ msgstr "Statut équipe"
+
+#~ msgid "Is superuser"
+#~ msgstr "Statut super-utilisateur"
+
+#~ msgid "New"
+#~ msgstr "Nouveau"
+
+#~ msgid "No such resource"
+#~ msgstr "Aucune ressource de ce type"
+
+#~ msgid "Search pattern"
+#~ msgstr "Mots clés"
+
+#~ msgid ""
+#~ "%(resource.children_type|capitalize)s %(first_on_page)s to "
+#~ "%(last_on_page)s on %(hits)s"
+#~ msgstr ""
+#~ "%(resource.children_type|capitalize)s %(first_on_page)s à "
+#~ "%(last_on_page)s sur %(hits)s"
+
+#~ msgid "Reference"
+#~ msgstr "Référence"
+
+#~ msgid "No resource"
+#~ msgstr "Aucune ressource"
+
+#~ msgid "Collections %(first_on_page)s to %(last_on_page)s on %(hits)s"
+#~ msgstr "Collections %(first_on_page)s à %(last_on_page)s sur %(hits)s"
+
+#~ msgid "No collection"
+#~ msgstr "Aucune collection"
+
+#~ msgid "Preview"
+#~ msgstr "Prévisualisation"
+
+#~ msgid "Credits"
+#~ msgstr "Crédits"
+
+#~ msgid "Dublin Core Metadata"
+#~ msgstr "Métadonnées Dublin Core"
+
+#~ msgid "Items %(first_on_page)s to %(last_on_page)s on %(hits)s"
+#~ msgstr "Items %(first_on_page)s à %(last_on_page)s sur %(hits)s"
+
+#~ msgid "Country/Continent"
+#~ msgstr "Etat/Continent"
+
+#~ msgid "No item"
+#~ msgstr "Aucun item"
+
+#~ msgid " from %(first_on_page)s to %(last_on_page)s on %(hits)s"
+#~ msgstr " de %(first_on_page)s à %(last_on_page)s sur %(hits)s"
+
+#~ msgid "Groups"
+#~ msgstr "Groupes"
+
+#~ msgid "%(count)d item"
+#~ msgid_plural "%(count)d items"
+#~ msgstr[0] "%(count)d item"
+#~ msgstr[1] "%(count)d items"
+
+#~ msgid "%(count)d collection"
+#~ msgid_plural "%(count)d collections"
+#~ msgstr[0] "%(count)d collection"
+#~ msgstr[1] "%(count)d collections"
+
+#~ msgid "My last changes"
+#~ msgstr "Mes dernières modifications"
+
+#~ msgid "All last changes"
+#~ msgstr "Toutes les dernières modifications"
+
+#~ msgid "My searches"
+#~ msgstr "Mes recherches"
+
+#~ msgid "Children"
+#~ msgstr "Enfants"
+
+#~ msgid "pattern"
+#~ msgstr "mots clés"
+
+#~ msgid "Last changes"
+#~ msgstr "Dernières modifications"
 
 #~ msgid "General informations"
 #~ msgstr "Informations générales"
