@@ -24,7 +24,6 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
         # send initial messages
         data = await self.get_notifications_list(self.scope['user'])
-        print(data)
         await self.send_json(content={'type': 'initial', 'messages': data})
 
 
@@ -38,9 +37,11 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
     @database_sync_to_async
     def get_notifications_list(self, user):
         # import pdb;pdb.set_trace()
-        messages = [message.to_dict() for message in Notification.objects.filter(
-            user=user).order_by('-created')][:20]
-        print(messages)
+        if user.is_authenticated:
+            messages = [message.to_dict() for message in Notification.objects.filter(
+                user=user).order_by('-created')][:20]
+        else:
+            messages = []
         return messages
 
     # Receive message from channel
