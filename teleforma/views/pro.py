@@ -86,7 +86,7 @@ def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     """
     src = weasyprint.HTML(string=content.encode(encoding), encoding=encoding)
     site = Site.objects.get_current()
-    src.write_pdf(dest, stylesheets=[f'https://{site.domain}/{settings.STATIC_URL}teleforma/css/teleforma_pdf.css',])
+    src.write_pdf(dest, stylesheets=[f'https://{site.domain}{settings.STATIC_URL}teleforma/css/teleforma_pdf.css',])
     return True
 
 
@@ -767,7 +767,7 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         Return the pdf attachment filename.
         If the filename is None, the pdf will not be an attachment.
         """
-        return str(self.pdf_filename)
+        return self.pdf_filename and str(self.pdf_filename) or "pb.pdf"
 
     def get_pdf_url(self):
         """
@@ -807,6 +807,7 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
     model = Seminar
     template_name = 'teleforma/seminar_testimonial.html'
     pdf_template_name = template_name
+    pdf_filename = 'testimonial.pdf'
 
     def get_context_data(self, **kwargs):
         context = super(TestimonialView, self).get_context_data(**kwargs)
@@ -924,6 +925,7 @@ class TestimonialPaybackView(TestimonialView):
         context['answers'] = Answer.objects.filter(question__in=seminar.question.all(),
                                                    user=self.request.user,
                                                    validated=True).order_by('question__rank')
+        context['site'] = Site.objects.get_current()
         # user_timer = get_seminar_timer(self.request.user, seminar)
         # context['user_timer'] = user_timer.days * 24 + user_timer.seconds / 3600
         return context

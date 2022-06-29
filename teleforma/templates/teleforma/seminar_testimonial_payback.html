@@ -16,92 +16,95 @@
 {% endblock %}
 
 <style>
- @page {
-  background-image: url({{ STATIC_URL }}teleforma/images/attestation_fifpl_v3.png);
-  
-  @frame user {
-  -pdf-frame-content: user;
+
+@page :first {
+  background: url(https://{{ site.domain }}/{{ STATIC_URL }}teleforma/images/attestation_fifpl_v3.png) no-repeat center;
+  background-size: cover;
+  margin: 0;
+}
+
+  #user {
+    position: absolute;
     top: 315px;
+    left: 330px;
+  }
+
+  #seminar { 
+    position: absolute;
+    top: 380px;
+    left: 160px;
+  }
+
+  #date_start_d {
+    position: absolute;
+    top: 412px;
+    left: 187px;
+  }
+
+ #date_start_m {
+  position: absolute;
+    top: 412px;
+    left: 215px;
+  }
+ #date_start_y {
+  position: absolute;
+    top: 412px;
+    left: 242px;
+  }
+
+  #date_end_d {
+    position: absolute;
+    top: 412px;
+    left: 285px;
+  }
+
+ #date_end_m {
+  position: absolute;
+    top: 412px;
+    left: 312px;
+  }
+ #date_end_y {
+  position: absolute;
+    top: 412px;
+    left: 340px;
+  }
+
+  #user-hours {
+    position: absolute;
+    top: 445px;
+    left: 470px;
+  }
+
+  #seminar-hours {
+    position: absolute;
+    top: 525px;
     left: 280px;
   }
 
-  @frame seminar {
-  -pdf-frame-content: seminar;
-    top: 380px;
-    left: 110px;
-  }
-
-  @frame date_start_d {
-  -pdf-frame-content: date_start_d;
-    top: 412px;
-    left: 137px;
-  }
-
- @frame date_start_m {
-  -pdf-frame-content: date_start_m;
-    top: 412px;
-    left: 165px;
-  }
- @frame date_start_y {
-  -pdf-frame-content: date_start_y;
-    top: 412px;
-    left: 192px;
-  }
-
-  @frame date_end_d {
-  -pdf-frame-content: date_end_d;
-    top: 412px;
-    left: 235px;
-  }
-
- @frame date_end_m {
-  -pdf-frame-content: date_end_m;
-    top: 412px;
-    left: 262px;
-  }
- @frame date_end_y {
-  -pdf-frame-content: date_end_y;
-    top: 412px;
-    left: 290px;
-  }
-
-  @frame user-hours {
-  -pdf-frame-content: user-hours;
-    top: 445px;
-    left: 420px;
-  }
-
-  @frame seminar-hours {
-  -pdf-frame-content: seminar-hours;
-    top: 525px;
-    left: 230px;
-  }
-
-  @frame price-ht {
-  -pdf-frame-content: price-ht;
+  #price-ht {
+    position: absolute;
     top: 629px;
-    left: 390px;
+    left: 440px;
   }
 
-  @frame price-ttc {
-  -pdf-frame-content: price-ttc;
+  #price-ttc {
+    position: absolute;
     top: 644px;
-    left: 140px;
+    left: 190px;
   }
 
-  @frame date-validated {
-  -pdf-frame-content: date-validated;
+  #date-validated {
+    position: absolute;
     top: 549px;
-    left: 310px;
+    left: 360px;
   }
 
-  @frame date-now {
-  -pdf-frame-content: date-now;
+  #date-now {
+    position: absolute;
     top: 718px;
-    left: 270px;
+    left: 320px;
   }
 
-}
 
 </style>
 
@@ -109,7 +112,7 @@
 
 </head>
 
-<body>
+<body id="seminar_testimonial_payback">
 {% block layout %}
 <div id="layout">
 <div id="content" style="font-size=1.3em;">
