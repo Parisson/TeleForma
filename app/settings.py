@@ -235,6 +235,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
+LOGOUT_REDIRECT_URL = reverse_lazy('teleforma-desk')
+
 
 #if DEBUG:
 #    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
