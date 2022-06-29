@@ -75,7 +75,7 @@ class Command(BaseCommand):
                                 notify(student.user, message, url)
                                 logger.logger.info("Student notified: " + student.user.username)
                 except:
-                    logger.logger.info("Student NOT notified: " + student.user.username)
+                    logger.logger.info("Student NOT notified: " + str(student.id))
                     continue
 
             conference.notified = True
