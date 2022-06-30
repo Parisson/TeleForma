@@ -48,20 +48,32 @@ class Command(BaseCommand):
         period_name = options['period']
         period = Period.objects.get(name=period_name)
 
+        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=5)
+        print(now_minus)
+        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=1)
+        print(now_plus)
+
         conferences = Conference.objects.filter(
                         period=period,
                         status=2,
                         notified=False,
-                        date_publish__lte=datetime.datetime.now()
+                        date_publish__lte=now_plus,
+                        date_publish__gte=now_minus,
                         )
 
         for conference in conferences:
             conference.status = 3
             conference.save()
+            medias = conference.media.all()
+            for media in medias:
+                media.is_published = True
+                media.save()
+                if "video/mp4" in media.mime_type:
+                    linked_media = media
             logger.logger.info("Conference published: " + conference.public_id)
          
             media = conference.media.filter(mime_type='video/mp4')[0]
-            url = reverse('teleforma-media-detail', args=[conference.period.id, media.id])
+            url = reverse('teleforma-media-detail', args=[conference.period.id, linked_media.id])
             message = "Nouvelle conférence publiée : " + str(conference)
 
             students = Student.objects.filter(period=conference.period)

@@ -70,8 +70,6 @@ services:
       - ./teleforma/:/srv/src/teleforma/teleforma
       - ./var/log/app:/var/log/app
       - ./var/run/app:/var/run/app
-    ports:
-      - "9002:8000"
     links:
       - db
       - redis
