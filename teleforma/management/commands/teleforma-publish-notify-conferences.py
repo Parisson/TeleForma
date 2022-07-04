@@ -49,9 +49,7 @@ class Command(BaseCommand):
         period = Period.objects.get(name=period_name)
 
         now_minus = datetime.datetime.now() - datetime.timedelta(minutes=5)
-        print(now_minus)
         now_plus = datetime.datetime.now() + datetime.timedelta(minutes=1)
-        print(now_plus)
 
         conferences = Conference.objects.filter(
                         period=period,
@@ -60,6 +58,8 @@ class Command(BaseCommand):
                         date_publish__lte=now_plus,
                         date_publish__gte=now_minus,
                         )
+        
+        logger.logger.info("Starting conference publication process")
 
         for conference in conferences:
             conference.status = 3
@@ -87,7 +87,7 @@ class Command(BaseCommand):
                                 notify(student.user, message, url)
                                 logger.logger.info("Student notified: " + student.user.username)
                 except:
-                    logger.logger.info("Student NOT notified: " + str(student.id))
+                    #logger.logger.info("Student NOT notified: " + str(student.id))
                     continue
 
             conference.notified = True
