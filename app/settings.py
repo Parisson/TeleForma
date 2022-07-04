@@ -254,10 +254,14 @@ TELEFORMA_E_LEARNING_TYPE = 'AE'
 EMAIL_HOST = 'pb-smtp.pilotsystems.net'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'e-learning@pro-barreau.com'
-SERVER_EMAIL = 'webmaster@parisson.com'
-REPORT_TO_EMAIL = ('kostya.rilov@pre-barreau.com', 'alexia.dcruz@pro-barreau.com')
 ADMIN_USERNAME = 'Pro-Barreau'
+
+DEFAULT_FROM_EMAIL = "Pro-Barreau <contact@pro-barreau.com>"
+DEFAULT_FROM_REMINDER_EMAIL = "Pro-Barreau <e-learning@pro-barreau.com>"
+COPY_REMINDER_TO_EMAIL = "alexia.dcruz@pro-barreau.com"
+COPY_QUOTATION_TO_EMAIL = "devis@pro-barreau.com"
+COPY_INSCRIPTION_TO_EMAIL = "inscription@pro-barreau.com"
+REPORT_TO_EMAIL = ('kostya.rilov@pre-barreau.com', 'alexia.dcruz@pro-barreau.com')
 EMAIL_SUBJECT_PREFIX = '[' + TELEFORMA_ORGANIZATION + '] '
 
 PASSWORD_HASHERS = [
