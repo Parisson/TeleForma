@@ -31,8 +31,10 @@ class Command(BaseCommand):
             if profile and students:
                 p = profile[0]
                 student = students[0]
-                if student.is_subscribed and user.is_active and \
-                        student.period == period and student.platform_only:
+                if student.is_subscribed and \
+                        user.is_active and \
+                        student.period == period and \
+                        not student.platform_only:
                     data = []
                     data.append(user.first_name)
                     data.append(user.last_name)
