@@ -43,7 +43,7 @@ else
 
     python $manage collectstatic --noinput --ignore Pre-Barreau/*
 
-    chown -R www-data: $debug_log
+    #chown -R www-data: $debug_log
 
     uwsgi /srv/app/wsgi.ini
 fi
