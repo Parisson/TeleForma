@@ -48,9 +48,9 @@ class Command(BaseCommand):
         period_name = options['period']
         period = Period.objects.get(name=period_name)
 
-        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=5)
+        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=30)
         print(now_minus)
-        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=1)
+        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=5)
         print(now_plus)
 
         conferences = Conference.objects.filter(
