@@ -17,6 +17,9 @@ from teleforma.views.core import get_courses
 import datetime
 
 
+MINUTES_LOW_RANGE = 30
+MINUTES_HIGH_RANGE = 1
+
 class Logger:
     """A logging object"""
 
@@ -41,6 +44,12 @@ class Command(BaseCommand):
         parser.add_argument('--period', type=str, required=True,
                             help='period to process')
 
+        parser.add_argument('--minute-low-range', type=int, required=False,
+                            help='minute low range')
+
+        parser.add_argument('--minute-high-range', type=int, required=False,
+                            help='minute high range')
+
     def handle(self, *args, **options):
         logpath = options['logfile']
         logger = Logger(logpath)
@@ -48,8 +57,19 @@ class Command(BaseCommand):
         period_name = options['period']
         period = Period.objects.get(name=period_name)
 
-        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=30)
-        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=5)
+        minute_low_range = options['minute-low-range']
+        if not minute_low_range:
+            minute_low_range = MINUTES_LOW_RANGE
+
+        minute_high_range = options['minute-high-range']
+        if not minute_high_range:
+            minute_high_range = MINUTES_HIGH_RANGE
+
+        print(minute_low_range)
+        print(minute_high_range)
+
+        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=minute_low_range)
+        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=minute_high_range)
 
         conferences = Conference.objects.filter(
                         period=period,
