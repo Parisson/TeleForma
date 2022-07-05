@@ -57,11 +57,11 @@ class Command(BaseCommand):
         period_name = options['period']
         period = Period.objects.get(name=period_name)
 
-        minute_low_range = options['minute-low-range']
+        minute_low_range = options['minute_low_range']
         if not minute_low_range:
             minute_low_range = MINUTES_LOW_RANGE
 
-        minute_high_range = options['minute-high-range']
+        minute_high_range = options['minute_high_range']
         if not minute_high_range:
             minute_high_range = MINUTES_HIGH_RANGE
 
