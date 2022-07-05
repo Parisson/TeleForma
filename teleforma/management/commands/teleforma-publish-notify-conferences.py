@@ -48,8 +48,8 @@ class Command(BaseCommand):
         period_name = options['period']
         period = Period.objects.get(name=period_name)
 
-        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=5)
-        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=1)
+        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=30)
+        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=5)
 
         conferences = Conference.objects.filter(
                         period=period,
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                         date_publish__lte=now_plus,
                         date_publish__gte=now_minus,
                         )
-        
+
         logger.logger.info("Starting conference publication process")
 
         for conference in conferences:
