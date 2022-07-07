@@ -17,6 +17,9 @@ else
     # watchmedo shell-command --patterns="$patterns" --recursive \
     #     --command='python '$manage' collectstatic --noinput' $app &
     #daphne -b 0.0.0.0 -p 8000 asgi:application
+    
+    rm $sock
+
     uvicorn asgi:application --uds $sock --log-level $loglevel --workers $workers --ws websockets
 fi
 
