@@ -96,7 +96,7 @@ class Command(BaseCommand):
             url = reverse('teleforma-media-detail', args=[conference.period.id, linked_media.id])
             message = "Nouvelle conférence publiée : " + str(conference)
 
-            students = Student.objects.filter(period=conference.period)
+            students = Student.objects.filter(period=conference.period, platform_only=True)
             for student in students:
                 try:
                     if student.user:
