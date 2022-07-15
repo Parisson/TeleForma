@@ -126,10 +126,9 @@ class BBBServer(models.Model):
         return "Serveur %d" % self.id
 
 
-class PublishedManager(models.Manager):
-    def get_query_set(self):
-        return super(PublishedManager, self).get_query_set().filter(status=3).exclude(end_date__lt=date.today())
-
+class WebclassPublishedManager(models.Manager):
+    def get_queryset(self):
+        return super(WebclassPublishedManager, self).get_queryset().filter(status=3).exclude(end_date__lt=date.today())
 
 class Webclass(models.Model):
 
@@ -156,7 +155,7 @@ class Webclass(models.Model):
     comment = ShortTextField(_('comment'), max_length=255, blank=True)
 
     objects = models.Manager()
-    published = PublishedManager()
+    published = WebclassPublishedManager()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass'
@@ -186,8 +185,8 @@ class Webclass(models.Model):
         
 
 class SlotPublishedManager(models.Manager):
-    def get_query_set(self):
-        return super(SlotPublishedManager, self).get_query_set().filter(webclass__status=3).exclude(webclass__end_date__lt=date.today())
+    def get_queryset(self):
+        return super(SlotPublishedManager, self).get_queryset().filter(webclass__status=3).exclude(webclass__end_date__lt=date.today())
 
 
 class WebclassSlot(models.Model):
