@@ -39,6 +39,7 @@ import string
 import datetime
 import mimetypes
 import copy
+import random
 from unidecode import unidecode
 
 from django.conf import settings
@@ -65,6 +66,8 @@ from jxmlease import XMLListNode, XMLDictNode
 
 from teleforma.bbb_utils import bbb, register_web_hook
 from teleforma.fields import Duration, DurationField, ShortTextField
+from teleforma.utils.kdenlive import KDEnLiveSession
+
 
 HAS_TELEMETA = False
 try:
@@ -75,6 +78,10 @@ except ImportError:
 
 app_label = 'teleforma'
 
+
+def get_random_hash():
+    hash = random.getrandbits(64)
+    return "%016x" % hash
 
 def get_n_choices(n):
     return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]
@@ -556,6 +563,7 @@ class MediaTranscoded(Model):
     class Meta(MetaCore):
         db_table = app_label + '_media_transcoded'
 
+
 class MediaItemMarker(Model):
     "2D marker object : text value vs. time (in seconds)"
 
@@ -601,6 +609,7 @@ class Media(MediaBase):
     readers         = ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                         blank=True)
     file            = models.FileField(_('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
+    session_file    = models.FileField(_('session file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
     poster_file     = models.FileField(_('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
     approx_duration = DurationField(_('approximative duration'))
 
@@ -642,12 +651,24 @@ class Media(MediaBase):
             self.conference.course.save()
         self.set_mime_type()
 
-
     def poster_url(self, geometry='640'):
         url = ''
         if self.poster_file:
             url = sorl_default.backend.get_thumbnail(self.poster_file, geometry).url
         return url
+
+    def parse_markers(self, **kwargs):
+        # Parse KDEnLive session
+        if self.session_file:
+            session = KDEnLiveSession(self.file.path)
+            markers = session.markers(**kwargs)
+            for marker in markers:
+                m = MediaItemMarker(item=self)
+                m.public_id = get_random_hash()
+                m.time = float(marker['time'])
+                m.title = marker['comment']
+                m.save()
+            return markers
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'

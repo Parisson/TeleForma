@@ -174,99 +174,80 @@ class Command(BaseCommand):
                         seminar.status = 1
                         seminar.save()
 
-                    collections = MediaCollection.objects.filter(code=collection_id)
-                    if not collections:
-                        collection = MediaCollection(code=collection_id,title=collection_id)
-                        collection.save()
-                    else:
-                        collection = collections[0]
-
-                    id = '_'.join([period.name, self.id_incr, collection_id, ext, str(media_rank)])
-                    item = self.get_item(collection, id)
-                    item.title = name
-                    
-                    id_webm = '_'.join([period.name, self.id_incr, collection_id, 'webm', str(media_rank)])
-                    items_webm = MediaItem.objects.filter(collection=collection, code=id_webm)
-
-
                     # cleanup old media
                     for media in seminar.medias.all():
-                        if not period.name in media.item.code:
-                            seminar.medias.remove(media)
+                        seminar.medias.remove(media)
                     
-                    if not item.file == path and not items_webm:
-                        logger.logger.info(seminar.public_url())
-                        logger.logger.info(path)
-                        if not seminar in seminars:
-                            seminars.append(seminar)
+                    # if not item.file == path and not items_webm:
+                    logger.logger.info(seminar.public_url())
+                    logger.logger.info(path)
+                    if not seminar in seminars:
+                        seminars.append(seminar)
 
-                        item.file = path
-                        if os.path.getsize(root+os.sep+filename):
-                            item.approx_duration = self.get_duration(root+os.sep+filename)
-                        item.save()
 
-                        files = os.listdir(root)
-                        for file in files:
-                            r_path = dir + os.sep + file
-                            filename, extension = os.path.splitext(file)
-                            if extension[1:] in self.image_formats:
-                                related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
-                                related.title = 'preview'
-                                related.set_mime_type()
-                                related.save()
-                                logger.logger.info(r_path)
-                            elif extension[1:] in self.transcoded_formats and not extension[1:] in self.original_format:
-                                t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
-                                logger.logger.info(r_path)
-                            elif extension[1:] == 'kdenlive':
-                                related, c = MediaItemRelated.objects.get_or_create(item=item, file=r_path)
-                                title, markers = related.parse_markers(from_first_marker=False)
-                                item.title = title
-                                item.save()
-                                logger.logger.info(r_path)
+                    media, c = Media.objects.get_or_create(course=course,
+                                                            type=ext,
+                                                            file=path,
+                                                            title='main')
+                    if c:
+                        media.set_mime_type()
+                        media.rank = media_rank
+                        media.is_published = True
+                        media.save()
 
-                        media, c = Media.objects.get_or_create(item=item, course=course, type=ext)
-                        if c:
-                            media.set_mime_type()
-                            media.rank = media_rank
-                            media.is_published = True
-                            media.save()
+                    if not media in seminar.medias.all():
+                        seminar.medias.add(media)
 
-                        if not media in seminar.medias.all():
-                            seminar.medias.add(media)
 
-                        # import previews
-                        if preview_trigger:
-                            dir = os.path.abspath(root + '/../preview/' +  str(seminar_rank))
-                            if os.path.exists(dir):
-                                r_dir = os.sep.join(dir.split(os.sep)[-7:])
-                                files = os.listdir(dir)
-                                if files and seminar.media_preview:
-                                    seminar.media_preview.delete()
-                                code = item.code + '_preview'
-                                title = item.title + ' (preview)'
-                                item = self.get_item(collection, code)
-                                item.title = title
-                                item.save()
-                                for file in files:
-                                    r_path = r_dir + os.sep + file
-                                    filename, extension = os.path.splitext(file)
-                                    if extension[1:] in self.original_format and not '.' == filename[0]:
-                                        item.file = r_path
-                                        if os.path.getsize(dir+os.sep+file):
-                                            item.approx_duration = self.get_duration(dir+os.sep+file)
-                                        item.save()
-                                        logger.logger.info(r_path)
-                                    elif extension[1:] in self.transcoded_formats:
-                                        t, c = MediaItemTranscoded.objects.get_or_create(item=item, file=r_path)
-                                        logger.logger.info(r_path)
+                    files = os.listdir(root)
+                    for file in files:
+                        r_path = dir + os.sep + file
+                        filename, extension = os.path.splitext(file)
+                        if extension[1:] in self.image_formats:
+                            media.file = r_path
+                        elif extension[1:] in self.transcoded_formats and not extension[1:] in self.original_format:
+                            transcoded, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
+                        elif extension[1:] == 'kdenlive':
+                            media.session_file = r_path
+                            media.parse_markers(from_first_marker=False)
+                        logger.logger.info(r_path)
+                    media.save()
 
-                                media = Media(item=item, course=course, type=ext)
-                                media.set_mime_type()
-                                media.is_published = True
-                                media.save()
-                                seminar.media_preview = media
-                                seminar.save()
+                    # import previews
+                    if preview_trigger:
+                        dir = os.path.abspath(root + '/../preview/' +  str(seminar_rank))
+                        if os.path.exists(dir):
+                            r_dir = os.sep.join(dir.split(os.sep)[-7:])
+                            files = os.listdir(dir)
+
+                            if files and seminar.media_preview:
+                                seminar.media_preview.delete()
+
+                            media_preview, c = Media.objects.get_or_create(course=course,
+                                                                    type=ext,
+                                                                    title='preview')
+                            if c:
+                                media_preview.set_mime_type()
+                                media_preview.rank = media_rank
+                                media_preview.is_published = True
+                                media_preview.save()
+
+                            for file in files:
+                                r_path = r_dir + os.sep + file
+                                filename, extension = os.path.splitext(file)
+                                if extension[1:] in self.original_format and not '.' == filename[0]:
+                                    media_preview.file = r_path
+                                    logger.logger.info(r_path)
+                                elif extension[1:] in self.transcoded_formats:
+                                    transcoded, c = MediaItemTranscoded.objects.get_or_create(item=media_preview, file=r_path)
+                                    logger.logger.info(r_path)
+
+                            media_preview.save()
+                            media_preview.set_mime_type()
+                            media_preview.is_published = True
+                            media_preview.save()
+                            seminar.media_preview = media_preview
+                            seminar.save()
 
         for s in seminars:
             print('http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id}))

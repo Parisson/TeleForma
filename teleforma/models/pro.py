@@ -49,6 +49,8 @@ from forms_builder.forms.models import Form
 from mezzanine.core.managers import DisplayableManager
 from quiz.models import Quiz
 import tinymce
+
+
 class SeminarType(models.Model):
 
     name            = models.CharField(_('name'), max_length=255, blank=True)
