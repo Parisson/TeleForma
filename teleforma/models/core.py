@@ -434,7 +434,7 @@ class MediaBase(ClonableMixin, Model):
     date_added      = DateTimeField(_('date added'), auto_now_add=True)
     date_modified   = DateTimeField(_('date modified'), auto_now=True)
     code            = CharField(_('code'), max_length=255, blank=True)
-    is_published    = BooleanField(_('published'))
+    is_published    = BooleanField(_('published')_default=False)
     mime_type       = CharField(_('mime type'), max_length=255, blank=True)
     weight          = models.IntegerField(_('weight'), choices=WEIGHT_CHOICES, default=1, null=True, blank=True)
     notes = GenericRelation(Note)
