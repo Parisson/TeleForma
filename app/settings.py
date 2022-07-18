@@ -246,10 +246,10 @@ POSTMAN_DISALLOW_ANONYMOUS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
-TELEFORMA_ORGANIZATION = 'Pro-Barreau'
-TELEFORMA_SUBJECTS = ('Barreau', 'e-learning')
-TELEFORMA_DESCRIPTION = "E-learning Pro-Barreau"
-TELEFORMA_E_LEARNING_TYPE = 'AE'
+TELEFORMA_MASTER_HOST = 'https://staging.el.pro-barreau.parisson.com/'
+TELEFORMA_ORGANIZATION = "Pro Barreau"
+TELEFORMA_DESCRIPTION = "Pro Barreau"
+DEMO_SEMINAR = 59
 
 EMAIL_HOST = 'pb-smtp.pilotsystems.net'
 EMAIL_PORT = 465

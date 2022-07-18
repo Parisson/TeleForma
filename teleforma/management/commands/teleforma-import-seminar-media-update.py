@@ -110,11 +110,11 @@ class Command(BaseCommand):
         return item
 
     def handle(self, *args, **options):
-        organization_name = options['organization-name']
-        period_name = options['period-name']
-        media_dir = options['media-dir']
+        organization_name = options['organization_name']
+        period_name = options['period_name']
+        media_dir = options['media_dir']
         domain = options['domain']
-        logfile = options['logfile']
+        log_file = options['logfile']
 
         logger = Logger(log_file)
 
@@ -183,17 +183,16 @@ class Command(BaseCommand):
                         seminar.title = course.title
                         seminar.status = 1
                         seminar.save()
-
-                    # cleanup old media
-                    for media in seminar.medias.all():
-                        seminar.medias.remove(media)
                     
                     # if not item.file == path and not items_webm:
                     logger.logger.info(seminar.public_url())
                     logger.logger.info(path)
-                    if not seminar in seminars:
+                    if c and not seminar in seminars:
                         seminars.append(seminar)
 
+                    # cleanup old media
+                    for media in seminar.medias.all():
+                        seminar.medias.remove(media)
 
                     media, c = Media.objects.get_or_create(course=course,
                                                             type=ext,
@@ -214,12 +213,12 @@ class Command(BaseCommand):
                         r_path = dir + os.sep + file
                         filename, extension = os.path.splitext(file)
                         if extension[1:] in self.image_formats:
-                            media.file = r_path
+                            media.poster_file = r_path
                         elif extension[1:] in self.transcoded_formats and not extension[1:] in self.original_format:
                             transcoded, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
                         elif extension[1:] == 'kdenlive':
                             media.session_file = r_path
-                            media.parse_markers(from_first_marker=False)
+                            #media.parse_markers(from_first_marker=False)
                         logger.logger.info(r_path)
                     media.save()
 
@@ -245,11 +244,13 @@ class Command(BaseCommand):
                             for file in files:
                                 r_path = r_dir + os.sep + file
                                 filename, extension = os.path.splitext(file)
+                                if extension[1:] in self.image_formats:
+                                    media_preview.poster_file = r_path
                                 if extension[1:] in self.original_format and not '.' == filename[0]:
                                     media_preview.file = r_path
                                     logger.logger.info(r_path)
                                 elif extension[1:] in self.transcoded_formats:
-                                    transcoded, c = MediaItemTranscoded.objects.get_or_create(item=media_preview, file=r_path)
+                                    transcoded, c = MediaTranscoded.objects.get_or_create(item=media_preview, file=r_path)
                                     logger.logger.info(r_path)
 
                             media_preview.save()
