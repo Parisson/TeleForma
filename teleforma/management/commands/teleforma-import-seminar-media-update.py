@@ -192,10 +192,8 @@ class Command(BaseCommand):
                     for media in seminar.medias.all():
                         seminar.medias.remove(media)
 
-                    media, c = Media.objects.get_or_create(course=course,
-                                                            type=ext,
-                                                            file=path,
-                                                            title='main')
+                    media, c = Media.objects.get_or_create(course=course, file=path)
+
                     if c:
                         if not seminar in seminars:
                             seminars.append(seminar)
@@ -205,10 +203,8 @@ class Command(BaseCommand):
                         media.is_published = True
                         media.save()
 
-
                         if not media in seminar.medias.all():
                             seminar.medias.add(media)
-
 
                         files = os.listdir(root)
                         for file in files:
