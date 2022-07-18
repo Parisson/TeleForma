@@ -27,7 +27,6 @@ class Command(BaseCommand):
     help = "Import seminars from a media directory for a special period.name"
     admin_email = 'webmaster@parisson.com'
     args = 'organization period_name log_file media_dir'
-    spacer = '_-_'
     original_format = ['mp4']
     transcoded_formats = ['mp3',]
     image_formats = ['png', 'jpg']
@@ -36,6 +35,18 @@ class Command(BaseCommand):
     site = Site.objects.get_current()
     id_incr = '40'
     size_limit = 16384
+
+    def add_arguments(self, parser):
+        parser.add_argument('--organization-name', type=str, required=True,
+                            help='organization name')
+        parser.add_argument('--logfile', type=str, required=True,
+                            help='log file path')
+        parser.add_argument('--period-name', type=str, required=True,
+                            help='period name')
+        parser.add_argument('--media-dir', type=str, required=True,
+                            help='media dir')
+        parser.add_argument('--domain', type=str, required=True,
+                            help='domain of the instance')
 
     def full_cleanup(self):
         items  = MediaItemTranscoded.objects.all()
@@ -100,11 +111,11 @@ class Command(BaseCommand):
         return item
 
     def handle(self, *args, **options):
-        organization_name = args[0]
-        period_name = args[1]
-        media_dir = args[2]
-        domain = args[3]
-        log_file = args[4]
+        organization_name = options['organization-name']
+        period_name = options['period-name']
+        media_dir = options['media-dir']
+        domain = options['domain']
+        logfile = options['logfile']
 
         logger = Logger(log_file)
 
