@@ -146,7 +146,6 @@ class Command(BaseCommand):
                         and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.' \
                         and statinfo.st_size > self.size_limit:
 
-                    print(path)
                     # seminar_rank <= 9
                     seminar_rank = int(root_list[-1][0])
 
@@ -192,7 +191,8 @@ class Command(BaseCommand):
                     for media in seminar.medias.all():
                         seminar.medias.remove(media)
 
-                    media, c = Media.objects.get_or_create(course=course, file=path)
+                    print(path)
+                    media, c = Media.objects.get_or_create(course=course, file=path, type=ext)
 
                     if c:
                         if not seminar in seminars:
@@ -259,4 +259,4 @@ class Command(BaseCommand):
                                 seminar.save()
 
         for s in seminars:
-            print('http://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id}))
+            print('https://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id}))
