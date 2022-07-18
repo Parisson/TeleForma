@@ -276,7 +276,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-SESSION_COOKIE_DOMAIN=".pro-barreau.com"
+SESSION_COOKIE_DOMAIN="staging.el.pro-barreau.parisson.com"
 SESSION_COOKIE_SAMESITE="None"
 SESSION_COOKIE_SECURE=True
 

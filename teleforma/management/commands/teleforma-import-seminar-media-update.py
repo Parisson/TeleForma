@@ -8,7 +8,6 @@ from django.urls import reverse
 
 import logging
 import os, sys, time, datetime
-import timeside
 
 
 class Logger:
