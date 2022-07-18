@@ -46,6 +46,8 @@ class Command(BaseCommand):
                             help='media dir')
         parser.add_argument('--domain', type=str, required=True,
                             help='domain of the instance')
+        parser.add_argument('--delete', type=bool,
+                            help='delete all media before import')
 
     def full_cleanup(self):
         items  = MediaItemTranscoded.objects.all()
@@ -115,6 +117,7 @@ class Command(BaseCommand):
         media_dir = options['media_dir']
         domain = options['domain']
         log_file = options['logfile']
+        delete = options['delete']
 
         logger = Logger(log_file)
 
@@ -188,8 +191,9 @@ class Command(BaseCommand):
                     logger.logger.info(path)
 
                     # cleanup old media
-                    for media in seminar.medias.all():
-                        seminar.medias.remove(media)
+                    if delete:
+                        for media in seminar.medias.all():
+                            seminar.medias.remove(media)
 
                     print(path)
                     media, c = Media.objects.get_or_create(course=course, file=path, type=ext)
