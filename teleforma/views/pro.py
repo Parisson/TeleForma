@@ -71,7 +71,7 @@ from quiz.views import QuizTake
 
 from teleforma.context_processors import all_conferences, all_seminars, seminar_progress, seminar_validated
 from teleforma.models.core import Conference
-from teleforma.models.pro import Answer, Question, QuizValidation, Seminar, SeminarRevision, Testimonial
+from teleforma.models.pro import Answer, Question, QuizValidation, Seminar, SeminarRevision, SeminarStep, Testimonial
 from teleforma.forms import AnswerForm
 from teleforma.views.core import DocumentDownloadView, DocumentReadView, MediaView
 
@@ -231,6 +231,9 @@ class SeminarView(SeminarAccessMixin, DetailView):
 
         user = self.request.user
         context['show_webclass'] = seminar.use_webclass(user)
+        context['steps'] = seminar.get_steps(user)
+
+
         validated = seminar_validated(user, seminar)
         if validated:
             # check if testimonial exists and create it
@@ -939,31 +942,40 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
 
     template_name = 'quiz/question.html'
 
+    def _init(self):
+        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
+        try:
+            self.step = self.quiz.seminarstep.get(seminar__pk=self.kwargs['pk'])
+        except SeminarStep.DoesNotExist:
+            self.step = self.seminar
+
     def get_user(self):
         user_id = self.request.user.id
         return User.objects.get(id=user_id)
 
     def can_access(self):
         user = self.get_user()
-        for items in [self.seminar.docs_1, self.seminar.medias]:
+        for items in [self.step.docs_1, self.step.medias]:
             for item in items.all():
                 if item.weight:
                     if user not in item.readers.all():
                         return False
         return True
 
+
     def get_context_data(self, **kwargs):
         context = super(QuizQuestionView, self).get_context_data(**kwargs)
+        self._init()
         user = self.get_user()
-        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
+
         context['can_access'] = self.can_access()
         context['seminar'] = self.seminar
         context['seminar_progress'] = seminar_progress(user, self.seminar)
         return context
 
     def final_result_user(self):
+        self._init()
         user = self.get_user()
-        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
 
         results = {
             'quiz': self.quiz,
@@ -989,11 +1001,11 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
 
         if self.sitting.get_percent_correct >= self.quiz.pass_mark:
             validation = QuizValidation(
-                user=user, quiz=self.seminar.quiz, validated=True)
+                user=user, quiz=self.step.quiz, validated=True)
             validation.save()
         else:
             # revert step 1 validation
-            for doc in self.seminar.docs_1.all():
+            for doc in self.step.docs_1.all():
                 doc.readers.remove(user)
                 doc.save()
 

@@ -237,11 +237,16 @@ def validated(question, user):
         return ''
 
 @register.filter
-def quiz_validated(seminar, user):
-    quiz = seminar.quiz
+def one_more(_1, _2):
+    # to pass more than one argument to filter
+    return _1, _2
+
+@register.filter
+def quiz_validated(quiz_and_user, seminar):
+    quiz, user = quiz_and_user
     startdate = seminar.date_added
     enddate = seminar.expiry_date
-    validations = QuizValidation.objects.filter(quiz=quiz, user=user, validated=True,date_validated__range=[startdate, enddate])
+    validations = QuizValidation.objects.filter(quiz=quiz, user=user, validated=True, date_validated__range=[startdate, enddate])
     if validations:
         return validations[0].date_validated
     else:

@@ -210,9 +210,13 @@ class ConferenceAdmin(admin.ModelAdmin):
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
 
+class SeminarStepInline(admin.StackedInline):
+    model = SeminarStep
+    autocomplete_fields = [ 'docs_1', 'medias', 'docs_2', 'docs_correct', 'quiz']
+
 class SeminarAdmin(admin.ModelAdmin):
     exclude = ['keywords']
-    inlines = [SeminarQuestionInline,]
+    inlines = [SeminarQuestionInline, SeminarStepInline]
     filter_horizontal = ['professor',]
     # filter_vertical = ['docs_description', 'docs_1',
     #                    'docs_2', 'docs_correct', 'medias',
@@ -287,6 +291,9 @@ class SeminarAdmin(admin.ModelAdmin):
 
     class Media:
         css = { 'all': ('admin/extra.css',) }
+
+
+
 
 class MediaItemMarkerAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description']

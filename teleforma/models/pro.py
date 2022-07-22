@@ -61,6 +61,9 @@ class SeminarType(models.Model):
         verbose_name = _('Seminar type')
 
 
+
+
+
 class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
 
     # title, description, keywords, dates and status are given by Displayable
@@ -181,6 +184,33 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     def suggestions(self):
         return (list(self.suggested_seminars.all())+list(self.suggested_conferences.all()))[:3]
 
+    @property
+    def is_multistep(self):
+        return self.steps.count()
+    
+    @property
+    def number_of_steps(self):
+        """ number of top steps """
+        return self.steps.count() or 1
+
+    def get_steps(self, user):
+        """ get steps info """
+        steps = []
+        last_accessible = None
+        for i, step in enumerate(self.steps.order_by('id')):
+            validated = step.is_validated(user)
+            accessible = validated
+            if not validated and not last_accessible:
+                accessible = True
+                last_accessible = True 
+            steps.append({
+                'index': i + 1,
+                'object': step,
+                'validated': validated,
+                'accessible': accessible
+            })
+        return steps
+
     def use_webclass(self, user):
         """
         Should we show the webclass or the media ?
@@ -243,6 +273,30 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
         verbose_name = _('Seminar')
         ordering = ['rank']
 
+class SeminarStep(models.Model):
+    seminar         = models.ForeignKey(Seminar, related_name='steps', verbose_name=_('seminar'), on_delete=models.CASCADE)
+    docs_1          = models.ManyToManyField(Document, related_name="seminarstep_docs1",
+                                        verbose_name=_('documents 1'),
+                                        blank=True)
+    medias          = models.ManyToManyField(Media, related_name="seminarstep",
+                                        verbose_name=_('media'),
+                                        blank=True)
+    docs_2          = models.ManyToManyField(Document, related_name="seminarstep_docs2",
+                                        verbose_name=_('documents 2'),
+                                        blank=True)
+    docs_correct    = models.ManyToManyField(Document, related_name="seminarstep_docs_correct",
+                                        verbose_name=_('corrected documents'),
+                                        blank=True)
+    quiz            = models.ForeignKey(Quiz, related_name="seminarstep",
+                                        verbose_name=_('quiz'),
+                                        on_delete=models.PROTECT)
+
+                                    
+    def is_validated(self, user):
+        validations = QuizValidation.objects.filter(quiz=self.quiz, user=user, validated=True, date_validated__range=[self.seminar.date_added, self.seminar.expiry_date])
+        if validations:
+            return True
+        return False
 
 class Question(ClonableMixin, models.Model):
 
