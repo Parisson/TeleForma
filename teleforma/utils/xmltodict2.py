@@ -131,7 +131,7 @@ class Xml2Obj:
 		"""SAX character data event handler"""
 		if self._inCode or data.strip():
 			data = data.replace("&lt;", "<")
-			data = data.encode(default_encoding)
+			#data = data.encode(default_encoding)
 			if self._inCode:
 				if self._mthdCode:
 					self._mthdCode += data
