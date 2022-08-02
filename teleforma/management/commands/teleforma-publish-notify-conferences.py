@@ -17,8 +17,8 @@ from teleforma.views.core import get_courses
 import datetime
 
 
-MINUTES_LOW_RANGE = 30
-MINUTES_HIGH_RANGE = 1
+MINUTES_LOW_RANGE = 5
+MINUTES_HIGH_RANGE = 25
 
 class Logger:
     """A logging object"""
