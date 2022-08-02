@@ -93,6 +93,12 @@ class Command(BaseCommand):
             logger.logger.info("Conference published: " + conference.public_id)
 
         for conference in conferences:
+            medias = conference.media.all()
+            for media in medias:
+                media.is_published = True
+                media.save()
+                if "video/mp4" in media.mime_type:
+                    linked_media = media
             media = conference.media.filter(mime_type='video/mp4')[0]
             url = reverse('teleforma-media-detail', args=[conference.period.id, linked_media.id])
             message = "Nouvelle conférence publiée : " + str(conference)
