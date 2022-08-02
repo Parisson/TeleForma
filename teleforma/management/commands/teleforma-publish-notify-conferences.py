@@ -95,8 +95,6 @@ class Command(BaseCommand):
         for conference in conferences:
             medias = conference.media.all()
             for media in medias:
-                media.is_published = True
-                media.save()
                 if "video/mp4" in media.mime_type:
                     linked_media = media
             media = conference.media.filter(mime_type='video/mp4')[0]
