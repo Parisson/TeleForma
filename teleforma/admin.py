@@ -210,13 +210,13 @@ class ConferenceAdmin(admin.ModelAdmin):
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
 
-class SeminarStepInline(admin.StackedInline):
-    model = SeminarStep
-    autocomplete_fields = [ 'docs_1', 'medias', 'docs_2', 'docs_correct', 'quiz']
+class SeminarPartInline(admin.StackedInline):
+    model = SeminarPart
+    autocomplete_fields = [ 'docs_1', 'medias', 'docs_2', 'quiz']
 
 class SeminarAdmin(admin.ModelAdmin):
     exclude = ['keywords']
-    inlines = [SeminarQuestionInline, SeminarStepInline]
+    inlines = [SeminarQuestionInline, SeminarPartInline]
     filter_horizontal = ['professor',]
     # filter_vertical = ['docs_description', 'docs_1',
     #                    'docs_2', 'docs_correct', 'medias',

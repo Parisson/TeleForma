@@ -1,3 +1,8 @@
+:root{
+    --border-color: #aaa;
+    --body-quiet-color: #80bdff;
+    --darkened-bg: #e4e4e4;
+}
 
 .selector {
     width: 1024px;
@@ -23,4 +28,12 @@
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     color: #fff
+}
+
+.select2-container .select2-selection--multiple, .select2-container--open.select2-container--below .select2-selection--multiple {
+    border: 1px solid blue;
+}
+
+.select2-container {
+    min-width: 80%;
 }

@@ -1,0 +1,20 @@
+{% load teleforma_tags %}
+{% load thumbnail %}
+{% load i18n %}
+
+<table class="listing" width="100%">
+    <tbody>
+      <tr>
+          <td class="border-top" width="90%">
+            <a href="{% url 'teleforma-conference-detail' webclass.id %}" target="_blank">Voir la conférence</a>  
+          </td>
+          <td class="border-top" width="10%" align="center">
+            {% if user in webclass.readers.all %}
+              <img src="{{ STATIC_URL }}teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' viewed' %}" />
+            {% else %}
+              <img src="{{ STATIC_URL }}teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' not viewed yet' %}" />
+            {% endif %}
+          </td>
+          </tr>
+   </tbody>
+</table>

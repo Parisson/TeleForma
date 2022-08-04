@@ -410,3 +410,9 @@ def render_flatpage(content):
     parts = publish_parts(source=smart_str(parsed), writer_name="html4css1", settings_overrides={})
     return mark_safe('<div class="rst-content">\n' + force_text(parts["html_body"]) + '</div>')
 render_flatpage.is_safe = True
+
+
+@register.simple_tag(takes_context=True)
+def seminar_parts(context, seminar):
+    """ get parts for multipar seminar """
+    return seminar.get_parts(context.request.user)
