@@ -156,25 +156,40 @@ $(document).ready(function(){
 <dl class="listing">
 
 {% if media.conference %}
-<dt>{% trans "Course" %}</dt><dd><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
-<dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
+    <dt>{% trans "Course" %}</dt><dd><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ media.course.title }} - {{ media.course_type }}</a></dd>
+    <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
+
 {% if media.conference.professor %}
-<dt>{% trans "Professor" %}</dt><dd>{{ media.conference.professor }}</dd>
+    <dt>{% trans "Professor" %}</dt><dd>{{ media.conference.professor }}</dd>
 {% endif %}
-{% if media.conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>{% endif %}
-{% if media.conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>{% endif %}
-<dt>{% trans "Publication date" %}</dt><dd>{{ media.conference.date_publish }}</dd>
-<dt>{% trans "Duration" %}</dt><dd>{{ media.conference.duration }}</dd>
+
+{% if media.conference.comment %}
+    <dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>
+{% endif %}
+
+{% if media.conference.room %}
+    <dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>
+{% endif %}
+
+{% if media.conference.date_publish %}
+    <dt>{% trans "Publication date" %}</dt><dd>{{ media.conference.date_publish }}</dd>
+{% else %}
+    <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+{% endif %}
+
+    <dt>{% trans "Duration" %}</dt><dd>{{ media.conference.duration }}</dd>
+
 {% if user.is_staff or user.is_superuser %}
-<dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
-<dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
-<dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
-<dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
-<dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
-<dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
-<dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
-<dt>{% trans "Web class group" %}</dt><dd>{{ media.conference.web_class_group }}</dd>
+    <dt>{% trans "Mime type" %}</dt><dd>{{ media.mime_type }}</dd>
+    <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+    <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
+    <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
+    <dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
+    <dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
+    <dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
+    <dt>{% trans "Web class group" %}</dt><dd>{{ media.conference.web_class_group }}</dd>
 {% endif %}
+
 {% endif %}
 
 </dl>
