@@ -403,6 +403,10 @@ class Conference(models.Model):
         return str(self)
 
     @property
+    def duration(self):
+        return self.date_end - self.date_begin
+
+    @property
     def slug(self):
         slug = '-'.join([self.course.department.slug,
                          self.course.slug,

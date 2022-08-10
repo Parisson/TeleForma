@@ -36,7 +36,8 @@
                     {% if media.conference.professor %}
                     <dt>{% trans "Professor" %}</dt><dd>{{ media.conference.professor }}</dd>
                     {% endif %}
-                    <dt>{% trans "Begin" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+                    <dt>{% trans "Publication date" %}</dt><dd>{{ media.conference.date_publish }}</dd>
+                    <dt>{% trans "Duration" %}</dt><dd>{{ media.conference.duration }}</dd>
                     {% if media.conference.comment %}
                     <dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>
                     {% endif %}
