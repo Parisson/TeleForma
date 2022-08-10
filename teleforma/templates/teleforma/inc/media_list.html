@@ -41,7 +41,9 @@
                     {% else %}
                         <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
                     {% endif %}
-                    <dt>{% trans "Duration" %}</dt><dd>{{ media.conference.duration }}</dd>
+                    {% if media.conference.duration %}
+                        <dt>{% trans "Duration" %}</dt><dd>{{ media.conference.duration }}</dd>
+                    {% endif %}
                     {% if media.conference.comment %}
                     <dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>
                     {% endif %}

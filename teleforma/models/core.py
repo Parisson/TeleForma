@@ -404,8 +404,11 @@ class Conference(models.Model):
 
     @property
     def duration(self):
-        return self.date_end.replace(microsecond=0) - \
-               self.date_begin.replace(microsecond=0)
+        if self.date_end:
+            return self.date_end.replace(microsecond=0) - \
+                   self.date_begin.replace(microsecond=0)
+        else:
+            return None
 
     @property
     def slug(self):
