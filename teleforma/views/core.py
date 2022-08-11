@@ -608,12 +608,23 @@ class MediaView(CourseAccessMixin, DetailView):
         media = Media.objects.get(id=id)
         media.is_published = True
         media.save()
+        for other_media in media.conference.media.all():
+            other_media.is_published = True
+            other_media.save()
+        media.conference.status = 3
+        media.conference.date_publish = datetime.datetime.now()
+        media.conference.save()
 
     @jsonrpc_method('teleforma.unpublish_media')
     def unpublish(request, id):
         media = Media.objects.get(id=id)
         media.is_published = False
         media.save()
+        for other_media in media.conference.media.all():
+            other_media.is_published = False
+            other_media.save()
+        media.conference.status = 2
+        media.conference.save()
 
     def stream(self, request, period_id, pk, streaming=True):
         courses = get_courses(request.user)
