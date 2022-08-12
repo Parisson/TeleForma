@@ -5,6 +5,7 @@ from django.utils.encoding import force_text
 import warnings
 import os
 import sys
+import socket
 from django.urls import reverse_lazy
 # import environ
 
@@ -15,10 +16,6 @@ DEBUG = DEBUG_ENV
 TEMPLATE_DEBUG = DEBUG
 
 RECOVERY = False
-
-# disable to debug websocket and improve performance
-DEBUG_TOOLBAR = False
-
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -40,6 +37,13 @@ ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
 ]
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
+
+
+INTERNAL_IPS = ['127.0.0.1', ]
+
+# tricks to have debug toolbar when developing with docker
+ip = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS += [ip[:-1] + '1']
 
 REDIS_HOST = "redis"
 REDIS_PORT = 6379
@@ -159,7 +163,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG else ()) + (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -200,7 +204,7 @@ INSTALLED_APPS = (
 )
 
 
-if DEBUG_TOOLBAR:
+if DEBUG:
     INSTALLED_APPS += ('debug_toolbar',)
 
 TEMPLATES = [
@@ -505,7 +509,7 @@ SHERLOKS_USE_TRANSACTION_ID = True
 
 ORAL_OPTION_PRICE = 250
 
-if DEBUG_TOOLBAR:
+if DEBUG:
     def show_toolbar(request):
         return True
     DEBUG_TOOLBAR_CONFIG = {
