@@ -59,7 +59,10 @@ class ScriptAdmin(admin.ModelAdmin):
          return super(ScriptAdmin, self).render_change_form(request, context, *args, **kwargs)
 
     def author_name(self, instance):
-        return instance.author.username
+        if instance.author:
+            return instance.author.username
+        else:
+            return 'None'
 
     def file_size(self, instance):
         if instance.file:
