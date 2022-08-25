@@ -39,6 +39,8 @@ import json
 from collections import defaultdict
 import pprint
 
+ENCODING = 'utf-8'
+
 def parse_timecode(value, fps):
     """
     Parse a timestamp, either new HH:MM:SS.mmm format or old frames format
@@ -65,21 +67,21 @@ class KDEnLiveSession(object):
     def entries(self):
         entries = []
         for attr in self.session['children']:
-            if 'playlist' in attr['name'] and 'children' in attr:
+            if 'playlist' in self.get_name(attr) and 'children' in attr:
                 for att in attr['children']:
-                    if 'entry' in att['name'] and att['attributes']['producer'] != 'black':
+                    if 'entry' in self.get_name(att) and att['attributes']['producer'] != 'black':
                         entries.append(att['attributes'])
         return entries
 
     def video_entries(self):
         entries = []
         for attr in self.session['children']:
-            if 'playlist' in attr['name'] and 'children' in attr:
+            if 'playlist' in self.get_name(attr) and 'children' in attr:
                 plid = attr['attributes'].get('id', '')
                 if 'main_bin' in plid:
                     continue
                 for att in attr['children']:                    
-                    if 'entry' in att['name'] and att['attributes']['producer'] != 'black' \
+                    if 'entry' in self.get_name(att) and att['attributes']['producer'] != 'black' \
                             and not 'audio' in att['attributes']['producer']:
                         entries.append(att['attributes'])
         return entries
@@ -120,9 +122,18 @@ class KDEnLiveSession(object):
     def first_video_frame(self):
         return int(self.entries_sorted()[0]['in'])
 
+    def get_name(self, attr):
+        """
+        Get the name of an attibute, handling encoding issues
+        """
+        name = attr['name']
+        if isinstance(name, bytes):
+            name = name.decode(ENCODING)
+        return name
+    
     def profile(self):
         for attr in self.session['children']:
-            if 'profile' in attr['name']:
+            if 'profile' in self.get_name(attr):
                 return attr['attributes']
 
     def fix_text(self, text):
@@ -140,11 +151,11 @@ class KDEnLiveSession(object):
         """
         by_names = defaultdict(list)
         for attr in self.session['children']:
-            if 'producer' in attr['name'] and 'children' in attr:
+            if 'producer' in self.get_name(attr) and 'children' in attr:
                 if "id" in attr['attributes']:
                     entry_id = attr['attributes']['id']
                     for att in attr['children']:
-                        name = att['attributes']['name']
+                        name = self.get_name(att['attributes'])
                         if 'resource' in name and 'cdata' in att:
                             by_names[att['cdata']].append(entry_id)
 
@@ -202,28 +213,28 @@ class KDEnLiveSession(object):
                     return rel_time            
 
         for attr in self.session['children']:
-            if 'playlist' in attr['name'] and 'children' in attr:
+            if 'playlist' in self.get_name(attr) and 'children' in attr:
                 # Old v 6.4 file format, markers in playlist
                 for att in attr['children']:
                     if 'name' in att['attributes']:
-                        name = att['attributes']['name']
+                        name = self.get_name(att['attributes'])
                         if 'docmetadata.meta.attr.title.markup' in name:
                             title = att['cdata']
                         if 'marker' in name:
-                            name = name.encode('utf8')
+                            name = name.encode(ENCODING)
                             marker_time = float(name.split(':')[-1].replace(',','.').replace(' ', ''))
                             entry_id = str(name.split(':')[-2].split('.')[-1])
                             comment = self.fix_text(att['cdata'])
                             rel_time = get_reltime(entry_id, marker_time)
                             if rel_time is not None:
                                 add_marker(rel_time, comment)
-            elif 'producer' in attr['name'] and 'children' in attr:                
+            elif 'producer' in self.get_name(attr) and 'children' in attr:
                 # New v 6.24 file format, markers in producers
                 if "id" in attr['attributes']:
                     entry_id = attr['attributes']['id']
                     alt_ids = alternate_ids.get(entry_id, [])
                     for att in attr['children']:
-                        name = att['attributes']['name']
+                        name = self.get_name(att['attributes'])
                         if 'markers' in name:
                             items = json.loads(self.fix_text(att['cdata']))
                             #print("=> Marker items")
