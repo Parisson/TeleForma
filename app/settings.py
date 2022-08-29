@@ -376,6 +376,11 @@ def show_user_as(user):
 
 
 POSTMAN_SHOW_USER_AS = show_user_as
+def get_params_email(context):
+    return {
+        'cc': ['e-learning@pro-barreau.com'],
+    }
+POSTMAN_PARAMS_EMAIL = get_params_email  # default is None
 
 # MEZZANINE
 GRAPPELLI_INSTALLED = False
