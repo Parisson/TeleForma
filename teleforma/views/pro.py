@@ -362,6 +362,8 @@ class AnswerView(SeminarAccessMixin, SeminarRevisionMixin, FormView):
                 "You have successfully submitted your answer."))
             if answer.question.seminar.course.code == 'demo':
                 answer.validate()
+            answer.date_submitted = datetime.datetime.now()
+            answer.save()
         return super(AnswerView, self).form_valid(form)
 
     def form_invalid(self, form):

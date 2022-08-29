@@ -276,7 +276,7 @@ class Answer(models.Model):
     status      = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
     treated     = models.BooleanField(_('treated'), default=False)
     validated   = models.BooleanField(_('validated'), default=False)
-    date_submitted = models.DateTimeField(_('date submitted'), auto_now=True, null=True)
+    date_submitted = models.DateTimeField(_('date submitted'), null=True)
     date_validated = models.DateTimeField(_('date validated'), null=True)
     date_added     = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
 
