@@ -661,7 +661,7 @@ class Media(MediaBase):
         # Parse KDEnLive session
         if self.session_file:
             session = KDEnLiveSession(self.session_file.path)
-            markers = session.markers(**kwargs)
+            title, markers = session.markers(**kwargs)
             for marker in markers:
                 m = MediaItemMarker(item=self)
                 m.public_id = get_random_hash()
