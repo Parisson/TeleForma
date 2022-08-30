@@ -221,7 +221,6 @@ class KDEnLiveSession(object):
                         if 'docmetadata.meta.attr.title.markup' in name:
                             title = att['cdata']
                         if 'marker' in name:
-                            name = name.encode(ENCODING)
                             marker_time = float(name.split(':')[-1].replace(',','.').replace(' ', ''))
                             entry_id = str(name.split(':')[-2].split('.')[-1])
                             comment = self.fix_text(att['cdata'])
