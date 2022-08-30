@@ -149,11 +149,25 @@ class Command(BaseCommand):
                         and not 'preview' in filename and not 'Preview' in filename and filename[0] != '.' \
                         and statinfo.st_size > self.size_limit:
 
-                    # seminar_rank <= 9
-                    seminar_rank = int(root_list[-1][0])
+                    seminar_rank = root_list[-1]
+                    print(seminar_rank)
+                    if seminar_rank.isdigit():
+                       media_rank_offset = 0
+                    elif seminar_rank[0:2].isdigit():
+                       seminar_rank = root_list[-1][0:2]
+                       media_rank_offset = 2
+                    elif seminar_rank[0:1].isdigit():
+                       seminar_rank = root_list[-1][0:1]
+                       media_rank_offset = 1
 
-                    if len(root_list[-1]) != 1:
-                        rank = root_list[-1][1:]
+                    seminar_rank = int(seminar_rank)
+                    print(seminar_rank)
+
+                    # seminar_rank <= 9 
+                    #seminar_rank = int(root_list[-1][0])
+
+                    if media_rank_offset:
+                        rank = root_list[-1][media_rank_offset:]
                         media_rank = self.media_rank_dict[rank.replace('_', '')]
                         preview_trigger = False
                     else:
@@ -191,14 +205,22 @@ class Command(BaseCommand):
                     logger.logger.info(path)
 
                     # cleanup old media
+                    #print(delete)
+
                     if delete:
                         for media in seminar.medias.all():
                             seminar.medias.remove(media)
 
-                    print(path)
-                    media, c = Media.objects.get_or_create(course=course, file=path, type=ext)
+                    #print(path)
+                    
+                    medias = Media.objects.filter(course=course, file=path, type=ext)
+                    if medias.count() >= 1:
+                        c = False
+                    else:
+                        media, c = Media.objects.get_or_create(course=course, file=path, type=ext)
 
                     if c:
+                        print(path)
                         if not seminar in seminars:
                             seminars.append(seminar)
 
@@ -220,7 +242,8 @@ class Command(BaseCommand):
                                 transcoded, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
                             elif extension[1:] == 'kdenlive':
                                 media.session_file = r_path
-                                #media.parse_markers(from_first_marker=False)
+                                print(r_path)
+                                media.parse_markers(from_first_marker=False)
                             logger.logger.info(r_path)
                         media.save()
 
