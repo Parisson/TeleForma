@@ -16,6 +16,7 @@ develop-eggs
 .directory
 *.e4p
 select2-4.0.5
+local_settings.py
 
 # Installer logs
 pip-log.txt
