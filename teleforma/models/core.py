@@ -660,7 +660,7 @@ class Media(MediaBase):
     def parse_markers(self, **kwargs):
         # Parse KDEnLive session
         if self.session_file:
-            session = KDEnLiveSession(self.file.path)
+            session = KDEnLiveSession(self.session_file.path)
             markers = session.markers(**kwargs)
             for marker in markers:
                 m = MediaItemMarker(item=self)
