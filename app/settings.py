@@ -250,6 +250,7 @@ POSTMAN_DISALLOW_ANONYMOUS = True
 TELEFORMA_MASTER_HOST = 'https://staging.el.pro-barreau.parisson.com/'
 TELEFORMA_ORGANIZATION = "Pro Barreau"
 TELEFORMA_DESCRIPTION = "Pro Barreau"
+TELEFORMA_E_LEARNING_TYPE = 'AE'
 DEMO_SEMINAR = 59
 
 EMAIL_HOST = 'pb-smtp.pilotsystems.net'
