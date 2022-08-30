@@ -280,6 +280,7 @@ class Answer(models.Model):
     date_validated = models.DateTimeField(_('date validated'), null=True)
     date_added     = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
 
+    # test push/pull
     def __str__(self):
         return ' - '.join([str(self.question), self.user.username, str(self.date_submitted)])
 
