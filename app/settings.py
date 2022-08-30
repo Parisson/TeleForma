@@ -26,6 +26,7 @@ warnings.showwarning = lambda *x: None
 ADMINS = (
     ('Guillaume Pellerin', 'webmaster@parisson.com'),
     ('Gael le Mignot', 'gael@pilotsystems.net'),
+    ('Yoan Le Clanche', 'yoanl@pilotsystems.net'),
     #    ('Admin CRFPA', 'admin-crfpa@pre-barreau.com'),
 )
 
