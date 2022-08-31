@@ -71,7 +71,7 @@ from quiz.views import QuizTake
 
 from teleforma.context_processors import all_conferences, all_seminars, seminar_progress, seminar_validated
 from teleforma.models.core import Conference
-from teleforma.models.pro import Answer, Question, QuizValidation, Seminar, SeminarRevision, Testimonial
+from teleforma.models.pro import Answer, Question, QuizValidation, Seminar, SeminarRevision, SeminarPart, Testimonial
 from teleforma.forms import AnswerForm
 from teleforma.views.core import DocumentDownloadView, DocumentReadView, MediaView
 
@@ -148,6 +148,7 @@ class SeminarAccessMixin(object):
         sec = (totsec % 3600) % 60
         context['timer'] = "%d:%d:%d" % (h, m, sec)
         context['conferences'] = all_conferences(self.request)
+        context['show_webclass'] = seminar.use_webclass(user)
         return context
 
     def render_to_response(self, context):
@@ -230,7 +231,9 @@ class SeminarView(SeminarAccessMixin, DetailView):
         seminar = context['seminar']
 
         user = self.request.user
-        context['show_webclass'] = seminar.use_webclass(user)
+        context['parts'] = seminar.get_parts(user)
+
+
         validated = seminar_validated(user, seminar)
         if validated:
             # check if testimonial exists and create it
@@ -265,7 +268,6 @@ class SeminarView(SeminarAccessMixin, DetailView):
             messages.info(self.request, _(
                 "You have successfully terminated all steps of your e-learning seminar. You can now download your training testimonial below."))
         elif len(missing_steps) == 1:
-
             if missing_steps == set(['4.5']):
                 messages.warning(self.request,
                                  _("Yours submissions have been submitted. They will be processed within 48 hours."))
@@ -941,31 +943,43 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
 
     template_name = 'quiz/question.html'
 
+    def _init(self):
+        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
+        try:
+            self.part = self.quiz.seminarpart.get(seminar__pk=self.kwargs['pk'])
+        except SeminarPart.DoesNotExist:
+            self.part = self.seminar
+
     def get_user(self):
         user_id = self.request.user.id
         return User.objects.get(id=user_id)
 
     def can_access(self):
         user = self.get_user()
-        for items in [self.seminar.docs_1, self.seminar.medias]:
+        items = [self.part.docs_1, self.part.medias]
+        if self.seminar.is_multipart:
+            items.append(self.part.docs_2)
+        for items in items:
             for item in items.all():
                 if item.weight:
                     if user not in item.readers.all():
                         return False
         return True
 
+
     def get_context_data(self, **kwargs):
         context = super(QuizQuestionView, self).get_context_data(**kwargs)
+        self._init()
         user = self.get_user()
-        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
+
         context['can_access'] = self.can_access()
         context['seminar'] = self.seminar
         context['seminar_progress'] = seminar_progress(user, self.seminar)
         return context
 
     def final_result_user(self):
+        self._init()
         user = self.get_user()
-        self.seminar = Seminar.objects.get(pk=self.kwargs['pk'])
 
         results = {
             'quiz': self.quiz,
@@ -991,11 +1005,11 @@ class QuizQuestionView(SeminarAccessMixin, SeminarRevisionMixin, QuizTake):
 
         if self.sitting.get_percent_correct >= self.quiz.pass_mark:
             validation = QuizValidation(
-                user=user, quiz=self.seminar.quiz, validated=True)
+                user=user, quiz=self.part.quiz, validated=True)
             validation.save()
         else:
-            # revert step 1 validation
-            for doc in self.seminar.docs_1.all():
+            # revert part 1 validation
+            for doc in self.part.docs_1.all():
                 doc.readers.remove(user)
                 doc.save()
 

@@ -1490,6 +1490,16 @@ input,textarea{
     display:inline-block;
 }
 
+#module-set-left .sequences h3 {
+    display: block;
+    padding-bottom: 8px;
+    margin-bottom:1em;
+    width:100%;
+    color: black;
+    font-size: 1.3em;
+    border-bottom:1px solid #dfdfdf;
+}
+
 #module-set .ui-tabs.ui-widget-content{
 	margin-top: 15px;
 }
@@ -2156,5 +2166,32 @@ form .exceed{
 
 #_Form p {
     font-weight: bold;
+}
+
+/*** TABS ***/
+.multipart-tabs li {
+    display: inline-block;
+}
+
+.multipart-tabs .disabled {
+    color: grey;
+    pointer-events: none;
+}
+.multipart-tabs .active {
+    font-weight: bold;
+}
+.tab-content {
+  display: none;
+  padding: 6px 12px;
+  animation: fadeEffect 1s;
+}
+
+@keyframes fadeEffect {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 

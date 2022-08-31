@@ -51,27 +51,49 @@ def seminar_progress(user, seminar, more=False):
     total = 0
     missing_steps = set()
 
-    objects = [
-        {
-            'obj': seminar.docs_1,
-            'step': '1'
-        },
-        {
-            'obj': seminar.medias,
-            'step': '2'
-        },
-        {
-            'obj': seminar.docs_2,
-            'step': '3'
-        },
-        {
-            'obj': seminar.docs_correct,
-            'step': '5'
-        }
-    ]
+    multipart = seminar.is_multipart
+    parts = seminar.parts.all()
+    if not multipart:
+        objects = [
+            {
+                'obj': seminar.docs_1,
+                'step': '1'
+            },
+            {
+                'obj': seminar.medias,
+                'step': '2'
+            },
+            {
+                'obj': seminar.docs_2,
+                'step': '3'
+            },
+            {
+                'obj': seminar.docs_correct,
+                'step': '5'
+            }
+        ]
 
-    if seminar.use_webclass(user):
-        objects[1]['obj'] = seminar.conference
+        if seminar.use_webclass(user):
+            objects[1]['obj'] = seminar.conference
+    else:
+        objects = []
+        for part in parts:
+            objects.extend([
+                {
+                    'obj': part.docs_1,
+                    'step': '1'
+                },
+                {
+                    'obj': part.medias,
+                    'step': '2'
+                },
+                {
+                    'obj': part.docs_2,
+                    'step': '3'
+                }
+            ])
+        if seminar.use_webclass(user):
+            objects[1]['obj'] = seminar.conference
     for item in objects:
         
         obj = item['obj']
@@ -88,32 +110,41 @@ def seminar_progress(user, seminar, more=False):
                 else:
                     missing_steps.add(step)
 
-    questions = Question.objects.filter(seminar=seminar, status=3)
-    missing_step4 = None
-    for question in questions:
-        if question.weight:
-            total += question.weight
-            answer = Answer.objects.filter(question=question, status=3, user=user)
-            if answer:
-                answer = answer[0]
-            if answer:
-                progress += question.weight
-            else:
-                if answer and not answer.treated and not missing_step4 == '4':
-                    missing_step4 = '4.5'
+    # questions are not relevant to multipart
+    if not multipart:
+        questions = Question.objects.filter(seminar=seminar, status=3)
+        missing_step4 = None
+        for question in questions:
+            if question.weight:
+                total += question.weight
+                answer = Answer.objects.filter(question=question, status=3, user=user)
+                if answer:
+                    answer = answer[0]
+                if answer:
+                    progress += question.weight
                 else:
-                    missing_step4 = '4'
-    if missing_step4:
-        missing_steps.add(missing_step4)
+                    if answer and not answer.treated and not missing_step4 == '4':
+                        missing_step4 = '4.5'
+                    else:
+                        missing_step4 = '4'
+        if missing_step4:
+            missing_steps.add(missing_step4)
 
-    if seminar.quiz:
-        quiz_weight = 3
-        quiz_validations = QuizValidation.objects.filter(user=user, quiz=seminar.quiz, validated=True)
-        total += quiz_weight
-        if quiz_validations:
-            progress += quiz_weight
-        else:
-            missing_steps.add('2bis')
+
+    quizs = [seminar.quiz]
+    if multipart:
+        quizs = [part.quiz for part in parts]
+    quizstep = multipart and '4' or '2bis'
+    for quiz in quizs:
+        if quiz:
+            quiz_weight = 3
+            quiz_validations = QuizValidation.objects.filter(user=user, quiz=quiz, validated=True)
+            total += quiz_weight
+            if quiz_validations:
+                
+                progress += quiz_weight
+            else:
+                missing_steps.add(quizstep)
 
     if total != 0:
         progress = int(progress*100/total)
@@ -128,6 +159,11 @@ def seminar_progress(user, seminar, more=False):
 
 
 def seminar_validated(user, seminar):
+    if seminar.is_multipart:
+        for part in seminar.parts.all():
+            if not part.is_validated(user):
+                return False
+        return True
     validated = []
     questions = seminar.question.filter(status=3)
     if seminar.quiz:

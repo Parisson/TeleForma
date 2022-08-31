@@ -58,7 +58,7 @@ $(function() {
 <ul id="seminars">
 {% block conferences %}
 {% for conference in conferences %}
-   <li {% if user.is_staff and seminar.status == 2 %}class="link_green"{% endif %}><a href="{% url 'teleforma-conference-detail' conference.id %}">{{ conference.title }}</a></li>
+   <li {% if user.is_staff and seminar.status == 2 %}class="link_green"{% endif %}><a href="{% url 'teleforma-conference-detail' conference.id %}">{% if conference.title %}{{ conference.title }}{% else %}{{ conference }}{% endif %}</a></li>
  {% endfor %}
 {% endblock conferences %}
 </ul>
