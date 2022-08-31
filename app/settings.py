@@ -247,7 +247,7 @@ POSTMAN_DISALLOW_ANONYMOUS = True
 
 #FILE_PROTECTION_METHOD = 'xsendfile'
 
-TELEFORMA_MASTER_HOST = 'https://staging.el.pro-barreau.parisson.com/'
+TELEFORMA_MASTER_HOST = 'https://e-learning.pro-barreau.com/'
 TELEFORMA_ORGANIZATION = "Pro Barreau"
 TELEFORMA_DESCRIPTION = "Pro Barreau"
 TELEFORMA_E_LEARNING_TYPE = 'AE'
@@ -278,7 +278,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-SESSION_COOKIE_DOMAIN="staging.el.pro-barreau.parisson.com"
+SESSION_COOKIE_DOMAIN=".pro-barreau.com"
 SESSION_COOKIE_SAMESITE="None"
 SESSION_COOKIE_SECURE=True
 
