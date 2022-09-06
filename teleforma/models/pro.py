@@ -35,6 +35,7 @@
 """
 
 import datetime
+from itertools import chain
 import os
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -61,6 +62,9 @@ class SeminarType(models.Model):
     class Meta(MetaCore):
         db_table = app_label + '_' + 'seminar_type'
         verbose_name = _('Seminar type')
+
+
+
 
 
 class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
@@ -183,6 +187,33 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     def suggestions(self):
         return (list(self.suggested_seminars.all())+list(self.suggested_conferences.all()))[:3]
 
+    @property
+    def is_multipart(self):
+        return self.parts.count()
+    
+    @property
+    def number_of_parts(self):
+        """ number of top parts """
+        return self.parts.count() or 1
+
+    def get_parts(self, user):
+        """ get parts info """
+        parts = []
+        last_accessible = None
+        for i, part in enumerate(self.parts.order_by('id')):
+            validated = part.is_validated(user)
+            accessible = validated
+            if not validated and not last_accessible:
+                accessible = True
+                last_accessible = True 
+            parts.append({
+                'index': i + 1,
+                'object': part,
+                'validated': validated,
+                'accessible': accessible
+            })
+        return parts
+
     def use_webclass(self, user):
         """
         Should we show the webclass or the media ?
@@ -245,7 +276,36 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
         verbose_name = _('Seminar')
         ordering = ['rank']
 
+class SeminarPart(models.Model):
+    seminar         = models.ForeignKey(Seminar, related_name='parts', verbose_name=_('seminar'), on_delete=models.CASCADE)
+    docs_1          = models.ManyToManyField(Document, related_name="seminarpart_docs1",
+                                        verbose_name=_('documents 1'),
+                                        blank=True)
+    medias          = models.ManyToManyField(Media, related_name="seminarpart",
+                                        verbose_name=_('media'),
+                                        blank=True)
+    webclass_text   = models.CharField("Titre webclass", blank=True, null=True, help_text="Texte utilisé lorsque les medias sont remplacés par la webclasse.", max_length=255)
+    docs_2          = models.ManyToManyField(Document, related_name="seminarpart_docs2",
+                                        verbose_name=_('documents 2'),
+                                        blank=True)
+    # docs_correct    = models.ManyToManyField(Document, related_name="seminarpart_docs_correct",
+    #                                     verbose_name=_('corrected documents'),
+    #                                     blank=True)
+    quiz            = models.ForeignKey(Quiz, related_name="seminarpart",
+                                        verbose_name=_('quiz'),
+                                        on_delete=models.PROTECT)
 
+                                    
+    def is_validated(self, user):
+        """ a module is validated when every doc / medias is viewed and quiz is validated """
+        validations = QuizValidation.objects.filter(quiz=self.quiz, user=user, validated=True, date_validated__range=[self.seminar.date_added, self.seminar.expiry_date])
+        if not validations:
+            return False
+        for item in chain(self.docs_1.all(), self.medias.all(), self.docs_2.all()):
+            if user not in item.readers.all():
+                return False
+        return True
+        
 class Question(ClonableMixin, models.Model):
 
     element_type = 'question'

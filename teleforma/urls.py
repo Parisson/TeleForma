@@ -75,18 +75,18 @@ urlpatterns = [
     # Registration
 
     # Registration
-    url(r'^accounts/password_change/$', PasswordChangeView.as_view(template_name='registration/password_change_form.html'),
+    url(r'^accounts/password_change/$', PasswordChangeView.as_view(template_name='teleforma_registration/password_change_form.html'),
         name="teleforma-password-change"),
     url(r'^accounts/password_change_done/$', PasswordChangeDoneView.as_view(
-        template_name='registration/password_change_done.html'), name="password_change_done"),
+        template_name='teleforma_registration/password_change_done.html'), name="password_change_done"),
 
-    url(r'^accounts/password_reset/$', PasswordResetView.as_view(template_name='registration/password_reset_form.html',
-                                                                 email_template_name='registration/password_reset_email.html'), name="teleforma-password-reset"),
+    url(r'^accounts/password_reset/$', PasswordResetView.as_view(template_name='teleforma_registration/password_reset_form.html',
+                                                                 email_template_name='teleforma_registration/password_reset_email.html'), name="teleforma-password-reset"),
     url(r'^accounts/password_reset_done/$', PasswordResetDoneView.as_view(
-        template_name='registration/password_reset_done.html'), name="password_reset_done"),
+        template_name='teleforma_registration/password_reset_done.html'), name="password_reset_done"),
     path('accounts/password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
-        template_name='registration/password_reset_confirm.html'), name="teleforma-password-reset-confirm"),
-    url(r'^accounts/password_reset_complete/$', PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
+        template_name='teleforma_registration/password_reset_confirm.html'), name="teleforma-password-reset-confirm"),
+    url(r'^accounts/password_reset_complete/$', PasswordResetCompleteView.as_view(template_name='teleforma_registration/password_reset_complete.html'),
         name="password_reset_complete"),
 
     # url(r'^captcha/', include('captcha.urls')),

@@ -12,7 +12,11 @@
 
 {% if not can_access %}
    <br/>
-   <p class="alert error">Vous n'avez pas accès à ce quizz car vous n'avez pas complété les étapes 1 et/ou 2.</p>
+   {% if seminar.is_multipart %}
+    <p class="alert error">Vous n'avez pas accès à ce quiz car vous n'avez pas complété les étapes précédentes.</p>
+   {% else %}
+    <p class="alert error">Vous n'avez pas accès à ce quiz car vous n'avez pas complété les étapes 1 et/ou 2.</p>
+   {% endif %}
    <br/>   
    <p>
    <a href="{% url 'teleforma-seminar-detail' seminar.id %}" class="component_icon button icon_next">&nbsp;{% trans "Back" %} au séminaire</a>   

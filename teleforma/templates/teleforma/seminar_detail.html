@@ -48,9 +48,6 @@
       }
     {% endif %}
   });
-
-
-
 </script>
 
 
@@ -78,7 +75,25 @@
   var f = seminarUtils;
   $(document).ready(function () {
     onLoadSeminar('{{seminar.id}}', '{{user.username}}')
+    
+    $('.tab-link').bind('click', function(){
+      openTab($(this).attr('href'));
+    })
+    openTab($('.tab-link:not(.disabled)').last().attr('href'));
   });
+
+
+  function openTab(tab) {
+    $(".tab-content").each(function() {
+      $(this).hide();
+    })
+    $(".tab-link").each(function() {
+      $(this).removeClass('active');
+    })
+    $("a[href="+tab+"]").addClass('active');
+    $(tab).show().addClass("active");
+  }
+
 
   $(window).ready(function () {
     {% if user.is_staff %}
@@ -98,6 +113,8 @@
       onUnloadSeminar('{{seminar.id}}', '{{user.username}}')
     });
   });
+
+
 
 </script>
 
@@ -158,6 +175,106 @@
     {% endif %}
   </div>
 
+  {% if seminar.is_multipart %}
+
+  <div class="multipart">
+    <ul class="multipart-tabs">
+      {% for part in parts %}
+      <li><a href="#part-{{ part.index }}" class="tab-link {% if part.validated %}validated{% endif %} {% if not part.accessible %}disabled{% endif %}">Séquence {{ part.index }} > </a></li>
+      {% endfor %}
+      <li><a href="#part-last" class="tab-link {% if not seminar_progress == 100 %}disabled{% endif %}">Attestation</a></li>
+    </ul>
+
+
+    {% for part in parts %}
+    <div class="tab-content" id="part-{{ part.index }}">
+      <h2>Séquence {{ part.index }}</h2>
+
+      {% with part.object.docs_1 as docs %}
+      <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 1 :
+            {% if docs.all.count > 1 %}{% trans "read these documents" %}{% else %}{% trans "read this document" %}{% endif %}
+          </h3>
+        </div>
+        {% include "teleforma/inc/document_simple_list.html" %}
+      </div>
+      {% endwith %}
+
+      {% if seminar.use_webclass %}
+        {% with seminar.conference as webclass %}
+        <div class="course_content">
+          <div class="course_subtitle">
+            <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 :
+              {% if part.object.webclass_text %}{{ part.object.webclass_text}}{% else %}{% trans "view this conference" %}{% endif %}</h3>
+          </div>
+          {% include "teleforma/inc/webclass.html" %}
+        </div>
+        {% endwith %}
+        {% else %}
+        {% with part.object.medias as medias %}
+        <div class="course_content">
+          <div class="course_subtitle">
+            <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 :
+              {% if medias.all.count > 1 %}{% trans "view these conferences" %}{% else %}{% trans "view this conference" %}{% endif %}
+            </h3>
+          </div>
+          {% include "teleforma/inc/media_package_list.html" %}
+        </div>
+        {% endwith %}
+      {% endif %}
+
+      {% with part.object.docs_2 as docs %}
+      <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 3 :
+            {% if docs.all.count > 1 %}{% trans "read these documents" %}{% else %}{% trans "read this document" %}{% endif %}
+          </h3>
+        </div>
+        {% include "teleforma/inc/document_simple_list.html" %}
+      </div>
+      {% endwith %}
+      
+
+      {% with part.object.quiz as quiz %}
+      <div class="course_content">
+        <div class="course_subtitle">
+          <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 4 :
+            {% trans "Quiz" %}</h3>
+        </div>
+        {% include "teleforma/inc/quiz_list.html" %}
+      </div>
+      {% endwith %}
+    </div>
+    {% endfor %}
+
+    <div class="tab-content" id="part-last">
+      {% if seminar_progress == 100 %}
+        {% with seminar.form as form %}
+        <div class="course_content">
+          <div class="course_subtitle">
+            <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 1 :
+              {% trans "evaluate the seminar" %}</h3>
+          </div>
+          {% include "teleforma/inc/evaluation_form.html" %}
+        </div>
+        {% endwith %}
+      {% endif %}
+      
+      {% if seminar_validated and seminar_progress == 100 and delta_sec >= 0 %}
+        <div class="course_content">
+          <div class="course_subtitle">
+            <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 :
+              {% trans "download your testimonial" %}</h3>
+          </div>
+          {% include "teleforma/inc/testimonial_list.html" %}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% else %}
   {% with seminar.docs_1 as docs %}
   <div class="course_content">
     <div class="course_subtitle">
@@ -169,32 +286,33 @@
   </div>
   {% endwith %}
 
-  {% if show_webclass %}
-    {% with seminar.conference as webclass %}
-    <div class="course_content">
-      <div class="course_subtitle">
-        <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 :
-          {% trans "view this conference" %}</h3>
-      </div>
-      {% include "teleforma/inc/webclass.html" %}
+  {% if seminar.use_webclass %}
+  {% with seminar.conference as webclass %}
+  <div class="course_content">
+    <div class="course_subtitle">
+      <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 :
+        {% trans "view this conference" %}</h3>
     </div>
-    {% endwith %}
+    {% include "teleforma/inc/webclass.html" %}
+  </div>
+  {% endwith %}
   {% else %}
-    {% with seminar.medias as medias %}
-    <div class="course_content">
-      <div class="course_subtitle">
-        <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 :
-          {% if medias.all.count > 1 %}{% trans "view these conferences" %}{% else %}{% trans "view this conference" %}{% endif %}
-        </h3>
-      </div>
-      {% include "teleforma/inc/media_package_list.html" %}
+  {% with seminar.medias as medias %}
+  <div class="course_content">
+    <div class="course_subtitle">
+      <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2 :
+        {% if medias.all.count > 1 %}{% trans "view these conferences" %}{% else %}{% trans "view this conference" %}{% endif %}
+      </h3>
     </div>
-    {% endwith %}
+    {% include "teleforma/inc/media_package_list.html" %}
+  </div>
+  {% endwith %}
   {% endif %}
 
 
 
   {% if seminar.quiz %}
+  {% with seminar.quiz as quiz %}
   <div class="course_content">
     <div class="course_subtitle">
       <h3><img src="{{ STATIC_URL }}/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 2bis :
@@ -202,6 +320,7 @@
     </div>
     {% include "teleforma/inc/quiz_list.html" %}
   </div>
+  {% endwith %}
   {% endif %}
 
   {% with seminar.docs_2 as docs %}
@@ -240,25 +359,27 @@
 
   {% if seminar_progress == 100 %}
 
-    {% with seminar.form as form %}
-    <div class="course_content">
-      <div class="course_subtitle">
-        <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 :
-          {% trans "evaluate the seminar" %}</h3>
-      </div>
-      {% include "teleforma/inc/evaluation_form.html" %}
+  {% with seminar.form as form %}
+  <div class="course_content">
+    <div class="course_subtitle">
+      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 6 :
+        {% trans "evaluate the seminar" %}</h3>
     </div>
-    {% endwith %}
+    {% include "teleforma/inc/evaluation_form.html" %}
+  </div>
+  {% endwith %}
   {% endif %}
 
   {% if seminar_validated and seminar_progress == 100 and delta_sec >= 0 %}
-    <div class="course_content">
-      <div class="course_subtitle">
-        <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7 :
-          {% trans "download your testimonial" %}</h3>
-      </div>
-      {% include "teleforma/inc/testimonial_list.html" %}
+  <div class="course_content">
+    <div class="course_subtitle">
+      <h3><img src="{{ STATIC_URL }}/telemeta/images/item_title.png" width="10px" alt="" /> {% trans "Step" %} 7 :
+        {% trans "download your testimonial" %}</h3>
     </div>
+    {% include "teleforma/inc/testimonial_list.html" %}
+  </div>
+  {% endif %}
+  
   {% endif %}
 
   {% endblock course_content %}

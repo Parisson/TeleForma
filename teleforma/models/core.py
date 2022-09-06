@@ -628,6 +628,8 @@ class Media(MediaBase):
     @cached_property
     def full_title(self):
         strings = []
+        if self.title:
+            strings.append(self.title)
         if self.period:
             strings.append(self.period.name)
         if self.course:

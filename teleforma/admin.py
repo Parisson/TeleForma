@@ -144,8 +144,10 @@ class MediaItemMarkerInline(admin.StackedInline):
 class MediaAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_added'
     exclude = ['readers']
-    search_fields = ['id', 'title', 'course__title', 'course__code', 'title']
+    search_fields = ['id', 'title', 'course__title', 'course__code']
     inlines = [MediaTranscodedInline, MediaItemMarkerInline]
+    ordering = ['-date_added']
+
 
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']
@@ -210,9 +212,13 @@ class ConferenceAdmin(admin.ModelAdmin):
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
 
+class SeminarPartInline(admin.StackedInline):
+    model = SeminarPart
+    autocomplete_fields = [ 'docs_1', 'docs_2', 'medias', 'quiz']
+
 class SeminarAdmin(admin.ModelAdmin):
     exclude = ['keywords']
-    inlines = [SeminarQuestionInline,]
+    inlines = [SeminarQuestionInline, SeminarPartInline]
     filter_horizontal = ['professor',]
     # filter_vertical = ['docs_description', 'docs_1',
     #                    'docs_2', 'docs_correct', 'medias',
@@ -287,6 +293,9 @@ class SeminarAdmin(admin.ModelAdmin):
 
     class Media:
         css = { 'all': ('admin/extra.css',) }
+
+
+
 
 class MediaItemMarkerAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description']
