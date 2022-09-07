@@ -201,7 +201,7 @@
       </div>
       {% endwith %}
 
-      {% if seminar.use_webclass %}
+      {% if show_webclass %}
         {% with seminar.conference as webclass %}
         <div class="course_content">
           <div class="course_subtitle">
@@ -286,7 +286,7 @@
   </div>
   {% endwith %}
 
-  {% if seminar.use_webclass %}
+  {% if show_webclass %}
   {% with seminar.conference as webclass %}
   <div class="course_content">
     <div class="course_subtitle">
