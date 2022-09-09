@@ -78,7 +78,7 @@ class KDEnLiveSession(object):
         for attr in self.session['children']:
             if 'playlist' in self.get_name(attr) and 'children' in attr:
                 plid = attr['attributes'].get('id', '')
-                if 'main_bin' in plid:
+                if 'main_bin' in plid or 'main bin' in plid:
                     continue
                 for att in attr['children']:                    
                     if 'entry' in self.get_name(att) and att['attributes']['producer'] != 'black' \
@@ -193,7 +193,6 @@ class KDEnLiveSession(object):
             """
             marker = {}
             marker['time'] = rel_time
-            marker['session_timecode'] = time.strftime('%H:%M:%S', time.gmtime(rel_time))
             if ":" in comment:
                 pre, post = comment.split(':', 1)
                 if pre.isdigit():
@@ -208,6 +207,7 @@ class KDEnLiveSession(object):
             rel_time = 0
 
             for entry in entries:
+                #print(entry_id, entry['id'], entry['in'], entry['out'], entry['t'], marker_time)
                 if entry['in'] <= marker_time <= entry['out'] and (entry_id == entry['id'] or entry['id'] in alt_ids):
                     rel_time = entry['t'] + (marker_time - entry['in']) + offset
                     return rel_time            
@@ -226,6 +226,7 @@ class KDEnLiveSession(object):
                             comment = self.fix_text(att['cdata'])
                             rel_time = get_reltime(entry_id, marker_time)
                             if rel_time is not None:
+                                #print(comment, entry_id, marker_time, rel_time)
                                 add_marker(rel_time, comment)
             elif 'producer' in self.get_name(attr) and 'children' in attr:
                 # New v 6.24 file format, markers in producers
@@ -242,16 +243,19 @@ class KDEnLiveSession(object):
                                 marker_time = float(marker['pos'] / fps)
                                 rel_time = get_reltime(entry_id, marker_time,
                                                        alt_ids)
+                                #print(marker['comment'], entry_id, marker_time, rel_time)
                                 if rel_time is not None:
                                     add_marker(rel_time, marker['comment'])
 
 
-        #print("=> Markers")
-        #pprint.pprint(markers)
-                                    
         if markers and from_first_marker:
             delta = min([ marker['time'] for marker in markers ])
             for marker in markers:
                 marker['time'] -= delta
+        if markers:
+            for marker in markers:
+                rel_time = marker['time']
+                marker['session_timecode'] = time.strftime('%H:%M:%S', time.gmtime(rel_time))
+
         return title, markers
 
