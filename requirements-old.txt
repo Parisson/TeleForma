@@ -74,7 +74,7 @@ logilab-astng==0.24.3
 logilab-common==1.4.4
 longerusername==0.4
 mailer==0.7
-Mako==0.7.0
+Mako==1.2.2
 Markdown==2.1.1
 MarkupSafe==0.15
 mock==1.0.1
