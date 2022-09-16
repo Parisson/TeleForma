@@ -92,7 +92,7 @@ oauthlib==0.6.0
 oslo.config==3.2.0
 oslo.i18n==3.1.0
 oslo.serialization==2.2.0
-oslo.utils==3.3.0
+oslo.utils==4.10.1
 packaging==20.9
 paramiko==1.10.1
 pathlib2==2.1.0
