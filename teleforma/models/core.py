@@ -770,7 +770,7 @@ class WebclassMixin(Model):
                     'moderatorPW':self.webclass_password,
                     'attendeePW':'pwattendee',
                     # 'maxParticipants':self.webclass_max_participants + 1,
-                    'welcome':"Pro-Barreau : Bienvenue sur la conférence \"%s\"." % (self.title.encode('utf-8'),),
+                    'welcome':"Pro-Barreau : Bienvenue sur la conférence \"%s\"." % (self.title,),
                     'record':True,
                     # 'autoStartRecording':True,
                     'muteOnStart':True,
