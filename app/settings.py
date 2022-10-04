@@ -344,7 +344,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': "/var/log/app/app.log",
             'formatter': 'simple',
