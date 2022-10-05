@@ -9,3 +9,4 @@ python3-psycopg2
 python3-yaml
 uwsgi
 gettext
+ffmpeg

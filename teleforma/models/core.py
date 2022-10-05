@@ -116,6 +116,7 @@ class MetaCore:
     app_label = app_label
 
 
+
 class ClonableMixin(object):
 
     def clone(self):
@@ -652,6 +653,7 @@ class Media(MediaBase):
         elif self.conference:
             self.conference.course.save()
         self.set_mime_type()
+        self.set_duration()
 
     def poster_url(self, geometry='640'):
         url = ''
@@ -672,9 +674,29 @@ class Media(MediaBase):
                 m.save()
             return markers
 
+    def set_duration(self):
+        """
+        set media duration
+        """
+        if self.file:
+            process = subprocess.Popen(["ffmpeg", "-i", self.file.path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            stdout, stderr = process.communicate()
+            try:
+                pattern = re.compile(r'Duration: ([\w.-]+):([\w.-]+):([\w.-]+),')
+                match = pattern.search(stdout)
+                duration = "%s:%s:%s" % (match.group(1), match.group(2), match.group(3))
+            except:
+                duration = None
+        else:
+            duration = None
+
+        self.approx_duration = duration
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
         ordering = ['rank']
+
+
 
 
 class SuggestionsMixin(Model):

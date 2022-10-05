@@ -185,7 +185,6 @@ class Command(BaseCommand):
                     path = dir + os.sep + filename
 
                     seminar_title = '_'.join([course_code, str(seminar_rank)])
-                    collection_id = '_'.join([department_name, seminar_title])
                     course = Course.objects.get(code=course_code)
                     department, c = Department.objects.get_or_create(name=department_name,
                                                                      organization=organization)
