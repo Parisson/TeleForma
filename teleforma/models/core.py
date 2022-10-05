@@ -35,12 +35,14 @@
 """
 
 import os
+import re
 import string
 import datetime
 import mimetypes
 import copy
 import random
 from unidecode import unidecode
+import subprocess
 
 from django.conf import settings
 from django.db.models import *
@@ -681,12 +683,13 @@ class Media(MediaBase):
         if self.file:
             process = subprocess.Popen(["ffmpeg", "-i", self.file.path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             stdout, stderr = process.communicate()
-            try:
-                pattern = re.compile(r'Duration: ([\w.-]+):([\w.-]+):([\w.-]+),')
-                match = pattern.search(stdout)
-                duration = "%s:%s:%s" % (match.group(1), match.group(2), match.group(3))
-            except:
-                duration = None
+            pattern = re.compile(r'Duration: ([\w.-]+):([\w.-]+):([\w.-]+),')
+            match = pattern.search(str(stdout))
+            hours = int(match.group(1))
+            minutes = int(match.group(2))
+            seconds = int(match.group(3)[:-3])
+            #duration = "%s:%s:%s" % (match.group(1), match.group(2), match.group(3))
+            duration = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds).total_seconds()
         else:
             duration = None
 
