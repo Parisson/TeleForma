@@ -691,7 +691,7 @@ class Media(MediaBase):
             #duration = "%s:%s:%s" % (match.group(1), match.group(2), match.group(3))
             duration = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds).total_seconds()
         else:
-            duration = None
+            duration = 0
 
         self.approx_duration = duration
 
