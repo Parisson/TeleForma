@@ -354,14 +354,9 @@ LOGGING = {
         },
     },
     'loggers': {
-        'payment': {
+        '': {
             'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'websocket': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
     },
