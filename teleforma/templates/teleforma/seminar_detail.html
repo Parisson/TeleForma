@@ -84,7 +84,7 @@
 
 
   function openTab(tab) {
-    $(".tab-content").each(function() {
+    $(".tab-content, .index-multipart").each(function() {
       $(this).hide();
     })
     $(".tab-link").each(function() {
@@ -92,6 +92,8 @@
     })
     $("a[href="+tab+"]").addClass('active');
     $(tab).show().addClass("active");
+    $(tab + "-index").show();
+    
   }
 
 
@@ -180,7 +182,7 @@
   <div class="multipart">
     <ul class="multipart-tabs">
       {% for part in parts %}
-      <li><a href="#part-{{ part.index }}" class="tab-link {% if part.validated %}validated{% endif %} {% if not part.accessible %}disabled{% endif %}">Séquence {{ part.index }} > </a></li>
+      <li><a href="#part-{{ part.index }}" class="tab-link {% if part.validated %}validated{% endif %} {% if not part.accessible %}disabled{% endif %}">{% if part.object.title %}{{ part.object.title }}{% else %}Séquence {{ part.index }}{% endif %} > </a></li>
       {% endfor %}
       <li><a href="#part-last" class="tab-link {% if not seminar_progress == 100 %}disabled{% endif %}">Attestation</a></li>
     </ul>
@@ -188,7 +190,7 @@
 
     {% for part in parts %}
     <div class="tab-content" id="part-{{ part.index }}">
-      <h2>Séquence {{ part.index }}</h2>
+      <h2>{% if part.object.title %}{{ part.object.title }}{% else %}Séquence {{ part.index }}{% endif %}</h2>
 
       {% with part.object.docs_1 as docs %}
       <div class="course_content">
@@ -415,13 +417,20 @@
 
 
 {% block index %}
-{% if seminar.index %}
+{% if seminar.index or seminar.is_multipart %}
 <div class="module">
   <h3><img src="{{STATIC_URL}}teleforma/images/module_playlist.png" alt="status" style="vertical-align:middle" />
     {% trans "Plan" %}</h3>
   <div id="index">
-    {{ seminar.index|safe }}
+  {% if seminar.is_multipart %}
+    {% for part in parts %}
+      <div id="part-{{part.index}}-index" class="index-multipart">
+        {{ part.object.index|safe }}
+      </div>
+    {% endfor %}
+  {% elif seminar.index  %}
+    {{ seminar.index|safe }}    
+  {% endif %}
   </div>
-</div>
 {% endif %}
 {% endblock index %}

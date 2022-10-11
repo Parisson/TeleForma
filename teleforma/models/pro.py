@@ -278,6 +278,8 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
 
 class SeminarPart(models.Model):
     seminar         = models.ForeignKey(Seminar, related_name='parts', verbose_name=_('seminar'), on_delete=models.CASCADE)
+    
+    title           = models.CharField("Titre de la séquence", max_length=80, blank=True, null=True)
     docs_1          = models.ManyToManyField(Document, related_name="seminarpart_docs1",
                                         verbose_name=_('documents 1'),
                                         blank=True)
@@ -293,7 +295,13 @@ class SeminarPart(models.Model):
     #                                     blank=True)
     quiz            = models.ForeignKey(Quiz, related_name="seminarpart",
                                         verbose_name=_('quiz'),
+                                        blank=True, null=True,
                                         on_delete=models.PROTECT)
+    index            = tinymce.models.HTMLField("Plan détaillé", 
+                                                help_text="",
+                                                null=True, 
+                                                blank=True)
+
 
                                     
     def is_validated(self, user):
