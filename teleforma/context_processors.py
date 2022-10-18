@@ -137,7 +137,7 @@ def seminar_progress(user, seminar, more=False):
     quizstep = multipart and '4' or '2bis'
     for quiz in quizs:
         if quiz:
-            quiz_weight = 3
+            quiz_weight = quiz.weight or 3
             startdate = seminar.date_added
             enddate = seminar.expiry_date
             quiz_validations = QuizValidation.objects.filter(user=user, quiz=quiz, validated=True, date_validated__range=[startdate, enddate])

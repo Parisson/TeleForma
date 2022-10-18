@@ -7,7 +7,8 @@
   <div class="sequences">
     {% for part in parts %}
       {% if part.accessible %}
-        <h3>Séquence {{ part.index }}</h3>
+        
+        <h3>{% if part.object.title %}{{ part.object.title }}{% else %}Séquence {{ part.index }}{% endif %}</h3>
 
         {% with part.object.docs_1 as docs %}
         <div class="course_subtitle">

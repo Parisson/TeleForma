@@ -27,4 +27,3 @@ psycopg2==2.8.6
 uwsgi
 pymemcache==3.4.4
 Mezzanine==5.0.0
-

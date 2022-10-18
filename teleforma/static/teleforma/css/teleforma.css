@@ -2172,7 +2172,9 @@ form .exceed{
 .multipart-tabs li {
     display: inline-block;
 }
-
+.multipart-tabs li {
+    font-size: 0.9em;
+}
 .multipart-tabs .disabled {
     color: grey;
     pointer-events: none;
@@ -2184,6 +2186,9 @@ form .exceed{
   display: none;
   padding: 6px 12px;
   animation: fadeEffect 1s;
+}
+.tab-content h2 {
+    font-size: 1.1em;
 }
 
 @keyframes fadeEffect {
