@@ -31,11 +31,21 @@ class Command(BaseCommand):
     less = ['Societes_3', 'Travail_8', 'DSS_7', 'PI_2']
     site = Site.objects.get_current()
 
+    def add_arguments(self, parser):
+        parser.add_argument('--domain', type=str, required=True,
+                            help='domain')
+        parser.add_argument('--logfile', type=str, required=True,
+                            help='log file path')
+        parser.add_argument('--from_year', type=str, required=True,
+                            help='from year')
+        parser.add_argument('--to_year', type=str, required=True,
+                            help='to year')
+
     def handle(self, *args, **kwargs):
-        to_year = int(args[-2])
-        from_year = int(args[-3])
-        logger = Logger(args[-1])
-        domain = args[-4]
+        to_year = int(kwargs['to_year'])
+        from_year = int(kwargs['from_year'])
+        logger = Logger(kwargs['logfile'])
+        domain = kwargs['domain']
 
         self.site.domain = domain
         self.site.save()
