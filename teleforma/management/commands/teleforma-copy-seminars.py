@@ -31,11 +31,21 @@ class Command(BaseCommand):
     less = ['Societes_3', 'Travail_8', 'DSS_7', 'PI_2']
     site = Site.objects.get_current()
 
+    def add_arguments(self, parser):
+        parser.add_argument('--domain', type=str, required=True,
+                            help='domain')
+        parser.add_argument('--logfile', type=str, required=True,
+                            help='log file path')
+        parser.add_argument('--from_year', type=str, required=True,
+                            help='from year')
+        parser.add_argument('--to_year', type=str, required=True,
+                            help='to year')
+
     def handle(self, *args, **kwargs):
-        to_year = int(args[-2])
-        from_year = int(args[-3])
-        logger = Logger(args[-1])
-        domain = args[-4]
+        to_year = int(kwargs['to_year'])
+        from_year = int(kwargs['from_year'])
+        logger = Logger(kwargs['logfile'])
+        domain = kwargs['domain']
 
         self.site.domain = domain
         self.site.save()
@@ -68,21 +78,21 @@ class Command(BaseCommand):
 
                     for field in seminar._meta.many_to_many:
 
-                        if field.rel.to == Document:
+                        if field.remote_field.model == Document:
                             source = getattr(seminar, field.attname)
                             destination = getattr(clone, field.attname)
                             for item in source.all():
                                 item.period = from_period
                                 item.save()
                                 item_clone = item.clone()
-                                item_clone.readers = []
+                                #item_clone.readers = []
                                 item_clone.period = to_period
                                 item_clone.save()
                                 destination.remove(item)
                                 destination.add(item_clone)
                                 # print ("media cloned and assigned:", item_clone)
 
-                        elif field.rel.to == Media:
+                        elif field.remote_field.model == Media:
                             source = getattr(seminar, field.attname)
                             destination = getattr(clone, field.attname)
                             for item in source.all():
