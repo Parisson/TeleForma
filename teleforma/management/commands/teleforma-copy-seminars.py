@@ -85,7 +85,7 @@ class Command(BaseCommand):
                                 item.period = from_period
                                 item.save()
                                 item_clone = item.clone()
-                                item_clone.readers = []
+                                #item_clone.readers = []
                                 item_clone.period = to_period
                                 item_clone.save()
                                 destination.remove(item)
