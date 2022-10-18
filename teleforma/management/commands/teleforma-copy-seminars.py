@@ -78,7 +78,7 @@ class Command(BaseCommand):
 
                     for field in seminar._meta.many_to_many:
 
-                        if field.rel.to == Document:
+                        if field.remote_field.to == Document:
                             source = getattr(seminar, field.attname)
                             destination = getattr(clone, field.attname)
                             for item in source.all():
@@ -92,7 +92,7 @@ class Command(BaseCommand):
                                 destination.add(item_clone)
                                 # print ("media cloned and assigned:", item_clone)
 
-                        elif field.rel.to == Media:
+                        elif field.remote_field.to == Media:
                             source = getattr(seminar, field.attname)
                             destination = getattr(clone, field.attname)
                             for item in source.all():
