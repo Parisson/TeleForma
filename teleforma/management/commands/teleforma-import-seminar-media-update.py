@@ -157,7 +157,7 @@ class Command(BaseCommand):
                         and statinfo.st_size > self.size_limit:
 
                     seminar_rank = root_list[-1]
-                    print(seminar_rank)
+                    #print(seminar_rank)
                     if seminar_rank.isdigit():
                        media_rank_offset = 0
                     elif seminar_rank[0:2].isdigit():
@@ -168,7 +168,7 @@ class Command(BaseCommand):
                        media_rank_offset = 1
 
                     seminar_rank = int(seminar_rank)
-                    print(seminar_rank)
+                    #print(seminar_rank)
 
                     # seminar_rank <= 9 
                     #seminar_rank = int(root_list[-1][0])
@@ -226,7 +226,7 @@ class Command(BaseCommand):
                         media, c = Media.objects.get_or_create(course=course, file=path, type=ext)
 
                     if c:
-                        print(path)
+                        #print(path)
                         if not seminar in seminars:
                             seminars.append(seminar)
 
@@ -294,7 +294,7 @@ class Command(BaseCommand):
         for s in seminars:
             print('https://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id}))
 
-        log = open(logfile, 'r')
+        log = open(log_file, 'r')
         log_txt = log.read()
         log.close()
 
