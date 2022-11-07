@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from teleforma.models import *
 from django.urls import reverse
+from django.core.mail import send_mail
 
 import logging
 import os, sys, time, datetime
@@ -26,6 +27,12 @@ class Command(BaseCommand):
     help = "Import seminars from a media directory for a special period.name"
     admin_email = 'webmaster@parisson.com'
     args = 'organization period_name log_file media_dir'
+    email_subject="[Pro-Barreau] import media STAGING"
+    to_emails=['webmaster@parisson.com',
+        'jeannot@parisson.com',
+        'kostya.rilov@pre-barreau.com'
+        ]
+    from_email = 'no-reply@pro-barreau.com'
     original_format = ['mp4']
     transcoded_formats = ['mp3',]
     image_formats = ['png', 'jpg']
@@ -286,3 +293,15 @@ class Command(BaseCommand):
 
         for s in seminars:
             print('https://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id}))
+
+        log = open(logfile, 'r')
+        log_txt = log.read()
+        log.close()
+
+        send_mail(
+            self.email_subject,
+            log_txt,
+            self.from_email,
+            self.to_emails,
+            fail_silently=False,
+        )
