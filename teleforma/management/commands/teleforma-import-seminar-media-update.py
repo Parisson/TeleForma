@@ -200,7 +200,8 @@ class Command(BaseCommand):
                     #print([s.id for s in ss])
 
                     seminar, c = Seminar.objects.get_or_create(course=course,
-                                            rank=seminar_rank, period=period)
+                                            rank=seminar_rank, period=period,
+                                            magistral=False)
                     if c:
                         seminar.title = course.title
                         seminar.status = 1
