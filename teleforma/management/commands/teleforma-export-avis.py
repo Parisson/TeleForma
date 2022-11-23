@@ -24,7 +24,7 @@ class Command(BaseCommand):
     FTP_PATH = "/orders/"
 
     def add_arguments(self, parser):
-        parser.add_argument('days', type=int)
+        parser.add_argument('--days', type=int, required=True)
         parser.add_argument(
             '--dry-run',
             action='store_true',
@@ -45,7 +45,7 @@ class Command(BaseCommand):
 
         output = io.StringIO()
         writer = csv.writer(output, delimiter=';')
-        
+
         writer.writerow([
             "order_ref", 
             "email", 
@@ -100,10 +100,10 @@ class Command(BaseCommand):
                 cart.order_id,                              # order reference
                 user.email,                                 # customer email 
                 cart_date.strftime('%Y-%m-%d'),             # order date (YYYY-MM-DD hh:mm:ss OR YYYY-MM-DD)
-                user.first_name.encode('utf-8'),            # customer firstname
-                user.last_name.encode('utf-8'),             # customer lastname
+                user.first_name,                            # customer firstname
+                user.last_name,                             # customer lastname
                 testimonial.seminar.product_code,           # id of the product
-                testimonial.seminar.title.encode('utf-8')   # name of the product
+                testimonial.seminar.title                   # name of the product
             ])
         
 
@@ -132,10 +132,10 @@ class Command(BaseCommand):
                     cart.order_id,                              # order reference
                     user.email,                                 # customer email 
                     cart_date.strftime('%Y-%m-%d'),             # order date (YYYY-MM-DD hh:mm:ss OR YYYY-MM-DD)
-                    user.first_name.encode('utf-8'),            # customer firstname
-                    user.last_name.encode('utf-8'),             # customer lastname
-                    conference.product_code,           # id of the product
-                    conference.title.encode('utf-8')   # name of the product
+                    user.first_name,                            # customer firstname
+                    user.last_name,                             # customer lastname
+                    conference.product_code,                    # id of the product
+                    conference.title                            # name of the product
                 ])
         # import pdb;pdb.set_trace()
 
@@ -169,7 +169,9 @@ class Command(BaseCommand):
             try:
                 ftp.login(self.FTP_LOGIN, self.FTP_PASSWORD)
                 ftp.cwd(self.FTP_PATH)
-                ftp.storlines("STOR export-orders%s.csv" % str(date.today()), output)
+                # convert StringIO to BytesIO
+                bytes_output = io.BytesIO(output.getvalue().encode('utf-8'))
+                ftp.storbinary("STOR export-orders%s.csv" % str(date.today()), bytes_output)
                 ftp.quit()
             except:
                 ftp.close()
