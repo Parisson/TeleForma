@@ -30,12 +30,14 @@
       userCollapseText: 'Cacher le texte',
     });
 
-
     {% if popup_message %}
       // show a warning popup and set a cookie to not display the popup each visit
       if(getCookie('time-popup-view') != 1){
         $( "#warning-message" ).dialog({
           modal: true,
+          width: 400,
+          height: 400,
+          dialogClass: 'modal-warning',
           buttons: {
             Ok: function() {
               $( this ).dialog( "close" );

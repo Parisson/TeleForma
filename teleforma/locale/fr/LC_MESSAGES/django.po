@@ -2082,7 +2082,7 @@ msgstr ""
 "Vous avez franchi avec succès toutes les étapes de votre formation. "
 "Une attestation de formation vous sera délivrée dès que vos réponses aux "
 "consultations fictives auront été validées par notre équipe pédagogique "
-"(2 jours ouvrés maximum) sous réserve d'un temps de connexion suffisant."
+"(2 jours ouvrés maximum)."
 
 #: views/pro.py:186
 msgid ""

@@ -1676,6 +1676,28 @@ form.add_actus #id_text_parent{
 }
 
 
+.modal-warning .ui-dialog-titlebar {
+    background-image: none;
+    color: white;
+    background-color: red;
+    font-size: 20px;
+
+}
+.modal-warning .ui-dialog-buttonpane {
+    background-color: red;
+    color: white;
+}
+.modal-warning .ui-button {
+    background-color: white;
+    font-weight: 600;
+}
+/* modal dialog */
+.modal-warning .ui-dialog-content {
+    padding: 2em;
+    background-color: #f5f5f5;
+}
+
+
 
 .desk_center {
     float: left;
