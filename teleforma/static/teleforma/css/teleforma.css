@@ -2191,18 +2191,69 @@ form .exceed{
 }
 
 /*** TABS ***/
-.multipart-tabs li {
-    display: inline-block;
+.multipart-tabs {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 5px 0;
+}
+.multipart-tabs .tab-link {
+    position: relative;
+    display:flex;
+    justify-content: start;
+    align-items: center;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    height: 36px;
+    background-color: #393;
+    color: white;
+    padding: 0 10px;
+    margin: 2px 10px 2px 0px;
+    transition: all 0.3s;
+}
+.multipart-tabs .tab-link:hover, .multipart-tabs .tab-link.active {
+    background-color: #171;
+}
+.multipart-tabs .tab-link span {
+    z-index: 1;
+}
+.multipart-tabs .tab-link .part-index {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: black;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+.multipart-tabs .tab-link:not(:last-child):after {
+    content: "";
+    border-left: 10px solid #393;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    background-color: transparent;
+    right: -10px;
+    position: absolute;
+    z-index: 0;
+}
+.multipart-tabs .tab-link:hover:not(:last-child):after, .multipart-tabs .tab-link.active:not(:last-child):after {
+    border-left: 10px solid #171;
+}
+.multipart-tabs .tab-link:not(:last-child).disabled:after {
+    border-left: 10px solid #ccc;
+}
+.multipart-tabs .disabled {
+    pointer-events: none;
+    background-color: #ccc;
+    color: black;
 }
 .multipart-tabs li {
     font-size: 0.9em;
 }
 .multipart-tabs .disabled {
-    color: grey;
     pointer-events: none;
-}
-.multipart-tabs .active {
-    font-weight: bold;
 }
 .tab-content {
   display: none;

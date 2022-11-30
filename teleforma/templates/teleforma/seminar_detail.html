@@ -182,12 +182,12 @@
   {% if seminar.is_multipart %}
 
   <div class="multipart">
-    <ul class="multipart-tabs">
+    <div class="multipart-tabs">
       {% for part in parts %}
-      <li><a href="#part-{{ part.index }}" class="tab-link {% if part.validated %}validated{% endif %} {% if not part.accessible %}disabled{% endif %}">{% if part.object.title %}{{ part.object.title }}{% else %}Séquence {{ part.index }}{% endif %} > </a></li>
+      <a href="#part-{{ part.index }}" class="tab-link {% if part.validated %}validated{% endif %} {% if not part.accessible %}disabled{% endif %}"><span class="part-index">{{ part.index }}</span><span>{% if part.object.title %}{{ part.object.title }}{% else %}Séquence {{ part.index }}{% endif %}</span></a>
       {% endfor %}
-      <li><a href="#part-last" class="tab-link {% if not seminar_progress == 100 %}disabled{% endif %}">Attestation</a></li>
-    </ul>
+      <a href="#part-last" class="tab-link {% if not seminar_progress == 100 %}disabled{% endif %}"><span class="part-index">{{ parts|length|add:1 }}</span>Attestation</a></li>
+    </div>
 
 
     {% for part in parts %}
