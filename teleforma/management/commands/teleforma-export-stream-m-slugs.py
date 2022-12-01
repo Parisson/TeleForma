@@ -51,7 +51,7 @@ streams.monitor.limit=100
         file = args[1]
         self.export()
         f = open(file, 'w')
-        f.write(self.data)
+        f.write(self.data.encode('UTF-8'))
         f.close()
 
 
