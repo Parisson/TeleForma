@@ -37,6 +37,7 @@
 import datetime
 from itertools import chain
 import os
+import copy
 from django.conf import settings
 from django.contrib.auth.models import User
 import django.db.models as models
@@ -245,7 +246,7 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
 
         for field in self._meta.many_to_many:
 
-            if field.rel.to == Document:
+            if field.model == Document:
                 source = getattr(self, field.attname)
                 destination = getattr(clone, field.attname)
                 for item in source.all():
@@ -259,7 +260,7 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
                     destination.add(item_clone)
                     # print ("media cloned and assigned:", item_clone)
 
-            elif field.rel.to == Media:
+            elif field.model == Media:
                 source = getattr(self, field.attname)
                 destination = getattr(clone, field.attname)
                 for item in source.all():
@@ -269,6 +270,10 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
             question_clone = question.clone()
             question_clone.seminar = clone
             question_clone.save()
+        for part in self.parts.all():
+            parts_clone = part.clone(from_period, to_period)
+            parts_clone.seminar = clone
+            parts_clone.save()
         return log
 
     class Meta(MetaCore):
@@ -276,7 +281,7 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
         verbose_name = _('Seminar')
         ordering = ['rank']
 
-class SeminarPart(models.Model):
+class SeminarPart(models.Model, ClonableMixin):
     seminar         = models.ForeignKey(Seminar, related_name='parts', verbose_name=_('seminar'), on_delete=models.CASCADE)
     
     title           = models.CharField("Titre de la séquence", max_length=80, blank=True, null=True)
@@ -313,6 +318,38 @@ class SeminarPart(models.Model):
             if user not in item.readers.all():
                 return False
         return True
+
+    def clone(self, from_period, to_period):
+        """Return an identical copy of the instance with a new ID."""
+        if not self.pk:
+            raise ValueError('Instance must be saved before it can be cloned.')
+        duplicate = copy.copy(self)
+        # Setting pk to None tricks Django into thinking this is a new object.
+        duplicate.pk = None
+        duplicate.save()
+        # ... but the trick loses all ManyToMany relations.
+        for field in self._meta.many_to_many:
+            if field.model == Document:
+                source = getattr(self, field.attname)
+                destination = getattr(duplicate, field.attname)
+                for item in source.all():
+                    item.period = from_period
+                    item.save()
+                    item_clone = item.clone()
+                    item_clone.readers = []
+                    item_clone.period = to_period
+                    item_clone.save()
+                    destination.remove(item)
+                    destination.add(item_clone)
+                    # print ("media cloned and assigned:", item_clone)
+
+            elif field.model == Media:
+                source = getattr(self, field.attname)
+                destination = getattr(duplicate, field.attname)
+                for item in source.all():
+                    destination.add(item)
+
+        return duplicate
         
 class Question(ClonableMixin, models.Model):
 
