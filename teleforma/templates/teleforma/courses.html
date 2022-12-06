@@ -81,9 +81,7 @@
     </p>
   </div>
 
-  {% if home_video.type == 'webm' %}
   <div class="block">
-
     <div class="course_subtitle">
       <h3>{% if home_video.title %}{{ home_video.title }}{% else %}{{ home_video.course.title }}{% endif %}</h3>
     </div>
@@ -102,7 +100,6 @@
       </a>
     </div>
   </div>
-  {% endif %}
 
   {% if webclass_slots or webclass_to_subscribe and not restricted %}
   <div class="course_title">
