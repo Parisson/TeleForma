@@ -265,11 +265,11 @@ class SeminarView(SeminarAccessMixin, DetailView):
             missing = "%dh%02d" % (hours, minutes % 60)
         if progress == 100 and not validated and self.template_name == 'teleforma/seminar_detail.html':
             if delta_sec < 0:
-                messages.info(self.request, _(
-                    "You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
-            else:
                 messages.warning(self.request, _("Your connexion time is not sufficient. In order to get your testimonial, you "
                                              "still have to work at least %(time)s.") % {'time': missing})
+            else:
+                messages.info(self.request, _(
+                    "You have successfully terminated your e-learning seminar. A training testimonial will be available as soon as the pedagogical team validate all your answers (48h maximum)."))
         elif progress < 100 and validated and self.template_name == 'teleforma/seminar_detail.html' and missing_steps == set('5'):
             messages.info(self.request, _(
                 "All your answers have been validated. You can now read the corrected documents (step 5)."))
