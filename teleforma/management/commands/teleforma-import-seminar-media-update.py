@@ -172,8 +172,10 @@ class Command(BaseCommand):
 
                     # seminar_rank <= 9 
                     #seminar_rank = int(root_list[-1][0])
-
-                    if media_rank_offset:
+                    if '-' in root_list[-1]:
+                        seminar_rank, media_rank = root_list[-1].split('-')
+                        preview_trigger = False
+                    elif media_rank_offset:
                         rank = root_list[-1][media_rank_offset:]
                         media_rank = self.media_rank_dict[rank.replace('_', '')]
                         preview_trigger = False
@@ -181,7 +183,7 @@ class Command(BaseCommand):
                         rank = 0
                         media_rank = 1
                         preview_trigger = True
-
+                    
                     course_code = root_list[-2]
                     period_dir = root_list[-3]
                     master_dir = root_list[-4]
@@ -298,7 +300,6 @@ class Command(BaseCommand):
         log = open(log_file, 'r')
         log_txt = log.read()
         log.close()
-
         send_mail(
             self.email_subject,
             log_txt,
