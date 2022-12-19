@@ -222,9 +222,10 @@ def submitted(question, user):
 
 @register.filter
 def saved(question, user):
-    answers = Answer.objects.filter(question=question, user=user, status=2)
+    answers = Answer.objects.filter(question=question, user=user, status=2).order_by('-date_added')
+    
     if answers:
-        return answers[0].date_submitted
+        return answers[0].date_added
     else:
         return ''
 
