@@ -69,6 +69,7 @@ class Command(BaseCommand):
                 except:
                     print(("Warning, can't find user %s for seminar %s" % (user_id, sem_txt)))
                     continue
+                conf.set_as_read(user)
                 user_txt = "%s (%s)" % (user, user.pk)
                 rev = SeminarRevision.objects.filter(seminar = seminar,
                                                      user = user,
