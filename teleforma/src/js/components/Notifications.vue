@@ -134,9 +134,11 @@ export default class Notifications extends Vue {
   z-index: 100;
   right: 10px;
   width: 400px;
+  max-height: calc(100vh - 300px);
   max-width: calc(100vw - 50px);
   border: 1px solid lightblue;
   border-radius: 3px;
+  overflow-y: scroll;
 }
 
 ul {
