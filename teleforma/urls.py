@@ -45,7 +45,7 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordResetDoneView,
                                        PasswordResetView)
 from django.views import static
-from teleforma.views.core import ConferenceRecordView, ConferenceView, CourseView, HelpView, MediaTranscodedView, MediaView, join_webclass
+from teleforma.views.core import ConferenceRecordView, ConferenceView, CourseView, HelpView, MediaTranscodedView, MediaView, get_site_url, join_webclass
 from teleforma.views.crfpa import UserLoginView, UsersCourseView, UsersIejView, UsersTrainingView, UsersView
 from teleforma.views.pro import AnswerDetailView, AnswerDetailViewTest, AnswerView, AnswersPendingView, AnswersTreatedView, QuizQuestionView, SeminarDocumentDownloadView, SeminarDocumentView, SeminarMediaView, SeminarView, SeminarsView, TestimonialDownloadView, TestimonialKnowledgeView, TestimonialListView, TestimonialPaybackView, TestimonialView, evaluation_form_detail, webclass_bbb_webhook
 from teleforma.views.profile import ProfileView
@@ -205,4 +205,9 @@ urlpatterns = [
     # Webclass hook
     url(r'^webclass_bbb_webhook/', webclass_bbb_webhook,
         name="webclass_bbb_webhook"),
+
+    # site url (nagios test)
+    path('get-site-url',
+         get_site_url, name='teleforma-get-site-url'),
+
 ]

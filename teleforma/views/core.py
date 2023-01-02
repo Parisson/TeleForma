@@ -758,3 +758,9 @@ class ProfessorListView(View):
             professor.save()
 
 
+def get_site_url(request):
+    """
+    Simply return the site url stored in DB
+    Used to test if url is correct with Nagios.
+    """
+    return HttpResponse(Site.objects.get_current().domain)
