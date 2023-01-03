@@ -13,6 +13,7 @@ sys.dont_write_bytecode = True
 
 DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
+DEBUG_TOOLBAR = False
 TEMPLATE_DEBUG = DEBUG
 
 RECOVERY = False
@@ -163,7 +164,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG else ()) + (
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -204,7 +205,7 @@ INSTALLED_APPS = (
 )
 
 
-if DEBUG:
+if DEBUG_TOOLBAR:
     INSTALLED_APPS += ('debug_toolbar',)
 
 TEMPLATES = [
@@ -509,7 +510,7 @@ SHERLOKS_USE_TRANSACTION_ID = True
 
 ORAL_OPTION_PRICE = 250
 
-if DEBUG:
+if DEBUG_TOOLBAR:
     def show_toolbar(request):
         return True
     DEBUG_TOOLBAR_CONFIG = {
