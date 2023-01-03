@@ -49,6 +49,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from docutils.core import publish_parts
 
+from teleforma.views.core import get_course_conferences
+
 from ..exam.models import Quota, Script
 from ..models.core import Document, Professor
 from ..models.crfpa import IEJ, Course, NewsItem, Training
@@ -463,7 +465,7 @@ def course_docs_by_type(context):
     return res
 
 @register.simple_tag(takes_context=True)
-def course_conferences(context):
+def course_ingoing_conferences(context):
     course = context['course']
     confs = course.conference.filter(streaming=True,
                                      period=context['period'],
@@ -471,10 +473,19 @@ def course_conferences(context):
     return list(confs)
 
 @register.simple_tag(takes_context=True)
-def course_media(context):
+def course_past_conferences(context):
+    user = context['user']
     course = context['course']
-    media = course.media.filter(period=context['period'],
-                                course_type=context['type'])
-    if not context['user'].is_staff or context.get('list_view', None):
-        media = media.filter(is_published = True)
-    return list(media)
+    period = context['period']
+    course_type = context['type']
+
+    return get_course_conferences(user, period, course, course_type)
+
+# @register.simple_tag(takes_context=True)
+# def course_media(context):
+#     course = context['course']
+#     media = course.media.filter(period=context['period'],
+#                                 course_type=context['type'])
+#     if not context['user'].is_staff or context.get('list_view', None):
+#         media = media.filter(is_published = True)
+#     return list(media)

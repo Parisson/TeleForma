@@ -57,6 +57,9 @@ from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.core.cache import cache
+from django.db.models import Q
+from django.contrib.sites import Site
+
 
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
@@ -67,14 +70,14 @@ from rest_framework.response import Response
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 from rest_framework.views import APIView
-from teleforma.models.crfpa import Home
+from teleforma.models.crfpa import Home, Training
 from teleforma.models.notification import Notification
 from teleforma.utils import guess_mimetypes
 
 from ..decorators import access_required
 from ..models.appointment import Appointment, AppointmentPeriod
 from ..models.chat import ChatMessage
-from ..models.core import (Conference, Course, CourseType, Department,
+from ..models.core import (Conference, ConferencePublication, Course, CourseType, Department,
                            Document, DocumentType, Media, MediaTranscoded,
                            Organization, Period, Professor, WebClassGroup,
                            StreamingServer, LiveStream,
@@ -118,6 +121,42 @@ def get_courses(user, date_order=False, num_order=False, num_courses=False, peri
     elif settings.TELEFORMA_E_LEARNING_TYPE == 'AE':
         from teleforma.views.ae import get_ae_courses
         return get_ae_courses(user, date_order, num_order, period)
+
+
+def get_trainings(user):
+    trainings = []
+
+    if not user.is_authenticated:
+        return trainings
+
+    professor = user.professor.all()
+    student = user.student.all()
+    quotas = user.quotas.all()
+
+    if professor or quotas or user.is_staff:
+        trainings = Training.objects.filter(available=True)
+
+    elif student:
+        student = user.student.get()
+        trainings = student.trainings.all()
+    return trainings
+
+
+def get_course_conferences(user, period, course, course_type):
+    trainings = get_trainings(user)
+    conferences = []
+    # get conference publications
+    publications = ConferencePublication.objects.filter(
+        trainings__in=trainings, status=3, conference__course=course, conference__course_type=course_type).distinct()
+    for publication in publications:
+        conferences.append(publication.conference)
+
+    for conference in Conference.objects.filter(period=period, status=3, course=course, course_type=course_type):
+        # do not include conferences with publication rules
+        if conference.publications.filter(trainings__in=trainings).count():
+            continue
+        conferences.append(conference)
+    return conferences
 
 
 def stream_from_file(__file):
@@ -175,7 +214,8 @@ def get_periods(request):
     elif students:
         period_ids = request.session.get('period_ids')
         if period_ids:
-            periods = [Period.objects.get(id=period_id) for period_id in period_ids]
+            periods = [Period.objects.get(id=period_id)
+                       for period_id in period_ids]
         else:
             student = user.student.get()
             periods = [training.period for training in student.trainings.all()]
@@ -272,8 +312,8 @@ def nginx_media_accel(media_path, content_type="", buffering=True, streaming=Fal
 def live_message(site, conference):
     token = settings.ADMIN_TOKEN
     requests.post('https://' + site.domain + '/chat/messages',
-        headers={'Authorization' : 'Token ' + token},
-        data={'conference_id': conference.id})
+                  headers={'Authorization': 'Token ' + token},
+                  data={'conference_id': conference.id})
 
 
 class HomeRedirectView(View):
@@ -356,14 +396,17 @@ class CourseListView(CourseAccessMixin, ListView):
 
         # get last published media / document
         last_published = []
-        last_media = Media.objects.filter(period=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
+        last_media = Media.objects.filter(
+            period=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
         if last_media:
             last_published.append(last_media)
-        last_document = Document.objects.filter(periods=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
+        last_document = Document.objects.filter(
+            periods=self.period, is_published=True, course__in=courses).order_by("-date_added").first()
         if last_document:
             last_published.append(last_document)
         if last_published:
-            last_published = sorted(last_published, key=lambda k: k.date_added, reverse=True)[0]
+            last_published = sorted(
+                last_published, key=lambda k: k.date_added, reverse=True)[0]
             # get course with the latest published media / document
             for course in context['all_courses']:
                 if course['course'].id == last_published.course.id:
@@ -372,7 +415,7 @@ class CourseListView(CourseAccessMixin, ListView):
         else:
             # get course with the latest "date"
             context['courses'] = sorted(
-                 context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
+                context['all_courses'], key=lambda k: k['date'], reverse=True)[:1]
 
         user = self.request.user
         is_student = user.student.all().count()
@@ -412,9 +455,10 @@ class CourseListView(CourseAccessMixin, ListView):
             student = user.student.all()[0]
             slots = []
             to_subscribe = []
+            student_trainings = get_trainings(user)
             student_courses = [course['course']
                                for course in get_courses(user)]
-            for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
+            for webclass in Webclass.published.filter(trainings__in=student_trainings, iej=student.iej, course__in=student_courses):
                 # if webclass.course not in student_courses:
                 #     continue
                 if student.platform_only and not webclass.allow_elearning:
@@ -513,10 +557,11 @@ class CourseView(CourseAccessMixin, DetailView):
         if student:
             student = student[0]
 
+        trainings = get_trainings(self.request.user)
         if student:
             try:
                 webclass = Webclass.published.filter(
-                    period=self.period, course=course, iej=student.iej)[0]
+                    trainings__in=trainings, course=course, iej=student.iej)[0]
             except IndexError:
                 pass
             if webclass:
@@ -532,12 +577,13 @@ class CourseView(CourseAccessMixin, DetailView):
 
         records = {}
         try:
-            records = WebclassRecord.get_records(context['period'], course)
+            records = WebclassRecord.get_records(trainings, course)
         except Exception as e:
             print(e)
             context['webclass_error'] = True
         context['webclass_records'] = records.get(WebclassRecord.WEBCLASS)
-        context['webclass_corrections_records'] = records.get(WebclassRecord.CORRECTION)
+        context['webclass_corrections_records'] = records.get(
+            WebclassRecord.CORRECTION)
         return context
 
     @method_decorator(access_required)
@@ -794,7 +840,6 @@ class ConferenceView(CourseAccessMixin, DetailView):
             except:
                 pass
 
-
     @jsonrpc_method('teleforma.create_conference')
     def create(request, conf_dict):
         if isinstance(conf_dict, dict):
@@ -805,23 +850,29 @@ class ConferenceView(CourseAccessMixin, DetailView):
                 conference.save()
                 if conference.streaming:
                     for stream in conf_dict['streams']:
-                        host = getattr(settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
-                        protocol = getattr(settings, "TELECASTER_LIVE_STREAMING_PROTOCOL", 'http')
+                        host = getattr(
+                            settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+                        protocol = getattr(
+                            settings, "TELECASTER_LIVE_STREAMING_PROTOCOL", 'http')
                         server_type = stream['server_type']
                         stream_type = stream['stream_type']
                         if server_type == 'icecast':
-                            port = getattr(settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", '8000')
-                            path = getattr(settings, "TELECASTER_LIVE_ICECAST_STREAMING_PATH", '/')
+                            port = getattr(
+                                settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", '8000')
+                            path = getattr(
+                                settings, "TELECASTER_LIVE_ICECAST_STREAMING_PATH", '/')
                         elif server_type == 'stream-m':
-                            port = getattr(settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", '8080')
-                            path = getattr(settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PATH", '/')
+                            port = getattr(
+                                settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", '8080')
+                            path = getattr(
+                                settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PATH", '/')
                         #site = Site.objects.all()[0]
                         server, c = StreamingServer.objects.get_or_create(
-                                        protocol=protocol,
-                                        host=host,
-                                        port=port,
-                                        path=path,
-                                        type=server_type)
+                            protocol=protocol,
+                            host=host,
+                            port=port,
+                            path=path,
+                            type=server_type)
                         stream = LiveStream(conference=conference, server=server,
                                             stream_type=stream_type, streaming=True)
                         stream.save()
@@ -898,11 +949,13 @@ class ChatMessageView(APIView):
         room_name = request.POST.get('room_name')
         message = request.POST.get('message')
         if not room_name:
-            conference = Conference.objects.get(id=request.POST.get('conference_id'))
+            conference = Conference.objects.get(
+                id=request.POST.get('conference_id'))
             ChatMessage.live_conference_message(conference=conference)
         else:
             ChatMessage.add_message(room_name, message, system=True)
         return Response({'status': 'ok'})
+
 
 class NotificationView(APIView):
     permission_classes = [IsAuthenticated]
@@ -1201,3 +1254,5 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         context[self.pdf_url_varname] = self.get_pdf_url()
         return super(PDFTemplateResponseMixin, self).render_to_response(
             context, **response_kwargs)
+
+

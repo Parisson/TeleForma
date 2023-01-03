@@ -2,22 +2,22 @@
 {% load thumbnail %}
 {% load i18n %}
 
-{% course_media as all_media %}
+{% course_past_conferences as all_conferences %}
 
-{% if all_media %}
+{% if all_conferences %}
 <div class="course_content content_video">
 <div class="course_subtitle">
     <h3><img src="/static/teleforma/images/item_title.png" width="10px" alt="" /> {% trans "Conférences en différé" %}</h3>
 </div>
     <table class="listing" width="100%">
     <tbody>
-        {% for media in all_media %}
-          {% if media.type == 'webm' or media.type == 'mp4' %}
+        {% for conference in all_conferences %}
+          {% if conference.video %}
             <tr>
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
-            <a href="{% url 'teleforma-media-detail' period.id media.id %}" title="{% trans "Play" %}">
-            {% if media.poster_file %}
-               {% thumbnail media.poster_file "168x96" as im %}
+            <a href="{% url 'teleforma-media-detail' period.id conference.video.id %}" title="{% trans "Play" %}">
+            {% if conference.video.poster_file %}
+               {% thumbnail conference.video.poster_file "168x96" as im %}
                 <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
                  <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
@@ -31,21 +31,21 @@
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
-                    <dt>{% trans "Title" %}</dt><dd>{{ media.conference.course.title }}</dd>
-                    <dt>{% trans "Session" %}</dt><dd>{{ media.conference.session }}</dd>
-                    {% if media.conference.professor %}
-                    <dt>{% trans "Professor" %}</dt><dd>{{ media.conference.professor }}</dd>
+                    <dt>{% trans "Title" %}</dt><dd>{{ conference.course.title }}</dd>
+                    <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
+                    {% if conference.professor %}
+                    <dt>{% trans "Professor" %}</dt><dd>{{ conference.professor }}</dd>
                     {% endif %}
-                    {% if media.conference.date_publish %}
-                        <dt>{% trans "Publishing date" %}</dt><dd>{{ media.conference.date_publish }}</dd>
+                    {% if conference.date_publish %}
+                        <dt>{% trans "Publishing date" %}</dt><dd>{{ conference.date_publish }}</dd>
                     {% else %}
-                        <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+                        <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
                     {% endif %}
-                    {% if media.conference.duration %}
-                        <dt>{% trans "Duration" %}</dt><dd>{{ media.conference.duration }}</dd>
+                    {% if conference.duration %}
+                        <dt>{% trans "Duration" %}</dt><dd>{{ conference.duration }}</dd>
                     {% endif %}
-                    {% if media.conference.comment %}
-                    <dt>{% trans "Comment" %}</dt><dd>{{ media.conference.comment }}</dd>
+                    {% if conference.comment %}
+                    <dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>
                     {% endif %}
                     </dl>
                  </div>
@@ -56,9 +56,9 @@
             {% elif not media.is_published and user.is_staff %}
              <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
-            {% if media.file and media.is_published or user.is_superuser or user.is_staff %}
-                {% if not "video" in media.mime_type or request.user_agent.os.family == 'iOS' %}
-                    <a href="{% url 'teleforma-media-download' period.id media.id %}">
+            {% if conference.video.file and conference.video.is_published or user.is_superuser or user.is_staff %}
+                {% if not "video" in conference.video.mime_type or request.user_agent.os.family == 'iOS' %}
+                    <a href="{% url 'teleforma-media-download' period.id conference.video.id %}">
                         <img src="/static/teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
                     </a>
                 {% endif %}

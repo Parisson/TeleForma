@@ -368,6 +368,15 @@ class Room(models.Model):
         verbose_name = _('room')
 
 
+class ConferencePublication(models.Model):
+    conference = models.ForeignKey('Conference', related_name='publications', verbose_name=_('conference'),
+                                    on_delete=models.CASCADE)
+    trainings = models.ManyToManyField('Training', related_name='conference_publications', verbose_name=_('trainings'))
+    date_publish = models.DateTimeField(_('publishing date'), null=True, blank=True)
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2)
+    notified = models.BooleanField(_('notified'), default=False)
+
 class Conference(models.Model):
 
     public_id = models.CharField(_('public_id'), max_length=255, blank=True, unique=True)
@@ -418,10 +427,7 @@ class Conference(models.Model):
         return slug
 
     def __str__(self):
-        if self.date_publish:
-            date = self.date_publish
-        else:
-            date = self.date_begin
+        date = self.date_begin
 
         if self.professor:
             list = [self.course.title,
@@ -539,6 +545,20 @@ class Conference(models.Model):
             if data['web_class_group'] != 'None':
                 self.web_class_group = WebClassGroup.objet.get(
                     name=data['web_class_group'])
+
+    def video(self):
+        """
+        get media video
+        """
+        try:
+            return self.media.get(type='mp4')
+        except Media.DoesNotExist:
+            try:
+                return self.media.get(type='webm')
+            except Media.DoesNotExist:
+                pass
+        return None
+        
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
