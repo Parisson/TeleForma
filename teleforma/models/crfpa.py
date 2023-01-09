@@ -116,6 +116,9 @@ class Training(models.Model):
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
     duration = models.IntegerField(u"Durée en heures", default=0)
+    nb_script = models.IntegerField(
+        _("nombre maximal de copies"), default=12)
+
 
     def __str__(self):
         if self.name and self.period:
@@ -400,6 +403,20 @@ class Student(models.Model):
     def expiration_date(self):
         """ closing date of student period """
         return self.period.date_close_accounts
+
+    def max_sessions(self):
+        """ get total number of scripts """
+        max_sessions = 0
+        for training in self.trainings.all():
+            max_sessions = max(training.nb_script, max_sessions)
+        return max_sessions
+    
+    def max_total_scripts(self):
+        """ get total number of scripts"""
+        total = 0
+        for training in self.trainings.all():
+            total += training.nb_script
+        return total
     
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
