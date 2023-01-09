@@ -53,23 +53,13 @@ class ScriptMixinView(View):
         context['courses'] = Course.objects.filter(pk__in=course_pk_list)
         context['script_service_url'] = getattr(
             settings, 'TELEFORMA_EXAM_SCRIPT_SERVICE_URL')
-        
-        try:
-            student = self.request.user.student.get()
-        except Student.DoesNotExist:
-            student = None
-        self.max_scripts = 1000
-        if student:
-            self.nb_script = student.max_sessions() or settings.TELEFORMA_EXAM_MAX_SESSIONS
-            self.max_scripts = student.max_total_scripts()
-        else:
-            self.nb_script = self.period.nb_scripts() or settings.TELEFORMA_EXAM_MAX_SESSIONS
+        self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         if getattr(settings, 'TELEFORMA_EXAM_SCRIPT_UPLOAD', True) and self.period.date_exam_end:
             upload = datetime.datetime.now() <= self.period.date_exam_end
             cur_scripts = Script.objects.filter(period=self.period,
                                                 author=self.request.user)\
                 .exclude(status=0).count()
-            allowed_scripts = self.max_scripts * len(self.get_course_pk_list())
+            allowed_scripts = self.nb_script * len(self.get_course_pk_list())
             if cur_scripts >= allowed_scripts:
                 upload = False
             context['upload'] = upload
@@ -133,7 +123,6 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
         kwargs = super(ScriptView, self).get_form_kwargs()
         script = self.get_object()
         kwargs['period'] = script.period
-        kwargs['user'] = self.request.user
         return kwargs
 
     def get_success_url(self):
@@ -318,7 +307,6 @@ class ScriptCreateView(ScriptMixinView, CreateView):
     def get_form_kwargs(self):
         kwargs = super(ScriptCreateView, self).get_form_kwargs()
         kwargs['period'] = self.period
-        kwargs['user'] = self.request.user
         return kwargs
 
 
@@ -338,11 +326,7 @@ class QuotasView(ListView):
         self.courses = self.professor.courses.all()
         self.period = get_object_or_404(
             Period, id=int(self.kwargs['period_id']))
-        try:
-            student = self.request.user.student.get()
-            self.nb_script = student.max_sessions() or settings.TELEFORMA_EXAM_MAX_SESSIONS
-        except Student.DoesNotExist:
-            self.nb_script = self.period.nb_scripts() or settings.TELEFORMA_EXAM_MAX_SESSIONS
+        self.nb_script = self.period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         self.session = self.request.GET.get('session')
         self.course = self.request.GET.get('course')
         self.corrector = self.request.GET.get('corrector')
