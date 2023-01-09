@@ -479,7 +479,13 @@ def course_past_conferences(context):
     period = context['period']
     course_type = context['type']
 
-    return get_course_conferences(user, period, course, course_type)
+    return get_course_conferences(period, course, course_type)
+
+@register.simple_tag(takes_context=True)
+def conference_publication(context, conference):
+    period = context['period']
+    return conference.publication_info(period)
+
 
 # @register.simple_tag(takes_context=True)
 # def course_media(context):

@@ -57,9 +57,6 @@ from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.core.cache import cache
-from django.db.models import Q
-from django.contrib.sites import Site
-
 
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
@@ -142,20 +139,21 @@ def get_trainings(user):
     return trainings
 
 
-def get_course_conferences(user, period, course, course_type):
-    trainings = get_trainings(user)
+def get_course_conferences(period, course, course_type):
     conferences = []
+    already_added = set()
     # get conference publications
     publications = ConferencePublication.objects.filter(
-        trainings__in=trainings, status=3, conference__course=course, conference__course_type=course_type).distinct()
+        period=period, conference__course=course, conference__course_type=course_type).distinct()
     for publication in publications:
         conferences.append(publication.conference)
+        already_added.add(publication.conference.id)
 
-    for conference in Conference.objects.filter(period=period, status=3, course=course, course_type=course_type):
+    for conference in Conference.objects.filter(period=period, course=course, course_type=course_type):
         # do not include conferences with publication rules
-        if conference.publications.filter(trainings__in=trainings).count():
-            continue
-        conferences.append(conference)
+        if conference.id not in already_added:
+            conferences.append(conference)
+    conferences = sorted(conferences, key=lambda c:-c.session_as_int)
     return conferences
 
 
@@ -455,10 +453,9 @@ class CourseListView(CourseAccessMixin, ListView):
             student = user.student.all()[0]
             slots = []
             to_subscribe = []
-            student_trainings = get_trainings(user)
             student_courses = [course['course']
                                for course in get_courses(user)]
-            for webclass in Webclass.published.filter(trainings__in=student_trainings, iej=student.iej, course__in=student_courses):
+            for webclass in Webclass.published.filter(period=self.period, iej=student.iej, course__in=student_courses):
                 # if webclass.course not in student_courses:
                 #     continue
                 if student.platform_only and not webclass.allow_elearning:
@@ -557,11 +554,10 @@ class CourseView(CourseAccessMixin, DetailView):
         if student:
             student = student[0]
 
-        trainings = get_trainings(self.request.user)
         if student:
             try:
                 webclass = Webclass.published.filter(
-                    trainings__in=trainings, course=course, iej=student.iej)[0]
+                    period=self.period, course=course, iej=student.iej)[0]
             except IndexError:
                 pass
             if webclass:
@@ -577,13 +573,13 @@ class CourseView(CourseAccessMixin, DetailView):
 
         records = {}
         try:
-            records = WebclassRecord.get_records(trainings, course)
+            records = WebclassRecord.get_records(context['period'], course)
         except Exception as e:
             print(e)
             context['webclass_error'] = True
         context['webclass_records'] = records.get(WebclassRecord.WEBCLASS)
-        context['webclass_corrections_records'] = records.get(
-            WebclassRecord.CORRECTION)
+        context['webclass_corrections_records'] = records.get(WebclassRecord.CORRECTION)
+
         return context
 
     @method_decorator(access_required)
@@ -1254,5 +1250,3 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         context[self.pdf_url_varname] = self.get_pdf_url()
         return super(PDFTemplateResponseMixin, self).render_to_response(
             context, **response_kwargs)
-
-

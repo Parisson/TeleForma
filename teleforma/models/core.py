@@ -371,7 +371,8 @@ class Room(models.Model):
 class ConferencePublication(models.Model):
     conference = models.ForeignKey('Conference', related_name='publications', verbose_name=_('conference'),
                                     on_delete=models.CASCADE)
-    trainings = models.ManyToManyField('Training', related_name='conference_publications', verbose_name=_('trainings'))
+    period = models.ForeignKey('Period', verbose_name=_('period'),
+                               on_delete=models.CASCADE)
     date_publish = models.DateTimeField(_('publishing date'), null=True, blank=True)
     status = models.IntegerField(
         _('status'), choices=STATUS_CHOICES, default=2)
@@ -410,6 +411,13 @@ class Conference(models.Model):
     @property
     def description(self):
         return str(self)
+
+    @property
+    def session_as_int(self):
+        try:
+            return int(self.session)
+        except ValueError:
+            return 0
 
     @property
     def duration(self):
@@ -558,6 +566,23 @@ class Conference(models.Model):
             except Media.DoesNotExist:
                 pass
         return None
+
+    def publication_info(self, period):
+        """
+        Get publication info according to period.
+        """
+        publication = self.publications.filter(period=period).first()
+        if not publication and self.period == period:
+            publication = self
+        elif not publication:
+            return None
+        
+        return {
+            'status': publication.status,
+            'published': publication.status == 3,
+            'publication_date': publication.date_publish,
+            'notified': publication.notified
+        }
         
 
     class Meta(MetaCore):

@@ -50,13 +50,15 @@
                     </dl>
                  </div>
             </td>
+            
+            {% conference_publication conference as publication %}
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
-            {% if media.is_published and user.is_staff %}
+            {% if publication.published and user.is_staff %}
              <img src="/static/teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
-            {% elif not media.is_published and user.is_staff %}
+            {% elif not publication.published and user.is_staff %}
              <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
             {% endif %}
-            {% if conference.video.file and conference.video.is_published or user.is_superuser or user.is_staff %}
+            {% if conference.video.file %}
                 {% if not "video" in conference.video.mime_type or request.user_agent.os.family == 'iOS' %}
                     <a href="{% url 'teleforma-media-download' period.id conference.video.id %}">
                         <img src="/static/teleforma/images/download_media.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" />
