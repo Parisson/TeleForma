@@ -182,6 +182,8 @@ class Period(models.Model):
     is_open = models.BooleanField(_('is open'), default=True)
     date_exam_end = models.DateTimeField(
         _("date de fin d'examens"), null=True, blank=True)
+    nb_script = models.IntegerField(
+        _("nombre maximal de copies"), null=True, blank=True)
     date_close_accounts = models.DateField(
         "date de fermeture des comptes étudiants", null=True, blank=True)
     date_inscription_start = models.DateField(
@@ -191,19 +193,10 @@ class Period(models.Model):
 
     def __str__(self):
         return self.name
-
-    def nb_scripts(self):
-        """ max number of scripts among all trainings """
-        max_scripts = 0
-        for training in self.training.all():
-            max_scripts = max(max_scripts, training.nb_script)
-        return max_scripts
-
     class Meta(MetaCore):
         db_table = app_label + '_' + 'period'
         verbose_name = _('period')
         ordering = ['name']
-
 
 
 class CourseType(models.Model):

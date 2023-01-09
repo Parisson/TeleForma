@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from ..exam.models import Script
 from ..models.core import get_n_choices
-from ..models.crfpa import Student
 
 
 def validate_session(nb):
@@ -18,19 +17,9 @@ class ScriptForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         period = kwargs.pop('period')
-        user = kwargs.pop('user')
         super(ScriptForm, self).__init__(*args, **kwargs)
         self.fields['score'].localize = False
-        try:
-            student = user.student.get()
-        except Student.DoesNotExist:
-            student = None
-        
-        if student:
-            nb = student.max_sessions() or settings.TELEFORMA_EXAM_MAX_SESSIONS
-        else:
-            nb = period.nb_scripts() or settings.TELEFORMA_EXAM_MAX_SESSIONS
-
+        nb = period.nb_script or settings.TELEFORMA_EXAM_MAX_SESSIONS
         self.fields['session'] = forms.ChoiceField(choices=get_n_choices(nb + 1),
                                                    validators=[validate_session(nb)])
         self.fields['file'].required = True
