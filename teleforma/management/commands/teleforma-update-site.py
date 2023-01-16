@@ -9,12 +9,12 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--from',
-            action='store_true',
+            type=str, required=True,
             help='from domain',
         )
         parser.add_argument(
             '--to',
-            action='store_true',
+            type=str, required=True,
             help='to domain',
         )
 
