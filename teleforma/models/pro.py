@@ -91,6 +91,13 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
     duration        = DurationField(_('approximative duration'))
     professor       = models.ManyToManyField('Professor', related_name='seminar',
                                             verbose_name=_('professor'), blank=True)
+    class TestimonialType(models.TextChoices):
+            ELEARNING = 'elearning', "E-learning"
+            BLENDED = "blended", "Blended"
+    testimonial_type = models.CharField("Type d'attestation", 
+                                        choices=TestimonialType.choices, 
+                                        max_length=10,
+                                        null=True, blank=True)
     docs_description = models.ManyToManyField(Document, related_name="seminar_docs_description",
                                         verbose_name=_('description documents'),
                                         blank=True)
