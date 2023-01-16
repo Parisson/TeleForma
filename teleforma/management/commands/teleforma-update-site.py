@@ -5,10 +5,23 @@ from django.conf import settings
 
 class Command(BaseCommand):
     help = "Change Site domain to another"
-    
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--from',
+            action='store_true',
+            help='from domain',
+        )
+        parser.add_argument(
+            '--to',
+            action='store_true',
+            help='to domain',
+        )
+
+
     def handle(self, *args, **options):
-        to_domain = args[1]
-        from_domain = args[0]
+        from_domain = options['from']
+        to_domain = options['to']
 
         site = Site.objects.get(domain=from_domain)
         site.domain = to_domain
