@@ -832,7 +832,7 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
             context['testimonial'] = testimonials[0]
 
         context['blended'] = False
-        if seminar.conference and seminar.testimonial_type != seminar.TESTIMONIAL_TYPE.ELEARNING.value:
+        if seminar.conference:
             if seminar.conference.webclass and seminar.conference in self.request.user.auditor.get().conferences.all():
                 context['blended'] = True
                 context['conference'] = seminar.conference
