@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
     'e-learning.crfpa.pre-barreau.com',
     'prod.docker.e-learning.crfpa.pre-barreau.parisson.com',
     'recovery.docker.e-learning.crfpa.pre-barreau.parisson.com',
+    'channels'
 ]
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
@@ -57,6 +58,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# channel access point from django
+CHANNEL_URL = "http://channels:8000"
 
 DATABASES = {
     'default': {

@@ -51,7 +51,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template import loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
@@ -67,8 +67,8 @@ from rest_framework.response import Response
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 from rest_framework.views import APIView
-from teleforma.models.crfpa import Home, Training
-from teleforma.models.notification import Notification
+from teleforma.models.crfpa import Home, Student, Training
+from teleforma.models.notification import Notification, notify
 from teleforma.utils import guess_mimetypes
 
 from ..decorators import access_required
@@ -82,6 +82,8 @@ from ..models.core import (Conference, ConferencePublication, Course, CourseType
 from ..webclass.models import Webclass, WebclassRecord
 from .pages import get_page_content
 
+import logging
+logger = logging.getLogger('teleforma')
 # def render(request, template, data=None, mimetype=None):
 #     return django_render(template, data, context_instance=RequestContext(request),
 #                          mimetype=mimetype)
@@ -966,6 +968,36 @@ class NotificationView(APIView):
         notif.viewed = viewed
         notif.save()
         return Response({'status': 'ok'})
+
+
+class LiveConferenceNotify(APIView):
+    def post(self, request):
+        """
+        notify users a new live conference is starting
+        """
+        conference_id = request.data.get('id')
+        if not conference_id:
+            raise Exception('No conference id in request')
+        conference = Conference.objects.get(pk=int(conference_id))
+        students = Student.objects.filter(period=conference.period, platform_only=True)
+        text = f"""Une conférence live "{conference.course.title}" commence"""
+        url = reverse('teleforma-conference-detail', kwargs={'period_id': conference.period.id, 'pk': conference.id})
+        for student in students:
+            try:
+                if student.user:
+                    courses = get_courses(student.user, period=conference.period)
+                    for course in courses:
+                        if conference.course == course['course'] and \
+                                conference.course_type in course['types']:
+                            notify(student.user, text, url)
+                            logger.info("Student notified: " + student.user.username)
+            except Exception as e:
+                logger.warning("Student NOT notified: " + str(student.id))
+                logger.warning(e)
+        return Response({'status': 'ok'})
+        
+        
+
 
 
 # class ConferenceRecordView(FormView):

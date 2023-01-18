@@ -39,6 +39,7 @@ import mimetypes
 import os
 import string
 import random
+import requests
 from teleforma.utils import guess_mimetypes
 
 import django.db.models as models
@@ -48,7 +49,7 @@ from django.core.paginator import InvalidPage
 from django.db import models
 from django.forms.fields import FileField
 from django.template.defaultfilters import slugify
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 # from quiz.models import Quiz
 from sorl.thumbnail import default as sorl_default
@@ -406,6 +407,7 @@ class Conference(models.Model):
     web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
     notified = models.BooleanField(_('notified'), default=False)
+    notified_live = models.BooleanField("Notifié live", default=False)
 
     @property
     def description(self):
@@ -452,6 +454,14 @@ class Conference(models.Model):
         if not self.public_id:
             self.public_id = get_random_hash()
         self.course.save()
+
+        if self.streaming and not self.notified_live:
+            # Notify live conferences by sending a signal to websocket.
+            # This signal will be catched by the channel instance to notify students
+            from teleforma.models.notification import notify
+            requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+            self.notified_live = True
+        
         super(Conference, self).save(*args, **kwargs)
 
     def to_dict(self):
