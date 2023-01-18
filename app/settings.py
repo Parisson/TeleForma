@@ -362,6 +362,9 @@ LOGGING = {
     },
 }
 
+# disable warning about unique foreignkey
+SILENCED_SYSTEM_CHECKS = ["fields.W342"]
+
 
 def show_user_as(user):
     professor = user.professor.all()
