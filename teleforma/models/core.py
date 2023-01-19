@@ -453,7 +453,7 @@ class Conference(models.Model):
                     str(date)]
         return ' - '.join(list)
 
-    async def notify(self):
+    async def notify_async(self):
         if self.streaming and not self.notified_live:
             # Notify live conferences by sending a signal to websocket.
             # This signal will be catched by the channel instance to notify students
@@ -467,11 +467,25 @@ class Conference(models.Model):
                                             data={'id': self.id}, timeout=20.0)
                     assert response.status_code == 200
 
+    def notify_sync(self):
+        if self.streaming and not self.notified_live:
+            # Notify live conferences by sending a signal to websocket.
+            # This signal will be catched by the channel instance to notify students
+            from teleforma.models.notification import notify
+            if settings.DEBUG:
+                requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+            else:
+                transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
+                with httpx.Client(transport=transport) as client:
+                    response = client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
+                                            data={'id': self.id}, timeout=20.0)
+                    assert response.status_code == 200
+
     def save(self, *args, **kwargs):
         if not self.public_id:
             self.public_id = get_random_hash()
         self.course.save()
-        self.notify()
+        self.notify_sync()
         if self.notified_live:
             self.notified_live = True
         super(Conference, self).save(*args, **kwargs)
