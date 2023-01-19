@@ -486,7 +486,7 @@ class Conference(models.Model):
             self.public_id = get_random_hash()
         self.course.save()
         self.notify_sync()
-        if self.notified_live:
+        if not self.notified_live:
             self.notified_live = True
         super(Conference, self).save(*args, **kwargs)
 
