@@ -35,6 +35,7 @@
 
 from teleforma.views.core import get_periods
 from teleforma.models.core import Period
+from django.conf import settings
 
 
 def periods(request):
@@ -44,3 +45,6 @@ def periods(request):
     else:
         return {'periods': get_periods(request)}
 
+
+def debug(request):
+    return settings.DEBUG

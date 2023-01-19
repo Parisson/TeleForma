@@ -232,7 +232,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'teleforma.context_processors.periods',
-
+                'teleforma.context_processors.debug',
             ],
         },
     },
