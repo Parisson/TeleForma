@@ -463,7 +463,7 @@ class Conference(models.Model):
             else:
                 transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
                 async with httpx.AsyncClient(transport=transport) as client:
-                    response = client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
+                    response = await client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
                                             data={'id': self.id}, timeout=20.0)
                     assert response.status_code == 200
 
