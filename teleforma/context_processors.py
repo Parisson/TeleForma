@@ -47,4 +47,4 @@ def periods(request):
 
 
 def debug(request):
-    return settings.DEBUG
+    return {'debug': settings.DEBUG}
