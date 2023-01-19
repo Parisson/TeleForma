@@ -40,6 +40,7 @@ import os
 import string
 import random
 import requests
+import asyncio
 from teleforma.utils import guess_mimetypes
 
 import django.db.models as models
@@ -452,11 +453,7 @@ class Conference(models.Model):
                     str(date)]
         return ' - '.join(list)
 
-    def save(self, *args, **kwargs):
-        if not self.public_id:
-            self.public_id = get_random_hash()
-        self.course.save()
-
+    async def notify(self):
         if self.streaming and not self.notified_live:
             # Notify live conferences by sending a signal to websocket.
             # This signal will be catched by the channel instance to notify students
@@ -470,7 +467,12 @@ class Conference(models.Model):
                                             data={'id': self.id}, timeout=20.0)
                     # assert response.status_code == 200
             self.notified_live = True
-        
+
+    def save(self, *args, **kwargs):
+        if not self.public_id:
+            self.public_id = get_random_hash()
+        self.course.save()
+        self.notify()
         super(Conference, self).save(*args, **kwargs)
 
     def to_dict(self):
