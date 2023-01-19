@@ -63,7 +63,7 @@ CHANNEL_LAYERS = {
 if DEBUG:
     CHANNEL_URL = "http://channels:8000"
 else:
-    CHANNEL_URL = "/var/run/app/asgi.sock/ws"
+    CHANNEL_URL = "/var/run/app/asgi.sock"
 
 
 DATABASES = {
