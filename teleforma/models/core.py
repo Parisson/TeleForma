@@ -464,7 +464,7 @@ class Conference(models.Model):
             else:
                 transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
                 client = httpx.Client(transport=transport)
-                response = client.post(f"{reverse('teleforma-live-conference-notify')}",
+                response = client.post(f"http://{reverse('teleforma-live-conference-notify')}",
                                         {'id': self.id})
                 assert response.status_code == 200
             self.notified_live = True
