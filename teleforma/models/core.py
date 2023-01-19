@@ -465,14 +465,15 @@ class Conference(models.Model):
                 async with httpx.AsyncClient(transport=transport) as client:
                     response = client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
                                             data={'id': self.id}, timeout=20.0)
-                    # assert response.status_code == 200
-            self.notified_live = True
+                    await response.status_code == 200
 
     def save(self, *args, **kwargs):
         if not self.public_id:
             self.public_id = get_random_hash()
         self.course.save()
         self.notify()
+        if self.notified_live:
+            self.notified_live = True
         super(Conference, self).save(*args, **kwargs)
 
     def to_dict(self):
