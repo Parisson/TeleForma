@@ -462,6 +462,7 @@ class Conference(models.Model):
             if settings.DEBUG:
                 requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
             else:
+                import httpx
                 transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
                 client = httpx.Client(transport=transport)
                 response = client.post(f"http://{reverse('teleforma-live-conference-notify')}",

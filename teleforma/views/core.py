@@ -62,10 +62,6 @@ from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-# The fact that you are presently reading this means that you have had
-# knowledge of the CeCILL license and that you accept its terms.
-#
-# Authors: Guillaume Pellerin <yomguy@parisson.com>
 from rest_framework.views import APIView
 from teleforma.models.crfpa import Home, Student, Training
 from teleforma.models.notification import Notification, notify
