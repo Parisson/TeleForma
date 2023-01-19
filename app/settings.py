@@ -60,7 +60,11 @@ CHANNEL_LAYERS = {
 }
 
 # channel access point from django
-CHANNEL_URL = "http://channels:8000"
+if DEBUG:
+    CHANNEL_URL = "http://channels:8000"
+else:
+    CHANNEL_URL = "/var/run/app/asgi.sock/ws"
+
 
 DATABASES = {
     'default': {
