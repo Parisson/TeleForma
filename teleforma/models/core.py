@@ -54,6 +54,8 @@ from django.utils.translation import ugettext_lazy as _
 # from quiz.models import Quiz
 from sorl.thumbnail import default as sorl_default
 
+import httpx
+
 from ..fields import ShortTextField
 
 HAS_TELEMETA = False
@@ -462,11 +464,10 @@ class Conference(models.Model):
             if settings.DEBUG:
                 requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
             else:
-                import httpx
                 transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
                 client = httpx.Client(transport=transport)
-                response = client.put(f"http://{reverse('teleforma-live-conference-notify')}",
-                                        data={'id': self.id})
+                response = client.put("http://localhost/" + reverse('teleforma-live-conference-notify'),
+                                        data={'id': self.id}, timeout=20.0)
                 assert response.status_code == 200
             self.notified_live = True
         
