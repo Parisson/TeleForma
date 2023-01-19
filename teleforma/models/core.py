@@ -459,7 +459,14 @@ class Conference(models.Model):
             # Notify live conferences by sending a signal to websocket.
             # This signal will be catched by the channel instance to notify students
             from teleforma.models.notification import notify
-            requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+            if settings.DEBUG:
+                requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+            else:
+                transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
+                client = httpx.Client(transport=transport)
+                response = client.post(f"{reverse('teleforma-live-conference-notify')}",
+                                        {'id': self.id})
+                assert response.status_code == 200
             self.notified_live = True
         
         super(Conference, self).save(*args, **kwargs)
