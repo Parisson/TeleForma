@@ -485,9 +485,6 @@ class Conference(models.Model):
         if not self.public_id:
             self.public_id = get_random_hash()
         self.course.save()
-        self.notify_sync()
-        if not self.notified_live:
-            self.notified_live = True
         super(Conference, self).save(*args, **kwargs)
 
     def to_dict(self):
@@ -628,6 +625,16 @@ class Conference(models.Model):
         indexes = [
             models.Index(fields=['course', 'course_type', 'period', 'streaming', '-date_begin' ]),
          ]
+
+
+def notif_conference(sender, instance, *args, **kwargs):
+    if not instance.notified_live:
+        instance.notify_sync()
+        instance.notified_live = True
+        instance.save()
+
+post_save.connect(notif_conference, sender=Conference)
+
 
 class StreamingServer(models.Model):
 
