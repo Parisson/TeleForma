@@ -317,7 +317,7 @@ CACHES = {
    }
 }
 
-CACHE_TIMEOUT = 60*60*12
+CACHE_TIMEOUT = 60*60*24
 
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.
