@@ -44,6 +44,7 @@ from django.db.models import signals
 from django.urls.base import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from tinymce.models import HTMLField
+from django.core.cache import cache
 
 from ..models.core import (Course, Media, MetaCore, payment_choices,
                            payment_schedule_choices)
@@ -116,6 +117,7 @@ class Training(models.Model):
     available = models.BooleanField(_('available'))
     platform_only = models.BooleanField(_('e-learning platform only'))
     duration = models.IntegerField(u"Durée en heures", default=0)
+
 
     def __str__(self):
         if self.name and self.period:
@@ -400,6 +402,7 @@ class Student(models.Model):
     def expiration_date(self):
         """ closing date of student period """
         return self.period.date_close_accounts
+
     
     class Meta(MetaCore):
         db_table = app_label + '_' + 'student'
@@ -418,10 +421,25 @@ def update_balance_signal(sender, instance, *args, **kwargs):
 def create_payment_objects(sender, instance, *args, **kwargs):
     transaction.on_commit(instance.create_payment_objects)
 
+
+def purge_courses_cache(sender, instance, *args, **kwargs):
+    """ purge get_courses cache """
+    periods = [training.period for training in instance.trainings.all()]
+    for period in periods:
+        for child in period.children.all():
+            periods.append(child)
+    for period in periods + [None]:
+        for date_order in (True, False):
+            for num_order in (True, False):
+                for num_courses in (True, False):
+                    cache_key = f"get_courses-{instance.user.id}-{date_order}-{num_order}-{num_courses}-{period and period.id or None}"
+                    print(f"purging {cache_key}")
+                    cache.delete(cache_key)
+
 signals.post_save.connect(update_balance_signal)
 signals.post_save.connect(create_payment_objects, sender=Student)
+signals.post_save.connect(purge_courses_cache, sender=Student)
 signals.post_delete.connect(update_balance_signal)
-
 
 class Profile(models.Model):
     "User profile extension"

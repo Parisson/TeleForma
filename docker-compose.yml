@@ -22,6 +22,7 @@ services:
       - db:db
       - redis
       - memcached
+      - channels
     depends_on:
       - db
       - redis

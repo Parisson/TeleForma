@@ -2,6 +2,7 @@
 import os
 
 from django.conf.urls import include, url
+from django.conf import settings
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.http import HttpResponse
@@ -11,9 +12,7 @@ admin.autodiscover()
 
 js_info_dict = ['teleforma']
 
-DEBUG_ENV = os.environ.get('DEBUG') == 'True'
-
-if DEBUG_ENV:
+if settings.DEBUG_TOOLBAR:
     import debug_toolbar
 
 urlpatterns = [
@@ -38,5 +37,5 @@ urlpatterns = [
     #url(r'^pdfviewer/', include('webviewer.urls')),
     url(r'^pdfannotator/', include('pdfannotator.urls')),
     url(r'^messages/', include('postman.urls', namespace='postman')),
-] + ([url(r'^__debug__/', include(debug_toolbar.urls)),] if DEBUG_ENV else [])
+] + ([url(r'^__debug__/', include(debug_toolbar.urls)),] if settings.DEBUG_TOOLBAR else [])
 

@@ -54,7 +54,7 @@ from teleforma.views.home import HomeView
 from .views.appointment import Appointments, cancel_appointment
 from .views.core import (ChatMessageView, ConferenceListView, ConferenceView, CourseListView,
                          CoursePendingListView, CourseView, DocumentView,
-                         HelpView, HomeRedirectView, MediaTranscodedView,
+                         HelpView, HomeRedirectView, LiveConferenceNotify, MediaTranscodedView,
                          MediaView, MediaViewEmbed, NotificationView)
 from .views.crfpa import (AnnalsCourseView, AnnalsIEJView, AnnalsView,
                           CorrectorAddView, CorrectorCompleteView,
@@ -272,4 +272,8 @@ urlpatterns = [
     # notification
     path('notification',
          NotificationView.as_view(), name='teleforma-notification'),
+
+    # must be called on channels instance
+    path('live_conference_notify',
+        LiveConferenceNotify.as_view(), name='teleforma-live-conference-notify')
 ]

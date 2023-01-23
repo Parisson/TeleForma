@@ -39,7 +39,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         # import pdb;pdb.set_trace()
         if user.is_authenticated:
             messages = [message.to_dict() for message in Notification.objects.filter(
-                user=user).order_by('-created')][:20]
+                user=user).order_by('-created')][:50]
         else:
             messages = []
         return messages

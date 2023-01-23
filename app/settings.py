@@ -13,6 +13,7 @@ sys.dont_write_bytecode = True
 
 DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
+DEBUG_TOOLBAR = False
 TEMPLATE_DEBUG = DEBUG
 
 RECOVERY = False
@@ -34,6 +35,7 @@ ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
     'e-learning.crfpa.pre-barreau.com',
     'prod.docker.e-learning.crfpa.pre-barreau.parisson.com',
     'recovery.docker.e-learning.crfpa.pre-barreau.parisson.com',
+    'channels'
 ]
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
@@ -56,6 +58,13 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# channel access point from django
+if DEBUG:
+    CHANNEL_URL = "http://channels:8000"
+else:
+    CHANNEL_URL = "/var/run/app/asgi.sock"
+
 
 DATABASES = {
     'default': {
@@ -163,7 +172,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG else ()) + (
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -204,7 +213,7 @@ INSTALLED_APPS = (
 )
 
 
-if DEBUG:
+if DEBUG_TOOLBAR:
     INSTALLED_APPS += ('debug_toolbar',)
 
 TEMPLATES = [
@@ -223,7 +232,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'teleforma.context_processors.periods',
-
+                'teleforma.context_processors.debug',
             ],
         },
     },
@@ -252,7 +261,7 @@ TELEFORMA_PERIOD_TWEETER = True
 TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
 TELEFORMA_EXAM_SCRIPT_UPLOAD = True
 TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
-TELEFORMA_PERIOD_DEFAULT_ID = 23
+TELEFORMA_PERIOD_DEFAULT_ID = 34
 TELEFORMA_EXAM_MAX_SESSIONS = 99
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
@@ -359,6 +368,11 @@ LOGGING = {
         },
     },
     'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'payment': {
             'handlers': ['file'],
             'level': 'DEBUG',
@@ -509,7 +523,7 @@ SHERLOKS_USE_TRANSACTION_ID = True
 
 ORAL_OPTION_PRICE = 250
 
-if DEBUG:
+if DEBUG_TOOLBAR:
     def show_toolbar(request):
         return True
     DEBUG_TOOLBAR_CONFIG = {
