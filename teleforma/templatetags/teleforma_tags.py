@@ -201,4 +201,8 @@ def set_host(url, host):
 
 @register.tag
 def random_hash(parser, token):
-    return get_random_hash()
+    return RandomHash()
+
+class RandomHash(template.Node):
+    def render(self, context):
+        return get_random_hash()
