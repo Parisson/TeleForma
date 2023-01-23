@@ -7,5 +7,7 @@ Suite à votre inscription à la formation {{ period }}, une échéance de
 Pour effectuer votre paiement, veuillez cliquer sur l’URL suivante :
 https://{{ site.domain }}{{ payment_url }}
 
+Après avoir cliqué sur le lien, vous arrivez sur la page de notre site mentionnant vos échéances et il ne vous reste plus qu’à cliquer sur le logo de votre carte bancaire pour accéder au formulaire de paiement correspondant.
+
 Cordialement,
 L’équipe du Pré-Barreau
