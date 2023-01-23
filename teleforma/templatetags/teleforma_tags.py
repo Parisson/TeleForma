@@ -198,8 +198,7 @@ def get_video_id(media):
 def set_host(url, host):
     u = urlparse(url)
     return u.scheme + '://' + host + ':' + str(u.port) + u.path
-    
 
-@register.assignment_tag
-def get_random_hash():
+@register.tag
+def get_random_hash(parser, token):
     return get_random_hash()
