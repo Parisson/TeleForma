@@ -39,6 +39,8 @@ import mimetypes
 import os
 import string
 import random
+import requests
+import asyncio
 from teleforma.utils import guess_mimetypes
 
 import django.db.models as models
@@ -48,10 +50,13 @@ from django.core.paginator import InvalidPage
 from django.db import models
 from django.forms.fields import FileField
 from django.template.defaultfilters import slugify
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
+from django.db.models.signals import post_save
 # from quiz.models import Quiz
 from sorl.thumbnail import default as sorl_default
+
+import httpx
 
 from ..fields import ShortTextField
 
@@ -193,7 +198,6 @@ class Period(models.Model):
 
     def __str__(self):
         return self.name
-
     class Meta(MetaCore):
         db_table = app_label + '_' + 'period'
         verbose_name = _('period')
@@ -368,6 +372,16 @@ class Room(models.Model):
         verbose_name = _('room')
 
 
+class ConferencePublication(models.Model):
+    conference = models.ForeignKey('Conference', related_name='publications', verbose_name=_('conference'),
+                                    on_delete=models.CASCADE)
+    period = models.ForeignKey('Period', verbose_name=_('period'),
+                               on_delete=models.CASCADE)
+    date_publish = models.DateTimeField(_('publishing date'), null=True, blank=True)
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2)
+    notified = models.BooleanField(_('notified'), default=False)
+
 class Conference(models.Model):
 
     public_id = models.CharField(_('public_id'), max_length=255, blank=True, unique=True)
@@ -397,10 +411,18 @@ class Conference(models.Model):
     web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
                                         blank=True, null=True, on_delete=models.SET_NULL)
     notified = models.BooleanField(_('notified'), default=False)
+    notified_live = models.BooleanField("Notifié live", default=False)
 
     @property
     def description(self):
         return str(self)
+
+    @property
+    def session_as_int(self):
+        try:
+            return int(self.session)
+        except ValueError:
+            return 0
 
     @property
     def duration(self):
@@ -412,16 +434,13 @@ class Conference(models.Model):
 
     @property
     def slug(self):
-        slug = '-'.join([self.course.department.slug,
+        slug = '-'.join([self.department.slug,
                          self.course.slug,
                          self.course_type.name.lower()])
         return slug
 
     def __str__(self):
-        if self.date_publish:
-            date = self.date_publish
-        else:
-            date = self.date_begin
+        date = self.date_begin
 
         if self.professor:
             list = [self.course.title,
@@ -434,6 +453,34 @@ class Conference(models.Model):
                     self.course_type.name, self.session,
                     str(date)]
         return ' - '.join(list)
+
+    async def notify_async(self):
+        if self.streaming and not self.notified_live:
+            # Notify live conferences by sending a signal to websocket.
+            # This signal will be catched by the channel instance to notify students
+            from teleforma.models.notification import notify
+            if settings.DEBUG:
+                requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+            else:
+                transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
+                async with httpx.AsyncClient(transport=transport) as client:
+                    response = await client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
+                                            data={'id': self.id}, timeout=20.0)
+                    assert response.status_code == 200
+
+    def notify_sync(self):
+        if self.streaming and not self.notified_live:
+            # Notify live conferences by sending a signal to websocket.
+            # This signal will be catched by the channel instance to notify students
+            from teleforma.models.notification import notify
+            if settings.DEBUG:
+                requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+            else:
+                transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
+                with httpx.Client(transport=transport) as client:
+                    response = client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
+                                            data={'id': self.id}, timeout=20.0)
+                    assert response.status_code == 200
 
     def save(self, *args, **kwargs):
         if not self.public_id:
@@ -540,6 +587,37 @@ class Conference(models.Model):
                 self.web_class_group = WebClassGroup.objet.get(
                     name=data['web_class_group'])
 
+    def video(self):
+        """
+        get media video
+        """
+        try:
+            return self.media.get(type='mp4')
+        except Media.DoesNotExist:
+            try:
+                return self.media.get(type='webm')
+            except Media.DoesNotExist:
+                pass
+        return None
+
+    def publication_info(self, period):
+        """
+        Get publication info according to period.
+        """
+        publication = self.publications.filter(period=period).first()
+        if not publication and self.period == period:
+            publication = self
+        elif not publication:
+            return None
+        
+        return {
+            'status': publication.status,
+            'published': publication.status == 3,
+            'publication_date': publication.date_publish,
+            'notified': publication.notified
+        }
+        
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
         verbose_name = _('conference')
@@ -548,6 +626,16 @@ class Conference(models.Model):
         indexes = [
             models.Index(fields=['course', 'course_type', 'period', 'streaming', '-date_begin' ]),
          ]
+
+
+def notif_conference(sender, instance, *args, **kwargs):
+    if not instance.notified_live:
+        instance.notify_sync()
+        instance.notified_live = True
+        instance.save()
+
+post_save.connect(notif_conference, sender=Conference)
+
 
 class StreamingServer(models.Model):
 
@@ -599,7 +687,7 @@ class LiveStream(models.Model):
         if self.server.type == 'stream-m':
             mount_point += 'consume/' + self.slug
         else:
-            mount_point += self.slug
+            mount_point += self.slug + '.' + self.stream_type
         return mount_point
 
     @property

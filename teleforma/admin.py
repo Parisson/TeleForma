@@ -22,7 +22,7 @@ from collections import OrderedDict
 from .exam.admin import QuotaInline
 from .models.appointment import (Appointment, AppointmentJury,
                                  AppointmentPeriod, AppointmentSlot)
-from .models.core import (Conference, Course, CourseType, Department, Document,
+from .models.core import (Conference, ConferencePublication, Course, CourseType, Department, Document,
                           DocumentSimple, DocumentType, LiveStream, Media,
                           MediaTranscoded, Organization, Period, Professor,
                           Room, StreamingServer)
@@ -368,6 +368,8 @@ class MediaInline(admin.StackedInline):
     model = Media
     exclude = ['readers', ]
 
+class ConferenceInline(admin.StackedInline):
+    model = ConferencePublication
 
 @admin.action(description='Publish selected conferences')
 def publish_conferences(modeladmin, request, queryset):
@@ -393,8 +395,10 @@ def duplicate_conferences(modeladmin, request, queryset):
             media.save()
 
 
+
+
 class ConferenceAdmin(admin.ModelAdmin):
-    inlines = [MediaInline, ]
+    inlines = [MediaInline, ConferenceInline]
     exclude = ['readers']
     list_per_page = 30
     list_filter = ('course', 'period', 'date_begin', 'session', 'course_type')

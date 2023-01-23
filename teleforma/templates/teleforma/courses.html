@@ -81,9 +81,8 @@
     </p>
   </div>
 
-  {% if home_video.type == 'webm' %}
+  {% if home_video %}
   <div class="block">
-
     <div class="course_subtitle">
       <h3>{% if home_video.title %}{{ home_video.title }}{% else %}{{ home_video.course.title }}{% endif %}</h3>
     </div>
