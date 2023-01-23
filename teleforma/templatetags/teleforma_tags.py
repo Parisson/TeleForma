@@ -200,5 +200,5 @@ def set_host(url, host):
     return u.scheme + '://' + host + ':' + str(u.port) + u.path
 
 @register.tag
-def get_random_hash(parser, token):
+def random_hash(parser, token):
     return get_random_hash()
