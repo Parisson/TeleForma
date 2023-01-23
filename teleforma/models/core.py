@@ -701,7 +701,11 @@ class LiveStream(models.Model):
 
     @property
     def url(self):
-        return self.server.protocol + '://' + self.server.host + ':' + self.server.port + \
+        server = self.server.host
+        if settings.TELECASTER_LIVE_RANDOM_SERVERS:
+            servers = settings.TELECASTER_LIVE_STREAMING_SERVERS
+            server = random.choice(servers)
+        return self.server.protocol + '://' + server + ':' + self.server.port + \
                 self.server.path + self.mount_point
 
     def __str__(self):
