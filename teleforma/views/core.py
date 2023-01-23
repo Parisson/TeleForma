@@ -376,6 +376,7 @@ class CourseAccessMixin(PeriodAccessMixin):
         else:
             context['doc_types'] = DocumentType.objects.all()
             context['show_media'] = True
+        context['access_error'] = False
         return context
 
 
