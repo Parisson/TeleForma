@@ -54,6 +54,8 @@ from timezones.utils import localtime_for_timezone
 from django.utils.translation import ugettext_lazy as _
 from teleforma.views import get_courses
 from urlparse import urlparse
+from teleforma.models import get_random_hash
+
 
 register = template.Library()
 
@@ -197,3 +199,7 @@ def set_host(url, host):
     u = urlparse(url)
     return u.scheme + '://' + host + ':' + str(u.port) + u.path
     
+
+@register.assignment_tag
+def get_random_hash():
+    return get_random_hash()
