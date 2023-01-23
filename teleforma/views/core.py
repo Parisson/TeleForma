@@ -142,12 +142,19 @@ def get_course_conferences(period, course, course_type):
     already_added = set()
     # get conference publications
     publications = ConferencePublication.objects.filter(
-        period=period, conference__course=course, conference__course_type=course_type).distinct()
+        period=period,
+        conference__course=course,
+        conference__course_type=course_type,
+        status=3).distinct()
     for publication in publications:
         conferences.append(publication.conference)
         already_added.add(publication.conference.id)
 
-    for conference in Conference.objects.filter(period=period, course=course, course_type=course_type):
+    cc = Conference.objects.filter(period=period,
+        course=course,
+        course_type=course_type,
+        status=3)
+    for conference in cc:
         # do not include conferences with publication rules
         if conference.id not in already_added:
             conferences.append(conference)
