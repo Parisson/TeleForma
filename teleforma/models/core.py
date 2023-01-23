@@ -434,7 +434,7 @@ class Conference(models.Model):
 
     @property
     def slug(self):
-        slug = '-'.join([self.course.department.slug,
+        slug = '-'.join([self.department.slug,
                          self.course.slug,
                          self.course_type.name.lower()])
         return slug
