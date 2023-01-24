@@ -230,6 +230,10 @@ class CourseType(models.Model):
         self.description = data['description']
         self.save()
 
+    @property
+    def slug(self):
+        return slugify(self.name)
+
 
 class Course(models.Model):
 
@@ -436,7 +440,7 @@ class Conference(models.Model):
     def slug(self):
         slug = '-'.join([self.department.slug,
                          self.course.slug,
-                         self.course_type.name.lower()])
+                         self.course_type.slug])
         return slug
 
     def __str__(self):
