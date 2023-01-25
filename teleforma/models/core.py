@@ -386,6 +386,7 @@ class ConferencePublication(models.Model):
         _('status'), choices=STATUS_CHOICES, default=2)
     notified = models.BooleanField(_('notified'), default=False)
 
+
 class Conference(models.Model):
 
     public_id = models.CharField(_('public_id'), max_length=255, blank=True, unique=True)
@@ -596,10 +597,10 @@ class Conference(models.Model):
         get media video
         """
         try:
-            return self.media.get(type='mp4')
+            return self.media.filter(type='mp4')[0]
         except Media.DoesNotExist:
             try:
-                return self.media.get(type='webm')
+                return self.media.filter(type='webm')[0]
             except Media.DoesNotExist:
                 pass
         return None
