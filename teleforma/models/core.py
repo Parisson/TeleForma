@@ -597,7 +597,9 @@ class Conference(models.Model):
         get media video
         """
         try:
-            return self.media.filter(type='mp4')[0]
+            videos = self.media.filter(type='mp4')
+            if videos:
+                return videos[0]
         except Media.DoesNotExist:
             try:
                 return self.media.filter(type='webm')[0]
