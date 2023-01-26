@@ -475,11 +475,15 @@ def course_ingoing_conferences(context):
 @register.simple_tag(takes_context=True)
 def course_past_conferences(context):
     user = context['user']
+    if user.is_staff:
+        status_min = 2
+    else:
+        status_min = 3
     course = context['course']
     period = context['period']
     course_type = context['type']
 
-    return get_course_conferences(period, course, course_type)
+    return get_course_conferences(period, course, course_type, status_min=status_min)
 
 @register.simple_tag(takes_context=True)
 def conference_publication(context, conference):

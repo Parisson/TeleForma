@@ -137,7 +137,7 @@ def get_trainings(user):
     return trainings
 
 
-def get_course_conferences(period, course, course_type):
+def get_course_conferences(period, course, course_type, status_min=3):
     conferences = []
     already_added = set()
     # get conference publications
@@ -145,7 +145,7 @@ def get_course_conferences(period, course, course_type):
         period=period,
         conference__course=course,
         conference__course_type=course_type,
-        status=3).distinct()
+        status__gte=status_min).distinct()
     for publication in publications:
         conferences.append(publication.conference)
         already_added.add(publication.conference.id)
@@ -153,7 +153,7 @@ def get_course_conferences(period, course, course_type):
     cc = Conference.objects.filter(period=period,
         course=course,
         course_type=course_type,
-        status=3)
+        status__gte=status_min)
     for conference in cc:
         # do not include conferences with publication rules
         if conference.id not in already_added:
