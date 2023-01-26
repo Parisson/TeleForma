@@ -484,7 +484,7 @@ class Conference(models.Model):
                 transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
                 with httpx.Client(transport=transport) as client:
                     response = client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
-                                            data={'id': self.id}, timeout=60.0)
+                                            data={'id': self.id}, timeout=120.0)
                     assert response.status_code == 200
 
     def save(self, *args, **kwargs):
