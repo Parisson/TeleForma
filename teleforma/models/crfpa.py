@@ -325,7 +325,7 @@ class Student(models.Model):
         payments = None
         # Full or partial ?
         if self.payment_schedule == 'split':
-            if period.name in ('Semestrielle', 'Annuelle'):
+            if period.name in ('Semestrielle', 'Annuelle', 'Annuelle progressive'):
                 part = int(total * 0.25)
                 remaining = total - 3 * part
                 payments = ((remaining, tomorrow),)
@@ -365,7 +365,7 @@ class Student(models.Model):
 
         # Handle oral date
         oral_date = None
-        if period.name in ('Semestrielle', 'Annuelle'):
+        if period.name in ('Semestrielle', 'Annuelle', 'Annuelle progressive'):
             if tomorrow.month <= 6:                    
                 # Late registration
                 oral_date = endofmonth(tomorrow.year, 6)
