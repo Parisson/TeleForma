@@ -15,7 +15,7 @@
     "extract-css": "^2.0.0",
     "path": "^0.12.7",
     "vue": "^2.6.11",
-    "vue-advanced-chat": "^1.5.5",
+    "vue-advanced-chat": "1.5.8",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^9.1.2",
     "webpack-manifest-plugin": "^3.1.1"

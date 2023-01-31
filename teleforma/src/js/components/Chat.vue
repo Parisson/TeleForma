@@ -133,7 +133,15 @@ export default class Chat extends Vue {
       if (type == "initial" && this.messagesLoaded) return
       const newMessages = data.messages as Message[]
       this.messages = [...this.messages, ...newMessages]
-      if (type == "initial") this.messagesLoaded = true
+      if (type == "initial") {
+        this.messagesLoaded = true
+        // scroll chat to bottom
+        const messageContainer = document.querySelector(".vac-container-scroll")
+        this.$nextTick(() => {
+          if(messageContainer)
+            messageContainer.scrollTop = messageContainer.scrollHeight
+        })
+      }
     }
   }
 

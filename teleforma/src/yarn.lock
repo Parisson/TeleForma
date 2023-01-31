@@ -3560,7 +3560,7 @@ elliptic@^6.5.3:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
-emoji-picker-element@^1.8.2:
+emoji-picker-element@1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/emoji-picker-element/-/emoji-picker-element-1.12.1.tgz#854a9bbae4d9a04fa2b5cd0763845921f4904c83"
   integrity sha512-F9AY/re8uqZmBcCXLHLGvyy7fxuMQdZl9R8OToLRH8Vnns+WMX8RYUbI2nSJklzl5+82qzpYWeus1/puDepWcQ==
@@ -8899,7 +8899,7 @@ url@^0.11.0:
 use-strict@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/use-strict/-/use-strict-1.0.1.tgz#0bb80d94f49a4a05192b84a8c7d34e95f1a7e3a0"
-  integrity sha1-C7gNlPSaSgUZK4Sox9NOlfGn46A=
+  integrity sha512-IeiWvvEXfW5ltKVMkxq6FvNf2LojMKvB2OCeja6+ct24S1XOmQw2dGr2JyndwACWAGJva9B7yPHwAmeA9QCqAQ==
 
 use@^3.1.0:
   version "3.1.1"
@@ -8966,9 +8966,9 @@ uuid@^3.3.2, uuid@^3.4.0:
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
 v-click-outside@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/v-click-outside/-/v-click-outside-3.1.2.tgz#1dbaa14bf09a21bd16f23a38f03bfa3988f71281"
-  integrity sha512-gMdRqfRE6m6XU6SiFi3dyBlFB2MWogiXpof8Aa3LQysrl9pzTndqp/iEaAphLoadaQUFnQ0ec6fLLaxr7LiY6A==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/v-click-outside/-/v-click-outside-3.2.0.tgz#850ac3f52d66d84b9f7e8002a1bcadcafec5534e"
+  integrity sha512-QD0bDy38SHJXQBjgnllmkI/rbdiwmq9RC+/+pvrFjYJKTn8dtp7Penf9q1lLBta280fYG2q53mgLhQ+3l3z74w==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
@@ -9007,12 +9007,12 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vue-advanced-chat@^1.5.5:
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/vue-advanced-chat/-/vue-advanced-chat-1.5.5.tgz#6a9af8af18364a15d01a6308ac7ae663d7311a93"
-  integrity sha512-v3+STQXHoTNWlIWOFlzDzhXlUVZXAFoWRpcZXv0pVNcILzGUXSZ4wQeetWyWx42PhXvNhD4h6ktPLBbZzbqTTQ==
+vue-advanced-chat@1.5.8:
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/vue-advanced-chat/-/vue-advanced-chat-1.5.8.tgz#a57bb474e987d5d2dfbd17c867581854c4c6defe"
+  integrity sha512-PQ/4sDCNoLWJ22jlr8WRGSm5CWTTpISkR8NH1FHx/nETGkzb/e4l1kTSY8ANBia05gXry2WhbVXtyhUAFIteMw==
   dependencies:
-    emoji-picker-element "^1.8.2"
+    emoji-picker-element "1.12.1"
     linkifyjs "^2.1.9"
     v-click-outside "^3.1.2"
   optionalDependencies:
