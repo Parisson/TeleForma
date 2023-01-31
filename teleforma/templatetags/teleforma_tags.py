@@ -475,7 +475,7 @@ def course_ingoing_conferences(context):
 @register.simple_tag(takes_context=True)
 def course_past_conferences(context):
     user = context['user']
-    if user.is_staff:
+    if user.is_staff or user.professor.count():
         status_min = 2
     else:
         status_min = 3
