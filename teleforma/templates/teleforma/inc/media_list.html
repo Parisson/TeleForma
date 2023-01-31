@@ -53,10 +53,12 @@
             
             {% conference_publication conference as publication %}
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
-            {% if publication.published and user.is_staff %}
-             <img src="/static/teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
-            {% elif not publication.published and user.is_staff %}
-             <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
+            {% if user.is_staff or user.professor.count %}
+                {% if publication.published %}
+                    <img src="/static/teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
+                {% else %}
+                    <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
+                {% endif %}
             {% endif %}
             {% if conference.video.file %}
                 {% if not "video" in conference.video.mime_type or request.user_agent.os.family == 'iOS' %}
