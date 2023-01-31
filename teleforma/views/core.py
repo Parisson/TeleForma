@@ -975,6 +975,7 @@ class NotificationView(APIView):
 
 
 class LiveConferenceNotify(APIView):
+
     def post(self, request):
         """
         notify users a new live conference is starting
@@ -986,6 +987,8 @@ class LiveConferenceNotify(APIView):
         students = Student.objects.filter(period=conference.period, platform_only=True)
         text = f"""Une conférence live "{conference.course.title}" commence"""
         url = reverse('teleforma-conference-detail', kwargs={'period_id': conference.period.id, 'pk': conference.id})
+
+        # notify students
         for student in students:
             try:
                 if student.user:
@@ -998,10 +1001,13 @@ class LiveConferenceNotify(APIView):
             except Exception as e:
                 logger.warning("Student NOT notified: " + str(student.id))
                 logger.warning(e)
-        return Response({'status': 'ok'})
-        
-        
+                continue
 
+        # notify staff
+        for user in User.objects.filter(is_staff=True):
+            notify(student.user, text, url)
+
+        return Response({'status': 'ok'})
 
 
 # class ConferenceRecordView(FormView):
