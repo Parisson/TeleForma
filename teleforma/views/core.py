@@ -1005,7 +1005,7 @@ class LiveConferenceNotify(APIView):
 
         # notify staff
         for user in User.objects.filter(is_staff=True):
-            notify(student.user, text, url)
+            notify(user, text, url)
 
         return Response({'status': 'ok'})
 
