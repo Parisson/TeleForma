@@ -831,11 +831,23 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
         if testimonials:
             context['testimonial'] = testimonials[0]
 
+        context['hours_presentiel'] = 0
+        context['hours_elearning'] = seminar.duration
         context['blended'] = False
         if seminar.conference:
             if seminar.conference.webclass and seminar.conference in self.request.user.auditor.get().conferences.all():
                 context['blended'] = True
                 context['conference'] = seminar.conference
+                context['hours_presentiel'] = (seminar.duration.as_seconds() - seminar.conference.webclass_hours_complementary.as_seconds()) / 3600
+                context['hours_elearning'] = seminar.conference.webclass_hours_complementary
+
+        hours = seminar.duration.as_seconds() / 3600
+        context['nb_parts'] = seminar.is_multipart and seminar.number_of_parts or 5
+        context['nb_days'] = int(hours / 6)
+        context['nb_semi_days'] = (hours / 3 ) % 2 >= 1 and 1 or 0
+        context['title'] = seminar.title
+        if seminar.level == "Spécialisation":
+            context['title'] = seminar.course.title + " - " + seminar.title
 
         return context
 

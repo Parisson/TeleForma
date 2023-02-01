@@ -18,91 +18,115 @@
 <style>
 
 @page :first {
-  background: url(https://{{ site.domain }}/{{ STATIC_URL }}teleforma/images/attestation_fifpl_v3.png) no-repeat center;
+  background: url(https://{{ site.domain }}/{{ STATIC_URL }}teleforma/images/attestation_fifpl_v4.png) no-repeat center;
   background-size: cover;
   margin: 0;
 }
 
   #user {
     position: absolute;
-    top: 315px;
-    left: 330px;
+    top: 380px;
+    left: 200px;
   }
 
   #seminar { 
     position: absolute;
-    top: 380px;
-    left: 160px;
+    top: 420px;
+    left: 60px;
   }
 
   #date_start_d {
     position: absolute;
-    top: 412px;
-    left: 187px;
+    top: 460px;
+    left: 395px;
   }
 
  #date_start_m {
   position: absolute;
-    top: 412px;
-    left: 215px;
+    top: 460px;
+    left: 430px;
   }
  #date_start_y {
   position: absolute;
-    top: 412px;
-    left: 242px;
+    top: 460px;
+    left: 475px;
   }
 
   #date_end_d {
     position: absolute;
-    top: 412px;
-    left: 285px;
+    top: 460px;
+    left: 595px;
   }
 
  #date_end_m {
   position: absolute;
-    top: 412px;
-    left: 312px;
+    top: 460px;
+    left: 630px;
   }
  #date_end_y {
   position: absolute;
-    top: 412px;
-    left: 340px;
+    top: 460px;
+    left: 675px;
   }
 
-  #user-hours {
+  {% comment %} #user-hours {
     position: absolute;
     top: 445px;
     left: 470px;
-  }
+  } {% endcomment %}
 
-  #seminar-hours {
+  #seminar-semi-days {
     position: absolute;
-    top: 525px;
-    left: 280px;
+    top: 530px;
+    left: 172px;
+  }
+  #seminar-days {
+    position: absolute;
+    top: 530px;
+    left: 366px;
+  }
+  #seminar-presentiel-hours {
+    position: absolute;
+    top: 530px;
+    left: 550px;
+  }
+  #seminar-elearning-hours {
+    position: absolute;
+    top: 676px;
+    left: 172px;
   }
 
+
+  #nb-parts {
+    position: absolute;
+    top: 676px;
+    left: 366px;
+  }
+
+  
+  
   #price-ht {
     position: absolute;
-    top: 629px;
-    left: 440px;
+    top: 798px;
+    left: 265px;
   }
 
   #price-ttc {
     position: absolute;
-    top: 644px;
-    left: 190px;
+    top: 798px;
+    left: 430px;
   }
 
   #date-validated {
     position: absolute;
-    top: 549px;
-    left: 360px;
+    top: 676px;
+    left: 550px;
   }
 
   #date-now {
     position: absolute;
-    top: 718px;
-    left: 320px;
+    top: 920px;
+    left: 94px;
   }
 
 
@@ -124,8 +148,9 @@
 
 
 <div id="seminar">
-  {{ seminar.title }}
+  {{ title }}
 </div>
+
 
 
 
@@ -136,7 +161,7 @@
   {{ first_revision.date|date:'m' }}
 </div>
 <div id="date_start_y">
-  {{ first_revision.date|date:'y' }}
+  {{ first_revision.date|date:'yy' }}
 </div>
 
 <div id="date_end_d">
@@ -146,17 +171,28 @@
     {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'m' }}{% else %}{{ testimonial.date_added|date:'m' }}{% endif %}
 </div>
 <div id="date_end_y">
-    {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'y' }}{% else %}{{ testimonial.date_added|date:'y' }}{% endif %}
+    {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'y' }}{% else %}{{ testimonial.date_added|date:'yy' }}{% endif %}
 </div>
 
 
+{% if blended %}
+<div id="seminar-semi-days">
+  {{ nb_semi_days }}
+</div>
+<div id="seminar-days">
+  {{ nb_days }}
+</div>
+<div id="seminar-presentiel-hours">
+  {{ hours_presentiel }}
+</div>
+{% endif %}
 
-<div id="user-hours">
-  {{ seminar.duration|hours }}
+<div id="seminar-elearning-hours">
+  {{ hours_elearning|hours }}
 </div>
 
-<div id="seminar-hours">
-  {{ seminar.duration|hours }}
+<div id="nb-parts">
+  {{ nb_parts }}
 </div>
 
 <div id="price-ht">
