@@ -12,13 +12,13 @@
 <title>{%block head_title %}{% description %} - {% trans "Testimonial" %}{% endblock %}</title>
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}teleforma/css/teleforma_pdf.css" />
+<link rel="stylesheet" type="text/css" href="/static/teleforma/css/teleforma_pdf.css" />
 {% endblock %}
 
 <style>
 
 @page :first {
-  background: url(https://{{ site.domain }}/{{ STATIC_URL }}teleforma/images/attestation_fifpl_v4.png) no-repeat center;
+  background: url(https://{{ site.domain }}/static/teleforma/images/attestation_fifpl_v4.png) no-repeat center;
   background-size: cover;
   margin: 0;
 }
