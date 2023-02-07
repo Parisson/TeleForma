@@ -70,9 +70,6 @@ class Command(BaseCommand):
         if not minute_high_range:
             minute_high_range = MINUTES_HIGH_RANGE
 
-        print(minute_low_range)
-        print(minute_high_range)
-
         now_minus = datetime.datetime.now() - datetime.timedelta(minutes=minute_low_range)
         now_plus = datetime.datetime.now() + datetime.timedelta(minutes=minute_high_range)
 
@@ -94,40 +91,52 @@ class Command(BaseCommand):
         logger.logger.info("Starting conference publication process")
 
         for publication in publications:
-            publication.status = 3
 
             if type(publication) == ConferencePublication:
                 conference = publication.conference
             else:
+
                 conference = publication            
+
             medias = conference.media.all()
-            for media in medias:
-                media.is_published = True
-                media.save()
-            logger.logger.info("Conference published: " + conference.public_id)
 
-            for media in medias:
-                if "video/mp4" in media.mime_type:
-                    linked_media = media
-            media = conference.media.filter(mime_type='video/mp4')[0]
-            url = reverse('teleforma-media-detail', args=[conference.period.id, linked_media.id])
-            message = "Nouvelle conférence publiée : " + str(conference)
+            if medias:
+                publication.status = 3
 
-            students = Student.objects.filter(period=publication.period, platform_only=True)
-            for student in students:
-                try:
-                    if student.user:
-                        courses = get_courses(student.user, period=publication.period)
-                        for course in courses:
-                            if conference.course == course['course'] and \
-                                    conference.course_type in course['types']:
-                                notify(student.user, message, url)
-                                logger.logger.info("Student notified: " + student.user.username)
-                                print("notify", student)
-                except:
-                    #logger.logger.info("Student NOT notified: " + str(student.id))
-                    print("can't notify", student)
-                    continue
+                for media in medias:
+                    media.is_published = True
+                    media.save()
+                    if "video/mp4" in media.mime_type:
+                        linked_media = media
 
-            publication.notified = True
-            publication.save()
+                publication.save()
+                logger.logger.info("Conference published: " + conference.public_id)
+
+                # media = conference.media.filter(mime_type='video/mp4')[0]
+                url = reverse('teleforma-media-detail', args=[conference.period.id, linked_media.id])
+                message = "Nouvelle conférence publiée : " + str(conference)
+
+                students = Student.objects.filter(period=publication.period, platform_only=True)
+                for student in students:
+                    try:
+                        if student.user:
+                            courses = get_courses(student.user, period=publication.period)
+                            for course in courses:
+                                if conference.course == course['course'] and \
+                                        conference.course_type in course['types']:
+                                    notify(student.user, message, url)
+                                    logger.logger.info("Student notified: " + student.user.username)
+                                    print("notify", student)
+                    except:
+                        #logger.logger.info("Student NOT notified: " + str(student.id))
+                        print("can't notify", student)
+                        continue
+
+                for user in User.objects.filter(is_staff=True):
+                    notify(user, message, url)
+
+                publication.notified = True
+                publication.save()
+
+
+

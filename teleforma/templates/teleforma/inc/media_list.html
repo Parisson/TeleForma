@@ -28,6 +28,7 @@
             {% comment %}<div>{% trans 'Click here' %}</div>{% endcomment %}
             </a>
             </td>
+            {% conference_publication conference as publication %}
             <td {% if forloop.first %}class="border-top"{% endif %} width="60%" style="padding-left: 1em;">
                 <div>
                     <dl class="listing" style="font-size: 1.2em;">
@@ -36,10 +37,10 @@
                     {% if conference.professor %}
                     <dt>{% trans "Professor" %}</dt><dd>{{ conference.professor }}</dd>
                     {% endif %}
-                    {% if conference.date_publish %}
-                        <dt>{% trans "Publishing date" %}</dt><dd>{{ conference.date_publish }}</dd>
-                    {% else %}
+                    {% if conference.streaming %}
                         <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
+                    {% else %}
+                        <dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
                     {% endif %}
                     {% if conference.duration %}
                         <dt>{% trans "Duration" %}</dt><dd>{{ conference.duration }}</dd>
@@ -51,7 +52,6 @@
                  </div>
             </td>
             
-            {% conference_publication conference as publication %}
             <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
             {% if user.is_staff or user.professor.count %}
                 {% if publication.published %}
