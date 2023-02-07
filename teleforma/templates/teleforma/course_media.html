@@ -173,8 +173,11 @@ $(document).ready(function(){
 
 
 {% conference_publication media.conference as publication %}
-<dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
-
+{% if media.conference.streaming %}
+    <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
+{% else %}
+    <dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
+{% endif %}
 
 {% if media.conference.duration %}
     <dt>{% trans "Duration" %}</dt><dd>{{ media.conference.duration }}</dd>
@@ -186,6 +189,7 @@ $(document).ready(function(){
     <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
     <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
     <dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
+    <dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
     <dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
     <dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
     <dt>{% trans "Web class group" %}</dt><dd>{{ media.conference.web_class_group }}</dd>

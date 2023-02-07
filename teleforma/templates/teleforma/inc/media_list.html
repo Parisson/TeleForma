@@ -37,7 +37,11 @@
                     {% if conference.professor %}
                     <dt>{% trans "Professor" %}</dt><dd>{{ conference.professor }}</dd>
                     {% endif %}
-                    <dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
+                    {% if conference.streaming %}
+                        <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
+                    {% else %}
+                        <dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
+                    {% endif %}
                     {% if conference.duration %}
                         <dt>{% trans "Duration" %}</dt><dd>{{ conference.duration }}</dd>
                     {% endif %}
