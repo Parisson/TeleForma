@@ -132,7 +132,7 @@ class Command(BaseCommand):
                         print("can't notify", student)
                         continue
 
-                for user in User.objects.filter(is_staff=True)
+                for user in User.objects.filter(is_staff=True):
                     notify(user, message, url)
 
                 publication.notified = True
