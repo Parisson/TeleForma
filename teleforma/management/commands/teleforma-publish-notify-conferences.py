@@ -95,6 +95,7 @@ class Command(BaseCommand):
             if type(publication) == ConferencePublication:
                 conference = publication.conference
             else:
+
                 conference = publication            
 
             medias = conference.media.all()
@@ -136,5 +137,6 @@ class Command(BaseCommand):
 
                 publication.notified = True
                 publication.save()
+
 
 
