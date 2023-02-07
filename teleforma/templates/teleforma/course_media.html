@@ -171,8 +171,10 @@ $(document).ready(function(){
     <dt>{% trans "Room" %}</dt><dd>{{ media.conference.room }}</dd>
 {% endif %}
 
-{% if media.conference.date_publish %}
-    <dt>{% trans "Publishing date" %}</dt><dd>{{ media.conference.date_publish }}</dd>
+
+{% conference_publication media.conference as publication %}
+{% if publication.published %}
+    <dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
 {% else %}
     <dt>{% trans "Begin date" %}</dt><dd>{{ media.conference.date_begin }}</dd>
 {% endif %}
@@ -187,7 +189,7 @@ $(document).ready(function(){
     <dt>{% trans "End date" %}</dt><dd>{{ media.conference.date_end }}</dd>
     <dt>{% trans "Date added" %}</dt><dd>{{ media.date_added }}</dd>
     <dt>{% trans "Date modified" %}</dt><dd>{{ media.date_modified }}</dd>
-    <dt>{% trans "Publishing date" %}</dt><dd>{{ media.conference.date_publish }}</dd>
+    <dt>{% trans "Publishing date" %}</dt><dd>{{ publication.publication_date }}</dd>
     <dt>{% trans "Media ID" %}</dt><dd>{{ media.id }}</dd>
     <dt>{% trans "Conference ID" %}</dt><dd>{{ media.conference.public_id }}</dd>
     <dt>{% trans "Web class group" %}</dt><dd>{{ media.conference.web_class_group }}</dd>
