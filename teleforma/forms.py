@@ -55,6 +55,10 @@ class BBBConferenceForm(ModelForm):
     class Meta:
         model = Conference
 
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = UserProfile
+
 
 if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
     class UserForm(ModelForm):
