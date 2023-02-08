@@ -3686,7 +3686,7 @@ msgstr ""
 
 #: templates/telemeta/registration/password_reset_email.html:10
 msgid "Your username, in case you've forgotten:"
-msgstr ""
+msgstr "Votre identifiant, au cas où vous l'auriez oublié :"
 
 #: templates/telemeta/registration/password_reset_form.html:7
 msgid ""
