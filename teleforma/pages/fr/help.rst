@@ -7,26 +7,14 @@ FAQ
 Pourquoi les flux vidéos ne s'affichent pas correctement dans mon navigateur ?
 -------------------------------------------------------------------------------
 
-Ce site est conforme aux standards ouverts du web comme le HTML5. Tous les contenus sont donc accessible depuis n'importe quel navigateur compatible sur un ordinateur de bureau ou mobile. Voici la liste des navigateurs compatibles :
+Ce site est conforme aux standards ouverts du web comme le HTML5. Tous les contenus sont donc accessibles depuis n'importe quel navigateur compatible sur un ordinateur de bureau ou mobile. Voici la liste des navigateurs compatibles :
 
  * `Firefox <http://www.mozilla.org/fr/firefox/new/>`_ (Windows, Mac, Linux)
  * `Chrome <https://www.google.com/chrome?hl=fr>`_ (Windows, Mac, Linux et Android)
  * Safari (Mac et iOS)
  * Opera (Windows, Mac, Linux)
 
-Si vous rencontrez toutefois un problème de lecture, merci de contacter un technicien (voir paragraphe "Support" ci-dessous).
-
-|
-
-Je n'arrive pas à télécharger un fichier audio ou vidéo.
--------------------------------------------------------------------
-
- * Sur Windows : cliquer sur l'icône "Télécharger" avec le bouton DROIT de la souris puis cliquer avec le bouton GAUCHE sur "Enregistrer la cible du lien sous" pour l'enregistrer dans un dossier.
- * Sur Mac : appuyer sur CTRL avant de cliquer à l'aide du bouton de la souris sur le bouton "Télécharger"
- * Sur Linux : procéder comme sur windows
- * Sur smartphones : un clic long ou court sur le bouton "Télécharger" devrait fonctionner.
-
-Pour lire les videos une fois le téléchargement éffectué, choisissez `VLC <http://www.videolan.org/vlc/>`_.
+Si vous rencontrez toutefois un problème de lecture, merci de nous contacter au 01 56 81 00 30 ou de contacter un technicien (voir paragraphe "Support" ci-dessous).
 
 |
 
@@ -42,7 +30,11 @@ Support
 
 |
 
-Pour toute question relative à votre formation, veuillez `contacter un administrateur depuis la messagerie </messages/write/admin>`_ ou bien par mail à l'adresse suivante : `e-learning@pro-bareau.com <mailto:e-learning@pro-bareau.com>`_
+Pour toute question relative à votre formation, vous pouvez nous contacter du lundi au vendredi de 9h30 à 13h00 et de 14h00 à 17h30 au 01 56 81 00 30.
+
+|
+
+Pour toute question relative à votre formation, veuillez `contacter un administrateur depuis la messagerie </messages/write/admin>`_ ou bien par mail à l'adresse suivante : `e-learning@pro-barreau.com <mailto:e-learning@pro-barreau.com>`_
 
 |
 
