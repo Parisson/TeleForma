@@ -70,8 +70,9 @@ class Command(BaseCommand):
         if not minute_high_range:
             minute_high_range = MINUTES_HIGH_RANGE
 
-        now_minus = datetime.datetime.now() - datetime.timedelta(minutes=minute_low_range)
-        now_plus = datetime.datetime.now() + datetime.timedelta(minutes=minute_high_range)
+        now = datetime.datetime.now()
+        now_minus = now - datetime.timedelta(minutes=minute_low_range)
+        now_plus = now + datetime.timedelta(minutes=minute_high_range)
 
         publications = list(Conference.objects.filter(
                         period=period,
@@ -95,7 +96,6 @@ class Command(BaseCommand):
             if type(publication) == ConferencePublication:
                 conference = publication.conference
             else:
-
                 conference = publication            
 
             medias = conference.media.all()
@@ -138,5 +138,12 @@ class Command(BaseCommand):
                 publication.notified = True
                 publication.save()
 
-
+        # streaming published end conference should have a streaming propery set to False
+        for conference in Conference.objects.filter(
+                                period=period,
+                                status=3,
+                                streaming=True,
+                                date_end__lt=now):
+            conference.streaming = False
+            conference.save()
 
