@@ -161,7 +161,7 @@
   {{ first_revision.date|date:'m' }}
 </div>
 <div id="date_start_y">
-  {{ first_revision.date|date:'yy' }}
+  {{ first_revision.date|date:'Y' }}
 </div>
 
 <div id="date_end_d">
@@ -171,7 +171,7 @@
     {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'m' }}{% else %}{{ testimonial.date_added|date:'m' }}{% endif %}
 </div>
 <div id="date_end_y">
-    {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'y' }}{% else %}{{ testimonial.date_added|date:'yy' }}{% endif %}
+    {% if testimonial.date_modified %}{{ testimonial.date_modified|date:'Y' }}{% else %}{{ testimonial.date_added|date:'Y' }}{% endif %}
 </div>
 
 
