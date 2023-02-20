@@ -200,7 +200,8 @@ class Command(BaseCommand):
                     #ss = Seminar.objects.filter(course=course,
                     #                        rank=seminar_rank, period=period)
                     #print([s.id for s in ss])
-
+                    
+                    print(course, seminar_rank, period)
                     seminar, c = Seminar.objects.get_or_create(course=course,
                                             rank=seminar_rank, period=period,
                                             magistral=False)
