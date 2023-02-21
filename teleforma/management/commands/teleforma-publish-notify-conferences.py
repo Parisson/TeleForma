@@ -114,7 +114,16 @@ class Command(BaseCommand):
 
                 # media = conference.media.filter(mime_type='video/mp4')[0]
                 url = reverse('teleforma-media-detail', args=[conference.period.id, linked_media.id])
-                message = "Nouvelle conférence publiée : " + str(conference)
+
+                if conference.professor:
+                    elm = [conference.course.title,
+                        conference.course_type.name, conference.session,
+                        conference.professor.user.first_name,
+                        conference.professor.user.last_name]
+                else:
+                    elm = [conference.course.title,
+                        conference.course_type.name, conference.session]
+                message = "Nouvelle conférence publiée : " + ' - '.join(elm)
 
                 students = Student.objects.filter(period=publication.period, platform_only=True)
                 for student in students:
@@ -135,7 +144,7 @@ class Command(BaseCommand):
                 for user in User.objects.filter(is_staff=True):
                     notify(user, message, url)
 
-                publication.notified = True
+                # publication.notified = True
                 publication.save()
 
         # streaming published end conference should have a streaming propery set to False
