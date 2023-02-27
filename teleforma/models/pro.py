@@ -437,6 +437,7 @@ class Testimonial(models.Model):
     date_added  = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
     date_modified  = models.DateTimeField(_('date modified'), blank=True, null=True)
     title       = models.CharField(_('title'), max_length=255, blank=True)
+    sent        = models.BooleanField("Envoyé par email ?", default=False)
 
     def get_title(self):
         if self.date_modified:

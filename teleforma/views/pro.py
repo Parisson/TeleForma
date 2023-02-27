@@ -234,7 +234,7 @@ class SeminarView(SeminarAccessMixin, DetailView):
         context['parts'] = seminar.get_parts(user)
 
 
-        validated = seminar_validated(user, seminar)
+        validated = seminar_validated(user, seminar) and get_seminar_delta(user, seminar) >= 0
         if validated:
             # check if testimonial exists and create it
             testimonials = Testimonial.objects.filter(
@@ -501,7 +501,7 @@ class AnswersView(ListView):
         context['organization'] = organization
         context['date'] = answer.question.seminar.expiry_date
 
-        if seminar_validated(user, seminar):
+        if seminar_validated(user, seminar) and get_seminar_delta(user, seminar) >= 0:
             testimonial = Testimonial(user=user, seminar=seminar)
             now = datetime.datetime.now()
             if context['date'] < now:
@@ -809,6 +809,44 @@ class PDFTemplateResponseMixin(TemplateResponseMixin):
         context['site_url'] = Site.objects.get_current().domain
         return context
 
+
+def get_testimonial_context(testimonial):
+    """ make it a stateless function so we can use it in django admin command to send testimonial pdf """
+    context = {'testimonial': testimonial}
+    seminar = testimonial.seminar
+    context['seminar'] = seminar
+    user = testimonial.user
+    revisions = SeminarRevision.objects.filter(
+            seminar=seminar, user=user).order_by('date')
+            
+    if revisions:
+        context['first_revision'] = revisions[0]
+
+    testimonials = Testimonial.objects.filter(
+        seminar=seminar, user=user)
+    if testimonials:
+        context['testimonial'] = testimonials[0]
+
+    context['hours_presentiel'] = 0
+    context['hours_elearning'] = seminar.duration
+    context['blended'] = False
+    if seminar.conference:
+        if seminar.conference.webclass and seminar.conference in user.auditor.get().conferences.all():
+            context['blended'] = True
+            context['conference'] = seminar.conference
+            context['hours_presentiel'] = (seminar.duration.as_seconds() - seminar.conference.webclass_hours_complementary.as_seconds()) / 3600
+            context['hours_elearning'] = seminar.conference.webclass_hours_complementary
+
+    hours = seminar.duration.as_seconds() / 3600
+    context['nb_parts'] = seminar.is_multipart and seminar.number_of_parts or 5
+    context['nb_days'] = int(hours / 6)
+    context['nb_semi_days'] = (hours / 3 ) % 2 >= 1 and 1 or 0
+    context['title'] = seminar.title
+    if seminar.level == "Spécialisation":
+        context['title'] = seminar.course.title + " - " + seminar.title
+    return context
+
+
 class TestimonialView(PDFTemplateResponseMixin, SeminarView):
 
     context_object_name = "seminar"
@@ -821,33 +859,12 @@ class TestimonialView(PDFTemplateResponseMixin, SeminarView):
         context = super(TestimonialView, self).get_context_data(**kwargs)
         seminar = context['seminar']
 
-        revisions = SeminarRevision.objects.filter(
-            seminar=seminar, user=self.request.user).order_by('date')
-        if revisions:
-            context['first_revision'] = revisions[0]
-
         testimonials = Testimonial.objects.filter(
             seminar=seminar, user=self.request.user)
+        
         if testimonials:
-            context['testimonial'] = testimonials[0]
-
-        context['hours_presentiel'] = 0
-        context['hours_elearning'] = seminar.duration
-        context['blended'] = False
-        if seminar.conference:
-            if seminar.conference.webclass and seminar.conference in self.request.user.auditor.get().conferences.all():
-                context['blended'] = True
-                context['conference'] = seminar.conference
-                context['hours_presentiel'] = (seminar.duration.as_seconds() - seminar.conference.webclass_hours_complementary.as_seconds()) / 3600
-                context['hours_elearning'] = seminar.conference.webclass_hours_complementary
-
-        hours = seminar.duration.as_seconds() / 3600
-        context['nb_parts'] = seminar.is_multipart and seminar.number_of_parts or 5
-        context['nb_days'] = int(hours / 6)
-        context['nb_semi_days'] = (hours / 3 ) % 2 >= 1 and 1 or 0
-        context['title'] = seminar.title
-        if seminar.level == "Spécialisation":
-            context['title'] = seminar.course.title + " - " + seminar.title
+            testimonial = testimonials[0]
+            context.update(get_testimonial_context(testimonial))
 
         return context
 
