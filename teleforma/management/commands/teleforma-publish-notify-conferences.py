@@ -144,7 +144,7 @@ class Command(BaseCommand):
                 for user in User.objects.filter(is_staff=True):
                     notify(user, message, url)
 
-                # publication.notified = True
+                publication.notified = True
                 publication.save()
 
         # streaming published end conference should have a streaming propery set to False
