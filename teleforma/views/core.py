@@ -260,30 +260,29 @@ class CourseListView(CourseAccessMixin, ListView):
         for department in departments:
             url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
-            remote_list = s.teleforma.get_course_list(organization_name, department.name)
+
             department_courses = Course.objects.filter(department=department)
+            remote_list = s.teleforma.get_course_list(organization_name, department.name)
             if remote_list['result']:
                 for course_dict in remote_list['result']:
                     course = department_courses.filter(code=course_dict['code'])
                     if not course:
                         course = Course()
-                        courses_new.append(course)
                     else:
                         course = course[0]
                     course.from_dict(course_dict)
-            try:
-                remote_list = s.teleforma.get_course_type_list()
-                if remote_list['result']:
-                    for course_type_dict in remote_list['result']:
-                        course_type = course_types.filter(name=course_type_dict['name'])
-                        if not course_type:
-                            course_type = CourseType(name=course_type_dict['name'])
-                            course_type.from_dict(course_type_dict)
-                        else:
-                            course_type = course_type[0]
-                        course_types_new.append(course_type)
-            except:
-                continue
+                    courses_new.append(course)
+
+            remote_list = s.teleforma.get_course_type_list()
+            if remote_list['result']:
+                for course_type_dict in remote_list['result']:
+                    course_type = course_types.filter(name=course_type_dict['name'])
+                    if not course_type:
+                        course_type = CourseType()
+                    else:
+                        course_type = course_type[0]
+                    course_type.from_dict(course_type_dict)
+                    course_types_new.append(course_type)
 
         # cleanup
         for course in courses:
