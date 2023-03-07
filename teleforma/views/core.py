@@ -699,6 +699,7 @@ class ProfessorListView(View):
         from teleforma.models import Organization, Department
         departments = Department.objects.all()
         professors = Professor.objects.all()
+        professors_new = []
 
         for department in departments:
             url = 'https://' + department.domain + '/json/'
