@@ -269,6 +269,7 @@ class CourseListView(CourseAccessMixin, ListView):
                     print(course)
 
             remote_list = s.teleforma.get_course_type_list()
+            print(remote_list)
             if remote_list['result']:
                 for course_type_dict in remote_list['result']:
                     course_type, c = CourseType.objects.get_or_create(name=course_type_dict['name'])
