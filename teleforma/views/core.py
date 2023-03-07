@@ -267,20 +267,20 @@ class CourseListView(CourseAccessMixin, ListView):
                     course = department_courses.filter(code=course_dict['code'])
                     if not course:
                         course = Course()
+                        courses_new.append(course)
                     else:
                         course = course[0]
                     course.from_dict(course_dict)
-                    courses_new.append(course)
             try:
                 remote_list = s.teleforma.get_course_type_list()
                 if remote_list['result']:
                     for course_type_dict in remote_list['result']:
                         course_type = course_types.filter(name=course_type_dict['name'])
                         if not course_type:
-                            course_type = CourseType()
+                            course_type = CourseType(name=course_type_dict['name'])
+                            course_type.from_dict(course_type_dict)
                         else:
                             course_type = course_type[0]
-                        course_type.from_dict(course_type_dict)
                         course_types_new.append(course_type)
             except:
                 continue
