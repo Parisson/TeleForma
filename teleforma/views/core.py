@@ -274,6 +274,7 @@ class CourseListView(CourseAccessMixin, ListView):
                     course_type, c = CourseType.objects.get_or_create(name=course_type_dict['name'])
                     course_type.from_dict(course_type_dict)
                     course_types_new.append(course_type)
+                    print(url)
                     print(course_type)
 
         # cleanup
