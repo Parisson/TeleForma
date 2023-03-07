@@ -263,24 +263,18 @@ class CourseListView(CourseAccessMixin, ListView):
             remote_list = s.teleforma.get_course_list(organization_name, department.name)
             if remote_list['result']:
                 for course_dict in remote_list['result']:
-                    course = department_courses.filter(code=course_dict['code'])
-                    if not course:
-                        course = Course()
-                    else:
-                        course = course[0]
+                    course = department_courses.get_or_create(code=course_dict['code'])
                     course.from_dict(course_dict)
                     courses_new.append(course)
+                    print(course)
 
             remote_list = s.teleforma.get_course_type_list()
             if remote_list['result']:
                 for course_type_dict in remote_list['result']:
-                    course_type = CourseType.objects.filter(name=course_type_dict['name'])
-                    if not course_type:
-                        course_type = CourseType()
-                    else:
-                        course_type = course_type[0]
+                    course_type = CourseType.objects.get_or_create(name=course_type_dict['name'])
                     course_type.from_dict(course_type_dict)
                     course_types_new.append(course_type)
+                    print(course_type)
 
         # cleanup
         for course in Course.objects.all():
