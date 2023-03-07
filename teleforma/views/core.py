@@ -252,9 +252,7 @@ class CourseListView(CourseAccessMixin, ListView):
         from teleforma.models import Organization, Department
         organization = Organization.objects.get(name=organization_name)
         departments = Department.objects.filter(organization=organization)
-        courses = Course.objects.all()
         courses_new = []
-        course_types = CourseType.objects.all()
         course_types_new = []
 
         for department in departments:
@@ -276,7 +274,7 @@ class CourseListView(CourseAccessMixin, ListView):
             remote_list = s.teleforma.get_course_type_list()
             if remote_list['result']:
                 for course_type_dict in remote_list['result']:
-                    course_type = course_types.filter(name=course_type_dict['name'])
+                    course_type = CourseType.objects.filter(name=course_type_dict['name'])
                     if not course_type:
                         course_type = CourseType()
                     else:
@@ -285,10 +283,10 @@ class CourseListView(CourseAccessMixin, ListView):
                     course_types_new.append(course_type)
 
         # cleanup
-        for course in courses:
+        for course in Course.objects.all():
             if not course in courses_new:
                 course.delete()
-        for course_type in course_types:
+        for course_type in CourseType.objects.all():
             if not course_type in course_types_new:
                 course_type.delete()
 
