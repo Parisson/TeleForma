@@ -256,25 +256,40 @@ class CourseListView(CourseAccessMixin, ListView):
             url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_course_list(organization_name, department.name)
+            department_courses = Course.objects.filter(department=department)
+            department_courses_list = [course for course in department_courses]
             if remote_list['result']:
                 for course_dict in remote_list['result']:
-                    course = Course.objects.filter(code=course_dict['code'], department=department)
+                    course = department_courses.filter(code=course_dict['code'])
                     if not course:
                         course = Course()
+                        course.from_dict(course_dict)
                     else:
                         course = course[0]
-                    course.from_dict(course_dict)
+                        course.from_dict(course_dict)
+                        department_courses_list.remove(course)
+                # cleanup
+                for course in department_courses_list:
+                    course.delete()
 
             try:
                 remote_list = s.teleforma.get_course_type_list()
+                course_types = CourseType.objects.all()
+                course_types_list = [course_type for course_type in course_types]
                 if remote_list['result']:
                     for course_type_dict in remote_list['result']:
-                        course_type = CourseType.objects.filter(name=course_type_dict['name'])
+                        course_type = course_types.filter(name=course_type_dict['name'])
                         if not course_type:
                             course_type = CourseType()
+                            course_type.from_dict(course_type_dict)
                         else:
                             course_type = course_type[0]
-                        course_type.from_dict(course_type_dict)
+                            course_type.from_dict(course_type_dict)
+                            course_types_list.remove(course_type)
+                    # cleanup
+                    for course_type in course_types_list:
+                        course_type.delete()
+
             except:
                 continue
 
@@ -687,10 +702,10 @@ class ProfessorListView(View):
     def pull(request, host=None):
         from teleforma.models import Organization, Department
         departments = Department.objects.all()
-        professors_old = Professor.objects.all()
-        professors_new = []
 
         for department in departments:
+            department_professors = Professor.objects.filter(department=department)
+            department_professors_list = [professor for professor in department_professors]
             url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_professor_list()
@@ -711,8 +726,11 @@ class ProfessorListView(View):
                 professors_new.append(professor)
                 #print professor
 
-        for professor in professors_old:
-            if not professor in professors_new:
+                if not c:
+                    department_professors_list.remove(professor)
+
+            # cleanup
+            for professor in department_professors_list:
                 professor.delete()
 
 
