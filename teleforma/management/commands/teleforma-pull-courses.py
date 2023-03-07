@@ -20,7 +20,3 @@ class Command(BaseCommand):
     	organization_name = args[-1]
         view = CourseListView()
         view.pull(organization_name)
-
-        for course_type in CourseType.objects.all():
-            if 'supp' in course_type.name:
-                course_type.delete()
