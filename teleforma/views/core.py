@@ -259,11 +259,13 @@ class CourseListView(CourseAccessMixin, ListView):
             url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
 
-            department_courses = Course.objects.filter(department=department)
             remote_list = s.teleforma.get_course_list(organization_name, department.name)
             if remote_list['result']:
                 for course_dict in remote_list['result']:
-                    course, c = department_courses.get_or_create(code=course_dict['code'])
+                    course, c = Course.objects.get_or_create(
+                                    code=course_dict['code'],
+                                    department=department,
+                                )
                     course.from_dict(course_dict)
                     courses_new.append(course)
                     print(course)
