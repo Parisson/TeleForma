@@ -19,7 +19,7 @@ from postman.forms import WriteForm as PostmanWriteForm
 from tinymce.widgets import TinyMCE
 
 from .models.core import Conference, Course, Period, payment_schedule_choices
-from .models.crfpa import IEJ, PAY_STATUS_CHOICES, Corrector, NewsItem
+from .models.crfpa import IEJ, PAY_STATUS_CHOICES, Corrector, NewsItem, Origin
 from .models.crfpa import Profile as UserProfile
 from .models.crfpa import Student, Training
 
@@ -219,11 +219,12 @@ class UserForm(ModelForm):
         return user
 
 
-class UserUseYourLawForm(UserForm):
+class UserUseYourLawOriginForm(UserForm):
 
     def save(self, commit=True):
         super(UserSourceForm, self).__save__(*args, **kwargs)
-        self.profile.source = "UseYourLaw"
+        origin = Origin.objects.get_or_create(name="UseYourLaw")
+        self.profile.origin = origin
 
 
 class CorrectorForm(ModelForm):

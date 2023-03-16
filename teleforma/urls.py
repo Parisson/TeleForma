@@ -66,7 +66,7 @@ from .views.crfpa import (AnnalsCourseView, AnnalsIEJView, AnnalsView,
                           RegistrationPDFViewDownload, UserAddView,
                           UserCompleteView, UserLoginView, UsersExportView,
                           UsersView, WriteView, update_training,
-                          UserAddUseYourLawView)
+                          UserAddUseYourLawOriginView)
 from .views.payment import (PaymentStartView, bank_auto, bank_cancel,
                             bank_fail, bank_success)
 
@@ -90,7 +90,7 @@ urlpatterns = [
     # (r'^accounts/register0/$', RegistrationView.as_view(), {'form_class':CustomRegistrationForm}),
     url(r'^accounts/register/$', UserAddView.as_view(),
         name="teleforma-register"),
-    url(r'^accounts/register/uyl/$', UserAddUseYourLawView.as_view(),
+    url(r'^accounts/register/uyl/$', UserAddUseYourLawOriginView.as_view(),
         name="teleforma-register-uyl"),
     url(r'^accounts/register/(?P<username>.*)/complete/$',
         UserCompleteView.as_view(), name="teleforma-register-complete"),
