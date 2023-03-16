@@ -177,7 +177,7 @@ class UserForm(ModelForm):
         user.is_active = False
         if commit:
             user.save()
-        profile = UserProfile(user=user,
+        self.profile = UserProfile(user=user,
                               address=data['address'],
                               address_detail=data.get('address_detail'),
                               postal_code=data['postal_code'],
@@ -217,6 +217,13 @@ class UserForm(ModelForm):
         student.save()
         student.trainings.add(data.get('training', None))
         return user
+
+
+class UserUseYourLawForm(UserForm):
+
+    def save(self, commit=True):
+        super(UserSourceForm, self).__save__(*args, **kwargs)
+        self.profile.source = "UseYourLaw"
 
 
 class CorrectorForm(ModelForm):

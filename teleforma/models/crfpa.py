@@ -470,6 +470,8 @@ class Profile(models.Model):
                                  max_length=15, blank=True, null=True)
     siret = models.CharField('Siret',
                              max_length=14, blank=True, null=True)
+    source = models.CharField('Source',
+                             max_length=32, blank=True, null=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
