@@ -229,7 +229,8 @@ class UserUseYourLawOriginForm(UserForm):
 
     def save(self, commit=True):
         self.origin, c = Origin.objects.get_or_create(name="UseYourLaw")
-        super(UserUseYourLawOriginForm, self).save(commit=True)
+        user = super(UserUseYourLawOriginForm, self).save(commit=True)
+        return user
 
 
 class CorrectorForm(ModelForm):
