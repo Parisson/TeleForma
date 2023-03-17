@@ -223,7 +223,7 @@ class UserUseYourLawOriginForm(UserForm):
 
     def save(self, commit=True):
         super(UserUseYourLawOriginForm, self).save(commit=commit)
-        origin = Origin.objects.get_or_create(name="UseYourLaw")
+        origin, c = Origin.objects.get_or_create(name="UseYourLaw")
         self.profile.origin = origin
 
 
