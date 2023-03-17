@@ -494,6 +494,9 @@ class Origin(models.Model):
     name = models.CharField('Name',
                              max_length=64, blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Corrector(models.Model):
     "A corrector profile, only used for registration for the moment"
