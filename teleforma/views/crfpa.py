@@ -61,7 +61,7 @@ from django.conf import settings
 
 from ..decorators import access_required
 from ..forms import (CorrectorForm, NewsItemForm, UserForm, WriteForm,
-                     get_unique_username)
+                     get_unique_username, UserUseYourLawOriginForm)
 from ..models.core import Course, CourseType, Document, NamePaginator, Period
 from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
                             Payment, Profile, Student, Training, months_choices, payment_choices)
@@ -746,6 +746,15 @@ class UserAddView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('teleforma-register-complete', kwargs={'username':self.object.username})
+
+
+class UserAddUseYourLawOriginView(UserAddView):
+
+    model = User
+    template_name = 'registration/registration_form.html'
+    form_class = UserUseYourLawOriginForm
+
+
 
 class UserCompleteView(TemplateView):
 

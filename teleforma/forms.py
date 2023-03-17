@@ -19,7 +19,7 @@ from postman.forms import WriteForm as PostmanWriteForm
 from tinymce.widgets import TinyMCE
 
 from .models.core import Conference, Course, Period, payment_schedule_choices
-from .models.crfpa import IEJ, PAY_STATUS_CHOICES, Corrector, NewsItem
+from .models.crfpa import IEJ, PAY_STATUS_CHOICES, Corrector, NewsItem, Origin
 from .models.crfpa import Profile as UserProfile
 from .models.crfpa import Student, Training
 
@@ -127,6 +127,8 @@ class UserForm(ModelForm):
     captcha = ReCaptchaField()
     accept = BooleanField()
 
+    origin = None
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
@@ -177,7 +179,7 @@ class UserForm(ModelForm):
         user.is_active = False
         if commit:
             user.save()
-        profile = UserProfile(user=user,
+        self.profile = UserProfile(user=user,
                               address=data['address'],
                               address_detail=data.get('address_detail'),
                               postal_code=data['postal_code'],
@@ -186,8 +188,12 @@ class UserForm(ModelForm):
                               telephone=data['telephone'],
                               birthday=data['birthday']
                               )
+        if self.origin:
+            self.profile.origin = self.origin
+
         if commit:
-            profile.save()
+            self.profile.save()
+
         platform_only = data.get('platform_only') == 'True' and True or False
         fascicule = data.get('fascicule') == 'True' and True or False
         training = data.get('training')
@@ -216,6 +222,14 @@ class UserForm(ModelForm):
                           )
         student.save()
         student.trainings.add(data.get('training', None))
+        return user
+
+
+class UserUseYourLawOriginForm(UserForm):
+
+    def save(self, commit=True):
+        self.origin, c = Origin.objects.get_or_create(name="UseYourLaw")
+        user = super(UserUseYourLawOriginForm, self).save(commit=True)
         return user
 
 

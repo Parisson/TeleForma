@@ -238,6 +238,8 @@ class UserProfileAdmin(UserAdmin):
     list_display = UserAdmin.list_display + (
         'user_actions', 
     )
+    list_filter = ['profile__origin',]
+
     def user_actions(self, obj):
         return format_html(
             '<a class="btn btn-primary btn-sm" href="{}">Se connecter en tant que</a>',

@@ -441,6 +441,7 @@ signals.post_save.connect(create_payment_objects, sender=Student)
 signals.post_save.connect(purge_courses_cache, sender=Student)
 signals.post_delete.connect(update_balance_signal)
 
+
 class Profile(models.Model):
     "User profile extension"
 
@@ -470,6 +471,11 @@ class Profile(models.Model):
                                  max_length=15, blank=True, null=True)
     siret = models.CharField('Siret',
                              max_length=14, blank=True, null=True)
+    origin = models.ForeignKey("Origin", related_name='profiles',
+                             verbose_name=_('origin'),
+                             on_delete=models.SET_NULL,
+                             null=True,
+                             blank=True)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'profiles'
@@ -480,6 +486,16 @@ PAY_STATUS_CHOICES = [
     ('honoraires', 'Honoraires'),
     ('salarie', 'Salarié'),
 ]
+
+
+class Origin(models.Model):
+    "Origin of the user"
+
+    name = models.CharField('Name',
+                             max_length=64, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Corrector(models.Model):
