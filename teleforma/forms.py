@@ -222,7 +222,7 @@ class UserForm(ModelForm):
 class UserUseYourLawOriginForm(UserForm):
 
     def save(self, commit=True):
-        super(UserSourceForm, self).__save__(*args, **kwargs)
+        super(UserUseYourLawOriginForm, self).__save__(*args, **kwargs)
         origin = Origin.objects.get_or_create(name="UseYourLaw")
         self.profile.origin = origin
 
