@@ -187,7 +187,7 @@ class UserForm(ModelForm):
                               birthday=data['birthday']
                               )
         if commit:
-            profile.save()
+            self.profile.save()
         platform_only = data.get('platform_only') == 'True' and True or False
         fascicule = data.get('fascicule') == 'True' and True or False
         training = data.get('training')
