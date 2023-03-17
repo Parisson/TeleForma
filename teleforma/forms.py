@@ -127,6 +127,8 @@ class UserForm(ModelForm):
     captcha = ReCaptchaField()
     accept = BooleanField()
 
+    origin = None
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
@@ -186,8 +188,12 @@ class UserForm(ModelForm):
                               telephone=data['telephone'],
                               birthday=data['birthday']
                               )
+        if self.origin:
+            self.profile.origin = self.origin
+
         if commit:
             self.profile.save()
+
         platform_only = data.get('platform_only') == 'True' and True or False
         fascicule = data.get('fascicule') == 'True' and True or False
         training = data.get('training')
@@ -222,9 +228,8 @@ class UserForm(ModelForm):
 class UserUseYourLawOriginForm(UserForm):
 
     def save(self, commit=True):
-        super(UserUseYourLawOriginForm, self).save(commit=commit)
-        origin, c = Origin.objects.get_or_create(name="UseYourLaw")
-        self.profile.origin = origin
+        self.origin, c = Origin.objects.get_or_create(name="UseYourLaw")
+        super(UserUseYourLawOriginForm, self).save(commit=True)
 
 
 class CorrectorForm(ModelForm):
