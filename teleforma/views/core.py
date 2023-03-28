@@ -879,7 +879,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
                                             stream_type=stream_type, streaming=True)
                         stream.save()
 
-                    if not conference.web_class_group:
+                    if not conference.web_class_group and settings.TELECASTER_LIVE_TWEETER:
                         try:
                             site = get_current_site(request)
                             live_message(site, conference)
