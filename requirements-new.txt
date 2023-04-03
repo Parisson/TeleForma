@@ -1,9 +1,0 @@
-setuptools
-uwsgi
-django==1.6.11
-south
-django-pagination
-django-postman
-django-extensions
-django-notes
-django-timezones

@@ -1,5 +1,0 @@
-git
-netcat
-vim
-locales
-python-yaml

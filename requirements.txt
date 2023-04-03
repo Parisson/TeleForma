@@ -1,21 +1,37 @@
-setuptools
-django==1.4.19
-telemeta==1.4.6
-south   # a supprimer
-django-pagination==1.0.7    # a supprimer
-django-postman==3.2.0
-django-extensions==0.9
-django-notes    # a supprimer
-django-timezones==0.2
-django-jqchat
-crocodoc    # a supprimer
-django-registration==0.8
-django-extra-views==0.6.5   # a supprimer
-django-simple-captcha   # a maj
-django-suit     # a maj
-django-nvd3
-django-user-agents
-xhtml2pdf
-html5lib==0.95
-django-tinymce==1.5.4
-django-quiz # a supprimer
+bigbluebutton-api-python==0.0.11
+docutils==0.17.1
+Django==3.2.13
+djangorestframework==3.13.1
+# django-extensions==1.2.1
+# django-timezones==0.2
+# django-registration==3.1.2
+dj_pagination==2.5.0 # used by postman
+django-jazzmin==2.4.7
+django-json-rpc==0.7.1
+# django-google-tools==1.1.0
+django-nvd3==0.8.2
+django-postman==4.2
+django-tinymce==3.3.0
+-e git+https://git.parisson.com/git/django-unique-session.git@master#egg=django-unique-session
+django-user-agents==0.4.0
+django-recaptcha==2.0.6
+jxmlease==1.0.3
+mysqlclient==2.0.3
+numpy==1.20.3
+# django-user-agents==0.3.0
+# html5lib==1.1
+requests
+sorl-thumbnail==12.7.0
+unidecode==1.2.0
+weasyprint==52.5
+xlrd==2.0.1
+xlwt==1.3.0
+psycopg2==2.8.6 
+redis==3.5.3 
+uwsgi==2.0.19
+daphne==3.0.2
+pymemcache==3.4.4
+django-debug-toolbar==3.2.1
+uvicorn[standard]==0.18.1
+httpx==0.23.3
+ipython

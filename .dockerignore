@@ -1,0 +1,9 @@
+.git
+*.pyc
+*.egg-info
+data/
+env/
+tmp/
+var/
+**/.sass-cache
+*.sock

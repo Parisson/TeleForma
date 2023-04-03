@@ -1,2 +1,2 @@
--e git+https://github.com/Parisson/django_quiz.git#egg=django_quiz-0.5.1
--e git+https://github.com/Parisson/TeleForma.git@tc202#egg=teleforma
+ipdb==0.13.8
+django-debug-toolbar

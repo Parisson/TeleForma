@@ -4,18 +4,18 @@
 # Packages
 *.egg
 *.egg-info
-dist
-build
 eggs
 parts
-bin
 var
 sdist
 develop-eggs
+node_modules
 .installed.cfg
 .directory
 *.e4p
 select2-4.0.5
+.env
+local_settings.py
 
 # Installer logs
 pip-log.txt
@@ -26,3 +26,9 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#python venv
+py_env
+prod.env
+
+README_pilot.rst
