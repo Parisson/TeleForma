@@ -38,7 +38,7 @@ class Command(BaseCommand):
     image_formats = ['png', 'jpg']
     media_rank_dict = {'bis': 2, '1bis': 2, '1ter': 3, 'ter': 3, 'quarter': 4, '1quater': 4, 'quinquies': 5, 'quater': 4, 'sexies': 6, 'septies': 7, 'sexsies': 6, 'octies': 8}
 
-    site = Site.objects.get_current()
+    site = Site.objects.get(id=settings.SITE_ID)
     id_incr = '40'
     size_limit = 16384
 
@@ -51,8 +51,6 @@ class Command(BaseCommand):
                             help='period name')
         parser.add_argument('--media-dir', type=str, required=True,
                             help='media dir')
-        parser.add_argument('--domain', type=str, required=True,
-                            help='domain of the instance')
         parser.add_argument('--delete', type=bool,
                             help='delete all media before import')
 
@@ -122,14 +120,9 @@ class Command(BaseCommand):
         organization_name = options['organization_name']
         period_name = options['period_name']
         media_dir = options['media_dir']
-        domain = options['domain']
         log_file = options['logfile']
         delete = options['delete']
-
         logger = Logger(log_file)
-
-        self.site.domain = domain
-        self.site.save()
 
         organization = Organization.objects.get(name=organization_name)
         period = Period.objects.get(name=period_name)
