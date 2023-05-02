@@ -1,4 +1,3 @@
 [submodule "lib/pdfannotator"]
 	path = lib/pdfannotator
 	url = https://git.pilotsystems.net/probarreau/pdfannotator.git
-
