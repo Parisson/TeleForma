@@ -44,7 +44,7 @@ from django.urls.base import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from tinymce.models import HTMLField
 
-from ..models.core import (Course, Media, MetaCore, payment_choices,
+from ..models.core import (Course, Media, MetaCore, StudentMixin, payment_choices,
                            payment_schedule_choices)
 
 app_label = 'teleforma'
@@ -75,36 +75,36 @@ class Training(models.Model):
     code = models.CharField(_('code'), max_length=255)
     name = models.CharField(_('name'), max_length=255, blank=True)
     description = models.CharField(_('description'), max_length=512, blank=True)
-    period = models.ForeignKey('Period', related_name='training', verbose_name=_('period'), blank=True, null=True)
-    parent = models.ForeignKey('Training', related_name='children', verbose_name=_('parent'), blank=True, null=True)
+    period = models.ForeignKey('Period', related_name='training', verbose_name=_('period'), blank=True, null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey('Training', related_name='children', verbose_name=_('parent'), blank=True, null=True, on_delete=models.SET_NULL)
 
     if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
         synthesis_note  = models.ManyToManyField('CourseType', related_name="training_synthesis_note", verbose_name=_('synthesis note'),
-                                            blank=True, null=True)
+                                            blank=True)
         obligation = models.ManyToManyField('CourseType', related_name="training_obligation",
                                             verbose_name=_('obligations'),
-                                            blank=True, null=True)
+                                            blank=True)
         procedure = models.ManyToManyField('CourseType', related_name="training_procedure",
                                             verbose_name=_('procedure'),
-                                            blank=True, null=True)
+                                            blank=True)
         written_speciality = models.ManyToManyField('CourseType', related_name="training_written_speciality",
                                             verbose_name=_('written speciality'),
-                                            blank=True, null=True)
+                                            blank=True)
         oral_speciality = models.ManyToManyField('CourseType', related_name="training_oral_speciality",
                                             verbose_name=_('oral speciality'),
-                                            blank=True, null=True)
+                                            blank=True)
         oral_1 = models.ManyToManyField('CourseType', related_name="training_oral_1",
                                             verbose_name=_('oral 1'),
-                                            blank=True, null=True)
+                                            blank=True)
         oral_2 = models.ManyToManyField('CourseType', related_name="training_oral_2",
                                             verbose_name=_('oral 2'),
-                                            blank=True, null=True)
+                                            blank=True)
         options = models.ManyToManyField('CourseType', related_name="training_options",
                                             verbose_name=_('options'),
-                                            blank=True, null=True)
+                                            blank=True)
         magistral = models.ManyToManyField('CourseType', related_name="training_magistral",
                                             verbose_name=_('magistral'),
-                                            blank=True, null=True)
+                                            blank=True)
 
     cost = models.FloatField(_('cost'), blank=True, null=True)
     cost_elearning_fascicle = models.FloatField(
@@ -167,11 +167,11 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
 
 else:
     class Student(StudentMixin):
-        period          = ManyToManyField('Period', related_name='student', verbose_name=_('period'),
-                                    blank=True, null=True)
-        courses       	= ManyToManyField('Course', related_name="student",
+        period          = models.ManyToManyField('Period', related_name='student', verbose_name=_('period'),
+                                    blank=True)
+        courses       	= models.ManyToManyField('Course', related_name="student",
                                             verbose_name=_('courses'),
-                                            blank=True, null=True)
+                                            blank=True)
         # to stay in sync with crfpa
         training = None
 
@@ -350,7 +350,7 @@ class Home(models.Model):
         _('Title'), max_length=255, null=True, blank=True)
     text = models.TextField('Texte', blank=True)
     video = models.ForeignKey(Media, verbose_name="Video", null=True, blank=True, on_delete=models.SET_NULL)
-    modified_at = models.DateTimeField(u'Date de modification', auto_now=True, default=datetime.datetime.now)
+    modified_at = models.DateTimeField(u'Date de modification', auto_now=True)
     periods = models.ManyToManyField('Period', related_name="home_texts",
                                      verbose_name=u'Périodes associées',
                                      blank=True)

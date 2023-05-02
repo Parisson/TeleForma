@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Django settings for sandbox project.
 
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 import warnings
 import os
 import sys
@@ -30,12 +30,18 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'teleforma',                      # Or path to database file if using sqlite3.
-        'USER': 'teleforma',                      # Not used with sqlite3.
-        'PASSWORD': 'HMYsrZLEtYeBrvER',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Or path to database file if using sqlite3.
+        'NAME': os.environ.get('POSTGRES_DATABASE'),
+        # Not used with sqlite3.
+        'USER': os.environ.get('POSTGRES_USER'),
+        # Not used with sqlite3.
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': os.environ.get('DB_HOST'),
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -140,6 +146,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # 'south',
     'teleforma',
+    'teleforma.exam',
+    'teleforma.webclass',
     'sorl.thumbnail',
     # 'django_extensions',
     'dj_pagination',
@@ -241,16 +249,24 @@ TELECASTER_LIVE_ICECAST_STREAMING_PORT = 8000
 TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 8888
 
 # CRFPA or AE or PRO
-TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
+TELEFORMA_E_LEARNING_TYPE = 'AE'
+TELEFORMA_ORGANIZATION = 'Pré-Barreau - Avocats étrangers'
+TELEFORMA_SUBJECTS = ('Barreau', 'Avocats', 'étrangers', 'e-learning')
+TELEFORMA_DESCRIPTION = "E-learning Pré-Barreau - Avocats étrangers"
 TELEFORMA_GLOBAL_TWEETER = False
 TELEFORMA_PERIOD_TWEETER = True
 TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
 TELEFORMA_EXAM_SCRIPT_UPLOAD = True
 TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
-TELEFORMA_PERIOD_DEFAULT_ID = 22
-TELEFORMA_EXAM_MAX_SESSIONS = 15
+TELEFORMA_PERIOD_DEFAULT_ID = 11
+TELEFORMA_EXAM_MAX_SESSIONS = 10
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 20480000
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
+
+# courses choice in register form
+TELEFORMA_REGISTER_COURSE_CHOICE = (28, 29, 30, 31)
+# courses added to all registered users
+TELEFORMA_REGISTER_COURSE_AUTOREGISTER = (27, 34, 35, 36, 37)
 
 TELECASTER_LIVE_STREAMING_SERVER = 'stream4.parisson.com'
 TELECASTER_LIVE_STREAMING_PORT = 443
@@ -268,6 +284,10 @@ FILE_UPLOAD_TEMP_DIR = '/tmp'
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_ENGINE = "unique_session.backends.session_backend"
 UNIQUE_SESSION_WHITELIST = (1, 2042)
+
+RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
+RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
+RECAPTCHA_REQUIRED_SCORE = 0.85
 
 # SOUTH_MIGRATION_MODULES = {
 #     'captcha': 'captcha.south_migrations',
@@ -345,7 +365,7 @@ def show_user_as(user):
     if user.quotas.count() and not professor and not user.is_superuser:
         return "#"+str(user.id)
     else:
-        return force_text(user)
+        return force_str(user)
 
 
 POSTMAN_SHOW_USER_AS = show_user_as

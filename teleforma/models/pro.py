@@ -69,7 +69,7 @@ class Seminar(models.Model):
                                     verbose_name=_('corrected document'),
                                     blank=True, null=True)
     suscribers = models.ManyToManyField(User, related_name="seminar", verbose_name=_('suscribers'),
-                                        blank=True, null=True)
+                                        blank=True)
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True)

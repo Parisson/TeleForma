@@ -167,8 +167,8 @@ alt="logo" />
     </ul>
  </li>
  {% else %}
- <li><a href="{% url telemeta-profile-detail user.username %}" class="darkblue">{% trans "Profile" %}</a></li>
- <li><a href="{% url telemeta-logout %}" class="black">{% trans "Sign out" %}</a></li>
+ <li><a href="{% url 'telemeta-profile-detail' user.username %}" class="darkblue">{% trans "Profile" %}</a></li>
+ <li><a href="{% url 'telemeta-logout' %}" class="black">{% trans "Sign out" %}</a></li>
  {% endif %}
 
  {% endif %}

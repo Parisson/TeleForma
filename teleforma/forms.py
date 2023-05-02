@@ -2,7 +2,7 @@
 import datetime
 from io import BytesIO
 
-from captcha.fields import CaptchaField
+from captcha.fields import ReCaptchaField
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -55,6 +55,7 @@ def get_unique_username(first_name, last_name):
 class BBBConferenceForm(ModelForm):
     class Meta:
         model = Conference
+        fields = '__all__'
 
 class UserProfileForm(ModelForm):
     class Meta:
@@ -110,7 +111,7 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
                                     widget=forms.Select())
         
         # no model
-        captcha = CaptchaField()
+        captcha = ReCaptchaField()
         accept = BooleanField()
 
         class Meta:
@@ -132,23 +133,23 @@ if settings.TELEFORMA_E_LEARNING_TYPE != 'AE':
                 return image
             #width, height = get_image_dimensions(image)
             #ratio = float(height) / float(width)
-            #if ratio > 2.5 or ratio < 1:
+            # if ratio > 2.5 or ratio < 1:
             #    raise ValidationError({'portrait': "L'image n'est pas au format portrait."})
             NEW_HEIGHT = 230
             NEW_WIDTH = 180
-            #if width < NEW_WIDTH or height < NEW_HEIGHT:
+            # if width < NEW_WIDTH or height < NEW_HEIGHT:
             #    raise ValidationError({'portrait': "L'image est trop petite. Elle doit faire au moins %spx de large et %spx de hauteur." % (NEW_WIDTH, NEW_HEIGHT)})
 
-        # resize image
-        img = Image.open(image.file)
-        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
-        if new_image.mode == "RGBA":
-            new_image = new_image.convert("RGB")
+            # resize image
+            img = Image.open(image.file)
+            new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+            if new_image.mode == "RGBA":
+                new_image = new_image.convert("RGB")
 
-        temp = BytesIO()
-        new_image.save(temp, 'jpeg')
-        temp.seek(0)
-        return SimpleUploadedFile('temp', temp.read())
+            temp = BytesIO()
+            new_image.save(temp, 'jpeg')
+            temp.seek(0)
+            return SimpleUploadedFile('temp', temp.read())
 
         def save(self, commit=True):
 
@@ -234,7 +235,7 @@ else:
                                     required=True)
 
         # no model
-        captcha = CaptchaField()
+        captcha = ReCaptchaField()
         accept = BooleanField()
 
         class Meta:
@@ -323,7 +324,7 @@ class CorrectorForm(ModelForm):
                                        queryset=Course.objects.all().exclude(title="Aucune").order_by('title'),
                                        widget=forms.CheckboxSelectMultiple())
     # no model
-    captcha = CaptchaField()
+    captcha = ReCaptchaField()
     # accept = BooleanField()
 
     class Meta:

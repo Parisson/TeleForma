@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.http import HttpResponse
 from django.conf.urls import include, url
 from django.views.i18n import JavaScriptCatalog

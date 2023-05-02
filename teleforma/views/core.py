@@ -42,12 +42,13 @@ from teleforma.utils import guess_mimetypes
 
 from jsonrpc import jsonrpc_method
 
+import weasyprint
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, get_backends
 from django.template import RequestContext, loader, Context
 from django import template
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.http import FileResponse, HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import *
 from django.views.generic.base import *
 from django.conf import settings
@@ -78,15 +79,13 @@ from teleforma.models.crfpa import Home
 import pages
 from xlwt import Workbook
 
-from cgi import escape
-from cStringIO import StringIO
-from xhtml2pdf import pisa
+from html import escape
 
 from ..decorators import access_required
 from ..models.appointment import Appointment, AppointmentPeriod
 from ..models.core import (Conference, Course, CourseType, Department,
                            Document, DocumentType, Media, MediaTranscoded,
-                           Organization, Period, Professor, WebClassGroup,
+                           Organization, Period, Professor,
                            get_user_role)
 from ..webclass.models import Webclass, WebclassRecord
 from .pages import get_page_content
@@ -205,15 +204,15 @@ def get_default_period(periods):
     else:
         return Period.objects.get(id=getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1))
 
-
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
     """
     Write into *dest* file object the given html *content*.
     Return True if the operation completed successfully.
     """
-    src = BytesIO(content.encode(encoding))
-    pdf = pisa.pisaDocument(src, dest, encoding=encoding, **kwargs)
-    return not pdf.err
+    src = weasyprint.HTML(string=content, encoding=encoding)
+    src.write_pdf(dest)
+    return True
+
 
 
 def content_to_response(content, filename=None):
@@ -316,8 +315,7 @@ def serve_media(media_path, content_type="", buffering=True, streaming=False):
                                  buffering=buffering, streaming=streaming)
     else:
         try:
-            pass
-            #response = FileResponse(open(media_path, 'rb'))
+            response = FileResponse(open(media_path, 'rb'))
         except:    
             response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
         filename = os.path.basename(media_path)
@@ -608,8 +606,6 @@ class MediaView(CourseAccessMixin, DetailView):
             app_label="teleforma", model="course")
 
         room_name = media.course.code
-        if media.conference.web_class_group:
-            room_name += '_' + media.conference.public_id
 
         context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
@@ -672,8 +668,6 @@ class MediaTranscodedView(CourseAccessMixin, DetailView):
             app_label="teleforma", model="course")
 
         room_name = media.course.code
-        if media.conference.web_class_group:
-            room_name += '_' + media.conference.public_id
 
         context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
@@ -780,8 +774,6 @@ class ConferenceView(CourseAccessMixin, DetailView):
             app_label="teleforma", model="course")
 
         room_name = conference.course.code
-        if conference.web_class_group:
-            room_name += '_' + conference.public_id
 
         context['room'] = get_room(name=room_name, period=context['period'].name,
                                    content_type=content_type,
@@ -870,10 +862,10 @@ class ConferenceMixin(FormView):
     model = Conference
     hidden_fields = ['started', 'date_begin', 'date_end', 'public_id', 'readers']
 
-class ConferenceRecordView(ConferenceMixin):
-    "Conference record form : TeleCaster module required"
-    form_class = ConferenceForm
-    template_name='teleforma/course_conference_record.html'
+# class ConferenceRecordView(ConferenceMixin):
+#     "Conference record form : TeleCaster module required"
+#     form_class = ConferenceForm
+#     template_name='teleforma/course_conference_record.html'
 
 #     def get_context_data(self, **kwargs):
 #         context = super(ConferenceRecordView, self).get_context_data(**kwargs)
@@ -1065,24 +1057,24 @@ class ProfessorListView(View):
             professor.save()
 
 
-class WebClassGroupView(View):
+# class WebClassGroupView(View):
 
-    @jsonrpc_method('teleforma.get_class_group_list')
-    def get_class_group_list(request):
-        class_groups = WebClassGroup.objects.all()
-        return [w.to_json_dict() for w in class_groups]
+#     @jsonrpc_method('teleforma.get_class_group_list')
+#     def get_class_group_list(request):
+#         class_groups = WebClassGroup.objects.all()
+#         return [w.to_json_dict() for w in class_groups]
 
-    def pull(request, host=None):
-        if host:
-            url = 'http://' + host + '/json/'
-        else:
-            url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
-        s = ServiceProxy(url)
+#     def pull(request, host=None):
+#         if host:
+#             url = 'http://' + host + '/json/'
+#         else:
+#             url = 'http://' + settings.TELECASTER_MASTER_SERVER + '/json/'
+#         s = ServiceProxy(url)
 
-        remote_list = s.teleforma.get_class_group_list()
-        for class_group_dict in remote_list['result']:
-            class_group, c = WebClassGroup.objects.get_or_create(
-                name=class_group_dict['name'])
+#         remote_list = s.teleforma.get_class_group_list()
+#         for class_group_dict in remote_list['result']:
+#             class_group, c = WebClassGroup.objects.get_or_create(
+#                 name=class_group_dict['name'])
 
 
 class HelpView(TemplateView):

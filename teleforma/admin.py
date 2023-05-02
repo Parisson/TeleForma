@@ -2,6 +2,7 @@
 import csv
 import datetime
 
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin
@@ -9,6 +10,9 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+from django import forms
+from django.contrib.admin.helpers import ActionForm
+
 
 from .exam.admin import QuotaInline
 from .models.appointment import (Appointment, AppointmentJury,
@@ -81,9 +85,8 @@ class StudentInline(admin.StackedInline):
     model = Student
     extra = 1
 
-# TODO fix max_length
-# class StudentGroupForm(ActionForm):
-#     group_name = forms.CharField(_('Group'), required=False)
+class StudentGroupForm(ActionForm):
+    group_name = forms.CharField(label=_('Group'), max_length=255, required=False)
 
 
 class StudentGroupAdmin(admin.ModelAdmin):
@@ -189,8 +192,8 @@ else:
         actions = ['export_xls', 'write_message', 'add_to_group']
         action_form = StudentGroupForm
 
-    def get_trainings(self, instance):
-        return ' - '.join([str(training) for training in instance.trainings.all()])
+        def get_trainings(self, instance):
+            return ' - '.join([str(training) for training in instance.trainings.all()])
 
         def student_name(self, instance):
             return instance.user.last_name + ' ' + instance.user.first_name
@@ -205,23 +208,23 @@ else:
             serializers.serialize("json", queryset, stream=response)
             return response
 
-    def export_xls(self, request, queryset):
-        book = UserXLSBook(students=queryset)
-        book.write()
-        response = HttpResponse(content_type="application/vnd.ms-excel")
-        response['Content-Disposition'] = 'attachment; filename=users.xls'
-        book.book.save(response)
-        return response
+        def export_xls(self, request, queryset):
+            book = UserXLSBook(students=queryset)
+            book.write()
+            response = HttpResponse(content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'attachment; filename=users.xls'
+            book.book.save(response)
+            return response
 
-        export_xls.short_description = "Export vers XLS"
+            export_xls.short_description = "Export vers XLS"
 
-        def add_to_group(self, request, queryset):
-            group_name = request.POST['group_name']
-            group, c = StudentGroup.objects.get_or_create(name=group_name)
-            for student in queryset:
-                group.students.add(student)
-            # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
-        add_to_group.short_description = "Ajouter au groupe"
+            def add_to_group(self, request, queryset):
+                group_name = request.POST['group_name']
+                group, c = StudentGroup.objects.get_or_create(name=group_name)
+                for student in queryset:
+                    group.students.add(student)
+                # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
+            add_to_group.short_description = "Ajouter au groupe"
 
 
 class CorrectorAdmin(admin.ModelAdmin):

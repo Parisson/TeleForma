@@ -252,10 +252,10 @@ class Course(models.Model):
 
     periods = models.ManyToManyField('Period', related_name="courses",
                                      verbose_name=u'Périodes associées',
-                                     blank=True, null=True)
+                                     blank=True)
     types = models.ManyToManyField('CourseType', related_name="course",
                                         verbose_name=_('types'),
-                                        blank=True, null=True)
+                                        blank=True)
 
     def __str__(self):
         return self.title
@@ -392,8 +392,8 @@ class Conference(models.Model):
     status = models.IntegerField(
         _('status'), choices=STATUS_CHOICES, default=2)
     streaming = models.BooleanField(_('streaming'), default=True)
-    web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
-                                        blank=True, null=True, on_delete=models.SET_NULL)
+    # web_class_group = models.ForeignKey('WebClassGroup', related_name='conferences', verbose_name=_('web class group'),
+    #                                     blank=True, null=True, on_delete=models.SET_NULL)
 
     @property
     def description(self):
@@ -599,7 +599,7 @@ class LiveStream(models.Model):
     @property
     def url(self):
         if self.server.type == 'stream-m':
-	    return 'https://' + self.server.host + '/stream/video/consume/' + self.slug
+	        return 'https://' + self.server.host + '/stream/video/consume/' + self.slug
         else:
             return 'https://' + self.server.host + '/stream/audio/' + self.slug
 
@@ -798,9 +798,6 @@ class Media(MediaBase):
                                     blank=True, null=True, on_delete=models.SET_NULL)
     period = models.ForeignKey('Period', related_name='media', verbose_name=_('period'),
                                null=True, blank=True, on_delete=models.SET_NULL)
-    if HAS_TELEMETA:
-        item = models.ForeignKey(MediaItem, related_name='media',
-                                 verbose_name='item', blank=True, null=True, on_delete=models.SET_NULL)
     type = models.CharField(
         _('type'), choices=streaming_choices, max_length=32)
     readers = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
@@ -959,10 +956,10 @@ class NamePage(object):
         else:
             return '%c-%c' % (self.start_letter, self.end_letter)
 
-class StudentMixin(Model):
-    user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True)
+class StudentMixin(models.Model):
+    user = models.ForeignKey(User, related_name='student', verbose_name=_('user'), unique=True, on_delete=models.CASCADE)
     trainings = models.ManyToManyField('Training', related_name='student_trainings', verbose_name=_('trainings'),
-                                        blank=True, null=True)
+                                        blank=True)
     iej = models.ForeignKey('IEJ', related_name='student', verbose_name=_('iej'),
                                     blank=True, null=True, on_delete=models.SET_NULL)
     restricted = models.BooleanField("Accès restreint", help_text="Cocher cette case lorsque vous voulez que l'étudiant puisse se connecter, mais ne pas avoir accès aux cours.", default=False)

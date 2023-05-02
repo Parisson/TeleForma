@@ -18,7 +18,7 @@
         {% block courses %}
         {% for c in all_courses %}
         {% with c.course as course %}
-        <li><a href="{% url teleforma-desk-period-course period.id course.id %}">{{ course.title }}</a></li>
+        <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
         {% endwith %}
         {% endfor %}
         {% endblock courses %}
@@ -31,14 +31,14 @@
   {% get_telecaster as telecaster %}
   {%  if telecaster %}
   <div class="module_action">
-    <a href="{% url teleforma-conference-record %}" class="component_icon button"
+    <a href="{% url 'teleforma-conference-record' %}" class="component_icon button"
       id="action_red">{% trans "New conference" %}</a>
   </div>
   {% endif %}
 
   {% if user.is_staff %}
   <div class="module_action">
-    <a href="{% url teleforma-desk-period-pending period.id %}" class="component_icon button"
+    <a href="{% url 'teleforma-desk-period-pending' period.id %}" class="component_icon button"
       id="action_red">{% trans "Pending" %}</a>
   </div>
   {% endif %}
@@ -121,7 +121,7 @@
               {% elif slot.status == 'almost' %}
               La webclasse <strong>"{{slot.webclass.course.title}}"</strong> va démarrer bientôt.
               {% endif %}
-              <a href="{% url teleforma-webclass-join slot.id %}" target="_blank"
+              <a href="{% url 'teleforma-webclass-join' slot.id %}" target="_blank"
                 class="conference-big-button component_icon button icon_next">Cliquez ici pour rejoindre la
                 webclasse</a>
             </p>
@@ -134,7 +134,7 @@
             <p>
               <strong>Vous n'êtes pas inscrit à la webclasse "{{webclass.course.title}}".</strong> <a
                 class="conference-big-button component_icon button icon_next"
-                href="{% url teleforma-webclass-appointments webclass.id %}">Cliquez-ici pour choisir un créneau
+                href="{% url 'teleforma-webclass-appointments' webclass.id %}">Cliquez-ici pour choisir un créneau
                 horaire</a>
             </p>
           </td>

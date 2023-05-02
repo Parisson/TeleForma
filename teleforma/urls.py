@@ -125,9 +125,6 @@ urlpatterns = [
                url(r'^accounts/password_reset_complete/$', PasswordResetCompleteView.as_view(
                    template_name='registration/password_reset_complete.html'), name="teleforma-password-reset-complete"),
 
-
-               url(r'^captcha/', include('captcha.urls')),
-
                # Help
                url(r'^help/$', HelpView.as_view(), name="teleforma-help"),
 
@@ -188,10 +185,6 @@ urlpatterns = [
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/audio/$',
         ConferenceView.as_view(template_name="teleforma/course_conference_audio.html"),
         name="teleforma-conference-audio"),
-    url(r'^desk/conference_record/$', ConferenceRecordView.as_view(),
-        name="teleforma-conference-record"),
-    url(r'^desk/bbbconference_record/$', BBBConferenceRecordView.as_view(),
-        name="teleforma-bbbconference-record"),
     url(r'^desk/periods/(?P<period_id>.*)/conferences/list/$', ConferenceListView.as_view(),
         name="teleforma-conferences"),
 
