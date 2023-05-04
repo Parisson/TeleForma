@@ -64,11 +64,15 @@ from django.template import Context, RequestContext, loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from teleforma.models import *
 from teleforma.forms import *
@@ -843,20 +847,88 @@ class ConferenceListView(View):
             if not conference.public_id in remote_ids and conference.date_end:
                 s.teleforma.create_conference(conference.to_json_dict())
 
+@method_decorator(csrf_exempt, name='dispatch')
+class ChatMessageView(APIView):
+    permission_classes = [IsAuthenticated]
 
-def live_message(conference):
-    from jqchat.models import Message
-    user, c = User.objects.get_or_create(username='bot')
-    content_type = ContentType.objects.get(
-        app_label="teleforma", model="course")
-    room = get_room(name=conference.course.code, period=conference.period.name,
-                    content_type=content_type,
-                    id=conference.course.id)
-    text = _("A new live conference has started : ")
-    text += 'http://' + Site.objects.all()[0].domain + reverse('teleforma-conference-detail',
-                                                               kwargs={'period_id': conference.period.id, 'pk': conference.id})
-    message = Message.objects.create_message(user, room, text)
+    # deprecated
+    def get(self, request):
+        """
+        Get last 100 messages, in json
+        You need to provide a room_name in request
+        """
+        messages = [message.to_dict() for message in ChatMessage.objects.filter(
+            room_name=request.GET['room_name']).order_by('-created')[:100]]
+        messages = messages[::-1]
+        return Response(messages)
 
+    def post(self, request):
+        """
+        Send a chat message
+        You can pass either : 
+        - a conference id 
+        - a room name and a message
+        """
+        room_name = request.POST.get('room_name')
+        message = request.POST.get('message')
+        if not room_name:
+            conference = Conference.objects.get(
+                id=request.POST.get('conference_id'))
+            ChatMessage.live_conference_message(conference=conference)
+        else:
+            ChatMessage.add_message(room_name, message, system=True)
+        return Response({'status': 'ok'})
+
+
+class NotificationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """
+        Update a notification (set as read)
+        """
+        id = request.data.get('id')
+        viewed = request.data.get('viewed')
+        notif = Notification.objects.get(pk=id)
+        notif.viewed = viewed
+        notif.save()
+        return Response({'status': 'ok'})
+
+
+class LiveConferenceNotify(APIView):
+
+    def post(self, request):
+        """
+        notify users a new live conference is starting
+        """
+        conference_id = request.data.get('id')
+        if not conference_id:
+            raise Exception('No conference id in request')
+        conference = Conference.objects.get(pk=int(conference_id))
+        students = Student.objects.filter(period=conference.period, platform_only=True)
+        text = f"""Une conférence live "{conference.course.title}" commence"""
+        url = reverse('teleforma-conference-detail', kwargs={'period_id': conference.period.id, 'pk': conference.id})
+
+        # notify students
+        for student in students:
+            try:
+                if student.user:
+                    courses = get_courses(student.user, period=conference.period)
+                    for course in courses:
+                        if conference.course == course['course'] and \
+                                conference.course_type in course['types']:
+                            notify(student.user, text, url)
+                            logger.info("Student notified: " + student.user.username)
+            except Exception as e:
+                logger.warning("Student NOT notified: " + str(student.id))
+                logger.warning(e)
+                continue
+
+        # notify staff
+        for user in User.objects.filter(is_staff=True):
+            notify(user, text, url)
+
+        return Response({'status': 'ok'})
 
 class ConferenceMixin(FormView):
     model = Conference

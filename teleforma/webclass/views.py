@@ -8,6 +8,8 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, TemplateView, View
 
+from teleforma.models.core import Professor
+
 from ..decorators import access_required
 from ..views.core import get_courses, get_periods
 from ..webclass.forms import WebclassRecordsForm
@@ -17,14 +19,21 @@ from ..webclass.models import Webclass, WebclassSlot
 class WebclassProfessorAppointments(TemplateView):
     template_name = 'webclass/appointments_professor.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        user = self.request.user
+        try:
+            user.professor.get()
+        except Professor.DoesNotExist:
+            return HttpResponse('Unauthorized', status=401)
+
+        return super().dispatch(request, *args, **kwargs)
+
+
     def get_context_data(self, **kwargs):
         """ """
         context = super(WebclassProfessorAppointments,
                         self).get_context_data(**kwargs)
-
-        user = self.request.user
-        if not user.professor:
-            return HttpResponse('Unauthorized', status=401)
+        
         context['slots'] = WebclassSlot.published.filter(
             professor=user.professor.get(), webclass__status=3).order_by('day', 'start_hour')
         print(context['slots'])

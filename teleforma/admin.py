@@ -13,6 +13,9 @@ from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.contrib.admin.helpers import ActionForm
 
+from teleforma.models.chat import ChatMessage
+from teleforma.models.notification import Notification
+
 
 from .exam.admin import QuotaInline
 from .models.appointment import (Appointment, AppointmentJury,
@@ -445,6 +448,15 @@ class AppointmentAdmin(admin.ModelAdmin):
         return response
     export_csv.short_description = "Exporter en CSV"
 
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ('message', 'user', 'room_name')
+    ordering = ['-created']
+    raw_id_fields = ['user',]
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('message', 'user', 'created')
+    ordering = ['-created']
+    raw_id_fields = ['user',]
 
 admin.site.unregister(User)
 admin.site.register(Organization)
@@ -476,3 +488,5 @@ admin.site.register(AppointmentPeriod, AppointmentPeriodAdmin)
 admin.site.register(AppointmentSlot, AppointmentSlotAdmin)
 admin.site.register(AppointmentJury, AppointmentJuryAdmin)
 admin.site.register(Appointment, AppointmentAdmin)
+admin.site.register(ChatMessage, ChatMessageAdmin)
+admin.site.register(Notification, NotificationAdmin)

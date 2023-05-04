@@ -5,6 +5,7 @@ from django.utils.encoding import force_str
 import warnings
 import os
 import sys
+import socket
 from django.urls import reverse_lazy
 # import environ
 
@@ -27,6 +28,34 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+ASGI_APPLICATION = "teleforma.ws.routing.application"
+
+
+INTERNAL_IPS = ['127.0.0.1', ]
+
+# tricks to have debug toolbar when developing with docker
+ip = socket.gethostbyname(socket.gethostname())
+INTERNAL_IPS += [ip[:-1] + '1']
+
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
+}
+
+# channel access point from django
+if DEBUG:
+    CHANNEL_URL = "http://channels:8000"
+else:
+    CHANNEL_URL = "/var/run/app/asgi.sock"
+
 
 DATABASES = {
     'default': {
@@ -142,31 +171,21 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'teleforma',
     'jazzmin',
     'django.contrib.admin',
-    # 'south',
-    'teleforma',
+    'channels',
     'teleforma.exam',
     'teleforma.webclass',
     'sorl.thumbnail',
-    # 'django_extensions',
     'dj_pagination',
     'postman',
-    # 'timezones',
-    # 'googletools',
-    # 'extra_views',
     'captcha',
     'django_nvd3',
-    # 'bootstrap3',
-    # 'bootstrap_pagination',
-    # 'django_user_agents',
     'tinymce',
-    # 'multichoice',
-    # 'true_false',
-    # 'essay',
-    # 'quiz',
     'pdfannotator',
-    # 'telemeta',
+    'rest_framework',
+    'rest_framework.authtoken',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -321,6 +340,14 @@ TINYMCE_DEFAULT_CONFIG = {
     "custom_undo_redo_levels": 10,
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ]
+}
+
 # Sherlock's online payment
 PAYMENT_SHERLOCKS_PATH = '/opt/sherlocks2'
 PAYMENT_PARAMETERS = {'merchant_id': {'Semestrielle': "040109417200053",
@@ -371,7 +398,7 @@ def show_user_as(user):
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
-ALLOWED_HOSTS = ['localhost', 'ae.dockdev.pilotsystems.net']
+ALLOWED_HOSTS = ['localhost', 'ae.dockdev.pilotsystems.net', 'channels']
 
 JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",
@@ -478,3 +505,26 @@ if DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
     }
+
+
+
+USE_WEBPACK_DEV_SERVER = False
+WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"
+
+ENABLE_CHAT = True
+CHAT_LIMIT_HOURS = 48
+
+
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_settings import *
+except ImportError as e:
+    if "local_settings" not in str(e):
+        raise e
+

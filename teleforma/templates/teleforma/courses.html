@@ -206,13 +206,10 @@
   {% endblock status %}
 
   {% block chat %}
-  {% if room %}
-  {% with "General tweeter" as title %}
-  {% include "teleforma/inc/chat_room.html" %}
-  {% endwith %}
-  {% endif %}
-  {% endblock chat %}
 
+  {% chat_room period=period %}
+  {% endblock chat %}
+  
 </div>
 
 {% endblock content %}

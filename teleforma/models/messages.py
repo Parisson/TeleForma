@@ -4,12 +4,16 @@ import datetime
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from postman.models import Message
 from postman.utils import notify_user
 
+from teleforma.models.notification import Notification, notify
+
 from ..models import MetaCore, Student
 from ..models.core import app_label
+from django.db.models.signals import post_save
 
 
 class StudentGroup(models.Model):
@@ -66,3 +70,17 @@ class GroupedMessage(models.Model):
             mess.moderation_status = 'a'
             mess.save()
             notify_user(mess, 'acceptance', site)
+
+
+
+def new_message(sender, instance, created , **kwargs):
+    # create a notification on new message
+    if created:
+        notify(
+            instance.recipient, 
+            f"Nouveau message de {instance.sender.first_name} {instance.sender.last_name}",
+            reverse('postman:view', args=[instance.id])
+        )
+        
+
+post_save.connect(new_message, sender=Message)

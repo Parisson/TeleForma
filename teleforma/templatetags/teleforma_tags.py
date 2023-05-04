@@ -48,6 +48,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from docutils.core import publish_parts
 
+from teleforma.models.chat import ChatMessage
+
 from ..exam.models import Quota, Script
 from ..models.core import Document, Professor
 from ..models.crfpa import IEJ, Course, NewsItem, Training
@@ -258,17 +260,6 @@ def get_googletools():
     return 'googletools' in settings.INSTALLED_APPS
 
 
-@register.simple_tag
-def show_chat(user):
-    """ everybody should see the chat panel, except the correctors """
-    professor = user.professor.all()
-    if user.is_superuser or professor:
-        return True
-    if user.quotas.all():
-        return False
-    return True
-
-
 @register.filter
 def get_audio_id(media):
     for m in media.transcoded.all():
@@ -423,3 +414,23 @@ def render_flatpage(content):
 
 
 render_flatpage.is_safe = True
+
+@register.inclusion_tag('teleforma/inc/chat_room.html', takes_context=True)
+def chat_room(context, period=None, course=None):
+    """ display chat room """
+    # conditionnaly show chat
+    if not getattr(settings, 'ENABLE_CHAT', True):
+        return {'show':False}
+    room_name = ChatMessage.get_room_name(period, course)
+    if course:
+        room_title = course.title_tweeter or course.title
+    else:
+        room_title = period.name
+    return {
+        'show': True,
+        'data': {
+            'room_name': room_name,
+            'room_title': room_title,
+            'user_id': context.request.user.id
+        }
+    }
