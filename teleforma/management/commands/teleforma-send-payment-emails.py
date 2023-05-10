@@ -8,6 +8,7 @@ from django.utils import translation
 from teleforma.models import *
 import logging
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 class Logger:
     """A logging object"""
@@ -25,9 +26,12 @@ class Command(BaseCommand):
     help = "Send emails to students that must pay"
     language_code = 'fr_FR'
 
+    def add_arguments(self, parser):
+        parser.add_argument('log_file')
+        
     def email(self, student, kind, payment):
         site = Site.objects.get_current()
-        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'student': student, 'payment': payment, 'period': student.period }
+        ctx_dict = {'site': site, 'organization': settings.TELEFORMA_ORGANIZATION, 'student': student, 'payment': payment  }
         subject_template = 'payment/email_%s_subject.txt' % kind
         message_template = 'payment/email_%s.txt' % kind
         subject = render_to_string(subject_template, ctx_dict)
@@ -36,7 +40,7 @@ class Command(BaseCommand):
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [student.user.email], fail_silently=False)
 
     def handle(self, *args, **options):
-        log_file = args[-1]
+        log_file = options['log_file']
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
@@ -44,18 +48,25 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
 
         today = datetime.date.today()
-        
+
         for student in students:
-            if student.is_subscribed and student.user.email:
+            try:
+                user = student.user
+            except ObjectDoesNotExist:
+                logger.logger.warning('missing user object for %s' % student.pk)
+                continue
+            
+            if student.is_subscribed and user.email and user.is_active :
                 for payment in student.payments.filter(type = 'online').exclude(online_paid = True).filter(scheduled__lte = today):
                     if payment.scheduled == today:
                         self.email(student, 'initial', payment)
-                        logger.logger.info('initial email send for %s on %d' % (student.user.username, payment.id))
+                        logger.logger.info('initial email send for %s on %d' % (user.username, payment.id))
                     else:
                         delta = today - payment.scheduled
                         delta = delta.days
                         if delta % 7 == 0:
                             self.email(student, 'reminder', payment)
-                            logger.logger.info('reminder email send for %s on %d' % (student.user.username, payment.id))
+                            logger.logger.info('reminder email send for %s on %d' % (user.username, payment.id))                            
+                            
 
         logger.logger.info('############## Done #################')

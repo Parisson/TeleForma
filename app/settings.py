@@ -348,14 +348,14 @@ REST_FRAMEWORK = {
     ]
 }
 
-# Sherlock's online payment
-PAYMENT_SHERLOCKS_PATH = '/opt/sherlocks2'
-PAYMENT_PARAMETERS = {'merchant_id': {'Semestrielle': "040109417200053",
-                                      'Estivale': "040109417200054", },
-                      'merchant_country': 'fr',
-                      'currency_code': '978',
-                      'language': 'fr'
+SHERLOKS_URL = "https://sherlocks-payment-webinit-simu.secure.lcl.fr/paymentInit"
+
+PAYMENT_PARAMETERS = { 'merchantId' : "002001000000003",
+                       '_key': "002001000000003_KEY1",
+                       'keyVersion': '1',
+                       'currencyCode': '978',
                       }
+SHERLOKS_USE_TRANSACTION_ID = True
 
 LOGGING = {
     'version': 1,
