@@ -1,6 +1,6 @@
 @page {
   margin: 1cm;
-  margin-bottom: 2.5cm;
+  margin-bottom: 1cm;
   @frame footer {
     -pdf-frame-content: footer;
     bottom: 0cm;
@@ -63,7 +63,7 @@
 
 #content table tr th{
     padding: 5px;
-    font-size: 14px;
+    font-size: 12px;
     border: 1px solid #000;
 }
 
@@ -72,7 +72,7 @@
 }
 
 #content table tr th:first-child{
-    width: 60%;
+    width: 50%;
 }
 
 #content table tr td{
@@ -80,7 +80,7 @@
     border-left: 1px solid #000;
     border-right: 1px solid #000;
     line-height: 24px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
 }
 #content table tr td:first-child{
@@ -101,6 +101,12 @@
     font-size: 2em;
 }
 
+#signature {
+    margin-left: auto;
+    display: block;
+    width:200px;
+    margin-bottom:20px;
+}
 
 #footer{
     text-align: center;
