@@ -221,13 +221,13 @@ else:
 
             export_xls.short_description = "Export vers XLS"
 
-            def add_to_group(self, request, queryset):
-                group_name = request.POST['group_name']
-                group, c = StudentGroup.objects.get_or_create(name=group_name)
-                for student in queryset:
-                    group.students.add(student)
-                # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
-            add_to_group.short_description = "Ajouter au groupe"
+        def add_to_group(self, request, queryset):
+            group_name = request.POST['group_name']
+            group, c = StudentGroup.objects.get_or_create(name=group_name)
+            for student in queryset:
+                group.students.add(student)
+            # self.message_user(request, ("Successfully added to group : %s") % (group_name,), messages.SUCCESS)
+        add_to_group.short_description = "Ajouter au groupe"
 
 
 class CorrectorAdmin(admin.ModelAdmin):
@@ -478,7 +478,7 @@ admin.site.register(LiveStream)
 admin.site.register(Student, StudentAdmin)
 # admin.site.register(Corrector, CorrectorAdmin)
 admin.site.register(Professor, ProfessorAdmin)
-# admin.site.register(StudentGroup, StudentGroupAdmin)
+admin.site.register(StudentGroup, StudentGroupAdmin)
 admin.site.register(GroupedMessage)
 admin.site.register(Home, HomeAdmin)
 admin.site.register(Parameters, ParametersAdmin)

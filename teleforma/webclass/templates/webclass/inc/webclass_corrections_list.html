@@ -1,0 +1,19 @@
+{% load teleforma_tags webclass %}
+{% load i18n %}
+
+{% if webclass_corrections_records %}
+<div class="course_content content_video">
+    <table class="listing" width="100%">
+        <tbody>
+           
+            {% for record in webclass_corrections_records %}
+            {% webclass_record record %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="course_content">
+    <p>Aucun document</p>
+</div>
+{% endif %}

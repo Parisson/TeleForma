@@ -16,14 +16,14 @@ class WebclassSlotInline(admin.StackedInline):
 
 class WebclassAdmin(admin.ModelAdmin):
     inlines = [WebclassSlotInline]
-    list_filter = ('course', 'period', 'iej', 'bbb_server', 'status')
-    list_display = ('course', 'period', 'bbb_server', 'status')
+    list_filter = ('course', 'period', 'iej', 'session', 'bbb_server', 'status')
+    list_display = ('course', 'period', 'session', 'bbb_server', 'status')
     filter_horizontal = ('iej',)
     search_fields = ['id', 'course__code', 'course__title']
 
 class WebclassRecordAdmin(admin.ModelAdmin):
-    list_filter = ('course', 'period')
-    list_display = ('course', 'period', 'created')
+    list_filter = ('course', 'period', 'category')
+    list_display = ('course', 'period', 'category', 'created')
     search_fields = ['id', 'course__code', 'course__title']
 
     # def get_form(self, request, obj=None, **kwargs):

@@ -7,8 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, TemplateView, View
-
-from teleforma.models.core import Professor
+from datetime import datetime
 
 from ..decorators import access_required
 from ..views.core import get_courses, get_periods
@@ -19,24 +18,23 @@ from ..webclass.models import Webclass, WebclassSlot
 class WebclassProfessorAppointments(TemplateView):
     template_name = 'webclass/appointments_professor.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        user = self.request.user
-        try:
-            user.professor.get()
-        except Professor.DoesNotExist:
-            return HttpResponse('Unauthorized', status=401)
-
-        return super().dispatch(request, *args, **kwargs)
-
-
     def get_context_data(self, **kwargs):
         """ """
         context = super(WebclassProfessorAppointments,
                         self).get_context_data(**kwargs)
-        
-        context['slots'] = WebclassSlot.published.filter(
-            professor=user.professor.get(), webclass__status=3).order_by('day', 'start_hour')
-        print(context['slots'])
+
+        user = self.request.user
+        if not user.professor.all() and not user.is_superuser:
+            return HttpResponse('Unauthorized', status=401)
+        today = datetime.today()
+        query = {
+            'webclass__status': 3,
+            'webclass__end_date__gte': today
+        }
+        if user.professor.all():
+            query['professor'] = user.professor.get()
+        context['slots'] = WebclassSlot.published.filter(**query).order_by('day', 'start_hour')
+        context['is_superuser'] = user.is_superuser
         return context
 
 
@@ -52,7 +50,7 @@ class WebclassAppointment(View):
         student = student[0]
         # check period
         period_id = webclass.period.id
-        periods = [p for p in get_periods(user) if int(p.id) == period_id]
+        periods = [p for p in get_periods(self.request) if int(p.id) == period_id]
         if not periods:
             return HttpResponse('Unauthorized', status=401)
         # check courses
@@ -64,14 +62,30 @@ class WebclassAppointment(View):
         # Student is in the right IEJ ?
         if not student.iej in webclass.iej.all():
             return HttpResponse('Unauthorized', status=401)
+        if student.platform_only and not webclass.allow_elearning:
+            return HttpResponse('Unauthorized', status=401)
+        if not student.platform_only and not webclass.allow_presentiel:
+            return HttpResponse('Unauthorized', status=401)
+            
         return
 
     def render(self, request, webclass):
         # Ensure user is logged in, a student, and has access to current period
         user = request.user
         student = user.student.all()[0]
-        
-        return render(request, self.template_name, {'slots': webclass.slots.order_by('day', 'start_hour'), 'webclass': webclass})
+        slots = webclass.slots.order_by('day', 'start_hour')
+        # only display unavaible slots or first slot of the day
+        filtered_slots = []
+        day = None
+        for slot in slots:
+            if slot.participant_slot_available:
+                if slot.day != day:
+                    filtered_slots.append(slot)
+                    day = slot.day
+            else:
+                filtered_slots.append(slot)
+
+        return render(request, self.template_name, {'slots': filtered_slots, 'webclass': webclass})
 
     def check_slot_validity(self, user, slot):
         """
@@ -143,6 +157,7 @@ class WebclassAppointment(View):
     #     return data
 
 
+
 class WebclassRecordView(TemplateView):
     template_name = 'webclass/record.html'
 
@@ -199,3 +214,20 @@ def join_webclass(request, pk):
         return redirect(webclass_slot.get_join_webclass_url(request, user))
     else:
         return HttpResponse('Unauthorized', status=401)
+
+
+@access_required
+def unregister(request, pk):
+    """
+    Unregister to a webclass
+    """
+    webclass_slot = WebclassSlot.objects.get(pk=int(pk))
+    user = request.user
+
+    if user in webclass_slot.participants.all():
+        webclass_slot.participants.remove(user)
+
+    messages.add_message(request, messages.INFO,
+                                 "Votre réservation a été annulé.")
+    # redirect to register form
+    return redirect(reverse("teleforma-webclass-appointments", kwargs={'pk':webclass_slot.webclass.id}))

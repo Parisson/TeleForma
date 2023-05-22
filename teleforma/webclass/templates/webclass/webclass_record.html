@@ -1,0 +1,25 @@
+{% load i18n %}
+
+<tr>
+    <td {% if forloop.first %}class="border-top" {% endif %} style="width:200px">
+        <a href="{% url 'teleforma-webclass-record' %}?url={{record.url}}" title="{% trans "View" %}">
+            <img src="{{ record.preview }}" style="width:176px" alt="{% trans 'Click here' %}" />
+            <div>Cliquez-ici</div>
+        </a>
+    </td>
+    <td {% if forloop.first %}class="border-top" {% endif %} style="padding-left: 1em;">
+        <div>
+            <dl class="listing" style="font-size: 1.2em;">
+                {% if record.slot %}
+                <dt>{% trans "Professor" %}</dt>
+                <dd>{{ record.slot.professor }}</dd>
+                {% endif %}
+                <dt>{% trans "Begin" %}</dt>
+                <dd>{{ record.start_date }}</dd>
+            </dl>
+        </div>
+    </td>
+    <div style="padding-left: 1em;">
+
+    </div>
+</tr>

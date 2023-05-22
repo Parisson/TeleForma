@@ -1,4 +1,4 @@
-{% load teleforma_tags %}
+{% load teleforma_tags webclass %}
 {% load i18n %}
 
 {% if webclass_slot or webclass_records %}
@@ -11,11 +11,13 @@
             {% if webclass_slot %}
             <tr>
                 <td colspan="2">
-                    <p>Vous êtes inscrit pour les webclasses du
-                        <strong>{{webclass_slot.get_day_display}} de
+                    <p>Vous êtes inscrit pour la webclass du
+                        <strong>{{webclass_slot.get_day_display}} {{webclass_slot.date}} de
                             {{webclass_slot.start_hour|date:"H\hi"}} à
                             {{webclass_slot.end_hour|date:"H\hi"}}</strong>
-                        avec le professeur <strong>{{webclass_slot.professor.user.last_name}}</strong>.</p>
+                        avec le professeur <strong>{{webclass_slot.professor.user.last_name}}</strong>.
+                    </p>
+                    <p><a href="{% url 'teleforma-webclass-unregister' pk=webclass_slot.id %}" class="component_icon button icon_next">Se désinscrire</a> Vous pourrez ensuite vous inscrire sur un autre créneau.</p>
 
                     {% if webclass_slot.status == 'past' %}
                     <p>
@@ -44,31 +46,13 @@
             </tr>
             {% endif %}
             {% for record in webclass_records %}
-            <tr>
-                <td {% if forloop.first %}class="border-top" {% endif %} style="width:200px">
-                    <a href="{% url 'teleforma-webclass-record' %}?url={{record.url}}" title="{% trans "View" %}">
-                        <img src="{{ record.preview }}" style="width:176px" alt="{% trans 'Click here' %}" />
-                        <div>Cliquez-ici</div>
-                    </a>
-                </td>
-                <td {% if forloop.first %}class="border-top" {% endif %} style="padding-left: 1em;">
-                    <div>
-                        <dl class="listing" style="font-size: 1.2em;">
-                            {% if record.slot %}
-                                <dt>{% trans "Professor" %}</dt>
-                                <dd>{{ record.slot.professor }}</dd>
-                            {% endif %}
-                            <dt>{% trans "Begin" %}</dt>
-                            <dd>{{ record.start_date }}</dd>
-                        </dl>
-                    </div>
-                </td>
-                <div style="padding-left: 1em;">
-
-                </div>
-            </tr>
+            {% webclass_record record %}
             {% endfor %}
         </tbody>
     </table>
+</div>
+{% else %}
+<div class="course_content">
+    <p>Aucun document</p>
 </div>
 {% endif %}

@@ -181,6 +181,9 @@ else:
             verbose_name_plural = _('AE students')
             ordering = ['user__last_name']
 
+        def __str__(self):
+            return self.user.get_full_name()
+
 def update_balance_signal(sender, instance, *args, **kwargs):
     try:
         if sender is Student or sender:

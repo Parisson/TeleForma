@@ -3,6 +3,7 @@
 import calendar
 import datetime
 from datetime import date, timedelta
+from unidecode import unidecode
 
 import django.db.models as models
 from bigbluebutton_api_python import BigBlueButton
@@ -15,8 +16,9 @@ from django.template.defaultfilters import slugify
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 from jxmlease import XMLDictNode, XMLListNode
-from teleforma.fields import DurationField
-from unidecode import unidecode
+from teleforma.fields import DurationField, ShortTextField
+from teleforma.models import session_choices
+
 
 translation.activate('fr')
 app_label = 'teleforma'
@@ -61,7 +63,7 @@ def get_records_from_bbb(**kwargs):
                 'end': end,
                 'end_date': datetime.datetime.fromtimestamp(end),
                 'url': url,
-                'preview': str(recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])[0]),
+                'preview': str(recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])),
                 'state': str(recording['state']),
             }
             if recording['metadata'].get('periodid'):
@@ -72,7 +74,7 @@ def get_records_from_bbb(**kwargs):
                         pk=int(recording['metadata'].get('slotid', -1)))
                 except WebclassSlot.DoesNotExist:
                     # this happen if the slot is deleted in django admin
-                    continue
+                    pass
                 data.update({
                     'period_id': int(recording['metadata'].get('periodid', -1)),
                     'course_id': int(recording['metadata'].get('courseid', -1)),
@@ -124,10 +126,9 @@ class BBBServer(models.Model):
         return "Serveur %d" % self.id
 
 
-class PublishedManager(models.Manager):
-    def get_query_set(self):
-        return super(PublishedManager, self).get_query_set().filter(status=3).exclude(end_date__lt=date.today())
-
+class WebclassPublishedManager(models.Manager):
+    def get_queryset(self):
+        return super(WebclassPublishedManager, self).get_queryset().filter(status=3).exclude(end_date__lt=date.today())
 
 class Webclass(models.Model):
 
@@ -139,22 +140,30 @@ class Webclass(models.Model):
         'teleforma.Course', related_name='webclass', verbose_name=_('course'), on_delete=models.CASCADE)
     iej = models.ManyToManyField(
         'teleforma.IEJ', related_name='webclass', verbose_name=_('iej'), blank=True)
+    allow_elearning = models.BooleanField('Autoriser e-learning', default=True)
+    allow_presentiel = models.BooleanField('Autoriser présentiel', default=True)
     bbb_server = models.ForeignKey(
         'BBBServer', related_name='webclass', verbose_name='Serveur BBB', on_delete=models.CASCADE)
     duration = DurationField('Durée de la conférence', default="00:30:00")
     max_participants = models.IntegerField(
         'Nombre maxium de participants par créneau', blank=True, null=True, default=80)
     end_date = models.DateField('date de fin', blank=True, null=True)
+    session = models.CharField(_('session'), choices=session_choices,
+                               max_length=16, default="1")
     status = models.IntegerField(
         _('status'), choices=STATUS_CHOICES, default=2)
+    comment = ShortTextField(_('comment'), max_length=255, blank=True)
 
     objects = models.Manager()
-    published = PublishedManager()
+    published = WebclassPublishedManager()
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass'
         verbose_name = _('webclass')
         verbose_name_plural = _('webclass')
+        indexes = [
+            models.Index(fields=['status', 'period', 'course', ]),
+         ]
 
     def __str__(self):
         return "Webclass %d : %s" % (self.id, self.course.title)
@@ -166,10 +175,18 @@ class Webclass(models.Model):
         except WebclassSlot.DoesNotExist:
             return None
 
+    def is_not_over(self):
+        """
+        Check if the webclass is not over yet
+        """
+        if self.end_date and self.end_date < datetime.date.today():
+            return False
+        return True
+        
 
 class SlotPublishedManager(models.Manager):
-    def get_query_set(self):
-        return super(SlotPublishedManager, self).get_query_set().filter(webclass__status=3).exclude(webclass__end_date__lt=date.today())
+    def get_queryset(self):
+        return super(SlotPublishedManager, self).get_queryset().filter(webclass__status=3).exclude(webclass__end_date__lt=date.today())
 
 
 class WebclassSlot(models.Model):
@@ -196,6 +213,21 @@ class WebclassSlot(models.Model):
 
     def __str__(self):
         return "Webclass slot : " + str(self.id)
+
+    @property
+    def date(self):
+        """
+        Compute the last date (from weekday) before the end of webclass.
+        This is the webclass date. Before, webclass were every "monday" for example.
+        Now there is only one date per webclass.
+        This is not ideal. We should have a "date" field on the webclass slot instead of "day". 
+        But we're waiting to see how PB use webclasses in the future.
+        """
+        end_day = self.webclass.end_date
+        next_day = end_day + datetime.timedelta(days=7 - end_day.weekday() + self.day, weeks=-1)
+        if next_day > end_day:
+            next_day = next_day - datetime.timedelta(weeks=1)
+        return next_day
 
     @property
     def remaining_participant_slot(self):
@@ -272,7 +304,6 @@ class WebclassSlot(models.Model):
                     'slotid': self.id,
                     'professor': self.professor.user.username,
                 }
-                print(params)
                 try:
                     result = self.bbb.create_meeting(
                         self.room_id, params=params, meta=meta)
@@ -378,6 +409,19 @@ class WebclassRecord(models.Model):
         'BBBServer', related_name='webclass_records', verbose_name='Serveur BBB', on_delete=models.CASCADE)
     created = models.DateTimeField("Date de la conférence", auto_now_add=True)
 
+    WEBCLASS = 'WC'
+    CORRECTION = 'CC'
+    CATEGORY_CHOICES = [
+        (WEBCLASS, 'Webclass'),
+        (CORRECTION, 'Correction de copie'),
+    ]
+    category = models.CharField(
+        "Catégorie",
+        max_length=2,
+        choices=CATEGORY_CHOICES,
+        default=WEBCLASS,
+    )
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'webclass_record'
         verbose_name = 'enregistrement'
@@ -389,9 +433,21 @@ class WebclassRecord(models.Model):
     @staticmethod
     def get_records(period, course):
         record_ids = set()
+        # id : category mapping
+        category_mapping = {}
         for record in WebclassRecord.objects.filter(period=period, course=course):
             record_ids.add(record.record_id)
+            category_mapping[record.record_id] = record.category
         if not record_ids:
-            return []
+            return {}
         records = get_records_from_bbb(recording_id=','.join(record_ids))
-        return records
+
+        # group records by category
+        categories = {}
+        for record in records:
+            category = category_mapping[record['id']]
+            if category not in categories:
+                categories[category] = []
+            categories[category].append(record)
+
+        return categories
