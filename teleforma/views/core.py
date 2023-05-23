@@ -728,7 +728,7 @@ class ProfessorListView(View):
             if not professor in professors_new:
                 professor.delete()
 
-    @jsonrpc_method('teleforma.get_dep_professor')
+    @jsonrpc_method('teleforma.get_dep_professors')
     def get_dep_professors(request, id):
         department = Department.objects.get(id=id)
         return [p.to_json_dict() for p in Professor.objects.filter(department=department)]
