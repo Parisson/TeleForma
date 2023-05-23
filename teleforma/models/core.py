@@ -225,6 +225,8 @@ class Professor(Model):
     courses         = ManyToManyField('Course', related_name="professor",
                                         verbose_name=_('courses'),
                                         blank=True, null=True)
+    department      = ForeignKey('Department', related_name='professors',
+                                 verbose_name=_('department'))
 
     def __unicode__(self):
         if self.user.first_name and self.user.last_name:

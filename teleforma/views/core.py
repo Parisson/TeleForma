@@ -718,6 +718,7 @@ class ProfessorListView(View):
                     if course:
                         if not course[0] in professor.courses.all():
                             professor.courses.add(course[0])
+                professor.department = department
                 professor.save()
                 professors_new.append(professor)
                 #print professor
@@ -726,6 +727,11 @@ class ProfessorListView(View):
         for professor in professors:
             if not professor in professors_new:
                 professor.delete()
+
+    @jsonrpc_method('teleforma.get_dep_professor')
+    def get_dep_professors(request, id):
+        department = Department.objects.get(id=id)
+        return [p.to_json_dict() for p in Professor.objects.filter(department=department)]
 
 
 class HelpView(TemplateView):
