@@ -712,13 +712,12 @@ class ProfessorListView(View):
                 user.email = professor_dict['email']
                 user.save()
 
-                professor, c = Professor.objects.get_or_create(user=user)
+                professor, c = Professor.objects.get_or_create(user=user, department=department)
                 for course_code in professor_dict['courses']:
                     course = Course.objects.filter(code=course_code)
                     if course:
                         if not course[0] in professor.courses.all():
                             professor.courses.add(course[0])
-                professor.department = department
                 professor.save()
                 professors_new.append(professor)
                 #print professor
