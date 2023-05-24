@@ -236,7 +236,8 @@ class Professor(Model):
             return self.user.username
 
     def to_json_dict(self):
-        data = {'username': self.user.username,
+        data = {'id': self.id,
+                'username': self.user.username,
                 'first_name': self.user.first_name,
                 'last_name': self.user.last_name,
                 'email' : self.user.email,
