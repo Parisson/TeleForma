@@ -208,6 +208,7 @@ class PeriodAccessMixin(View):
         return [period.name for period in Period.objects.filter(department=department)]
 
     def pull(request, organization_name):
+        from teleforma.models import Organization, Department
         organization = Organization.objects.get(name=organization_name)
         departments = Department.objects.filter(organization=organization)
         periods_new = []
