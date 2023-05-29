@@ -223,12 +223,12 @@ class PeriodAccessMixin(View):
                         period, c = Period.objects.get_or_create(
                                         name=period_dict['name'],
                                         department=department)
-                        period_new.append(period)
+                        periods_new.append(period)
                         print(period)
 
         # cleanup
         for period in Period.objects.all():
-            if not period in period_new:
+            if not period in periods_new:
                 period.delete()
 
 
