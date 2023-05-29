@@ -365,7 +365,7 @@ class PeriodAccessMixin(View):
     @jsonrpc_method('teleforma.get_period_list')
     def get_period_list(request, department_id):
         department = Department.objects.get(id=department_id)
-        return [period.name for period in Period.objects.filter(department=department)]
+        return [period.name for period in Period.objects.filter(department=department, is_open=True)]
 
 
 class CourseAccessMixin(PeriodAccessMixin):
