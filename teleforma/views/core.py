@@ -219,12 +219,11 @@ class PeriodAccessMixin(View):
             remote_list = s.teleforma.get_period_list(department.id)
             if remote_list['result']:
                 for period_dict in remote_list['result']:
-                    if period_dict["is_open"] == "true":
-                        period, c = Period.objects.get_or_create(
-                                        name=period_dict['name'],
-                                        department=department)
-                        period_new.append(period)
-                        print(period)
+                    period, c = Period.objects.get_or_create(
+                                    name=period_dict['name'],
+                                    department=department)
+                    period_new.append(period)
+                    print(period)
 
         # cleanup
         for period in Period.objects.all():
