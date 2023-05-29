@@ -215,7 +215,7 @@ class PeriodAccessMixin(View):
         for department in departments:
             url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
-            remote_list = s.teleforma.get_period_list(department.name)
+            remote_list = s.teleforma.get_period_list(department.id)
             if remote_list['result']:
                 for period_dict in remote_list['result']:
                     if period_dict["is_open"] == "true":
