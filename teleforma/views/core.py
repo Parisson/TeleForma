@@ -207,6 +207,29 @@ class PeriodAccessMixin(View):
         department = Department.objects.get(id=department_id)
         return [period.name for period in Period.objects.filter(department=department)]
 
+    def pull(request, organization_name):
+        organization = Organization.objects.get(name=organization_name)
+        departments = Department.objects.filter(organization=organization)
+        periods_new = []
+
+        for department in departments:
+            url = 'https://' + department.domain + '/json/'
+            s = ServiceProxy(url)
+            remote_list = s.teleforma.get_period_list(department.name)
+            if remote_list['result']:
+                for period_dict in remote_list['result']:
+                    if period_dict["is_open"] == "true":
+                        period, c = Period.objects.get_or_create(
+                                        name=period_dict['name'],
+                                        department=department)
+                        period_new.append(period)
+                        print(period)
+
+        # cleanup
+        for period in Period.objects.all():
+            if not period in period_new:
+                period.delete()
+
 
 class CourseAccessMixin(PeriodAccessMixin):
 
