@@ -216,11 +216,12 @@ class PeriodAccessMixin(View):
         for department in departments:
             url = 'https://' + department.domain + '/json/'
             s = ServiceProxy(url)
-            remote_list = s.teleforma.get_period_list(department.id)
+            remote_list = s.teleforma.get_period_list(department.name)
+            print(remote_list)
             if remote_list['result']:
-                for period_dict in remote_list['result']:
+                for period_name in remote_list['result']:
                     period, c = Period.objects.get_or_create(
-                                    name=period_dict['name'],
+                                    name=period_name,
                                     department=department)
                     periods_new.append(period)
                     print(period)
