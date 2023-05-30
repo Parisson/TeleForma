@@ -408,6 +408,8 @@ class WebclassRecord(models.Model):
     bbb_server = models.ForeignKey(
         'BBBServer', related_name='webclass_records', verbose_name='Serveur BBB', on_delete=models.CASCADE)
     created = models.DateTimeField("Date de la conférence", auto_now_add=True)
+    session = models.CharField(
+        _('session'), choices=session_choices, max_length=16, blank=True, null=True)
 
     WEBCLASS = 'WC'
     CORRECTION = 'CC'
@@ -433,10 +435,12 @@ class WebclassRecord(models.Model):
     @staticmethod
     def get_records(period, course):
         record_ids = set()
+        records_mapping = {}
         # id : category mapping
         category_mapping = {}
         for record in WebclassRecord.objects.filter(period=period, course=course):
             record_ids.add(record.record_id)
+            records_mapping[record.record_id] = record
             category_mapping[record.record_id] = record.category
         if not record_ids:
             return {}
@@ -445,9 +449,9 @@ class WebclassRecord(models.Model):
         # group records by category
         categories = {}
         for record in records:
+            record['obj'] = records_mapping.get(record['id'])
             category = category_mapping[record['id']]
             if category not in categories:
                 categories[category] = []
             categories[category].append(record)
-
         return categories
