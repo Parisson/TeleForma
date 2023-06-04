@@ -117,7 +117,7 @@ MEDIA_URL = 'http://localhost:8040/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/var/www/static/'
+STATIC_ROOT = '/srv/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -401,7 +401,13 @@ def show_user_as(user):
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
-ALLOWED_HOSTS = ['localhost', 'ae.dockdev.pilotsystems.net', 'channels']
+ALLOWED_HOSTS = [
+    'localhost', 
+    'ae.dockdev.pilotsystems.net', 
+    'channels',
+    'staging.docker.e-learning.ae.pre-barreau.parisson.com',
+    'e-learning.ae.pre-barreau.com'
+]
 
 JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",

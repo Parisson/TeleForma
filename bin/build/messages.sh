@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker-compose run app bash /srv/bin/build/local/messages.sh
+docker compose exec app bash /srv/bin/build/local/messages.sh
