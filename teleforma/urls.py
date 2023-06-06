@@ -43,13 +43,13 @@ from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordContextMixin,
                                        PasswordResetCompleteView,
                                        PasswordResetConfirmView,
-                                       PasswordResetDoneView,
-                                       PasswordResetView)
+                                       PasswordResetDoneView)
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import cache_page
 from jsonrpc import jsonrpc_site
 
 from teleforma.views.home import HomeView
+from teleforma.views.password import TFPasswordResetConfirmView, TFPasswordResetView
 
 from .views.appointment import Appointments, cancel_appointment
 from .views.core import (ChatMessageView, ConferenceListView, ConferenceView, CourseListView,
@@ -121,11 +121,11 @@ urlpatterns = [
     url(r'^accounts/password_change_done/$', PasswordChangeDoneView.as_view(
         template_name='registration/password_change_done.html'), name="password_change_done"),
 
-    url(r'^accounts/password_reset/$', PasswordResetView.as_view(template_name='registration/password_reset_form.html',
+    url(r'^accounts/password_reset/$', TFPasswordResetView.as_view(template_name='registration/password_reset_form.html',
                                                                  email_template_name='registration/password_reset_email.html'), name="teleforma-password-reset"),
     url(r'^accounts/password_reset_done/$', PasswordResetDoneView.as_view(
         template_name='registration/password_reset_done.html'), name="password_reset_done"),
-    path('accounts/password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
+    path('accounts/password_reset_confirm/<uidb64>/<token>/', TFPasswordResetConfirmView.as_view(
         template_name='registration/password_reset_confirm.html'), name="teleforma-password-reset-confirm"),
     url(r'^accounts/password_reset_complete/$', PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
         name="password_reset_complete"),
