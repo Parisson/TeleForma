@@ -578,14 +578,20 @@ class CourseView(CourseAccessMixin, DetailView):
         context['webclass_not_over'] = webclass and webclass.is_not_over()
 
         records = {}
+        period = context['period']
+        shared_records = {}
         try:
-            records = WebclassRecord.get_records(context['period'], course)
+            records = WebclassRecord.get_records(period, course)
+            if period.correction_copies_from and course.correction_copies_shared:
+                shared_records = WebclassRecord.get_records(period.correction_copies_from, course)
         except Exception as e:
             print(e)
             context['webclass_error'] = True
         context['webclass_records'] = records.get(WebclassRecord.WEBCLASS)
-        context['webclass_corrections_records'] = records.get(WebclassRecord.CORRECTION)
-
+        context['webclass_corrections_records'] = records.get(WebclassRecord.CORRECTION, [])
+        if shared_records:
+            context['webclass_corrections_records'].extend(shared_records.get(WebclassRecord.CORRECTION, []))
+            context['webclass_corrections_records'] = sorted(context['webclass_corrections_records'], key=lambda w:w['start_date'])
         return context
 
     @method_decorator(access_required)
