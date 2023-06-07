@@ -140,9 +140,14 @@ def get_trainings(user):
 def get_course_conferences(period, course, course_type, status_min=3):
     conferences = []
     already_added = set()
+
+    periods = [period,]
+
+    if period.corrections_from and course.corrections_shared and course_type.id == settings.CORRECTIONS_COURSE_TYPE_ID:
+        periods.append(period.corrections_from)
     # get conference publications
     publications = ConferencePublication.objects.filter(
-        period=period,
+        period__in=periods,
         conference__course=course,
         conference__course_type=course_type,
         status__gte=status_min).distinct()
@@ -150,10 +155,11 @@ def get_course_conferences(period, course, course_type, status_min=3):
         conferences.append(publication.conference)
         already_added.add(publication.conference.id)
 
-    cc = Conference.objects.filter(period=period,
+    cc = Conference.objects.filter(period__in=periods,
         course=course,
         course_type=course_type,
-        status__gte=status_min)
+        status__gte=status_min).distinct()
+
     for conference in cc:
         # do not include conferences with publication rules
         if conference.id not in already_added:
@@ -579,19 +585,13 @@ class CourseView(CourseAccessMixin, DetailView):
 
         records = {}
         period = context['period']
-        shared_records = {}
         try:
             records = WebclassRecord.get_records(period, course)
-            if period.correction_copies_from and course.correction_copies_shared:
-                shared_records = WebclassRecord.get_records(period.correction_copies_from, course)
         except Exception as e:
             print(e)
             context['webclass_error'] = True
         context['webclass_records'] = records.get(WebclassRecord.WEBCLASS)
         context['webclass_corrections_records'] = records.get(WebclassRecord.CORRECTION, [])
-        if shared_records:
-            context['webclass_corrections_records'].extend(shared_records.get(WebclassRecord.CORRECTION, []))
-            context['webclass_corrections_records'] = sorted(context['webclass_corrections_records'], key=lambda w:w['start_date'])
         return context
 
     @method_decorator(access_required)

@@ -540,6 +540,9 @@ WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"
 ENABLE_CHAT = True
 CHAT_LIMIT_HOURS = 48
 
+# use to share correction doc / media accross different training
+CORRECTIONS_COURSE_TYPE_ID = 2
+
 
 ##################
 # LOCAL SETTINGS #
