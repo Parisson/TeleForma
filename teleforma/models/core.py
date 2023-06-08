@@ -946,6 +946,7 @@ class Conference(Displayable, WebclassMixin, ProductCodeMixin, SuggestionsMixin)
                                     help_text="Affiché sur la page formation du shop",
                                     null=True, 
                                     blank=True) 
+    animation_text          = models.CharField("Text d'animation", help_text="Affiché au dessus de l'intervenant, par exemple 'formation animée par'", max_length=1024, blank=True, null=True)
     plan                    = tinymce.models.HTMLField("Plan détaillé", 
                                                 help_text="Affiché sur la page formation du shop. Ajouter dans le code source &lt;div class=\"break\"&gt;&lt;/div&gt; pour choisir ou couper la colonne.",
                                                 null=True, 
