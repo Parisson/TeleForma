@@ -451,9 +451,14 @@ def chat_room(context, period=None, course=None):
 @register.simple_tag(takes_context=True)
 def course_docs_by_type(context):
     course = context['course']
+    period = context['period']
+    periods = [period,]
+
+    if period.corrections_from and course.corrections_shared and context['type'].id == settings.CORRECTIONS_COURSE_TYPE_ID:
+        periods.append(period.corrections_from)
     docs = course.document.filter(is_published=True,
-                                  periods__in=(context['period'],),
-                                  course_type=context['type'])
+                                  periods__in=periods,
+                                  course_type=context['type']).distinct()
     res = []
     by_types = defaultdict(list)
     for doc in docs:

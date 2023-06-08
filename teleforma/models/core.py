@@ -189,12 +189,18 @@ class Period(models.Model):
         _("date de fin d'examens"), null=True, blank=True)
     nb_script = models.IntegerField(
         _("nombre maximal de copies"), null=True, blank=True)
+    nb_script_per_session = models.IntegerField(
+        "nombre maximal de copies par session", default=1)
     date_close_accounts = models.DateField(
         "date de fermeture des comptes étudiants", null=True, blank=True)
     date_inscription_start = models.DateField(
         "date d'ouverture des inscriptions", null=True, blank=True)
     date_inscription_end = models.DateField(
         "date de fermeture des inscriptions", null=True, blank=True)
+    corrections_from = models.ForeignKey('Period', 
+                                        verbose_name="Récupérer les séminaires de correction depuis", 
+                                        help_text="Permet d'afficher les séminaires de corrections d'une autre période. Il faut aussi cocher la case relative dans les matières pour autoriser celles-ci à partager leur contenu.", 
+                                        blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
@@ -265,6 +271,9 @@ class Course(models.Model):
     periods = models.ManyToManyField('Period', related_name="courses",
                                      verbose_name=u'Périodes associées',
                                      blank=True)
+    corrections_shared = models.BooleanField("Corrections partagés", 
+                                            help_text="A utiliser avec le champ relatif dans la période.",
+                                            default=False)
 
     def __str__(self):
         return self.title
