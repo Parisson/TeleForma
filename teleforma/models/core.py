@@ -189,6 +189,8 @@ class Period(models.Model):
         _("date de fin d'examens"), null=True, blank=True)
     nb_script = models.IntegerField(
         _("nombre maximal de copies"), null=True, blank=True)
+    nb_script_per_session = models.IntegerField(
+        "nombre maximal de copies par session", default=1)
     date_close_accounts = models.DateField(
         "date de fermeture des comptes étudiants", null=True, blank=True)
     date_inscription_start = models.DateField(
