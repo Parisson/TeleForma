@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
         f = open(path, 'w')
         period = Period.objects.get(name=period_name)
-        s+ = "prenom,nom,login,pass\n"
+        s = "prenom,nom,login,pass\n"
 
         for user in User.objects.all():
             profile = Profile.objects.filter(user=user)
