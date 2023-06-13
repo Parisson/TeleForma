@@ -36,8 +36,8 @@ class Command(BaseCommand):
                         student.period == period and \
                         not student.platform_only:
                     data = []
-                    data.append(user.first_name)
-                    data.append(user.last_name)
+                    data.append(slugify(user.first_name))
+                    data.append(slugify(user.last_name))
                     data.append(p.wifi_login)
                     data.append(p.wifi_pass)
                     s += ','.join(data)+'\n'
