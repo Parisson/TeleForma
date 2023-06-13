@@ -16,6 +16,10 @@
                 {% endif %}
                 <dt>{% trans "Begin" %}</dt>
                 <dd>{{ record.start_date }}</dd>
+                {% if record.obj.session %}
+                <dt>{% trans "Session" %}</dt>
+                <dd>{{ record.obj.session }}</dd>
+                {% endif %}
             </dl>
         </div>
     </td>
