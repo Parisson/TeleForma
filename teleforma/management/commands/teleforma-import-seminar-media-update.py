@@ -194,7 +194,7 @@ class Command(BaseCommand):
                     #                        rank=seminar_rank, period=period)
                     #print([s.id for s in ss])
                     
-                    print(course, seminar_rank, period)
+                    #print(course, seminar_rank, period)
                     seminar, c = Seminar.objects.get_or_create(course=course,
                                             rank=seminar_rank, period=period,
                                             magistral=False)
@@ -204,8 +204,8 @@ class Command(BaseCommand):
                         seminar.save()
                     
                     # if not item.file == path and not items_webm:
-                    logger.logger.info(seminar.public_url())
-                    logger.logger.info(path)
+                    #logger.logger.info(seminar.public_url())
+                    #logger.logger.info(path)
 
                     # cleanup old media
                     #print(delete)
@@ -241,6 +241,7 @@ class Command(BaseCommand):
                             filename, extension = os.path.splitext(file)
                             if extension[1:] in self.image_formats:
                                 media.poster_file = r_path
+                                print(r_path)
                             elif extension[1:] in self.transcoded_formats and not extension[1:] in self.original_format:
                                 transcoded, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
                             elif extension[1:] == 'kdenlive':
@@ -289,7 +290,9 @@ class Command(BaseCommand):
                                 seminar.save()
 
         for s in seminars:
-            print('https://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id}))
+            url = 'https://' + self.site.domain + reverse('teleforma-seminar-detail', kwargs={'pk': s.id})
+            print(url)
+            logger.logger.info(url)
 
         log = open(log_file, 'r')
         log_txt = log.read()
