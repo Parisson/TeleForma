@@ -560,8 +560,10 @@ class MediaTranscoded(Model):
     def __str__(self):
         if self.item.title:
             return self.item.title + ' - ' + self.mime_type
-        else:
+        elif self.item.public_id:
             return self.item.public_id + ' - ' + self.mime_type
+        else:
+            return "no public id nor media title"
 
     class Meta(MetaCore):
         db_table = app_label + '_media_transcoded'
