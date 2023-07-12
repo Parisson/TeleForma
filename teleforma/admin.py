@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pbcart.models import Cart
 from teleforma.utils.unicode import UnicodeWriter
 from teleforma.models import *
 from teleforma.templatetags.teleforma_tags import fancy_duration_shop_like, fancy_seconds
@@ -45,6 +46,17 @@ class UserProfileAdmin(UserAdmin):
     list_filter = ['is_staff', 'is_superuser', 'is_active', 'date_joined']
 
     actions = ['export_user_profiles']
+
+    def save_model(self, request, obj, form, change):
+        auditor = obj.auditor.get()
+        # remove conference / seminars from user draft cart
+        carts = Cart.objects.filter(user=obj, status=Cart.STATE_DRAFT)
+        for cart in carts:
+            for item in cart.items.all():
+                if item.content in auditor.seminars.all() or item.content in auditor.conferences.all():
+                    item.delete()
+
+        super().save_model(request, obj, form, change)
 
     def export_user_profiles(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
