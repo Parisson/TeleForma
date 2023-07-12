@@ -82,6 +82,9 @@
       openTab($(this).attr('href'));
     })
     openTab($('.tab-link:not(.disabled)').last().attr('href'));
+
+    $('.multipart-next').bind('click', goNext)
+    $('.multipart-previous').bind('click', goPrevious)
   });
 
 
@@ -95,9 +98,33 @@
     $("a[href="+tab+"]").addClass('active');
     $(tab).show().addClass("active");
     $(tab + "-index").show();
+
+    $('.multipart-next, .multipart-previous').attr('disabled', false)
+    var next = $('.tab-link.active').next(':not(.disabled)')
+    if(next.length)
+      $('.multipart-next').show()
+    else
+      $('.multipart-next').hide()
+    var previous = $('.tab-link.active').prev();
+    if(previous.length)
+      $('.multipart-previous').show()
+    else
+      $('.multipart-previous').hide()
     
   }
 
+  function goNext() {
+    var next = $('.tab-link.active').next(':not(.disabled)')
+    if(next.length)
+      openTab(next.first().attr('href'));
+  }
+  function goPrevious() {
+    var previous = $('.tab-link.active').prev();
+    console.log("previous", previous)
+    console.log("previous", previous[0])
+    if(previous.length)
+      openTab(previous.first().attr('href'));
+  }
 
   $(window).ready(function () {
     {% if user.is_staff %}
@@ -275,6 +302,11 @@
         </div>
       {% endif %}
 
+    </div>
+
+    <div class="prev-next-buttons">
+      <input type="button" value="Précédent" class="multipart-previous" />
+      <input type="button" value="Suivant" class="multipart-next" />
     </div>
   </div>
 

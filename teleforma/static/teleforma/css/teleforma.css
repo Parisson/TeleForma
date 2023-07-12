@@ -2255,6 +2255,12 @@ form .exceed{
 .multipart-tabs .disabled {
     pointer-events: none;
 }
+.multipart .multipart-previous {
+    float:left;
+}
+.multipart .multipart-next {
+    float:right;
+}
 .tab-content {
   display: none;
   padding: 6px 12px;
