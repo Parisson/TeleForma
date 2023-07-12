@@ -267,11 +267,11 @@ class Seminar(ClonableMixin, Displayable, ProductCodeMixin, SuggestionsMixin):
                 for item in source.all():
                     destination.add(item)
 
-        for question in self.question.all():
+        for question in self.question.order_by('id'):
             question_clone = question.clone()
             question_clone.seminar = clone
             question_clone.save()
-        for part in self.parts.all():
+        for part in self.parts.order_by('id'):
             parts_clone = part.clone(from_period, to_period)
             parts_clone.seminar = clone
             parts_clone.save()
