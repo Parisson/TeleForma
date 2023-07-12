@@ -172,6 +172,12 @@ class Command(BaseCommand):
                 # convert StringIO to BytesIO
                 bytes_output = io.BytesIO(output.getvalue().encode('utf-8'))
                 ftp.storbinary("STOR export-orders%s.csv" % str(date.today()), bytes_output)
+
+                # check existence of file in "errors" folder
+                ftp.cwd(self.FTP_PATH + '/error')
+                files = ftp.nlst()
+                if files:
+                    self.log("Error : there's a file in the FTP 'error' directory. Something went wrong in the last export. Please check the error file on the FTP.")
                 ftp.quit()
             except:
                 ftp.close()
