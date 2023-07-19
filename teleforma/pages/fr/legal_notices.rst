@@ -28,4 +28,4 @@ Parisson SARL - au capital de 1000 euros - 16 rue Jacques Louvel-Tessier F-75010
 Contact administratif
 =====================
 
-`admin-crfpa@pre-barreau.com <mailto:admin-crfpa@pre-barreau.com>`_
+`crfpa@pre-barreau.com <mailto:crfpa@pre-barreau.com>`_

@@ -43,4 +43,4 @@ Vous pouvez à tout moment réinitialiser votre mot de passe personnel depuis l'
 Support
 ========
 
-Pour les questions relatives à votre formation, vos supports de cours, vos agendas, des problèmes techniques veuillez contacter l'administration (admin-CRFPA dans la messagerie) ou bien par mail à l'adresse suivante : `admin-crfpa@pre-bareau.com <mailto:admin-crfpa@pre-barreau.com>`_
+Pour les questions relatives à votre formation, vos supports de cours, vos agendas, des problèmes techniques veuillez contacter l'administration (admin-CRFPA dans la messagerie) ou bien par mail à l'adresse suivante : `crfpa@pre-barreau.com <mailto:crfpa@pre-barreau.com>`_
