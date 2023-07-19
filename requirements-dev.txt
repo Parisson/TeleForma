@@ -1,2 +1,0 @@
-ipdb==0.13.8
-django-debug-toolbar

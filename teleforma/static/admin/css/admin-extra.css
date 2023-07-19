@@ -1,0 +1,31 @@
+@media screen and (max-width: 2200px) {
+  .related-widget-wrapper .selector-available,
+  .related-widget-wrapper .selector-chosen {
+    width: 100%;
+    float: none;
+  }
+  .related-widget-wrapper ul.selector-chooser {
+    float: none;
+    margin: auto;
+    width: 48px;
+  }
+
+  .related-widget-wrapper .selector-chooser li {
+    display: inline-block;
+    width: 24px;
+  }
+
+  .related-widget-wrapper .selector-add {
+    background: url(../img/selector-icons.svg) 0 -32px no-repeat;
+  }
+  .related-widget-wrapper .selector-add:hover {
+    background-position: 0 -48px;
+  }
+
+  .related-widget-wrapper .selector-remove {
+    background: url(../img/selector-icons.svg) 0 0px no-repeat;
+  }
+  .related-widget-wrapper .selector-remove:hover {
+    background-position: 0 -16px;
+  }
+}
