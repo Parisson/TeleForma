@@ -148,7 +148,7 @@ class StudentAdmin(admin.ModelAdmin):
     exclude = ['options', 'training']
     filter_horizontal = ['trainings']
     inlines = [PaymentInline, OptionalFeeInline, DiscountInline, PaybackInline]
-    search_fields = ['user__first_name', 'user__last_name', 'user__username']
+    search_fields = ['user__first_name', 'user__last_name', 'user__username', 'receipt_id' ]
     list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
                    TrainingsFilter, 'iej', 'procedure', 'written_speciality', 'oral_speciality',
                    'oral_1', 'oral_2', 'fascicule', BalanceFilter]
