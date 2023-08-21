@@ -454,6 +454,10 @@ class Testimonial(models.Model):
             title = ' - '.join([self.user.first_name + ' ' + self.user.last_name, str(date)])
 
         return title
+    
+    def download_url(self):
+        url = reverse('teleforma-seminar-testimonial-download', kwargs={'pk':self.seminar.id})
+        return "%s%s" % (settings.TELEFORMA_MASTER_HOST, url)
 
     def save(self, **kwargs):
         if not self.title:
