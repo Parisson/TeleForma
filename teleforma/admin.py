@@ -164,37 +164,10 @@ class MediaAdmin(admin.ModelAdmin):
 class ConferenceAdmin(admin.ModelAdmin):
     exclude = ['readers', 'keywords']
     search_fields = ['public_id', 'id', 'title']
-    # filter_vertical = ['docs_description',
-    #                    'suggested_seminars', 'suggested_conferences']
+    autocomplete_fields = ['docs_description',
+                           'suggested_seminars', 'suggested_conferences']
     actions = ['export_conference']
 
-    def render_change_form(self, request, context, *args, **kwargs):
-        """
-        Filter queryset to improve performance
-        """
-        instance = context.get('original')
-        current_year = date.today().year
-        years = (str(current_year), str(current_year - 1))
-        current_values = []
-        if instance:
-            current_values = [doc.id for doc in instance.docs_description.all()]
-        context['adminform'].form.fields['docs_description'].queryset = Document.objects.filter(
-            Q(period__name__in=years) | 
-            Q(id__in=current_values)
-        )
-        # if instance:
-        #     current_values = [doc.id for doc in instance.suggested_seminars.all()]
-        # context['adminform'].form.fields['suggested_seminars'].queryset = Seminar.objects.filter(
-        #     Q(private=2) | 
-        #     Q(id__in=current_values)
-        # )
-        # if instance:
-        #     current_values = [doc.id for doc in instance.suggested_conferences.all()]
-        # context['adminform'].form.fields['suggested_conferences'].queryset = Conference.objects.filter(
-        #     Q(status=2) | 
-        #     Q(id__in=current_values)
-        # )
-        return super(ConferenceAdmin, self).render_change_form(request, context, *args, **kwargs)
 
     def export_conference(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
@@ -220,6 +193,9 @@ class ConferenceAdmin(admin.ModelAdmin):
 
     export_conference.short_description = "Exporter les conferences"
 
+    class Media:
+        css = { 'all': ('admin/extra.css',) }
+
 
 class SeminarQuestionInline(admin.StackedInline):
     model = Question
@@ -235,47 +211,13 @@ class SeminarAdmin(admin.ModelAdmin):
     # filter_vertical = ['docs_description', 'docs_1',
     #                    'docs_2', 'docs_correct', 'medias',
     #                    'suggested_seminars', 'suggested_conferences']
+    autocomplete_fields = ['docs_description', 'docs_1', 'docs_2', 'docs_correct', 'medias', 'media_preview', 'suggested_seminars', 'suggested_conferences', 'quiz', 'conference']
     ordering = ['course', 'rank']
     search_fields = ['course__title', 'title', 'sub_title']
     list_filter = ('period', 'publish_date', 'expiry_date')
     actions = ['clone_seminars', 'export_seminar']
-    raw_id_fields = [ 'media_preview',
-                      'quiz', 'conference']
-
-    def render_change_form(self, request, context, *args, **kwargs):
-        """
-        Filter queryset to improve performance
-        """
-        instance = context.get('original')
-        current_year = date.today().year
-        years = (str(current_year), str(current_year - 1))
-        # Documents
-        for fieldname in ('docs_description', 'docs_1', 'docs_2', 'docs_correct'):
-            current_values = []
-            if instance:
-                current_values = getattr(instance, fieldname).all()
-            context['adminform'].form.fields[fieldname].queryset = Document.objects.filter(
-                Q(period__name__in=years) | 
-                Q(id__in=[doc.id for doc in current_values])
-            )
-
-        # Medias
-        current_values = []
-        if instance:
-            current_values = instance.medias.all()
-        context['adminform'].form.fields['medias'].queryset = Media.objects.filter(
-            Q(date_modified__gte=datetime.date(current_year - 1, 1, 1)) | 
-            Q(id__in=[media.id for media in current_values])
-        )
-        preview_id = None
-        if instance and instance.media_preview:
-            preview_id = instance.media_preview.id
-        context['adminform'].form.fields['media_preview'].queryset = Media.objects.filter(
-            Q(date_modified__gte=datetime.date(current_year - 1, 1, 1)) | 
-            Q(id=preview_id)
-        )
-        
-        return super(SeminarAdmin, self).render_change_form(request, context, *args, **kwargs)
+    # raw_id_fields = [ 'media_preview',
+    #                   'quiz', 'conference']
 
     def clone_seminars(self, request, queryset):
         log = ""
