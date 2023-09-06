@@ -1,3 +1,7 @@
+:root {
+  --border-color: #aaa;
+}
+
 @media screen and (max-width: 2200px) {
   .related-widget-wrapper .selector-available,
   .related-widget-wrapper .selector-chosen {

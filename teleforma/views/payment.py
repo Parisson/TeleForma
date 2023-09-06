@@ -9,7 +9,7 @@ import hashlib
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.mail import send_mail
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
