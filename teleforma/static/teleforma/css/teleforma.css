@@ -3318,11 +3318,13 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     padding: 0;
 }
 #content .home-text h2 {
-    background-color: #355ea2;
+    /* background-color: #355ea2; */
+    background: repeat url(/static/teleforma/images/tw_hd.png) 0 0;
     border-top-left-radius: 5px;
     color: white;
     margin: 0;
-    padding: 8px;
+    font-size: 1.1em;
+    padding: 10px;
 }
 #content .home-text p {
     padding-left: 0.8em;
