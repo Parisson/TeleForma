@@ -3312,5 +3312,20 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 }
 
 
-
-
+#content .home-text {
+    border: 1px solid #505050;
+    box-shadow: 2px 2px 9px -2px #505050;
+    padding: 0;
+}
+#content .home-text h2 {
+    /* background-color: #355ea2; */
+    background: repeat url(/static/teleforma/images/tw_hd.png) 0 0;
+    border-top-left-radius: 5px;
+    color: white;
+    margin: 0;
+    font-size: 1.1em;
+    padding: 10px;
+}
+#content .home-text p {
+    padding-left: 0.8em;
+}
