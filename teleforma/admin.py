@@ -48,7 +48,10 @@ class UserProfileAdmin(UserAdmin):
     actions = ['export_user_profiles']
 
     def save_model(self, request, obj, form, change):
-        auditor = obj.auditor.get()
+        try:
+            auditor = obj.auditor.get()
+        except Auditor.DoesNotExist:
+            super().save_model(request, obj, form, change)
         # remove conference / seminars from user draft cart
         carts = Cart.objects.filter(user=obj, status=Cart.STATE_DRAFT)
         for cart in carts:
