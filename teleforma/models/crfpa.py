@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
    teleforma
@@ -34,6 +33,7 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 """
 
+import re
 import datetime
 
 from django.conf import settings
@@ -323,9 +323,12 @@ class Student(models.Model):
             return datetime.date(year, month, 1) - oneday
 
         payments = None
+        period_name = period.name
+        if re.match('^.* 20[0-9][0-9]$', period_name):
+            period_name = period_name[:-5]
         # Full or partial ?
         if self.payment_schedule == 'split':
-            if period.name in ('Semestrielle', 'Annuelle', 'Annuelle progressive'):
+            if period_name in ('Semestrielle', 'Annuelle', 'Annuelle progressive'):
                 part = int(total * 0.25)
                 remaining = total - 3 * part
                 payments = ((remaining, tomorrow),)
@@ -341,7 +344,7 @@ class Student(models.Model):
                         # look at 01/m+1 and then remove one day
                         date = endofmonth(tomorrow.year + 1, month)
                         payments += ((part, date),)
-            elif period.name == 'Estivale':
+            elif period_name == 'Estivale':
                 part = int(total * 0.35)
                 remaining = total - 2 * part
                 payments = ((remaining, tomorrow),)
@@ -365,14 +368,14 @@ class Student(models.Model):
 
         # Handle oral date
         oral_date = None
-        if period.name in ('Semestrielle', 'Annuelle', 'Annuelle progressive'):
+        if period_name in ('Semestrielle', 'Annuelle', 'Annuelle progressive'):
             if tomorrow.month <= 6:                    
                 # Late registration
                 oral_date = endofmonth(tomorrow.year, 6)
             else:
                 # Normal registration
                 oral_date = endofmonth(tomorrow.year + 1, 6)
-        elif period.name == 'Estivale':
+        elif period_name == 'Estivale':
             if tomorrow.month >= 6:
                 # Late registration
                 oral_date = endofmonth(tomorrow.year, max(tomorrow.month, 8))
