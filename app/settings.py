@@ -14,7 +14,7 @@ sys.dont_write_bytecode = True
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-DEBUG_TOOLBAR = True
+DEBUG_TOOLBAR = False
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
