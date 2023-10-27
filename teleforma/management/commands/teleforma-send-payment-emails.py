@@ -6,8 +6,10 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.utils import translation
 from teleforma.models import *
+import re
 import logging
 import datetime
+import time
 from django.core.exceptions import ObjectDoesNotExist
 
 class Logger:
@@ -46,7 +48,19 @@ class Command(BaseCommand):
         logger = Logger(log_file)
         logger.logger.info('########### Processing #############')
 
-        period = Period.objects.get(name=period_name)
+        cur_year = time.strftime('%Y')
+        
+        all_periods = Period.objects.all()
+        periods = []
+        for period in all_periods:
+            name = period.name
+            if re.match('^.* 20[0-9][0-9]$', name):
+                year = name[-4:]
+                if year >= cur_year:
+                    name = name[:-5]
+            if name == period_name:
+                periods.append(period)
+        logger.logger.info('##### Will handle periods %s' % ', '.join([ str(p) for p in periods ]))
         students = Student.objects.all()
         translation.activate(self.language_code)
 
@@ -59,7 +73,7 @@ class Command(BaseCommand):
                 logger.logger.warning('missing user object for %s' % student.pk)
                 continue
             
-            if student.is_subscribed and user.email and student.period == period and user.is_active :
+            if student.is_subscribed and user.email and student.period in periods and user.is_active :
                 for payment in student.payments.filter(type = 'online').exclude(online_paid = True).filter(scheduled__lte = today):
                     if payment.scheduled == today:
                         self.email(student, 'initial', payment)
