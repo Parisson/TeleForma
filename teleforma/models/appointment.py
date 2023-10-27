@@ -220,7 +220,8 @@ class AppointmentSlot(models.Model):
     def nb_jurys_to_show(self):
         min = 100
 
-        for groupslot in AppointmentSlot.objects.filter(date=self.date, mode=self.mode).all():
+        for groupslot in AppointmentSlot.objects.filter(date=self.date, mode=self.mode,
+                                                        appointment_period = self.appointment_period).all():
             for slot in groupslot.slots:
                 for i, jury in enumerate(slot['jurys']):
                     if jury['available']:
