@@ -14,7 +14,7 @@ sys.dont_write_bytecode = True
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-DEBUG_TOOLBAR = True
+DEBUG_TOOLBAR = False
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -103,7 +103,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media/')
+MEDIA_ROOT = "/srv/media/"
 
 if not os.path.exists(MEDIA_ROOT):
 	os.mkdir(MEDIA_ROOT)
@@ -111,13 +111,13 @@ if not os.path.exists(MEDIA_ROOT):
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://localhost:8040/'
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/var/www/static/'
+STATIC_ROOT = '/srv/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -401,7 +401,13 @@ def show_user_as(user):
 POSTMAN_SHOW_USER_AS = show_user_as
 
 #THUMBNAIL_FORCE_OVERWRITE = True
-ALLOWED_HOSTS = ['localhost', 'ae.dockdev.pilotsystems.net', 'channels']
+ALLOWED_HOSTS = [
+    'localhost', 
+    'ae.dockdev.pilotsystems.net', 
+    'channels',
+    'staging.docker.e-learning.ae.pre-barreau.parisson.com',
+    'e-learning.ae.pre-barreau.com'
+]
 
 JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",
