@@ -22,7 +22,7 @@ debug_log='/var/log/app/debug.log'
 # /srv/bin/build/local/setup_lib.sh
 
 # waiting for other services
-sh $app/wait.sh
+#sh $app/wait.sh
 
 # django setup
 #python $manage wait-for-db
@@ -43,7 +43,7 @@ else
 
     python $manage collectstatic --noinput
 
-    chown -R www-data: $debug_log
+    chown -R www-data: /var/log
 
     uwsgi /srv/app/wsgi.ini
 fi
