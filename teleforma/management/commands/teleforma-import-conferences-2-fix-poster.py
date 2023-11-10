@@ -75,7 +75,7 @@ class Command(BaseCommand):
                                 # POSTER
                                 for file in files:
                                     filename, extension = os.path.splitext(file)
-                                    if extension[1:] in self.image_formats:
+                                    if extension[1:] in self.image_formats and not media.poster_file:
                                         media.poster_file = dir + os.sep + file
                                         logger.logger.info(media.poster_file)
                                         break
