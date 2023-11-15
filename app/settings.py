@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 warnings.showwarning = lambda *x: None
 
 ADMINS = (
-    ('Guillaume Pellerin', 'webmaster@parisson.com'),
+    ('Guillaume Pellerin', 'yomguyparisson@gmail.com'),
     ('Gael le Mignot', 'gael@pilotsystems.net'),
     #    ('Admin CRFPA', 'admin-crfpa@pre-barreau.com'),
 )
@@ -366,7 +366,7 @@ PAYMENT_PARAMETERS = { 'merchantId' : "002001000000003",
                       }
 SHERLOKS_USE_TRANSACTION_ID = True
 
-LOGGING = {
+GGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -381,18 +381,32 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': "/var/log/app.log",
+            'filename': "/var/log/app/app.log",
             'formatter': 'simple',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
         'payment': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },
+        'websocket': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
+
 
 
 def show_user_as(user):
