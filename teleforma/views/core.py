@@ -244,6 +244,10 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
 
 
 def serve_media(media_path, content_type="", buffering=True, streaming=False):
+    try:
+        media_path = media_path.decode('utf-8')
+    except:
+        pass
     if not content_type:
         content_type = guess_mimetypes(media_path)
 
@@ -268,75 +272,6 @@ def nginx_media_accel(media_path, content_type="", buffering=True, streaming=Fal
     filename = os.path.basename(media_path)
     if not streaming:
         response['Content-Disposition'] = "attachment; filename=%s" % (filename)
-    response['Content-Type'] = content_type
-    response['X-Accel-Redirect'] = url
-
-    if not buffering:
-        response['X-Accel-Buffering'] = 'no'
-        #response['X-Accel-Limit-Rate'] = 524288
-
-    return response
-
-
-def serve_media(media_path, content_type="", buffering=True, streaming=False):
-    if not settings.DEBUG:
-        return nginx_media_accel(media_path, content_type=content_type,
-                                 buffering=buffering, streaming=streaming)
-    else:
-        try:
-            pass
-            #response = FileResponse(open(media_path, 'rb'))
-        except:    
-            response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
-        filename = os.path.basename(media_path)
-        if not streaming:
-            response['Content-Disposition'] = 'attachment; ' + \
-                'filename=' + filename
-        return response
-
-
-def nginx_media_accel(media_path, content_type="", buffering=True, streaming=False):
-    """Send a protected media file through nginx with X-Accel-Redirect"""
-
-    response = HttpResponse()
-    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
-    filename = os.path.basename(media_path)
-    if not streaming:
-        response['Content-Disposition'] = "attachment; filename=%s" % (filename)
-    response['Content-Type'] = content_type
-    response['X-Accel-Redirect'] = url
-
-    if not buffering:
-        response['X-Accel-Buffering'] = 'no'
-        #response['X-Accel-Limit-Rate'] = 524288
-
-    return response
-
-
-def serve_media(media_path, content_type="", buffering=True, streaming=False):
-    if not settings.DEBUG:
-        return nginx_media_accel(media_path, content_type=content_type,
-                                 buffering=buffering, streaming=streaming)
-    else:
-        try:
-            response = FileResponse(open(media_path, 'rb'))
-        except:    
-            response = StreamingHttpResponse(stream_from_file(media_path), content_type=content_type)
-        filename = os.path.basename(media_path)
-        if not streaming:
-            response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
-        return response
-
-
-def nginx_media_accel(media_path, content_type="", buffering=True, streaming=False):
-    """Send a protected media file through nginx with X-Accel-Redirect"""
-
-    response = HttpResponse()
-    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
-    filename = os.path.basename(media_path)
-    if not streaming:
-        response['Content-Disposition'] = "attachment; filename=%s" % (
-            filename)
     response['Content-Type'] = content_type
     response['X-Accel-Redirect'] = url
 
