@@ -31,6 +31,12 @@ MANAGERS = ADMINS
 
 ASGI_APPLICATION = "teleforma.ws.routing.application"
 
+ALLOWED_HOSTS = [
+    'localhost',
+    'staging.docker.e-learning.ae.pre-barreau.parisson.com',
+    'e-learning.ae.pre-barreau.com',
+    'ae.dockdev.pilotsystems.net',
+]
 
 INTERNAL_IPS = ['127.0.0.1', ]
 
@@ -410,8 +416,8 @@ ALLOWED_HOSTS = [
 ]
 
 JAZZMIN_SETTINGS = {
-    "site_title": "CRFPA",
-    "site_header": "CRFPA",
+    "site_title": "AE",
+    "site_header": "Avocats étrangers",
     "site_logo": "teleforma/images/logo_pb.png",
 
     # # Links to put along the top menu
