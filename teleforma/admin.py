@@ -189,7 +189,7 @@ else:
         search_fields = ['user__first_name', 'user__last_name', 'user__username']
         list_filter = ['user__is_active', 'restricted', 'is_subscribed', 'platform_only', PeriodListFilter,
                         'fascicule', BalanceFilter ]
-        list_display = ['student_name', 'restricted', 'platform_only',
+        list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
                         'total_payments', 'total_fees', 'balance', 'balance_intermediary']
         readonly_fields = [ 'balance', 'balance_intermediary' ]
         actions = ['export_xls', 'write_message', 'add_to_group']
