@@ -8,8 +8,6 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, mail_admins
 from django.utils import translation
-from telemeta.models import *
-from telemeta.util.unaccent import unaccent
 from teleforma.models import *
 import logging
 from postman import *
@@ -41,12 +39,16 @@ class Command(BaseCommand):
         message = render_to_string(self.message_template, ctx_dict)
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
-        log_file = args[-1]
+        log_file = args[0]
         logger = Logger(log_file)
 
         users = User.objects.all()
         translation.activate(self.language_code)
+        logger.logger.info('ok')
         for user in users:
             profile, c = Profile.objects.get_or_create(user=user)
             student = user.student.all()
@@ -54,7 +56,7 @@ class Command(BaseCommand):
             if student or professor:
                 if profile and user.is_active:
                     if not profile.init_password and user.email:
-                        self.init_password_email(user)
+                        #self.init_password_email(user)
                         profile.init_password = True
-                        profile.save()
+                        #profile.save()
                         logger.logger.info(user.username)
