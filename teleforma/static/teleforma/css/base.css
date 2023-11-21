@@ -433,9 +433,9 @@ form.login .submit {
 
 /* Main navigation bar  (borrowed from Trac) */
 #menu {
-    background-color: #6a0307 ;
+    background-color: #000 ;
     font: normal verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
-    border-top: .25em solid #6a0307;
+    border-top: 0em solid #6a0307;
     padding-left:26px;
 }
 
@@ -445,7 +445,7 @@ form.login .submit {
     text-decoration:none;
     border-bottom-width:.5em;
     border-bottom-style: solid;
-    background-color: #6a0307;
+    background-color: #000;
     -webkit-border-top-left-radius:5px 5px;
     moz-border-radius-topleft: 5px 5px;
     border-top-left-radius: 5px 5px;
@@ -458,7 +458,7 @@ form.login .submit {
 }
 #menu a:hover, #menu a.active{
     background-color: #FFF;
-    color: #6a0307;
+    color: #000;
 }
 
 #menu .darkblue { border-bottom-color: #0f3179; }
