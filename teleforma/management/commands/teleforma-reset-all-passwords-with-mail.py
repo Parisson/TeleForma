@@ -39,6 +39,9 @@ class Command(BaseCommand):
         message = render_to_string(self.message_template, ctx_dict)
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         log_file = args[-1]
         period_name = args[-2]

@@ -39,6 +39,7 @@ class Command(BaseCommand):
         message = render_to_string(message_template, ctx_dict)
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [student.user.email], fail_silently=False)
 
+
     def handle(self, *args, **options):
         log_file = options['log_file']
         logger = Logger(log_file)
