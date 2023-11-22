@@ -713,10 +713,8 @@ class ConferenceView(CourseAccessMixin, DetailView):
             app_label="teleforma", model="course")
 
         room_name = conference.course.code
-
-        context['room'] = get_room(name=room_name, period=context['period'].name,
-                                   content_type=content_type,
-                                   id=conference.course.id)
+        # if conference.web_class_group:
+        #     room_name += '_' + conference.public_id
 
         context['livestreams'] = conference.livestream.all()
         context['host'] = get_host(self.request)
@@ -728,22 +726,68 @@ class ConferenceView(CourseAccessMixin, DetailView):
 
     @jsonrpc_method('teleforma.stop_conference')
     def stop(request, public_id):
-        conference = Conference.objects.get(public_id=public_id)
-        conference.date_end = datetime.datetime.now()
-        conference.save()
-        for stream in conference.livestream.all():
-            stream.delete()
-        for station in conference.station.all():
-            station.started = False
-            station.save()
-            station.stop()
-        if 'telecaster' in settings.INSTALLED_APPS:
-            try:
-                url = 'http://' + conference.department.domain + '/json/'
-                s = ServiceProxy(url)
-                s.teleforma.stop_conference(conference.public_id)
-            except:
-                pass
+            conference = Conference.objects.get(public_id=public_id)
+            conference.date_end = datetime.datetime.now()
+            conference.save()
+            for stream in conference.livestream.all():
+                stream.delete()
+            if 'telecaster' in settings.INSTALLED_APPS:
+                for station in conference.station.all():
+                    station.started = False
+                    station.save()
+                    station.stop()
+                    try:
+                        url = 'https://' + conference.department.domain + '/json/'
+                        s = ServiceProxy(url)
+                        s.teleforma.stop_conference(conference.public_id)
+                    except:
+                        pass
+
+    @jsonrpc_method('teleforma.create_conference')
+    def create(request, conf_dict):
+        if isinstance(conf_dict, dict):
+            conferences = Conference.objects.filter(public_id=conf_dict['id'])
+            if not conferences:
+                conference = Conference()
+                conference.from_json_dict(conf_dict)
+                conference.save()
+                if conference.streaming:
+                    for stream in conf_dict['streams']:
+                        host = getattr(
+                            settings, "TELECASTER_LIVE_STREAMING_SERVER", stream['host'])
+                        protocol = getattr(
+                            settings, "TELECASTER_LIVE_STREAMING_PROTOCOL", 'http')
+                        server_type = stream['server_type']
+                        stream_type = stream['stream_type']
+                        if server_type == 'icecast':
+                            port = getattr(
+                                settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", '8000')
+                            path = getattr(
+                                settings, "TELECASTER_LIVE_ICECAST_STREAMING_PATH", '/')
+                        elif server_type == 'stream-m':
+                            port = getattr(
+                                settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", '8080')
+                            path = getattr(
+                                settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PATH", '/')
+                        #site = Site.objects.all()[0]
+                        server, c = StreamingServer.objects.get_or_create(
+                            protocol=protocol,
+                            host=host,
+                            port=port,
+                            path=path,
+                            type=server_type)
+                        stream = LiveStream(conference=conference, server=server,
+                                            stream_type=stream_type, streaming=True)
+                        stream.save()
+
+                    if not conference.web_class_group and settings.TELECASTER_LIVE_TWEETER:
+                        try:
+                            site = get_current_site(request)
+                            live_message(site, conference)
+                        except:
+                            pass
+        else:
+            raise 'Error : input must be a conference dictionnary'
 
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
