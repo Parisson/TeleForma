@@ -598,10 +598,12 @@ class LiveStream(models.Model):
 
     @property
     def url(self):
-        if self.server.type == 'stream-m':
-	        return 'https://' + self.server.host + '/stream/video/consume/' + self.slug
-        else:
-            return 'https://' + self.server.host + '/stream/audio/' + self.slug
+        server = self.server.host
+        if settings.TELECASTER_LIVE_RANDOM_SERVERS:
+            servers = settings.TELECASTER_LIVE_STREAMING_SERVERS
+            server = random.choice(servers)
+        return self.server.protocol + '://' + server + ':' + self.server.port + \
+                self.server.path + self.mount_point
 
     def __str__(self):
         if self.conference:
