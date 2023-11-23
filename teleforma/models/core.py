@@ -545,8 +545,10 @@ class StreamingServer(models.Model):
 
     element_type = 'streamingserver'
 
+    protocol = models.CharField(_('protocol'), max_length=16, blank=True)
     host = models.CharField(_('host'), max_length=255)
     port = models.CharField(_('port'), max_length=32)
+    path = models.CharField(_('path'), max_length=256, blank=True)
     type = models.CharField(_('type'), choices=server_choices, max_length=32)
     description = models.CharField(
         _('description'), max_length=255, blank=True)
@@ -555,7 +557,7 @@ class StreamingServer(models.Model):
         _('admin password'), max_length=32, blank=True)
 
     def __str__(self):
-        return self.host + ':' + self.port + ' - ' + self.type
+        return self.protocol + '://' + self.host + ':' + self.port + self.path + ' - ' + self.type
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'streaming_server'
