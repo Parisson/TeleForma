@@ -89,7 +89,7 @@ class UserForm(ModelForm):
     portrait = ImageField(widget=FileInput(attrs={'accept': "image/*;capture=camera"}), required=True,
                           help_text="Veuillez utiliser une photo au format d'identité.")
     level = ChoiceField(label=_('Studying level'), choices=LEVEL_CHOICES)
-    iej = ModelChoiceField(label='IEJ',
+    iej = ModelChoiceField(label="Niveau d'étude - IEJ",
                            queryset=IEJ.objects.all())
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
