@@ -30,7 +30,7 @@
 
     <h1>{% if mode_corrector %}Pré-inscription des correcteurs - PRÉ-BARREAU -
         CRFPA{% else %}{% trans "Pre-registration" %} -
-        Formation CRFPA - Le pré-barreau{% endif %}</h1>
+        Formation de préparation au CRFPA - Le pré-barreau{% endif %}</h1>
 
     {{ introduction|safe }}
 
@@ -48,7 +48,7 @@
             {% with field=form|get_item:fieldname %}
             <div class="info_champs">
                 <label for="id_{{ field.name }}">
-                    {{ field.label }} {% if field.field.required %}<span class="required">*</span>{% endif %}
+                    {{ field.label }} {% if field.field.required and mode_corrector %}<span class="required">*</span>{% endif %}
                 </label>
                 <span class="helptext">
                     {{ field.help_text }}
@@ -73,7 +73,9 @@
             {% with field=form|get_item:fieldname %}
             <div class="info_champs">
                 <label for="id_{{ field.name }}">
-                    {{ field.label }} {% if field.field.required %}<span class="required">*</span>{% endif %}
+                    {{ field.label }}
+                    {% if field.field.required and mode_corrector %}<span class="required">*</span>{% endif %}
+                    {% if field.name == 'iej' %}<span class="required">*</span>{% endif %}
                 </label>
                 <span class="helptext">
                     {{ field.help_text }}
@@ -87,7 +89,12 @@
             {% endfor %}
         </div>
     </fieldset>
-    <span class="error">* Champs obligatoires</span>
+
+    {% if mode_corrector %}
+        <span class="error">* Champs obligatoires</span>
+    {% else %}
+        <span class="error">* Conditions nécessaires pour présenter le CRFPA</span>
+    {% endif %}
 
     <div class="submit-panel">
         <div>
