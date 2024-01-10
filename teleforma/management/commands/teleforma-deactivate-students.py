@@ -40,17 +40,23 @@ class Command(BaseCommand):
         logger.logger.info('########### Processing #############')
 
         today = datetime.date.today()
-        students = Student.objects.filter(period=period)
+        students = Student.objects.all()
         translation.activate(self.language_code)
 
         for student in students:
-            if student.user:
-                if student.is_subscribed and student.confirmation_sent and \
-                    student.user.email and student.user.is_active and \
-                    student.period.date_close_accounts <= today:
-
-                    student.user.is_active = False
-                    student.user.save()
-                    logger.logger.info('deactivated : ' + student.user.username)
+            print(student)
+            try:
+                if student.user.email and student.user.is_active:
+                    if student.period:
+                        if student.period.date_close_accounts <= today:
+                            student.user.is_active = False
+                            student.user.save()
+                            logger.logger.info('deactivated : ' + student.user.username)
+                    else:
+                        student.user.is_active = False
+                        student.user.save()
+                        logger.logger.info('deactivated : ' + student.user.username)
+            except:
+                continue
 
         logger.logger.info('############## Done #################')
