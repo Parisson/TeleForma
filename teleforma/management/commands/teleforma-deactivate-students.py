@@ -44,7 +44,7 @@ class Command(BaseCommand):
         translation.activate(self.language_code)
 
         for student in students:
-            print(student)
+            #print(student)
             try:
                 if student.user.email and student.user.is_active:
                     if student.period:
