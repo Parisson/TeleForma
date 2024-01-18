@@ -1448,7 +1448,7 @@ msgstr "Index vidéo"
 #: templates/teleforma/seminar_testimonial.html:28
 #: templates/teleforma/testimonials.html:63
 msgid "Training testimonial"
-msgstr "Attestation de formation"
+msgstr "Attestation de fin de formation"
 
 #: templates/teleforma/seminar_testimonial.html:34
 #: templates/teleforma/seminar_testimonial_knowledge.html:34
