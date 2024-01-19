@@ -158,7 +158,7 @@ class UserForm(ModelForm):
 
         # resize image
         img = Image.open(image.file)
-        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.LANCZOS)
         if new_image.mode == "RGBA":
             new_image = new_image.convert("RGB")
 
