@@ -22,7 +22,7 @@ mysqlclient==2.0.3
 numpy==1.20.3
 pymemcache==3.4.4
 requests
-sorl-thumbnail==12.7.0
+sorl-thumbnail==12.10.0
 unidecode==1.2.0
 weasyprint==52.5
 xlrd==2.0.1
