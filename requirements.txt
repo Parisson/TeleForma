@@ -3,7 +3,7 @@ channels==3.0.4
 channels_redis==3.4.0
 docutils==0.17.1
 daphne==3.0.2
-Django==3.2.13
+Django==3.2.23
 djangorestframework==3.13.1
 django-debug-toolbar==3.2.1
 dj_pagination==2.5.0 # used by postman
