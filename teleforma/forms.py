@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
 from io import BytesIO
 
 from captcha.fields import ReCaptchaField
@@ -13,6 +12,7 @@ from django.forms import (BooleanField, CharField, ChoiceField, DateField,
                           ModelMultipleChoiceField)
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import datetime
 from PIL import Image
 from postman.fields import BasicCommaSeparatedUserField
 from postman.forms import WriteForm as PostmanWriteForm
@@ -93,8 +93,8 @@ class UserForm(ModelForm):
                            queryset=IEJ.objects.all())
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
-                                                             date_inscription_start__lte=datetime.datetime.now(),
-                                                             date_inscription_end__gte=datetime.datetime.now()))
+                                                             date_inscription_start__lte=datetime.today(),
+                                                             date_inscription_end__gte=datetime.today()))
     platform_only = forms.ChoiceField(choices=TRAINING_TYPE,
                                       label='Type de formation',
                                       widget=forms.Select())
@@ -158,7 +158,7 @@ class UserForm(ModelForm):
 
         # resize image
         img = Image.open(image.file)
-        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.ANTIALIAS)
+        new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.LANCZOS)
         if new_image.mode == "RGBA":
             new_image = new_image.convert("RGB")
 
@@ -252,8 +252,8 @@ class CorrectorForm(ModelForm):
     # corrector
     period = ModelChoiceField(label='Période',
                               queryset=Period.objects.filter(is_open=True,
-                                                             date_inscription_start__lte=datetime.datetime.now(),
-                                                             date_inscription_end__gte=datetime.datetime.now()))
+                                                             date_inscription_start__lte=datetime.today(),
+                                                             date_inscription_end__gte=datetime.today()))
     pay_status = forms.ChoiceField(choices=PAY_STATUS_CHOICES,
                                    label='Statut',
                                    widget=forms.Select())
