@@ -683,9 +683,12 @@ class MediaView(CourseAccessMixin, DetailView):
     def stream(self, request, period_id, pk, streaming=True):
         courses = get_courses(request.user)
         media = Media.objects.get(id=pk)
-        if get_access(media, courses):
-            media_path = media.file.path
-            return serve_media(media_path, content_type=media.mime_type, streaming=streaming)
+        referer = request.META.get('HTTP_REFERER')
+        media_detail_url = request.build_absolute_uri(reverse("teleforma-media-detail", kwargs={"period_id": period_id, "pk": media.id}))
+        #print(referer)
+        #print(media_detail_url)
+        if get_access(media, courses) and referer == media_detail_url:
+            return serve_media(media.file.path, content_type=media.mime_type, streaming=streaming)
         else:
             raise Http404("You don't have access to this media.")
 
