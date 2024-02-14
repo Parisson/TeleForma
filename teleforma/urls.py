@@ -156,7 +156,7 @@ urlpatterns = [
         CourseView.as_view(),
         name="teleforma-desk-period-course"),
 
-
+    # Media
     url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/detail/$',
         MediaTranscodedView.as_view(), name="teleforma-media-transcoded"),
     url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/download/$',
