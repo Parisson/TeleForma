@@ -106,7 +106,11 @@ $(document).ready(function(){
         data-setup='{"playbackRates": [1, 1.25, 1.5, 2]}'
         {% if media.poster_file %}{% thumbnail media.poster_file '640' as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}
         >
-        <source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
+        {% if value_from_settings DEBUG %}
+            <source src="{{ media_url }}{{ media.file }}" type="{{ media.mime_type }}" />
+        {% else %}
+            <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" />
+        {% endif %}
         <p class="vjs-no-js">
           To view this video please enable JavaScript, and consider upgrading to a
           web browser that
@@ -143,7 +147,11 @@ $(document).ready(function(){
 </div>
 <div class="audio">
     <audio controls preload="auto">
-        <source src="{{ MEDIA_URL }}{{ media.file }}" type="{{ media.mime_type }}" />
+        {% if value_from_settings DEBUG %}
+            <source src="{{ media_url }}{{ media.file }}" type="{{ media.mime_type }}" />
+        {% else %}
+            <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" />
+        {% endif %}
     </audio>
 </div>
 {% endif %}
