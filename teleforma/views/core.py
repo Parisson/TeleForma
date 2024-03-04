@@ -729,7 +729,7 @@ class ProfessorListView(View):
             s = ServiceProxy(url)
             remote_list = s.teleforma.get_professor_list()
             for professor_dict in remote_list['result']:
-                user, c = User.objects.get_or_create(username=professor_dict['username'])
+                user, c = User.objects.get_or_create(username=professor_dict['username'][:30])
                 user.first_name = professor_dict['first_name']
                 user.last_name = professor_dict['last_name']
                 user.email = professor_dict['email']
