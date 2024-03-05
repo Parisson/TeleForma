@@ -19,7 +19,7 @@ class Command(BaseCommand):
         domain = args[2]
 
         organization = Organization.objects.get(name=organization_name)
-        department = Department.objects.get_or_create(
+        department, c = Department.objects.get_or_create(
             organization=organization,
             name=name,
             domain=domain
