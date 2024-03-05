@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         organization_name = args[0]
         name = args[1]
-        domain = arg[2]
+        domain = args[2]
 
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get_or_create(
