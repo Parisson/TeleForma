@@ -346,4 +346,11 @@ class RetractationForm(ModelForm):
     class Meta:
         model = Student
         fields = ['stop_retractation']
+
+    def save(self, commit=True):
+        student = super(RetractationForm, self).save(commit=False)
+        student.stop_retractation_date = datetime.now()
+        if commit:
+            student.save()
+        return student
         

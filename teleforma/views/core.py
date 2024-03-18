@@ -598,8 +598,6 @@ class CourseView(CourseAccessMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         
         # redirect to a retractation page if the student has paid in the 14 last days
-        print(args)
-        print(kwargs)
         student = None
         # import pdb;pdb.set_trace()
         try:
@@ -611,11 +609,10 @@ class CourseView(CourseAccessMixin, DetailView):
                 two_week_ago = None
                 two_week_ago = datetime.datetime.now() - datetime.timedelta(days=14)
                 old_payments = student.payments.filter(date_paid__lt=two_week_ago).count()
-                print(old_payments)
                 if old_payments:
-                    pass
-                    # student.stop_retractation = True
-                    # student.save()
+                    student.stop_retractation = True
+                    student.stop_retractation_date = datetime.datetime.now()
+                    student.save()
                 else:
                     payment_in_retractation_period = student.payments.filter(date_paid__gte=two_week_ago).count()
                     if payment_in_retractation_period:

@@ -775,19 +775,12 @@ class RetractationView(CourseAccessMixin, DetailView, UpdateView):
     model = Course
     form_class = RetractationForm
     template_name = 'teleforma/retractation.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(RetractationView, self).get_context_data(**kwargs)
-        return context
     
     def get_form_kwargs(self):
         kwargs = super(RetractationView, self).get_form_kwargs()
         kwargs['instance'] = self.request.user.student.get()
         return kwargs
-    
-    def post(self, request, *args, **kwargs):
-        return FormView.post(self, request, *args, **kwargs)
-    
+        
     def get_success_url(self):
         return reverse_lazy('teleforma-desk-period-course', kwargs = {'pk': self.kwargs['pk'], 'period_id': self.kwargs['period_id']})
 
