@@ -1,0 +1,24 @@
+{% extends "teleforma/courses.html" %}
+{% load i18n %}
+{% load teleforma_tags %}
+
+{% block courses %}
+{% for c in all_courses %}
+  {% with c.course as course %}
+   <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
+  {% endwith %}
+ {% endfor %}
+{% endblock courses %}
+
+{% block course %}
+
+<form action="" method="POST" id="retractation-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="submit" value="Valider" />
+</form>
+{% endblock course %}
+
+{% block chat %}
+{% endblock chat %}

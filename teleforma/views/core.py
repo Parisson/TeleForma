@@ -596,6 +596,31 @@ class CourseView(CourseAccessMixin, DetailView):
 
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
+        
+        # redirect to a retractation page if the student has paid in the 14 last days
+        print(args)
+        print(kwargs)
+        student = None
+        # import pdb;pdb.set_trace()
+        try:
+            student = self.request.user.student.get()
+        except Student.DoesNotExist:
+            pass
+        if student and student.total_fees and not student.stop_retractation:
+            if student.total_fees:
+                two_week_ago = None
+                two_week_ago = datetime.datetime.now() - datetime.timedelta(days=14)
+                old_payments = student.payments.filter(date_paid__lt=two_week_ago).count()
+                print(old_payments)
+                if old_payments:
+                    pass
+                    # student.stop_retractation = True
+                    # student.save()
+                else:
+                    payment_in_retractation_period = student.payments.filter(date_paid__gte=two_week_ago).count()
+                    if payment_in_retractation_period:
+                        return HttpResponseRedirect(reverse('teleforma-desk-period-course-retractation', kwargs={'period_id': kwargs['period_id'], 'pk': kwargs['pk']}))
+            
         return super(CourseView, self).dispatch(*args, **kwargs)
 
     @jsonrpc_method('teleforma.get_course_media_urls')

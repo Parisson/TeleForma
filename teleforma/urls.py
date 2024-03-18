@@ -63,7 +63,7 @@ from .views.crfpa import (AnnalsCourseView, AnnalsIEJView, AnnalsView,
                           CRFPAProfileView, NewsItemCreate, NewsItemDelete,
                           NewsItemList, NewsItemUpdate, ReceiptPDFView,
                           ReceiptPDFViewDownload, RegistrationPDFView,
-                          RegistrationPDFViewDownload, UserAddView,
+                          RegistrationPDFViewDownload, RetractationView, UserAddView,
                           UserCompleteView, UserLoginView, UsersExportView,
                           UsersView, WriteView, update_training,
                           UserAddUseYourLawOriginView)
@@ -155,6 +155,9 @@ urlpatterns = [
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/detail/$', 
         CourseView.as_view(),
         name="teleforma-desk-period-course"),
+    url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<pk>.*)/retractation/$', 
+        RetractationView.as_view(),
+        name="teleforma-desk-period-course-retractation"),
 
     # Media
     url(r'^desk/periods/(?P<period_id>.*)/medias/transcode/(?P<pk>.*)/detail/$',

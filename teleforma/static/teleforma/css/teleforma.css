@@ -3329,3 +3329,16 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 #content .home-text p {
     padding-left: 0.8em;
 }
+
+#retractation-form {
+    padding: 20px;
+}
+#retractation-form p, #retractation-form input {
+    margin-left: 20px;
+}
+#retractation-form p {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+    font-weight: bold;
+}

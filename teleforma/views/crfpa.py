@@ -52,7 +52,8 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView, View
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 from django.views.generic.list import ListView
 from postman.forms import AnonymousWriteForm
 from postman.views import WriteView as PostmanWriteView
@@ -60,12 +61,12 @@ from xlwt import Workbook
 from django.conf import settings
 
 from ..decorators import access_required
-from ..forms import (CorrectorForm, NewsItemForm, UserForm, WriteForm,
+from ..forms import (CorrectorForm, NewsItemForm, RetractationForm, UserForm, WriteForm,
                      get_unique_username, UserUseYourLawOriginForm)
 from ..models.core import Course, CourseType, Document, NamePaginator, Period
 from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
                             Payment, Profile, Student, Training, months_choices, payment_choices)
-from ..views.core import (PDFTemplateResponseMixin, format_courses,
+from ..views.core import (CourseAccessMixin, PDFTemplateResponseMixin, format_courses,
                           get_courses, get_periods)
 from ..views.profile import ProfileView
 
@@ -755,7 +756,6 @@ class UserAddUseYourLawOriginView(UserAddView):
     form_class = UserUseYourLawOriginForm
 
 
-
 class UserCompleteView(TemplateView):
 
     template_name = 'registration/registration_complete.html'
@@ -768,6 +768,29 @@ class UserCompleteView(TemplateView):
         student = user.student.all()[0]
         context['period'] = student.period
         return context
+
+
+class RetractationView(CourseAccessMixin, DetailView, UpdateView):
+    
+    model = Course
+    form_class = RetractationForm
+    template_name = 'teleforma/retractation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RetractationView, self).get_context_data(**kwargs)
+        return context
+    
+    def get_form_kwargs(self):
+        kwargs = super(RetractationView, self).get_form_kwargs()
+        kwargs['instance'] = self.request.user.student.get()
+        return kwargs
+    
+    def post(self, request, *args, **kwargs):
+        return FormView.post(self, request, *args, **kwargs)
+    
+    def get_success_url(self):
+        return reverse_lazy('teleforma-desk-period-course', kwargs = {'pk': self.kwargs['pk'], 'period_id': self.kwargs['period_id']})
+
 
 
 class RegistrationPDFView(PDFTemplateResponseMixin, TemplateView):

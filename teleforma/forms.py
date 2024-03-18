@@ -340,3 +340,10 @@ class WriteForm(PostmanWriteForm):
         """compute recipient if 'auto' is set"""
         recipients = self.cleaned_data['recipients']
         return recipients
+
+
+class RetractationForm(ModelForm):
+    class Meta:
+        model = Student
+        fields = ['stop_retractation']
+        
