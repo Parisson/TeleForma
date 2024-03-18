@@ -212,7 +212,7 @@ class Student(models.Model):
                                      unique=True)
 
     payment_generated = models.BooleanField(_('échances générées'), default=False)
-    stop_retractation = models.BooleanField('En accédant à la plateforme et à  donc à son contenu, je renonce à mon droit de rétractation.', default=False)
+    stop_retractation = models.BooleanField('En accédant au contenu de la plateforme, je renonce de ce fait à mon droit de rétractation.', default=False)
 
     def __str__(self):
         try:
