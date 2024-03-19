@@ -154,7 +154,7 @@ class StudentAdmin(admin.ModelAdmin):
                    'oral_1', 'oral_2', 'fascicule', BalanceFilter]
     list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance', 'balance_intermediary']
-    readonly_fields = ['balance', 'balance_intermediary']
+    readonly_fields = ['user', 'balance', 'balance_intermediary']
     actions = ['export_xls', 'write_message', 'add_to_group']
     action_form = StudentGroupForm
 
@@ -162,6 +162,12 @@ class StudentAdmin(admin.ModelAdmin):
         js = (
             'admin/js/admin-teleforma.js',
         )
+
+    def get_fields(self, request, obj=None):
+        fields = super(StudentAdmin, self).get_fields(request, obj)
+        fields.remove('user')
+        fields.insert(0, 'user')
+        return fields
 
     def get_trainings(self, instance):
         return ' - '.join([str(training) for training in instance.trainings.all()])
