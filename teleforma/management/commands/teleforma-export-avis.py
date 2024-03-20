@@ -68,7 +68,10 @@ class Command(BaseCommand):
         for testimonial in testimonials:
             user = testimonial.user
             seminar = testimonial.seminar
-            if testimonial.seminar.course.code == "demo":
+            if not seminar:
+                continue
+            
+            if seminar.course.code == "demo":
                 continue
             # https://mattermost.pilotsystems.net/pro-barreau/pl/twdx8ro6mfbimyr7n31tkpstac
             # testimonials are created before being accessible
