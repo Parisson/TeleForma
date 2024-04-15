@@ -747,7 +747,7 @@ class MediaBase(models.Model):
     date_modified = models.DateTimeField(
         _('date modified'), auto_now=True, null=True)
     code = models.CharField(_('code'), max_length=255, blank=True)
-    is_published = models.BooleanField(_('published'))
+    is_published = models.BooleanField(_('published'), default=False)
     mime_type = models.CharField(_('mime type'), max_length=255, blank=True)
     weight = models.IntegerField(
         _('weight'), choices=WEIGHT_CHOICES, default=1, blank=True)
@@ -831,7 +831,7 @@ class Document(MediaBase):
         super(Document, self).save(**kwargs)
 
     def private_file(self, user):
-        private_document = DocumentPrivate.objects.get_or_create(document=self, user=user)
+        private_document, c = DocumentPrivate.objects.get_or_create(document=self, user=user)
         return private_document.file
 
 
@@ -848,15 +848,16 @@ class DocumentPrivate(MediaBase):
         ordering = ['-date_added']
 
     def save(self, **kwargs):
-        if "pdf" in self.document.mimetype:
+        if "pdf" in self.document.mime_type:
             from pypdf import PdfReader, PdfWriter
             writer = PdfWriter(clone_from=self.document.file.path)
             writer.add_metadata({"/Downloader": self.user.username})
-            name = self.document.file.name
+            name = self.document.file.name.split(os.sep)[-1]
             today = datetime.date.today()
             root = settings.MEDIA_ROOT + "private_documents/%s/%s/%s/" % (today.year, today.month, today.day)
-            os.path.makedirs(root)
-            path = root + user.username + " - " + name
+            if not os.path.exists(root):
+                os.makedirs(root)
+            path = root + self.user.username + " - " + name
             with open(path, "wb") as f:
                 writer.write(f)
             self.file = path
