@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2011-2018 Parisson SARL
-# Copyright (c) 2011-2018 Guillaume Pellerin
+# Copyright (c) 2011-2024 Parisson SARL
+# Copyright (c) 2011-2024 Guillaume Pellerin
 
 # This software is a computer program whose purpose is to backup, analyse,
 # transcode and stream any audio content with its metadata over a web frontend.
@@ -31,6 +31,7 @@
 # knowledge of the CeCILL license and that you accept its terms.
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
+
 import datetime
 import os
 import requests
@@ -818,7 +819,11 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path, streaming=False)
+           if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
+                path = document.private_file.path
+            else:
+                path = document.file.path
+            return serve_media(path, streaming=False)
         else:
             return redirect('teleforma-home')
 
@@ -826,7 +831,11 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-            return serve_media(document.file.path, streaming=True)
+            if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
+                path = document.private_file.path
+            else:
+                path = document.file.path
+            return serve_media(path, streaming=True)
         else:
             return redirect('teleforma-home')
 
@@ -892,6 +901,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
                             settings, "TELECASTER_LIVE_STREAMING_PROTOCOL", 'http')
                         server_type = stream['server_type']
                         stream_type = stream['stream_type']
+
                         if server_type == 'icecast':
                             port = getattr(
                                 settings, "TELECASTER_LIVE_ICECAST_STREAMING_PORT", '8000')
@@ -902,7 +912,6 @@ class ConferenceView(CourseAccessMixin, DetailView):
                                 settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PORT", '8080')
                             path = getattr(
                                 settings, "TELECASTER_LIVE_STREAM_M_STREAMING_PATH", '/')
-                        #site = Site.objects.all()[0]
                         server, c = StreamingServer.objects.get_or_create(
                             protocol=protocol,
                             host=host,
