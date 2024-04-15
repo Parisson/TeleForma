@@ -801,6 +801,13 @@ class Document(MediaBase):
     readers = models.ManyToManyField(User, related_name="document", verbose_name=_('readers'),
                                      blank=True)
 
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'document'
+        ordering = ['-date_added']
+        indexes = [
+            models.Index(fields=['course', 'is_published', '-date_added' ]),
+         ]
+
     def is_image(self):
         is_url_image = False
         if self.url:
@@ -823,12 +830,37 @@ class Document(MediaBase):
         self.set_mime_type()
         super(Document, self).save(**kwargs)
 
+    def private_file(self, user):
+        private_document = DocumentPrivate.objects.get_or_create(document=self, user=user)
+        return private_document.file
+
+
+class DocumentPrivate(MediaBase):
+
+    document = models.ForeignKey('Document', related_name='private_documents', verbose_name=_('document'),
+                                null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="private_documents", verbose_name=_('user'),
+                                null=True, blank=True, on_delete=models.CASCADE)
+    file = models.FileField(_('file'), upload_to='private_documents/%Y/%m/%d', db_column="filename",
+                            max_length=1024, blank=True)
     class Meta(MetaCore):
-        db_table = app_label + '_' + 'document'
+        db_table = app_label + '_' + 'document_private'
         ordering = ['-date_added']
-        indexes = [
-            models.Index(fields=['course', 'is_published', '-date_added' ]),
-         ]
+
+    def save(self, **kwargs):
+        if "pdf" in self.document.mimetype:
+            from pypdf import PdfReader, PdfWriter
+            writer = PdfWriter(clone_from=self.document.file.path)
+            writer.add_metadata({"/Downloader": self.user.username})
+            name = self.document.file.name
+            today = datetime.date.today()
+            root = settings.MEDIA_ROOT + "private_documents/%s/%s/%s/" % (today.year, today.month, today.day)
+            os.path.makedirs(root)
+            path = root + user.username + " - " + name
+            with open(path, "wb") as f:
+                writer.write(f)
+            self.file = path
+        super(DocumentPrivate, self).save(**kwargs)
 
 
 class DocumentSimple(MediaBase):
