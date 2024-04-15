@@ -819,7 +819,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
-           if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
+            if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
                 path = document.private_file.path
             else:
                 path = document.file.path
