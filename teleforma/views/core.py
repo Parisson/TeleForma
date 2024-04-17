@@ -798,7 +798,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
-                path = document.private_file.path
+                path = document.private_file(request.user).path
             else:
                 path = document.file.path
             return serve_media(path, streaming=False)
@@ -810,7 +810,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
-                path = document.private_file.path
+                path = document.private_file(request.user).path
             else:
                 path = document.file.path
             return serve_media(path, streaming=True)
