@@ -176,6 +176,7 @@ urlpatterns = [
     url(r'^desk/periods/(?P<period_id>.*)/medias/(?P<pk>.*)/stream/$',
         media.stream, name="teleforma-media-stream"),
 
+    # Documents
     url(r'^desk/documents/(?P<pk>.*)/detail/$', DocumentView.as_view(),
         name="teleforma-document-detail"),
     url(r'^desk/documents/(?P<pk>.*)/download/$', document.download,
@@ -183,6 +184,7 @@ urlpatterns = [
     url(r'^desk/documents/(?P<pk>.*)/view/$', document.view,
         name="teleforma-document-view"),
 
+    # Annals
     url(r'^archives/annals/$', 
         AnnalsView.as_view(),
         name="teleforma-annals"),
@@ -191,6 +193,7 @@ urlpatterns = [
     url(r'^archives/annals/by-course/(\w+)/$',
         AnnalsCourseView.as_view(), name="teleforma-annals-course"),
 
+    # Conferences
     url(r'^desk/periods/(?P<period_id>.*)/conferences/(?P<pk>.*)/video/$',
         ConferenceView.as_view(),
         name="teleforma-conference-detail"),
