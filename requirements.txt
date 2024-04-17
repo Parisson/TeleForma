@@ -20,7 +20,7 @@ ipython
 jxmlease==1.0.3
 mysqlclient==2.0.3
 numpy==1.20.3
-pypdf=4.2.0
+pypdf==4.2.0
 pymemcache==3.4.4
 requests
 sorl-thumbnail==12.10.0
