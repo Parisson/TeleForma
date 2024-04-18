@@ -7,7 +7,7 @@ CLASSIFIERS = ['Environment :: Web Environment', 'Framework :: Django', 'Intende
 setup(
   name = "TeleForma",
   url = "https://github.com/yomguy/teleforma",
-  description = "open web multimedia e-learning platform",
+  description = "e-learning platform based on streaming",
   long_description = open('README.rst').read(),
   author = "Guillaume Pellerin",
   author_email = "yomguy@parisson.com",
