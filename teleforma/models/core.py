@@ -852,12 +852,14 @@ class DocumentPrivate(MediaBase):
             from pypdf import PdfReader, PdfWriter
             writer = PdfWriter(clone_from=self.document.file.path)
             writer.add_metadata({"/Downloader": self.user.username})
+            writer.add_metadata({"/Publisher": settings.TELEFORMA_ORGANIZATION})
+            writer.add_metadata({"/Copyright": settings.TELEFORMA_ORGANIZATION})
             filename = self.document.file.name.split(os.sep)[-1]
             today = datetime.date.today()
-            root = settings.MEDIA_ROOT + "private_documents/%s/%s/%s/" % (today.year, today.month, today.day)
+            root = settings.MEDIA_ROOT + "private/documents/%s/%s/%s/" % (today.year, today.month, today.day)
             if not os.path.exists(root):
                 os.makedirs(root)
-            path = root + self.user.username + " - " + filename
+            path = root + self.user.username + "--" + filename
             with open(path, "wb") as f:
                 writer.write(f)
             self.file = path
