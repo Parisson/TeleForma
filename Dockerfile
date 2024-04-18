@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3
+FROM python:3.9
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 
@@ -35,19 +35,33 @@ RUN apt-get update && \
     locale-gen && \
     apt-get clean
 
-RUN pip3 install -U pip
-
 ENV LANG fr_FR.UTF-8
 ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
-COPY requirements.txt /srv
-RUN pip3 install -r requirements.txt
+# https://python-poetry.org/docs/configuration/#using-environment-variables
+ENV POETRY_VERSION=1.4.2 \
+    POETRY_NO_INTERACTION=1 \
+    # make poetry install to this location
+    POETRY_HOME="/opt/poetry" \
+    PIP_CACHE_DIR="/root/.cache/pip"
 
-COPY requirements-dev.txt /srv
-ARG dev=0
-RUN if [ "${dev}" = "1" ]; then pip3 install -r requirements-dev.txt; fi
-RUN if [ "${dev}" = "1" ]; then apt-get -y install less nano postgresql-client redis-tools; fi
+ENV PATH="$POETRY_HOME/bin:$PATH"
+
+# # Install poetry - respects $POETRY_VERSION & $POETRY_HOME
+RUN curl -sSL https://install.python-poetry.org | python -
+
+# upgrade pip and pin setuptools
+# RUN pip3 install "setuptools<58.0.0"
+RUN pip3 install -U pip
+# RUN pip3 install setuptools==58
+
+# Disable Poetry's virtualenv (useless in a container)
+RUN poetry config virtualenvs.create false
+
+COPY poetry.lock pyproject.toml /srv/
+
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip poetry install --no-interaction
 
 COPY lib /srv/lib
 COPY bin/build/local/setup_lib.sh /srv
