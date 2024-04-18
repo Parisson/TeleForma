@@ -21,7 +21,6 @@ MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 ENV PYTHONUNBUFFERED 1
 
 RUN mkdir -p /srv/app
-RUN mkdir -p /srv/lib/teleforma
 
 WORKDIR /srv
 
