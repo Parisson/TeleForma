@@ -37,8 +37,8 @@ import os
 import requests
 from html import escape
 from io import BytesIO
+import logging
 
-import weasyprint
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -61,13 +61,14 @@ from django.core.cache import cache
 
 from jsonrpc import jsonrpc_method
 from jsonrpc.proxy import ServiceProxy
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from teleforma.models.crfpa import Home, Student, Training
 from teleforma.models.notification import Notification, notify
 from teleforma.utils import guess_mimetypes
-
 from ..decorators import access_required
 from ..models.appointment import Appointment, AppointmentPeriod
 from ..models.chat import ChatMessage
@@ -79,13 +80,9 @@ from ..models.core import (Conference, ConferencePublication, Course, CourseType
 from ..webclass.models import Webclass, WebclassRecord
 from .pages import get_page_content
 
-import logging
-logger = logging.getLogger('teleforma')
-# def render(request, template, data=None, mimetype=None):
-#     return django_render(template, data, context_instance=RequestContext(request),
-#                          mimetype=mimetype)
+import weasyprint
 
-# CACHE_TIMEOUT = getattr(settings, 'CACHE_TIMEOUT', 60*60)
+logger = logging.getLogger('teleforma')
 
 
 def format_courses(courses, course=None, queryset=None, types=None):

@@ -41,7 +41,6 @@ import string
 import random
 import requests
 import asyncio
-from teleforma.utils import guess_mimetypes
 
 import django.db.models as models
 from django.conf import settings
@@ -54,11 +53,14 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 # from quiz.models import Quiz
-from sorl.thumbnail import default as sorl_default
 
+from teleforma.utils import guess_mimetypes
+from ..fields import ShortTextField
+
+from sorl.thumbnail import default as sorl_default
+from pypdf import PdfWriter
 import httpx
 
-from ..fields import ShortTextField
 
 HAS_TELEMETA = False
 if 'telemeta' in settings.INSTALLED_APPS:
@@ -849,7 +851,6 @@ class DocumentPrivate(MediaBase):
 
     def save(self, **kwargs):
         if "pdf" in self.document.mime_type:
-            from pypdf import PdfReader, PdfWriter
             writer = PdfWriter(clone_from=self.document.file.path)
             writer.add_metadata({"/Downloader": self.user.username})
             writer.add_metadata({"/Publisher": settings.TELEFORMA_ORGANIZATION})
