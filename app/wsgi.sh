@@ -22,7 +22,7 @@ debug_log='/var/log/app/debug.log'
 # /srv/bin/build/local/setup_lib.sh
 
 # waiting for other services
-sh $app/wait.sh
+# sh $app/wait.sh
 
 # django setup
 #python $manage wait-for-db
