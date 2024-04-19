@@ -39,7 +39,7 @@ ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
 # https://python-poetry.org/docs/configuration/#using-environment-variables
-ENV POETRY_VERSION=1.4.2 \
+ENV POETRY_VERSION=1.8.2 \
     POETRY_NO_INTERACTION=1 \
     # make poetry install to this location
     POETRY_HOME="/opt/poetry" \
