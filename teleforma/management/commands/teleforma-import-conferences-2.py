@@ -99,17 +99,10 @@ class Command(BaseCommand):
 
                             files = os.listdir(root)
 
-                            # TRANSCODED MEDIA
-                            for file in files:
-                                filename, extension = os.path.splitext(file)
-                                if extension[1:] in self.transcoded_formats:
-                                    r_path = dir + os.sep + file
-                                    t, c = MediaTranscoded.objects.get_or_create(item=media, file=r_path)
-
                             # POSTER
                             for file in files:
                                 filename, extension = os.path.splitext(file)
-                                if extension[1:] in self.image_formats:
+                                if extension[1:] in self.image_formats and filename in path:
                                     media.poster_file = dir + os.sep + file
                                     break
 
