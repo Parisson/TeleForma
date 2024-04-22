@@ -645,6 +645,15 @@ class Conference(models.Model):
             models.Index(fields=['course', 'course_type', 'period', 'streaming', '-date_begin' ]),
          ]
 
+    def get_absolute_url(self):
+        if self.streaming:
+            return reverse_lazy('teleforma-conference-detail',
+                            kwargs={'pk': self.id, 'period_id': self.period.id})
+        else:
+            media = self.media.all()[0]
+            return reverse_lazy('teleforma-media-detail',
+                            kwargs={'pk': media.id, 'period_id': self.period.id})
+
 
 def notif_conference(sender, instance, *args, **kwargs):
     if not instance.notified_live:
