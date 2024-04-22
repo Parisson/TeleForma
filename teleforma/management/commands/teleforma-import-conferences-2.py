@@ -110,10 +110,10 @@ class Command(BaseCommand):
 
                             if not media.poster_file:
                                 for file in files:
-                                filename, extension = os.path.splitext(file)
-                                if extension[1:] in self.image_formats:
-                                    media.poster_file = dir + os.sep + file
-                                    break
+                                    filename, extension = os.path.splitext(file)
+                                    if extension[1:] in self.image_formats:
+                                        media.poster_file = dir + os.sep + file
+                                        break
 
 
                             media.save()
