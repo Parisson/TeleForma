@@ -51,7 +51,11 @@ class Command(BaseCommand):
                 name = os.path.splitext(filename)[0]
                 ext = os.path.splitext(filename)[1][1:]
 
-                if ext and (ext in self.original_format or ext in self.transcoded_formats) and name[0] != '.':
+                if ext \
+                    and (ext in self.original_format or ext in self.transcoded_formats) \
+                    and name[0] != '.' \
+                    and not "_2.webm" in name:
+
                     root_list = root.split(os.sep)
                     public_id = root_list[-1]
                     course = root_list[-2]
