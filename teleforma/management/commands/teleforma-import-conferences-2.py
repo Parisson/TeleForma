@@ -112,7 +112,7 @@ class Command(BaseCommand):
                             if not media.poster_file:
                                 for file in files:
                                     filename, extension = os.path.splitext(file)
-                                    if extension[1:] in self.image_formats and "_0.webm" in filename:
+                                    if extension[1:] in self.image_formats and not "_2.webm" in filename:
                                         media.poster_file = dir + os.sep + file
                                         break
 
