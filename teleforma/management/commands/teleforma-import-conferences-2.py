@@ -100,15 +100,21 @@ class Command(BaseCommand):
                             files = os.listdir(root)
 
                             # POSTER
-                            poster_file = None
+
+                            # prefer self image
                             for file in files:
                                 filename, extension = os.path.splitext(file)
                                 if extension[1:] in self.image_formats and filename in path:
-                                    poster_file = dir + os.sep + file
-                                    media.poster_file = poster_file
+                                    media.poster_file = dir + os.sep + file
                                     break
-                            if not media.poster_file and poster_file:
-                                media.poster_file = poster_file
+
+                            if not media.poster_file:
+                                for file in files:
+                                filename, extension = os.path.splitext(file)
+                                if extension[1:] in self.image_formats:
+                                    media.poster_file = dir + os.sep + file
+                                    break
+
 
                             media.save()
                             conference.save()
