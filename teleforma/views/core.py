@@ -280,29 +280,30 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-def serve_media(media_path, content_type="", buffering=True, streaming=False):
+def serve_media(file, content_type="", buffering=True, streaming=False):
     if not content_type:
-        content_type = guess_mimetypes(media_path)
+        content_type = guess_mimetypes(file.url)
 
     if not settings.DEBUG:
-        return nginx_media_accel(media_path, content_type=content_type,
+        return nginx_file_accel(file.url, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
         response = StreamingHttpResponse(
-            stream_from_file(media_path), content_type=content_type)
-        filename = os.path.basename(media_path)
+            stream_from_file(file.path), content_type=content_type)
+        filename = os.path.basename(file.path)
         if not streaming:
             response['Content-Disposition'] = 'attachment; ' + \
                 'filename=' + filename
         return response
 
 
-def nginx_media_accel(media_path, content_type="", buffering=True, streaming=False):
+def nginx_media_accel(url, content_type="", buffering=True, streaming=False):
     """Send a protected media file through nginx with X-Accel-Redirect"""
 
     response = HttpResponse()
-    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
-    filename = os.path.basename(media_path)
+    # url = settings.MEDIA_URL + os.path.relpath(file, settings.MEDIA_ROOT)
+    filename = url.split("/")[-1].split("?")[0]
+
     if not streaming:
         response['Content-Disposition'] = "attachment; filename=%s" % (
             filename)
@@ -817,10 +818,10 @@ class DocumentView(CourseAccessMixin, DetailView):
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
-                path = document.private_file(request.user).path
+                file = document.private_file(request.user)
             else:
-                path = document.file.path
-            return serve_media(path, streaming=False)
+                file = document.file
+            return serve_media(file, streaming=False)
         else:
             return redirect('teleforma-home')
 
@@ -829,10 +830,10 @@ class DocumentView(CourseAccessMixin, DetailView):
         document = Document.objects.get(pk=pk)
         if get_access(document, courses):
             if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
-                path = document.private_file(request.user).path
+                file = document.private_file(request.user)
             else:
-                path = document.file.path
-            return serve_media(path, streaming=True)
+                file = document.file
+            return serve_media(file, streaming=True)
         else:
             return redirect('teleforma-home')
 

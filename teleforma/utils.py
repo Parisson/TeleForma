@@ -1,8 +1,5 @@
 import mimetypes
 
-def guess_mimetypes(path):
-    try:
-        path = path.decode()
-    except (UnicodeDecodeError, AttributeError):
-        pass
-    return mimetypes.guess_type(path)[0]
+def guess_mimetypes(url):
+    url = url.split("?")[0]
+    return mimetypes.guess_type(url)[0]
