@@ -39,6 +39,8 @@ redis = "3.5.3"
 uwsgi = "2.0.25.1"
 uvicorn = {version = "0.18.1", extras = ["standard"]}
 httpx = "0.23.3"
+django-storages = {extras = ["s3"], version = "^1.14.2"}
+boto3 = "^1.34.89"
 
 
 [build-system]

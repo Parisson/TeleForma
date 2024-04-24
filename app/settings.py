@@ -136,6 +136,8 @@ MEDIA_ROOT = '/srv/media/'
 #MEDIA_URL = 'http://pre-barreau.com/archives/'
 MEDIA_URL = '/media/'
 
+DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
@@ -210,6 +212,7 @@ INSTALLED_APPS = (
     'pdfannotator',
     'rest_framework',
     'rest_framework.authtoken',
+    'storages',
 )
 
 
@@ -266,6 +269,14 @@ TELEFORMA_EXAM_MAX_SESSIONS = 99
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 31457280
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 TELEFORMA_PRIVATE_DOCUMENTS_MODE = False
+TELEFORMA_PRIVATE_MEDIA_USE_S3 = False
+
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+AWS_STORAGE_BUCKET_NAME=""
+AWS_S3_REGION_NAME=""
+AWS_S3_ENDPOINT_URL=""
+AWS_S3_ENCRYPTION=True
 
 EMAIL_HOST = 'angus.parisson.com'
 DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'

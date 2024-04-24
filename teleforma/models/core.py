@@ -41,10 +41,13 @@ import string
 import random
 import requests
 import asyncio
+import tempfile
 
 import django.db.models as models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.files import File
+from django.core.files.storage import FileSystemStorage
 from django.core.paginator import InvalidPage
 from django.db import models
 from django.forms.fields import FileField
@@ -60,6 +63,8 @@ from ..fields import ShortTextField
 from sorl.thumbnail import default as sorl_default
 from pypdf import PdfWriter
 import httpx
+
+from storages.backends.s3boto3 import S3Boto3Storage
 
 
 HAS_TELEMETA = False
@@ -109,6 +114,12 @@ STATUS_CHOICES = (
 )
 
 WEIGHT_CHOICES = get_nint_choices(5)
+
+
+if settings.TELEFORMA_PRIVATE_MEDIA_USE_S3:
+    private_storage = S3Boto3Storage
+else:
+    private_storage = FileSystemStorage
 
 
 def get_random_hash():
@@ -852,28 +863,29 @@ class DocumentPrivate(MediaBase):
                                 null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="private_documents", verbose_name=_('user'),
                                 null=True, blank=True, on_delete=models.CASCADE)
-    file = models.FileField(_('file'), upload_to='private_documents/%Y/%m/%d', db_column="filename",
-                            max_length=1024, blank=True)
+    file = models.FileField(_('file'), upload_to='private/documents/%Y/%m/%d', db_column="filename",
+                            max_length=1024, blank=True, storage=private_storage)
+
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_private'
         ordering = ['-date_added']
 
     def save(self, **kwargs):
+        temp_file = None
         if "pdf" in self.document.mime_type:
             writer = PdfWriter(clone_from=self.document.file.path)
             writer.add_metadata({"/Downloader": self.user.username})
             writer.add_metadata({"/Publisher": settings.TELEFORMA_ORGANIZATION})
             writer.add_metadata({"/Copyright": settings.TELEFORMA_ORGANIZATION})
             filename = self.document.file.name.split(os.sep)[-1]
-            today = datetime.date.today()
-            root = settings.MEDIA_ROOT + "private/documents/%s/%s/%s/" % (today.year, today.month, today.day)
-            if not os.path.exists(root):
-                os.makedirs(root)
-            path = root + self.user.username + "--" + filename
-            with open(path, "wb") as f:
-                writer.write(f)
-            self.file = path
+            name = self.user.username + "--" + filename
+            temp_file = tempfile.SpooledTemporaryFile()
+            writer.write(temp_file)
+            self.file = File(temp_file, name=name)
         super(DocumentPrivate, self).save(**kwargs)
+        if temp_file:
+            temp_file.close()
+            del temp_file
 
 
 class DocumentSimple(MediaBase):

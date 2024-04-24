@@ -23,7 +23,7 @@ from .exam.admin import QuotaInline
 from .models.appointment import (Appointment, AppointmentJury,
                                  AppointmentPeriod, AppointmentSlot)
 from .models.core import (Conference, ConferencePublication, Course, CourseType, Department, Document,
-                          DocumentSimple, DocumentType, LiveStream, Media,
+                          DocumentSimple, DocumentType, LiveStream, Media, DocumentPrivate,
                           MediaTranscoded, Organization, Period, Professor,
                           Room, StreamingServer)
 from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
@@ -537,6 +537,7 @@ admin.site.register(IEJ)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentSimple)
 admin.site.register(DocumentType)
+admin.site.register(DocumentPrivate)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(Room)
 admin.site.register(User, UserProfileAdmin)
