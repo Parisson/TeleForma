@@ -848,10 +848,10 @@ class DocumentView(CourseAccessMixin, DetailView):
             return redirect('teleforma-home')
 
     def download(self, request, pk):
-        return self.serve(self, request, pk, streaming=False)
+        return self.serve(request, pk, streaming=False)
 
     def view(self, request, pk):
-        return self.serve(self, request, pk, streaming=True)
+        return self.serve(request, pk, streaming=True)
 
 
 class ConferenceView(CourseAccessMixin, DetailView):
