@@ -709,7 +709,7 @@ class MediaView(CourseAccessMixin, DetailView):
             reverse("teleforma-media-detail",
                 kwargs={"period_id": period_id, "pk": media.id}))
         if get_access(media, courses) and referer == media_detail_url:
-            return serve_media(media.file.path, content_type=media.mime_type, streaming=streaming)
+            return serve_media(media.file, content_type=media.mime_type, streaming=streaming)
         else:
             raise Http404("You don't have access to this media.")
 
