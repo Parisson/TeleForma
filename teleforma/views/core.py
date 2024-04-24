@@ -285,7 +285,7 @@ def serve_media(file, content_type="", buffering=True, streaming=False):
         content_type = guess_mimetypes(file.url)
 
     if not settings.DEBUG:
-        return nginx_file_accel(file.url, content_type=content_type,
+        return nginx_media_accel(file.url, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
         response = StreamingHttpResponse(
