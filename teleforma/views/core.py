@@ -280,12 +280,16 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-def serve_media(file, content_type="", buffering=True, streaming=False):
+def serve_media(file, content_type="", buffering=True, streaming=False, bucket=True):
     if not content_type:
         content_type = guess_mimetypes(file.url)
 
     if not settings.DEBUG:
-        return nginx_media_accel(file.url, content_type=content_type,
+        if bucket:
+            url = '/media/bucket/' + file.url.split(settings.AWS_S3_ENDPOINT_URL)[-1]
+        else:
+            url = file.url
+        return nginx_media_accel(url, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
         response = StreamingHttpResponse(
@@ -307,13 +311,14 @@ def nginx_media_accel(url, content_type="", buffering=True, streaming=False):
     if not streaming:
         response['Content-Disposition'] = "attachment; filename=%s" % (
             filename)
+    print(content_type)
     response['Content-Type'] = content_type
     response['X-Accel-Redirect'] = url
 
     if not buffering:
         response['X-Accel-Buffering'] = 'no'
         #response['X-Accel-Limit-Rate'] = 524288
-
+    #print(url)
     return response
 
 
