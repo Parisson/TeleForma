@@ -280,13 +280,13 @@ def render_to_pdf(request, template, context, filename=None, encoding='utf-8',
     return HttpResponse('Errors rendering pdf:<pre>%s</pre>' % escape(content))
 
 
-def serve_media(file, content_type="", buffering=True, streaming=False, bucket=True):
+def serve_media(file, content_type="", buffering=True, streaming=False, bucket=False):
     if not content_type:
         content_type = guess_mimetypes(file.url)
 
     if not settings.DEBUG:
         if bucket:
-            url = '/media/bucket/' + file.url.split(settings.AWS_S3_ENDPOINT_URL)[-1]
+            url = settings.MEDIA_S3_BUCKET + file.url.split(settings.AWS_S3_ENDPOINT_URL)[-1]
         else:
             url = file.url
         return nginx_media_accel(url, content_type=content_type,
@@ -714,7 +714,11 @@ class MediaView(CourseAccessMixin, DetailView):
             reverse("teleforma-media-detail",
                 kwargs={"period_id": period_id, "pk": media.id}))
         if get_access(media, courses) and referer == media_detail_url:
-            return serve_media(media.file, content_type=media.mime_type, streaming=streaming)
+            return serve_media(media.file,
+                content_type=media.mime_type,
+                streaming=streaming,
+                bucket=False,
+                )
         else:
             raise Http404("You don't have access to this media.")
 
@@ -765,7 +769,11 @@ class MediaTranscodedView(CourseAccessMixin, DetailView):
             reverse("teleforma-media-transcoded",
                 kwargs={"period_id": period_id, "pk": media.id}))
         if get_access(media, courses) and referer == media_detail_url:
-            return serve_media(media.file, content_type=media.mime_type, streaming=streaming)
+            return serve_media(media.file,
+                content_type=media.mime_type,
+                streaming=streaming,
+                bucket=False,
+                )
         else:
             raise Http404("You don't have access to this media.")
 
@@ -818,29 +826,32 @@ class DocumentView(CourseAccessMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         return super(DocumentView, self).dispatch(*args, **kwargs)
 
-    def download(self, request, pk):
+    def serve(self, request, pk, streaming=False):
         courses = get_courses(request.user)
         document = Document.objects.get(pk=pk)
+        bucket = False
+
         if get_access(document, courses):
             if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
                 file = document.private_file(request.user)
+                if settings.TELEFORMA_PRIVATE_MEDIA_USE_S3:
+                    bucket = True
             else:
                 file = document.file
-            return serve_media(file, streaming=False)
+
+            return serve_media(
+                file,
+                streaming=streaming,
+                bucket=bucket,
+                )
         else:
             return redirect('teleforma-home')
 
+    def download(self, request, pk):
+        return self.serve(self, request, pk, streaming=False)
+
     def view(self, request, pk):
-        courses = get_courses(request.user)
-        document = Document.objects.get(pk=pk)
-        if get_access(document, courses):
-            if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
-                file = document.private_file(request.user)
-            else:
-                file = document.file
-            return serve_media(file, streaming=True)
-        else:
-            return redirect('teleforma-home')
+        return self.serve(self, request, pk, streaming=True)
 
 
 class ConferenceView(CourseAccessMixin, DetailView):
