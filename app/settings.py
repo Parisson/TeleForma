@@ -7,20 +7,11 @@ import os
 import sys
 import socket
 from django.urls import reverse_lazy
-# import environ
 
-sys.dont_write_bytecode = True
 
-DEBUG_ENV = os.environ.get('DEBUG') == 'True'
-DEBUG = DEBUG_ENV
-DEBUG_TOOLBAR = False
-TEMPLATE_DEBUG = DEBUG
-
-RECOVERY = False
-
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-warnings.showwarning = lambda *x: None
+########################
+# ADMIN / SECURITY
+########################
 
 ADMINS = (
     ('Guillaume Pellerin', 'webmaster@parisson.com'),
@@ -30,6 +21,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'a8l7%06wr2k+3=%#*#@#rvop2mmzko)44%7k(zx%lls^ihm9^5'
+
 ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
     'staging.docker.e-learning.crfpa.pre-barreau.parisson.com',
     'e-learning.crfpa.pre-barreau.com',
@@ -38,8 +32,20 @@ ALLOWED_HOSTS = ['localhost', 'crfpa.dockdev.pilotsystems.net',
     'channels'
 ]
 
-ASGI_APPLICATION = "teleforma.ws.routing.application"
 
+########################
+# SYSTEM
+########################
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+sys.dont_write_bytecode = True
+
+DEBUG_ENV = os.environ.get('DEBUG') == 'True'
+DEBUG = DEBUG_ENV
+DEBUG_TOOLBAR = False
+TEMPLATE_DEBUG = DEBUG
+RECOVERY = False
 
 INTERNAL_IPS = ['127.0.0.1', ]
 
@@ -47,24 +53,18 @@ INTERNAL_IPS = ['127.0.0.1', ]
 ip = socket.gethostbyname(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + '1']
 
-REDIS_HOST = "redis"
-REDIS_PORT = 6379
+ASGI_APPLICATION = "teleforma.ws.routing.application"
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [(REDIS_HOST, REDIS_PORT)],
-        },
-    },
-}
+warnings.showwarning = lambda *x: None
+SILENCED_SYSTEM_CHECKS = ["fields.W342"]
 
-# channel access point from django
-if DEBUG:
-    CHANNEL_URL = "http://channels:8000"
-else:
-    CHANNEL_URL = "/var/run/app/asgi.sock"
+ROOT_URLCONF = 'urls'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+########################
+# DATABASES
+########################
 
 DATABASES = {
     'default': {
@@ -99,6 +99,11 @@ if RECOVERY:
         'PORT': os.environ.get('DB_PORT'),
         }
 
+
+########################
+# LANGUAGE / ZONE
+########################
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -126,6 +131,11 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+
+########################
+# MEDIA / STATIC
+########################
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = '/srv/media/'
@@ -139,6 +149,8 @@ MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
 
 MEDIA_S3_BUCKET = '/media/bucket/'
+
+FILE_UPLOAD_TEMP_DIR = '/tmp'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -165,8 +177,10 @@ STATICFILES_FINDERS = (
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'a8l7%06wr2k+3=%#*#@#rvop2mmzko)44%7k(zx%lls^ihm9^5'
+
+########################
+# TEMPLATES
+########################
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -175,51 +189,6 @@ TEMPLATE_LOADERS = (
         'django.template.loaders.app_directories.Loader',
     )),
 )
-
-MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'dj_pagination.middleware.PaginationMiddleware',
-    'teleforma.middleware.XsSharing',
-    'django_user_agents.middleware.UserAgentMiddleware',
-)
-
-ROOT_URLCONF = 'urls'
-
-
-INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'teleforma',
-    'jazzmin',
-    'django.contrib.admin',
-    'channels',
-    'teleforma.webclass',
-    'teleforma.exam',
-    'jsonrpc',
-    'sorl.thumbnail',
-    'dj_pagination',
-    'postman',
-    'captcha',
-    'django_nvd3',
-    'tinymce',
-    'pdfannotator',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'storages',
-)
-
-
-if DEBUG_TOOLBAR:
-    INSTALLED_APPS += ('debug_toolbar',)
 
 TEMPLATES = [
     {
@@ -243,79 +212,10 @@ TEMPLATES = [
     },
 ]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-AUTH_PROFILE_MODULE = 'telemeta.userprofile'
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
-
-#if DEBUG:
-#    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-POSTMAN_AUTO_MODERATE_AS = True
-POSTMAN_DISALLOW_ANONYMOUS = True
-
-#FILE_PROTECTION_METHOD = 'xsendfile'
-
-TELEFORMA_ORGANIZATION = 'Pré-Barreau - CRFPA'
-TELEFORMA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
-TELEFORMA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
-TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
-TELEFORMA_GLOBAL_TWEETER = False
-TELEFORMA_PERIOD_TWEETER = True
-TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
-TELEFORMA_EXAM_SCRIPT_UPLOAD = True
-TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
-TELEFORMA_PERIOD_DEFAULT_ID = 34
-TELEFORMA_EXAM_MAX_SESSIONS = 99
-TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 31457280
-TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
-TELEFORMA_PRIVATE_DOCUMENTS_MODE = True
-TELEFORMA_PRIVATE_MEDIA_USE_S3 = True
-
-AWS_ACCESS_KEY_ID=""
-AWS_SECRET_ACCESS_KEY=""
-AWS_STORAGE_BUCKET_NAME=""
-AWS_S3_REGION_NAME=""
-AWS_S3_ENDPOINT_URL=""
-AWS_S3_ENCRYPTION=True
-
-EMAIL_HOST = 'angus.parisson.com'
-DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
-SERVER_EMAIL = 'crfpa@pre-barreau.com'
-EMAIL_SUBJECT_PREFIX = '[' + TELEFORMA_ORGANIZATION + '] '
-
-TELECASTER_LIVE_STREAMING_PROTOCOL = 'https'
-TELECASTER_LIVE_STREAMING_SERVER = 'jimmy.parisson.com'
-TELECASTER_LIVE_STREAMING_SERVERS = ['jimmy.parisson.com', 'ron.parisson.com']
-TELECASTER_LIVE_RANDOM_SERVERS = True
-TELECASTER_LIVE_STREAMING_PORT = 443
-TELECASTER_LIVE_ICECAST_STREAMING_PORT = 443
-TELECASTER_LIVE_ICECAST_STREAMING_PATH = '/stream/audio/'
-TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 443
-TELECASTER_LIVE_STREAM_M_STREAMING_PATH = '/stream/video/'
-TELECASTER_LIVE_TWEETER = False
-
-PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-]
-
-BOX_API_TOKEN = 'D2pBaN8YqjGIfS0tKrgnMP93'
-
-FILE_UPLOAD_TEMP_DIR = '/tmp'
-
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-#SESSION_ENGINE = "unique_session.backends.session_backend"
-UNIQUE_SESSION_WHITELIST = (1, 2042)
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_SAMESITE="None"
-SESSION_COOKIE_SECURE=True
-
-
-RECAPTCHA_PUBLIC_KEY = '6Ldq5DgbAAAAADkKg19JXlhx6F1XUQDsrXfXqSP6'
-RECAPTCHA_PRIVATE_KEY = '6Ldq5DgbAAAAAOVDOeF2kH8i2e2VSNHpqlinbpAJ'
-RECAPTCHA_REQUIRED_SCORE = 0.85
+########################
+# CACHE
+########################
 
 # Cache backend is optional, but recommended to speed up user agent parsing
 CACHES = {
@@ -338,22 +238,6 @@ CACHE_TIMEOUT = 60*60*24
 # cache alias will be used. Set to `None` to disable caching.
 USER_AGENTS_CACHE = 'default'
 
-AUTH_USER_MODEL = 'auth.User'
-
-TINYMCE_DEFAULT_CONFIG = {
-    "height": "320px",
-    "width": "960px",
-    "menubar": "file edit view insert format tools table help",
-    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
-    "fullscreen insertdatetime media table paste code help wordcount spellchecker",
-    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
-    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
-    "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
-    "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
-    "a11ycheck ltr rtl | showcomments addcomment code",
-    "custom_undo_redo_levels": 10,
-}
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -361,6 +245,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
     ]
 }
+
+
+########################
+# LOGGING
+########################
 
 LOGGING = {
     'version': 1,
@@ -404,6 +293,105 @@ LOGGING = {
 }
 
 
+########################
+# APPS / MIDDLEWARE
+########################
+
+MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'dj_pagination.middleware.PaginationMiddleware',
+    'teleforma.middleware.XsSharing',
+    'django_user_agents.middleware.UserAgentMiddleware',
+)
+
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'teleforma',
+    'jazzmin',
+    'django.contrib.admin',
+    'channels',
+    'teleforma.webclass',
+    'teleforma.exam',
+    'jsonrpc',
+    'sorl.thumbnail',
+    'dj_pagination',
+    'postman',
+    'captcha',
+    'django_nvd3',
+    'tinymce',
+    'pdfannotator',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'storages',
+)
+
+
+########################
+# DEBUG
+########################
+
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += ('debug_toolbar',)
+
+    def show_toolbar(request):
+        return True
+
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+    }
+
+
+########################
+# REDIS
+########################
+
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+
+
+########################
+# CHANNELS
+########################
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
+}
+
+# channel access point from django
+if DEBUG:
+    CHANNEL_URL = "http://channels:8000"
+else:
+    CHANNEL_URL = "/var/run/app/asgi.sock"
+
+
+########################
+# AUTH / SESSIONS
+########################
+
+AUTH_PROFILE_MODULE = 'telemeta.userprofile'
+AUTH_USER_MODEL = 'auth.User'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+]
+
 def show_user_as(user):
     professor = user.professor.all()
     is_corrector = False
@@ -412,10 +400,18 @@ def show_user_as(user):
     else:
         return force_text(user)
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+#SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+#SESSION_ENGINE = "unique_session.backends.session_backend"
+UNIQUE_SESSION_WHITELIST = (1, 2042)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_SAMESITE="None"
+SESSION_COOKIE_SECURE=True
 
-POSTMAN_SHOW_USER_AS = show_user_as
 
-#THUMBNAIL_FORCE_OVERWRITE = True
+########################
+# JAZZMIN
+########################
 
 JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",
@@ -516,6 +512,30 @@ JAZZMIN_UI_TWEAKS = {
     "actions_sticky_top": True
 }
 
+
+########################
+# TINYMCE
+########################
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "320px",
+    "width": "960px",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+    "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+    "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+    "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+    "a11ycheck ltr rtl | showcomments addcomment code",
+    "custom_undo_redo_levels": 10,
+}
+
+
+########################
+# SHERLOCK
+########################
+
 SHERLOKS_URL = "https://sherlocks-payment-webinit-simu.secure.lcl.fr/paymentInit"
 
 PAYMENT_PARAMETERS = { 'Semestrielle': { 'merchantId' : "002001000000003",
@@ -537,25 +557,97 @@ PAYMENT_PARAMETERS = { 'Semestrielle': { 'merchantId' : "002001000000003",
 SHERLOKS_USE_TRANSACTION_ID = True
 
 
-
-ORAL_OPTION_PRICE = 250
-
-if DEBUG_TOOLBAR:
-    def show_toolbar(request):
-        return True
-    DEBUG_TOOLBAR_CONFIG = {
-        "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
-    }
-
+########################
+# WEBPACK
+########################
 
 USE_WEBPACK_DEV_SERVER = False
 WEBPACK_DEV_SERVER_URL = "http://172.24.104.152:3000/"
 
+
+########################
+# POSTMAN
+########################
+
+POSTMAN_SHOW_USER_AS = show_user_as
+POSTMAN_AUTO_MODERATE_AS = True
+POSTMAN_DISALLOW_ANONYMOUS = True
+
+
+########################
+# TELEFORMA
+########################
+
+TELEFORMA_ORGANIZATION = 'Pré-Barreau - CRFPA'
+TELEFORMA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
+TELEFORMA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
+TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
+TELEFORMA_GLOBAL_TWEETER = False
+TELEFORMA_PERIOD_TWEETER = True
+TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
+TELEFORMA_EXAM_SCRIPT_UPLOAD = True
+TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
+TELEFORMA_PERIOD_DEFAULT_ID = 34
+TELEFORMA_EXAM_MAX_SESSIONS = 99
+TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 31457280
+TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
+TELEFORMA_PRIVATE_DOCUMENTS_MODE = True
+TELEFORMA_PRIVATE_MEDIA_USE_S3 = True
+ORAL_OPTION_PRICE = 250
+# use to share correction doc / media accross different training
+CORRECTIONS_COURSE_TYPE_ID = 2
+
 ENABLE_CHAT = True
 CHAT_LIMIT_HOURS = 48
 
-# use to share correction doc / media accross different training
-CORRECTIONS_COURSE_TYPE_ID = 2
+#THUMBNAIL_FORCE_OVERWRITE = True
+
+
+########################
+# EMAIL
+########################
+
+EMAIL_HOST = 'angus.parisson.com'
+DEFAULT_FROM_EMAIL = 'crfpa@pre-barreau.com'
+SERVER_EMAIL = 'crfpa@pre-barreau.com'
+EMAIL_SUBJECT_PREFIX = '[' + TELEFORMA_ORGANIZATION + '] '
+
+
+########################
+# TELECASTER
+########################
+
+TELECASTER_LIVE_STREAMING_PROTOCOL = 'https'
+TELECASTER_LIVE_STREAMING_SERVER = 'jimmy.parisson.com'
+TELECASTER_LIVE_STREAMING_SERVERS = ['jimmy.parisson.com', 'ron.parisson.com']
+TELECASTER_LIVE_RANDOM_SERVERS = True
+TELECASTER_LIVE_STREAMING_PORT = 443
+TELECASTER_LIVE_ICECAST_STREAMING_PORT = 443
+TELECASTER_LIVE_ICECAST_STREAMING_PATH = '/stream/audio/'
+TELECASTER_LIVE_STREAM_M_STREAMING_PORT = 443
+TELECASTER_LIVE_STREAM_M_STREAMING_PATH = '/stream/video/'
+TELECASTER_LIVE_TWEETER = False
+
+
+########################
+# RECAPTCHA
+########################
+
+RECAPTCHA_PUBLIC_KEY = ''
+RECAPTCHA_PRIVATE_KEY = ''
+RECAPTCHA_REQUIRED_SCORE = 0.85
+
+
+########################
+# AWS S3
+########################
+
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+AWS_STORAGE_BUCKET_NAME=""
+AWS_S3_REGION_NAME=""
+AWS_S3_ENDPOINT_URL=""
+AWS_S3_ENCRYPTION=True
 
 
 ##################
