@@ -311,7 +311,7 @@ def nginx_media_accel(url, content_type="", buffering=True, streaming=False):
     if not streaming:
         response['Content-Disposition'] = "attachment; filename=%s" % (
             filename)
-    print(content_type)
+
     response['Content-Type'] = content_type
     response['X-Accel-Redirect'] = url
 
