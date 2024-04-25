@@ -853,7 +853,11 @@ class Document(MediaBase):
         super(Document, self).save(**kwargs)
 
     def private_file(self, user):
-        private_document, c = DocumentPrivate.objects.get_or_create(document=self, user=user)
+        try:
+            private_document, c = DocumentPrivate.objects.get_or_create(document=self, user=user)
+        except:
+            private_documents = DocumentPrivate.objects.filter(document=self, user=user)
+            private_document = private_documents[0]
         return private_document.file
 
 
