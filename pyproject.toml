@@ -7,7 +7,7 @@ license = "CeCILL v2"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 bigbluebutton-api-python = "0.0.11"
 channels = "3.0.4"
 channels-redis = "3.4.0"
@@ -41,6 +41,7 @@ uvicorn = {version = "0.18.1", extras = ["standard"]}
 httpx = "0.23.3"
 django-storages = {extras = ["s3"], version = "^1.14.2"}
 boto3 = "^1.34.89"
+ipython = "^8.23.0"
 
 
 [build-system]
