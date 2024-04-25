@@ -1,12 +1,11 @@
 git
-vim
+less
 locales
-python3-ipython
+nano
+postgresql-client
 python3-setuptools
 python3-psycopg2
 python3-yaml
-uwsgi
-less
-nano
-postgresql-client
 redis-tools
+uwsgi
+vim
