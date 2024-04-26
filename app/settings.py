@@ -58,7 +58,7 @@ ASGI_APPLICATION = "teleforma.ws.routing.application"
 warnings.showwarning = lambda *x: None
 SILENCED_SYSTEM_CHECKS = ["fields.W342"]
 if not DEBUG:
-    SILENCED_SYSTEM_CHECKS += ["fields.W003", "fields.W005"]
+    SILENCED_SYSTEM_CHECKS += ["urls.W003", "urls.W005"]
 
 ROOT_URLCONF = 'urls'
 
