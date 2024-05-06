@@ -858,6 +858,9 @@ class Document(MediaBase):
         except:
             private_documents = DocumentPrivate.objects.filter(document=self, user=user)
             private_document = private_documents[0]
+        if not private_document.file:
+            private_document.file = self.file
+            private_document.save()
         return private_document.file
 
 
