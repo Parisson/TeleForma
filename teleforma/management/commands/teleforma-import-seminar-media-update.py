@@ -125,7 +125,7 @@ class Command(BaseCommand):
         logger = Logger(log_file)
 
         organization = Organization.objects.get(name=organization_name)
-        period = Period.objects.get(name=period_name)
+        period, c = Period.objects.get_or_create(name=period_name)
         self.media_dir = media_dir
         file_list = []
         seminars = []
