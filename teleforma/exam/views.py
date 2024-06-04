@@ -3,6 +3,7 @@
 # Create your views here.
 
 import datetime
+import io
 import json
 
 import numpy as np
@@ -20,6 +21,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from pdfannotator.models import Annotation, AnnotationComment
+from pypdf import PdfReader, PdfWriter
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+
 from teleforma.decorators import access_required, staff_required
 from teleforma.models.crfpa import Student
 from teleforma.views.core import CourseAccessMixin, get_courses
@@ -164,6 +173,90 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScriptView, self).dispatch(*args, **kwargs)
+
+class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
+    """
+    download the script pdf with its annotations
+    """
+
+    def get(self, request, *args, **kwargs):
+        script = get_object_or_404(Script, id=kwargs['pk'])
+
+        packet = io.BytesIO()
+        can = canvas.Canvas(packet, pagesize=A4)
+
+        # store text to be added in the last page
+        bottom_texts = []
+
+        page = 1
+        for annotation in Annotation.objects.filter(uuid=script.uuid).order_by('page'):
+            if annotation.page != page:
+                # we may have to skip some pages if there are no annotations on it
+                for i in range(annotation.page - page):
+                    # go to next page
+                    can.showPage()
+                page = annotation.page
+
+            # set text to red
+            can.setFillColorRGB(1,0,0)
+            
+            annotation_data = json.loads(annotation.content)
+            print(annotation_data)
+            text = "N/A"
+            # we handle only point (comment) and textbox (text) annotations
+            if annotation_data.get('type') == 'point':
+                print(annotation.uuid)
+                # print(uuid)
+                comment = AnnotationComment.objects.get(annotation_id=annotation.annotation_id, uuid=annotation.uuid)
+                text = comment.content
+                bottom_texts.append(text)
+                # add a number corresponding to the annotation
+                can.drawString(annotation_data['x'], -12 + A4[1] - annotation_data['y'], str(len(bottom_texts)))
+            elif annotation_data.get('type') == 'textbox':
+                can.drawString(annotation_data['x'], -12 + A4[1] - annotation_data['y'], annotation_data['content'])
+
+        can.save()
+
+        # create a new pdf with list of annotations
+        annotation_page = io.BytesIO()
+        doc = SimpleDocTemplate(annotation_page, pagesize=A4)
+        Story = []
+        styles = getSampleStyleSheet()
+        # for i in range(100):
+        for i, text in enumerate(bottom_texts):
+            comment = f"<strong>{i + 1}</strong> : {text}"
+            style = styles["Normal"]
+            p = Paragraph(comment, style)
+            Story.append(p)
+            Story.append(Spacer(1, 0.2*inch))
+        doc.build(Story)
+
+        #move to the beginning of the StringIO buffer
+        packet.seek(0)
+
+        # create a new PDF that contains reportlab content
+        new_pdf = PdfReader(packet)
+        # existing PDF
+        existing_pdf = PdfReader(script.file.path)
+        
+        # new pdf, merged from reportlab pdf and existing pdf
+        output = PdfWriter()
+        
+        # merge annotation layer pdf and existing pdf
+        for i, page in enumerate(existing_pdf.pages):
+            page.merge_page(new_pdf.pages[i])
+            output.add_page(page)
+
+        # finally, add annotations pages
+        new_pdf = PdfReader(annotation_page)
+        for page in new_pdf.pages:
+            output.add_page(page)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="%s"' % script.file.name
+        output.write(response)
+        return response
+
 
 
 class ScriptsView(ScriptsListMixinView, ListView):
@@ -590,6 +683,7 @@ class MassScoreCreateView(ScoreCreateView):
     def dispatch(self, request, *args, **kwargs):
         return super(ScoreCreateView, self).dispatch(request, *args, **kwargs)
 
+	
 
 def get_mass_students(request):
     """
@@ -622,3 +716,6 @@ def get_mass_students(request):
 
     data = {'results': res, 'pagination': {'more': False}}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+
