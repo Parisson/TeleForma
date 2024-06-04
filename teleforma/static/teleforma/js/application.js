@@ -25,21 +25,21 @@
  * Requires jQuery
  */
 
-$(document).ready(function(){
-     if($('.home').size()){
-         $('.course').each(function(){
-             var $course = $(this);
-             var course_url = $course.find('.course_title a').attr('href');
-             $course.find('.course_content .listing tbody').each(function(){
-                 var $tbody = $(this);
-                 if($tbody.find('tr').size()>=2) {
-                     $tbody.find('tr:not(:first)').remove();
-                     $tbody.append('<tr><td><a href="'+course_url+'">Voir la suite</a></td><td></td><td></td></tr>')
-                 }
-             });
-         })
-     }
-     if($('.tabs').size())
+$(document).ready(function () {
+    if ($('.home').size()) {
+        $('.course').each(function () {
+            var $course = $(this);
+            var course_url = $course.find('.course_title a').attr('href');
+            $course.find('.course_content .listing tbody').each(function () {
+                var $tbody = $(this);
+                if ($tbody.find('tr').size() >= 2) {
+                    $tbody.find('tr:not(:first)').remove();
+                    $tbody.append('<tr><td><a href="' + course_url + '">Voir la suite</a></td><td></td><td></td></tr>')
+                }
+            });
+        })
+    }
+    if ($('.tabs').size())
         $('.tabs').tabs();
 });
 
@@ -77,15 +77,15 @@ $(document).ready(function(){
  */
 
 //returns the full path of the current url location removing the last slash '/' followed by one or more '#', if any
-function urlNormalized(){
+function urlNormalized() {
     var sPath = window.location.href;
-    sPath = sPath.replace(/\/#*$/,"");
+    sPath = sPath.replace(/\/#*$/, "");
     return sPath;
 }
 /**
  *sets up few stuff when the page is ready (see functions below it)
  */
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     foldInfoBlocks();
     setSelectedMenu();
 });
@@ -97,7 +97,7 @@ function foldInfoBlocks() {
     var $J = jQuery;
     var extra = $J('.extraInfos');
     extra.find('.folded dl, .folded table').css('display', 'none');
-    extra.find('h4').click(function() {
+    extra.find('h4').click(function () {
         $J(this).parents('.extraInfos').children().toggleClass('folded').find('dl, table').toggle(100);
         //toggle toggles the visibility of elements
         return false;
@@ -107,57 +107,57 @@ function foldInfoBlocks() {
 /**
  * Global teleforma function which sets the current selected menu according to the current url
  */
-function setSelectedMenu(){
+function setSelectedMenu() {
     var $J = jQuery;
     var menus = $J('#menu a');
     //build collections/items from http:/site/collections/items,
     //being http:/site/ = window.location.origin
-    
+
     //function for normalizing paths (removes last n occurrences of the slash)
-    var normalize = function(str){
-        return str.replace(/\/+#*$/,"");
+    var normalize = function (str) {
+        return str.replace(/\/+#*$/, "");
     }
-    
+
     var host = window.location.host;
     var protocol = window.location.protocol
     var href = normalize(window.location.href);
-     
-    if(!(host) || !(protocol) || !(href)){
+
+    if (!(host) || !(protocol) || !(href)) {
         return;
     }
 
     //var pageOrigin = normalize(window.location.origin); //does not exist in FF, so:
-    var pageOrigin = normalize(protocol+"//"+host);
+    var pageOrigin = normalize(protocol + "//" + host);
     var pageHref = normalize(href);
 
-    menus.each(function(){
+    menus.each(function () {
         ///if we are at home, the window location href corresponds to window location origin,
         //so we select only links whose link points EXACTLY to the origin (home link)
         var linkHref = normalize(this.href);
         var elm = $J(this);
 
-        if(linkHref.indexOf("#") != -1){
+        if (linkHref.indexOf("#") != -1) {
             var reg = new RegExp("[#]+", "g");
             var baseHref = linkHref.split(reg);
             linkHref = pageOrigin + "/" + baseHref[1]
         }
 
-        if(pageOrigin===pageHref){
-            if(pageHref == linkHref){
+        if (pageOrigin === pageHref) {
+            if (pageHref == linkHref) {
                 elm.addClass('active');
-            }else{
+            } else {
                 elm.removeClass('active');
             }
-        }else{
+        } else {
             //here, on the other hand, we select if a link points to a page or super page
             //of the current page
-            if(linkHref!=pageOrigin && pageHref.match("^"+linkHref+".*")){
+            if (linkHref != pageOrigin && pageHref.match("^" + linkHref + ".*")) {
                 elm.addClass('active');
-            }else{
+            } else {
                 elm.removeClass('active');
             }
         }
-        
+
     })
 }
 
@@ -192,46 +192,46 @@ function setSelectedMenu(){
  *       Possible values for the second argument (besides null) are "timeout", "error", "abort", and "parsererror".
  * ****************************************************************************/
 
-var json = function(param,method,onSuccessFcn,onErrorFcn){
+var json = function (param, method, onSuccessFcn, onErrorFcn) {
     //this function converts a javascript object to a string
-    var toString_ = function(string){
-        if(typeof string == "string"){
+    var toString_ = function (string) {
+        if (typeof string == "string") {
             //escapes newlines quotes and backslashes
-            string = string.replace(/\\/g,"\\\\")
-            .replace(/\n/g,"\\n")
-            .replace(/"/g,"\\\"");
+            string = string.replace(/\\/g, "\\\\")
+                .replace(/\n/g, "\\n")
+                .replace(/"/g, "\\\"");
         }
         var array; //used for arrays and objects (see below)
-        if(typeof string == "boolean" || typeof string== "number" || typeof string == "string"){
-            string = '"'+string+'"';
-        }else if(string instanceof Array){
+        if (typeof string == "boolean" || typeof string == "number" || typeof string == "string") {
+            string = '"' + string + '"';
+        } else if (string instanceof Array) {
             array = [];
-            for(var i = 0;i <string.length ; i++){
+            for (var i = 0; i < string.length; i++) {
                 array.push(toString_(string[i])); //recursive invocation
             }
-            string='[';
-            string+=array.join(",");
-            string+=']';
-        }else{
+            string = '[';
+            string += array.join(",");
+            string += ']';
+        } else {
             array = [];
-            for(var k in string){
-                array.push(toString_(k)+":"+toString_(string[k])); //recursive invocation
+            for (var k in string) {
+                array.push(toString_(k) + ":" + toString_(string[k])); //recursive invocation
             }
-            string='{';
-            string+=array.join(",");
-            string+='}';
+            string = '{';
+            string += array.join(",");
+            string += '}';
         }
         return string;
     };
-    
+
     //creating the string to send. 
     var param2string = toString_(param);
     var data2send = '{"id":"jsonrpc", "params":';
-    data2send+=param2string;
-    data2send+=', "method":"'
-    data2send+=method;
-    data2send+='","jsonrpc":"1.0"}';
-    
+    data2send += param2string;
+    data2send += ', "method":"'
+    data2send += method;
+    data2send += '","jsonrpc":"1.0"}';
+
     var $J = jQuery;
     $J.ajax({
         type: "POST",
@@ -239,24 +239,24 @@ var json = function(param,method,onSuccessFcn,onErrorFcn){
         contentType: "application/json",
         data: data2send,
         dataType: "json",
-        success: function(data, textStatus, jqXHR){
-            if(onSuccessFcn){
+        success: function (data, textStatus, jqXHR) {
+            if (onSuccessFcn) {
                 onSuccessFcn(data, textStatus, jqXHR);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown){
-            if(onErrorFcn){
+        error: function (jqXHR, textStatus, errorThrown) {
+            if (onErrorFcn) {
                 onErrorFcn(jqXHR, textStatus, errorThrown);
                 return;
             }
             //default:
             var details = "\n(no further info available)";
-            if(jqXHR) {
-                details="\nThe server responded witha status of "+jqXHR.status+" ("+
-                jqXHR.statusText+")\n\nDetails (request responseText):\n"+jqXHR.responseText;
+            if (jqXHR) {
+                details = "\nThe server responded witha status of " + jqXHR.status + " (" +
+                    jqXHR.statusText + ")\n\nDetails (request responseText):\n" + jqXHR.responseText;
             }
-            alert("ERROR: Failed to save"+details);
-            
+            alert("ERROR: Failed to save" + details);
+
         }
     });
 
@@ -265,8 +265,8 @@ var json = function(param,method,onSuccessFcn,onErrorFcn){
 /**
  * function for writing to the console. Catches errors, if any (eg, console == undefined) and does nothing in case
  */
-function consolelog(text){
-    if(typeof console != 'undefined'){
+function consolelog(text) {
+    if (typeof console != 'undefined') {
         var c = console;
         if (c.log) {
             c.log(text);
@@ -277,34 +277,34 @@ function consolelog(text){
 // Drop down menus
 
 $(document).ready(function () {
-     
+
     $('#nav li').hover(
         function () {
             //show its submenu
             $('ul', this).slideDown(200);
- 
+
         },
         function () {
             //hide its submenu
-            $('ul', this).slideUp(100);        
+            $('ul', this).slideUp(100);
         }
     );
-     
 
-     // add a "read more" button after first video and hide others vidéos by default
-     $('.course_content.content_video table.listing').each(function(){
+
+    // add a "read more" button after first video and hide others vidéos by default
+    $('.course_content.content_video table.listing').each(function () {
         var $this = $(this);
 
         // do nothing if not enough videos
         var numberOfVideos = $this.find('tr').length
-        if(numberOfVideos <= 2)
+        if (numberOfVideos <= 2)
             return
 
         $this.find('tr:not(:first)').hide();
-        
+
         var colspan = $(this).find('tr:first td').length
-        var buttonRow = $('<tr><td class="show_more_videos" colspan="'+colspan+'"></td></tr>')
-        var button = $('<a class="component_icon button icon_next">Voir les vidéos plus anciennes</a>').bind('click', function(){
+        var buttonRow = $('<tr><td class="show_more_videos" colspan="' + colspan + '"></td></tr>')
+        var button = $('<a class="component_icon button icon_next">Voir les vidéos plus anciennes</a>').bind('click', function () {
             $this.find('tr:not(:first)').show('fast');
             buttonRow.hide();
         });
@@ -312,5 +312,13 @@ $(document).ready(function () {
         $this.find('tr:not(:first)').hide();
         buttonRow.find('td').append(button)
         buttonRow.insertAfter($this.find('tr:first'))
-     })
+    })
+
+
+    $('.select_all').bind('change', function () {
+        var $this = $(this);
+        var isChecked = $this.is(':checked');
+        var $form = $this.closest('form');
+        $form.find('input[type=checkbox]').prop('checked', isChecked);
+    })
 });
