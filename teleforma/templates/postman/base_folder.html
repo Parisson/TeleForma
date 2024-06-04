@@ -8,10 +8,18 @@
 <div id="postman" class="desk_messages">
 
 {% block pm_by_modes %}
-<div id="pm_by_modes" style="float: right;">
-<a href="{{ by_conversation_url }}" class="component_icon button icon_filter">{% trans "by conversation" %}</a>
-<a href="{{ by_message_url }}" class="component_icon button icon_filter">{% trans "by message" %}</a>
+
+<div style="float:right; display:flex; align-items:center">
+  <form action="" method="GET">
+      <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Recherche" />
+      <input type="submit" value="Ok" />
+  </form>
+  <div id="pm_by_modes">
+    <a href="{{ by_conversation_url }}" class="component_icon button icon_filter">{% trans "by conversation" %}</a>
+    <a href="{{ by_message_url }}" class="component_icon button icon_filter">{% trans "by message" %}</a>
+  </div>
 </div>
+
 {% endblock pm_by_modes %}
 <h1>{% block pm_folder_title %}{% endblock %}</h1>
 {% if invalid_page %}
@@ -36,7 +44,7 @@
 <table id="pm_messages" class="listing" >
  <thead>
   <tr>
-   <th>{% trans "Action" %}</th>
+   <th><input type="checkbox" class="select_all" />{% trans "Action" %}</th>
 {% block pm_sender_header %}   <th><a href="{% postman_order_by sender %}">{% trans "Sender" %}</a></th>{% endblock %}
 {% block pm_recipient_header %}   <th><a href="{% postman_order_by recipient %}">{% trans "Recipient" %}</a></th>{% endblock %}
    <th><a href="{% postman_order_by subject %}">{% trans "Subject" %}</a></th>
