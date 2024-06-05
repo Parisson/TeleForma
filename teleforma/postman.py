@@ -33,7 +33,9 @@ def _folder(self, related, filters, option=None, order_by=None, query_dict=None)
                 | models.Q(body__icontains=search)\
                 | models.Q(sender__username__icontains=search)\
                 | models.Q(sender__first_name__icontains=search)\
-                | models.Q(sender__last_name__icontains=search)
+                | models.Q(sender__last_name__icontains=search)\
+                | models.Q(recipient__first_name__icontains=search)\
+                | models.Q(recipient__last_name__icontains=search)
     if option == OPTION_MESSAGES:
         qs = qs.filter(lookups)
         # Adding a 'count' attribute, to be similar to the by-conversation case,
