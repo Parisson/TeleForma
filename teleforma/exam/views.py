@@ -244,7 +244,8 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
         
         # merge annotation layer pdf and existing pdf
         for i, page in enumerate(existing_pdf.pages):
-            page.merge_page(new_pdf.pages[i])
+            if i < len(new_pdf.pages):
+                page.merge_page(new_pdf.pages[i])
             output.add_page(page)
 
         # finally, add annotations pages
