@@ -23,7 +23,6 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from pdfannotator.models import Annotation, AnnotationComment
 from pypdf import PdfReader, PdfWriter
-from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
@@ -182,8 +181,13 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
     def get(self, request, *args, **kwargs):
         script = get_object_or_404(Script, id=kwargs['pk'])
 
+        # existing PDF
+        existing_pdf = PdfReader(script.file.path)
+        width = existing_pdf.pages[0].mediabox.width
+        height = existing_pdf.pages[0].mediabox.height
+
         packet = io.BytesIO()
-        can = canvas.Canvas(packet, pagesize=A4)
+        can = canvas.Canvas(packet, pagesize=(width, height))
 
         # store text to be added in the last page
         bottom_texts = []
@@ -211,15 +215,15 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
                 text = comment.content
                 bottom_texts.append(text)
                 # add a number corresponding to the annotation
-                can.drawString(annotation_data['x'], -12 + A4[1] - annotation_data['y'], str(len(bottom_texts)))
+                can.drawString(annotation_data['x'], -12 + height - annotation_data['y'], str(len(bottom_texts)))
             elif annotation_data.get('type') == 'textbox':
-                can.drawString(annotation_data['x'], -12 + A4[1] - annotation_data['y'], annotation_data['content'])
+                can.drawString(annotation_data['x'], -12 + height - annotation_data['y'], annotation_data['content'])
 
         can.save()
 
         # create a new pdf with list of annotations
         annotation_page = io.BytesIO()
-        doc = SimpleDocTemplate(annotation_page, pagesize=A4)
+        doc = SimpleDocTemplate(annotation_page, pagesize=(width, height))
         Story = []
         styles = getSampleStyleSheet()
         # for i in range(100):
@@ -236,8 +240,7 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
 
         # create a new PDF that contains reportlab content
         new_pdf = PdfReader(packet)
-        # existing PDF
-        existing_pdf = PdfReader(script.file.path)
+
         
         # new pdf, merged from reportlab pdf and existing pdf
         output = PdfWriter()
