@@ -86,7 +86,18 @@ class PaybackInline(admin.StackedInline):
     extra = 1
 
 
-class StudentInline(admin.StackedInline):
+class StudentAdminMixin:
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "training":
+            kwargs["queryset"] = Training.objects.order_by('-period__date_begin')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "trainings":
+            kwargs["queryset"] = Training.objects.order_by('-period__date_begin')
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
+
+class StudentInline(StudentAdminMixin, admin.StackedInline):
     model = Student
     extra = 1
 
@@ -142,7 +153,7 @@ class TrainingsFilter(MultipleChoiceListFilter):
         return [(training.id, str(training)) for training in Training.objects.all()]
 
 
-class StudentAdmin(admin.ModelAdmin):
+class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
     model = Student
     list_per_page = 30
     exclude = ['options', 'training']
