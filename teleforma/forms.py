@@ -52,23 +52,6 @@ def get_unique_username(first_name, last_name):
     return username[:30]
 
 
-# class ConferenceForm(ModelForm):
-#     class Meta:
-#         model = Conference
-#         fields = '__all__'
-
-
-#
-# class RegistrationForm(ModelForm):
-#     captcha = CaptchaField()
-#     accept = BooleanField()
-#
-#
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name', 'email', 'accept']
-
-
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
