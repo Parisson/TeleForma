@@ -113,8 +113,12 @@ class Command(BaseCommand):
             del lines[-1]
         body = '\n'.join(lines)
 
-        mess = Message(sender=msg.recipient, recipient=msg.sender,
-                       subject=subject, body=body)
+        if not msg.thread:
+            msg.thread = msg
+        
+        mess = Message(sender = msg.recipient, recipient = msg.sender,
+                       subject = subject, body = body, thread = msg.thread,
+                       parent = msg)
         mess.moderation_status = 'a'
         mess.save()
         site = Site.objects.all()[0]
