@@ -115,6 +115,7 @@ class Command(BaseCommand):
 
         if not msg.thread:
             msg.thread = msg
+            msg.save()
         
         mess = Message(sender = msg.recipient, recipient = msg.sender,
                        subject = subject, body = body, thread = msg.thread,
