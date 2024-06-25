@@ -55,6 +55,7 @@ from ..exam.models import Quota, Script
 from ..models.core import Document, Professor
 from ..models.crfpa import IEJ, Course, NewsItem, Training
 from ..views import get_courses
+from ..utils import generate_hash
 
 from collections import defaultdict
 
@@ -494,6 +495,11 @@ def course_past_conferences(context):
 def conference_publication(context, conference):
     period = context['period']
     return conference.publication_info(period)
+
+@register.simple_tag(takes_context=True)
+def generate_msg_id(context, message):
+    mid = message.id
+    return generate_hash(mid)
 
 
 # @register.simple_tag(takes_context=True)
