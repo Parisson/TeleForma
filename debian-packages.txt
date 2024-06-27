@@ -1,6 +1,7 @@
 git
 less
 locales
+gettext
 nano
 postgresql-client
 python3-setuptools
