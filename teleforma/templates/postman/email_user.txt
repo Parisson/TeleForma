@@ -18,7 +18,9 @@
 
 {{object.body}}
 
-{% endif %}{% endif %}Vous pouvez répondre à ce message en répondant directement à cet email ou bien depuis votre bureau e-learning en suivant <a href="https://{{ site.domain }}/messages/inbox/">ce lien</a>.
+{% endif %}{% endif %}Vous pouvez répondre à ce message en répondant directement à cet email ou bien depuis votre bureau e-learning en suivant ce lien :
+
+https://{{ site.domain }}/messages/inbox/
 
 {# 'acceptance' #}
 
