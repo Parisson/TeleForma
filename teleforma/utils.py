@@ -12,5 +12,5 @@ def generate_hash(mid):
     """
     mid = "%x" % mid
     msg = '%s-%s' % (settings.SECRET_KEY, mid)
-    md5 = hashlib.md5(msg.encode('ascii')).hexdigest()
+    md5 = hashlib.md5(msg.encode('utf8')).hexdigest()
     return '%s%s' % (mid, md5[:4])
