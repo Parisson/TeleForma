@@ -8,16 +8,21 @@
 {% else %}{# 'acceptance' #}
 {% if object.parent_id %}{% if object.parent.sender_id == object.recipient_id %}{% blocktrans with object.parent.sent_at|date:"DATETIME_FORMAT" as date and object.obfuscated_sender as sender %}On {{ date }}, you sent a message to the user '{{ sender }}'.{% endblocktrans %}
 {% trans "Your correspondent has given you an answer." %}
-{% else %}{% blocktrans with object.obfuscated_sender as sender %}You have received a copy of a response from the user '{{ sender }}'.{% endblocktrans %}
+
+{{object.body}}
+
+{% else %}{% blocktrans with object.obfuscated_sender as sender %}You have received a copy of a response from the user '{{ sender }}' :{% endblocktrans %}
 {% endif %}
-{% else %}{% blocktrans with object.obfuscated_sender as sender %}You have received a message from the user '{{ sender }}'.{% endblocktrans %}
-{% endif %}{% endif %}{% trans "You can read and respond to this message from your e-learning desk following this link:" %}
+{% else %}
+{% blocktrans with object.obfuscated_sender as sender %}You have received a message from the user '{{ sender }}'.{% endblocktrans %}
+
+{{object.body}}
+
+{% endif %}{% endif %}Vous pouvez lire et répondre à ce message depuis votre bureau e-learning en suivant ce lien ou en répondant directement à cet email.
 
 http://{{ site.domain }}/messages/inbox/
 {# 'acceptance' #}
 
 {% trans "Thank you again for your interest in our services." %}
 {% trans "The site administrator" %} {% trans "of" %} {% organization %}
-
-{% blocktrans %}Note: This message is issued by an automated system.
-Do not reply, this would not be taken into account.{% endblocktrans %}{% endautoescape %}
+{% endautoescape %}
