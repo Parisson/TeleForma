@@ -205,11 +205,11 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
             can.setFillColorRGB(1,0,0)
             
             annotation_data = json.loads(annotation.content)
-            print(annotation_data)
+            # print(annotation_data)
             text = "N/A"
             # we handle only point (comment) and textbox (text) annotations
             if annotation_data.get('type') == 'point':
-                print(annotation.uuid)
+                # print(annotation.uuid)
                 # print(uuid)
                 comment = AnnotationComment.objects.get(annotation_id=annotation.annotation_id, uuid=annotation.uuid)
                 text = comment.content
