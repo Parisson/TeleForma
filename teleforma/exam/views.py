@@ -211,13 +211,21 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
             if annotation_data.get('type') == 'point':
                 # print(annotation.uuid)
                 # print(uuid)
-                comment = AnnotationComment.objects.get(annotation_id=annotation.annotation_id, uuid=annotation.uuid)
-                text = comment.content
-                bottom_texts.append(text)
-                # add a number corresponding to the annotation
-                can.drawString(annotation_data['x'], -12 + height - annotation_data['y'], str(len(bottom_texts)))
+                comments = AnnotationComment.objects.filter(
+                    annotation_id=annotation.annotation_id,
+                    uuid=annotation.uuid)
+                if comments:
+                    comment = comments[0]
+                    text = comment.content
+                    bottom_texts.append(text)
+                    # add a number corresponding to the annotation
+                    can.drawString(annotation_data['x'],
+                        -12 + height - annotation_data['y'],
+                        str(len(bottom_texts)))
             elif annotation_data.get('type') == 'textbox':
-                can.drawString(annotation_data['x'], -12 + height - annotation_data['y'], annotation_data['content'])
+                can.drawString(annotation_data['x'],
+                    -12 + height - annotation_data['y'],
+                    annotation_data['content'])
 
         can.save()
 

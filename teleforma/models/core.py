@@ -67,10 +67,6 @@ import httpx
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
-HAS_TELEMETA = False
-if 'telemeta' in settings.INSTALLED_APPS:
-    HAS_TELEMETA = True
-
 app_label = 'teleforma'
 
 
