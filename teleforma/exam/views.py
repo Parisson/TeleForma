@@ -173,6 +173,7 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
     def dispatch(self, *args, **kwargs):
         return super(ScriptView, self).dispatch(*args, **kwargs)
 
+
 class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
     """
     download the script pdf with its annotations
@@ -200,15 +201,15 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
                     # go to next page
                     can.showPage()
                 page = annotation.page
-
-            # set text to red
-            can.setFillColorRGB(1,0,0)
-            
+       
             annotation_data = json.loads(annotation.content)
             # print(annotation_data)
             text = "N/A"
             # we handle only point (comment) and textbox (text) annotations
             if annotation_data.get('type') == 'point':
+                # set text to violet
+                can.setFillColorRGB(1,0,1)
+     
                 # print(annotation.uuid)
                 # print(uuid)
                 comments = AnnotationComment.objects.filter(
@@ -223,6 +224,9 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
                         -12 + height - annotation_data['y'],
                         str(len(bottom_texts)))
             elif annotation_data.get('type') == 'textbox':
+                # set text to red
+                can.setFillColorRGB(1,0,0)
+
                 can.drawString(annotation_data['x'],
                     -12 + height - annotation_data['y'],
                     annotation_data['content'])
