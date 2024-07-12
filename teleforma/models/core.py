@@ -978,9 +978,6 @@ class Media(MediaBase):
                                     blank=True, null=True, on_delete=models.SET_NULL)
     period = models.ForeignKey('Period', related_name='media', verbose_name=_('period'),
                                null=True, blank=True, on_delete=models.SET_NULL)
-    if HAS_TELEMETA:
-        item = models.ForeignKey(MediaItem, related_name='media',
-                                 verbose_name='item', blank=True, null=True, on_delete=models.SET_NULL)
     type = models.CharField(
         _('type'), choices=streaming_choices, max_length=32)
     readers = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
