@@ -12,23 +12,22 @@
   <div id="module-set-left" style="width: 20%">
   {% block modules %}
 
-  <div class="module">
-
-    <h3><img src="/static/teleforma/images/module_playlist.png" alt="playlists"
-        style="vertical-align:middle" />{{ period }}</h3>
+    <div class="module">
+    <h3><a href="{% url 'teleforma-home' %}"><img src="/static/teleforma/images/module_playlist.png" alt="playlists" style="vertical-align:middle" />{% if user.username != usr.username%}{% trans "His courses" %}{% else %}{% trans "My courses" %}{% endif %}</a></h3>
     <div style="background: white;">
-      <ul>
-        {% block courses %}
-        {% for c in all_courses %}
-        {% with c.course as course %}
-        <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }}</a></li>
-        {% endwith %}
-        {% endfor %}
-        {% endblock courses %}
-      </ul>
+    <ul>
+    {% block courses %}
+    {% with usr|user_courses as courses %}
+     {% for c in courses %}
+       {% with c.course as course %}
+       <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title}} {{ course.type }}</a></li>
+       {% endwith %}
+     {% endfor %}
+    {% endwith %}
+    {% endblock courses %}
+    </ul>
     </div>
-
-  </div>
+    </div>
 
   {% endblock %}
 
