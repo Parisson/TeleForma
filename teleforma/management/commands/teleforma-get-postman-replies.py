@@ -18,10 +18,12 @@ import poplib
 def decode_header(header, charset):
     """
     Decode a header field
-    """        
+    """
     header = email.header.decode_header(header)
     res = []
     for value, encoding in header:
+        if isinstance(value, bytes):
+            value = value.decode(encoding)
         res.append(value)
     return " ".join(res)
 
