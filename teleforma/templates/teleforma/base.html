@@ -324,29 +324,12 @@
       });
     </script>
 
-
     <script type="text/javascript">
-      tarteaucitron.user.gajsUa = 'UA-6573030-11';
-      tarteaucitron.user.gajsMore = function () {};
-      (tarteaucitron.job = tarteaucitron.job || []).push('gajs');
+      tarteaucitron.user.matomoId = 2;
+      (tarteaucitron.job = tarteaucitron.job || []).push('matomo');
     </script>
 
-    <!-- Matomo -->
-    <script>
-      var _paq = window._paq = window._paq || [];
-      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="//matomo.parisson.com/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '1']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-      })();
-    </script>
-    <!-- End Matomo Code -->
-
+    <script>tarteaucitron.user.matomoHost = '//matomo.parisson.com/';</script>
 
   {% endif %}
 
