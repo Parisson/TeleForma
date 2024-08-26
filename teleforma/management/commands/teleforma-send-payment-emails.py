@@ -84,7 +84,7 @@ class Command(BaseCommand):
                         if delta % 7 == 0:
                             self.email(student, 'reminder', payment)
                             logger.logger.info('reminder email send for %s on %d' % (user.username, payment.id))
-                        elif delta == 16:
+                        elif delta == 19:
                             self.email(student, 'close', payment)
                             student.restricted = True
                             student.save()
