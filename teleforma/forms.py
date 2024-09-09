@@ -84,6 +84,12 @@ class UserForm(ModelForm):
 
     training = ModelChoiceField(label='Formation',
                                 queryset=Training.objects.filter(available=True))
+    
+    fascicule = forms.ChoiceField(choices=TRUE_FALSE_CHOICES,
+                                  label='Envoi postal des fascicules de cours',
+                                  required=False,
+                                  widget=forms.Select())
+
     procedure = ModelChoiceField(label=_('Procedure'),
                                  help_text="Matière de procédure",
                                  queryset=Course.objects.filter(procedure=True))
@@ -100,11 +106,6 @@ class UserForm(ModelForm):
     payment_schedule = ChoiceField(label=_(u'Échéancier de paiement'),
                                    choices=payment_schedule_choices,
                                    required=True)
-
-    fascicule = forms.ChoiceField(choices=TRUE_FALSE_CHOICES,
-                                  label='Envoi postal des fascicules',
-                                  required=False,
-                                  widget=forms.Select())
 
     # no model
     captcha = ReCaptchaField()
@@ -123,8 +124,8 @@ class UserForm(ModelForm):
         self.fields['email'].required = True
         self.user_fields = ['first_name', 'last_name', 'email', 'address', 'address_detail',
                             'postal_code', 'city', 'country', 'telephone', 'birthday', 'portrait']
-        self.training_fields = ['level', 'iej', 'period', 'platform_only', 'fascicule',
-                                'training', 'procedure', 'written_speciality', 'oral_1']
+        self.training_fields = ['level', 'iej', 'period', 'platform_only',
+                                'training', 'fascicule', 'procedure', 'written_speciality', 'oral_1']
 
     def clean_portrait(self):
         image = self.cleaned_data['portrait']

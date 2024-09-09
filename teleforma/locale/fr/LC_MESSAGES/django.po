@@ -2172,7 +2172,7 @@ msgid "Training type"
 msgstr "Type de formation"
 
 #: teleforma/templates/registration/registration_pdf.html:85
-msgid "Envoi postal des fascicules"
+msgid "Envoi postal des fascicules de cours"
 msgstr ""
 
 #: teleforma/templates/registration/registration_pdf.html:89

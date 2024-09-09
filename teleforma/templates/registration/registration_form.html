@@ -159,7 +159,10 @@
 
     function updateFascicule() {
         var platformOnly = $("[name='platform_only']").val() === 'True' ? true : false;
-        if (platformOnly)
+        var training = $("[name='training'] option:selected").text();
+        var showFasc = training.indexOf("Séminaires de correction") === -1 && training.indexOf("----") === -1;
+        
+        if (platformOnly && showFasc)
             $("[name='fascicule']").parent().show();
         else
             $("[name='fascicule']").parent().hide();
@@ -171,6 +174,7 @@
         $("#id_period,  #id_platform_only").change(updateTrainings);
         updateFascicule();
         $("[name='platform_only']").change(updateFascicule);
+        $("[name='training']").change(updateFascicule);
     });
 </script>
 <style>
