@@ -86,7 +86,7 @@ class UserForm(ModelForm):
                                 queryset=Training.objects.filter(available=True))
     
     fascicule = forms.ChoiceField(choices=TRUE_FALSE_CHOICES,
-                                  label='Envoi postal des fascicules de cours',
+                                  label='Envoi postal des fascicules de cours (option)',
                                   required=False,
                                   widget=forms.Select())
 
