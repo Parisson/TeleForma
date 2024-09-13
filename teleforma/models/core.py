@@ -218,6 +218,9 @@ class Period(Model):
 
     name            = CharField(_('name'), max_length=255)
     description     = CharField(_('description'), max_length=255, blank=True)
+    department = models.ForeignKey('Department', related_name='period',
+                               verbose_name=_('department'),
+                               blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
