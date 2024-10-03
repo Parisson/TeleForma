@@ -598,6 +598,7 @@ TELEFORMA_PRIVATE_MEDIA_USE_S3 = True
 TELFORMA_MEDIA_DOWNLOAD = False
 
 ORAL_OPTION_PRICE = 250
+FASICLE_OPTION_PRICE = 110
 # use to share correction doc / media accross different training
 CORRECTIONS_COURSE_TYPE_ID = 2
 

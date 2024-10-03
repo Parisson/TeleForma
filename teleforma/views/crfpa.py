@@ -901,6 +901,8 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
 
         if oral_1:
             substract += settings.ORAL_OPTION_PRICE
+        if student.fascicule:
+            substract += settings.FASICLE_OPTION_PRICE
 
         items.append({ 'label': label,
                        'unit_price': student.total_fees - substract - student.total_discount,
@@ -909,6 +911,12 @@ class ReceiptPDFView(PDFTemplateResponseMixin, TemplateView):
         if oral_1:
             items.append({ 'label': "<b>Option langue</b>",
                            'unit_price': settings.ORAL_OPTION_PRICE,
+                           'amount': 1,
+                           'discount': 0, }, )
+
+        if student.fascicule:
+            items.append({ 'label': "<b>Envoi des fascicules</b>",
+                           'unit_price': settings.FASICLE_OPTION_PRICE,
                            'amount': 1,
                            'discount': 0, }, )
         for item in items:
