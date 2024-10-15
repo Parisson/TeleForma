@@ -23,6 +23,7 @@ class AEStudentProfileInline(admin.StackedInline):
 class AuditorProfileInline(admin.StackedInline):
     model = Auditor
     # filter_vertical = ['seminars', 'conferences']
+    autocomplete_fields = ['seminars', 'conferences']
 
     class Media:
         css = { 'all': ('admin/extra.css',) }
