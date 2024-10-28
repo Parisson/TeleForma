@@ -329,6 +329,9 @@ class SeminarRevisionAdmin(admin.ModelAdmin):
 
     export_seminar_revisions.short_description = "Exporter le relevé des temps de connexion"
 
+class LocationAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)
@@ -361,3 +364,4 @@ admin.site.register(Room)
 
 admin.site.register(StreamingServer)
 admin.site.register(LiveStream)
+admin.site.register(Location, LocationAdmin)

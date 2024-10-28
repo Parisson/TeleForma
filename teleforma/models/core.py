@@ -186,8 +186,8 @@ class Location(Model):
     complete_type    = models.ForeignKey('LocationType', related_name="locations", verbose_name=_('complete type'), on_delete=models.CASCADE)
     current_location = models.ForeignKey('self', related_name="past_names",
                                       verbose_name=_('current location'), null=True, blank=True, on_delete=models.SET_NULL)
-    latitude         = models.FloatField(null=True)
-    longitude        = models.FloatField(null=True)
+    latitude         = models.FloatField(blank=True, null=True)
+    longitude        = models.FloatField(blank=True, null=True)
     is_authoritative = models.BooleanField(_('authoritative'), default=False)
 
     class Meta(MetaCore):
