@@ -7,4 +7,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for document in DocumentPrivate.objects.all():
-            DocumentPrivate.delete()
+            document.delete()
