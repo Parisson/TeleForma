@@ -580,7 +580,7 @@ class MediaItemMarker(Model):
     item            = ForeignKey('Media', related_name="markers", verbose_name=_('item'), on_delete=models.CASCADE)
     public_id       = CharField(_('public_id'), max_length=255)
     time            = FloatField(_('time (s)'), blank=True, null=True)
-    title           = CharField(_('title'), blank=True, null=True, max_length=255)
+    title           = CharField(_('title'), blank=True, null=True, max_length=512)
     date            = DateTimeField(_('date'), auto_now=True, blank=True, null=True)
     description     = TextField(_('description'), blank=True, null=True)
     author          = ForeignKey(User, related_name="markers", verbose_name=_('author'),
