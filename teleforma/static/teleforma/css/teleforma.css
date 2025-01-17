@@ -1805,8 +1805,7 @@ form.add_actus #id_text_parent{
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
     border-radius: 8px 0px 8px 8px;
-    width: 640px;
-/*     border: 2px solid #CCC; */
+    width: 55%;
     }
 
 #media_infos {
