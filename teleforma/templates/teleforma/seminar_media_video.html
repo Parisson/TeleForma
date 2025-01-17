@@ -94,15 +94,40 @@ $(window).ready(function(){
 {% else %}
 <div class="media">
 
+{% if "video" in media.mime_type %}
 <div class="video">
-<video id="my_video_1" class="video-js vjs-default-skin" width="864" height="480" controls preload="none" {% if media.poster_file %}poster="{{ MEDIA_URL }}{{ media.poster_file }}"{% endif %} data-setup='{}'>
-  {% for transcoded in media.transcoded.all %}
-   {% if "video" in transcoded.mime_type %}
-    <source src="{{ MEDIA_URL }}{{ transcoded.file }}#t=0" type="{{ transcoded.mime_type }}" />
-   {% endif %}
-  {% endfor %}
-    <source src="{{ MEDIA_URL }}{{ media.file }}#t=0" type="{{ media.mime_type }}" />
-</video>
+    <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+    <link href="https://unpkg.com/@videojs/themes@1/dist/fantasy/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.css">
+    <video
+        id="my_video_1"
+        class="video-js vjs-theme-fantasy"
+        controls
+        preload="none"
+        width="100%"
+        height="auto"
+        data-setup='{"playbackRates": [1, 1.25, 1.5, 2]}'
+        {% if media.poster_file %}{% thumbnail media.poster_file '640' as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}
+        >
+            <source src="{{ MEDIA_URL }}{{ media.file }}#t=0" type="{{ media.mime_type }}" />
+        <p class="vjs-no-js">
+          To view this video please enable JavaScript, and consider upgrading to a
+          web browser that
+          <a href="https://videojs.com/html5-video-support/" target="_blank"
+            >supports HTML5 video</a
+          >
+        </p>
+    </video>
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.min.js"></script>
+    <script>
+      var player = videojs('my_video_1');
+
+      player.seekButtons({
+        forward: 10,
+        back: 10
+      });
+    </script>
 </div>
 
 </div>
