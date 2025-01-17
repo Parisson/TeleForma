@@ -1815,10 +1815,17 @@ form.add_actus #id_text_parent{
     width: 620px;
     }
 
-.video {
-    background-color: transparent;
-    padding: 0.8em 0em 1em 0em;
-    }
+.course_media .video-js{
+        max-width: 100%;
+        height: auto !important;
+        width: 100% !important;
+}
+
+.course_media .video-js .vjs-tech{
+    position: static;
+    width: 100%;
+    height: auto;
+}
 
 .audio {
     padding: 0.8em 1em 1em 0em;
