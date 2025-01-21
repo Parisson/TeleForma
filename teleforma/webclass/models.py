@@ -48,11 +48,21 @@ def get_records_from_bbb(**kwargs):
             recordings = [recordings]
         for recording in recordings:
             # recording.prettyprint()
-            url = recording.get('playback', {}).get('format', {}).get('url')
+            format = {}
+            format = recording.get('playback', {}).get('format', {})
+            if isinstance(format, list):
+                formats = recording.get('playback', {}).get('format', [])
+                for format in formats:
+                    if format.get('type') == 'presentation':
+                        break
+            else:
+                format = recording.get('playback', {}).get('format', {})                
+            url = format.get('url')
             if url:
                 url = str(url)
             else:
                 continue
+            url = url.replace('bbb2.parisson.com', 'bbb3.parisson.com')
             start = int(str(recording['startTime'])[:-3])
             end = int(str(recording['endTime'])[:-3])
             data = {
@@ -63,7 +73,7 @@ def get_records_from_bbb(**kwargs):
                 'end': end,
                 'end_date': datetime.datetime.fromtimestamp(end),
                 'url': url,
-                'preview': str(recording.get('playback', {}).get('format', {}).get('preview', {}).get('images', {}).get('image', [])),
+                'preview': str(format.get('preview', {}).get('images', {}).get('image', '')),
                 'state': str(recording['state']),
             }
             if recording['metadata'].get('periodid'):
@@ -113,6 +123,7 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
 class BBBServer(models.Model):
     url = models.CharField("Url du serveur BBB", max_length=100)
     api_key = models.CharField("API Key", max_length=100)
+    # api_version = models.CharField("API Version", max_length=100, default="1")
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'bbb_server'
@@ -454,4 +465,5 @@ class WebclassRecord(models.Model):
             if category not in categories:
                 categories[category] = []
             categories[category].append(record)
+        print(categories)
         return categories
