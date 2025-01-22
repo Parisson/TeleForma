@@ -465,5 +465,4 @@ class WebclassRecord(models.Model):
             if category not in categories:
                 categories[category] = []
             categories[category].append(record)
-        print(categories)
         return categories
