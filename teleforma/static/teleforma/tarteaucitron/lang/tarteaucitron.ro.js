@@ -1,4 +1,5 @@
 /*global tarteaucitron */
+/* min ready */
 tarteaucitron.lang = {
     "middleBarHead": "☝ 🍪",
     "adblock": "Buna! Acest site este transparent și vă permite să alegeți serviciile terță parte pe care doriți să le permiteți.",
@@ -14,6 +15,7 @@ tarteaucitron.lang = {
     "personalize": "Personalizați",
     "acceptAll": "OK, acceptați-le pe toate",
     "close": "Închide",
+    "closeBanner": "Ascunde bannerul cookie-urilor",
 
     "privacyUrl": "Politica de confidentialitate",
     
@@ -30,11 +32,13 @@ tarteaucitron.lang = {
     "more": "Citeste mai mult",
     "source": "Vizualizați site-ul oficial",
     "credit": "Cookie manager de către tarteaucitron.js",
+    "noServices": "Acest site web nu utilizează niciun cookie care necesită acordul dumneavoastră.",
 
     "toggleInfoBox": "Afișați / ascundeți informații despre stocarea modulelor cookie",
     "title": "Panoul de gestionare a panourilor cookie",
     "cookieDetail": "Detaliile cookie pentru",
     "ourSite": "pe site-ul nostru",
+    "modalWindow": "(fereastra modală)",
     "newWindow": "(fereastră nouă)",
     "allowAll": "Permiteți toate cookie-urile",
     "denyAll": "Respinge toate cookie-urile",
@@ -77,7 +81,15 @@ tarteaucitron.lang = {
         "title": "Alte",
         "details": "Servicii pentru afișarea conținutului web."
     },
-    
-    "mandatoryTitle": "Mandatory cookies",
-    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
+
+    "google": {
+        "title": "Consentiment specific pentru serviciile Google",
+        "details": "Google poate utiliza datele dvs. pentru măsurarea audienței, performanța publicitară sau pentru a vă oferi anunțuri personalizate."
+    },
+
+    "mandatoryTitle": "Cookie-uri obligatorii",
+    "mandatoryText": "Acest site utilizează cookie-uri necesare pentru buna funcționare, care nu pot fi dezactivate.",
+
+    "save": "Salvare",
+    "ourpartners": "Partenerii noștri"
 };

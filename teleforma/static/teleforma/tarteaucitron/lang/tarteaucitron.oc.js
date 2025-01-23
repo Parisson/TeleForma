@@ -1,4 +1,5 @@
 /*global tarteaucitron */
+/* min ready */
 tarteaucitron.lang = {
 
     "middleBarHead": "☝ 🍪",
@@ -15,6 +16,7 @@ tarteaucitron.lang = {
     "acceptAll": "OK, tot acceptar",
     "personalize": "Personalizar",
     "close": "Tampar",
+    "closeBanner": "Mascar lo bendèth deus cookies",
 
     "privacyUrl": "Politica de confidencialitat",
 
@@ -37,15 +39,16 @@ tarteaucitron.lang = {
     "title": "Panèl de gestion dels cookies",
     "cookieDetail": "Detalh dels cookies",
     "ourSite": "sus nòstre site",
-    "newWindow": "(novèla fenèstra)",
+    "modalWindow": "(fenèstra de dialòg)",
+    "newWindow": "(fenèstra novèla)",
     "allowAll": "Autorizar totes los cookies",
     "denyAll": "Interdire totes los cookies",
 
     "icon": "Cookies",
     
     "fallback": "es desactivat.",
-    "allowed": "allowed",
-    "disallowed": "disallowed",
+    "allowed": "autorizat",
+    "disallowed": "interdit",
 
     "ads": {
         "title": "Regias publicitàrias",
@@ -53,7 +56,7 @@ tarteaucitron.lang = {
     },
     "analytic": {
         "title": "Mesura d'audiéncia",
-        "details": "Los servicis de mesura d'audiénce permeton de generar d'estatisticas de frequentacion utilas per melhorar lo site."
+        "details": "Los servicis de mesura d'audiéncia permeton de generar d'estatisticas de frequentacion utilas per melhorar lo site."
     },
     "social": {
         "title": "Malhums socials",
@@ -79,7 +82,15 @@ tarteaucitron.lang = {
         "title": "Autre",
         "details": "Servicis que cèrcan a afichar de contengut web."
     },
+
+    "google": {
+        "title": "Consentiment específic pels servèis de Google",
+        "details": "Google pòt utilizar vòstres donadas per la mesura de l'audiéncia, lo rendiment publicitari o per vos proposar de publicitats personalizats."
+    },
     
     "mandatoryTitle": "Cookies necessaris",
-    "mandatoryText": "Aqueste site utiliza de cookies necessaris pel seu pròpri foncionament que pòdon pas èsser desactivats."
+    "mandatoryText": "Aqueste site utiliza de cookies necessaris pel seu pròpri foncionament que pòdon pas èsser desactivats.",
+
+    "save": "Enregistrar",
+    "ourpartners": "Nòstres partenaris"
 };

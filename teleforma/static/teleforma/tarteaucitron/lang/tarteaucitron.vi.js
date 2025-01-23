@@ -1,4 +1,5 @@
 /*global tarteaucitron */
+/* min ready */
 tarteaucitron.lang = {
     "middleBarHead": "☝ 🍪",
     "adblock": "Xin chào! Trang web này minh bạch và cho phép bạn chọn dịch vụ bên thứ 3 mà bạn muốn cho phép.",
@@ -14,6 +15,7 @@ tarteaucitron.lang = {
     "acceptAll": "OK, đồng ý",
     "personalize": "Cá nhân",
     "close": "Đóng",
+    "closeBanner": "Ẩn biểu ngữ cookie",
 
     "privacyUrl": "Chính sách bảo mật",
 
@@ -36,6 +38,7 @@ tarteaucitron.lang = {
     "title": "Bảng quản lý cookie",
     "cookieDetail": "Cookie chi tiết",
     "ourSite": "trên site của chúng ta",
+    "modalWindow": "(cửa sổ phương thức)",
     "newWindow": "(Cửa sổ mới)",
     "allowAll": "Cho phép tất cả các Cookies",
     "denyAll": "Từ chối cất cả cookies",
@@ -78,7 +81,15 @@ tarteaucitron.lang = {
         "title": "Dịch vụ khác",
         "details": "Dịch vụ hiển thị nội dung web."
     },
-    
-    "mandatoryTitle": "Mandatory cookies",
-    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
+
+    "google": {
+        "title": "Sự đồng ý cụ thể cho dịch vụ của Google",
+        "details": "Google có thể sử dụng dữ liệu của bạn để đo lường đối tượng, hiệu suất quảng cáo hoặc cung cấp quảng cáo được cá nhân hóa cho bạn."
+    },
+
+    "mandatoryTitle": "Cookie Bắt Buộc",
+    "mandatoryText": "Trang web này sử dụng cookie cần thiết để hoạt động đúng cách, không thể tắt.",
+
+    "save": "Lưu",
+    "ourpartners": "Đối tác của chúng tôi"
 };

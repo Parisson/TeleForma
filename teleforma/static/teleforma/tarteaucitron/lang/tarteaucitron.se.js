@@ -1,4 +1,5 @@
 /*global tarteaucitron */
+/* min ready */
 tarteaucitron.lang = {
     "middleBarHead": "☝ 🍪",
     "adblock": "Hej! Denna webbplats är transparent och låter dig välja de tredjeparts tjänster du vill tillåta.",
@@ -14,6 +15,7 @@ tarteaucitron.lang = {
     "personalize": "Personifiera",
     "acceptAll": "OK, acceptera allt",
     "close": "Stänga",
+    "closeBanner": "Dölj cookies banner",
 
     "privacyUrl": "Integritetspolicy",
 
@@ -25,16 +27,18 @@ tarteaucitron.lang = {
     "deny": "Förneka",
     "noCookie": "Den här tjänsten använder inte cookie.",
     "useCookie": "Den här tjänsten kan installeras",
-    "useCookieCurrent": "Den här tjänsten har installerats",
+    "useCookieCurrent": "Den här tjänsten har installerat",
     "useNoCookie": "Den här tjänsten har inte installerat någon cookie.",
     "more": "Läs mer",
     "source": "Visa den officiella webbplatsen",
     "credit": "Cookies manager av tarteaucitron.js",
+    "noServices": "Denna webbplats använder ingen cookie som kräver ditt samtycke.",
 
     "toggleInfoBox": "Visa / dölj information om lagring av cookies",
     "title": "Cookie- hanteringspanel",
     "cookieDetail": "cookie- detalj för",
     "ourSite": "på vår webbplats",
+    "modalWindow": "(modalt fönster)",
     "newWindow": "(nytt fönster)",
     "allowAll": "Tillåt alla cookie",
     "denyAll": "Neka alla cookies",
@@ -42,8 +46,8 @@ tarteaucitron.lang = {
     "icon": "Cookies",
 
     "fallback": "är ur funktion.",
-    "allowed": "tillåten",
-    "disallowed": "tillåtet",
+    "allowed": "tillåtet",
+    "disallowed": "nekad",
 
     "ads": {
         "title": "Annonsnätverk",
@@ -78,7 +82,15 @@ tarteaucitron.lang = {
         "title": "Övrig",
         "details": "Tjänster för att visa webbinnehåll."
     },
-    
-    "mandatoryTitle": "Mandatory cookies",
-    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
+
+    "google": {
+        "title": "Specifikt samtycke för Googles tjänster",
+        "details": "Google kan använda dina data för publikmätning, reklamprestanda eller för att erbjuda dig personligt anpassade annonser."
+    },
+
+    "mandatoryTitle": "Dutkámus čáhci",
+    "mandatoryText": "Dát ođđa veahkehuhtii lea geavahuvvon dutkámus čáhciid buoremus boahtteárvvuin, guhte ii leat deaktiverejuvvon.",
+
+    "save": "Spara",
+    "ourpartners": "Våra partners"
 };

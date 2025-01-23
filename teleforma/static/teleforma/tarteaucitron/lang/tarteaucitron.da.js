@@ -1,4 +1,5 @@
 /*global tarteaucitron */
+/* min ready */
 tarteaucitron.lang = {
     "middleBarHead": "☝ 🍪",
     "adblock": "Hej! Dette sted er gennemsigtigt og giver dig mulighed for at vælge de tredjeparts tjenester, du vil tillade.",
@@ -14,6 +15,7 @@ tarteaucitron.lang = {
     "personalize": "Tilpas",
     "acceptAll": "OK, accepter alle",
     "close": "Luk",
+    "closeBanner": "Skjul cookie-banner",
 
     "privacyUrl": "Fortrolighedspolitik",
 
@@ -35,7 +37,8 @@ tarteaucitron.lang = {
     "toggleInfoBox": "Vis / skjul informationer om opbevaring af cookies",
     "title": "CCookie-styringspanel",
     "cookieDetail": "Cookie detaljer for",
-    "ourSite": "på vores side",
+    "ourSite": "på vores site",
+    "modalWindow": "(modal vindue)",
     "newWindow": "(nyt vindue)",
     "allowAll": "Tillad alle cookies",
     "denyAll": "Afvis alle cookies",
@@ -78,7 +81,15 @@ tarteaucitron.lang = {
         "title": "Andet",
         "details": "Tjenester til visning af webindhold."
     },
-    
-    "mandatoryTitle": "Mandatory cookies",
-    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
+
+    "google": {
+        "title": "Specifik samtykke til Googles tjenester",
+        "details": "Google kan bruge dine data til at måle publikum, reklamepræstation eller til at tilbyde dig personligt tilpassede annoncer."
+    },
+
+    "mandatoryTitle": "Obligatoriske cookies",
+    "mandatoryText": "Denne hjemmeside bruger cookies, der er nødvendige for dens korrekte funktion, og som ikke kan deaktiveres.",
+
+    "save": "Gem",
+    "ourpartners": "Vores partnere"
 };

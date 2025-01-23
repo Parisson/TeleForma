@@ -1,4 +1,5 @@
 /*global tarteaucitron */
+/* min ready */
 tarteaucitron.lang = {
     "middleBarHead": "☝ 🍪",
     "adblock": "Ahoj! Tato stránka je transparetní a umožňuje ti si přímo vybrat, jaké služby třetích stran chceš povolit.",
@@ -14,6 +15,7 @@ tarteaucitron.lang = {
     "personalize": "Přizpůsobit",
     "acceptAll": "OK, přijmout vše",
     "close": "Zavřít",
+    "closeBanner": "Skrýt banner souborů cookie",
 
     "privacyUrl": "Zásady ochrany osobních údajů",
     
@@ -30,14 +32,16 @@ tarteaucitron.lang = {
     "more": "Dozvědět se více",
     "source": "Zobrazit oficiální stránku",
     "credit": "Správce cookies od tarteaucitron.js",
+    "noServices": "Tento web nepoužívá žádné soubory cookie vyžadující váš souhlas.",
 
-    "toggleInfoBox": "Show/hide informations about cookie storage",
-    "title": "Cookies management panel",
-    "cookieDetail": "Cookie detail for",
-    "ourSite": "on our site",
-    "newWindow": "(new window)",
-    "allowAll": "Allow all cookies",
-    "denyAll": "Deny all cookies",
+    "toggleInfoBox": "Zobrazit/skrýt informace o ukládání souborů cookie",
+    "title": "Panel pro správu cookies",
+    "cookieDetail": "Podrobnosti o souboru cookie pro",
+    "ourSite": "na našem webu",
+    "modalWindow": "(modální okno)",
+    "newWindow": "(nové okno)",
+    "allowAll": "Povolit všechny soubory cookie",
+    "denyAll": "Odmítnout všechny cookies",
 
     "icon": "Cookies",
     
@@ -77,7 +81,15 @@ tarteaucitron.lang = {
         "title": "Jiný",
         "details": "Služby pro zobrazení webového obsahu."
     },
-    
-    "mandatoryTitle": "Mandatory cookies",
-    "mandatoryText": "This site uses cookies necessary for its proper functioning which cannot be deactivated."
+
+    "google": {
+        "title": "Specifický souhlas se službami Google",
+        "details": "Google může využívat vaše údaje k měření publika, reklamnímu účinku nebo k zobrazení personalizovaných reklam."
+    },
+
+    "mandatoryTitle": "Povinné soubory cookie",
+    "mandatoryText": "Tato stránka používá soubory cookie nezbytné pro její správné fungování, které nelze deaktivovat.",
+
+    "save": "Uložit",
+    "ourpartners": "Naši partneři"
 };
