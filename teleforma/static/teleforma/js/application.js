@@ -327,7 +327,7 @@ $(document).ready(function () {
 
 
 tarteaucitron.init({
-"privacyUrl": "/pages/legal_notices", /* Privacy policy url */
+"privacyUrl": "https://pre-barreau.com/politique-de-confidentialite/", /* Privacy policy url */
   "bodyPosition": "bottom", /* or top to bring it as first element for accessibility */
 
 "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
