@@ -20,7 +20,7 @@
     {% with usr|user_courses as courses %}
      {% for c in courses %}
        {% with c.course as course %}
-       <li><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title}} {{ course.type }}</a></li>
+       <li>{{ course.title}} {{ course.type }}</li>
        {% endwith %}
      {% endfor %}
     {% endwith %}
