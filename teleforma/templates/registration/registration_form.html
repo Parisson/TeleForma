@@ -75,7 +75,7 @@
                 <label for="id_{{ field.name }}">
                     {{ field.label }}
                     {% if field.field.required and mode_corrector %}<span class="required">*</span>{% endif %}
-                    {% if field.name == 'iej' %}<span class="required">*</span>{% endif %}
+                    {% if field.name == 'iej' or field.name == 'level' %}<span class="required">*</span>{% endif %}
                 </label>
                 <span class="helptext">
                     {{ field.help_text }}
