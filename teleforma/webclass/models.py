@@ -296,7 +296,7 @@ class WebclassSlot(models.Model):
                     'attendeePW': "PWATTENDEE",
                     # 'maxParticipants':self.webclass_max_participants + 1,
                     'welcome': "Pré-Barreau CRFPA %d - Bienvenue sur la webclass \"%s\"." % (year, self.webclass.course.title.encode('UTF-8'),),
-                    'record': True,
+                    # 'record': True,
                     # 'autoStartRecording':True,
                     'muteOnStart': True,
                     'allowModsToUnmuteUsers': True,
