@@ -300,7 +300,7 @@ class WebclassSlot(models.Model):
                     # 'maxParticipants':self.webclass_max_participants + 1,
                     'welcome': "Bienvenue sur la webclass \"%s\"." % self.webclass.course.title,
                     'record': True,
-                    # 'autoStartRecording': False,
+                    'autoStartRecording': False,
                     'allowStartStopRecording': True,
                     'muteOnStart': True,
                     'allowModsToUnmuteUsers': True,
