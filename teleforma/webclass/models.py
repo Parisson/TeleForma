@@ -306,6 +306,7 @@ class WebclassSlot(models.Model):
                     'bannerText': "Pré-Barreau",
                     'bannerColor': "#003768",
                     # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
+                    'name': webclass.course.title,
                 }
                 meta = {
                     'origin': 'crfpa',
