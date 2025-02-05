@@ -15,6 +15,7 @@ from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 from jxmlease import XMLDictNode, XMLListNode
 from teleforma.fields import DurationField, ShortTextField
 from teleforma.models import session_choices
@@ -288,6 +289,7 @@ class WebclassSlot(models.Model):
                 # check if meeting already exists
                 self.get_webclass_info()
             except BBBException:
+                site = Site.objects.get_current()
                 year = datetime.datetime.now().year
                 # site_url = 'https://' + request.get_host()
                 params = {
@@ -295,23 +297,23 @@ class WebclassSlot(models.Model):
                     'moderatorPW': self.room_password,
                     'attendeePW': "pwattendee",
                     # 'maxParticipants':self.webclass_max_participants + 1,
-                    'welcome': "Pré-Barreau CRFPA %d - Bienvenue sur la webclass \"%s\"." % (year, self.webclass.course.title,),
+                    'welcome': "Bienvenue sur la webclass \"%s\"." % self.webclass.course.title,
                     'record': True,
                     # 'autoStartRecording': False,
                     'allowStartStopRecording': True,
                     'muteOnStart': True,
                     'allowModsToUnmuteUsers': True,
-                    'logo':'https://e-learning.crfpa.pre-barreau.com/static/teleforma/images/logo_pb.png',
-                    'copyright': "© %d Pré-Barreau" % year,
+                    'logo':'https://%s%s' % (site, settings.BBB_LOGO_URL),
+                    'copyright': "© %d %s" % (year, settings.TELEFORMA_ORGANIZATION),
                     # 'guestPolicy':'ALWAYS_ACCEPT'
-                    'bannerText': "Pré-Barreau CRFPA",
-                    'bannerColor': "#003768",
+                    'bannerText': settings.TELEFORMA_ORGANIZATION,
+                    'bannerColor': settings.BBB_BANNER_COLOR,
                     # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
-                    'logoutURL': "https://e-learning.crfpa.pre-barreau.com",
+                    'logoutURL': "https://%s" % site,
                     'endWhenNoModerator': True,
                     'meetingLayout': "VIDEO_FOCUS",
                     "notifyRecordingIsOn": True,
-                    'preUploadedPresentation': "https://e-learning.crfpa.pre-barreau.com/static/teleforma/pdf/pb-blank-slide.pdf",
+                    'preUploadedPresentation': "https://%s%s" % (site, settings.BBB_PDF_URL),
                 }
                 meta = {
                     'origin': 'crfpa',
