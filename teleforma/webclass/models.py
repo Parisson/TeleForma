@@ -291,7 +291,7 @@ class WebclassSlot(models.Model):
                 year = datetime.datetime.now().year
                 # site_url = 'https://' + request.get_host()
                 params = {
-                    'name': "Webclass %s" % self.webclass.course.title,
+                    'name': "Webclass - %s" % self.webclass.course.title,
                     'moderatorPW': self.room_password,
                     'attendeePW': "PWATTENDEE",
                     # 'maxParticipants':self.webclass_max_participants + 1,
