@@ -438,7 +438,7 @@ def purge_courses_cache(sender, instance, *args, **kwargs):
             for num_order in (True, False):
                 for num_courses in (True, False):
                     cache_key = f"get_courses-{instance.user.id}-{date_order}-{num_order}-{num_courses}-{period and period.id or None}"
-                    print(f"purging {cache_key}")
+                    # print(f"purging {cache_key}")
                     cache.delete(cache_key)
 
 signals.post_save.connect(update_balance_signal)
