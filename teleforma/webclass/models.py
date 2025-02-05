@@ -311,6 +311,7 @@ class WebclassSlot(models.Model):
                     'endWhenNoModerator': True,
                     'meetingLayout': "VIDEO_FOCUS",
                     "notifyRecordingIsOn": True,
+                    'preUploadedPresentation': "https://e-learning.crfpa.pre-barreau.com/static/teleforma/pdf/pb-blank-slide.pdf",
                 }
                 meta = {
                     'origin': 'crfpa',
