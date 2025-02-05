@@ -290,29 +290,32 @@ class WebclassSlot(models.Model):
             except BBBException:
                 year = datetime.datetime.now().year
                 # site_url = 'https://' + request.get_host()
-                webclass = self.webclass
                 params = {
+                    'name': "Webclass %s" % self.webclass.course.title,
                     'moderatorPW': self.room_password,
-                    'attendeePW': 'pwattendee',
+                    'attendeePW': "PWATTENDEE",
                     # 'maxParticipants':self.webclass_max_participants + 1,
-                    'welcome': "Pré-Barreau : Bienvenue sur la conférence \"%s\"." % (webclass.course.title.encode('utf-8'),),
+                    'welcome': "Pré-Barreau CRFPA %d - Bienvenue sur la webclass \"%s\"." % (year, self.webclass.course.title,),
                     'record': True,
-                    # 'autoStartRecording':True,
+                    'autoStartRecording':True,
                     'muteOnStart': True,
                     'allowModsToUnmuteUsers': True,
-                    # 'logo':'https://e-learning.crfpa.pre-barreau.com/static/teleforma/images/logo_pb.png',
+                    'logo':'https://e-learning.crfpa.pre-barreau.com/static/teleforma/images/logo_pb.png',
                     'copyright': "© %d Pré-Barreau" % year,
                     # 'guestPolicy':'ALWAYS_ACCEPT'
-                    'bannerText': "Pré-Barreau",
+                    'bannerText': "Pré-Barreau CRFPA",
                     'bannerColor': "#003768",
                     # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
-                    'name': webclass.course.title,
+                    'logoutURL': "https://e-learning.crfpa.pre-barreau.com",
+                    'endWhenNoModerator': True,
+                    'meetingLayout': "VIDEO_FOCUS",
+                    "notifyRecordingIsOn": True,
                 }
                 meta = {
                     'origin': 'crfpa',
-                    'periodid': webclass.period.id,
-                    'courseid': webclass.course.id,
-                    'webclassid': webclass.id,
+                    'periodid': self.webclass.period.id,
+                    'courseid': self.webclass.course.id,
+                    'webclassid': self.webclass.id,
                     'slotid': self.id,
                     'professor': self.professor.user.username,
                 }
