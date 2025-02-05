@@ -266,7 +266,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.FileHandler',
             'filename': "/var/log/app/app.log",
             'formatter': 'simple',
@@ -278,7 +278,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file'],
-            'level': 'WARNING',
+            'level': 'ERROR',
             'propagate': True,
         },
         'payment': {
