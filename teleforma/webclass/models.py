@@ -473,9 +473,6 @@ class WebclassRecord(models.Model):
         for record in records:
             record['obj'] = records_mapping.get(record['id'])
             category = category_mapping.get(record['id'])
-            if not category:
-                record_id = record['id'].split('-')[0]
-                category = category_mapping[record_id]
             if category not in categories:
                 categories[category] = []
             categories[category].append(record)
