@@ -452,6 +452,7 @@ class WebclassRecord(models.Model):
     def __str__(self):
         return "Enregistrement webclass %d" % self.id
 
+
     @staticmethod
     def get_records(period, course):
         record_ids = set()
@@ -464,13 +465,17 @@ class WebclassRecord(models.Model):
             category_mapping[record.record_id] = record.category
         if not record_ids:
             return {}
-        records = get_records_from_bbb(recording_id=','.join(record_ids))
+
+        records = get_records_from_bbb(recording_id=','.join(record_ids))        
 
         # group records by category
         categories = {}
         for record in records:
             record['obj'] = records_mapping.get(record['id'])
-            category = category_mapping[record['id']]
+            category = category_mapping.get(record['id'])
+            if not category:
+                record_id = record['id'].split('-')[0]
+                category = category_mapping[record_id]
             if category not in categories:
                 categories[category] = []
             categories[category].append(record)
