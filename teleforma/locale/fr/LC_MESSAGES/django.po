@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-27 10:46+0200\n"
+"POT-Creation-Date: 2025-02-07 11:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Guillaume Pellerin <yomguy@parisson.com>\n"
 "Language-Team: LANGUAGE <lists@parisson.com>\n"
@@ -18,12 +18,12 @@ msgstr ""
 
 #: teleforma/admin.py:42 teleforma/exam/models.py:147
 #: teleforma/exam/models.py:264 teleforma/models/ae.py:49
-#: teleforma/models/core.py:168 teleforma/models/core.py:222
-#: teleforma/models/core.py:404 teleforma/models/core.py:417
-#: teleforma/models/core.py:902 teleforma/models/core.py:983
+#: teleforma/models/core.py:164 teleforma/models/core.py:218
+#: teleforma/models/core.py:400 teleforma/models/core.py:413
+#: teleforma/models/core.py:898 teleforma/models/core.py:979
 #: teleforma/models/crfpa.py:82 teleforma/models/crfpa.py:176
 #: teleforma/models/crfpa.py:511 teleforma/models/crfpa.py:667
-#: teleforma/webclass/models.py:138 teleforma/webclass/models.py:403
+#: teleforma/webclass/models.py:156 teleforma/webclass/models.py:428
 msgid "period"
 msgstr "période"
 
@@ -53,7 +53,7 @@ msgstr "brouillon"
 msgid "submitted"
 msgstr "soumise"
 
-#: teleforma/exam/models.py:87 teleforma/models/core.py:92
+#: teleforma/exam/models.py:87 teleforma/models/core.py:88
 msgid "pending"
 msgstr "en attente"
 
@@ -122,10 +122,10 @@ msgid "file too large"
 msgstr "fichier trop gros"
 
 #: teleforma/exam/models.py:143 teleforma/exam/models.py:263
-#: teleforma/models/core.py:331 teleforma/models/core.py:420
-#: teleforma/models/core.py:808 teleforma/models/core.py:979
+#: teleforma/models/core.py:327 teleforma/models/core.py:416
+#: teleforma/models/core.py:804 teleforma/models/core.py:975
 #: teleforma/models/crfpa.py:665 teleforma/models/pro.py:50
-#: teleforma/webclass/models.py:140 teleforma/webclass/models.py:405
+#: teleforma/webclass/models.py:158 teleforma/webclass/models.py:430
 msgid "course"
 msgstr "matière"
 
@@ -134,8 +134,8 @@ msgid "corrector"
 msgstr "correcteur"
 
 #: teleforma/exam/models.py:149 teleforma/exam/models.py:266
-#: teleforma/models/core.py:425 teleforma/models/core.py:815
-#: teleforma/webclass/models.py:151 teleforma/webclass/models.py:412
+#: teleforma/models/core.py:421 teleforma/models/core.py:811
+#: teleforma/webclass/models.py:169 teleforma/webclass/models.py:437
 msgid "session"
 msgstr "séance"
 
@@ -152,8 +152,8 @@ msgid "date end"
 msgstr "date de fin"
 
 #: teleforma/exam/models.py:154 teleforma/exam/models.py:268
-#: teleforma/models/core.py:686 teleforma/models/core.py:813
-#: teleforma/models/core.py:989
+#: teleforma/models/core.py:682 teleforma/models/core.py:809
+#: teleforma/models/core.py:982
 msgid "type"
 msgstr "type"
 
@@ -162,17 +162,17 @@ msgid "Quota"
 msgstr ""
 
 #: teleforma/exam/models.py:158 teleforma/exam/templates/exam/quotas.html:11
-#: teleforma/templates/teleforma/base.html:130
+#: teleforma/templates/teleforma/base.html:131
 msgid "Quotas"
 msgstr ""
 
-#: teleforma/exam/models.py:213 teleforma/models/core.py:768
+#: teleforma/exam/models.py:213 teleforma/models/core.py:764
 #: teleforma/models/pro.py:74
 msgid "date added"
 msgstr "date d'ajout"
 
-#: teleforma/exam/models.py:215 teleforma/models/core.py:267
-#: teleforma/models/core.py:770 teleforma/models/crfpa.py:549
+#: teleforma/exam/models.py:215 teleforma/models/core.py:263
+#: teleforma/models/core.py:766 teleforma/models/crfpa.py:549
 #: teleforma/models/pro.py:75
 msgid "date modified"
 msgstr "date de modification"
@@ -215,11 +215,11 @@ msgid "Pages"
 msgstr "Pages"
 
 #: teleforma/exam/models.py:250 teleforma/models/appointment.py:32
-#: teleforma/models/appointment.py:291 teleforma/models/core.py:147
-#: teleforma/models/core.py:161 teleforma/models/core.py:184
-#: teleforma/models/core.py:228 teleforma/models/core.py:338
-#: teleforma/models/core.py:389 teleforma/models/core.py:786
-#: teleforma/models/core.py:1151 teleforma/models/crfpa.py:61
+#: teleforma/models/appointment.py:291 teleforma/models/core.py:143
+#: teleforma/models/core.py:157 teleforma/models/core.py:180
+#: teleforma/models/core.py:224 teleforma/models/core.py:334
+#: teleforma/models/core.py:385 teleforma/models/core.py:782
+#: teleforma/models/core.py:1144 teleforma/models/crfpa.py:61
 #: teleforma/models/crfpa.py:78 teleforma/models/messages.py:22
 msgid "name"
 msgstr "nom"
@@ -252,10 +252,10 @@ msgstr "note"
 msgid "comments"
 msgstr "commentaires"
 
-#: teleforma/exam/models.py:280 teleforma/models/core.py:408
-#: teleforma/models/core.py:436 teleforma/models/core.py:943
+#: teleforma/exam/models.py:280 teleforma/models/core.py:404
+#: teleforma/models/core.py:432 teleforma/models/core.py:939
 #: teleforma/models/pro.py:54 teleforma/models/pro.py:97
-#: teleforma/models/pro.py:115 teleforma/webclass/models.py:154
+#: teleforma/models/pro.py:115 teleforma/webclass/models.py:172
 msgid "status"
 msgstr "status"
 
@@ -286,12 +286,10 @@ msgstr ""
 #: teleforma/exam/templates/exam/scripts.html:82
 #: teleforma/templates/teleforma/course.html:53
 #: teleforma/templates/teleforma/course_conference.html:62
-#: teleforma/templates/teleforma/course_conference.html:108
+#: teleforma/templates/teleforma/course_conference.html:109
 #: teleforma/templates/teleforma/course_conference_audio.html:67
-#: teleforma/templates/teleforma/course_conference_double.html:142
-#: teleforma/templates/teleforma/course_conference_double.html:188
-#: teleforma/templates/teleforma/course_media.html:79
-#: teleforma/templates/teleforma/course_media.html:156
+#: teleforma/templates/teleforma/course_media.html:81
+#: teleforma/templates/teleforma/course_media.html:158
 #: teleforma/templates/teleforma/course_media_transcoded.html:44
 #: teleforma/templates/teleforma/course_media_transcoded.html:94
 #: teleforma/templates/teleforma/course_media_video_embed.html:33
@@ -308,8 +306,8 @@ msgid "Script"
 msgstr "Copie"
 
 #: teleforma/exam/models.py:317 teleforma/exam/templates/exam/scripts.html:20
-#: teleforma/templates/teleforma/base.html:111
-#: teleforma/templates/teleforma/base.html:116
+#: teleforma/templates/teleforma/base.html:112
+#: teleforma/templates/teleforma/base.html:117
 #: teleforma/templates/telemeta/base.html:119
 #: teleforma/templates/telemeta/base.html:124
 msgid "Scripts"
@@ -320,9 +318,8 @@ msgstr "Copies"
 #: teleforma/exam/templates/exam/quotas.html:46
 #: teleforma/exam/templates/exam/scripts.html:75
 #: teleforma/models/appointment.py:35 teleforma/models/crfpa.py:514
-#: teleforma/templates/teleforma/course_conference.html:107
-#: teleforma/templates/teleforma/course_conference_double.html:187
-#: teleforma/templates/teleforma/course_media.html:155
+#: teleforma/templates/teleforma/course_conference.html:108
+#: teleforma/templates/teleforma/course_media.html:157
 #: teleforma/templates/teleforma/course_media_transcoded.html:93
 #: teleforma/templates/teleforma/course_media_video_embed.html:32
 msgid "Course"
@@ -389,7 +386,7 @@ msgstr "Cordialement"
 #: teleforma/exam/templates/exam/messages/script_fix.txt:10
 #: teleforma/exam/templates/exam/messages/script_marked.txt:10
 #: teleforma/exam/templates/exam/messages/script_rejected.txt:8
-#: teleforma/templates/postman/email_user.txt:26
+#: teleforma/templates/postman/email_user.txt:28
 #: teleforma/templates/postman/email_user_init.txt:24
 #: teleforma/templates/postman/email_visitor.txt:16
 #: teleforma/templates/registration/password_reset_email.html:13
@@ -451,8 +448,8 @@ msgid "My courses"
 msgstr "Mes matières"
 
 #: teleforma/exam/templates/exam/scores.html:48
-#: teleforma/templates/teleforma/base.html:142
-#: teleforma/templates/teleforma/base.html:144
+#: teleforma/templates/teleforma/base.html:143
+#: teleforma/templates/teleforma/base.html:145
 #: teleforma/templates/telemeta/base.html:140
 #: teleforma/templates/telemeta/base.html:142
 msgid "Scores"
@@ -514,8 +511,8 @@ msgstr "Envoyer"
 
 #: teleforma/exam/templates/exam/script_detail.html:136
 #: teleforma/exam/templates/exam/script_detail2.html:113
-#: teleforma/templates/teleforma/base.html:158
-#: teleforma/templates/teleforma/base.html:170
+#: teleforma/templates/teleforma/base.html:159
+#: teleforma/templates/teleforma/base.html:171
 #: teleforma/templates/teleforma/help.html:10
 #: teleforma/templates/telemeta/base.html:155
 #: teleforma/templates/telemeta/base.html:165
@@ -547,19 +544,19 @@ msgstr ""
 msgid "No scripts"
 msgstr "Aucune copie"
 
-#: teleforma/exam/views.py:342
+#: teleforma/exam/views.py:354
 msgid "Pending scripts"
 msgstr "Copies en attente"
 
-#: teleforma/exam/views.py:353
+#: teleforma/exam/views.py:365
 msgid "Treated scripts"
 msgstr "Copie traitées"
 
-#: teleforma/exam/views.py:362
+#: teleforma/exam/views.py:374
 msgid "Rejected scripts"
 msgstr "Copies rejetées"
 
-#: teleforma/exam/views.py:381
+#: teleforma/exam/views.py:393
 msgid ""
 "Error: you have already submitted a script for this session, the same course "
 "and the same type!"
@@ -567,7 +564,7 @@ msgstr ""
 "Erreur : vous avez déjà soumis une copie du même type pour la même matière "
 "et la même séance."
 
-#: teleforma/exam/views.py:386
+#: teleforma/exam/views.py:398
 msgid ""
 "You have successfully submitted your script. It will be processed in the "
 "next hours."
@@ -575,7 +572,7 @@ msgstr ""
 "Vous avez correctement soumis votre copie. Elle sera traitée dans les "
 "prochaines heures puis corrigée."
 
-#: teleforma/exam/views.py:391
+#: teleforma/exam/views.py:403
 msgid ""
 "There was a problem with your submission. Please try again, later if "
 "possible."
@@ -583,15 +580,15 @@ msgstr ""
 "Il y a une une erreur lors de votre soumission de copie. Merci de vérifier "
 "votre fichier ou de réessayer plus tard."
 
-#: teleforma/exam/views.py:474
+#: teleforma/exam/views.py:486
 msgid "You must add your score to access to the statistics."
 msgstr "Vous devez ajouter votre note pour accéder aux statistiques."
 
-#: teleforma/exam/views.py:553
+#: teleforma/exam/views.py:565
 msgid "all courses"
 msgstr "toutes les matières"
 
-#: teleforma/fields.py:114 teleforma/templates/teleforma/course_media.html:179
+#: teleforma/fields.py:114 teleforma/templates/teleforma/course_media.html:181
 #: teleforma/templates/teleforma/inc/media_list.html:47
 msgid "Duration"
 msgstr "Durée"
@@ -600,37 +597,37 @@ msgstr "Durée"
 msgid "Enter a valid duration in HH:MM[:ss] format."
 msgstr "Entrez une durée valide au format HH:MM[:ss]"
 
-#: teleforma/forms.py:63 teleforma/forms.py:221 teleforma/models/crfpa.py:455
+#: teleforma/forms.py:63 teleforma/forms.py:222 teleforma/models/crfpa.py:455
 #: teleforma/templates/registration/registration_corrector_pdf.html:43
 #: teleforma/templates/registration/registration_pdf.html:48
-#: teleforma/templates/teleforma/profile_detail.html:81
+#: teleforma/templates/teleforma/profile_detail.html:79
 msgid "Address"
 msgstr "Adresse"
 
-#: teleforma/forms.py:65 teleforma/forms.py:223 teleforma/models/crfpa.py:457
+#: teleforma/forms.py:65 teleforma/forms.py:224 teleforma/models/crfpa.py:457
 msgid "Address detail"
 msgstr "Adresse (detail)"
 
-#: teleforma/forms.py:66 teleforma/forms.py:224 teleforma/models/crfpa.py:459
+#: teleforma/forms.py:66 teleforma/forms.py:225 teleforma/models/crfpa.py:459
 msgid "Postal code"
 msgstr "Code postal"
 
-#: teleforma/forms.py:67 teleforma/forms.py:225 teleforma/models/crfpa.py:460
+#: teleforma/forms.py:67 teleforma/forms.py:226 teleforma/models/crfpa.py:460
 msgid "City"
 msgstr "Ville"
 
-#: teleforma/forms.py:68 teleforma/forms.py:226 teleforma/models/crfpa.py:461
+#: teleforma/forms.py:68 teleforma/forms.py:227 teleforma/models/crfpa.py:461
 msgid "Country"
 msgstr "Pays"
 
-#: teleforma/forms.py:69 teleforma/forms.py:227 teleforma/models/crfpa.py:463
+#: teleforma/forms.py:69 teleforma/forms.py:228 teleforma/models/crfpa.py:463
 #: teleforma/templates/registration/registration_corrector_pdf.html:47
 #: teleforma/templates/registration/registration_pdf.html:52
-#: teleforma/templates/teleforma/profile_detail.html:84
+#: teleforma/templates/teleforma/profile_detail.html:82
 msgid "Telephone"
 msgstr "Téléphone"
 
-#: teleforma/forms.py:70 teleforma/forms.py:228
+#: teleforma/forms.py:70 teleforma/forms.py:229
 #: teleforma/templates/registration/registration_corrector_pdf.html:59
 #: teleforma/templates/registration/registration_pdf.html:64
 msgid "Birthday"
@@ -641,30 +638,30 @@ msgstr "Date de naissance"
 msgid "Studying level"
 msgstr "Niveau d'étude"
 
-#: teleforma/forms.py:87 teleforma/templates/teleforma/inc/user_list.html:23
+#: teleforma/forms.py:93 teleforma/templates/teleforma/inc/user_list.html:23
 #: teleforma/templates/teleforma/profile_detail.html:71
 msgid "Procedure"
 msgstr "Procédure"
 
-#: teleforma/forms.py:97
+#: teleforma/forms.py:103
 msgid "Code promo"
 msgstr ""
 
-#: teleforma/forms.py:100
+#: teleforma/forms.py:106
 msgid "Échéancier de paiement"
 msgstr ""
 
-#: teleforma/forms.py:316
+#: teleforma/forms.py:317
 msgid "Recipients"
 msgstr "Destinataires"
 
-#: teleforma/forms.py:316 teleforma/templates/postman/base_folder.html:50
+#: teleforma/forms.py:317 teleforma/templates/postman/base_folder.html:50
 #: teleforma/templates/postman/reply.html:4
 msgid "Recipient"
 msgstr ""
 
 #: teleforma/models/ae.py:48 teleforma/models/chat.py:20
-#: teleforma/models/core.py:353 teleforma/models/core.py:871
+#: teleforma/models/core.py:349 teleforma/models/core.py:867
 #: teleforma/models/crfpa.py:143 teleforma/models/crfpa.py:454
 #: teleforma/models/crfpa.py:510 teleforma/models/notification.py:34
 #: teleforma/models/pro.py:110 teleforma/models/pro.py:152
@@ -675,8 +672,8 @@ msgstr "utilisateur"
 msgid "platform only"
 msgstr "plateforme seulement"
 
-#: teleforma/models/ae.py:53 teleforma/models/core.py:339
-#: teleforma/models/core.py:355
+#: teleforma/models/ae.py:53 teleforma/models/core.py:335
+#: teleforma/models/core.py:351
 msgid "courses"
 msgstr "matières"
 
@@ -692,310 +689,310 @@ msgstr ""
 msgid "A new live conference has started : "
 msgstr "Une nouvelle conférence en direct a commencé : "
 
-#: teleforma/models/core.py:92
+#: teleforma/models/core.py:88
 msgid "broken"
 msgstr "cassé"
 
-#: teleforma/models/core.py:92
+#: teleforma/models/core.py:88
 msgid "processing"
 msgstr "en cours"
 
-#: teleforma/models/core.py:93
+#: teleforma/models/core.py:89
 msgid "done"
 msgstr "fait"
 
-#: teleforma/models/core.py:93
+#: teleforma/models/core.py:89
 msgid "ready"
 msgstr "prêt"
 
-#: teleforma/models/core.py:110
+#: teleforma/models/core.py:106
 msgid "Hidden"
 msgstr "Caché"
 
-#: teleforma/models/core.py:111
+#: teleforma/models/core.py:107
 msgid "Private"
 msgstr "Privé"
 
-#: teleforma/models/core.py:112 teleforma/webclass/models.py:30
+#: teleforma/models/core.py:108 teleforma/webclass/models.py:32
 msgid "Draft"
 msgstr "Brouillon"
 
-#: teleforma/models/core.py:113 teleforma/webclass/models.py:31
+#: teleforma/models/core.py:109 teleforma/webclass/models.py:33
 msgid "Public"
 msgstr "Publié"
 
-#: teleforma/models/core.py:149 teleforma/models/core.py:163
-#: teleforma/models/core.py:186 teleforma/models/core.py:230
-#: teleforma/models/core.py:263 teleforma/models/core.py:391
-#: teleforma/models/core.py:688 teleforma/models/core.py:765
-#: teleforma/models/core.py:788 teleforma/models/crfpa.py:63
+#: teleforma/models/core.py:145 teleforma/models/core.py:159
+#: teleforma/models/core.py:182 teleforma/models/core.py:226
+#: teleforma/models/core.py:259 teleforma/models/core.py:387
+#: teleforma/models/core.py:684 teleforma/models/core.py:761
+#: teleforma/models/core.py:784 teleforma/models/crfpa.py:63
 #: teleforma/models/crfpa.py:80 teleforma/models/crfpa.py:572
 #: teleforma/models/crfpa.py:587 teleforma/models/crfpa.py:602
 #: teleforma/models/pro.py:135
 msgid "description"
 msgstr "description"
 
-#: teleforma/models/core.py:156 teleforma/models/core.py:165
-#: teleforma/models/core.py:388 teleforma/models/pro.py:134
+#: teleforma/models/core.py:152 teleforma/models/core.py:161
+#: teleforma/models/core.py:384 teleforma/models/pro.py:134
 msgid "organization"
 msgstr "organisation"
 
-#: teleforma/models/core.py:166
+#: teleforma/models/core.py:162
 msgid "Master domain"
 msgstr ""
 
-#: teleforma/models/core.py:179 teleforma/models/core.py:190
-#: teleforma/models/core.py:260 teleforma/models/core.py:358
-#: teleforma/models/core.py:415 teleforma/webclass/models.py:136
+#: teleforma/models/core.py:175 teleforma/models/core.py:186
+#: teleforma/models/core.py:256 teleforma/models/core.py:354
+#: teleforma/models/core.py:411 teleforma/webclass/models.py:154
 msgid "department"
 msgstr "département"
 
-#: teleforma/models/core.py:188 teleforma/models/crfpa.py:84
+#: teleforma/models/core.py:184 teleforma/models/crfpa.py:84
 msgid "parent"
 msgstr ""
 
-#: teleforma/models/core.py:192 teleforma/models/core.py:430
+#: teleforma/models/core.py:188 teleforma/models/core.py:426
 msgid "begin date"
 msgstr "date de début"
 
-#: teleforma/models/core.py:193 teleforma/models/core.py:431
+#: teleforma/models/core.py:189 teleforma/models/core.py:427
 msgid "end date"
 msgstr "date de fin"
 
-#: teleforma/models/core.py:195
+#: teleforma/models/core.py:191
 msgid "date d'init de mot de passe"
 msgstr ""
 
-#: teleforma/models/core.py:197
+#: teleforma/models/core.py:193
 msgid "message pour internaute"
 msgstr ""
 
-#: teleforma/models/core.py:199
+#: teleforma/models/core.py:195
 msgid "message pour presentielle"
 msgstr ""
 
-#: teleforma/models/core.py:200
+#: teleforma/models/core.py:196
 msgid "is open"
 msgstr ""
 
-#: teleforma/models/core.py:202
+#: teleforma/models/core.py:198
 msgid "date de fin d'examens"
 msgstr ""
 
-#: teleforma/models/core.py:204
+#: teleforma/models/core.py:200
 msgid "nombre maximal de copies"
 msgstr ""
 
-#: teleforma/models/core.py:238 teleforma/models/core.py:422
-#: teleforma/models/core.py:810 teleforma/models/core.py:981
+#: teleforma/models/core.py:234 teleforma/models/core.py:418
+#: teleforma/models/core.py:806 teleforma/models/core.py:977
 msgid "course type"
 msgstr "type de matière"
 
-#: teleforma/models/core.py:261 teleforma/models/core.py:763
+#: teleforma/models/core.py:257 teleforma/models/core.py:759
 #: teleforma/models/pro.py:51 teleforma/models/pro.py:90
 msgid "title"
 msgstr "titre"
 
-#: teleforma/models/core.py:264 teleforma/models/core.py:771
+#: teleforma/models/core.py:260 teleforma/models/core.py:767
 #: teleforma/models/crfpa.py:77
 msgid "code"
 msgstr "cote"
 
-#: teleforma/models/core.py:265
+#: teleforma/models/core.py:261
 msgid "tweeter title"
 msgstr "titre tweeter"
 
-#: teleforma/models/core.py:268 teleforma/models/core.py:789
+#: teleforma/models/core.py:264 teleforma/models/core.py:785
 msgid "number"
 msgstr "nombre"
 
-#: teleforma/models/core.py:269 teleforma/models/crfpa.py:85
+#: teleforma/models/core.py:265 teleforma/models/crfpa.py:85
 msgid "synthesis note"
 msgstr "note de synthèse"
 
-#: teleforma/models/core.py:270 teleforma/models/crfpa.py:88
+#: teleforma/models/core.py:266 teleforma/models/crfpa.py:88
 msgid "obligations"
 msgstr "obligations"
 
-#: teleforma/models/core.py:271 teleforma/models/crfpa.py:110
+#: teleforma/models/core.py:267 teleforma/models/crfpa.py:110
 msgid "magistral"
 msgstr "magistral"
 
-#: teleforma/models/core.py:272 teleforma/models/crfpa.py:91
+#: teleforma/models/core.py:268 teleforma/models/crfpa.py:91
 #: teleforma/models/crfpa.py:156
 msgid "procedure"
 msgstr "procédure"
 
-#: teleforma/models/core.py:273
+#: teleforma/models/core.py:269
 msgid "written_speciality"
 msgstr "spécialité écrit"
 
-#: teleforma/models/core.py:274
+#: teleforma/models/core.py:270
 msgid "oral_speciality"
 msgstr "spécialité orale"
 
-#: teleforma/models/core.py:275
+#: teleforma/models/core.py:271
 msgid "oral_1"
 msgstr ""
 
-#: teleforma/models/core.py:276
+#: teleforma/models/core.py:272
 msgid "oral_2"
 msgstr ""
 
-#: teleforma/models/core.py:277
+#: teleforma/models/core.py:273
 msgid "copies d'examen"
 msgstr ""
 
-#: teleforma/models/core.py:347
+#: teleforma/models/core.py:343
 msgid "course group"
 msgstr "groupe de matière"
 
-#: teleforma/models/core.py:381 teleforma/models/core.py:423
-#: teleforma/webclass/models.py:198
+#: teleforma/models/core.py:377 teleforma/models/core.py:419
+#: teleforma/webclass/models.py:216
 msgid "professor"
 msgstr "professeur"
 
-#: teleforma/models/core.py:398 teleforma/models/core.py:427
+#: teleforma/models/core.py:394 teleforma/models/core.py:423
 msgid "room"
 msgstr "salle"
 
-#: teleforma/models/core.py:402 teleforma/models/core.py:652
-#: teleforma/models/core.py:706 teleforma/models/core.py:977
+#: teleforma/models/core.py:398 teleforma/models/core.py:648
+#: teleforma/models/core.py:702 teleforma/models/core.py:973
 msgid "conference"
 msgstr "conférence"
 
-#: teleforma/models/core.py:406 teleforma/models/core.py:432
+#: teleforma/models/core.py:402 teleforma/models/core.py:428
 msgid "publishing date"
 msgstr "date de publication"
 
-#: teleforma/models/core.py:409 teleforma/models/core.py:440
+#: teleforma/models/core.py:405 teleforma/models/core.py:436
 msgid "notified"
 msgstr "notifié"
 
-#: teleforma/models/core.py:414
+#: teleforma/models/core.py:410
 msgid "public_id"
 msgstr "public id"
 
-#: teleforma/models/core.py:429 teleforma/webclass/models.py:155
+#: teleforma/models/core.py:425 teleforma/webclass/models.py:173
 msgid "comment"
 msgstr "commentaire"
 
-#: teleforma/models/core.py:433 teleforma/models/core.py:823
-#: teleforma/models/core.py:906 teleforma/models/core.py:990
+#: teleforma/models/core.py:429 teleforma/models/core.py:819
+#: teleforma/models/core.py:902 teleforma/models/core.py:983
 msgid "readers"
 msgstr ""
 
-#: teleforma/models/core.py:437 teleforma/models/core.py:712
+#: teleforma/models/core.py:433 teleforma/models/core.py:708
 msgid "streaming"
 msgstr "diffusion"
 
-#: teleforma/models/core.py:438 teleforma/models/core.py:1156
-#: teleforma/models/core.py:1157
+#: teleforma/models/core.py:434 teleforma/models/core.py:1149
+#: teleforma/models/core.py:1150
 msgid "web class group"
 msgstr ""
 
-#: teleforma/models/core.py:682
+#: teleforma/models/core.py:678
 msgid "protocol"
 msgstr ""
 
-#: teleforma/models/core.py:683
+#: teleforma/models/core.py:679
 msgid "host"
 msgstr "hôte"
 
-#: teleforma/models/core.py:684
+#: teleforma/models/core.py:680
 msgid "port"
 msgstr "port"
 
-#: teleforma/models/core.py:685
+#: teleforma/models/core.py:681
 msgid "path"
 msgstr ""
 
-#: teleforma/models/core.py:689
+#: teleforma/models/core.py:685
 msgid "source password"
 msgstr ""
 
-#: teleforma/models/core.py:691
+#: teleforma/models/core.py:687
 msgid "admin password"
 msgstr ""
 
-#: teleforma/models/core.py:698 teleforma/models/core.py:709
+#: teleforma/models/core.py:694 teleforma/models/core.py:705
 msgid "streaming server"
 msgstr "serveur de diffusion"
 
-#: teleforma/models/core.py:710
+#: teleforma/models/core.py:706
 msgid "Streaming type"
 msgstr "Type de flux"
 
-#: teleforma/models/core.py:757
+#: teleforma/models/core.py:753
 msgid "live stream"
 msgstr "stream en direct"
 
-#: teleforma/models/core.py:766
+#: teleforma/models/core.py:762
 msgid "credits"
 msgstr "crédits"
 
-#: teleforma/models/core.py:772
+#: teleforma/models/core.py:768
 msgid "published"
 msgstr "publié"
 
-#: teleforma/models/core.py:773
+#: teleforma/models/core.py:769
 msgid "mime type"
 msgstr "Type mime"
 
-#: teleforma/models/core.py:775 teleforma/models/pro.py:94
+#: teleforma/models/core.py:771 teleforma/models/pro.py:94
 msgid "weight"
 msgstr "poids"
 
-#: teleforma/models/core.py:799
+#: teleforma/models/core.py:795
 msgid "document type"
 msgstr "type de document"
 
-#: teleforma/models/core.py:811
+#: teleforma/models/core.py:807
 msgid "periods"
 msgstr "périodes"
 
-#: teleforma/models/core.py:817 teleforma/models/crfpa.py:148
-#: teleforma/webclass/models.py:142
+#: teleforma/models/core.py:813 teleforma/models/crfpa.py:148
+#: teleforma/webclass/models.py:160
 msgid "iej"
 msgstr "iej"
 
-#: teleforma/models/core.py:819
+#: teleforma/models/core.py:815
 msgid "annal"
 msgstr "annale"
 
-#: teleforma/models/core.py:820
+#: teleforma/models/core.py:816
 msgid "year"
 msgstr "année"
 
-#: teleforma/models/core.py:821 teleforma/models/core.py:873
-#: teleforma/models/core.py:904 teleforma/models/core.py:945
-#: teleforma/models/core.py:993
+#: teleforma/models/core.py:817 teleforma/models/core.py:869
+#: teleforma/models/core.py:900 teleforma/models/core.py:941
+#: teleforma/models/core.py:986
 msgid "file"
 msgstr "fichier"
 
-#: teleforma/models/core.py:869
+#: teleforma/models/core.py:865
 #, fuzzy
 #| msgid "document 1"
 msgid "document"
 msgstr "document 1"
 
-#: teleforma/models/core.py:939
+#: teleforma/models/core.py:935
 msgid "item"
 msgstr "item"
 
-#: teleforma/models/core.py:940
+#: teleforma/models/core.py:936
 msgid "mime_type"
 msgstr "type mime"
 
-#: teleforma/models/core.py:941
+#: teleforma/models/core.py:937
 msgid "date"
 msgstr ""
 
-#: teleforma/models/core.py:995
+#: teleforma/models/core.py:988
 msgid "poster file"
 msgstr "fichier poster"
 
-#: teleforma/models/core.py:1152 teleforma/models/crfpa.py:70
+#: teleforma/models/core.py:1145 teleforma/models/crfpa.py:70
 #: teleforma/models/crfpa.py:71
 #: teleforma/templates/registration/registration_pdf.html:73
 #: teleforma/templates/teleforma/annals.html:30
@@ -1131,7 +1128,7 @@ msgid "Students"
 msgstr "Etudiants"
 
 #: teleforma/models/crfpa.py:462
-#: teleforma/templates/teleforma/profile_detail.html:98
+#: teleforma/templates/teleforma/profile_detail.html:96
 msgid "Language"
 msgstr "Langue"
 
@@ -1144,7 +1141,7 @@ msgid "Password initialized"
 msgstr "Mot de passe initialisé"
 
 #: teleforma/models/crfpa.py:467
-#: teleforma/templates/teleforma/profile_detail.html:87
+#: teleforma/templates/teleforma/profile_detail.html:85
 msgid "WiFi login"
 msgstr ""
 
@@ -1531,12 +1528,12 @@ msgstr ""
 msgid "You have received a message from the user '%(sender)s': "
 msgstr "Vous avez reçu un message de l'utilisateur '%(sender)s' : "
 
-#: teleforma/templates/postman/email_user.txt:25
+#: teleforma/templates/postman/email_user.txt:27
 #: teleforma/templates/postman/email_visitor.txt:14
 msgid "Thank you again for your interest in our services."
 msgstr ""
 
-#: teleforma/templates/postman/email_user.txt:26
+#: teleforma/templates/postman/email_user.txt:28
 #: teleforma/templates/quiz/question.html:47
 msgid "of"
 msgstr "de"
@@ -2113,14 +2110,13 @@ msgstr "Réinitialiser mon mot de passe"
 #: teleforma/templates/registration/registration_corrector_complete.html:5
 #: teleforma/templates/registration/registration_corrector_pdf.html:13
 #: teleforma/templates/registration/registration_pdf.html:13
-#: teleforma/views/crfpa.py:831 teleforma/views/crfpa.py:997
-#: teleforma/views/crfpa.py:1011
+#: teleforma/views/crfpa.py:831 teleforma/views/crfpa.py:1005
+#: teleforma/views/crfpa.py:1019
 msgid "Registration"
 msgstr "Inscription"
 
 #: teleforma/templates/registration/registration_complete.html:18
 #: teleforma/templates/teleforma/annals.html:72
-#: teleforma/templates/teleforma/course_media.html:57
 #: teleforma/templates/teleforma/course_media_transcoded.html:25
 #: teleforma/templates/teleforma/inc/document_list.html:22
 #: teleforma/templates/teleforma/inc/media_list.html:67
@@ -2193,7 +2189,7 @@ msgstr ""
 
 #: teleforma/templates/teleforma/annals.html:5
 #: teleforma/templates/teleforma/annals.html:52
-#: teleforma/templates/teleforma/base.html:103
+#: teleforma/templates/teleforma/base.html:104
 #: teleforma/templates/telemeta/base.html:116
 msgid "Annals"
 msgstr "Annales"
@@ -2210,48 +2206,48 @@ msgstr "Aucun document"
 msgid "View"
 msgstr "Voir"
 
-#: teleforma/templates/teleforma/base.html:80
-#: teleforma/templates/teleforma/base.html:89
+#: teleforma/templates/teleforma/base.html:81
+#: teleforma/templates/teleforma/base.html:90
 #: teleforma/templates/telemeta/base.html:95
 #: teleforma/templates/telemeta/base.html:104
 msgid "Desk"
 msgstr "Bureau"
 
-#: teleforma/templates/teleforma/base.html:94
+#: teleforma/templates/teleforma/base.html:95
 #: teleforma/templates/telemeta/base.html:109
 msgid "Home"
 msgstr "Accueil"
 
-#: teleforma/templates/teleforma/base.html:99
+#: teleforma/templates/teleforma/base.html:100
 #: teleforma/templates/telemeta/base.html:114
 msgid "Messaging"
 msgstr "Messagerie"
 
-#: teleforma/templates/teleforma/base.html:156
+#: teleforma/templates/teleforma/base.html:157
 #: teleforma/templates/telemeta/base.html:153
 msgid "Admin"
 msgstr ""
 
-#: teleforma/templates/teleforma/base.html:167
-#: teleforma/templates/teleforma/base.html:176
+#: teleforma/templates/teleforma/base.html:168
+#: teleforma/templates/teleforma/base.html:177
 #: teleforma/templates/telemeta/base.html:162
 #: teleforma/templates/telemeta/base.html:171
 msgid "Profile"
 msgstr "Profil"
 
-#: teleforma/templates/teleforma/base.html:172
-#: teleforma/templates/teleforma/base.html:178
+#: teleforma/templates/teleforma/base.html:173
+#: teleforma/templates/teleforma/base.html:179
 #: teleforma/templates/telemeta/base.html:167
 #: teleforma/templates/telemeta/base.html:172
 msgid "Sign out"
 msgstr "Se déconnecter"
 
-#: teleforma/templates/teleforma/base.html:236
+#: teleforma/templates/teleforma/base.html:237
 #: teleforma/templates/telemeta/base.html:222
 msgid "Powered by"
 msgstr ""
 
-#: teleforma/templates/teleforma/base.html:247
+#: teleforma/templates/teleforma/base.html:248
 #: teleforma/templates/telemeta/base.html:232
 msgid "Legal notices"
 msgstr "Mentions légales"
@@ -2269,9 +2265,9 @@ msgstr "Description"
 #: teleforma/templates/teleforma/course.html:21
 #: teleforma/templates/teleforma/course.html:38
 #: teleforma/templates/teleforma/course.html:55
-#: teleforma/templates/teleforma/course_media.html:186
+#: teleforma/templates/teleforma/course_media.html:188
 #: teleforma/templates/teleforma/course_media_transcoded.html:105
-#: teleforma/templates/teleforma/profile_detail.html:91
+#: teleforma/templates/teleforma/profile_detail.html:89
 msgid "Date added"
 msgstr "Date d'ajout"
 
@@ -2284,10 +2280,9 @@ msgid "Conferences"
 msgstr "Conférences"
 
 #: teleforma/templates/teleforma/course.html:54
-#: teleforma/templates/teleforma/course_conference.html:109
+#: teleforma/templates/teleforma/course_conference.html:110
 #: teleforma/templates/teleforma/course_conference_audio.html:66
-#: teleforma/templates/teleforma/course_conference_double.html:189
-#: teleforma/templates/teleforma/course_media.html:159
+#: teleforma/templates/teleforma/course_media.html:161
 #: teleforma/templates/teleforma/course_media_transcoded.html:96
 #: teleforma/templates/teleforma/course_media_video_embed.html:35
 #: teleforma/templates/teleforma/inc/conference_list.html:29
@@ -2300,20 +2295,17 @@ msgstr "Professeur"
 
 #: teleforma/templates/teleforma/course_conference.html:50
 #: teleforma/templates/teleforma/course_conference_audio.html:24
-#: teleforma/templates/teleforma/course_conference_double.html:130
 msgid "S T O P"
 msgstr "S T O P"
 
 #: teleforma/templates/teleforma/course_conference.html:60
-#: teleforma/templates/teleforma/course_conference_double.html:140
-#: teleforma/templates/teleforma/course_media.html:69
+#: teleforma/templates/teleforma/course_media.html:71
 #: teleforma/templates/teleforma/course_media_transcoded.html:37
 msgid "Audio"
 msgstr ""
 
-#: teleforma/templates/teleforma/course_conference.html:112
-#: teleforma/templates/teleforma/course_conference_double.html:192
-#: teleforma/templates/teleforma/course_media.html:163
+#: teleforma/templates/teleforma/course_conference.html:113
+#: teleforma/templates/teleforma/course_media.html:165
 #: teleforma/templates/teleforma/course_media_transcoded.html:99
 #: teleforma/templates/teleforma/course_media_video_embed.html:37
 #: teleforma/templates/teleforma/inc/media_list.html:50
@@ -2321,54 +2313,48 @@ msgstr ""
 msgid "Comment"
 msgstr "Commentaire"
 
-#: teleforma/templates/teleforma/course_conference.html:113
-#: teleforma/templates/teleforma/course_conference_double.html:193
-#: teleforma/templates/teleforma/course_media.html:173
-#: teleforma/templates/teleforma/course_media.html:184
+#: teleforma/templates/teleforma/course_conference.html:114
+#: teleforma/templates/teleforma/course_media.html:175
+#: teleforma/templates/teleforma/course_media.html:186
 #: teleforma/templates/teleforma/course_media_transcoded.html:100
 #: teleforma/templates/teleforma/course_media_video_embed.html:38
 #: teleforma/templates/teleforma/inc/media_list.html:42
 msgid "Begin date"
 msgstr "Date de début"
 
-#: teleforma/templates/teleforma/course_conference.html:114
-#: teleforma/templates/teleforma/course_conference_double.html:194
-#: teleforma/templates/teleforma/course_media.html:185
+#: teleforma/templates/teleforma/course_conference.html:115
+#: teleforma/templates/teleforma/course_media.html:187
 #: teleforma/templates/teleforma/course_media_transcoded.html:101
 #: teleforma/templates/teleforma/course_media_video_embed.html:39
 msgid "End date"
 msgstr "Date de fin"
 
-#: teleforma/templates/teleforma/course_conference.html:115
+#: teleforma/templates/teleforma/course_conference.html:116
 #: teleforma/templates/teleforma/course_conference_audio.html:71
-#: teleforma/templates/teleforma/course_conference_double.html:195
 msgid "Live"
 msgstr "Direct"
 
-#: teleforma/templates/teleforma/course_conference.html:115
-#: teleforma/templates/teleforma/course_conference_double.html:195
+#: teleforma/templates/teleforma/course_conference.html:116
 #: teleforma/templatetags/teleforma_tags.py:149
 msgid "Yes"
 msgstr "Oui"
 
-#: teleforma/templates/teleforma/course_conference.html:116
+#: teleforma/templates/teleforma/course_conference.html:117
 #: teleforma/templates/teleforma/course_conference_audio.html:68
-#: teleforma/templates/teleforma/course_conference_double.html:196
-#: teleforma/templates/teleforma/course_media.html:167
+#: teleforma/templates/teleforma/course_media.html:169
 #: teleforma/templates/teleforma/course_media_transcoded.html:102
 #: teleforma/templates/teleforma/course_media_video_embed.html:40
 msgid "Room"
 msgstr "Salle"
 
-#: teleforma/templates/teleforma/course_conference.html:118
-#: teleforma/templates/teleforma/course_conference_double.html:198
-#: teleforma/templates/teleforma/course_media.html:190
+#: teleforma/templates/teleforma/course_conference.html:119
+#: teleforma/templates/teleforma/course_media.html:192
 #: teleforma/templates/teleforma/course_media_transcoded.html:108
 msgid "Conference ID"
 msgstr "ID Conférence"
 
 #: teleforma/templates/teleforma/course_conference_audio.html:35
-#: teleforma/templates/teleforma/course_media.html:72
+#: teleforma/templates/teleforma/course_media.html:74
 #: teleforma/templates/teleforma/course_media_transcoded.html:40
 msgid "Video"
 msgstr ""
@@ -2399,41 +2385,41 @@ msgid "Record and stream"
 msgstr "Enregistrer et diffuser"
 
 #: teleforma/templates/teleforma/course_media.html:21
-#: teleforma/templates/teleforma/course_media.html:75
+#: teleforma/templates/teleforma/course_media.html:77
 #: teleforma/templates/teleforma/inc/media_list.html:59
 #: teleforma/templates/teleforma/inc/media_list_pending.html:47
 msgid " published"
 msgstr " publié"
 
 #: teleforma/templates/teleforma/course_media.html:28
-#: teleforma/templates/teleforma/course_media.html:75
+#: teleforma/templates/teleforma/course_media.html:77
 #: teleforma/templates/teleforma/inc/media_list.html:61
 #: teleforma/templates/teleforma/inc/media_list_pending.html:49
 msgid " rejected"
 msgstr " rejeté"
 
-#: teleforma/templates/teleforma/course_media.html:175
-#: teleforma/templates/teleforma/course_media.html:188
+#: teleforma/templates/teleforma/course_media.html:177
+#: teleforma/templates/teleforma/course_media.html:190
 #: teleforma/templates/teleforma/inc/media_list.html:44
 msgid "Publishing date"
 msgstr "Date de publication"
 
-#: teleforma/templates/teleforma/course_media.html:183
+#: teleforma/templates/teleforma/course_media.html:185
 #: teleforma/templates/teleforma/course_media_transcoded.html:104
 msgid "Mime type"
 msgstr "Type mime"
 
-#: teleforma/templates/teleforma/course_media.html:187
+#: teleforma/templates/teleforma/course_media.html:189
 #: teleforma/templates/teleforma/course_media_transcoded.html:106
 msgid "Date modified"
 msgstr "Date de modification"
 
-#: teleforma/templates/teleforma/course_media.html:189
+#: teleforma/templates/teleforma/course_media.html:191
 #: teleforma/templates/teleforma/course_media_transcoded.html:107
 msgid "Media ID"
 msgstr "ID Média"
 
-#: teleforma/templates/teleforma/course_media.html:191
+#: teleforma/templates/teleforma/course_media.html:193
 #: teleforma/templates/teleforma/course_media_transcoded.html:109
 msgid "Web class group"
 msgstr ""
@@ -2484,22 +2470,19 @@ msgid "Trainings"
 msgstr "Formations"
 
 #: teleforma/templates/teleforma/inc/user_list.html:24
-#: teleforma/templates/teleforma/profile_detail.html:73
+#: teleforma/templates/teleforma/profile_detail.html:72
 msgid "Written spe"
 msgstr "Ecrit Spé"
 
 #: teleforma/templates/teleforma/inc/user_list.html:25
-#: teleforma/templates/teleforma/profile_detail.html:72
 msgid "Oral spe"
 msgstr "Oral Spé"
 
 #: teleforma/templates/teleforma/inc/user_list.html:26
-#: teleforma/templates/teleforma/profile_detail.html:74
 msgid "Oral 1"
 msgstr ""
 
 #: teleforma/templates/teleforma/inc/user_list.html:27
-#: teleforma/templates/teleforma/profile_detail.html:75
 msgid "Oral 2"
 msgstr ""
 
@@ -2578,27 +2561,27 @@ msgstr "Se connecter en tant que"
 msgid "Platform only"
 msgstr "Plateforme seulement"
 
-#: teleforma/templates/teleforma/profile_detail.html:76
+#: teleforma/templates/teleforma/profile_detail.html:74
 msgid "Options"
 msgstr "Options"
 
-#: teleforma/templates/teleforma/profile_detail.html:80
+#: teleforma/templates/teleforma/profile_detail.html:78
 msgid "Email"
 msgstr ""
 
-#: teleforma/templates/teleforma/profile_detail.html:88
+#: teleforma/templates/teleforma/profile_detail.html:86
 msgid "WiFi password"
 msgstr "Mot de passe WiFi"
 
-#: teleforma/templates/teleforma/profile_detail.html:93
+#: teleforma/templates/teleforma/profile_detail.html:91
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
-#: teleforma/templates/teleforma/profile_detail.html:95
+#: teleforma/templates/teleforma/profile_detail.html:93
 msgid "Last login"
 msgstr "Dernière connexion"
 
-#: teleforma/templates/teleforma/profile_detail.html:106
+#: teleforma/templates/teleforma/profile_detail.html:104
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -2687,23 +2670,23 @@ msgstr "Nouveau mot de passe"
 msgid "Access not allowed"
 msgstr "Accès non autorisé"
 
-#: teleforma/webclass/models.py:119
+#: teleforma/webclass/models.py:137
 msgid "BBB server"
 msgstr ""
 
-#: teleforma/webclass/models.py:120
+#: teleforma/webclass/models.py:138
 msgid "BBB servers"
 msgstr ""
 
-#: teleforma/webclass/models.py:162 teleforma/webclass/models.py:163
+#: teleforma/webclass/models.py:180 teleforma/webclass/models.py:181
 msgid "webclass"
 msgstr ""
 
-#: teleforma/webclass/models.py:200
+#: teleforma/webclass/models.py:218
 msgid "participants"
 msgstr ""
 
-#: teleforma/webclass/models.py:212
+#: teleforma/webclass/models.py:230
 msgid "webclass slot"
 msgstr ""
 
