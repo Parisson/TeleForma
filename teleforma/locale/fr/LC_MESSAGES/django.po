@@ -2254,7 +2254,7 @@ msgstr ""
 #: teleforma/templates/teleforma/base.html:247
 #: teleforma/templates/telemeta/base.html:232
 msgid "Legal notices"
-msgstr ""
+msgstr "Mentions légales"
 
 #: teleforma/templates/teleforma/course.html:16
 #: teleforma/templates/teleforma/inc/document_list.html:9
