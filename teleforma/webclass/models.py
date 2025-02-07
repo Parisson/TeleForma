@@ -67,6 +67,10 @@ def get_records_from_bbb(**kwargs):
             url = url.replace('bbb2.parisson.com', 'bbb3.parisson.com')
             start = int(str(recording['startTime'])[:-3])
             end = int(str(recording['endTime'])[:-3])
+            preview = ""
+            images = format.get('preview', {}).get('images', {})
+            if images:
+                preview = str(images.get('image', ''))
             data = {
                 'id': str(recording['recordID']),
                 'server_id': server.id,
@@ -75,9 +79,10 @@ def get_records_from_bbb(**kwargs):
                 'end': end,
                 'end_date': datetime.datetime.fromtimestamp(end),
                 'url': url,
-                'preview': str(format.get('preview', {}).get('images', {}).get('image', '')),
+                'preview': preview,
                 'state': str(recording['state']),
             }
+            # print(data)
             if recording['metadata'].get('periodid'):
                 # we try to get metadata added to bbb record during the recording
                 slot = None
