@@ -113,7 +113,7 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
     if period_id:
         meta['periodid'] = period_id
     if course_id:
-        meta['courseid'] = period_id
+        meta['courseid'] = course_id
     meta['origin'] = 'crfpa'
 
     all_records = get_records_from_bbb(meta=meta)
