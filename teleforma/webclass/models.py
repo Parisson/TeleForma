@@ -128,7 +128,8 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
 
 
 class BBBServer(models.Model):
-    url = models.CharField("Url du serveur BBB", max_length=100)
+    name = models.CharField(_('name'), max_length=32)
+    url = models.CharField("URL du serveur BBB", max_length=100)
     api_key = models.CharField("API Key", max_length=100)
     # api_version = models.CharField("API Version", max_length=100, default="1")
 
@@ -141,7 +142,7 @@ class BBBServer(models.Model):
         return BigBlueButton(self.url, self.api_key)
 
     def __str__(self):
-        return "Serveur %d" % self.id
+        return "name"
 
 
 class WebclassPublishedManager(models.Manager):
