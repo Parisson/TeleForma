@@ -402,12 +402,11 @@ class Conference(Model):
 
     def stop(self):
         self.date_end = datetime.datetime.now()
+        self.streaming = False
         self.save()
         for stream in self.livestream.all():
             stream.delete()
         for station in self.station.all():
-            station.started = False
-            station.save()
             station.stop()
         if 'telecaster' in settings.INSTALLED_APPS:
             try:
