@@ -525,21 +525,7 @@ class ConferenceView(CourseAccessMixin, DetailView):
     @jsonrpc_method('teleforma.stop_conference')
     def stop(request, public_id):
         conference = Conference.objects.get(public_id=public_id)
-        conference.date_end = datetime.datetime.now()
-        conference.save()
-        for stream in conference.livestream.all():
-            stream.delete()
-        for station in conference.station.all():
-            station.started = False
-            station.save()
-            station.stop()
-        if 'telecaster' in settings.INSTALLED_APPS:
-            try:
-                url = 'https://' + conference.department.domain + '/json/'
-                s = ServiceProxy(url)
-                s.teleforma.stop_conference(conference.public_id)
-            except:
-                pass
+        conference.stop()
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

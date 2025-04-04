@@ -57,6 +57,8 @@ import jqchat.models
 from django.core.paginator import InvalidPage, EmptyPage
 from django.template.defaultfilters import slugify
 from sorl.thumbnail import default as sorl_default
+from jsonrpc.proxy import ServiceProxy
+
 
 app_label = 'teleforma'
 
@@ -396,6 +398,25 @@ class Conference(Model):
         if 'room' in data.keys():
             self.room, c = Room.objects.get_or_create(name=data['room'],
                                                    organization=organization)
+
+
+    def stop(self):
+        self.date_end = datetime.datetime.now()
+        self.save()
+        for stream in self.livestream.all():
+            stream.delete()
+        for station in self.station.all():
+            station.started = False
+            station.save()
+            station.stop()
+        if 'telecaster' in settings.INSTALLED_APPS:
+            try:
+                url = 'https://' + self.department.domain + '/json/'
+                s = ServiceProxy(url)
+                s.teleforma.stop_conference(self.public_id)
+            except:
+                pass
+
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'conference'
