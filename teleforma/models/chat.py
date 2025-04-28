@@ -14,7 +14,7 @@ from asgiref.sync import async_to_sync
 class ChatMessage(models.Model):
     """A chat message"""
 
-    message = models.CharField('Message', max_length=255)
+    message = models.CharField('Message', max_length=512)
     room_name = models.CharField('Salon', max_length=255)
     user = models.ForeignKey(
         User, related_name='chat_messages', verbose_name=_('user'), on_delete=models.CASCADE, blank=True, null=True)
