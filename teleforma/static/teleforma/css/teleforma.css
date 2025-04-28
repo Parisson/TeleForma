@@ -1728,8 +1728,18 @@ form.add_actus #id_text_parent{
     padding: 0em;
     font-weight: bold;
     font-size: 1.2em;
-    }
-
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.create-bbb-conference {
+    font-size: 0.8em;
+}
+.bbb-placeholder {
+    width: 100%;
+    height: 116px;
+    background-color: #dfdfdf;
+}
 .course_content {
     background-color: #FFF;
     -moz-border-radius: 8px 0px 8px 8px;

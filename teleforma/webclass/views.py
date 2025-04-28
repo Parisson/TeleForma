@@ -7,12 +7,19 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, TemplateView, View
+from bigbluebutton_api_python.exception import BBBException
+
 from datetime import datetime
+import string
+import random
+
+from ..models.core import Conference, Course, Professor
 
 from ..decorators import access_required
 from ..views.core import get_courses, get_periods
 from ..webclass.forms import WebclassRecordsForm
-from ..webclass.models import Webclass, WebclassSlot
+from ..webclass.models import BBBServer, Webclass, WebclassRecord, WebclassSlot
+from django.contrib.auth.models import User
 
 
 class WebclassProfessorAppointments(TemplateView):
@@ -231,3 +238,81 @@ def unregister(request, pk):
                                  "Votre réservation a été annulé.")
     # redirect to register form
     return redirect(reverse("teleforma-webclass-appointments", kwargs={'pk':webclass_slot.webclass.id}))
+
+
+
+@access_required
+def create_cc_bbb_conference(request, period_id, course_id):
+    """
+    Join a bbb webclass for "correction de copie" (cc) with a random room id. 
+    A cron script will later create a WebclassRecord object.
+    """
+
+    username = request.user.get_full_name()
+    is_professor = len(request.user.professor.all()) >= 1
+    is_staff = request.user.is_staff or request.user.is_superuser
+
+    if not is_professor and not is_staff:
+        raise ValueError("User is not a professor or staff")
+    course = Course.objects.get(pk=course_id)
+
+    year = datetime.now().year
+    bbb = BBBServer.objects.get(pk=2).get_instance()
+    # generate password
+    password = User.objects.make_random_password()
+    # generate random room id
+    room_id = "".join(random.choices(string.ascii_letters + string.digits, k=20))
+
+    params = {
+        'name': "Conférence %s" % course.title,
+        'moderatorPW': password,
+        'attendeePW': "PWATTENDEE",
+        # 'maxParticipants':self.webclass_max_participants + 1,
+        'welcome': "Pré-Barreau : Bienvenue sur la conférence \"%s\"." % (course.title),
+        'record': True,
+        'autoStartRecording':True,
+        'muteOnStart': True,
+        'allowModsToUnmuteUsers': True,
+        'logo':'https://e-learning.crfpa.pre-barreau.com/static/teleforma/images/logo_pb.png',
+        'copyright': "© %d Pré-Barreau" % year,
+        # 'guestPolicy':'ALWAYS_ACCEPT'
+        'bannerText': "Pré-Barreau - CRFPA",
+        'bannerColor': "#003768",
+        # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
+        'logoutURL': "https://e-learning.ae.pre-barreau.com",
+        'endWhenNoModerator': True,
+        'meetingLayout': "VIDEO_FOCUS",
+        "notifyRecordingIsOn": True,
+    }
+
+    meta = {
+        'origin': 'crfpa',
+        'periodid': period_id,
+        'courseid': course_id,
+        'professorid': request.user.id,
+        'type': 'cc',
+    }
+
+    try:
+        result = bbb.create_meeting(
+            room_id, params=params, meta=meta)
+    except BBBException as e:
+        print(e)
+        raise
+
+    try:
+        professor = request.user.professor.get()
+    except Professor.DoesNotExist:
+        professor = None
+
+    WebclassRecord.objects.create(
+        room_id=room_id,
+        bbb_server=BBBServer.objects.get(pk=2),
+        period_id=period_id,
+        course_id=course_id,
+        category=WebclassRecord.CORRECTION,
+        professor=professor,
+    )
+
+    params = {'userID': request.user.username}
+    return redirect(bbb.get_join_meeting_url(username, room_id, password, params))

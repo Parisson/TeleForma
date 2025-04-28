@@ -429,13 +429,19 @@ class WebclassRecord(models.Model):
     period = models.ForeignKey('teleforma.Period', verbose_name=_('period'), on_delete=models.CASCADE)
     course = models.ForeignKey(
         'teleforma.Course', related_name='webclass_records', verbose_name=_('course'), on_delete=models.CASCADE)
-    record_id = models.CharField("Enregistrement BBB", max_length=255)
+    record_id = models.CharField("Enregistrement BBB", max_length=255, blank=True, null=True)
     # not used for now, but may be handy if we need to optimize performance
     bbb_server = models.ForeignKey(
         'BBBServer', related_name='webclass_records', verbose_name='Serveur BBB', on_delete=models.CASCADE)
     created = models.DateTimeField("Date de la conférence", auto_now_add=True)
     session = models.CharField(
         _('session'), choices=session_choices, max_length=16, blank=True, null=True)
+    
+    # Used when conference are created from webclass by teachers to retrive the record id
+    room_id = models.CharField(
+        'id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255, unique=True)
+    professor = models.ForeignKey('teleforma.Professor', related_name='webclass_records', verbose_name=_('professor'), on_delete=models.SET_NULL, blank=True, null=True)
+    
 
     WEBCLASS = 'WC'
     CORRECTION = 'CC'

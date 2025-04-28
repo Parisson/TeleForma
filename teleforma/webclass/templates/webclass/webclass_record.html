@@ -3,8 +3,11 @@
 <tr>
     <td {% if forloop.first %}class="border-top" {% endif %} style="width:200px">
         <a href="{% url 'teleforma-webclass-record' %}?url={{record.url}}" title="{% trans "View" %}">
-            <img src="{{ record.preview }}" style="width:176px" alt="{% trans 'Click here' %}" />
-            <div>Cliquez-ici</div>
+            {% if record.preview %}
+                <img src="{{ record.preview }}" style="width:176px" alt="{% trans 'Click here' %}" />
+            {% else %}
+                <img src="/static/teleforma/images/play_168.png" class="bbb-placeholder" alt="{% trans 'Click here' %}" />
+            {% endif %}
         </a>
     </td>
     <td {% if forloop.first %}class="border-top" {% endif %} style="padding-left: 1em;">
