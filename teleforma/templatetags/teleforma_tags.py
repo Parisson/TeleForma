@@ -393,6 +393,11 @@ def current_year():
     return datetime.datetime.now().strftime("%Y")
 
 
+@register.simple_tag
+def bbb_logo():
+    return settings.BBB_LOGO_URL
+
+
 @register.filter
 def render_flatpage(content):
     parsed = ""

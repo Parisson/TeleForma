@@ -1,13 +1,16 @@
+{% load teleforma_tags %}
 {% load i18n %}
 
 <tr>
     <td {% if forloop.first %}class="border-top" {% endif %} style="width:200px">
-        <a href="{% url 'teleforma-webclass-record' %}?url={{record.url}}" title="{% trans "View" %}">
+        <a href="{% url 'teleforma-webclass-record' %}?url={{ record.url }}" title="{% trans "View" %}">
             {% if record.preview %}
-                <img src="{{ record.preview }}" style="width:176px" alt="{% trans 'Click here' %}" />
+                <div style="background: no-repeat url('{{ record.preview }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
             {% else %}
-                <img src="/static/teleforma/images/play_168.png" class="bbb-placeholder" alt="{% trans 'Click here' %}" />
+                <div style="background: no-repeat url('{% bbb_logo %}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
             {% endif %}
+                    <img class="bbb-placeholder src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
+                </div>
         </a>
     </td>
     <td {% if forloop.first %}class="border-top" {% endif %} style="padding-left: 1em;">

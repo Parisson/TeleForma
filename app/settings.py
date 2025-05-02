@@ -658,7 +658,7 @@ AWS_S3_ENCRYPTION=True
 # BBB
 ########################
 
-BBB_LOGO_URL = "/static/teleforma/images/logo_pb.png"
+BBB_LOGO_URL = "/static/teleforma/images/logo_pb_2025.png"
 BBB_PDF_URL = "/static/teleforma/pdf/pb-blank-slide.pdf"
 BBB_BANNER_COLOR = "#003768"
 
