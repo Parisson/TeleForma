@@ -87,8 +87,8 @@ $(document).ready(function(){
 <div class="media">
 {% block video %}
 <div class="video">
-<video controls autoplay preload="auto" width="640" height="360">
-<source src="http://{{ host }}:8000/monitor.webm?v={% random_hash %}" type="video/webm">
+<video controls autoplay preload="auto" width="100%">
+<source src="/stream/monitor.webm?v={% random_hash %}" type="video/webm">
 </video>
 </div>
 {% endblock video %}
