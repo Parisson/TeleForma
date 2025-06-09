@@ -89,7 +89,6 @@ $(document).ready(function(){
 <div class="video">
     <link href="/static/teleforma/video-js/video-js.css" rel="stylesheet" />
     <link href="/static/teleforma/video-js/fantasy/index.css" rel="stylesheet">
-    <link href="/static/teleforma/video-js/videojs-seek-buttons.css" rel="stylesheet">
     <video
         id="my_video_1"
         class="video-js vjs-theme-fantasy"
@@ -97,10 +96,9 @@ $(document).ready(function(){
         preload="none"
         width="100%"
         height="auto"
-        data-setup='{"playbackRates": [1, 1.25, 1.5, 2]}'
-        {% if media.poster_file %}{% thumbnail media.poster_file '640' as im %}poster="{{ im.url }}"{% endthumbnail %}{% endif %}
+        data-setup=''
         >
-            <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" />
+            <source src="/stream/monitor.webm?v={% random_hash %}" type="{{ media.mime_type }}" />
         <p class="vjs-no-js">
           To view this video please enable JavaScript, and consider upgrading to a
           web browser that
@@ -110,15 +108,6 @@ $(document).ready(function(){
         </p>
     </video>
     <script src="/static/teleforma/video-js/video.min.js"></script>
-    <script src="/static/teleforma/video-js/videojs-seek-buttons.min.js"></script>
-    <script>
-      var player = videojs('my_video_1');
-
-      player.seekButtons({
-        forward: 10,
-        back: 10
-      });
-    </script>
 </div>
 {% endblock video %}
 </div>
