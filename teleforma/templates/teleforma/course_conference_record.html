@@ -93,10 +93,11 @@ $(document).ready(function(){
         id="my_video_1"
         class="video-js vjs-theme-fantasy"
         controls
-        preload="none"
+        preload="auto"
         width="100%"
         height="auto"
         data-setup=''
+        autoplay
         >
             <source src="/stream/monitor.webm?v={% random_hash %}" type="video/webm" />
         <p class="vjs-no-js">
