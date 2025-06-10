@@ -65,6 +65,7 @@ def get_records_from_bbb(**kwargs):
             else:
                 continue
             url = url.replace('bbb2.parisson.com', 'bbb3.parisson.com')
+            url = url.replace("http://", "https://")
             start = int(str(recording['startTime'])[:-3])
             end = int(str(recording['endTime'])[:-3])
             preview = ""

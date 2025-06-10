@@ -127,7 +127,11 @@ class WebclassAppointment(View):
             # self.send_ap_mail(ap)
             messages.add_message(request, messages.INFO,
                                  "Votre réservation a bien été prise en compte.")
-            return HttpResponseRedirect(reverse('teleforma-desk-period-course', kwargs={'period_id': webclass.period.id, 'pk': webclass.course.id}))
+            return HttpResponseRedirect(
+                reverse('teleforma-desk-period-course',
+                    kwargs={'period_id': webclass.period.id,
+                    'pk': webclass.course.id})
+                )
         else:
             messages.add_message(request, messages.ERROR, msg)
         return self.render(request, webclass)
@@ -171,7 +175,7 @@ class WebclassRecordView(TemplateView):
     def get_context_data(self, **kwargs):
         """ """
         context = super(WebclassRecordView, self).get_context_data(**kwargs)
-        context['record_url'] = self.request.GET.get('url')
+        context['record_url'] = self.request.GET.get('url').replace("http://", "https://")
         return context
 
 
@@ -316,4 +320,6 @@ def create_cc_bbb_conference(request, period_id, course_id):
     )
 
     params = {'userID': request.user.username}
-    return redirect(bbb.get_join_meeting_url(username, room_id, password, params))
+    return redirect(bbb.get_join_meeting_url(
+        username, room_id, password, params).replace("http://", "https://")
+    )
