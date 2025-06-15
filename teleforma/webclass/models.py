@@ -461,7 +461,6 @@ class WebclassRecord(models.Model):
         db_table = app_label + '_' + 'webclass_record'
         verbose_name = 'enregistrement'
         verbose_name_plural = 'enregistrements'
-        ordering = '-session'
 
     def __str__(self):
         return "Enregistrement webclass %d" % self.id
