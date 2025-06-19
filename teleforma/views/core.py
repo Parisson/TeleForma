@@ -73,7 +73,7 @@ from ..decorators import access_required
 from ..models.appointment import Appointment, AppointmentPeriod
 from ..models.chat import ChatMessage
 from ..models.core import (Conference, ConferencePublication, Course, CourseType, Department,
-                           Document, DocumentType, Media, MediaTranscoded,
+                           Document, DocumentType, Media, MediaRead, MediaTranscoded,
                            Organization, Period, Professor, WebClassGroup,
                            StreamingServer, LiveStream,
                            get_user_role)
@@ -714,6 +714,7 @@ class MediaView(CourseAccessMixin, DetailView):
             reverse("teleforma-media-detail",
                 kwargs={"period_id": period_id, "pk": media.id}))
         if get_access(media, courses) and referer == media_detail_url:
+            media_read, c = MediaRead.objects.get_or_create(media=media, user=request.user)
             return serve_media(media.file,
                 content_type=media.mime_type,
                 streaming=streaming,
