@@ -5,6 +5,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
 import json
 
+
 @log_consumer_exceptions
 class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
