@@ -1,6 +1,9 @@
 body {margin: 0; padding: 0;}
 a {text-decoration: none; color: #969696;}
 a img {border: none;}
+html {
+    scroll-behavior: smooth;
+}
 html, input, select, textarea, h1, h2, h3, h4, h5, h6 {
     font-size: 100%;
 }
@@ -1709,7 +1712,7 @@ form.add_actus #id_text_parent{
     }
 
 .course {
-    margin: 0em 0em 2em 0em;
+    margin: 1em 0em 1em 0em;
     background-color: #FFF;
     -moz-border-radius: 8px 0px 8px 8px;
     -webkit-border-radius: 8px 0px 8px 8px;
@@ -1719,19 +1722,45 @@ form.add_actus #id_text_parent{
     background-repeat:repeat;
    }
 
+.course_main_title {
+    color: #355ea2;
+    -moz-border-radius: 8px 0px 0px 0px;
+    -webkit-border-radius: 8px 0px 0px 0px;
+    border-radius: 8px 0px 0px 0px;
+    padding: 0.25em 0em 1em 0em;
+    font-weight: bold;
+    font-size: 1.75em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.course_button {
+    padding: 10px;
+    line-height: 3em;
+}
+
+.course_button:hover {
+    padding: 10px;
+    line-height: 3em;
+}
+
 
 .course_title {
     color: #355ea2;
     -moz-border-radius: 8px 0px 0px 0px;
     -webkit-border-radius: 8px 0px 0px 0px;
     border-radius: 8px 0px 0px 0px;
-    padding: 0em;
+    padding: 1em 0em 0.5em 0em;
     font-weight: bold;
     font-size: 1.2em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    scroll-margin-block-start: 1em;
+    scroll-margin-block-end: 1em;
 }
+
 .create-bbb-conference {
     font-size: 0.8em;
 }

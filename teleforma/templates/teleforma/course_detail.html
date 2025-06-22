@@ -24,13 +24,27 @@
   </div>
   {% endif %}
 
-
-  <br /><br />
   {% for c in courses %}
   {% with c.course as course %}
+  <div class="course_main_title">
+    {{ course.title }}
+  </div>
+  <div class="course_buttons">
+    {% for type in c.types %}
+      <a class="component button course_button" href="#{{ type }}">
+        {{ type }}
+      </a>
+    {% endfor %}
+      <a class="component button course_button" href="#webclasses">
+        Webclasses
+      </a>
+      <a class="component button course_button" href="#corrections_de_copies">
+        Corrections de copies
+      </a>
+  </div>
   {% for type in c.types %}
   <div class="course">
-    <div class="course_title">{{ course.title }} - {{ type }}{% if course.description %} -
+    <div class="course_title" id="{{ type }}">{{ type }}{% if course.description %} -
       {{ course.description }}{% endif %}
     </div>
 
@@ -70,7 +84,7 @@
   {% endfor %}
 
   <div class="course">
-    <div class="course_title">{{ course.title }} - Webclass{% if course.description %} -
+    <div class="course_title" id="webclasses">Webclasses{% if course.description %} -
       {{ course.description }}{% endif %}
     </div>
     {% block webclass %}
@@ -80,7 +94,7 @@
   </div>
 
   <div class="course">
-    <div class="course_title">{{ course.title }} - Corrections de copies{% if course.description %} -
+    <div class="course_title" id="corrections_de_copies">Corrections de copies{% if course.description %} -
       {{ course.description }}{% endif %}
       {% if user.is_staff or user.professor.count %}<a href="{% url 'teleforma-create-cc-bbb-conference' period.id course.id %}" class="component_icon button icon_add create-bbb-conference">Créer une correction de copie</a>{% endif %}
 
