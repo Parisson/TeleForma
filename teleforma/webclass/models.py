@@ -101,7 +101,7 @@ def get_records_from_bbb(**kwargs):
 
             data['duration'] = data['end'] - data['start']
             records.append(data)
-    records = sorted(records, key=lambda r: r['start'])
+    records = sorted(records, key=lambda r: r['start'], reverse=True)
     return records
 
 
@@ -122,7 +122,7 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
     if not all_records:
         return []
 
-    all_records = sorted(all_records, key=lambda record: -record['start'])
+    all_records = sorted(all_records, key=lambda record: -record['start'], reverse=True)
     # for record in all_records:
     #     vocabulary.append((record['url'], record['start']))
     return all_records
