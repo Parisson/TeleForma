@@ -236,13 +236,9 @@ def get_periods(request):
     return periods
 
 
-def get_default_period(periods):
-    if periods:
-        return periods[0]
-    else:
-        period_id = getattr(settings, 'TELEFORMA_PERIOD_DEFAULT_ID', 1)
-        default_period = Period.objects.get(id=period_id)
-        return default_period
+def get_default_period():
+    period = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
+    return period
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -335,10 +331,9 @@ class HomeRedirectView(View):
         if request.user.is_authenticated:
             period_id = request.session.get('period_id')
             if not period_id:
-                periods = get_periods(request)
-                period = get_default_period(periods)
+                period = get_default_period()
+                request.session['period_id'] = period.id
                 period_id = period.id
-                request.session['period_id'] = period_id
             return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period_id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))

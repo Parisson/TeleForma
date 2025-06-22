@@ -369,8 +369,7 @@ class MediaAdmin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(MediaAdmin, self).get_form(request, obj, **kwargs)
-        periods = Period.objects.all()
-        period = get_default_period(periods)
+        period = get_default_period()
         form.base_fields['conference'].queryset = Conference.objects.filter(period=period)
         return form
 
