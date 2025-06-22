@@ -66,6 +66,7 @@ $(document).ready(function(){
 <div class="course_media">
 
 <div class="course_title">
+    <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
     <div style="float: right; font-size: 0.9em;">
         {% if "video" in media.mime_type %}
             <a href="{% url 'teleforma-media-detail' period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
@@ -77,9 +78,6 @@ $(document).ready(function(){
             <a id="publish" href="#" class="{% if media.conference.status == 3 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.conference.status == 3 %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
-
-    <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
-
 </div>
 
 {% if access_error %}
