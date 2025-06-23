@@ -331,7 +331,11 @@ class HomeRedirectView(View):
         if request.user.is_authenticated:
             period_id = request.session.get('period_id')
             if not period_id:
-                period = get_default_period()
+                students = Student.objects.filter(user=request.user)
+                if students:
+                    period = students[0].period
+                else:
+                    period = get_default_period()
                 request.session['period_id'] = period.id
                 period_id = period.id
             return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period_id}))
