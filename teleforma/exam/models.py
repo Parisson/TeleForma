@@ -468,7 +468,6 @@ class Script(BaseResource):
     def mark(self):
         self.date_marked = datetime.datetime.now()
         site = Site.objects.all()[0]
-        default_corrector
         context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_marked.txt', context)
         a = ugettext('Script')
