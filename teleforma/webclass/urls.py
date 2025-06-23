@@ -36,7 +36,7 @@ from django.conf.urls import url
 
 from ..webclass.views import (WebclassAppointment,
                               WebclassProfessorAppointments,
-                              WebclassRecordsFormView, WebclassRecordView,
+                              WebclassRecordsFormView, WebclassRecordView, create_cc_bbb_conference,
                               join_webclass, unregister)
 
 urlpatterns = [
@@ -53,6 +53,8 @@ urlpatterns = [
         name="teleforma-webclass-unregister"),
     url(r'^desk/webclass/(?P<pk>.*)/join/$',
         join_webclass,
-        name="teleforma-webclass-join")
-    
+        name="teleforma-webclass-join"),
+    url(r'^desk/webclass/(?P<period_id>.*)/(?P<course_id>.*)/create_cc_bbb_conference/$',
+        create_cc_bbb_conference,
+        name="teleforma-create-cc-bbb-conference")
 ]

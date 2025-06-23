@@ -66,6 +66,7 @@ $(document).ready(function(){
 <div class="course_media">
 
 <div class="course_title">
+    <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
     <div style="float: right; font-size: 0.9em;">
         {% if "video" in media.mime_type %}
             <a href="{% url 'teleforma-media-detail' period.id media|get_audio_id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
@@ -77,9 +78,6 @@ $(document).ready(function(){
             <a id="publish" href="#" class="{% if media.conference.status == 3 %}component_icon button icon_ok{% else %}component_icon button icon_delete{% endif %}">{% if media.conference.status == 3 %}{% trans " published" %}{% else %}{% trans " rejected" %}{% endif %}</a>
         {% endif %}
     </div>
-
-    <a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ course.title }} - {{ type }}{% if media.conference.session %} - {% trans "Session" %} {{ media.conference.session }}{% endif %}</a>
-
 </div>
 
 {% if access_error %}
@@ -91,9 +89,9 @@ $(document).ready(function(){
 
 {% if "video" in media.mime_type %}
 <div class="video">
-    <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
-    <link href="https://unpkg.com/@videojs/themes@1/dist/fantasy/index.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.css">
+    <link href="/static/teleforma/video-js/video-js.css" rel="stylesheet" />
+    <link href="/static/teleforma/video-js/fantasy/index.css" rel="stylesheet">
+    <link href="/static/teleforma/video-js/videojs-seek-buttons.css" rel="stylesheet">
     <video
         id="my_video_1"
         class="video-js vjs-theme-fantasy"
@@ -113,8 +111,8 @@ $(document).ready(function(){
           >
         </p>
     </video>
-    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-seek-buttons/dist/videojs-seek-buttons.min.js"></script>
+    <script src="/static/teleforma/video-js/video.min.js"></script>
+    <script src="/static/teleforma/video-js/videojs-seek-buttons.min.js"></script>
     <script>
       var player = videojs('my_video_1');
 

@@ -1155,3 +1155,13 @@ class WebClassGroup(models.Model):
                 'iejs': [iej.name for iej in self.iejs.all()],
                 }
         return data
+
+
+class MediaRead(models.Model):
+    "Store media read and time by user"
+
+    media = models.ForeignKey('Media', related_name='read', verbose_name=_('media'),
+                                   blank=True, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name='read', verbose_name=_('user'),
+                               blank=True, null=True, on_delete=models.SET_NULL)
+    duration = models.DurationField(_("duration"), blank=True, null=True)

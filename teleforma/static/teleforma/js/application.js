@@ -26,20 +26,20 @@
  */
 
 $(document).ready(function () {
-    if ($('.home').size()) {
+    if ($('.home').length) {
         $('.course').each(function () {
             var $course = $(this);
             var course_url = $course.find('.course_title a').attr('href');
             $course.find('.course_content .listing tbody').each(function () {
                 var $tbody = $(this);
-                if ($tbody.find('tr').size() >= 2) {
+                if ($tbody.find('tr').length >= 2) {
                     $tbody.find('tr:not(:first)').remove();
                     $tbody.append('<tr><td><a href="' + course_url + '">Voir la suite</a></td><td></td><td></td></tr>')
                 }
             });
         })
     }
-    if ($('.tabs').size())
+    if ($('.tabs').length)
         $('.tabs').tabs();
 });
 
@@ -344,7 +344,7 @@ tarteaucitron.init({
 
   "closePopup": false, /* Show a close X on the banner */
 
-  "showIcon": true, /* Show cookie icon to manage cookies */
+  "showIcon": false, /* Show cookie icon to manage cookies */
   //"iconSrc": "", /* Optionnal: URL or base64 encoded image */
   "iconPosition": "BottomRight", /* BottomRight, BottomLeft, TopRight and TopLeft */
 

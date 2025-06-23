@@ -36,7 +36,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     # Receive message from user
     async def receive_json(self, content):
-        message_content = content['message'][:255]
+        message_content = content['message'][:512]
         reply_to = await self.get_message_from_id(content.get('replyTo'))
         message = await self.add_message_to_db(self.scope['user'], self.room_name, message_content, reply_to=reply_to)
         # Send message to room group

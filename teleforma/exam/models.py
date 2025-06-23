@@ -341,8 +341,7 @@ class Script(BaseResource):
             lower_quota = sorted(quota_list, key=lambda k: k['level'])[0]
             self.corrector = lower_quota['obj'].corrector
         else:
-            # FIXME: default corrector goes to settings
-            self.corrector = User.objects.filter(is_superuser=True)[1]
+            self.corrector = User.objects.get(username=settings.TELEFORMA_ADMIN)
 
         self.status = 3
         # self.save()
@@ -469,12 +468,14 @@ class Script(BaseResource):
     def mark(self):
         self.date_marked = datetime.datetime.now()
         site = Site.objects.all()[0]
+        default_corrector
         context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_marked.txt', context)
         a = ugettext('Script')
         v = ugettext('marked')
         subject = '%s %s' % (a, v)
-        mess = Message(sender=self.corrector, recipient=self.author,
+        sender = User.objects.get(username=settings.TELEFORMA_ADMIN)
+        mess = Message(sender=sender, recipient=self.author,
                        subject=subject[:119], body=text)
         mess.moderation_status = 'a'
         mess.save()

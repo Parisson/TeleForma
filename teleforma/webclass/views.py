@@ -7,12 +7,19 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, TemplateView, View
+from bigbluebutton_api_python.exception import BBBException
+
 from datetime import datetime
+import string
+import random
+
+from ..models.core import Conference, Course, Professor
 
 from ..decorators import access_required
 from ..views.core import get_courses, get_periods
 from ..webclass.forms import WebclassRecordsForm
-from ..webclass.models import Webclass, WebclassSlot
+from ..webclass.models import BBBServer, Webclass, WebclassRecord, WebclassSlot
+from django.contrib.auth.models import User
 
 
 class WebclassProfessorAppointments(TemplateView):

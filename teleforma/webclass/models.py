@@ -71,7 +71,7 @@ def get_records_from_bbb(**kwargs):
             preview = ""
             images = format.get('preview', {}).get('images', {})
             if images:
-                preview = str(images.get('image', ''))
+                preview = str(images.get('image', '')).replace("http://", "https://")
             data = {
                 'id': str(recording['recordID']),
                 'server_id': server.id,
@@ -101,7 +101,7 @@ def get_records_from_bbb(**kwargs):
 
             data['duration'] = data['end'] - data['start']
             records.append(data)
-    records = sorted(records, key=lambda r: r['start'])
+    records = sorted(records, key=lambda r: r['start'], reverse=True)
     return records
 
 
@@ -114,7 +114,7 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
     if period_id:
         meta['periodid'] = period_id
     if course_id:
-        meta['courseid'] = period_id
+        meta['courseid'] = course_id
     meta['origin'] = 'crfpa'
 
     all_records = get_records_from_bbb(meta=meta)
@@ -122,14 +122,15 @@ def get_records(period_id=None, course_id=None, rooms=None, recording_id=None):
     if not all_records:
         return []
 
-    all_records = sorted(all_records, key=lambda record: -record['start'])
+    all_records = sorted(all_records, key=lambda record: -record['start'], reverse=True)
     # for record in all_records:
     #     vocabulary.append((record['url'], record['start']))
     return all_records
 
 
 class BBBServer(models.Model):
-    url = models.CharField("Url du serveur BBB", max_length=100)
+    name = models.CharField(_('name'), max_length=32)
+    url = models.CharField("URL du serveur BBB", max_length=100)
     api_key = models.CharField("API Key", max_length=100)
     # api_version = models.CharField("API Version", max_length=100, default="1")
 
@@ -142,7 +143,7 @@ class BBBServer(models.Model):
         return BigBlueButton(self.url, self.api_key)
 
     def __str__(self):
-        return "Serveur %d" % self.id
+        return "name"
 
 
 class WebclassPublishedManager(models.Manager):
@@ -429,13 +430,19 @@ class WebclassRecord(models.Model):
     period = models.ForeignKey('teleforma.Period', verbose_name=_('period'), on_delete=models.CASCADE)
     course = models.ForeignKey(
         'teleforma.Course', related_name='webclass_records', verbose_name=_('course'), on_delete=models.CASCADE)
-    record_id = models.CharField("Enregistrement BBB", max_length=255)
+    record_id = models.CharField("Enregistrement BBB", max_length=255, blank=True, null=True)
     # not used for now, but may be handy if we need to optimize performance
     bbb_server = models.ForeignKey(
         'BBBServer', related_name='webclass_records', verbose_name='Serveur BBB', on_delete=models.CASCADE)
     created = models.DateTimeField("Date de la conférence", auto_now_add=True)
     session = models.CharField(
         _('session'), choices=session_choices, max_length=16, blank=True, null=True)
+    
+    # Used when conference are created from webclass by teachers to retrive the record id
+    room_id = models.CharField(
+        'id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255, unique=True)
+    professor = models.ForeignKey('teleforma.Professor', related_name='webclass_records', verbose_name=_('professor'), on_delete=models.SET_NULL, blank=True, null=True)
+    
 
     WEBCLASS = 'WC'
     CORRECTION = 'CC'

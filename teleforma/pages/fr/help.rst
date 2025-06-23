@@ -5,7 +5,7 @@ Cette plateforme est conforme aux standards ouverts du web comme le HTML5. Il es
 
 Pour une navigation fluide dans tous les cas, nous vous recommandons d'utiliser le navigateur `Firefox <https://www.mozilla.org/fr/firefox/new/>`_.
 
-Les vidéos en direct ne sont compatibles qu'avec Firefox_ (non compatible sur Iphone et Ipad mais compatible sur ordinateur Apple).
+Les vidéos en direct ne sont compatibles qu'avec Firefox_ Brave ou Chrome (non compatible sur Iphone et Ipad mais compatible sur ordinateur Apple).
 
 Les vidéos en différé sont compatibles avec tous les navigateurs.
 

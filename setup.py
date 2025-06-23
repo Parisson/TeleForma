@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+²# -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
 
@@ -11,7 +11,7 @@ setup(
   long_description = open('README.rst').read(),
   author = "Guillaume Pellerin",
   author_email = "yomguy@parisson.com",
-  version = '2.11.0',
+  version = '2.13.0',
   platforms=['OS Independent'],
   license='CeCILL v2',
   classifiers = CLASSIFIERS,
