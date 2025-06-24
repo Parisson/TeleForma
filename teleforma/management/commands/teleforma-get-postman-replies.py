@@ -23,7 +23,7 @@ def decode_header(header, charset):
     res = []
     for value, encoding in header:
         if isinstance(value, bytes):
-            value = value.decode(encoding)
+            value = value.decode(encoding or charset)
         res.append(value)
     return " ".join(res)
 
@@ -118,6 +118,9 @@ class Command(BaseCommand):
         if not msg.thread:
             msg.thread = msg
             msg.save()
+
+        if len(subject) > 200:
+            subject = subject[:200] + "..."
         
         mess = Message(sender = msg.recipient, recipient = msg.sender,
                        subject = subject, body = body, thread = msg.thread,
@@ -148,8 +151,8 @@ class Command(BaseCommand):
                     self.process(msg)
                     pop.dele(msgid)
                 except Exception as e:
-                    self.logger.warning("Error in message %s: %s" % (msgid, str(e)))
-                    raise
+                    self.logger.warning("Error in message %s: %s" % (msgid, str(e)),
+                                        exc_info = e)
         finally:
             pop.quit()
 
