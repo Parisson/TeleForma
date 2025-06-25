@@ -143,7 +143,7 @@ class BBBServer(models.Model):
         return BigBlueButton(self.url, self.api_key)
 
     def __str__(self):
-        return "name"
+        return self.name
 
 
 class WebclassPublishedManager(models.Manager):
