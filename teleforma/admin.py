@@ -108,6 +108,7 @@ class StudentGroupForm(ActionForm):
 class StudentGroupAdmin(admin.ModelAdmin):
     model = StudentGroup
     filter_horizontal = ['students']
+    search_fields = ['name']
 
 
 class BalanceFilter(admin.SimpleListFilter):
@@ -524,7 +525,8 @@ class AppointmentAdmin(admin.ModelAdmin):
     export_csv.short_description = "Exporter en CSV"
 
 class GroupedMessageAdmin(admin.ModelAdmin):
-    list_per_page = 30    
+    list_per_page = 30
+    autocomplete_fields = ['group', 'sender']
 
 class ChatMessageAdmin(admin.ModelAdmin):
     list_display = ('message', 'user', 'room_name')
