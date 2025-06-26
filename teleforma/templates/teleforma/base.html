@@ -108,7 +108,7 @@
           <li><a href="{% url 'teleforma-annals' %}" class="yellow">{% trans "Annals" %}</a></li>
 
           {% if user.professor.count or user.is_superuser %}
-          <li><a href="{% url 'teleforma-webclass-professor' %}" class="yellow">Webclass</a></li>
+          <li><a href="{% url 'teleforma-webclass-professor' %}" class="yellow">Webclasses</a></li>
           {% endif %}
 
           {% if periods|length == 1 %}

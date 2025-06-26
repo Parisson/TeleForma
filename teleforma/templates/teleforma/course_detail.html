@@ -97,7 +97,6 @@
     <div class="course_title" id="corrections_de_copies">Corrections de copies{% if course.description %} -
       {{ course.description }}{% endif %}
       {% if user.is_staff or user.professor.count %}<a href="{% url 'teleforma-create-cc-bbb-conference' period.id course.id %}" class="component_icon button icon_add create-bbb-conference">Créer une correction de copie</a>{% endif %}
-
     </div>
     {% block webclass_corrections %}
     {% include "webclass/inc/webclass_corrections_list.html" %}
