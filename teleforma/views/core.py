@@ -207,10 +207,10 @@ def get_periods(request):
     students = user.student.all()
 
     if user.is_superuser or user.is_staff:
-        periods = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
+        periods = Period.objects.filter(is_open=True).order_by("-date_begin")
 
     elif professor:
-        periods = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
+        periods = Period.objects.filter(is_open=True).order_by("-date_begin")
 
     elif quotas and not (user.is_superuser or user.is_staff) and not professor:
         periods = []
