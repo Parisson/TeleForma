@@ -332,8 +332,11 @@ class HomeRedirectView(View):
             period_id = request.session.get('period_id')
             if not period_id:
                 students = Student.objects.filter(user=request.user)
+                correctors = Corrector.objects.filter(user=request.user)
                 if students:
                     period = students[0].period
+                elif correctors:
+                    period = correctors[0].period
                 else:
                     period = get_default_period()
                 request.session['period_id'] = period.id
