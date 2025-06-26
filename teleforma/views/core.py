@@ -236,9 +236,9 @@ def get_periods(request):
     return periods
 
 
-def get_default_period():
+def get_default_period(request):
     # period = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
-    return get_periods()[0]
+    return get_periods(request)[0]
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -331,7 +331,7 @@ class HomeRedirectView(View):
         if request.user.is_authenticated:
             period_id = request.session.get('period_id')
             if not period_id:
-                period_id = get_periods()[0]
+                period_id = get_default_period(request).id
             return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period_id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
@@ -813,7 +813,7 @@ class DocumentView(CourseAccessMixin, DetailView):
         if not access:
             context['access_error'] = access_error
             context['message'] = contact_message
-        context['periods'] = get_periods(self.request.user)
+        context['periods'] = get_periods(self.request)
         return context
 
     @method_decorator(access_required)
