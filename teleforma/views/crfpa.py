@@ -67,7 +67,7 @@ from ..models.core import Course, CourseType, Document, NamePaginator, Period
 from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
                             Payment, Profile, Student, Training, months_choices, payment_choices)
 from ..views.core import (CourseAccessMixin, PDFTemplateResponseMixin, format_courses,
-                          get_courses, get_periods, get_default_period)
+                          get_courses, get_periods)
 from ..views.profile import ProfileView
 
 def get_course_code(obj):
@@ -773,7 +773,7 @@ class UserCompleteView(TemplateView):
             student = user.student.all()[0]
             context['period'] = student.period
         else:
-            context['period'] = get_default_period()
+            context['period'] = get_periods(self.request)[0]
         return context
 
 

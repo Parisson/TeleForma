@@ -84,6 +84,10 @@ import weasyprint
 
 logger = logging.getLogger('teleforma')
 
+access_error = _('Access not allowed.')
+contact_message = _(
+    'Please login or contact the website administator to get a private access.')
+
 
 def format_courses(courses, course=None, queryset=None, types=None):
     if queryset:
@@ -185,11 +189,6 @@ def get_access(obj, courses):
     return access
 
 
-access_error = _('Access not allowed.')
-contact_message = _(
-    'Please login or contact the website administator to get a private access.')
-
-
 def get_host(request):
     host = request.META['HTTP_HOST']
     if ':' in host:
@@ -234,11 +233,6 @@ def get_periods(request):
         return []
 
     return periods
-
-
-def get_default_period(request):
-    # period = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
-    return get_periods(request)[0]
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -331,7 +325,7 @@ class HomeRedirectView(View):
         if request.user.is_authenticated:
             period_id = request.session.get('period_id')
             if not period_id:
-                period_id = get_default_period(request).id
+                period_id = get_periods(request)[0].id
             return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period_id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
@@ -348,7 +342,7 @@ class PeriodAccessMixin(View):
             period_id = int(self.kwargs['period_id'])
             self.period = get_object_or_404(Period, pk=period_id)
         else:
-            period = get_default_period()
+            period = get_periods(request)[0]
             period_id = period.id
             self.period = period
         self.request.session['period_id'] = period_id

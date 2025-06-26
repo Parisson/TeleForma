@@ -31,7 +31,7 @@ from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
                            Student, Training)
 from .models.messages import GroupedMessage, StudentGroup
 from .views.crfpa import CorrectorXLSBook, UserXLSBook
-from .views.core import get_default_period
+from .views.core import get_periods
 
 from django.contrib.admin.helpers import ActionForm
 from django import forms
@@ -370,7 +370,7 @@ class MediaAdmin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(MediaAdmin, self).get_form(request, obj, **kwargs)
-        period = get_default_period()
+        period = get_periods(request)
         form.base_fields['conference'].queryset = Conference.objects.filter(period=period)
         return form
 
