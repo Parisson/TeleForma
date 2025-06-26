@@ -207,10 +207,10 @@ def get_periods(request):
     students = user.student.all()
 
     if user.is_superuser or user.is_staff:
-        periods = Period.objects.filter(is_open=True)
+        periods = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
 
     elif professor:
-        periods = Period.objects.filter(is_open=True)
+        periods = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
 
     elif quotas and not (user.is_superuser or user.is_staff) and not professor:
         periods = []
@@ -237,8 +237,8 @@ def get_periods(request):
 
 
 def get_default_period():
-    period = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
-    return period
+    # period = Period.objects.filter(is_open=True).order_by("-date_begin")[0]
+    return get_periods()[0]
 
 
 def content_to_pdf(content, dest, encoding='utf-8', **kwargs):
@@ -331,16 +331,7 @@ class HomeRedirectView(View):
         if request.user.is_authenticated:
             period_id = request.session.get('period_id')
             if not period_id:
-                students = Student.objects.filter(user=request.user)
-                correctors = Corrector.objects.filter(user=request.user)
-                if students:
-                    period = students[0].period
-                elif correctors:
-                    period = correctors[0].period
-                else:
-                    period = get_default_period()
-                request.session['period_id'] = period.id
-                period_id = period.id
+                period_id = get_periods()[0]
             return HttpResponseRedirect(reverse('teleforma-desk-period-list', kwargs={'period_id': period_id}))
         else:
             return HttpResponseRedirect(reverse('teleforma-login'))
@@ -357,7 +348,7 @@ class PeriodAccessMixin(View):
             period_id = int(self.kwargs['period_id'])
             self.period = get_object_or_404(Period, pk=period_id)
         else:
-            period = get_default_period(periods)
+            period = get_default_period()
             period_id = period.id
             self.period = period
         self.request.session['period_id'] = period_id
