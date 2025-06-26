@@ -66,7 +66,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from teleforma.models.crfpa import Home, Student, Training
+from teleforma.models.crfpa import Home, Student, Training, Corrector
 from teleforma.models.notification import Notification, notify
 from teleforma.utils import guess_mimetypes
 from ..decorators import access_required
