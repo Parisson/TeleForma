@@ -6,7 +6,9 @@
     <table class="listing" width="100%">
         <tbody>
             {% for record in webclass_corrections_records %}
-            {% webclass_record record %}
+                {% if record.status == 3 %}
+                    {% webclass_record record %}
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>

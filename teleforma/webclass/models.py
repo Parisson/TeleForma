@@ -442,6 +442,8 @@ class WebclassRecord(models.Model):
     room_id = models.CharField(
         'id de la conférence BBB (généré automatiquement)', blank=True, null=True, max_length=255, unique=True)
     professor = models.ForeignKey('teleforma.Professor', related_name='webclass_records', verbose_name=_('professor'), on_delete=models.SET_NULL, blank=True, null=True)
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2)
     
 
     WEBCLASS = 'WC'
