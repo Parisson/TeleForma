@@ -13,9 +13,3 @@ def add_records_links(context):
         'periods':periods,
     }
 
-
-@register.inclusion_tag('webclass/webclass_record.html', takes_context=True)
-def webclass_record(context, record):
-    return {
-        'record':record
-    }
