@@ -46,7 +46,7 @@
             </tr>
             {% endif %}
             {% for record in webclass_records %}
-            {% webclass_record record %}
+                {% include "webclass/webclass_record.html" %}
             {% endfor %}
         </tbody>
     </table>
