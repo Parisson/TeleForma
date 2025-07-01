@@ -475,9 +475,10 @@ class WebclassRecord(models.Model):
         # id : category mapping
         category_mapping = {}
         for record in WebclassRecord.objects.filter(period=period, course=course, status=3):
-            record_ids.add(record.record_id)
-            records_mapping[record.record_id] = record
-            category_mapping[record.record_id] = record.category
+            if record.record_id:
+                record_ids.add(record.record_id)
+                records_mapping[record.record_id] = record
+                category_mapping[record.record_id] = record.category
         if not record_ids:
             return {}
 
@@ -486,9 +487,10 @@ class WebclassRecord(models.Model):
         # group records by category
         categories = {}
         for record in records:
-            record['obj'] = records_mapping.get(record['id'])
-            category = category_mapping.get(record['id'])
-            if category not in categories:
-                categories[category] = []
-            categories[category].append(record)
+            if record:
+                record['obj'] = records_mapping.get(record['id'])
+                category = category_mapping.get(record['id'])
+                if category not in categories:
+                    categories[category] = []
+                categories[category].append(record)
         return categories
