@@ -474,7 +474,7 @@ class WebclassRecord(models.Model):
         records_mapping = {}
         # id : category mapping
         category_mapping = {}
-        for record in WebclassRecord.objects.filter(period=period, course=course):
+        for record in WebclassRecord.objects.filter(period=period, course=course, status=3):
             record_ids.add(record.record_id)
             records_mapping[record.record_id] = record
             category_mapping[record.record_id] = record.category
