@@ -6,12 +6,6 @@
 {% load thumbnail %}
 
 {% block extra_javascript %}
-{#  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">#}
-{#  <script src="//code.jquery.com/jquery-1.10.2.js"></script>#}
-{#  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>#}
-  <script src="/static/exam/js/exam.js"></script>
-{#  <!--<script src='{% static "WebViewer/lib/html5/external/jquery-3.2.1.min.js" %}'></script>-->#}
-{#  <script src='{% static "WebViewer/lib/WebViewer.min.js" %}'></script>#}
   <script>
     // increase the default animation speed to exaggerate the effect
   {% if script.comments %}
@@ -25,8 +19,8 @@
 {% endblock extra_javascript %}
 
 {% block extra_stylesheets %}
-  <link rel="stylesheet" type="text/css" href="{% static "pdfannotator/toolbar.css" %}"/>
-  <link rel="stylesheet" type="text/css" href="{% static "pdfannotator/pdf_viewer.css" %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static "pdfannotator/toolbar.css?v={% pdfannotator_version %}" %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static "pdfannotator/pdf_viewer.css?v={% pdfannotator_version %}" %}"/>
   <style type="text/css">
     body {
       background-color: #eee;
