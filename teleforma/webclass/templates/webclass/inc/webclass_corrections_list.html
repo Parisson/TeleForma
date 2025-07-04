@@ -8,7 +8,7 @@
             {% for record in webclass_corrections_records %}
                 {% if record.obj.is_published or user.is_staff or user.professor.count %}
                     {% include "webclass/webclass_record.html" %}
-                {§ endif %}
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>
