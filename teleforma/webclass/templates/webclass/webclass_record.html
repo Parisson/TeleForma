@@ -31,7 +31,7 @@
     </td>
     <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
         {% if user.is_staff or user.professor.count %}
-            {% if record.obj._is_published %}
+            {% if record.obj.is_published %}
                 <img src="/static/teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans ' published' %}" />
             {% else %}
                 <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
