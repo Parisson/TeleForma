@@ -6,7 +6,9 @@
     <table class="listing" width="100%">
         <tbody>
             {% for record in webclass_corrections_records %}
-                {% include "webclass/webclass_record.html" %}
+                {% if record.obj.is_published or user.is_staff or user.professor.count %}
+                    {% include "webclass/webclass_record.html" %}
+                {§ endif %}
             {% endfor %}
         </tbody>
     </table>

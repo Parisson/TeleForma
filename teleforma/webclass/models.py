@@ -467,6 +467,8 @@ class WebclassRecord(models.Model):
     def __str__(self):
         return "Enregistrement webclass %d" % self.id
 
+    def is_published(self):
+        return self.status == 3
 
     @staticmethod
     def get_records(period, course):
@@ -474,7 +476,7 @@ class WebclassRecord(models.Model):
         records_mapping = {}
         # id : category mapping
         category_mapping = {}
-        for record in WebclassRecord.objects.filter(period=period, course=course, status=3):
+        for record in WebclassRecord.objects.filter(period=period, course=course):
             if record.record_id:
                 record_ids.add(record.record_id)
                 records_mapping[record.record_id] = record
