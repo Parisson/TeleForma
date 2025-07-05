@@ -71,7 +71,7 @@ def get_records_from_bbb(**kwargs):
             preview = ""
             images = format.get('preview', {}).get('images', {})
             if images:
-                preview = str(images.get('image', '')).replace("http://", "https://")
+                preview = images.dict()['images']['image'][0].replace("http://", "https://")
             data = {
                 'id': str(recording['recordID']),
                 'server_id': server.id,
