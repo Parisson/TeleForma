@@ -22,16 +22,22 @@ class WebclassAdmin(admin.ModelAdmin):
     search_fields = ['id', 'course__code', 'course__title']
 
 class WebclassRecordAdmin(admin.ModelAdmin):
-    list_filter = ('course', 'period', 'category', 'status')
-    list_display = ('course', 'period', 'category', 'created', 'status')
+    list_filter = ('period', 'course', 'session', 'professor', 'category', 'created', 'status')
+    list_display = ('period', 'course', 'session', 'professor', 'category', 'created', 'status')
     search_fields = ['id', 'course__code', 'course__title']
+    actions = ['publish',]
 
     # def get_form(self, request, obj=None, **kwargs):
     #     form = super(WebclassRecordAdmin, self).get_form(request, obj, **kwargs)
     #     form.base_fields['url'] = forms.ChoiceField(choices=get_all_records())
     #     return form
 
+    def publish(self, request, queryset):
+        for record in queryset.all():
+            record.status = 3
+            record.save()
 
+    publish.short_description = "Publier les enregistrements sélectionnés"
 
 
 admin.site.register(BBBServer, BBBServerAdmin)
