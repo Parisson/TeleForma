@@ -118,7 +118,6 @@ class Training(models.Model):
     platform_only = models.BooleanField(_('e-learning platform only'))
     duration = models.IntegerField(u"Durée en heures", default=0)
 
-
     def __str__(self):
         if self.name and self.period:
             return ' - '.join([self.name, self.period.name])
