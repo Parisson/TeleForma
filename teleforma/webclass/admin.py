@@ -23,7 +23,7 @@ class WebclassAdmin(admin.ModelAdmin):
 
 class WebclassRecordAdmin(admin.ModelAdmin):
     list_filter = ('period', 'course', 'session', 'professor', 'category', 'created', 'status')
-    list_display = ('period', 'course', 'session', 'record_id', 'professor', 'category', 'created', 'status')
+    list_display = ('period', 'course', 'session', 'record_id', 'room_id', 'professor', 'category', 'created', 'status')
     search_fields = ['id', 'course__code', 'course__title', 'record_id']
     actions = ['publish',]
 
