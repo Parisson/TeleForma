@@ -46,6 +46,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models.signals import post_save
 from django.template.loader import render_to_string
@@ -58,30 +59,15 @@ from teleforma.models.core import Course, Period
 
 from ..models.core import session_choices
 
+from storages.backends.s3boto3 import S3Boto3Storage
+
+
 app = 'teleforma'
 
 
 class MetaCore:
 
     app_label = 'exam'
-
-
-# import boxsdk
-# from boxsdk import OAuth2, Client
-# import StringIO
-#
-# box_client_id = settings.BOX_CLIENT_ID
-# box_client_secret = settings.BOX_CLIENT_SECRET
-# box_redirect_url = settings.BOX_REDIRECT_URL
-#
-# oauth = OAuth2(
-#     client_id=box_client_id,
-#     client_secret=box_client_secret,
-#     store_tokens='',
-# )
-#
-# box_auth_url, box_csrf_token = oauth.get_authorization_url('http://' + BOX_REDIRECT_URL)
-# box_client = Client(oauth)
 
 SCRIPT_STATUS = ((0, _('rejected')), (1, _('draft')), (2, _('submitted')),
                  (3, _('pending')), (4, _('marked')), (5, _('read')),
@@ -103,6 +89,11 @@ REJECT_REASON = (('unreadable', _('unreadable')),
 
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
+
+if settings.TELEFORMA_EXAM_USE_S3:
+    storage = S3Boto3Storage
+else:
+    storage = FileSystemStorage
 
 
 def sha1sum_file(filename):
@@ -271,7 +262,12 @@ class Script(BaseResource):
     corrector = models.ForeignKey(User, related_name="corrector_scripts", verbose_name=_(
         'corrector'), blank=True, null=True, on_delete=models.SET_NULL)
     file = models.FileField(
-        _('PDF file'), upload_to='scripts/%Y/%m/%d', max_length=1024, blank=True)
+        _('PDF file'),
+        upload_to='scripts/%Y/%m/%d',
+        max_length=1024,
+        blank=True,
+        storage=storage
+        )
     box_uuid = models.CharField(_('Box UUID'), max_length=256, blank=True)
     score = models.FloatField(_('score'), blank=True,
                               null=True, help_text="/20")

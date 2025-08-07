@@ -30,7 +30,7 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
 from teleforma.decorators import access_required, staff_required
 from teleforma.models.crfpa import Student
-from teleforma.views.core import CourseAccessMixin, get_courses
+from teleforma.views.core import CourseAccessMixin, get_courses, serve_media
 
 from ..exam.forms import MassScoreForm, ScoreForm, ScriptForm
 from ..exam.models import Quota, Script, ScriptType
@@ -172,6 +172,23 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
     @method_decorator(access_required)
     def dispatch(self, *args, **kwargs):
         return super(ScriptView, self).dispatch(*args, **kwargs)
+
+    def serve(self, request, pk, streaming=False):
+        bucket = False
+        if settings.TELEFORMA_EXAM_USE_S3:
+            bucket = True
+
+        return serve_media(
+            file,
+            streaming=streaming,
+            bucket=bucket,
+            )
+
+    def download(self, request, pk):
+        return self.serve(request, pk, streaming=False)
+
+    def view(self, request, pk):
+        return self.serve(request, pk, streaming=True)
 
 
 class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
