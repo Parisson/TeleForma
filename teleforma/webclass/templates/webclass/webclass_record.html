@@ -17,14 +17,18 @@
         <div>
             <dl class="listing" style="font-size: 1.2em;">
                 {% if record.slot %}
-                <dt>{% trans "Professor" %}</dt>
-                <dd>{{ record.slot.professor }}</dd>
+                    <dt>{% trans "Professor" %}</dt>
+                    <dd>{{ record.slot.professor }}</dd>
                 {% endif %}
                 <dt>{% trans "Begin" %}</dt>
                 <dd>{{ record.start_date }}</dd>
                 {% if record.obj.session %}
-                <dt>{% trans "Session" %}</dt>
-                <dd>{{ record.obj.session }}</dd>
+                    <dt>{% trans "Session" %}</dt>
+                    <dd>{{ record.obj.session }}</dd>
+                {% endif %}
+                {% if user.is_staff or user.professor.count %}
+                    <dt>{% trans "ID" %}</dt>
+                    <dd>{{ record.obj.record_id }}</dd>
                 {% endif %}
             </dl>
         </div>

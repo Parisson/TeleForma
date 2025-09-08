@@ -701,7 +701,10 @@ class MediaView(CourseAccessMixin, DetailView):
             reverse("teleforma-media-detail",
                 kwargs={"period_id": period_id, "pk": media.id}))
         if get_access(media, courses) and referer == media_detail_url:
-            media_read, c = MediaRead.objects.get_or_create(media=media, user=request.user)
+            media_reads = MediaRead.objects.filter(media=media, user=request.user)
+            if not media_reads:
+                media_read = MediaRead(media=media, user=request.user)
+                media_read.save()
             return serve_media(media.file,
                 content_type=media.mime_type,
                 streaming=streaming,
