@@ -335,6 +335,10 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'storages',
+    'quiz',
+    'multichoice',
+    'true_false',
+    'essay',
 )
 
 

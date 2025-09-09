@@ -25,6 +25,9 @@ services:
         - 'env/debug.env'
       ports:
         - "9000:8000"
+      volumes:
+        - ./pyproject.toml:/srv/pyproject.toml
+        - ./poetry.lock:/srv/poetry.lock
 
   channels:
     build:
