@@ -11,6 +11,7 @@ services:
     volumes:
       - /mnt/crfpa-videos:/mnt/crfpa-videos
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
+      - /mnt/crfpa-scripts2:/mnt/crfpa-scripts2
     networks:
       - teleforma-prod
   
