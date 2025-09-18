@@ -6,7 +6,7 @@ manage=$app'/manage.py'
 static='/srv/static/'
 media='/srv/media/'
 src='/srv/src/'
-workers=8
+workers=24
 sock=/var/run/app/asgi.sock
 loglevel=error #Options: 'critical', 'error', 'warning', 'info', 'debug', 'trace'.
 

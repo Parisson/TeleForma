@@ -13,6 +13,7 @@ from django.forms import (BooleanField, CharField, ChoiceField, DateField,
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import datetime
+from django.db.models import Q
 from PIL import Image
 from postman.fields import BasicCommaSeparatedUserField
 from postman.forms import WriteForm as PostmanWriteForm
@@ -242,7 +243,7 @@ class CorrectorForm(ModelForm):
                                    label='Statut',
                                    widget=forms.Select())
     courses = ModelMultipleChoiceField(label='Matière',
-                                       queryset=Course.objects.filter(has_exam_scripts=True).exclude(title="Aucune").order_by('title'),
+                                       queryset=Course.objects.filter(Q(has_exam_scripts=True) | Q(title="Libertés publiques")).exclude(title="Aucune").order_by('title'),
                                        widget=forms.CheckboxSelectMultiple())
     # no model
     captcha = ReCaptchaField()
