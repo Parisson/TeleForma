@@ -35,6 +35,9 @@
         {{ type }}
       </a>
     {% endfor %}
+      <a class="component button course_button" href="#quizes">
+        Quizes
+      </a>
       <a class="component button course_button" href="#webclasses">
         Webclasses
       </a>
@@ -67,7 +70,7 @@
 
   <div class="course">
     {% if course.quizzes.all %}
-    <div class="course_title" id="webclasses">
+    <div class="course_title" id="quizes">
       Quizes
     </div>
     <div class="course_content">
