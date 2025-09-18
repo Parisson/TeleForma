@@ -104,7 +104,7 @@
       <a href="{% url 'teleforma-quiz' period_id=period.id course_id=course.pk quiz_name=quiz.url %}" class="component_icon button icon_loading">Refaire le quiz</a>
     </div>
     <div class="flex-item" id="flex">
-      <a class="component_icon button icon_next">Quiz suivant</a>
+      <a href="{% url 'teleforma-quiz' period_id=period.id course_id=course.pk quiz_name=quiz_next.url %}" class="component_icon button icon_next">Quiz suivant</a>
     </div>
   </div>
 

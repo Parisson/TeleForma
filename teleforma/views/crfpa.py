@@ -1212,6 +1212,9 @@ class QuizQuestionView(CourseAccessMixin, QuizTake):
         self.period = Period.objects.get(pk=self.kwargs['period_id'])
         self.course = Course.objects.get(pk=self.kwargs['course_id'])
         self.quiz = Quiz.objects.get(url=self.kwargs['quiz_name'])
+        self.quiz_next = self.course.quizzes.filter(id__gt=self.quiz.id).order_by('id').first()
+        if not self.quiz_next:
+            self.quiz_next = self.course.quizzes.first()
 
     def get_user(self):
         user_id = self.request.user.id
@@ -1225,6 +1228,7 @@ class QuizQuestionView(CourseAccessMixin, QuizTake):
         context['course_id'] = self.kwargs['course_id']
         context['course'] = self.course
         context['quiz'] = self.quiz
+        context['quiz_next'] = self.quiz_next
         return context
 
     def final_result_user(self):
@@ -1240,6 +1244,7 @@ class QuizQuestionView(CourseAccessMixin, QuizTake):
             'period': self.period,
             'course': self.course,
             'quiz': self.quiz,
+            'quiz_next': self.quiz_next,
             'all_courses': get_courses(self.user, num_order=True, period=self.period),
         }
 

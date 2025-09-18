@@ -80,8 +80,8 @@
             <td class="border-top" width="5%" align="center">
               {% if quiz|quiz_validated:user %}
                 <img src="{{ STATIC_URL }}teleforma/images/ok.png" style="vertical-align:middle" alt="" title="{% trans "Validated" %}" />
-                {% else %}
-                    <img src="{{ STATIC_URL }}teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' not viewed yet' %}" />
+              {% else %}
+                <img src="{{ STATIC_URL }}teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' not viewed yet' %}" />
               {% endif %}
             </td>
           </tr>
