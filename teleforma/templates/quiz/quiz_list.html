@@ -27,7 +27,7 @@
 			  <td>{{ quiz.exam_paper }}</td>
 			  <td>{{ quiz.single_attempt }}</td>
 			  <td>
-				<a href="{% url 'quiz_start_page' slug=quiz.url %}">
+				<a href="{% url 'teleforma-quiz' period_id=period.id pk=course.pk quiz_name=quiz.name %}">
 				  {% trans "View details" %}
 				</a>
 			</tr>

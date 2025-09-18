@@ -53,11 +53,12 @@ from teleforma.views.core import get_course_conferences
 
 from ..exam.models import Quota, Script
 from ..models.core import Document, Professor
-from ..models.crfpa import IEJ, Course, NewsItem, Training
+from ..models.crfpa import IEJ, Course, NewsItem, Training, QuizValidation
 from ..views import get_courses
 from ..utils import generate_hash
 
 from collections import defaultdict
+
 
 register = template.Library()
 
@@ -515,3 +516,18 @@ def generate_msg_id(context, message):
 #     if not context['user'].is_staff or context.get('list_view', None):
 #         media = media.filter(is_published = True)
 #     return list(media)
+
+
+
+@register.filter
+def one_more(_1, _2):
+    # to pass more than one argument to filter
+    return _1, _2
+
+@register.filter
+def quiz_validated(quiz, user):
+    validations = QuizValidation.objects.filter(quiz=quiz, user=user, validated=True)
+    if validations:
+        return validations[0].date_validated
+    else:
+        return ''

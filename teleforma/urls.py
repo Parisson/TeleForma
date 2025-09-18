@@ -66,9 +66,10 @@ from .views.crfpa import (AnnalsCourseView, AnnalsIEJView, AnnalsView,
                           RegistrationPDFViewDownload, RetractationView, UserAddView,
                           UserCompleteView, UserLoginView, UsersExportView,
                           UsersView, WriteView, update_training,
-                          UserAddUseYourLawOriginView)
+                          UserAddUseYourLawOriginView, QuizQuestionView)
 from .views.payment import (PaymentStartView, bank_auto, bank_cancel,
                             bank_fail, bank_success)
+
 
 htdocs_forma = os.path.dirname(__file__) + '/static/teleforma/'
 profile_view = CRFPAProfileView()
@@ -284,5 +285,8 @@ urlpatterns = [
 
     # must be called on channels instance
     path('live_conference_notify',
-        LiveConferenceNotify.as_view(), name='teleforma-live-conference-notify')
+        LiveConferenceNotify.as_view(), name='teleforma-live-conference-notify'),
+
+    # QUIZZ
+    url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<course_id>.*)/quiz/(?P<quiz_name>[\w-]+)/$', QuizQuestionView.as_view(), name="teleforma-quiz"),
 ]

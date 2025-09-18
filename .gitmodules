@@ -4,3 +4,6 @@
 [submodule "lib/pdfannotator"]
 	path = lib/pdfannotator
 	url = https://git.pilotsystems.net/probarreau/pdfannotator.git
+[submodule "lib/Django-Quiz"]
+	path = lib/Django-Quiz
+	url = https://github.com/Parisson/Django-Quiz.git

@@ -63,7 +63,7 @@ from ..fields import ShortTextField
 from sorl.thumbnail import default as sorl_default
 from pypdf import PdfWriter
 import httpx
-
+from quiz.models import Quiz
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
@@ -283,6 +283,9 @@ class Course(models.Model):
     corrections_shared = models.BooleanField("Corrections partagés", 
                                             help_text="A utiliser avec le champ relatif dans la période.",
                                             default=False)
+    quizzes = models.ManyToManyField(Quiz, related_name="courses",
+                                     verbose_name=u'Quizzes',
+                                     blank=True)
 
     def __str__(self):
         return self.title
@@ -1165,3 +1168,5 @@ class MediaRead(models.Model):
     user = models.ForeignKey(User, related_name='read', verbose_name=_('user'),
                                blank=True, null=True, on_delete=models.SET_NULL)
     duration = models.DurationField(_("duration"), blank=True, null=True)
+
+

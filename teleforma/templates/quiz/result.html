@@ -1,57 +1,66 @@
-{% extends "teleforma/base.html" %}
+{% extends "quiz/question.html" %}
 {% load i18n %}
-
 {% load quiz_tags %}
 
-{% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Exam Results for" %} {{ quiz.title }} {% endblock %}
+{% block course %}
 
-{% block content %}
+<div class="course_media">
+
+<div class="course_main_title">
+    {{ course.title }}
+  </div>
+
+<div class="course_title">
+   Quiz - {{ quiz.title }}
+</div>
+
+{% block description %} {{ quiz.description }} {% endblock %}
 
   {% if previous.answers %}
 
-  <p class="muted"><small>{% trans "The previous question" %}:</small></p>
-  <p>{{ previous.previous_question }}</p>
+  <div class="course_sub_title">
+    {% trans "The previous question" %}:
+  </div>
+
+  <div class="course_content">
+    <p class="lead">{{ previous.previous_question }}</p>
+    {% include 'quiz/correct_answer.html' %}
+  </div>
+
   <p>Votre réponse est
-	<strong>
-	  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
-	</strong>
+  <strong>
+    {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+  </strong>
   </p>
-  {% include 'correct_answer.html' %}
-  <p><strong>{% trans "Explanation" %}:</strong></p>
-  <div class="well " style="background-color: #fcf8e3;">
+
+  <div class="course_sub_title">{% trans "Explanation" %}:</div>
+  <div class="well course_content">
     <p>{{ previous.previous_question.explanation }}</p>
   </div>
-  <hr>
+
 
   {% endif %}
 
   {% if max_score %}
 
   <div>
-	<h2>{% trans "Exam results" %}</h2>
-	<p>
-	  <small class="muted">{% trans "Exam title" %}: </small>
-	  <strong>{{ quiz.title }}</strong></p>
+	<div class="course_title">{% trans "Exam results" %}</div>
 
 	<p class="lead">
-	  {% trans "You answered" %} {{ score }} {% trans "questions correctly out of" %} {{ max_score }}, {% trans "giving you" %} {{ percent }} {% trans "percent correct" %}
+    {% if percent >= quiz.pass_mark %}
+      &#127881; &#128175;
+    {% endif %}
+
+	  {% trans "You answered" %} <b>{{ score }}</b> {% trans "questions correctly out of" %} <b>{{ max_score }}</b>, {% trans "giving you" %} <b>{{ percent }}</b> {% trans "percent correct" %}
 	</p>
 
 	{% if quiz.pass_mark %}
-	<hr>
-        <p class="lead">{{ sitting.result_message }}</p>
-	<hr>
-
+    <p class="lead">{{ sitting.result_message }}</p>
 	{% endif %}
       
   </div>
 
-
   {% endif %}
-
-
-  <hr>
 
   {% if possible %}
 
@@ -59,16 +68,14 @@
 	{% trans "Your session score is" %} {{ session }} {% trans "out of a possible" %} {{ possible }}
   </p>
 
-  <hr>
-
   {% endif %}
 
   {% if questions %}
 
     {% for question in questions %}
 
-      <p class="lead">
-		{{ question.content }}
+    <p class="lead">
+		  {{ question.content }}
 	  </p>
 
 	  {% correct_answer_for_all question %}
@@ -82,11 +89,25 @@
 		<p>{{ question.explanation }}</p>
 	  </div>
 
-	  <hr>
 
   {% endfor %}
 
   {% endif %}
 
+  <br><br>
+
+  <div id="flex-container">
+    <div class="flex-item" id="flex">
+      <a href="{% url 'teleforma-desk-period-course' period.id course.id %}" class="component_icon button icon_previous">Retour à la matière</a>
+    </div>
+    <div class="flex-item" id="flex">
+      <a href="{% url 'teleforma-quiz' period_id=period.id course_id=course.pk quiz_name=quiz.url %}" class="component_icon button icon_loading">Refaire le quiz</a>
+    </div>
+    <div class="flex-item" id="flex">
+      <a class="component_icon button icon_next">Quiz suivant</a>
+    </div>
+  </div>
+
+</div>
 
 {% endblock %}

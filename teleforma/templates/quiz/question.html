@@ -1,82 +1,88 @@
-{% extends "teleforma/base.html" %}
+{% extends "teleforma/course_detail.html" %}
 {% load i18n%}
-
 {% load quiz_tags %}
 
-{% block title %} {{ quiz.title }} {% endblock %}
-{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+{% block course %}
 
-{% block content %}
+<div class="course_media">
 
-{% if previous.answers %}
+	<div class="course_main_title">
+	    {{ course.title }}
+	  </div>
 
-  <p class="muted"><small>{% trans "The previous question" %}:</small></p>
-  <p>{{ previous.previous_question }}</p>
-
-  {% if previous.previous_outcome %}
-	<div class="alert alert-success">
-  {% else %}
-	<div class="alert alert-warning">
-  {% endif %}
-  	  <p><small>
-		Votre réponse est </small>
-		<strong>
-		  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
-		</strong>
-	  </p>
-
+	<div class="course_title">
+		 Quiz - {{ quiz.title }}
 	</div>
 
-	{% include 'correct_answer.html' %}
+	{% block description %} {{ quiz.description }} {% endblock %}
 
-	<p><strong>{% trans "Explanation" %}:</strong></p>
-	<div class="well " style="background-color: #fcf8e3;">
-	  <p>{{ previous.previous_question.explanation }}</p>
-	</div>
+	{% if previous.answers %}
 
-	<hr>
+  <div class="course_sub_title">
+    {% trans "The previous question" %}:
+  </div>
 
-{% endif %}
+  <div class="course_content">
+    <p class="lead">{{ previous.previous_question }}</p>
+    {% include 'quiz/correct_answer.html' %}
+  </div>
 
-<br />
+  <p>Votre réponse est
+  <strong>
+    {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+  </strong>
+  </p>
 
-{% if question %}
+  <div class="course_sub_title">{% trans "Explanation" %}:</div>
+  <div class="well course_content">
+    <p>{{ previous.previous_question.explanation }}</p>
+  </div>
 
-{% if progress %}
-<div style="float: right;">
-{% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
+	{% endif %}
+
+	<br />
+
+	{% if question %}
+
+		{% if progress %}
+		<div class="course_sub_title">
+			{% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
+		</div>
+		{% endif %}
+
+		{% if question.category %}<p>
+		  <small class="muted">{% trans "Question category" %}:</small>
+		  <strong>{{ question.category }}</strong>
+		</p>{% endif %}
+
+		<div class="course_content">
+
+			<p class="lead">{{ question.content }}</p>
+
+			{% if question.figure %}
+			    <img src="{{ question.figure.url }}" alt="{{ question.content }}" />
+			{% endif %}
+
+			<form action="" method="POST">{% csrf_token %}
+			  <input type=hidden name="question_id" value="{{ question.id }}">
+
+			  <ul class="list-group">
+				{% for answer in form.answers %}
+				  <li class="list-group-item">
+				    {{ answer }}
+				  </li>
+				{% endfor %}
+			  </ul>
+
+			  <input style="padding: 5px; margin: 5px" type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
+
+			</form>
+
+		</div>
+
+	{% endif %}
+
+
 </div>
-{% endif %}
-
-{% if question.category %}<p>
-  <small class="muted">{% trans "Question category" %}:</small>
-  <strong>{{ question.category }}</strong>
-</p>{% endif %}
-
-<p class="lead">{{ question.content }}</p>
-
-{% if question.figure %}
-    <img src="{{ question.figure.url }}" alt="{{ question.content }}" />
-{% endif %}
-
-<form action="" method="POST">{% csrf_token %}
-  <input type=hidden name="question_id" value="{{ question.id }}">
-
-  <ul class="list-group">
-
-	{% for answer in form.answers %}
-	  <li class="list-group-item">
-	    {{ answer }}
-	  </li>
-	{% endfor %}
-
-  </ul>
-  <input type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
-</form>
-
-{% endif %}
-
-<hr>
-
 
 {% endblock %}
