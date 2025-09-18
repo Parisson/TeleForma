@@ -287,6 +287,6 @@ urlpatterns = [
     path('live_conference_notify',
         LiveConferenceNotify.as_view(), name='teleforma-live-conference-notify'),
 
-    # QUIZZ
+    # QUIZ
     url(r'^desk/periods/(?P<period_id>.*)/courses/(?P<course_id>.*)/quiz/(?P<quiz_name>[\w-]+)/$', QuizQuestionView.as_view(), name="teleforma-quiz"),
 ]
