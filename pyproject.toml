@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "telppeforma"
-version = "2.15.1"
+version = "2.16.0"
 description = "e-learning platform based on streaming"
 authors = ["Guillaume Pellerin <guillaume.pellerin@parisson.com>"]
 license = "CeCILL v2"
