@@ -305,7 +305,7 @@ class CourseTypeAdmin(admin.ModelAdmin):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     ordering = ['number']
-
+    filter_horizontal = ['periods', 'quizzes']
 
 class DocumentAdmin(admin.ModelAdmin):
     list_per_page = 30
