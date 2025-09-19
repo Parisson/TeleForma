@@ -622,7 +622,7 @@ class Conference(models.Model):
             if videos:
                 if len(videos) > 1:
                     # workaround for video production multi source bug
-                    videos = videos.filter(file__in="_0.webm")[0]
+                    videos = videos.filter(file__contains="_0.webm")
                 return videos[0]
         except Media.DoesNotExist:
             try:
