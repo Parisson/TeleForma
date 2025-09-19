@@ -618,12 +618,15 @@ class Conference(models.Model):
         get media video
         """
         try:
-            videos = self.media.filter(type='mp4')
+            videos_base = self.media.filter(type='mp4')
             if videos:
                 if len(videos) > 1:
                     # workaround for video production multi source bug
-                    videos = videos.filter(file__contains="_0.webm")
-                return videos[0]
+                    videos = videos_base.filter(file__contains="_0.webm")
+                    if videos:
+                        return videos[0]
+                return videos_base[0]
+
         except Media.DoesNotExist:
             try:
                 return self.media.filter(type='webm')[0]
