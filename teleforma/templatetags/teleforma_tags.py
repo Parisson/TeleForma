@@ -274,10 +274,16 @@ def get_transcoded_audio_id(media):
 
 @register.filter
 def get_audio_id(media):
-    for m in media.conference.media.all():
-        if 'audio' in m.mime_type:
-            return m.id
-    return
+    # we prioritize the mp3 transcoded from the webm video file
+    medias = media.conference.media.filter(
+        file__contains="webm",
+        mime_type__contains="audio")
+    if medias:
+        return medias[0].id
+    else:
+        medias = media.conference.media.filter(
+        mime_type__contains="audio")
+        return medias[0].id
 
 
 @register.filter
