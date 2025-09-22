@@ -125,7 +125,7 @@ class Command(BaseCommand):
                         conference.course_type.name, conference.session]
                 message = "Nouvelle conférence publiée : " + ' - '.join(elm)
 
-                students = Student.objects.filter(period=publication.period, platform_only=True)
+                students = Student.objects.filter(period=publication.period)
                 for student in students:
                     try:
                         if student.user:
