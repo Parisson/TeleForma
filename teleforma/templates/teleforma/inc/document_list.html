@@ -17,9 +17,14 @@
     <tbody>
       {% for doc in docs %}
         <tr>
-        <td {% if forloop.first %}class="border-top"{% endif %} width="60%">{% if doc.file %}<a href="{% url 'teleforma-document-view' doc.id %}" target="_blank" title="{% trans "View" %}"><img src="/static//teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
-        <td {% if forloop.first %}class="border-top"{% endif %} width="35%">{{ doc.date_added }}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="55%">{% if doc.file %}<a href="{% url 'teleforma-document-view' doc.id %}" target="_blank" title="{% trans "View" %}"><img src="/static//teleforma/images/application-msword.png" style="vertical-align:middle" alt="" />{% endif %} {{ doc.title }}{% if doc.file %}</a>{% endif %}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="30%">{{ doc.date_added }}</td>
         <td {% if forloop.first %}class="border-top"{% endif %} width="5%" align="center">{% if doc.file %}<a href="{% url 'teleforma-document-download' doc.id %}"><img src="/static/teleforma/images/download.png" style="vertical-align:middle" alt="" title="{% trans "Download" %}" /></a>{% endif %}</td>
+        <td {% if forloop.first %}class="border-top"{% endif %} width="10%" align="center">
+          {% if not doc|document_read:user %}
+            <span class="new-resource">Nouveau</span>
+          {% endif %}
+        </td>
         </tr>
     {% endfor %}
     </tbody>

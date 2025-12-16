@@ -52,7 +52,7 @@ from docutils.core import publish_parts
 from teleforma.views.core import get_course_conferences
 
 from ..exam.models import Quota, Script
-from ..models.core import Document, Professor
+from ..models.core import Document, MediaRead, Professor
 from ..models.crfpa import IEJ, Course, NewsItem, Training, QuizValidation
 from ..views import get_courses
 from ..utils import generate_hash
@@ -537,3 +537,11 @@ def quiz_validated(quiz, user):
         return validations[0].date_validated
     else:
         return ''
+
+@register.filter
+def document_read(document, user):
+    return document.readers.filter(id=user.id).exists()
+
+@register.filter
+def media_read(media, user):
+    return MediaRead.objects.filter(media=media, user=user).exists()

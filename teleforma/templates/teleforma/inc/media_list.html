@@ -60,6 +60,9 @@
                     <img src="/static/teleforma/images/delete.png" style="vertical-align:middle" alt="" title="{% trans ' rejected' %}" />
                 {% endif %}
             {% endif %}
+            {% if not conference.video|media_read:user %}
+                <span class="new-resource">Nouveau</span>
+            {% endif %}
             {% if conference.video.file %}
                 {% if not "video" in conference.video.mime_type or request.user_agent.os.family == 'iOS' %}
                     <a href="{% url 'teleforma-media-download' period.id conference.video.id %}">

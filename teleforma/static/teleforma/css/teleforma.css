@@ -3413,3 +3413,13 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 #flex-container > .raw-item {
   width: 5rem;
 }
+
+/* New resource indicator */
+.new-resource {
+    background-color: #e74c3c;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
