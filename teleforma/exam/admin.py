@@ -2,9 +2,11 @@
 import os
 
 from django.contrib import admin
+from django.http import HttpResponse
 from django.template.defaultfilters import filesizeformat
 from django.contrib.auth.models import User
 from django.db.models import Q
+from xlwt import Workbook
 
 from ..exam.models import Quota, Script, ScriptPage, ScriptType
 
@@ -49,7 +51,7 @@ class ScriptAdmin(admin.ModelAdmin):
                     'date_submitted', 'date_marked', 'date_rejected',
                    'author__student__platform_only']
     list_display = ['title', 'author_name', 'corrector', 'file_size', 'status']
-    actions = ['force_resubmit',]
+    actions = ['force_resubmit', 'export_xls']
 
     class Media:
         js = ("exam/js/admin.js",)
@@ -85,6 +87,37 @@ class ScriptAdmin(admin.ModelAdmin):
             script.save()
 
     force_resubmit.short_description = "Re-submit scripts"
+
+    def export_xls(self, request, queryset):
+        book = Workbook()
+        sheet = book.add_sheet('Scripts')
+
+        # En-têtes
+        cols = [
+            {'name': 'Identifiant', 'width': 5000},
+            {'name': 'Matière', 'width': 8000},
+            {'name': 'Séance', 'width': 3000},
+            {'name': 'Note', 'width': 3000},
+        ]
+        row = sheet.row(0)
+        for i, col in enumerate(cols):
+            row.write(i, col['name'])
+            sheet.col(i).width = col['width']
+
+        # Données
+        for i, script in enumerate(queryset):
+            row = sheet.row(i + 1)
+            row.write(0, script.author.username if script.author else '')
+            row.write(1, script.course.title if script.course else '')
+            row.write(2, script.session or '')
+            row.write(3, script.score if script.score is not None else '')
+
+        response = HttpResponse(content_type="application/vnd.ms-excel")
+        response['Content-Disposition'] = 'attachment; filename=scripts.xls'
+        book.save(response)
+        return response
+
+    export_xls.short_description = "Export vers XLS"
 
 
 admin.site.register(Script, ScriptAdmin)
