@@ -823,6 +823,9 @@ class DocumentView(CourseAccessMixin, DetailView):
         bucket = False
 
         if get_access(document, courses):
+            # Track document read
+            document.readers.add(request.user)
+
             if settings.TELEFORMA_PRIVATE_DOCUMENTS_MODE:
                 file = document.private_file(request.user)
                 if settings.TELEFORMA_PRIVATE_MEDIA_USE_S3:
