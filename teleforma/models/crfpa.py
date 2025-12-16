@@ -45,9 +45,11 @@ from django.urls.base import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from tinymce.models import HTMLField
 from django.core.cache import cache
+from quiz.models import Quiz
 
 from ..models.core import (Course, Media, MetaCore, payment_choices,
                            payment_schedule_choices)
+
 
 app_label = 'teleforma'
 
@@ -683,3 +685,28 @@ class NewsItem(models.Model):
 
     def can_delete(self, request):
         return request.user.is_staff or request.user.id == self.creator.id
+
+
+class QuizValidation(models.Model):
+
+    user        = models.ForeignKey(User, related_name="quiz_validation", verbose_name=_('user'), on_delete=models.CASCADE)
+    quiz        = models.ForeignKey(Quiz, related_name="quiz_validation", verbose_name=_('quiz'),
+                    blank=True, null=True, on_delete=models.SET_NULL)
+    validated   = models.BooleanField(_('validated'))
+    date_validated = models.DateTimeField(_('date validated'), auto_now_add=True, null=True)
+
+    def __str__(self):
+        return ' - '.join([str(self.quiz), self.user.username, str(self.date_validated)])
+
+    def validate(self):
+        self.validated = True
+        self.save()
+
+    def reject(self):
+        self.validated = False
+        self.save()
+
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'quiz_validation'
+        verbose_name = _('Quiz validation')
+        ordering = ['-date_validated']

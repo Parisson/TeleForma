@@ -63,7 +63,7 @@ from ..fields import ShortTextField
 from sorl.thumbnail import default as sorl_default
 from pypdf import PdfWriter
 import httpx
-
+from quiz.models import Quiz
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
@@ -283,6 +283,9 @@ class Course(models.Model):
     corrections_shared = models.BooleanField("Corrections partagés", 
                                             help_text="A utiliser avec le champ relatif dans la période.",
                                             default=False)
+    quizzes = models.ManyToManyField(Quiz, related_name="courses",
+                                     verbose_name=u'Quizzes',
+                                     blank=True)
 
     def __str__(self):
         return self.title
@@ -615,9 +618,17 @@ class Conference(models.Model):
         get media video
         """
         try:
-            videos = self.media.filter(type='mp4')
-            if videos:
-                return videos[0]
+            medias = self.media.filter(type='mp4')
+            if medias:
+                if len(medias) > 1:
+                    # workaround for video production multi source bug
+                    medias_0 = medias.filter(file__contains="_0.webm")
+                    if medias_0:
+                        return medias_0[0]
+                    else:
+                        return medias[0]
+                return medias[0]
+
         except Media.DoesNotExist:
             try:
                 return self.media.filter(type='webm')[0]
@@ -1165,3 +1176,5 @@ class MediaRead(models.Model):
     user = models.ForeignKey(User, related_name='read', verbose_name=_('user'),
                                blank=True, null=True, on_delete=models.SET_NULL)
     duration = models.DurationField(_("duration"), blank=True, null=True)
+
+

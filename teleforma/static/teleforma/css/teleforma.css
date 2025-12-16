@@ -1302,6 +1302,9 @@ table.listing tbody td.show_more_videos {
 .icon_wait{
     background-image: url('/static/teleforma/images/wait.gif');
 }
+.icon_loading{
+    background-image: url('/static/teleforma/images/loading.png');
+}
 .icon_rss,.icon_rss:hover{
     background: url('/static/teleforma/images/feed-icon-14x14.png') no-repeat;
     background-position: 0ex .8ex;
@@ -1759,6 +1762,22 @@ form.add_actus #id_text_parent{
     scroll-margin-block-start: 1em;
     scroll-margin-block-end: 1em;
 }
+
+.course_sub_title {
+    color: #355ea2;
+    -moz-border-radius: 8px 0px 0px 0px;
+    -webkit-border-radius: 8px 0px 0px 0px;
+    border-radius: 8px 0px 0px 0px;
+    padding: 1em 0em 0.5em 0em;
+    font-weight: bold;
+    font-size: 1.1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    scroll-margin-block-start: 1em;
+    scroll-margin-block-end: 1em;
+}
+
 
 .create-bbb-conference {
     font-size: 0.8em;
@@ -3380,4 +3399,17 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     flex-direction: row-reverse;
     justify-content: start;
     font-weight: bold;
+}
+
+#flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#flex-container > .flex-item {
+  flex: auto;
+}
+
+#flex-container > .raw-item {
+  width: 5rem;
 }

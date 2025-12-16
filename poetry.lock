@@ -755,7 +755,7 @@ Django = "*"
 
 [[package]]
 name = "django-quiz-app"
-version = "0.5.1"
+version = "0.6.0"
 description = "A configurable quiz app for Django."
 optional = false
 python-versions = "*"
@@ -769,9 +769,9 @@ Pillow = ">=2.5.0"
 
 [package.source]
 type = "git"
-url = "https://github.com/pilot-systems/Django-Quiz.git"
-reference = "HEAD"
-resolved_reference = "414ffcec05588d41652cdd1799706abccad9b8b7"
+url = "https://github.com/Parisson/Django-Quiz.git"
+reference = "crfpa"
+resolved_reference = "0109d89679ebf98e9f61369d7dca12d0c6d1a6c0"
 
 [[package]]
 name = "django-recaptcha"
@@ -2679,4 +2679,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "75063f62ed7197ea62b66b4106181196aeeeeb8c0513c3e3ae15173e4d52d6f5"
+content-hash = "ca43fb92a38a9e734fada4924b41533778853a34317f218cdbcd74c975f3c7a7"

@@ -53,11 +53,12 @@ from teleforma.views.core import get_course_conferences
 
 from ..exam.models import Quota, Script
 from ..models.core import Document, Professor
-from ..models.crfpa import IEJ, Course, NewsItem, Training
+from ..models.crfpa import IEJ, Course, NewsItem, Training, QuizValidation
 from ..views import get_courses
 from ..utils import generate_hash
 
 from collections import defaultdict
+
 
 register = template.Library()
 
@@ -273,10 +274,16 @@ def get_transcoded_audio_id(media):
 
 @register.filter
 def get_audio_id(media):
-    for m in media.conference.media.all():
-        if 'audio' in m.mime_type:
-            return m.id
-    return
+    # we prioritize the mp3 transcoded from the webm video file
+    medias = media.conference.media.filter(
+        file__contains="webm",
+        mime_type__contains="audio")
+    if medias:
+        return medias[0].id
+    else:
+        medias = media.conference.media.filter(
+        mime_type__contains="audio")
+        return medias[0].id
 
 
 @register.filter
@@ -515,3 +522,18 @@ def generate_msg_id(context, message):
 #     if not context['user'].is_staff or context.get('list_view', None):
 #         media = media.filter(is_published = True)
 #     return list(media)
+
+
+
+@register.filter
+def one_more(_1, _2):
+    # to pass more than one argument to filter
+    return _1, _2
+
+@register.filter
+def quiz_validated(quiz, user):
+    validations = QuizValidation.objects.filter(quiz=quiz, user=user, validated=True)
+    if validations:
+        return validations[0].date_validated
+    else:
+        return ''

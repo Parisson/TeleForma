@@ -59,22 +59,27 @@ from postman.forms import AnonymousWriteForm
 from postman.views import WriteView as PostmanWriteView
 from xlwt import Workbook
 from django.conf import settings
+from quiz.views import QuizTake
+from quiz.models import Quiz
 
 from ..decorators import access_required
 from ..forms import (CorrectorForm, NewsItemForm, RetractationForm, UserForm, WriteForm,
                      get_unique_username, UserUseYourLawOriginForm)
 from ..models.core import Course, CourseType, Document, NamePaginator, Period
 from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
-                            Payment, Profile, Student, Training, months_choices, payment_choices)
+                            Payment, Profile, Student, Training, months_choices, payment_choices,
+                            QuizValidation)
 from ..views.core import (CourseAccessMixin, PDFTemplateResponseMixin, format_courses,
                           get_courses, get_periods)
 from ..views.profile import ProfileView
+
 
 def get_course_code(obj):
     if obj:
         return str(obj.code)
     else:
         return ''
+
 
 def get_crfpa_courses(user, date_order=False, num_order=False, period=None):
     courses = []
@@ -1196,3 +1201,67 @@ class CRFPAProfileView(ProfileView):
                 payment = payment[0]
 
         return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})
+
+
+class QuizQuestionView(CourseAccessMixin, QuizTake):
+
+    template_name = 'quiz/question.html'
+
+    def _init(self):
+        self.user = self.get_user()
+        self.period = Period.objects.get(pk=self.kwargs['period_id'])
+        self.course = Course.objects.get(pk=self.kwargs['course_id'])
+        self.quiz = Quiz.objects.get(url=self.kwargs['quiz_name'])
+        self.quiz_next = self.course.quizzes.filter(id__gt=self.quiz.id).order_by('id').first()
+        if not self.quiz_next:
+            self.quiz_next = self.course.quizzes.first()
+
+    def get_user(self):
+        user_id = self.request.user.id
+        return User.objects.get(id=user_id)
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizQuestionView, self).get_context_data(**kwargs)
+        self._init()
+        context['period_id'] = self.kwargs['period_id']
+        context['period'] = self.period
+        context['course_id'] = self.kwargs['course_id']
+        context['course'] = self.course
+        context['quiz'] = self.quiz
+        context['quiz_next'] = self.quiz_next
+        return context
+
+    def final_result_user(self):
+        self._init()
+
+        results = {
+            'quiz': self.quiz,
+            'score': self.sitting.get_current_score,
+            'max_score': self.sitting.get_max_score,
+            'percent': self.sitting.get_percent_correct,
+            'sitting': self.sitting,
+            'previous': self.previous,
+            'period': self.period,
+            'course': self.course,
+            'quiz': self.quiz,
+            'quiz_next': self.quiz_next,
+            'all_courses': get_courses(self.user, num_order=True, period=self.period),
+        }
+
+        self.sitting.mark_quiz_complete()
+
+        if self.quiz.answers_at_end:
+            results['questions'] =\
+                self.sitting.get_questions(with_answers=True)
+            results['incorrect_questions'] =\
+                self.sitting.get_incorrect_questions
+
+        if self.quiz.exam_paper is False:
+            self.sitting.delete()
+
+        if self.sitting.get_percent_correct >= self.quiz.pass_mark:
+            validation = QuizValidation(
+                user=self.user, quiz=self.quiz, validated=True)
+            validation.save()
+
+        return render(self.request, 'quiz/result.html', results)

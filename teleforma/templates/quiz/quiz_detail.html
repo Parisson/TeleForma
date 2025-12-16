@@ -1,10 +1,10 @@
-{% extends 'teleforma/base.html' %}
+{% extends 'teleforma/course_detail.html' %}
 {% load i18n %}
 {% block title %}
 {{ quiz.title }}
 {% endblock %}
 
-{% block content %}
+{% block course %}
 <!--<h2>{{ quiz.title }}</h2>-->
 <!--<h3>{% trans "Category" %}: {{ quiz.category }}</h3>-->
 {% if quiz.single_attempt %}
