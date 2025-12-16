@@ -41,7 +41,7 @@ class QuotaInline(admin.StackedInline):
 class ScriptAdmin(admin.ModelAdmin):
     model = Script
     ordering = ['-date_added']
-    search_fields = ['author__username', 'author__last_name', 'corrector__username',
+    search_fields = ['=author__username', 'author__last_name', '=corrector__username',
                     'corrector__last_name', 'course__title', 'course__code']
     readonly_fields = ['date_added','uuid','box_uuid','sha1','mime_type']
     autocomplete_fields = ['author']
