@@ -174,12 +174,14 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
         return super(ScriptView, self).dispatch(*args, **kwargs)
 
     def serve(self, request, pk, streaming=False):
+        script = self.get_object()
+
         bucket = False
         if settings.TELEFORMA_EXAM_USE_S3:
             bucket = True
 
         return serve_media(
-            file,
+            script.file,
             streaming=streaming,
             bucket=bucket,
             )
