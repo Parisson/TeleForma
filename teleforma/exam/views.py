@@ -5,6 +5,7 @@
 import datetime
 import io
 import json
+import urllib
 
 import numpy as np
 from django.conf import settings
@@ -175,6 +176,7 @@ class ScriptView(ScriptMixinView, CourseAccessMixin, UpdateView):
 
     def serve(self, request, pk, streaming=False):
         script = self.get_object()
+        print(script)
 
         bucket = False
         if settings.TELEFORMA_EXAM_USE_S3:
@@ -202,7 +204,9 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
         script = get_object_or_404(Script, id=kwargs['pk'])
 
         # existing PDF
-        existing_pdf = PdfReader(script.file.path)
+        remote_file = urllib.request.urlopen(script.file.url).read()
+        memory_file = io.BytesIO(remote_file)
+        existing_pdf = PdfReader(memory_file)
         width = existing_pdf.pages[0].mediabox.width
         height = existing_pdf.pages[0].mediabox.height
 
@@ -290,6 +294,10 @@ class ScriptDownloadView(ScriptMixinView, CourseAccessMixin):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="%s"' % script.file.name
         output.write(response)
+
+        remote_file = None
+        memory_file = None
+
         return response
 
 

@@ -282,6 +282,7 @@ class Script(BaseResource):
     date_rejected = models.DateTimeField(
         _('date rejected'), null=True, blank=True)
     url = models.CharField(_('URL'), max_length=2048, blank=True)
+    size = models.IntegerField(_('size'), blank=True, null=True)
 
     @property
     def title(self):
@@ -402,21 +403,6 @@ class Script(BaseResource):
         if not self.url:
             self.url = settings.MEDIA_URL + str(new_rel)
 
-    @property
-    def safe_url(self):
-        domain = Site.objects.get_current().domain
-        url = self.url
-        url = url.replace(
-            'http://e-learning.crfpa.pre-barreau.com', '//' + domain)
-        return urllib.quote(url)
-
-    def unquoted_url(self):
-        domain = Site.objects.get_current().domain
-        url = self.url
-        url = url.replace(
-            'http://e-learning.crfpa.pre-barreau.com', '//' + domain)
-        return url
-
     def has_annotations_file(self):
         """
         check if an annotations file exists. Then use this file, otherwise use the new db implementation
@@ -431,17 +417,11 @@ class Script(BaseResource):
         # self.save()
 
     def submit(self):
-        self.box_upload_done = 0
-
         if not self.file:
             self.auto_reject('no file')
             return
 
-        if not os.path.exists(self.file.path):
-            self.auto_reject('file not found')
-            return
-
-        mime_type = guess_mimetypes(self.file.path)
+        mime_type = guess_mimetypes(self.file.url)
         if mime_type:
             if not 'pdf' in mime_type:
                 self.auto_reject('wrong format')
@@ -450,14 +430,11 @@ class Script(BaseResource):
             self.auto_reject('wrong format')
             return
 
-        if os.stat(self.file.path).st_size > settings.TELEFORMA_EXAM_SCRIPT_MAX_SIZE:
+        if self.file.size > settings.TELEFORMA_EXAM_SCRIPT_MAX_SIZE:
             self.auto_reject('file too large')
             return
 
         if not self.status == 0 and self.file:
-            # if not self.box_uuid:
-            #     self.uuid_link()
-            # self.box_upload()
             if not self.corrector:
                 self.auto_set_corrector()
 
@@ -497,31 +474,16 @@ def set_file_properties(sender, instance, **kwargs):
     if instance.file:
         trig_save = False
         if not instance.mime_type:
-            mime_type = guess_mimetypes(instance.file.path)
-            if mime_type:
-                instance.mime_type = guess_mimetypes(instance.file.path)
-                trig_save = True
-            # HOTFIX
-            else:
-                instance.mime_type = 'application/pdf'
-        if not instance.sha1:
-            instance.sha1 = sha1sum_file(instance.file.path)
+            instance.mime_type = guess_mimetypes(instance.file.url)
             trig_save = True
-        if not instance.url:
-            instance.uuid_link()
+        if not instance.size:
+            instance.size = instance.file.size
             trig_save = True
         if not instance.corrector:
             instance.submit()
             trig_save = True
         if trig_save:
             super(sender, instance).save()
-
-        # if hasattr(instance, 'image'):
-        #     if not instance.image:
-        #         path = cache_path + os.sep + instance.uuid + '.jpg'
-        #         command = 'convert ' + instance.file.path + ' ' + path
-        #         os.system(command)
-        #         instance.image = path
 
 
 post_save.connect(set_file_properties, sender=Script,
