@@ -300,7 +300,7 @@ LOGGING = {
 ########################
 
 MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOLBAR else ()) + (
-    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -309,6 +309,7 @@ MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOL
     'dj_pagination.middleware.PaginationMiddleware',
     'teleforma.middleware.XsSharing',
     'django_user_agents.middleware.UserAgentMiddleware',
+    "django.middleware.common.CommonMiddleware",
 )
 
 INSTALLED_APPS = (
@@ -339,6 +340,7 @@ INSTALLED_APPS = (
     'multichoice',
     'true_false',
     'essay',
+    'corsheaders',
 )
 
 
@@ -669,6 +671,16 @@ AWS_S3_ENCRYPTION=True
 BBB_LOGO_URL = "/static/teleforma/images/pb/logo_pb_2025.png"
 BBB_PDF_URL = "/static/teleforma/pdf/pb-blank-slide.pdf"
 BBB_BANNER_COLOR = "#003768"
+
+########################
+# CORS
+########################
+
+CORS_ALLOWED_ORIGINS = [
+    "",
+]
+
+CORS_ALLOW_ALL_ORIGINS = False
 
 ##################
 # LOCAL SETTINGS #

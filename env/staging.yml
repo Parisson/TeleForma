@@ -11,6 +11,8 @@ services:
     volumes:
       - /mnt/crfpa-videos:/mnt/crfpa-videos
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
+      - ./pyproject.toml:/srv/pyproject.toml
+      - ./poetry.lock:/srv/poetry.lock
     ports:
       - "9001:8000"
     networks:
