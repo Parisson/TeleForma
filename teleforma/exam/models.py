@@ -383,6 +383,10 @@ class Script(BaseResource):
     def update(self, *args, **kwargs):
         super(Script, self).save(*args, **kwargs)
 
+    def delete(self):
+        self.file.delete(save=False)
+        super().delete()
+
     def uuid_link(self):
         old_abs = self.file.path
         old_abs_list = old_abs.split(os.sep)

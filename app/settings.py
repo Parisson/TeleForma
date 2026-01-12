@@ -677,7 +677,7 @@ BBB_BANNER_COLOR = "#003768"
 ########################
 
 CORS_ALLOWED_ORIGINS = [
-    "",
+    "https://e-learning.pre-barreau.com",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False

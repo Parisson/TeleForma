@@ -901,6 +901,10 @@ class DocumentPrivate(MediaBase):
             temp_file.close()
             del temp_file
 
+    def delete(self):
+        self.file.delete(save=False)
+        super().delete()
+
 
 class DocumentSimple(MediaBase):
 
