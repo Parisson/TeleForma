@@ -442,8 +442,35 @@ def purge_courses_cache(sender, instance, *args, **kwargs):
                     # print(f"purging {cache_key}")
                     cache.delete(cache_key)
 
+def create_optional_fees(sender, instance, created, *args, **kwargs):
+    """Create optional fees for fascicule and oral option when a student is created"""
+    if not created:
+        return
+
+    period = instance.period
+    if not period:
+        return
+
+    # Frais d'envoi de fascicules
+    if instance.fascicule and period.fascicule_fee:
+        OptionalFee.objects.create(
+            student=instance,
+            value=period.fascicule_fee,
+            description="Envoi de fascicules"
+        )
+
+    # Frais option oral de langue
+    if instance.oral_1 and instance.oral_1.title != 'Aucune' and period.oral_option_fee:
+        OptionalFee.objects.create(
+            student=instance,
+            value=period.oral_option_fee,
+            description="Option anglais"
+        )
+
+
 signals.post_save.connect(update_balance_signal)
 signals.post_save.connect(create_payment_objects, sender=Student)
+signals.post_save.connect(create_optional_fees, sender=Student)
 signals.post_save.connect(purge_courses_cache, sender=Student)
 signals.post_delete.connect(update_balance_signal)
 

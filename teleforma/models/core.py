@@ -206,10 +206,16 @@ class Period(models.Model):
         "date d'ouverture des inscriptions", null=True, blank=True)
     date_inscription_end = models.DateField(
         "date de fermeture des inscriptions", null=True, blank=True)
-    corrections_from = models.ForeignKey('Period', 
-                                        verbose_name="Récupérer les séminaires de correction depuis", 
-                                        help_text="Permet d'afficher les séminaires de corrections d'une autre période. Il faut aussi cocher la case relative dans les matières pour autoriser celles-ci à partager leur contenu.", 
+    corrections_from = models.ForeignKey('Period',
+                                        verbose_name="Récupérer les séminaires de correction depuis",
+                                        help_text="Permet d'afficher les séminaires de corrections d'une autre période. Il faut aussi cocher la case relative dans les matières pour autoriser celles-ci à partager leur contenu.",
                                         blank=True, null=True, on_delete=models.SET_NULL)
+    fascicule_fee = models.FloatField(
+        "Frais d'envoi de fascicules", default=110,
+        help_text="Montant en € ajouté automatiquement si l'étudiant choisit l'envoi de fascicules")
+    oral_option_fee = models.FloatField(
+        "Frais option oral de langue", default=250,
+        help_text="Montant en € ajouté automatiquement si l'étudiant choisit l'option oral de langue")
 
     def __str__(self):
         return self.name
