@@ -35,6 +35,8 @@ from .views.core import get_periods
 
 from django.contrib.admin.helpers import ActionForm
 from django import forms
+from django.forms.widgets import TextInput
+from django.db import models
 
 
 class PeriodListFilter(SimpleListFilter):
@@ -69,21 +71,33 @@ class PeriodListFilter(SimpleListFilter):
 
 class PaymentInline(admin.StackedInline):
     model = Payment
+    formfield_overrides = {
+        models.FloatField: {'widget': TextInput(attrs={'autocomplete': 'on'})},
+    }
 
 
 class OptionalFeeInline(admin.StackedInline):
     model = OptionalFee
     extra = 1
+    formfield_overrides = {
+        models.FloatField: {'widget': TextInput(attrs={'autocomplete': 'on'})},
+    }
 
 
 class DiscountInline(admin.StackedInline):
     model = Discount
     extra = 1
+    formfield_overrides = {
+        models.FloatField: {'widget': TextInput(attrs={'autocomplete': 'on'})},
+    }
 
 
 class PaybackInline(admin.StackedInline):
     model = Payback
     extra = 1
+    formfield_overrides = {
+        models.FloatField: {'widget': TextInput(attrs={'autocomplete': 'on'})},
+    }
 
 
 class StudentAdminMixin:
