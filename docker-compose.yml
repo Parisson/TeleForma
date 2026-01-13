@@ -29,7 +29,7 @@ services:
       - env/debug.env
 
   db:
-    image: postgres:13
+    image: postgres:18
     env_file:
       - env/debug.env
     environment:
