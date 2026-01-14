@@ -1180,5 +1180,8 @@ class MediaRead(models.Model):
     user = models.ForeignKey(User, related_name='read', verbose_name=_('user'),
                                blank=True, null=True, on_delete=models.SET_NULL)
     duration = models.DurationField(_("duration"), blank=True, null=True)
-
+    date_added = models.DateTimeField(
+        _('date added'), auto_now_add=True, null=True)
+    date_modified = models.DateTimeField(
+        _('date modified'), auto_now=True, null=True)
 

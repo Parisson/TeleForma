@@ -1,0 +1,206 @@
+{% extends "teleforma/course_media.html" %}
+{% load teleforma_tags %}
+{% load i18n %}
+
+
+{% block extra_javascript %}
+{{ block.super }}
+
+<script type="text/javascript">
+    function getRndInteger(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    jQuery(window).ready(function() {
+        let video = $("#video");
+        let videoSource = $("#video source");
+        let url = videoSource.attr("src");
+        url = url + "?v=" + getRndInteger(1, 10000);
+        videoSource.attr("src", url);
+        video.load();
+        video.load();
+    });
+
+    $(document).ready(function(){
+        $('#video').bind('contextmenu',function() { return false; });
+    });
+
+var videos = {
+    a: Popcorn("#a"),
+    b: Popcorn("#b"),
+  },
+  scrub = $("#scrub"),
+  loadCount = 0,
+  events = "play pause timeupdate seeking".split(/\s+/g);
+
+// iterate both media sources
+Popcorn.forEach(videos, function(media, type) {
+
+  // when each is ready...
+  media.on("canplayall", function() {
+
+    // trigger a custom "sync" event
+    this.emit("sync");
+
+    // set the max value of the "scrubber"
+    scrub.attr("max", this.duration());
+
+    // Listen for the custom sync event...
+  }).on("sync", function() {
+
+    // Once both items are loaded, sync events
+    if (++loadCount == 2) {
+
+      // Iterate all events and trigger them on the video B
+      // whenever they occur on the video A
+      events.forEach(function(event) {
+
+        videos.a.on(event, function() {
+
+          // Avoid overkill events, trigger timeupdate manually
+          if (event === "timeupdate") {
+
+            if (!this.media.paused) {
+              return;
+            }
+            videos.b.emit("timeupdate");
+
+            // update scrubber
+            scrub.val(this.currentTime());
+
+            return;
+          }
+
+          if (event === "seeking") {
+            videos.b.currentTime(this.currentTime());
+          }
+
+          if (event === "play" || event === "pause") {
+            videos.b[event]();
+          }
+        });
+      });
+    }
+  });
+});
+
+scrub.bind("change", function() {
+  var val = this.value;
+  videos.a.currentTime(val);
+  videos.b.currentTime(val);
+});
+
+// With requestAnimationFrame, we can ensure that as
+// frequently as the browser would allow,
+// the video is resync'ed.
+function sync() {
+  if (videos.b.media.readyState === 4) {
+    videos.b.currentTime(
+      videos.a.currentTime()
+    );
+  }
+  requestAnimationFrame(sync);
+}
+
+sync();
+</script>
+
+{% endblock %}
+
+
+{% block module-action %}
+{% get_telecaster as telecaster %}
+{%  if telecaster %}
+<script type="text/javascript">
+    var conferenceUtils = {
+        stop : function(id){
+            json([id],'teleforma.stop_conference',function(){
+                location.href = '{% url 'teleforma-conference-record' %}';
+                }
+                );
+        }}
+
+    jQuery(window).ready(function(){
+        var a = jQuery('#action_red');
+        var f = conferenceUtils;
+        a.unbind('click').click(function(){
+            f.stop('{{conference.public_id}}');return false;});
+        });
+</script>
+
+<div class="module_action">
+<a href="#" class="component_icon button" id="action_red">{% trans "S T O P" %}</a>
+</div>
+{% endif %}
+{% endblock module-action %}
+
+{% block course %}
+<div class="course_media">
+
+<div class="course_title">
+    <div style="float: right; font-size: 0.9em;">
+        <a href="{% url 'teleforma-conference-audio' period.id conference.id %}" class="component_icon button icon_speaker">&nbsp;{% trans "Audio" %}</a>
+    </div>
+    <a href="{% url 'teleforma-desk-period-course' period.id course.id %}" style="color: #000;">{{ course.title }}</a> - {{ type }} - {% trans "Session" %} {{ conference.session }}
+</div>
+
+<div class="media">
+
+{% if access_error %}
+  <p>{{ access_error }}</p>
+  <p>{{ message }}</p>
+{% else %}
+    {% for livestream in livestreams %}
+        {% if "webm" == livestream.stream_type %}
+            <div class="video">
+                <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+                <link href="https://unpkg.com/@videojs/themes@1/dist/fantasy/index.css" rel="stylesheet">
+                <video
+                    id="video"
+                    class="video-js vjs-theme-fantasy"
+                    controls
+                    preload="auto"
+                    width="100%"
+                    height="auto"
+                    data-setup="{}">
+
+                  <source id="videosource" src="{{ livestream.url }}" type="video/webm" />
+                    <p class="vjs-no-js">
+                      To view this video please enable JavaScript, and consider upgrading to a
+                      web browser that
+                      <a href="https://videojs.com/html5-video-support/" target="_blank"
+                        >supports HTML5 video</a
+                      >
+                    </p>
+                </video>
+                <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+</div>
+
+{% block general_info %}
+<div class="course_content" id="media_infos">
+<dl class="listing">
+
+{% if conference.professor %}
+    <dt>{% trans "Course" %}</dt><dd><a href="{% url 'teleforma-desk-period-course' period.id course.id %}">{{ conference.course.title }} - {{ conference.course_type }}</a></dd>
+    <dt>{% trans "Session" %}</dt><dd>{{ conference.session }}</dd>
+    <dt>{% trans "Professor" %}</dt><dd>{{ conference.professor }}</dd>
+{% endif %}
+
+{% if conference.comment %}<dt>{% trans "Comment" %}</dt><dd>{{ conference.comment }}</dd>{% endif %}
+    <dt>{% trans "Begin date" %}</dt><dd>{{ conference.date_begin }}</dd>
+    {% if conference.date_end %}<dt>{% trans "End date" %}</dt><dd>{{ conference.date_end|yes_no }}</dd>{% endif %}
+    <dt>{% trans "Live" %}</dt><dd>{% trans "Yes" %}</dd>
+    {% if conference.room %}<dt>{% trans "Room" %}</dt><dd>{{ conference.room }}</dd>{% endif %}
+    {% if user.is_staff or user.is_superuser %}
+    <dt>{% trans "Conference ID" %}</dt><dd>{{ conference.public_id }}</dd>
+{% endif %}
+
+</dl>
+</div>
+{% endblock general_info %}
+
+</div>
+{% endblock course %}
