@@ -5,9 +5,15 @@ from datetime import datetime, timedelta
 
 class Command(BaseCommand):
     help = "Delete all private documents older than a number of days"
+    args = "days"
+
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
-        days = args[0]
+        days = int(args[0])
         date_limit = datetime.today() - timedelta(days=days)
-        for document in DocumentPrivate.objects.filter(date_added__lte=date_limit):
+        documents = DocumentPrivate.objects.filter(date_added__lte=date_limit)
+        print("deleting", documents.count(), "private documents...")
+        for document in documents:
             document.delete()
