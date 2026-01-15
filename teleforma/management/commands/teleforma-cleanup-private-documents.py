@@ -14,6 +14,6 @@ class Command(BaseCommand):
         days = int(args[0])
         date_limit = datetime.today() - timedelta(days=days)
         documents = DocumentPrivate.objects.filter(date_added__lte=date_limit)
-        print("deleting ", documents.count(), " private documents...")
+        print("deleting", documents.count(), "private documents...")
         for document in documents:
             document.delete()
