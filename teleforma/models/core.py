@@ -210,12 +210,6 @@ class Period(models.Model):
                                         verbose_name="Récupérer les séminaires de correction depuis",
                                         help_text="Permet d'afficher les séminaires de corrections d'une autre période. Il faut aussi cocher la case relative dans les matières pour autoriser celles-ci à partager leur contenu.",
                                         blank=True, null=True, on_delete=models.SET_NULL)
-    fascicule_fee = models.FloatField(
-        "Frais d'envoi de fascicules", default=110,
-        help_text="Montant en € ajouté automatiquement si l'étudiant choisit l'envoi de fascicules")
-    oral_option_fee = models.FloatField(
-        "Frais option oral de langue", default=250,
-        help_text="Montant en € ajouté automatiquement si l'étudiant choisit l'option oral de langue")
 
     def __str__(self):
         return self.name
@@ -870,7 +864,10 @@ class Document(MediaBase):
             private_document, c = DocumentPrivate.objects.get_or_create(document=self, user=user)
         except:
             private_documents = DocumentPrivate.objects.filter(document=self, user=user)
-            private_document = private_documents[0]
+            if private_documents:
+                private_document = private_documents[0]
+            else:
+                private_document = DocumentPrivate(document=self, user=user)
         if not private_document.file:
             private_document.file = self.file
             private_document.save()
@@ -1181,7 +1178,10 @@ class WebClassGroup(models.Model):
 class MediaRead(models.Model):
     "Store media read and time by user"
 
-    media = models.ForeignKey('Media', related_name='read', verbose_name=_('media'),
+    media = models.ForeignKey('Media', related    date_added = models.DateTimeField(
+        _('date added'), auto_now_add=True, null=True)
+    date_modified = models.DateTimeField(
+        _('date modified'), auto_now=True, null=True)  _name='read', verbose_name=_('media'),
                                    blank=True, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, related_name='read', verbose_name=_('user'),
                                blank=True, null=True, on_delete=models.SET_NULL)
