@@ -17,4 +17,4 @@ class Command(BaseCommand):
         print("num of docs: ", documents.count())
         for document in documents:
             document.delete()
-            print(document.id, "deleted")
+            print(document.pk, "deleted")
