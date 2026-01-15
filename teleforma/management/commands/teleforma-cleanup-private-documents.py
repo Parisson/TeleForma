@@ -5,6 +5,10 @@ from datetime import datetime, timedelta
 
 class Command(BaseCommand):
     help = "Delete all private documents older than a number of days"
+    args = "days"
+
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
         days = args[0]
