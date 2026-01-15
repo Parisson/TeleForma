@@ -868,6 +868,7 @@ class Document(MediaBase):
                 private_document = private_documents[0]
             else:
                 private_document = DocumentPrivate(document=self, user=user)
+                private_document.save()
         if not private_document.file:
             private_document.file = self.file
             private_document.save()
