@@ -11,7 +11,10 @@ class Command(BaseCommand):
         parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
-        days = args[0]
+        days = int(args[0])
         date_limit = datetime.today() - timedelta(days=days)
-        for document in DocumentPrivate.objects.filter(date_added__lte=date_limit):
+        documents = DocumentPrivate.objects.filter(date_added__lte=date_limit)
+        print("num of docs: ", documents.count())
+        for document in documents:
             document.delete()
+            print(document.id, "deleted")
