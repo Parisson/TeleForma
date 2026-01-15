@@ -1178,10 +1178,7 @@ class WebClassGroup(models.Model):
 class MediaRead(models.Model):
     "Store media read and time by user"
 
-    media = models.ForeignKey('Media', related    date_added = models.DateTimeField(
-        _('date added'), auto_now_add=True, null=True)
-    date_modified = models.DateTimeField(
-        _('date modified'), auto_now=True, null=True)  _name='read', verbose_name=_('media'),
+    media = models.ForeignKey('Media', related_name='read', verbose_name=_('media'),
                                    blank=True, null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, related_name='read', verbose_name=_('user'),
                                blank=True, null=True, on_delete=models.SET_NULL)
