@@ -210,9 +210,16 @@ class Period(models.Model):
                                         verbose_name="Récupérer les séminaires de correction depuis",
                                         help_text="Permet d'afficher les séminaires de corrections d'une autre période. Il faut aussi cocher la case relative dans les matières pour autoriser celles-ci à partager leur contenu.",
                                         blank=True, null=True, on_delete=models.SET_NULL)
+    fascicule_fee = models.FloatField(
+        "Frais d'envoi de fascicules", default=110,
+        help_text="Montant en € ajouté automatiquement si l'étudiant choisit l'envoi de fascicules")
+    oral_option_fee = models.FloatField(
+        "Frais option oral de langue", default=250,
+        help_text="Montant en € ajouté automatiquement si l'étudiant choisit l'option oral de langue")
 
     def __str__(self):
         return self.name
+    
     class Meta(MetaCore):
         db_table = app_label + '_' + 'period'
         verbose_name = _('period')

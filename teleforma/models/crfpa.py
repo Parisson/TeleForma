@@ -216,6 +216,12 @@ class Student(models.Model):
     stop_retractation = models.BooleanField('En accédant au contenu de la plateforme, je renonce de ce fait à mon droit de rétractation.', default=False)
     stop_retractation_date = models.DateTimeField('Date de renonciation', blank=True, null=True)
 
+    class Meta(MetaCore):
+        db_table = app_label + '_' + 'student'
+        verbose_name = _('Student')
+        verbose_name_plural = _('Students')
+        ordering = ['user__last_name', '-date_subscribed']
+
     def __str__(self):
         try:
             return self.user.last_name + ' ' + self.user.first_name
@@ -408,13 +414,6 @@ class Student(models.Model):
     def expiration_date(self):
         """ closing date of student period """
         return self.period.date_close_accounts
-
-    
-    class Meta(MetaCore):
-        db_table = app_label + '_' + 'student'
-        verbose_name = _('Student')
-        verbose_name_plural = _('Students')
-        ordering = ['user__last_name', '-date_subscribed']
 
 
 def update_balance_signal(sender, instance, *args, **kwargs):
