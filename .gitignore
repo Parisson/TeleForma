@@ -16,6 +16,7 @@ node_modules
 select2-4.0.5
 .env
 local_settings.py
+dist
 
 # Installer logs
 pip-log.txt
@@ -32,3 +33,8 @@ py_env
 prod.env
 
 README_pilot.rst
+
+*.sublime-project
+*.sublime-workspace
+
+
