@@ -12,6 +12,7 @@ services:
       - /mnt/crfpa-videos:/mnt/crfpa-videos
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
       - /mnt/crfpa-scripts2:/mnt/crfpa-scripts2
+      - /mnt/crfpa-items:/mnt/crfpa-items
     networks:
       - teleforma-prod
   

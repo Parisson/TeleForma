@@ -13,6 +13,7 @@ services:
       - /mnt/crfpa-scripts:/mnt/crfpa-scripts
       - ./pyproject.toml:/srv/pyproject.toml
       - ./poetry.lock:/srv/poetry.lock
+      - /mnt/crfpa-items:/mnt/crfpa-items
     ports:
       - "9001:8000"
     networks:
