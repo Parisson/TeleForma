@@ -437,7 +437,7 @@ def purge_courses_cache(sender, instance, *args, **kwargs):
         for date_order in (True, False):
             for num_order in (True, False):
                 for num_courses in (True, False):
-                    cache_key = f"get_courses-{instance.user.id}-{date_order}-{num_order}-{num_courses}-{period and period.id or None}"
+                    cache_key = f"get_courses-{instance.user.id}-{date_order}-{num_order}-{num_courses}-{period.id or None}"
                     # print(f"purging {cache_key}")
                     cache.delete(cache_key)
 
