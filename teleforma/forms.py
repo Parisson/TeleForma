@@ -144,9 +144,8 @@ class UserForm(ModelForm):
         # resize image
         img = Image.open(image.file)
         new_image = img.resize((NEW_WIDTH, NEW_HEIGHT), Image.LANCZOS)
-        if new_image.mode == "RGBA":
+        if new_image.mode in ("RGBA", "P"):
             new_image = new_image.convert("RGB")
-
         temp = BytesIO()
         new_image.save(temp, 'jpeg')
         temp.seek(0)
