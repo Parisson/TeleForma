@@ -371,10 +371,10 @@ class Script(BaseResource):
     def save(self, *args, **kwargs):
         if not self.file and self.score:
             self.status = 7
-        elif self.status == 4 and self.score:
-            self.mark()
+        elif self.score:
+            self.mark_notify()
         elif self.status == 0 and self.reject_reason:
-            self.reject()
+            self.reject_notify()
         # HOTFIX
         if not self.mime_type:
             self.mime_type = 'application/pdf'
@@ -417,8 +417,7 @@ class Script(BaseResource):
         self.reject_reason = mess
         self.status = 0
         self.corrector = User.objects.filter(is_superuser=True)[1]
-        self.reject()
-        # self.save()
+        self.reject_notify()
 
     def submit(self):
         if not self.file:
@@ -442,7 +441,7 @@ class Script(BaseResource):
             if not self.corrector:
                 self.auto_set_corrector()
 
-    def mark(self):
+    def mark_notify(self):
         self.date_marked = datetime.datetime.now()
         site = Site.objects.all()[0]
         context = {'script': self, 'site': site}
@@ -458,7 +457,7 @@ class Script(BaseResource):
         site = Site.objects.all()[0]
         notify_user(mess, 'acceptance', site)
 
-    def reject(self):
+    def reject_notify(self):
         self.date_marked = datetime.datetime.now()
         self.date_rejected = datetime.datetime.now()
         site = Site.objects.all()[0]
