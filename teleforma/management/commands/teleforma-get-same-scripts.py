@@ -20,5 +20,6 @@ class Command(BaseCommand):
             sss = ss.filter(file=script.file)
             for s in sss:
                 scripts.append(s)
-                users.append(s.author.username)
+                if not s.author in users:
+                    users.append(s.author.username)
         print(users)
