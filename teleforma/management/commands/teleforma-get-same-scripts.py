@@ -17,7 +17,7 @@ class Command(BaseCommand):
         scripts = []
         ss = Script.objects.filter(period=period)
         for script in ss:
-            sss = ss.objects.filter(file=script.file)
+            sss = ss.filter(file=script.file)
             for s in sss:
                 scripts.append(s)
                 users.append(s.author.username)
