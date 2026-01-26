@@ -15,9 +15,10 @@ class Command(BaseCommand):
         period = Period.objects.get(name=name)
         users = []
         scripts = []
-        for script in Script.objects.filter(period=period):
-            ss = Script.objects.filter(file=script.file)
-            for s in ss:
+        ss = Script.objects.filter(period=period)
+        for script in ss:
+            sss = ss.objects.filter(file=script.file)
+            for s in sss:
                 scripts.append(s)
-                users.append(s.author)
+                users.append(s.author.username)
         print(users)
