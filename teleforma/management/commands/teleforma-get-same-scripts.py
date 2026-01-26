@@ -7,6 +7,9 @@ from datetime import datetime, timedelta
 class Command(BaseCommand):
     help = "Get all users having uploaded the same script filename"
 
+    def add_arguments(self, parser):
+        parser.add_argument('args', nargs='*')
+
     def handle(self, *args, **options):
         name = args[0]
         period = Period.objects.get(name=name)
