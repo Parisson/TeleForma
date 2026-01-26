@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from teleforma.exam.models import Script
 from teleforma.models import Period
+from teleforma.models.messages import StudentGroup
 from datetime import datetime, timedelta
 
 
@@ -11,8 +12,9 @@ class Command(BaseCommand):
         parser.add_argument('args', nargs='*')
 
     def handle(self, *args, **options):
-        name = args[0]
-        period = Period.objects.get(name=name)
+        period_name = args[0]
+        group_name = args[1]
+        period = Period.objects.get(name=period_name)
         users = []
         scripts = []
         ss = Script.objects.filter(period=period)
@@ -23,4 +25,11 @@ class Command(BaseCommand):
                     scripts.append(s)
                     if not s.author in users:
                         users.append(s.author.username)
-        print(users)
+        group = StudentGroup(name=group_name)
+        group.save()
+        for u in users:
+            students = u.student.all()
+            if students:
+                student = students[0]
+                group.students.add(student)
+
