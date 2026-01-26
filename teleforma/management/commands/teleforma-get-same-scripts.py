@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 if not s in scripts:
                     scripts.append(s)
                     if not s.author in users:
-                        users.append(s.author.username)
+                        users.append(s.author)
         group = StudentGroup(name=group_name)
         group.save()
         for u in users:
