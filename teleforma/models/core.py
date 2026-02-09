@@ -487,33 +487,31 @@ class Conference(models.Model):
                     str(date)]
         return ' - '.join(list)
 
-    async def notify_async(self):
-        if self.streaming and not self.notified_live:
-            # Notify live conferences by sending a signal to websocket.
-            # This signal will be catched by the channel instance to notify students
-            from teleforma.models.notification import notify
-            if settings.DEBUG:
-                requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
-            else:
-                transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
-                async with httpx.AsyncClient(transport=transport) as client:
-                    response = await client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
-                                            data={'id': self.id}, timeout=20.0)
-                    assert response.status_code == 200
+    async def notify_live_async(self):
+        # Notify live conferences by sending a signal to websocket.
+        # This signal will be catched by the channel instance to notify students
+        from teleforma.models.notification import notify
+        if settings.DEBUG:
+            requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+        else:
+            transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
+            async with httpx.AsyncClient(transport=transport) as client:
+                response = await client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
+                                        data={'id': self.id}, timeout=20.0)
+                assert response.status_code == 200
 
-    def notify_sync(self):
-        if self.streaming and not self.notified_live:
-            # Notify live conferences by sending a signal to websocket.
-            # This signal will be catched by the channel instance to notify students
-            from teleforma.models.notification import notify
-            if settings.DEBUG:
-                requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
-            else:
-                transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
-                with httpx.Client(transport=transport) as client:
-                    response = client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
-                                            data={'id': self.id}, timeout=120.0)
-                    assert response.status_code == 200
+    def notify_live_sync(self):
+        # Notify live conferences by sending a signal to websocket.
+        # This signal will be catched by the channel instance to notify students
+        from teleforma.models.notification import notify
+        if settings.DEBUG:
+            requests.post(f"{settings.CHANNEL_URL}{reverse('teleforma-live-conference-notify')}", {'id': self.id})
+        else:
+            transport = httpx.HTTPTransport(uds=settings.CHANNEL_URL)
+            with httpx.Client(transport=transport) as client:
+                response = client.post("http://localhost" + reverse('teleforma-live-conference-notify'),
+                                        data={'id': self.id}, timeout=120.0)
+                assert response.status_code == 200
 
     def save(self, *args, **kwargs):
         if not self.public_id:
@@ -680,13 +678,39 @@ class Conference(models.Model):
                             kwargs={'pk': media.id, 'period_id': self.period.id})
 
 
-def notif_conference(sender, instance, *args, **kwargs):
-    if not instance.notified_live:
-        instance.notify_sync()
+def _notify_live_conference_thread(conference_id):
+    """Fonction exécutée dans un thread séparé pour notifier la conférence."""
+    from django.db import connection
+    from teleforma.models.core import Conference
+    try:
+        conference = Conference.objects.get(id=conference_id)
+        if conference.streaming and not conference.notified_live:
+            print("notify conference on secondary thread", conference.id)
+            conference.notify_sync()
+            conference.notified_live = True
+            conference.save()
+    except Conference.DoesNotExist:
+        pass
+    except Exception:
+        pass
+    finally:
+        connection.close()
+
+
+def notif_live_conference_thread(sender, instance, *args, **kwargs):
+    if instance.streaming and not instance.notified_live:
+        thread = threading.Thread(target=_notify_live_conference_thread, args=(instance.id,))
+        thread.daemon = True
+        thread.start()
+
+
+def notif_live_conference_sync(sender, instance, *args, **kwargs):
+    if instance.streaming and not instance.notified_live:
+        instance.notify_live_sync()
         instance.notified_live = True
         instance.save()
 
-post_save.connect(notif_conference, sender=Conference)
+post_save.connect(notif_live_conference_thread, sender=Conference)
 
 
 class StreamingServer(models.Model):
