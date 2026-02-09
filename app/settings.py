@@ -266,7 +266,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'INFO',
+            'level': 'ERROR',
             'class': 'logging.FileHandler',
             'filename': "/var/log/app/app.log",
             'formatter': 'simple',
