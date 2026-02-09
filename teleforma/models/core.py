@@ -687,7 +687,7 @@ def _notify_live_conference_thread(conference_id):
         conference = Conference.objects.get(id=conference_id)
         if conference.streaming and not conference.notified_live:
             print("notify conference on secondary thread", conference.id)
-            conference.notify_sync()
+            conference.notify_live_sync()
             conference.notified_live = True
             conference.save()
     except Conference.DoesNotExist:
