@@ -43,6 +43,7 @@ import requests
 import asyncio
 import tempfile
 import threading
+import logging
 
 import django.db.models as models
 from django.conf import settings
@@ -70,6 +71,7 @@ from storages.backends.s3boto3 import S3Boto3Storage
 
 app_label = 'teleforma'
 
+logger = logging.getLogger('django')
 
 def get_n_choices(n):
     return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]
@@ -686,7 +688,7 @@ def _notify_live_conference_thread(conference_id):
     try:
         conference = Conference.objects.get(id=conference_id)
         if conference.streaming and not conference.notified_live:
-            print("notify conference on secondary thread", conference.id)
+            logger.info("notify conference on secondary thread " + conference.id)
             conference.notify_sync()
             conference.notified_live = True
             conference.save()
