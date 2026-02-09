@@ -688,7 +688,7 @@ def _notify_live_conference_thread(conference_id):
     try:
         conference = Conference.objects.get(id=conference_id)
         if conference.streaming and not conference.notified_live:
-            logger.info("notify conference on secondary thread " + conference.id)
+            logger.info("notify conference on secondary thread " + str(conference.id))
             conference.notify_live_sync()
             conference.notified_live = True
             conference.save()
