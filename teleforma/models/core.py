@@ -71,7 +71,7 @@ from storages.backends.s3boto3 import S3Boto3Storage
 
 app_label = 'teleforma'
 
-logger = logging.getLogger('django')
+logger = logging.getLogger('teleforma')
 
 def get_n_choices(n):
     return [(str(x), str(y)) for x in range(1, n) for y in range(1, n) if x == y]

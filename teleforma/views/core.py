@@ -82,7 +82,7 @@ from .pages import get_page_content
 
 import weasyprint
 
-logger = logging.getLogger('django')
+logger = logging.getLogger('teleforma')
 
 access_error = _('Access not allowed.')
 contact_message = _(
