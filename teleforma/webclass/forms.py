@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.forms import ChoiceField, Form
+from django.utils.translation import ugettext_lazy as _
 
 from ..models.core import Course, Period
 from ..webclass.models import (BBBServer, WebclassRecord, WebclassSlot,
@@ -39,8 +40,12 @@ class WebclassRecordsForm(Form):
                         continue
                     webclass_slot = WebclassSlot.objects.get(
                         pk=record['slot'].id)
+                    if webclass_slot.professor:
+                        name = webclass_slot.professor.user.last_name
+                    else:
+                        name = _("undefined")
                     label = u"%s à %s - %s" % (record['start_date'].strftime(
-                        '%d/%m/%Y %H:%M'), record['end_date'].strftime('%H:%M'), webclass_slot.professor.user.last_name)
+                        '%d/%m/%Y %H:%M'), record['end_date'].strftime('%H:%M'), name)
                     vocabulary.append(
                         (str(record['id']) + ";" + str(record['server_id']), label))
                 self.fields[field_name] = ChoiceField(
