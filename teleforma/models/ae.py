@@ -36,7 +36,7 @@
 
 import django.db.models as models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ..models import app_label
 from ..models.core import MetaCore

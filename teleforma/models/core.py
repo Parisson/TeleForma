@@ -55,7 +55,7 @@ from django.db import models
 from django.forms.fields import FileField
 from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy, reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 # from quiz.models import Quiz
 

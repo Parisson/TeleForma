@@ -1,7 +1,30 @@
 # -*- coding: utf-8 -*-
 # Django settings for sandbox project.
 
-from django.utils.encoding import force_text
+# Monkey-patches for django-json-rpc (abandoned, incompatible with Py3.13/Django5)
+import inspect
+if not hasattr(inspect, 'getargspec'):
+    inspect.getargspec = inspect.getfullargspec
+
+from django.utils import encoding as _enc
+if not hasattr(_enc, 'smart_text'):
+    _enc.smart_text = _enc.smart_str
+if not hasattr(_enc, 'force_text'):
+    _enc.force_text = _enc.force_str
+
+from django.utils import translation as _trans
+if not hasattr(_trans, 'ugettext'):
+    _trans.ugettext = _trans.gettext
+if not hasattr(_trans, 'ugettext_lazy'):
+    _trans.ugettext_lazy = _trans.gettext_lazy
+if not hasattr(_trans, 'ugettext_noop'):
+    _trans.ugettext_noop = _trans.gettext_noop
+if not hasattr(_trans, 'ungettext'):
+    _trans.ungettext = _trans.ngettext
+if not hasattr(_trans, 'ungettext_lazy'):
+    _trans.ungettext_lazy = _trans.ngettext_lazy
+
+from django.utils.encoding import force_str
 import warnings
 import os
 import sys
@@ -44,7 +67,6 @@ sys.dont_write_bytecode = True
 DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
 DEBUG_TOOLBAR = False
-TEMPLATE_DEBUG = DEBUG
 RECOVERY = False
 
 INTERNAL_IPS = ['127.0.0.1', ]
@@ -71,7 +93,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         # Or path to database file if using sqlite3.
         'NAME': os.environ.get('POSTGRES_DATABASE'),
         # Not used with sqlite3.
@@ -88,7 +110,7 @@ DATABASES = {
 if RECOVERY:
     DATABASES['recovery'] = {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         # Or path to database file if using sqlite3.
         'NAME': os.environ.get('POSTGRES_DATABASE'),
         # Not used with sqlite3.
@@ -132,6 +154,8 @@ USE_I18N = True
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
 USE_L10N = True
+
+USE_TZ = False
 
 
 ########################
@@ -184,18 +208,10 @@ STATICFILES_FINDERS = (
 # TEMPLATES
 ########################
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'app', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -329,7 +345,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'dj_pagination',
     'postman',
-    'captcha',
+    'django_recaptcha',
     'django_nvd3',
     'tinymce',
     'pdfannotator',
@@ -391,7 +407,6 @@ else:
 # AUTH / SESSIONS
 ########################
 
-AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 AUTH_USER_MODEL = 'auth.User'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
@@ -406,7 +421,7 @@ def show_user_as(user):
     if user.quotas.count() and not professor and not user.is_superuser:
         return "#"+str(user.id)
     else:
-        return force_text(user)
+        return force_str(user)
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"

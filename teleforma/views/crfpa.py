@@ -49,7 +49,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
 from django.urls.base import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView

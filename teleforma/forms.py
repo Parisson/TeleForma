@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from io import BytesIO
 
-from captcha.fields import ReCaptchaField
+from django_recaptcha.fields import ReCaptchaField
 
 from django import forms
 from django.contrib.auth.models import User
@@ -11,7 +11,7 @@ from django.forms import (BooleanField, CharField, ChoiceField, DateField,
                           FileInput, ImageField, ModelChoiceField, ModelForm,
                           ModelMultipleChoiceField)
 from django.template.defaultfilters import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import datetime
 from django.db.models import Q
 from PIL import Image

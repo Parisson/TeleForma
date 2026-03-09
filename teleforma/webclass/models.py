@@ -15,7 +15,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils import translation
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from jxmlease import XMLDictNode, XMLListNode
 from teleforma.fields import DurationField, ShortTextField

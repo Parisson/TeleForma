@@ -52,7 +52,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template import loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
