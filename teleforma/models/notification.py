@@ -1,8 +1,8 @@
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ..models import MetaCore
 from ..models.core import app_label
@@ -11,7 +11,7 @@ from asgiref.sync import async_to_sync
 from django.db.models.signals import post_save
 
 def in_one_week():
-    return datetime.utcnow() + timedelta(days=7)
+    return datetime.now(timezone.utc) + timedelta(days=7)
 
 def notify(users, message, url, days_before_expiration=None):
     """
@@ -22,7 +22,7 @@ def notify(users, message, url, days_before_expiration=None):
     for user in users:
         notif = Notification(user=user, message=message, url=url)
         if days_before_expiration:
-            notif.expired = datetime.utcnow() + timedelta(days=days_before_expiration)
+            notif.expired = datetime.now(timezone.utc) + timedelta(days=days_before_expiration)
         notif.save()
 
 class Notification(models.Model):

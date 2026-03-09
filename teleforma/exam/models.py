@@ -51,8 +51,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.template.loader import render_to_string
 from django.urls.base import reverse_lazy
-from django.utils.translation import ugettext
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from postman.models import Message
 from postman.utils import notify_user
 from teleforma.models.core import Course, Period
@@ -446,8 +446,8 @@ class Script(BaseResource):
         site = Site.objects.all()[0]
         context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_marked.txt', context)
-        a = ugettext('Script')
-        v = ugettext('marked')
+        a = gettext('Script')
+        v = gettext('marked')
         subject = '%s %s' % (a, v)
         sender = User.objects.get(username=settings.TELEFORMA_ADMIN)
         mess = Message(sender=sender, recipient=self.author,
@@ -463,8 +463,8 @@ class Script(BaseResource):
         site = Site.objects.all()[0]
         context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_rejected.txt', context)
-        a = ugettext('Script')
-        v = ugettext('rejected')
+        a = gettext('Script')
+        v = gettext('rejected')
         subject = '%s %s' % (a, v)
         mess = Message(sender=self.corrector, recipient=self.author,
                        subject=subject[:119], body=text)

@@ -42,7 +42,7 @@ from django.db import transaction
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.urls.base import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
 from django.core.cache import cache
 from quiz.models import Quiz
