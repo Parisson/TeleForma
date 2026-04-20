@@ -1,10 +1,11 @@
 [tool.poetry]
-name = "telppeforma"
+name = "teleforma"
 version = "2.16.0"
 description = "e-learning platform based on streaming"
 authors = ["Guillaume Pellerin <guillaume.pellerin@parisson.com>"]
 license = "CeCILL v2"
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.13"
