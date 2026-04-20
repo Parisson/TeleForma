@@ -17,8 +17,8 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
@@ -378,7 +378,7 @@ class ScriptsPendingView(ScriptsView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsPendingView, self).get_context_data(**kwargs)
-        context['title'] = ugettext('Pending scripts')
+        context['title'] = gettext('Pending scripts')
         return context
 
 
@@ -389,7 +389,7 @@ class ScriptsTreatedView(ScriptsView):
     def get_context_data(self, **kwargs):
         context = super(ScriptsTreatedView, self).get_context_data(**kwargs)
         period = Period.objects.get(id=self.kwargs['period_id'])
-        context['title'] = ugettext('Treated scripts')
+        context['title'] = gettext('Treated scripts')
         return context
 
 
@@ -398,7 +398,7 @@ class ScriptsRejectedView(ScriptsView):
 
     def get_context_data(self, **kwargs):
         context = super(ScriptsRejectedView, self).get_context_data(**kwargs)
-        context['title'] = ugettext('Rejected scripts')
+        context['title'] = gettext('Rejected scripts')
         return context
 
 
@@ -589,7 +589,7 @@ class ScriptsScoreAllView(ScriptsTreatedView):
         #                    'data': by_session(scripts)})
 
         context['data'] = self.score_data_setup(sessions_x, scores)
-        context['course'] = course and course.title or ugettext('all courses')
+        context['course'] = course and course.title or gettext('all courses')
         return context
 
 

@@ -32,7 +32,7 @@
 #
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
-from django.conf.urls import url
+from django.urls import re_path
 
 from ..webclass.views import (WebclassAppointment,
                               WebclassProfessorAppointments,
@@ -40,21 +40,21 @@ from ..webclass.views import (WebclassAppointment,
                               join_webclass, unregister)
 
 urlpatterns = [
-    url(r'^desk/webclass_appointments/(?P<pk>.*)$', WebclassAppointment.as_view(),
+    re_path(r'^desk/webclass_appointments/(?P<pk>.*)$', WebclassAppointment.as_view(),
         name="teleforma-webclass-appointments"),
-    url(r'^desk/webclass_calendar/$', WebclassProfessorAppointments.as_view(),
+    re_path(r'^desk/webclass_calendar/$', WebclassProfessorAppointments.as_view(),
         name="teleforma-webclass-professor"),
-    url(r'^desk/webclass_record$', WebclassRecordView.as_view(),
+    re_path(r'^desk/webclass_record$', WebclassRecordView.as_view(),
         name="teleforma-webclass-record"),
-    url(r'^webclass/periods/(?P<period_id>.*)/webclass_records_form/$',
+    re_path(r'^webclass/periods/(?P<period_id>.*)/webclass_records_form/$',
         WebclassRecordsFormView.as_view(), name="teleforma-webclass-records-form"),
-    url(r'^desk/webclass/(?P<pk>.*)/unregister/$',
+    re_path(r'^desk/webclass/(?P<pk>.*)/unregister/$',
         unregister,
         name="teleforma-webclass-unregister"),
-    url(r'^desk/webclass/(?P<pk>.*)/join/$',
+    re_path(r'^desk/webclass/(?P<pk>.*)/join/$',
         join_webclass,
         name="teleforma-webclass-join"),
-    url(r'^desk/webclass/(?P<period_id>.*)/(?P<course_id>.*)/create_cc_bbb_conference/$',
+    re_path(r'^desk/webclass/(?P<period_id>.*)/(?P<course_id>.*)/create_cc_bbb_conference/$',
         create_cc_bbb_conference,
         name="teleforma-create-cc-bbb-conference")
 ]

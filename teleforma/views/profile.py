@@ -40,7 +40,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 from ..forms import UserProfileForm
 from ..models.crfpa import Profile as UserProfile
@@ -71,9 +71,9 @@ class ProfileView(object):
 
         user = User.objects.get(username=username)
         if user != request.user and not request.user.is_staff:
-            mess = ugettext('Access not allowed')
-            title = ugettext('User profile') + ' : ' + username + ' : ' + mess
-            description = ugettext(
+            mess = gettext('Access not allowed')
+            title = gettext('User profile') + ' : ' + username + ' : ' + mess
+            description = gettext(
                 'Please login or contact the website administator to get a private access.')
             messages.error(request, title)
             return render(request, 'teleforma/messages.html', {'description': description})
