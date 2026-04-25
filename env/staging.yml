@@ -25,6 +25,7 @@ services:
       args:
         dev: 0
     command: /bin/sh /srv/app/asgi.sh
+    restart: unless-stopped
     volumes:
       - ./app/:/srv/app
       - ./bin:/srv/bin
@@ -43,16 +44,19 @@ services:
       - teleforma-staging
 
   db:
+    restart: unless-stopped
     env_file:
       - env/staging.env
     networks:
       - teleforma-staging
 
   redis:
+    restart: unless-stopped
     networks:
       - teleforma-staging
 
   memcached:
+    restart: unless-stopped
     networks:
       - teleforma-staging
 
