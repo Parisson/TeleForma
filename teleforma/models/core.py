@@ -115,10 +115,19 @@ STATUS_CHOICES = (
 WEIGHT_CHOICES = get_nint_choices(5)
 
 
-if settings.TELEFORMA_PRIVATE_MEDIA_USE_S3:
-    private_storage = S3Boto3Storage
+if settings.TELEFORMA_MEDIA_USE_S3:
+    media_s3_storage = S3Boto3Storage(
+        bucket=settings.AWS_STORAGE_BUCKET_NAME_MEDIA)
+    media_local_storage = FileSystemStorage
 else:
-    private_storage = FileSystemStorage
+    media_s3_storage = FileSystemStorage
+    media_local_storage = FileSystemStorage
+
+if settings.TELEFORMA_PRIVATE_DOCUMENTS_USE_S3:
+    private_document_storage = S3Boto3Storage(
+        bucket=settings.AWS_STORAGE_BUCKET_NAME_PRIVATE_DOCUMENT)
+else:
+    private_document_storage = FileSystemStorage
 
 
 def get_random_hash():
@@ -916,7 +925,7 @@ class DocumentPrivate(MediaBase):
     user = models.ForeignKey(User, related_name="private_documents", verbose_name=_('user'),
                                 null=True, blank=True, on_delete=models.CASCADE)
     file = models.FileField(_('file'), upload_to='private/documents/%Y/%m/%d', db_column="filename",
-                            max_length=1024, blank=True, storage=private_storage)
+                            max_length=1024, blank=True, storage=private_document_storage)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_private'
@@ -1036,7 +1045,21 @@ class Media(MediaBase):
     readers = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                      blank=True)
     file = models.FileField(
-        _('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
+        _('file'),
+        upload_to='items/%Y/%m/%d',
+        max_length=1024,
+        null=True,
+        blank=True,
+        storage=media_local_storage
+        )
+    file_s3 = models.FileField(
+        _('S3 file'),
+        upload_to='items/%Y/%m/%d',
+        max_length=1024,
+        null=True,
+        blank=True,
+        storage=media_s3_storage
+        )
     poster_file = models.FileField(
         _('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
 
@@ -1069,6 +1092,12 @@ class Media(MediaBase):
             url = sorl_default.backend.get_thumbnail(
                 self.poster_file, geometry).url
         return url
+
+    def get_file(self):
+        if self.file_s3:
+            return self.file_s3
+        else:
+            return self.file
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
