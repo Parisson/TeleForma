@@ -158,9 +158,9 @@ USE_L10N = True
 USE_TZ = False
 
 
-########################
+#################
 # MEDIA / STATIC
-########################
+#################
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -171,8 +171,6 @@ MEDIA_ROOT = '/srv/media/'
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 #MEDIA_URL = 'http://pre-barreau.com/archives/'
 MEDIA_URL = '/media/'
-
-DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
@@ -438,6 +436,7 @@ JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",
     "site_header": "CRFPA",
     "site_logo": "teleforma/images/logo_pb.png",
+    "site_brand": "Admin CRFPA",
 
     # # Links to put along the top menu
     # "topmenu_links": [
@@ -521,7 +520,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
     "theme": "default",
-    "dark_mode_theme": "darkly",
+    "default_theme_mode": "auto",
     "button_classes": {
         "primary": "btn-outline-primary",
         "secondary": "btn-outline-secondary",
@@ -608,6 +607,42 @@ AWS_S3_FILE_OVERWRITE=False
 AWS_STORAGE_BUCKET_NAME=""
 MEDIA_S3_BUCKET = '/media/bucket/'
 
+
+########################
+# STORAGES
+########################
+
+DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+    "private_documents_s3": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+          "bucket_name": "crfpa-private",
+          "region_name": "gra",
+          "endpoint_url":  "https://s3.gra.io.cloud.ovh.net/",
+        },
+    },
+    "media_s3": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+          "bucket_name": "pb-crfpa-medias",
+          "region_name": "eu-west-par",
+          "endpoint_url":  "https://s3.eu-west-par.io.cloud.ovh.net/",
+        },
+    },
+}
+
+
+
 ########################
 # TELEFORMA
 ########################
@@ -632,14 +667,12 @@ TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 TELEFORMA_EXAM_USE_S3 = True
 
 TELEFORMA_DOCUMENTS_USE_S3 = False
-
 TELEFORMA_PRIVATE_DOCUMENTS_MODE = True #wether the downloaded docs should be signed
 TELEFORMA_PRIVATE_DOCUMENTS_USE_S3 = True
-AWS_STORAGE_BUCKET_NAME_PRIVATE_DOCUMENT="crfpa-private"
 
-TELEFORMA_MEDIA_USE_S3 = False
 TELEFORMA_MEDIA_DOWNLOAD = False
-AWS_STORAGE_BUCKET_NAME_MEDIA="crfpa-media"
+TELEFORMA_MEDIA_USE_S3 = True
+
 
 ORAL_OPTION_PRICE = 250
 FASICLE_OPTION_PRICE = 110
@@ -705,6 +738,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+
 
 ##################
 # LOCAL SETTINGS #

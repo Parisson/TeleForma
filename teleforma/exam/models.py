@@ -46,7 +46,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import FileSystemStorage, storages
 from django.db import models
 from django.db.models.signals import post_save
 from django.template.loader import render_to_string
@@ -90,10 +90,13 @@ REJECT_REASON = (('unreadable', _('unreadable')),
 cache_path = settings.MEDIA_ROOT + 'cache/'
 script_path = settings.MEDIA_ROOT + 'scripts/'
 
-if settings.TELEFORMA_EXAM_USE_S3:
-    storage = S3Boto3Storage
-else:
-    storage = FileSystemStorage
+
+def script_storage():
+    if settings.TELEFORMA_EXAM_USE_S3:
+        return storages["private_documents_s3"]
+    else:
+        return storages["default"]
+
 
 
 def sha1sum_file(filename):
@@ -266,7 +269,7 @@ class Script(BaseResource):
         upload_to='scripts/%Y/%m/%d',
         max_length=1024,
         blank=True,
-        storage=storage
+        storage=script_storage
         )
     box_uuid = models.CharField(_('Box UUID'), max_length=256, blank=True)
     score = models.FloatField(_('score'), blank=True,

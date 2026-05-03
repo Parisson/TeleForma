@@ -49,7 +49,7 @@ import django.db.models as models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files import File
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import FileSystemStorage, storages
 from django.core.paginator import InvalidPage
 from django.db import models
 from django.forms.fields import FileField
@@ -115,19 +115,18 @@ STATUS_CHOICES = (
 WEIGHT_CHOICES = get_nint_choices(5)
 
 
-if settings.TELEFORMA_MEDIA_USE_S3:
-    media_s3_storage = S3Boto3Storage(
-        bucket=settings.AWS_STORAGE_BUCKET_NAME_MEDIA)
-    media_local_storage = FileSystemStorage
-else:
-    media_s3_storage = FileSystemStorage
-    media_local_storage = FileSystemStorage
+def private_document_storage():
+    if settings.TELEFORMA_PRIVATE_DOCUMENTS_USE_S3:
+        return storages["private_documents_s3"]
+    else:
+        return storages["default"]
 
-if settings.TELEFORMA_PRIVATE_DOCUMENTS_USE_S3:
-    private_document_storage = S3Boto3Storage(
-        bucket=settings.AWS_STORAGE_BUCKET_NAME_PRIVATE_DOCUMENT)
-else:
-    private_document_storage = FileSystemStorage
+
+def media_storage():
+    if settings.TELEFORMA_MEDIA_USE_S3:
+        return storages["media_s3"]
+    else:
+        return storages["default"]
 
 
 def get_random_hash():
@@ -1050,7 +1049,7 @@ class Media(MediaBase):
         max_length=1024,
         null=True,
         blank=True,
-        storage=media_local_storage
+        storage=storages["default"]
         )
     file_s3 = models.FileField(
         _('S3 file'),
@@ -1058,7 +1057,7 @@ class Media(MediaBase):
         max_length=1024,
         null=True,
         blank=True,
-        storage=media_s3_storage
+        storage=media_storage,
         )
     poster_file = models.FileField(
         _('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
