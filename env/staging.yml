@@ -10,7 +10,6 @@ services:
       - env/staging.env
     volumes:
       - /mnt/crfpa-videos:/mnt/crfpa-videos
-      - /mnt/crfpa-scripts:/mnt/crfpa-scripts
       - ./pyproject.toml:/srv/pyproject.toml
       - ./poetry.lock:/srv/poetry.lock
       - /mnt/crfpa-items:/mnt/crfpa-items
