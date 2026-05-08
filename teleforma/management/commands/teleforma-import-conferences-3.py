@@ -91,7 +91,7 @@ class Command(BaseCommand):
                             # ORIGINAL MEDIA
                             media = Media(conference=conference)
                             media_file = open(path, 'rb')
-                            media.file = File(media_file)
+                            media.s3_file = File(media_file)
                             media.course = conference.course
                             media.period = conference.period
                             media.course_type = conference.course_type
