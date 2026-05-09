@@ -1100,8 +1100,10 @@ class Media(MediaBase):
     def get_file(self):
         if self.file_s3:
             return self.file_s3
-        else:
+        elif self.file:
             return self.file
+        else:
+            return
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
