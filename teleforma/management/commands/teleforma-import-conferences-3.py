@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.core.files import File
+from django.core.files.base import ContentFile
 from teleforma.models import *
 import logging
 import os
@@ -67,7 +68,7 @@ class Command(BaseCommand):
                     organization_name = root_list[-5]
                     dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
-
+                    
                     if Conference.objects.filter(public_id=public_id) and department:
                         conference = Conference.objects.get(public_id=public_id)
                         department = Department.objects.get(name=department_name,
@@ -90,15 +91,12 @@ class Command(BaseCommand):
                         if not exist and not streaming:
                             # ORIGINAL MEDIA
                             media = Media(conference=conference)
-                            media_file = open(path, 'rb')
-                            media.s3_file = File(media_file)
                             media.course = conference.course
                             media.period = conference.period
                             media.course_type = conference.course_type
                             media.type = ext
                             media.is_published = False
-                            media.set_mime_type()
-
+                            
                             files = os.listdir(root)
 
                             # POSTER
@@ -118,6 +116,13 @@ class Command(BaseCommand):
                                         media.poster_file = dir + os.sep + file
                                         break
 
+                            media.save()
+                            filename = os.path.split(path)[1]
+                            print(filename)
+                            with open(settings.MEDIA_ROOT + os.sep + path, 'rb') as f:
+                                media.file_s3.save(filename, File(f))
+                       
+                            media.set_mime_type()
                             media.save()
                             conference.save()
 
