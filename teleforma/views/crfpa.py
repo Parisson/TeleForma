@@ -43,7 +43,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import InvalidPage
 from django.db.models import Max, Q
 from django.forms.formsets import all_valid
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
@@ -1202,7 +1202,7 @@ class CRFPAProfileView(ProfileView):
                 if payment:
                     payment = payment[0]
         else:
-            user = None
+            raise Http404("No access")
 
         return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})
 
