@@ -1188,11 +1188,11 @@ class CRFPAProfileView(ProfileView):
     @method_decorator(login_required)
     def profile_detail(self, request, username, template='teleforma/profile_detail.html'):
         user = User.objects.get(username=username)
-        student = user.student.all()
         payment = None
         profile = None
-        if student:
-            if user.username == request.user.username or request.user.is_superuser:
+        if user.username == request.user.username or request.user.is_superuser:
+            student = user.student.all()
+            if student:
                 try:
                     profile = user.get_profile()
                 except:
@@ -1201,6 +1201,8 @@ class CRFPAProfileView(ProfileView):
                 payment = student.payments.order_by('-id').all()
                 if payment:
                     payment = payment[0]
+        else:
+            user = None
 
         return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})
 
