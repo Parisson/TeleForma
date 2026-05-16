@@ -116,6 +116,7 @@ class Command(BaseCommand):
                                         media.poster_file = dir + os.sep + file
                                         break
 
+                            media.file = path
                             media.save()
                             filename = os.path.split(path)[1]
                             print(filename)
