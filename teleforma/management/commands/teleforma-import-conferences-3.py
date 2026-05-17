@@ -76,7 +76,7 @@ class Command(BaseCommand):
                         exist = False
                         medias = conference.media.all()
                         for media in medias:
-                            if media.file == path:
+                            if media.file == path or media.file_s3:
                                 exist = True
                                 break
 
