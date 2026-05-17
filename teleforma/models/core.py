@@ -456,6 +456,7 @@ class Conference(models.Model):
                                         blank=True, null=True, on_delete=models.SET_NULL)
     notified = models.BooleanField(_('notified'), default=False)
     notified_live = models.BooleanField("Notifié live", default=False)
+    imported = models.BooleanField(_('imported'), default=False)
 
     @property
     def description(self):
