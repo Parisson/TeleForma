@@ -1103,7 +1103,7 @@ class Media(MediaBase):
         elif self.file:
             return self.file
         else:
-            return
+            return None
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
