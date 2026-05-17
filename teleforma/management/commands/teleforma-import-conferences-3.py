@@ -68,7 +68,7 @@ class Command(BaseCommand):
                     organization_name = root_list[-5]
                     dir = os.sep.join(root_list[-5:])
                     path = dir + os.sep + filename
-                    
+                     
                     if Conference.objects.filter(public_id=public_id) and department:
                         conference = Conference.objects.get(public_id=public_id)
                         department = Department.objects.get(name=department_name,
@@ -76,10 +76,9 @@ class Command(BaseCommand):
                         exist = False
                         medias = conference.media.all()
                         for media in medias:
-                            if media.file == path or media.file_s3:
+                            if media.file == path:
                                 exist = True
                                 break
-
                         streaming = False
                         try:
                             stations = conference.station.filter(started=True, public_id=public_id)
