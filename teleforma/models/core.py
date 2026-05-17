@@ -457,6 +457,7 @@ class Conference(models.Model):
     notified = models.BooleanField(_('notified'), default=False)
     notified_live = models.BooleanField("Notifié live", default=False)
     imported = models.BooleanField(_('imported'), default=False)
+    test = models.BooleanField(_('test'), default=False)
 
     @property
     def description(self):
