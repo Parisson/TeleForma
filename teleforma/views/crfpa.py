@@ -1200,10 +1200,11 @@ class CRFPAProfileView(ProfileView):
                     profile = user.get_profile()
                 except:
                     profile = None
-                student = user.student.get()
-                payment = student.payments.order_by('-id').all()
-                if payment:
-                    payment = payment[0]
+                if not request.user.professor.all():
+                    student = user.student.get()
+                    payment = student.payments.order_by('-id').all()
+                    if payment:
+                        payment = payment[0]
         else:
             raise Http404("No access")
 
