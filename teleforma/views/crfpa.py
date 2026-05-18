@@ -1295,6 +1295,6 @@ class StudentReadingsXLSBook:
 
         row = 1
         for doc_read in self.student.user.private_documents.all():
-            self.sheet_docs.write(row, 0, str(doc_read.media))
+            self.sheet_docs.write(row, 0, str(doc_read.document))
             row += 1
 
