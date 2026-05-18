@@ -64,16 +64,17 @@ class LastUserActivityMiddleware:
 
     def __call__(self, request):
         if request.user.is_authenticated:
+            now = timezone.now()
             last_activity = request.session.get(self.KEY)
-            too_old_time = timezone.now() - timedelta(seconds=settings.LAST_ACTIVITY_INTERVAL_SECS)
+            too_old_time = now - timedelta(seconds=settings.LAST_ACTIVITY_INTERVAL_SECS)
 
             # Update database only if the session timestamp is old enough
             if not last_activity or last_activity < too_old_time:
                 # Update your custom UserActivity or UserProfile model
-                request.user.useractivity.last_activity_date = timezone.now()
-                request.user.useractivity.save()
+                request.user.last_login = now
+                request.user.save()
 
             # Update the session timestamp
-            request.session[self.KEY] = timezone.now().isoformat()
+            request.session[self.KEY] = now.isoformat()
 
         return self.get_response(request)
