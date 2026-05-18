@@ -1190,9 +1190,9 @@ class CRFPAProfileView(ProfileView):
         user = User.objects.get(username=username)
         payment = None
         profile = None
-        if user.username == request.user.username or
-            request.user.is_superuser or
-            request.user.professor.all():
+        if (user.username == request.user.username or \
+            request.user.is_superuser or \
+            request.user.professor.all()):
 
             student = user.student.all()
             if student:
