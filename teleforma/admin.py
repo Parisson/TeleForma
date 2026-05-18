@@ -223,7 +223,7 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
         book = StudentReadingsXLSBook(students=queryset)
         book.write()
         response = HttpResponse(content_type="application/vnd.ms-excel")
-        response['Content-Disposition'] = 'attachment; filename=%s.xls' % queryset[0].user.username
+        response['Content-Disposition'] = 'attachment; filename=%s-readings.xls' % queryset[0].user.username
         book.book.save(response)
         return response
 
