@@ -1277,7 +1277,7 @@ class QuizQuestionView(CourseAccessMixin, QuizTake):
 
 
 
-class StudentXLSBook:
+class StudentReadingsXLSBook:
 
     def __init__(self, students):
         self.book = Workbook()
