@@ -1182,6 +1182,7 @@ class WriteView(PostmanWriteView):
 
         return context
 
+
 class CRFPAProfileView(ProfileView):
     """Provide Collections web UI methods"""
 

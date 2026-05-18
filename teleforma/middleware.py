@@ -1,7 +1,9 @@
-
-
-from django import http
+from datetime import timedelta
+from django.utils import timezone
 from django.conf import settings
+from django.db.models.expressions import F
+from django import http
+
 try:
     XS_SHARING_ALLOWED_ORIGINS = settings.XS_SHARING_ALLOWED_ORIGINS
     XS_SHARING_ALLOWED_METHODS = settings.XS_SHARING_ALLOWED_METHODS
@@ -50,5 +52,28 @@ class XsSharing:
             XS_SHARING_ALLOWED_METHODS)
         response['Access-Control-Allow-Headers'] = ",".join(
             XS_SHARING_ALLOWED_HEADERS)
+
+        return self.get_response(request)
+
+
+class LastUserActivityMiddleware:
+    KEY = "last-activity"
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.user.is_authenticated:
+            last_activity = request.session.get(self.KEY)
+            too_old_time = timezone.now() - timedelta(seconds=settings.LAST_ACTIVITY_INTERVAL_SECS)
+
+            # Update database only if the session timestamp is old enough
+            if not last_activity or last_activity < too_old_time:
+                # Update your custom UserActivity or UserProfile model
+                request.user.useractivity.last_activity_date = timezone.now()
+                request.user.useractivity.save()
+
+            # Update the session timestamp
+            request.session[self.KEY] = timezone.now().isoformat()
 
         return self.get_response(request)
