@@ -30,7 +30,7 @@ from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
                            OptionalFee, Parameters, Payback, Payment, Profile,
                            Student, Training)
 from .models.messages import GroupedMessage, StudentGroup
-from .views.crfpa import CorrectorXLSBook, UserXLSBook
+from .views.crfpa import CorrectorXLSBook, UserXLSBook, StudentReadingsXLSBook
 from .views.core import get_periods
 
 from django.contrib.admin.helpers import ActionForm
@@ -181,7 +181,7 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
     list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance', 'balance_intermediary']
     readonly_fields = ['user', 'balance', 'balance_intermediary']
-    actions = ['export_xls', 'write_message', 'add_to_group']
+    actions = ['export_xls_training', 'export_xls_readings', 'write_message', 'add_to_group']
     action_form = StudentGroupForm
 
     class Media:
@@ -211,7 +211,7 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
         serializers.serialize("json", queryset, stream=response)
         return response
 
-    def export_xls(self, request, queryset):
+    def export_xls_training(self, request, queryset):
         book = UserXLSBook(students=queryset)
         book.write()
         response = HttpResponse(content_type="application/vnd.ms-excel")
@@ -219,7 +219,16 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
         book.book.save(response)
         return response
 
-    export_xls.short_description = "Export vers XLS"
+    def export_xls_readings(self, request, queryset):
+        book = StudentReadingsXLSBook(students=queryset)
+        book.write()
+        response = HttpResponse(content_type="application/vnd.ms-excel")
+        response['Content-Disposition'] = 'attachment; filename=%s.xls' % queryset[0].user.username
+        book.book.save(response)
+        return response
+
+    export_xls_training.short_description = "Export Formation (XLS)"
+    export_xls_readings.short_description = "Export Lectures (XLS)"
 
     def add_to_group(self, request, queryset):
         group_name = request.POST['group_name']
