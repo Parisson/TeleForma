@@ -33,8 +33,9 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import datetime
-
+import random, string
 import xlrd
+
 from django.contrib.auth import get_backends, login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
@@ -72,6 +73,10 @@ from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
 from ..views.core import (CourseAccessMixin, PDFTemplateResponseMixin, format_courses,
                           get_courses, get_periods)
 from ..views.profile import ProfileView
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+        return ''.join(random.choice(chars) for _ in range(size))
 
 
 def get_course_code(obj):
@@ -775,6 +780,12 @@ class UserCompleteView(TemplateView):
         except:
             user = self.request.user
         if user:
+            profile = user.profile.get()
+            # Init personal wifi password
+            if not profile.wifi_pass:
+                profile.wifi_login = user.username
+                profile.wifi_pass = id_generator(8)
+                profile.save()
             student = user.student.all()[0]
             context['period'] = student.period
         else:
