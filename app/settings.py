@@ -320,6 +320,7 @@ MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOL
     'django.middleware.locale.LocaleMiddleware',
     'dj_pagination.middleware.PaginationMiddleware',
     'teleforma.middleware.XsSharing',
+    'teleforma.middleware.LastUserActivityMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
     "django.middleware.common.CommonMiddleware",
 )
@@ -685,6 +686,8 @@ CHAT_LIMIT_HOURS = 48
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 #THUMBNAIL_FORCE_OVERWRITE = True
+
+LAST_ACTIVITY_INTERVAL_SECS = 3600
 
 ########################
 # EMAIL
