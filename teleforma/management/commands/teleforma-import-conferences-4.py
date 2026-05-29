@@ -67,11 +67,11 @@ class Command(BaseCommand):
 
             if (os.path.exists(conf_dir) and not conference.media.all()):
 
-                for image_format in image_formats:
+                for image_format in self.image_formats:
                     poster_file = self.find_format(conf_dir, image_format)
 
                 for media_format in self.media_formats:
-                    media_file = find_format(conf_dir, media_format)
+                    media_file = self.find_format(conf_dir, media_format)
                     media = Media(conference=conference)
                     media.course = conference.course
                     media.period = conference.period
@@ -84,7 +84,7 @@ class Command(BaseCommand):
                     with open(media_file, 'rb') as f:
                         media.file_s3.save(filename, File(f))
                     media.set_mime_type()
-                    media_file = find_format(conf_dir, media_format)media.poster_file = poster_file.replace(settings.MEDIA_ROOT, "")
+                    media.poster_file = poster_file.replace(settings.MEDIA_ROOT, "")
                     media.save()
                     logger.logger.info(media_file)
 
