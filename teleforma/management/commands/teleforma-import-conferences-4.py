@@ -58,22 +58,18 @@ class Command(BaseCommand):
                     str(conference.course_type)]),
                 conference.public_id])
 
-            # check
-            exist = False
-            if conference.media.all():
-                exist = True
+            if (os.path.exists(conf_dir) and
+                not streaming and
+                not conference.media.all() and
+                not conference.station.filter(started=True, public_id=public_id)
+                ):
 
-            streaming = False
-            try:
-                stations = conference.station.filter(started=True, public_id=public_id)
-                if stations:
-                    streaming = True
-            except:
-                pass
-
-            # import
-            if os.path.exists(conf_dir) and not exist and not streaming:
                 files = os.listdir(conf_dir)
+
+                for file in files:
+                    name, ext = os.path.splitext(file)
+                    if ext[1:] in self.image_formats:
+                        poster_file = rel_path
 
                 for media_format in self.media_formats:
                     media = Media(conference=conference)
@@ -88,12 +84,6 @@ class Command(BaseCommand):
                         full_path = conf_dir + os.sep + file
                         rel_path = full_path.replace(settings.MEDIA_ROOT, "")
 
-                        # POSTER
-                        if ext[1:] in self.image_formats:
-                            media.poster_file = rel_path
-                            logger.logger.info(rel_path)
-
-                        # MEDIA FILE
                         if ext[1:] in self.media_formats:
                             media.file = rel_path
                             media.save()
@@ -101,6 +91,7 @@ class Command(BaseCommand):
                             with open(full_path, 'rb') as f:
                                 media.file_s3.save(filename, File(f))
                             media.set_mime_type()
+                            media.poster_file = poster_file
                             media.save()
                             logger.logger.info(rel_path)
 
