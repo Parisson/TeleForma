@@ -6,7 +6,7 @@ from teleforma.webclass.models import (BBBServer, Webclass, WebclassRecord,
 
 class BBBServerAdmin(admin.ModelAdmin):
     model = BBBServer
-    list_display = ('url', 'api_key')
+    list_display = ('name', 'url', 'api_key')
 
 class WebclassSlotInline(admin.StackedInline):
     model = WebclassSlot
