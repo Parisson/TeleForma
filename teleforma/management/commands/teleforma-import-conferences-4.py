@@ -33,6 +33,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('args', nargs='*')
 
+    def find_format(self, conf_dir, file_format):
+        files = os.listdir(conf_dir)
+        for file in files:
+            name, ext = os.path.splitext(file)
+            if ext[1:] in file_format:
+                return conf_dir + os.sep + file
+
     def handle(self, *args, **options):
         organization_name = args[0]
         department_name = args[1]
@@ -58,42 +65,28 @@ class Command(BaseCommand):
                     str(conference.course_type)]),
                 conference.public_id])
 
-            if (os.path.exists(conf_dir) and
-                not conference.media.all()
-                ):
+            if (os.path.exists(conf_dir) and not conference.media.all()):
 
-                files = os.listdir(conf_dir)
-
-                for file in files:
-                    name, ext = os.path.splitext(file)
-                    if ext[1:] in self.image_formats:
-                        full_path = conf_dir + os.sep + file
-                        rel_path = full_path.replace(settings.MEDIA_ROOT, "")
-                        poster_file = rel_path
+                for image_format in image_formats:
+                    poster_file = self.find_format(conf_dir, image_format)
 
                 for media_format in self.media_formats:
+                    media_file = find_format(conf_dir, media_format)
                     media = Media(conference=conference)
                     media.course = conference.course
                     media.period = conference.period
                     media.course_type = conference.course_type
                     media.type = media_format
                     media.is_published = False
-
-                    for file in files:
-                        name, ext = os.path.splitext(file)
-                        full_path = conf_dir + os.sep + file
-                        rel_path = full_path.replace(settings.MEDIA_ROOT, "")
-
-                        if ext[1:] in self.media_formats:
-                            media.file = rel_path
-                            media.save()
-                            filename = os.path.split(full_path)[1]
-                            with open(full_path, 'rb') as f:
-                                media.file_s3.save(filename, File(f))
-                            media.set_mime_type()
-                            media.poster_file = poster_file
-                            media.save()
-                            logger.logger.info(rel_path)
+                    media.file = media_file.replace(settings.MEDIA_ROOT, "")
+                    media.save()
+                    filename = os.path.split(media_file)[1]
+                    with open(media_file, 'rb') as f:
+                        media.file_s3.save(filename, File(f))
+                    media.set_mime_type()
+                    media_file = find_format(conf_dir, media_format)media.poster_file = poster_file.replace(settings.MEDIA_ROOT, "")
+                    media.save()
+                    logger.logger.info(media_file)
 
                 conference.imported = True
                 conference.save()
