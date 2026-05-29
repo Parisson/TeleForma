@@ -39,7 +39,6 @@ class Command(BaseCommand):
         log_file = args[2]
         logger = Logger(log_file)
         file_list = []
-        i = 1
 
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name,
@@ -56,16 +55,13 @@ class Command(BaseCommand):
                 str(conference.date_begin.year),
                 self.spacer.join([
                     conference.course.code,
-                    conference.course_type]),
+                    str(conference.course_type)]),
                 conference.public_id])
 
             # check
             exist = False
-            medias = conference.media.all()
-            for media in medias:
-                if media.file == path:
-                    exist = True
-                    break
+            if conference.media.all():
+                exist = True
 
             streaming = False
             try:
@@ -75,11 +71,11 @@ class Command(BaseCommand):
             except:
                 pass
 
-            # omport
+            # import
             if os.path.exists(conf_dir) and not exist and not streaming:
                 files = os.listdir(conf_dir)
 
-                for media_format in media_formats:
+                for media_format in self.media_formats:
                     media = Media(conference=conference)
                     media.course = conference.course
                     media.period = conference.period
@@ -95,7 +91,7 @@ class Command(BaseCommand):
                         # POSTER
                         if ext[1:] in self.image_formats:
                             media.poster_file = rel_path
-                            break
+                            logger.logger.info(rel_path)
 
                         # MEDIA FILE
                         if ext[1:] in self.media_formats:
@@ -106,10 +102,8 @@ class Command(BaseCommand):
                                 media.file_s3.save(filename, File(f))
                             media.set_mime_type()
                             media.save()
+                            logger.logger.info(rel_path)
 
                 conference.imported = True
                 conference.save()
-
-                logger.logger.info(path)
-                i += 1
 
