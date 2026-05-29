@@ -59,7 +59,24 @@ class Command(BaseCommand):
                     conference.course.course_type]),
                 conference.public_id])
 
-            if os.path.exists(conf_dir):
+            # check
+            exist = False
+            medias = conference.media.all()
+            for media in medias:
+                if media.file == path:
+                    exist = True
+                    break
+
+            streaming = False
+            try:
+                stations = conference.station.filter(started=True, public_id=public_id)
+                if stations:
+                    streaming = True
+            except:
+                pass
+
+            # omport
+            if os.path.exists(conf_dir) and not exist and not streaming:
                 files = os.listdir(conf_dir)
 
                 for media_format in media_formats:
