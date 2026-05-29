@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 str(conference.date_begin.year),
                 self.spacer.join([
                     conference.course.code,
-                    conference.course.course_type]),
+                    conference.course_type]),
                 conference.public_id])
 
             # check
