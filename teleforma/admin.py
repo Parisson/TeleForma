@@ -227,7 +227,7 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
         book.book.save(response)
         return response
 
-    export_xls_training.short_description = "Export Formation (XLS)"
+    export_xls_training.short_description = "Export Formations (XLS)"
     export_xls_readings.short_description = "Export Lectures (XLS)"
 
     def add_to_group(self, request, queryset):
