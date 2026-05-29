@@ -59,9 +59,7 @@ class Command(BaseCommand):
                 conference.public_id])
 
             if (os.path.exists(conf_dir) and
-                not streaming and
-                not conference.media.all() and
-                not conference.station.filter(started=True, public_id=public_id)
+                not conference.media.all()
                 ):
 
                 files = os.listdir(conf_dir)
@@ -69,6 +67,8 @@ class Command(BaseCommand):
                 for file in files:
                     name, ext = os.path.splitext(file)
                     if ext[1:] in self.image_formats:
+                        full_path = conf_dir + os.sep + file
+                        rel_path = full_path.replace(settings.MEDIA_ROOT, "")
                         poster_file = rel_path
 
                 for media_format in self.media_formats:
