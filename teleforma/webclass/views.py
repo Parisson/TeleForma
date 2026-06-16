@@ -263,7 +263,7 @@ def create_cc_bbb_conference(request, period_id, course_id):
     year = datetime.now().year
     bbb = BBBServer.objects.get(pk=2).get_instance()
     # generate password
-    password = User.objects.make_random_password()
+    password = "".join(random.choices(string.ascii_letters + string.digits, k=10))
     # generate random room id
     room_id = "".join(random.choices(string.ascii_letters + string.digits, k=20))
 

@@ -10,10 +10,13 @@ from bigbluebutton_api_python import BigBlueButton
 from bigbluebutton_api_python.exception import BBBException
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.core.mail import send_mail
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
+from django.template.loader import render_to_string
+from django.utils.crypto import get_random_string
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
@@ -32,6 +35,8 @@ STATUS_CHOICES = (
     (2, _('Draft')),
     (3, _('Public')),
 )
+# Statut « publié » d'une webclass (cf. STATUS_CHOICES ci-dessus)
+WEBCLASS_STATUS_PUBLIC = 3
 
 
 class MetaCore:
@@ -287,7 +292,7 @@ class WebclassSlot(models.Model):
             # not sure why, but the slug contains accent
             room_id = "%s-w%d-s%d" % (
                 unidecode(slugify(self.webclass.course.title)), self.webclass.id, self.id)
-            password = User.objects.make_random_password()
+            password = get_random_string(10)
             self.room_id = room_id
             self.room_password = password
             self.save()
@@ -420,11 +425,97 @@ class WebclassSlot(models.Model):
         """ """
         return self.bbb.get_meeting_info(self.room_id)
 
+    def notify_professor(self):
+        """
+        Notifie par e-mail le professeur du créneau de la tenue de sa webclass
+        (matière, période/formation, session, jour, date et heure).
+        """
+        # On ne notifie que pour une webclass publiée
+        if self.webclass.status != WEBCLASS_STATUS_PUBLIC:
+            return
+        if not self.professor or not self.professor.user.email:
+            return
+        try:
+            slot_date = self.date
+        except Exception:
+            # end_date de la webclass non renseignée : on envoie sans la date
+            slot_date = None
+        ctx = {
+            'professor': self.professor,
+            'course': self.webclass.course,
+            'period': self.webclass.period,
+            'session': self.webclass.get_session_display(),
+            'day_label': self.get_day_display(),
+            'slot_date': slot_date,
+            'start_hour': self.start_hour,
+        }
+        # Rendu forcé en français (noms de jours/mois localisés)
+        with translation.override('fr'):
+            subject = render_to_string(
+                'webclass/email_webclass_created_subject.txt', ctx)
+            subject = ''.join(subject.splitlines())
+            message = render_to_string(
+                'webclass/email_webclass_created.txt', ctx)
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
+                  [self.professor.user.email], fail_silently=True)
+
+
+@receiver(pre_save, sender=WebclassSlot)
+def track_webclass_slot_professor(sender, instance, **kwargs):
+    """Mémorise le professeur précédent pour détecter un changement au save."""
+    if instance.pk:
+        instance._old_professor_id = sender.objects.filter(
+            pk=instance.pk).values_list('professor_id', flat=True).first()
+    else:
+        instance._old_professor_id = None
+
 
 @receiver(post_save, sender=WebclassSlot)
 def create_webclass_room(sender, **kwargs):
     instance = kwargs['instance']
     instance.prepare_webclass()
+
+
+@receiver(post_save, sender=WebclassSlot)
+def notify_professor_webclass_slot(sender, instance, created, **kwargs):
+    """
+    Notifie le professeur à la création du créneau, ou lorsque le professeur
+    d'un créneau existant est assigné/modifié.
+    """
+    old_professor_id = getattr(instance, '_old_professor_id', None)
+    professor_changed = (
+        not created
+        and instance.professor_id is not None
+        and instance.professor_id != old_professor_id
+    )
+    if created or professor_changed:
+        instance.notify_professor()
+
+
+@receiver(pre_save, sender=Webclass)
+def track_webclass_status(sender, instance, **kwargs):
+    """Mémorise le statut précédent pour détecter une publication au save."""
+    if instance.pk:
+        instance._old_status = sender.objects.filter(
+            pk=instance.pk).values_list('status', flat=True).first()
+    else:
+        instance._old_status = None
+
+
+@receiver(post_save, sender=Webclass)
+def notify_professors_on_webclass_published(sender, instance, **kwargs):
+    """
+    Lors du passage d'une webclass à « publié » (Draft -> Public),
+    notifie les professeurs de tous ses créneaux.
+    """
+    old_status = getattr(instance, '_old_status', None)
+    just_published = (
+        instance.status == WEBCLASS_STATUS_PUBLIC
+        and old_status != WEBCLASS_STATUS_PUBLIC
+    )
+    if just_published:
+        for slot in instance.slots.all():
+            slot.notify_professor()
 
 
 class WebclassRecord(models.Model):
