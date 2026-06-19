@@ -44,6 +44,7 @@ import asyncio
 import tempfile
 import threading
 import logging
+import subprocess
 
 import django.db.models as models
 from django.conf import settings
@@ -1063,6 +1064,7 @@ class Media(MediaBase):
         )
     poster_file = models.FileField(
         _('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
+    duration = models.DurationField(_("duration"), blank=True, null=True)
 
     def set_mime_type(self):
         path = None
@@ -1106,6 +1108,14 @@ class Media(MediaBase):
             return self.file
         else:
             return None
+
+    def set_duration(filename):
+        result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                             "format=duration", "-of",
+                             "default=noprint_wrappers=1:nokey=1", filename],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
+        self.duration = float(result.stdout)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
