@@ -1063,8 +1063,19 @@ class Media(MediaBase):
         storage=media_storage,
         )
     poster_file = models.FileField(
-        _('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
-    duration = models.DurationField(_("duration"), blank=True, null=True)
+        _('poster file'),
+        upload_to='items/%Y/%m/%d',
+        max_length=255,
+        null=True,
+        blank=False)
+    duration = models.DurationField(
+        _("duration"),
+        blank=True,
+        null=True)
+    file_datetime = models.DateTimeField(
+        _("file date time"),
+        blank=True,
+        null=True)
 
     def set_mime_type(self):
         path = None
