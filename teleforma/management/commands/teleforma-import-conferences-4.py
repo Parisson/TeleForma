@@ -62,7 +62,8 @@ class Command(BaseCommand):
                 str(conference.date_begin.year),
                 self.spacer.join([
                     conference.course.code,
-                    str(conference.course_type)]),
+                    "-".join(str(conference.course_type).split(" "))
+                    ]),
                 conference.public_id])
 
             if (os.path.exists(conf_dir) and not conference.media.all()):
