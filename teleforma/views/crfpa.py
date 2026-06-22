@@ -1301,11 +1301,15 @@ class StudentReadingsXLSBook:
     def write(self):
         row = 1
         for media_read in self.student.user.read.all():
-            self.sheet_media.write(row, 0, str(media_read.media))
+            self.sheet_media.write(row, 0,
+                str(media_read.media) + " - " + str(media_read.date_added)
+                )
             row += 1
 
         row = 1
         for doc_read in self.student.user.private_documents.all():
-            self.sheet_docs.write(row, 0, str(doc_read.document))
+            self.sheet_docs.write(row, 0,
+                str(doc_read.document) + " - " + str(doc_read.date_added)
+                )
             row += 1
 
