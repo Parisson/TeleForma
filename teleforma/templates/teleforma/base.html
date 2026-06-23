@@ -162,7 +162,11 @@
               {% if user.is_staff %}
               <li><a href="{% url 'teleforma-help' %}">{% trans "Help" %}</a></li>
               {% endif %}
-              <li><a href="{% url 'teleforma-logout' %}">{% trans "Sign out" %}</a></li>
+              <li><form action="{% url 'teleforma-logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">{% trans "Sign out" %}</button>
+                </form>)
+              </li>
             </ul>
           </li>
           {% else %}
