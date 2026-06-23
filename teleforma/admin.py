@@ -318,6 +318,10 @@ class TrainingAdmin(admin.ModelAdmin):
     exclude = ['options']
     actions = [duplicate_trainings,]
     list_display = ['__str__', 'code' ]
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'40'})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+    }
 
 class CourseTypeAdmin(admin.ModelAdmin):
     model = CourseType
@@ -336,6 +340,10 @@ class DocumentAdmin(admin.ModelAdmin):
     filter_horizontal = ['course_type']
     list_filter = ('course', 'periods', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'40'})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+    }
 
 
 class ConferenceDateBeginFilter(admin.SimpleListFilter):
