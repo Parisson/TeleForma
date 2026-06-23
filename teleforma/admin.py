@@ -320,8 +320,8 @@ class TrainingAdmin(admin.ModelAdmin):
     actions = [duplicate_trainings,]
     list_display = ['__str__', 'code' ]
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':'50'})},
-        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':50})},
+        models.CharField: {'widget': TextInput(attrs={'size':'60'})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':60})},
     }
 
 class CourseTypeAdmin(admin.ModelAdmin):
@@ -342,8 +342,8 @@ class DocumentAdmin(admin.ModelAdmin):
     list_filter = ('course', 'periods', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':'40'})},
-        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+        models.CharField: {'widget': TextInput(attrs={'size':'60'})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':60})},
     }
 
 
