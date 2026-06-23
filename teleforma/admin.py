@@ -16,6 +16,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
+from django.forms import TextInput, Textarea
 
 from collections import OrderedDict
 
