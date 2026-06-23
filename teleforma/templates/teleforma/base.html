@@ -168,7 +168,11 @@
           {% else %}
           <li><a href="{% url 'teleforma-profile-detail' user.username %}" class="darkblue">{% trans "Profile" %}</a>
           </li>
-          <li><a href="{% url 'teleforma-logout' %}" class="black">{% trans "Sign out" %}</a></li>
+          <li><form action="{% url 'teleforma-logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit">{% trans "Sign out" %}</button>
+              </form>)
+          </li>
           {% endif %}
 
           {% endif %}
