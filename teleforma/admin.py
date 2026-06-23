@@ -320,8 +320,8 @@ class TrainingAdmin(admin.ModelAdmin):
     actions = [duplicate_trainings,]
     list_display = ['__str__', 'code' ]
     formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':'40'})},
-        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':40})},
+        models.CharField: {'widget': TextInput(attrs={'size':'50'})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':50})},
     }
 
 class CourseTypeAdmin(admin.ModelAdmin):
