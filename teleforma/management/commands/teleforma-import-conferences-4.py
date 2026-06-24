@@ -40,7 +40,7 @@ class Command(BaseCommand):
         for file in all_files:
             name, ext = os.path.splitext(file)
             if ext[1:] in file_format:
-                files.add(conf_dir + os.sep + file)
+                files.append(conf_dir + os.sep + file)
         if len(files) > 1:
             for file in files:
                 if self.main_pattern in file:
