@@ -45,7 +45,10 @@ class Command(BaseCommand):
             for file in files:
                 if self.main_pattern in file:
                     return file
-        return files[0]
+        elif len(files) == 1:
+            return files[0]
+        else:
+            return ""
 
     def handle(self, *args, **options):
         organization_name = args[0]
