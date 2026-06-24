@@ -37,7 +37,7 @@ class Command(BaseCommand):
     def find_format(self, conf_dir, file_format):
         files = []
         all_files = os.listdir(conf_dir)
-        for file in _all_files:
+        for file in all_files:
             name, ext = os.path.splitext(file)
             if ext[1:] in file_format:
                 files.add(conf_dir + os.sep + file)
