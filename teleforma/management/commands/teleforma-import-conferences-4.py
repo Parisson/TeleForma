@@ -29,16 +29,23 @@ class Command(BaseCommand):
     spacer = '_-_'
     media_formats = ['mp4', 'mp3']
     image_formats = ['png', 'jpg']
+    main_pattern = "_0.webm"
 
     def add_arguments(self, parser):
         parser.add_argument('args', nargs='*')
 
     def find_format(self, conf_dir, file_format):
-        files = os.listdir(conf_dir)
-        for file in files:
+        files = []
+        all_files = os.listdir(conf_dir)
+        for file in _all_files:
             name, ext = os.path.splitext(file)
             if ext[1:] in file_format:
-                return conf_dir + os.sep + file
+                files.add(conf_dir + os.sep + file)
+        if len(files) > 1:
+            for file in files:
+                if self.main_pattern in file:
+                    return file
+        return files[0]
 
     def handle(self, *args, **options):
         organization_name = args[0]
