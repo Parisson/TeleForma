@@ -29,7 +29,7 @@ class Command(BaseCommand):
     spacer = '_-_'
     media_formats = ['mp4', 'mp3']
     image_formats = ['png', 'jpg']
-    main_pattern = "_0.webm"
+    webm_pattern = "_0.webm"
     mp3_pattern = ".mp3-"
 
     def add_arguments(self, parser):
@@ -44,7 +44,7 @@ class Command(BaseCommand):
                 files.append(conf_dir + os.sep + file)
         if len(files) > 1:
             for file in files:
-                if self.main_pattern in file or self.mp3_pattern in file:
+                if self.webm_pattern in file or self.mp3_pattern in file:
                     return file
         elif len(files) == 1:
             return files[0]
