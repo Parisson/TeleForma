@@ -45,7 +45,9 @@
     <a href="{% url 'teleforma-desk-period-course' period.id script.course.id %}">{{ script.title }}</a>
 
     <div style="float: right; font-size: 0.9em;">
-        <a href="{% url 'teleforma-exam-script-download' period.id script.id %}" class="component_icon button icon_download">Télécharger</a>
+        {% if not user.quotas.all %}
+            <a href="{% url 'teleforma-exam-script-download' period.id script.id %}" class="component_icon button icon_download">Télécharger</a>
+        {% endif %}
         {% if user.quotas.all %}
             <a href="{% url 'postman:write' script.author.username %}" class="component_icon button icon_next">{% trans "Send a message" %}</a>
         {% endif %}
