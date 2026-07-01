@@ -1,7 +1,30 @@
 # -*- coding: utf-8 -*-
 # Django settings for sandbox project.
 
-from django.utils.encoding import force_text
+# Monkey-patches for django-json-rpc (abandoned, incompatible with Py3.13/Django5)
+import inspect
+if not hasattr(inspect, 'getargspec'):
+    inspect.getargspec = inspect.getfullargspec
+
+from django.utils import encoding as _enc
+if not hasattr(_enc, 'smart_text'):
+    _enc.smart_text = _enc.smart_str
+if not hasattr(_enc, 'force_text'):
+    _enc.force_text = _enc.force_str
+
+from django.utils import translation as _trans
+if not hasattr(_trans, 'ugettext'):
+    _trans.ugettext = _trans.gettext
+if not hasattr(_trans, 'ugettext_lazy'):
+    _trans.ugettext_lazy = _trans.gettext_lazy
+if not hasattr(_trans, 'ugettext_noop'):
+    _trans.ugettext_noop = _trans.gettext_noop
+if not hasattr(_trans, 'ungettext'):
+    _trans.ungettext = _trans.ngettext
+if not hasattr(_trans, 'ungettext_lazy'):
+    _trans.ungettext_lazy = _trans.ngettext_lazy
+
+from django.utils.encoding import force_str
 import warnings
 import os
 import sys
@@ -44,7 +67,6 @@ sys.dont_write_bytecode = True
 DEBUG_ENV = os.environ.get('DEBUG') == 'True'
 DEBUG = DEBUG_ENV
 DEBUG_TOOLBAR = False
-TEMPLATE_DEBUG = DEBUG
 RECOVERY = False
 
 INTERNAL_IPS = ['127.0.0.1', ]
@@ -71,7 +93,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         # Or path to database file if using sqlite3.
         'NAME': os.environ.get('POSTGRES_DATABASE'),
         # Not used with sqlite3.
@@ -88,7 +110,7 @@ DATABASES = {
 if RECOVERY:
     DATABASES['recovery'] = {
         # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         # Or path to database file if using sqlite3.
         'NAME': os.environ.get('POSTGRES_DATABASE'),
         # Not used with sqlite3.
@@ -133,10 +155,12 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+USE_TZ = False
 
-########################
+
+#################
 # MEDIA / STATIC
-########################
+#################
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -147,10 +171,6 @@ MEDIA_ROOT = '/srv/media/'
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 #MEDIA_URL = 'http://pre-barreau.com/archives/'
 MEDIA_URL = '/media/'
-
-DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
-
-MEDIA_S3_BUCKET = '/media/bucket/'
 
 FILE_UPLOAD_TEMP_DIR = '/tmp'
 
@@ -184,18 +204,10 @@ STATICFILES_FINDERS = (
 # TEMPLATES
 ########################
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'app', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -308,6 +320,7 @@ MIDDLEWARE = (('debug_toolbar.middleware.DebugToolbarMiddleware',) if DEBUG_TOOL
     'django.middleware.locale.LocaleMiddleware',
     'dj_pagination.middleware.PaginationMiddleware',
     'teleforma.middleware.XsSharing',
+    'teleforma.middleware.LastUserActivityMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
     "django.middleware.common.CommonMiddleware",
 )
@@ -329,7 +342,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'dj_pagination',
     'postman',
-    'captcha',
+    'django_recaptcha',
     'django_nvd3',
     'tinymce',
     'pdfannotator',
@@ -391,7 +404,6 @@ else:
 # AUTH / SESSIONS
 ########################
 
-AUTH_PROFILE_MODULE = 'telemeta.userprofile'
 AUTH_USER_MODEL = 'auth.User'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('teleforma-desk')
@@ -406,7 +418,7 @@ def show_user_as(user):
     if user.quotas.count() and not professor and not user.is_superuser:
         return "#"+str(user.id)
     else:
-        return force_text(user)
+        return force_str(user)
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 #SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
@@ -425,6 +437,7 @@ JAZZMIN_SETTINGS = {
     "site_title": "CRFPA",
     "site_header": "CRFPA",
     "site_logo": "teleforma/images/logo_pb.png",
+    "site_brand": "Admin CRFPA",
 
     # # Links to put along the top menu
     # "topmenu_links": [
@@ -508,7 +521,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
     "theme": "default",
-    "dark_mode_theme": "darkly",
+    "default_theme_mode": "auto",
     "button_classes": {
         "primary": "btn-outline-primary",
         "secondary": "btn-outline-secondary",
@@ -583,27 +596,84 @@ POSTMAN_DISALLOW_ANONYMOUS = True
 
 
 ########################
+# AWS S3
+########################
+
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+AWS_S3_REGION_NAME=""
+AWS_S3_ENDPOINT_URL=""
+AWS_S3_ENCRYPTION=True
+AWS_S3_FILE_OVERWRITE=False
+AWS_STORAGE_BUCKET_NAME=""
+MEDIA_S3_BUCKET = '/media/bucket/'
+
+
+########################
+# STORAGES
+########################
+
+DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+    "private_documents_s3": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+          "bucket_name": "crfpa-private",
+          "region_name": "gra",
+          "endpoint_url":  "https://s3.gra.io.cloud.ovh.net/",
+        },
+    },
+    "media_s3": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+          "bucket_name": "pb-crfpa-medias",
+          "region_name": "eu-west-par",
+          "endpoint_url":  "https://s3.eu-west-par.io.cloud.ovh.net/",
+        },
+    },
+}
+
+
+
+########################
 # TELEFORMA
 ########################
 
 TELEFORMA_ORGANIZATION = 'Pré-Barreau - CRFPA'
 TELEFORMA_SUBJECTS = ('Barreau', 'CRFPA', 'e-learning')
 TELEFORMA_DESCRIPTION = "E-learning Pré-Barreau - CRFPA"
+TELEFORMA_ADMIN = "Admin-CRFPA"
 TELEFORMA_E_LEARNING_TYPE = 'CRFPA'
+
 TELEFORMA_GLOBAL_TWEETER = False
 TELEFORMA_PERIOD_TWEETER = True
-TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
-TELEFORMA_EXAM_SCRIPT_UPLOAD = True
-TELEFORMA_ADMIN = "Admin-CRFPA"
+
 TELEFORMA_REGISTER_DEFAULT_DOC_ID = 5506
 TELEFORMA_PERIOD_DEFAULT_ID = 34
+
+TELEFORMA_EXAM_TOPIC_DEFAULT_DOC_TYPE_ID = 4
+TELEFORMA_EXAM_SCRIPT_UPLOAD = True
 TELEFORMA_EXAM_MAX_SESSIONS = 200
 TELEFORMA_EXAM_SCRIPT_MAX_SIZE = 31457280
 TELEFORMA_EXAM_SCRIPT_SERVICE_URL = '/webviewer/teleforma.html'
 TELEFORMA_EXAM_USE_S3 = True
-TELEFORMA_PRIVATE_DOCUMENTS_MODE = True
-TELEFORMA_PRIVATE_MEDIA_USE_S3 = True
+
+TELEFORMA_DOCUMENTS_USE_S3 = False
+TELEFORMA_PRIVATE_DOCUMENTS_MODE = True #wether the downloaded docs should be signed
+TELEFORMA_PRIVATE_DOCUMENTS_USE_S3 = True
+
 TELEFORMA_MEDIA_DOWNLOAD = False
+TELEFORMA_MEDIA_USE_S3 = True
+
 
 ORAL_OPTION_PRICE = 250
 FASICLE_OPTION_PRICE = 110
@@ -617,6 +687,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 #THUMBNAIL_FORCE_OVERWRITE = True
 
+LAST_ACTIVITY_INTERVAL_SECS = 3600
 
 ########################
 # EMAIL
@@ -654,18 +725,6 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 
 
 ########################
-# AWS S3
-########################
-
-AWS_ACCESS_KEY_ID=""
-AWS_SECRET_ACCESS_KEY=""
-AWS_STORAGE_BUCKET_NAME=""
-AWS_S3_REGION_NAME=""
-AWS_S3_ENDPOINT_URL=""
-AWS_S3_ENCRYPTION=True
-AWS_S3_FILE_OVERWRITE=False
-
-########################
 # BBB
 ########################
 
@@ -682,6 +741,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+
 
 ##################
 # LOCAL SETTINGS #

@@ -44,18 +44,19 @@ import asyncio
 import tempfile
 import threading
 import logging
+import subprocess
 
 import django.db.models as models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files import File
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import FileSystemStorage, storages
 from django.core.paginator import InvalidPage
 from django.db import models
 from django.forms.fields import FileField
 from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy, reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 # from quiz.models import Quiz
 
@@ -115,10 +116,18 @@ STATUS_CHOICES = (
 WEIGHT_CHOICES = get_nint_choices(5)
 
 
-if settings.TELEFORMA_PRIVATE_MEDIA_USE_S3:
-    private_storage = S3Boto3Storage
-else:
-    private_storage = FileSystemStorage
+def private_document_storage():
+    if settings.TELEFORMA_PRIVATE_DOCUMENTS_USE_S3:
+        return storages["private_documents_s3"]
+    else:
+        return storages["default"]
+
+
+def media_storage():
+    if settings.TELEFORMA_MEDIA_USE_S3:
+        return storages["media_s3"]
+    else:
+        return storages["default"]
 
 
 def get_random_hash():
@@ -448,6 +457,8 @@ class Conference(models.Model):
                                         blank=True, null=True, on_delete=models.SET_NULL)
     notified = models.BooleanField(_('notified'), default=False)
     notified_live = models.BooleanField("Notifié live", default=False)
+    imported = models.BooleanField(_('imported'), default=False)
+    test = models.BooleanField(_('test'), default=False)
 
     @property
     def description(self):
@@ -916,7 +927,7 @@ class DocumentPrivate(MediaBase):
     user = models.ForeignKey(User, related_name="private_documents", verbose_name=_('user'),
                                 null=True, blank=True, on_delete=models.CASCADE)
     file = models.FileField(_('file'), upload_to='private/documents/%Y/%m/%d', db_column="filename",
-                            max_length=1024, blank=True, storage=private_storage)
+                            max_length=1024, blank=True, storage=private_document_storage)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'document_private'
@@ -1036,13 +1047,44 @@ class Media(MediaBase):
     readers = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
                                      blank=True)
     file = models.FileField(
-        _('file'), upload_to='items/%Y/%m/%d', max_length=1024, null=True, blank=False)
+        _('file'),
+        upload_to='items/%Y/%m/%d',
+        max_length=1024,
+        null=True,
+        blank=True,
+        storage=storages["default"]
+        )
+    file_s3 = models.FileField(
+        _('S3 file'),
+        upload_to='items/%Y/%m/%d',
+        max_length=1024,
+        null=True,
+        blank=True,
+        storage=media_storage,
+        )
     poster_file = models.FileField(
-        _('poster file'), upload_to='items/%Y/%m/%d', max_length=255, null=True, blank=False)
+        _('poster file'),
+        upload_to='items/%Y/%m/%d',
+        max_length=255,
+        null=True,
+        blank=False)
+    duration = models.DurationField(
+        _("duration"),
+        blank=True,
+        null=True)
+    file_datetime = models.DateTimeField(
+        _("file date time"),
+        blank=True,
+        null=True)
 
     def set_mime_type(self):
+        path = None
         if self.file:
-            mime_type = guess_mimetypes(self.file.path)
+            path = self.file.path
+        elif self.file_s3:
+            path = self.file_s3.name
+        if path:
+            mime_type = guess_mimetypes(path)
             if mime_type == 'audio/mpeg':
                 self.mime_type = 'audio/mp3'
             else:
@@ -1069,6 +1111,22 @@ class Media(MediaBase):
             url = sorl_default.backend.get_thumbnail(
                 self.poster_file, geometry).url
         return url
+
+    def get_file(self):
+        if self.file_s3:
+            return self.file_s3
+        elif self.file:
+            return self.file
+        else:
+            return None
+
+    def set_duration(filename):
+        result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                             "format=duration", "-of",
+                             "default=noprint_wrappers=1:nokey=1", filename],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
+        self.duration = float(result.stdout)
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'

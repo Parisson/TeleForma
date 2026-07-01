@@ -14,8 +14,9 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.urls import reverse
 from django.http import HttpResponse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
+from django.forms import TextInput, Textarea
 
 from collections import OrderedDict
 
@@ -30,7 +31,7 @@ from .models.crfpa import (IEJ, Corrector, Discount, Home, NewsItem,
                            OptionalFee, Parameters, Payback, Payment, Profile,
                            Student, Training)
 from .models.messages import GroupedMessage, StudentGroup
-from .views.crfpa import CorrectorXLSBook, UserXLSBook
+from .views.crfpa import CorrectorXLSBook, UserXLSBook, StudentReadingsXLSBook
 from .views.core import get_periods
 
 from django.contrib.admin.helpers import ActionForm
@@ -181,7 +182,7 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
     list_display = ['student_name', 'restricted', 'get_trainings', 'platform_only',
                     'total_payments', 'total_fees', 'balance', 'balance_intermediary']
     readonly_fields = ['user', 'balance', 'balance_intermediary']
-    actions = ['export_xls', 'write_message', 'add_to_group']
+    actions = ['export_xls_training', 'export_xls_readings', 'write_message', 'add_to_group']
     action_form = StudentGroupForm
 
     class Media:
@@ -211,7 +212,7 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
         serializers.serialize("json", queryset, stream=response)
         return response
 
-    def export_xls(self, request, queryset):
+    def export_xls_training(self, request, queryset):
         book = UserXLSBook(students=queryset)
         book.write()
         response = HttpResponse(content_type="application/vnd.ms-excel")
@@ -219,7 +220,16 @@ class StudentAdmin(StudentAdminMixin, admin.ModelAdmin):
         book.book.save(response)
         return response
 
-    export_xls.short_description = "Export vers XLS"
+    def export_xls_readings(self, request, queryset):
+        book = StudentReadingsXLSBook(students=queryset)
+        book.write()
+        response = HttpResponse(content_type="application/vnd.ms-excel")
+        response['Content-Disposition'] = 'attachment; filename=%s-readings.xls' % queryset[0].user.username
+        book.book.save(response)
+        return response
+
+    export_xls_training.short_description = "Export Formations (XLS)"
+    export_xls_readings.short_description = "Export Lectures (XLS)"
 
     def add_to_group(self, request, queryset):
         group_name = request.POST['group_name']
@@ -309,6 +319,10 @@ class TrainingAdmin(admin.ModelAdmin):
     exclude = ['options']
     actions = [duplicate_trainings,]
     list_display = ['__str__', 'code' ]
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'60'})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':60})},
+    }
 
 class CourseTypeAdmin(admin.ModelAdmin):
     model = CourseType
@@ -327,6 +341,10 @@ class DocumentAdmin(admin.ModelAdmin):
     filter_horizontal = ['course_type']
     list_filter = ('course', 'periods', 'date_added', 'type')
     search_fields = ['course__code', 'course__title', 'type__name']
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size':'60'})},
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':60})},
+    }
 
 
 class ConferenceDateBeginFilter(admin.SimpleListFilter):
@@ -382,11 +400,11 @@ def duplicate_medias(modeladmin, request, queryset):
 
 class MediaAdmin(admin.ModelAdmin):
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(MediaAdmin, self).get_form(request, obj, **kwargs)
-        period = get_periods(request)
-        form.base_fields['conference'].queryset = Conference.objects.filter(period=period)
-        return form
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super(MediaAdmin, self).get_form(request, obj, **kwargs)
+    #     period = get_periods(request)
+    #     form.base_fields['conference'].queryset = Conference.objects.filter(period=period)
+    #     return form
 
     list_per_page = 30
     exclude = ['readers']

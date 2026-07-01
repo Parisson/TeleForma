@@ -52,7 +52,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template import loader
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateResponseMixin, TemplateView, View
 from django.views.generic.detail import DetailView
@@ -280,19 +280,22 @@ def serve_media(file, content_type="", buffering=True, streaming=False, bucket=F
 
     if not settings.DEBUG:
         if bucket:
-            url = settings.MEDIA_S3_BUCKET + file.url.split(settings.AWS_S3_ENDPOINT_URL)[-1]
+            # url = settings.MEDIA_S3_BUCKET + file.url.split(settings.AWS_S3_ENDPOINT_URL)[-1]
+            return HttpResponseRedirect(file.url)
         else:
-            url = file.url
-        return nginx_media_accel(url, content_type=content_type,
+            return nginx_media_accel(file.url, content_type=content_type,
                                  buffering=buffering, streaming=streaming)
     else:
-        response = StreamingHttpResponse(
-            stream_from_file(file.path), content_type=content_type)
-        filename = os.path.basename(file.path)
-        if not streaming:
-            response['Content-Disposition'] = 'attachment; ' + \
-                'filename=' + filename
-        return response
+        if bucket:
+            return HttpResponseRedirect(file.url)
+        else:
+            response = StreamingHttpResponse(
+                stream_from_file(file.path), content_type=content_type)
+            filename = os.path.basename(file.path)
+            if not streaming:
+                response['Content-Disposition'] = 'attachment; ' + \
+                    'filename=' + filename
+            return response
 
 
 def nginx_media_accel(url, content_type="", buffering=True, streaming=False):
@@ -652,16 +655,28 @@ class MediaView(CourseAccessMixin, DetailView):
         media = self.get_object()
         if not media.mime_type:
             media.set_mime_type()
+
+        if media.course:
+            course = media.course
+        else:
+            course = media.conference.course
+        if media.course_type:
+            course_type = media.course_type
+        else:
+            course_type = media.conference.course_type
+        if media.course:
+            room_name = media.course.code
+        else:
+            room_name = media.conference.course.code
+        if media.conference.web_class_group:
+            room_name += '_' + media.conference.public_id
+
         context['mime_type'] = media.mime_type
-        context['course'] = media.course
-        context['type'] = media.course_type
+        context['course'] = course
+        context['type'] = course_type
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(
             app_label="teleforma", model="course")
-
-        room_name = media.course.code
-        if media.conference.web_class_group:
-            room_name += '_' + media.conference.public_id
 
         access = get_access(media, context['all_courses'])
         if not access:
@@ -704,15 +719,15 @@ class MediaView(CourseAccessMixin, DetailView):
         media_detail_url = request.build_absolute_uri(
             reverse("teleforma-media-detail",
                 kwargs={"period_id": period_id, "pk": media.id}))
-        if get_access(media, courses) and referer == media_detail_url:
+        if (get_access(media, courses) and referer == media_detail_url) or settings.DEBUG:
             media_reads = MediaRead.objects.filter(media=media, user=request.user)
             if not media_reads:
                 media_read = MediaRead(media=media, user=request.user)
                 media_read.save()
-            return serve_media(media.file,
+            return serve_media(media.get_file(),
                 content_type=media.mime_type,
                 streaming=streaming,
-                bucket=False,
+                bucket=settings.TELEFORMA_MEDIA_USE_S3,
                 )
         else:
             raise Http404("You don't have access to this media.")

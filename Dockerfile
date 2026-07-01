@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.10-bookworm
+FROM python:3.14-trixie
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>
 
@@ -39,7 +39,7 @@ ENV LANGUAGE fr_FR:fr
 ENV LC_ALL fr_FR.UTF-8
 
 # https://python-poetry.org/docs/configuration/#using-environment-variables
-ENV POETRY_VERSION=1.8.2 \
+ENV POETRY_VERSION=2.3.4 \
     POETRY_NO_INTERACTION=1 \
     # make poetry install to this location
     POETRY_HOME="/opt/poetry" \
@@ -50,10 +50,8 @@ ENV PATH="$POETRY_HOME/bin:$PATH"
 # # Install poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN curl -sSL https://install.python-poetry.org | python -
 
-# upgrade pip and pin setuptools
-# RUN pip3 install "setuptools<58.0.0"
-RUN pip3 install -U pip
-# RUN pip3 install setuptools==58
+# upgrade pip and install setuptools (no longer bundled in Python 3.12+)
+RUN pip3 install -U pip setuptools
 
 # Disable Poetry's virtualenv (useless in a container)
 RUN poetry config virtualenvs.create false
@@ -73,7 +71,9 @@ WORKDIR /srv/src/teleforma
 COPY setup.py /srv/src/teleforma
 COPY teleforma /srv/src/teleforma
 COPY README.rst /srv/src/teleforma
-RUN python setup.py develop
+RUN pip install -e .
+
+ENV PYTHONPATH="/srv/src/teleforma:${PYTHONPATH}"
 
 # Workaround for django installation bugs
 # RUN cp -ra /usr/local/django/* /usr/local/lib/python2.7/site-packages/django/

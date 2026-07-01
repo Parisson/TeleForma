@@ -10,8 +10,6 @@ services:
       - env/prod.env
     volumes:
       - /mnt/crfpa-videos:/mnt/crfpa-videos
-      - /mnt/crfpa-scripts:/mnt/crfpa-scripts
-      - /mnt/crfpa-scripts2:/mnt/crfpa-scripts2
       - /mnt/crfpa-items:/mnt/crfpa-items
     networks:
       - teleforma-prod
@@ -22,6 +20,7 @@ services:
       args:
         dev: 0
     command: /bin/sh /srv/app/asgi.sh
+    restart: unless-stopped
     volumes:
       - ./app/:/srv/app
       - ./bin:/srv/bin
@@ -42,16 +41,19 @@ services:
       - memcached
 
   db:
+    restart: unless-stopped
     env_file:
       - env/prod.env
     networks:
       - teleforma-prod
 
   redis:
+    restart: unless-stopped
     networks:
       - teleforma-prod
 
   memcached:
+    restart: unless-stopped
     networks:
       - teleforma-prod
 

@@ -33,27 +33,27 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 from teleforma.exam.views import MassScoreCreateView, ScoreCreateView, ScriptCreateView, ScriptDownloadView, ScriptView, ScriptsPendingView, ScriptsRejectedView, ScriptsScoreAllView, ScriptsScoreCourseView, ScriptsTreatedView, ScriptsView, get_correctors, get_mass_students, QuotasView
-from django.conf.urls import url
+from django.urls import re_path
 
 
 urlpatterns = [
-    url(r'^scripts/periods/(?P<period_id>.*)/(?P<pk>.*)/detail/$', ScriptView.as_view(), name="teleforma-exam-script-detail"),
-    url(r'^scripts/periods/(?P<period_id>.*)/(?P<pk>.*)/download/$', ScriptDownloadView.as_view(), name="teleforma-exam-script-download"),
-    url(r'^scripts/periods/(?P<period_id>.*)/list/$', ScriptsView.as_view(), name="teleforma-exam-script-list"),
-    url(r'^scripts/periods/(?P<period_id>.*)/create/$', ScriptCreateView.as_view(), name="teleforma-exam-script-create"),
-    url(r'^scripts/periods/(?P<period_id>.*)/pending/$', ScriptsPendingView.as_view(), name="teleforma-exam-scripts-pending"),
-    url(r'^scripts/periods/(?P<period_id>.*)/treated/$', ScriptsTreatedView.as_view(), name="teleforma-exam-scripts-treated"),
-    url(r'^scripts/periods/(?P<period_id>.*)/rejected/$', ScriptsRejectedView.as_view(), name="teleforma-exam-scripts-rejected"),
+    re_path(r'^scripts/periods/(?P<period_id>.*)/(?P<pk>.*)/detail/$', ScriptView.as_view(), name="teleforma-exam-script-detail"),
+    re_path(r'^scripts/periods/(?P<period_id>.*)/(?P<pk>.*)/download/$', ScriptDownloadView.as_view(), name="teleforma-exam-script-download"),
+    re_path(r'^scripts/periods/(?P<period_id>.*)/list/$', ScriptsView.as_view(), name="teleforma-exam-script-list"),
+    re_path(r'^scripts/periods/(?P<period_id>.*)/create/$', ScriptCreateView.as_view(), name="teleforma-exam-script-create"),
+    re_path(r'^scripts/periods/(?P<period_id>.*)/pending/$', ScriptsPendingView.as_view(), name="teleforma-exam-scripts-pending"),
+    re_path(r'^scripts/periods/(?P<period_id>.*)/treated/$', ScriptsTreatedView.as_view(), name="teleforma-exam-scripts-treated"),
+    re_path(r'^scripts/periods/(?P<period_id>.*)/rejected/$', ScriptsRejectedView.as_view(), name="teleforma-exam-scripts-rejected"),
 
-    url(r'^scores/periods/(?P<period_id>.*)/all/$', ScriptsScoreAllView.as_view(), name="teleforma-exam-scripts-scores-all"),
-    url(r'^scores/periods/(?P<period_id>.*)/courses/(?P<course_id>.*)/$', ScriptsScoreCourseView.as_view(), name="teleforma-exam-scripts-scores-course"),
-    url(r'^scores/periods/(?P<period_id>.*)/create/$', ScoreCreateView.as_view(), name="teleforma-exam-scores-create"),
-    url(r'^scores/periods/(?P<period_id>.*)/mass_create/$', MassScoreCreateView.as_view(), name="teleforma-exam-scores-mass-create"),
+    re_path(r'^scores/periods/(?P<period_id>.*)/all/$', ScriptsScoreAllView.as_view(), name="teleforma-exam-scripts-scores-all"),
+    re_path(r'^scores/periods/(?P<period_id>.*)/courses/(?P<course_id>.*)/$', ScriptsScoreCourseView.as_view(), name="teleforma-exam-scripts-scores-course"),
+    re_path(r'^scores/periods/(?P<period_id>.*)/create/$', ScoreCreateView.as_view(), name="teleforma-exam-scores-create"),
+    re_path(r'^scores/periods/(?P<period_id>.*)/mass_create/$', MassScoreCreateView.as_view(), name="teleforma-exam-scores-mass-create"),
 
-    url(r'^scripts/get-correctors/$', get_correctors, name="teleforma-exam-get-correctors"),
-    url(r'^scripts/get-mass-students/$', get_mass_students, name="teleforma-exam-get-mass-students"),
+    re_path(r'^scripts/get-correctors/$', get_correctors, name="teleforma-exam-get-correctors"),
+    re_path(r'^scripts/get-mass-students/$', get_mass_students, name="teleforma-exam-get-mass-students"),
 
-    url(r'^quotas/periods/(?P<period_id>.*)/list/$',
+    re_path(r'^quotas/periods/(?P<period_id>.*)/list/$',
         QuotasView.as_view(),
         name="teleforma-exam-quotas"),
 

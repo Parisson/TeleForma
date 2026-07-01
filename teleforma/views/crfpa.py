@@ -33,8 +33,9 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 
 import datetime
-
+import random, string
 import xlrd
+
 from django.contrib.auth import get_backends, login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
@@ -43,13 +44,13 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import InvalidPage
 from django.db.models import Max, Q
 from django.forms.formsets import all_valid
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.defaultfilters import slugify
 from django.urls.base import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
@@ -72,6 +73,10 @@ from ..models.crfpa import (IEJ, Discount, NewsItem, Parameters, Payback,
 from ..views.core import (CourseAccessMixin, PDFTemplateResponseMixin, format_courses,
                           get_courses, get_periods)
 from ..views.profile import ProfileView
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+        return ''.join(random.choice(chars) for _ in range(size))
 
 
 def get_course_code(obj):
@@ -775,6 +780,12 @@ class UserCompleteView(TemplateView):
         except:
             user = self.request.user
         if user:
+            profile = user.profile.get()
+            # Init personal wifi password
+            if not profile.wifi_pass:
+                profile.wifi_login = user.username
+                profile.wifi_pass = id_generator(8)
+                profile.save()
             student = user.student.all()[0]
             context['period'] = student.period
         else:
@@ -1182,23 +1193,32 @@ class WriteView(PostmanWriteView):
 
         return context
 
+
 class CRFPAProfileView(ProfileView):
     """Provide Collections web UI methods"""
 
     @method_decorator(login_required)
     def profile_detail(self, request, username, template='teleforma/profile_detail.html'):
         user = User.objects.get(username=username)
-        try:
-            profile = user.get_profile()
-        except:
-            profile = None
-        student = user.student.all()
         payment = None
-        if student and (user.username == request.user.username or request.user.is_superuser):
-            student = user.student.get()
-            payment = student.payments.order_by('-id').all()
-            if payment:
-                payment = payment[0]
+        profile = None
+        if (user.username == request.user.username or \
+            request.user.is_superuser or \
+            request.user.professor.all()):
+
+            student = user.student.all()
+            if student:
+                try:
+                    profile = user.get_profile()
+                except:
+                    profile = None
+                if not request.user.professor.all():
+                    student = user.student.get()
+                    payment = student.payments.order_by('-id').all()
+                    if payment:
+                        payment = payment[0]
+        else:
+            raise Http404("No access")
 
         return render(request, template, {'profile' : profile, 'usr': user, 'payment':payment})
 
@@ -1265,3 +1285,31 @@ class QuizQuestionView(CourseAccessMixin, QuizTake):
             validation.save()
 
         return render(self.request, 'quiz/result.html', results)
+
+
+
+class StudentReadingsXLSBook:
+
+    def __init__(self, students):
+        self.book = Workbook()
+        if students:
+            self.student = students[0]
+
+        self.sheet_docs = self.book.add_sheet('Documents')
+        self.sheet_media = self.book.add_sheet('Medias')
+
+    def write(self):
+        row = 1
+        for media_read in self.student.user.read.all():
+            self.sheet_media.write(row, 0,
+                str(media_read.media) + " - " + str(media_read.date_added)
+                )
+            row += 1
+
+        row = 1
+        for doc_read in self.student.user.private_documents.all():
+            self.sheet_docs.write(row, 0,
+                str(doc_read.document) + " - " + str(doc_read.date_added)
+                )
+            row += 1
+

@@ -44,9 +44,9 @@ from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
-from django.utils.encoding import force_text, smart_str
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from docutils.core import publish_parts
 
 from teleforma.views.core import get_course_conferences
@@ -432,9 +432,9 @@ def render_flatpage(content):
 
         parsed += line + "\n"
 
-    parts = publish_parts(source=smart_str(
+    parts = publish_parts(source=force_str(
         parsed), writer_name="html4css1", settings_overrides={})
-    return mark_safe('<div class="rst-content">\n' + force_text(parts["html_body"]) + '</div>')
+    return mark_safe('<div class="rst-content">\n' + force_str(parts["html_body"]) + '</div>')
 
 
 render_flatpage.is_safe = True

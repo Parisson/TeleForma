@@ -1,0 +1,6 @@
+Bonjour,
+
+Nous vous confirmons votre webclass de la formation{% if period %} {{ period.name }}{% endif %}, matière « {{ course.title }} » (session {{ session }}),{% if slot_date %} le {{ slot_date|date:"l j F Y" }}{% else %} le {{ day_label }}{% endif %} à {{ start_hour|time:"H\hi" }}.
+
+Cordialement,
+L’équipe du Pré-Barreau
