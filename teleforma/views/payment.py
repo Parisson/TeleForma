@@ -197,8 +197,14 @@ def bank_success(request, merchant_id):
     """
     Bank success callback
     """
-    log.info("bank_auto %r" % request.POST)
-    info = check_payment_info(request.POST)
+    log.info("bank_success %r" % request.POST)
+    try:
+        info = check_payment_info(request.POST)
+    except SuspiciousOperation:
+        # Browser-facing endpoint: reloads, back button, bots or GET redirects
+        # can hit this URL without the expected Seal/Data. Redirect to the
+        # failure page instead of raising a 400 with a full traceback.
+        return HttpResponseRedirect('/echec-de-paiement')
     order_id = info['order_id']
     if info['valid']:
         payment = Payment.objects.get(pk=order_id)
