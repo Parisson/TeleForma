@@ -77,7 +77,14 @@ def get_records_from_bbb(**kwargs):
             preview = ""
             images = format.get('preview', {}).get('images', {})
             if images:
-                preview = images.dict()['images']['image'][0].replace("http://", "https://")
+                image = images.dict()['images']['image']
+                # BBB returns a list of <image> when there are several previews,
+                # but a single string node when there is only one. Indexing [0]
+                # on that string used to grab its first char ("h"), producing a
+                # broken relative url('h') in the template.
+                if isinstance(image, list):
+                    image = image[0]
+                preview = str(image).replace("http://", "https://")
             data = {
                 'id': str(recording['recordID']),
                 'server_id': server.id,
