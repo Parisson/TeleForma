@@ -1129,7 +1129,7 @@ class Media(MediaBase):
                              "default=noprint_wrappers=1:nokey=1", self.file.path],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT)
-        self.duration = datetime.timedelta(days =-1, seconds = int(result.stdout))
+        self.duration = datetime.timedelta(days =-1, seconds = float(result.stdout))
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
