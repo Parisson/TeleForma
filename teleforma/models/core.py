@@ -1122,10 +1122,10 @@ class Media(MediaBase):
         else:
             return None
 
-    def set_duration(filename):
+    def set_duration(self):
         result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
                              "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", filename],
+                             "default=noprint_wrappers=1:nokey=1", self.file.path],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT)
         self.duration = float(result.stdout)
