@@ -1106,6 +1106,7 @@ class Media(MediaBase):
             self.course.save()
         if not self.duration:
             self.set_duration()
+        super(Media, self).save(**kwargs)
 
     def poster_url(self, geometry='640'):
         url = ''
