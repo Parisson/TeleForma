@@ -1104,6 +1104,9 @@ class Media(MediaBase):
         super(Media, self).save(**kwargs)
         if self.course:
             self.course.save()
+        if not self.duration:
+            self.set_duration()
+        super(Media, self).save(**kwargs)
 
     def poster_url(self, geometry='640'):
         url = ''
@@ -1120,13 +1123,13 @@ class Media(MediaBase):
         else:
             return None
 
-    def set_duration(filename):
+    def set_duration(self):
         result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
                              "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", filename],
+                             "default=noprint_wrappers=1:nokey=1", self.file.path],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT)
-        self.duration = float(result.stdout)
+        self.duration = datetime.timedelta(days=0, seconds=float(result.stdout))
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'

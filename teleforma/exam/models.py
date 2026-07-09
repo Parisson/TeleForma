@@ -445,7 +445,8 @@ class Script(BaseResource):
                 self.auto_set_corrector()
 
     def mark_notify(self):
-        self.date_marked = datetime.datetime.now()
+        if not self.date_marked:
+            self.date_marked = datetime.datetime.now()
         site = Site.objects.all()[0]
         context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_marked.txt', context)
@@ -461,8 +462,10 @@ class Script(BaseResource):
         notify_user(mess, 'acceptance', site)
 
     def reject_notify(self):
-        self.date_marked = datetime.datetime.now()
-        self.date_rejected = datetime.datetime.now()
+        if not self.date_marked:
+            self.date_marked = datetime.datetime.now()
+        if not self.date_rejected:
+            self.date_rejected = datetime.datetime.now()
         site = Site.objects.all()[0]
         context = {'script': self, 'site': site}
         text = render_to_string('exam/messages/script_rejected.txt', context)
