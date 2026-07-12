@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from djanog.conf import settings
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse, HttpResponseRedirect
