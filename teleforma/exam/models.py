@@ -457,7 +457,7 @@ class Script(BaseResource):
         mess = Message(sender=sender, recipient=self.author,
                        subject=subject[:119], body=text)
         mess.moderation_status = 'a'
-        # mess.save()
+        mess.save()
         site = Site.objects.all()[0]
         notify_user(mess, 'acceptance', site)
 
@@ -475,7 +475,7 @@ class Script(BaseResource):
         mess = Message(sender=self.corrector, recipient=self.author,
                        subject=subject[:119], body=text)
         mess.moderation_status = 'a'
-        # mess.save()
+        mess.save()
         notify_user(mess, 'acceptance', site)
 
 
