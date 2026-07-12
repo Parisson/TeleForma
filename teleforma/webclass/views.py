@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
+from django.contrib.sites.models import Site
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -261,6 +262,7 @@ def create_cc_bbb_conference(request, period_id, course_id):
         raise ValueError("User is not a professor or staff")
     course = Course.objects.get(pk=course_id)
 
+    site = Site.objects.get_current()
     year = datetime.now().year
     bbb = BBBServer.objects.get(pk=settings.BBB_DEFAULT_SERVER_ID).get_instance()
     # generate password
@@ -279,13 +281,13 @@ def create_cc_bbb_conference(request, period_id, course_id):
         'allowStartStopRecording': True,
         'muteOnStart': True,
         'allowModsToUnmuteUsers': True,
-        'logo':'https://e-learning.crfpa.pre-barreau.com/static/teleforma/images/logo_pb.png',
+        'logo':"https://" + site.domain + "/static/teleforma/images/logo_pb.png",
         'copyright': "© %d Pré-Barreau" % year,
         # 'guestPolicy':'ALWAYS_ACCEPT'
-        'bannerText': "Pré-Barreau - CRFPA",
+        'bannerText': settings.TELEFORMA_ORGANIZATION,
         'bannerColor': "#003768",
         # 'customStyleUrl': site_url+"/static/teleforma/css/bbb.css"
-        'logoutURL': "https://e-learning.ae.pre-barreau.com",
+        'logoutURL': "https://" + site.domain,
         'endWhenNoModerator': True,
         'meetingLayout': "VIDEO_FOCUS",
         "notifyRecordingIsOn": True,
