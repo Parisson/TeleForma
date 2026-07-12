@@ -731,6 +731,7 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 BBB_LOGO_URL = "/static/teleforma/images/pb/logo_pb_2025.png"
 BBB_PDF_URL = "/static/teleforma/pdf/pb-blank-slide.pdf"
 BBB_BANNER_COLOR = "#003768"
+BBB_DEFAULT_SERVER_ID = 3
 
 ########################
 # CORS

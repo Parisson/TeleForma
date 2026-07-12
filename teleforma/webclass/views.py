@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from djanog.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -261,7 +262,7 @@ def create_cc_bbb_conference(request, period_id, course_id):
     course = Course.objects.get(pk=course_id)
 
     year = datetime.now().year
-    bbb = BBBServer.objects.get(pk=2).get_instance()
+    bbb = BBBServer.objects.get(pk=settings.BBB_DEFAULT_SERVER_ID).get_instance()
     # generate password
     password = "".join(random.choices(string.ascii_letters + string.digits, k=10))
     # generate random room id
