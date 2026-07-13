@@ -21,5 +21,6 @@ class Command(BaseCommand):
         date = datetime.datetime(day=31, month=12, year=year)
         docs = DocumentPrivate.objects.filter(date_added__lte=date)
         for doc in docs:
+            doc.file.delete(save=False)
             doc.delete()
         
