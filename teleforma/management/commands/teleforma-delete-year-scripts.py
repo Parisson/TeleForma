@@ -21,6 +21,6 @@ class Command(BaseCommand):
         date = datetime.datetime(day=31, month=12, year=year)
         scripts = Script.objects.filter(date_added__lte=date)
         for script in scripts:
-            os.remove(script.file.path)
+            script.file.delete(save=False)
             script.delete()
         
