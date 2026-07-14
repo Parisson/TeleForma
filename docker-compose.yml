@@ -27,6 +27,8 @@ services:
       - memcached
     env_file:
       - env/debug.env
+    sysctls:
+      net.core.somaxconn: 32768
 
   db:
     image: postgres:18
