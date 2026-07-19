@@ -10,8 +10,10 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db.models.signals import post_save
 
+
 def in_one_week():
     return datetime.now(timezone.utc) + timedelta(days=7)
+
 
 def notify(users, message, url, days_before_expiration=None):
     """
@@ -24,6 +26,7 @@ def notify(users, message, url, days_before_expiration=None):
         if days_before_expiration:
             notif.expired = datetime.now(timezone.utc) + timedelta(days=days_before_expiration)
         notif.save()
+
 
 class Notification(models.Model):
     """A notification message"""
