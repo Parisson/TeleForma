@@ -78,6 +78,7 @@ class Command(BaseCommand):
                         period=period,
                         status=2,
                         notified=False,
+                        streaming=False,
                         date_publish__lte=now_plus,
                         date_publish__gte=now_minus,
                         )) + list(ConferencePublication.objects.filter(
@@ -87,7 +88,6 @@ class Command(BaseCommand):
                         date_publish__lte=now_plus,
                         date_publish__gte=now_minus,
                         ))
-        print(publications)
     
         logger.logger.info("Starting conference publication process")
 
@@ -102,15 +102,15 @@ class Command(BaseCommand):
 
             if medias:
                 publication.status = 3
+                publication.save()
+
+                logger.logger.info("Conference published: " + conference.public_id)
 
                 for media in medias:
                     media.is_published = True
                     media.save()
                     if "video/mp4" in media.mime_type:
                         linked_media = media
-
-                publication.save()
-                logger.logger.info("Conference published: " + conference.public_id)
 
                 # media = conference.media.filter(mime_type='video/mp4')[0]
                 url = reverse('teleforma-media-detail', args=[publication.period.id, linked_media.id])
@@ -123,6 +123,7 @@ class Command(BaseCommand):
                 else:
                     elm = [conference.course.title,
                         conference.course_type.name, conference.session]
+
                 message = "Nouvelle conférence publiée : " + ' - '.join(elm)
 
                 students = Student.objects.filter(period=publication.period)
@@ -135,10 +136,8 @@ class Command(BaseCommand):
                                         conference.course_type in course['types']:
                                     notify(student.user, message, url)
                                     logger.logger.info("Student notified: " + student.user.username)
-                                    print("notify", student)
                     except:
-                        #logger.logger.info("Student NOT notified: " + str(student.id))
-                        print("can't notify", student)
+                        logger.logger.info("Student NOT notified: " + str(student.id))
                         continue
 
                 for user in User.objects.filter(is_staff=True):

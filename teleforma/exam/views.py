@@ -336,7 +336,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
         QT = self.get_form_queryset() & Q(period_id=self.kwargs['period_id'])
         if self.status_filter:
             QT &= Q(status__in=self.status_filter)
-        return Script.objects.filter(QT).order_by('date_submitted')
+        return Script.objects.filter(QT).order_by('date_added')
 
     def get_queryset(self):
         user = self.request.user
@@ -354,7 +354,7 @@ class ScriptsView(ScriptsListMixinView, ListView):
             base_qs = base_qs.filter(QT)
 
         # if self.get_profile() == STUDENT:
-        base_qs = base_qs.order_by('date_submitted')
+        base_qs = base_qs.order_by('date_added')
         return base_qs
 
     @method_decorator(access_required)
@@ -372,7 +372,7 @@ class ScriptsPendingView(ScriptsView):
         if self.request.GET.get('corrector') is None:
             user = self.request.user
             # Exclude status=2 but not author=user
-            qs = qs.filter(~Q(status=2) | Q(author=user)).order_by('date_submitted')
+            qs = qs.filter(~Q(status=2) | Q(author=user)).order_by('date_added')
 
         return qs
 
