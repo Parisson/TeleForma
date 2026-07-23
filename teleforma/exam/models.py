@@ -315,11 +315,12 @@ class Script(BaseResource):
     class Meta(MetaCore):
         verbose_name = _('Script')
         verbose_name_plural = _('Scripts')
-        ordering = ['date_submitted']
+        ordering = ['date_added']
 
     def auto_set_corrector(self):
 
-        self.date_submitted = datetime.datetime.now()
+        if not self.date_submitted:
+            self.date_submitted = datetime.datetime.now()
 
         quota_list = []
         all_quotas = self.course.quotas.filter(date_start__lte=self.date_submitted,
