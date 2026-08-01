@@ -151,12 +151,14 @@ def get_course_conferences(period, course, course_type, status_min=3):
 
     if period.corrections_from and course.corrections_shared and course_type.id == settings.CORRECTIONS_COURSE_TYPE_ID:
         periods.append(period.corrections_from)
+
     # get conference publications
     publications = ConferencePublication.objects.filter(
         period__in=periods,
         conference__course=course,
         conference__course_type=course_type,
         status__gte=status_min).distinct()
+
     for publication in publications:
         conferences.append(publication.conference)
         already_added.add(publication.conference.id)

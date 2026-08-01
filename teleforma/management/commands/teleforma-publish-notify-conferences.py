@@ -17,7 +17,7 @@ from teleforma.views.core import get_courses
 import datetime
 
 
-MINUTES_LOW_RANGE = 5
+MINUTES_LOW_RANGE = 25
 MINUTES_HIGH_RANGE = 25
 
 class Logger:
@@ -34,6 +34,7 @@ class Logger:
             self.hdlr.setFormatter(self.formatter)
             self.logger.addHandler(self.hdlr)
         self.logger.setLevel(logging.INFO)
+
 
 
 class Command(BaseCommand):
@@ -74,30 +75,19 @@ class Command(BaseCommand):
         now_minus = now - datetime.timedelta(minutes=minute_low_range)
         now_plus = now + datetime.timedelta(minutes=minute_high_range)
 
-        publications = list(Conference.objects.filter(
-                        period=period,
-                        status=2,
-                        notified=False,
-                        streaming=False,
-                        date_publish__lte=now_plus,
-                        date_publish__gte=now_minus,
-                        )) + list(ConferencePublication.objects.filter(
+        publications = ConferencePublication.objects.filter(
                         period=period,
                         status=2,
                         notified=False,
                         date_publish__lte=now_plus,
                         date_publish__gte=now_minus,
-                        ))
+                        )
     
         logger.logger.info("Starting conference publication process")
 
         for publication in publications:
 
-            if type(publication) == ConferencePublication:
-                conference = publication.conference
-            else:
-                conference = publication            
-
+            conference = publication.conference
             medias = conference.media.all()
 
             if medias:
@@ -140,6 +130,7 @@ class Command(BaseCommand):
                         logger.logger.info("Student NOT notified: " + str(student.id))
                         continue
 
+                # staff
                 for user in User.objects.filter(is_staff=True):
                     notify(user, message, url)
 
