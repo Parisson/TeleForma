@@ -716,10 +716,6 @@ def notif_live_conference_thread(sender, instance, *args, **kwargs):
         thread = threading.Thread(target=_notify_live_conference_thread, args=(instance.id,))
         thread.daemon = True
         thread.start()
-    if not instance.streaming and not instance.notified:
-        thread = threading.Thread(target=_notify_conference_publication_thread, args=(instance.id,))
-        thread.daemon = True
-        thread.start()
 
 
 def notif_live_conference_sync(sender, instance, *args, **kwargs):
