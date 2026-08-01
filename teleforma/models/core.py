@@ -693,7 +693,7 @@ class Conference(models.Model):
 
 
 def _notify_live_conference_thread(conference_id):
-    """Fonction exécutée dans un thread séparé pour notifier la conférence live."""
+    """Fonction exécutée dans un thread séparé pour notifier la conférence."""
     from django.db import connection
     from teleforma.models.core import Conference
     try:
@@ -703,38 +703,12 @@ def _notify_live_conference_thread(conference_id):
             conference.notify_live_sync()
             conference.notified_live = True
             conference.save()
-        if not conference.streaming and not conference.notified:
-            logger.info("notify conference publication on secondary thread " + str(conference.id))
-            conference.notify_live_sync()
-            conference.notified = True
-            conference.save()
     except Conference.DoesNotExist:
         pass
     except Exception:
         pass
     finally:
         connection.close()
-
-
-def _notify_conference_publication_thread(conference_id):
-    """Fonction exécutée dans un thread séparé pour notifier la publication de la conférence."""
-    from django.db import connection
-    from teleforma.models.core import Conference
-    try:
-        conference = Conference.objects.get(id=conference_id)
-        if not conference.streaming and not conference.notified:
-            logger.info("notify conference publication on secondary thread " + str(conference.id))
-            conference.notify_live_sync()
-            conference.notified = True
-            conference.save()
-
-    except Conference.DoesNotExist:
-        pass
-    except Exception:
-        pass
-    finally:
-        connection.close()
-
 
 
 def notif_live_conference_thread(sender, instance, *args, **kwargs):
@@ -753,7 +727,6 @@ def notif_live_conference_sync(sender, instance, *args, **kwargs):
         instance.notify_live_sync()
         instance.notified_live = True
         instance.save()
-
 
 post_save.connect(notif_live_conference_thread, sender=Conference)
 
