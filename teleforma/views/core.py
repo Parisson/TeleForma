@@ -676,6 +676,7 @@ class MediaView(CourseAccessMixin, DetailView):
         context['mime_type'] = media.mime_type
         context['course'] = course
         context['type'] = course_type
+
         # context['notes'] = media.notes.all().filter(author=self.request.user)
         content_type = ContentType.objects.get(
             app_label="teleforma", model="course")

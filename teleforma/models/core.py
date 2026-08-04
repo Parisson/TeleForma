@@ -458,6 +458,7 @@ class Conference(models.Model):
     notified = models.BooleanField(_('notified'), default=False)
     notified_live = models.BooleanField("Notifié live", default=False)
     imported = models.BooleanField(_('imported'), default=False)
+    s3_exported = models.BooleanField(_('S3 exported'), default=False)
     test = models.BooleanField(_('test'), default=False)
 
     @property
@@ -1068,6 +1069,14 @@ class Media(MediaBase):
         max_length=255,
         null=True,
         blank=False)
+    poster_file_s3 = models.FileField(
+        _('poster S3 file'),
+        upload_to='items/%Y/%m/%d',
+        max_length=1024,
+        null=True,
+        blank=True,
+        storage=media_storage,
+        )
     duration = models.DurationField(
         _("duration"),
         blank=True,
@@ -1108,18 +1117,25 @@ class Media(MediaBase):
             self.set_duration()
         super(Media, self).save(**kwargs)
 
-    def poster_url(self, geometry='640'):
-        url = ''
-        if self.poster_file:
-            url = sorl_default.backend.get_thumbnail(
-                self.poster_file, geometry).url
-        return url
+    def poster_url(self):
+        poster_file = self.get_poster_file()
+        if poster_file:
+            return poster_file.url
+        return ""
 
     def get_file(self):
         if self.file_s3:
             return self.file_s3
         elif self.file:
             return self.file
+        else:
+            return None
+
+    def get_poster_file(self):
+        if self.poster_file_s3:
+            return self.poster_file_s3
+        elif self.poster_file:
+            return self.poster_file
         else:
             return None
 
