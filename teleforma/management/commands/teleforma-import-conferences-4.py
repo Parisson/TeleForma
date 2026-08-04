@@ -90,15 +90,25 @@ class Command(BaseCommand):
                     media.course_type = conference.course_type
                     media.type = media_format
                     media.is_published = False
+
                     media.file = media_file.replace(settings.MEDIA_ROOT, "")
                     media.save()
                     filename = os.path.split(media_file)[1]
                     with open(media_file, 'rb') as f:
                         media.file_s3.save(filename, File(f))
+                    media.save()
                     media.set_mime_type()
+                    conference.imported = True
+                    logger.logger.info(media_file)
+
                     media.poster_file = poster_file.replace(settings.MEDIA_ROOT, "")
                     media.save()
-                    logger.logger.info(media_file)
+                    filename = os.path.split(poster_file)[1]
+                    with open(poster_file, 'rb') as f:
+                        media.poster_file_s3.save(filename, File(f))
+                    media.save()
+                    conference.s3_exported = True
+                    logger.logger.info(poster_file)
 
                 conference.imported = True
                 conference.save()
