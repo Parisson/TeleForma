@@ -1,7 +1,6 @@
 {% extends "teleforma/course_detail.html" %}
 {% load teleforma_tags %}
 {% load i18n %}
-{% load thumbnail %}
 
 {% block extra_javascript %}
 
@@ -89,9 +88,7 @@ $(document).ready(function(){
         height="auto"
         data-setup='{"playbackRates": [1, 1.25, 1.5, 2]}'
         {% if media.poster_url %}
-            {% thumbnail media.poster_url '640' as im %}
-                poster="{{ im.url }}"
-            {% endthumbnail %}
+            poster="{{ media.poster_url }}"
         {% endif %}
         >
             <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" />
@@ -119,11 +116,7 @@ $(document).ready(function(){
 
 <div style="margin-top:1em;">
 {% if media.poster_file %}
-
-   {% thumbnail media.poster_url "300" as im %}
-    <img src="{{ im.url }}" width="300px" alt="preview" />
-   {% endthumbnail %}
-
+    <img src="{{ media.poster_url }}" width="300px" alt="preview" />
 {% else %}
  snapshot
 {% endif %}

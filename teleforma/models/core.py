@@ -1136,9 +1136,6 @@ class Media(MediaBase):
         poster_file = self.get_poster_file()
         if poster_file:
             url = poster_file.url
-        if not "http" in url:
-            domain = Site.objects.get_current().domain
-            url = f'https://{domain}{url}'
         return url
 
     def get_file(self):

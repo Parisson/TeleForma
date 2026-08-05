@@ -1,5 +1,4 @@
 {% load teleforma_tags %}
-{% load thumbnail %}
 {% load i18n %}
 
 {% course_past_conferences as all_conferences %}
@@ -17,11 +16,9 @@
             <td {% if forloop.first %}class="border-top"{% endif %} width="230px" style="vertical-align:middle">
             <a href="{% url 'teleforma-media-detail' period.id conference.video.id %}" title="{% trans "Play" %}">
             {% if conference.video.poster_file %}
-               {% thumbnail conference.video.poster_url "168x96" as im %}
-                <div style="background: no-repeat url('{{ im.url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
+                <div style="background: no-repeat url('{{ conference.video.poster_url }}') 0 1px; background-size: 100%; background-color: #dfdfdf;">
                  <img src="/static/teleforma/images/play_168.png" width="100%" alt="{% trans 'Click here' %}" />
                 </div>
-               {% endthumbnail %}
             {% else %}
               <div>{% trans 'Click here' %}</div>
             {% endif %}
