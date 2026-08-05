@@ -49,6 +49,7 @@ import subprocess
 import django.db.models as models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage, storages
 from django.core.paginator import InvalidPage
@@ -1033,8 +1034,6 @@ class MediaTranscoded(models.Model):
 def get_media_path(instance, filename):
     if instance.conference:
         return os.sep.join([
-            instance.conference.department.organization.name,
-            instance.conference.department.name,
             str(instance.conference.date_begin.year),
             instance.conference.course.slug,
             instance.conference.course_type.slug,
@@ -1133,10 +1132,15 @@ class Media(MediaBase):
         super(Media, self).save(**kwargs)
 
     def poster_url(self):
+        url = ""
         poster_file = self.get_poster_file()
         if poster_file:
-            return poster_file.url
-        return ""
+            url = poster_file.url
+        if not "http" in url:
+            domain = Site.objects.get_current().domain
+            path = self.get_absolute_url()
+            url = f'https://{domain}{path}'
+        return url
 
     def get_file(self):
         if self.file_s3:
