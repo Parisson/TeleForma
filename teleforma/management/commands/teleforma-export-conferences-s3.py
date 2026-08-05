@@ -60,18 +60,20 @@ class Command(BaseCommand):
 
                     media_file = media.file.path
                     filename = os.path.split(media_file)[1]
-                    with open(media_file, 'rb') as f:
-                        media.file_s3.save(filename, File(f))
-                    media.set_mime_type()
-                    media.save()
-                    logger.logger.info(media_file)
+                    if os.path.exists(media_file):
+                        with open(media_file, 'rb') as f:
+                            media.file_s3.save(filename, File(f))
+                        media.set_mime_type()
+                        media.save()
+                        logger.logger.info(media_file)
 
                     poster_file = media.poster_file.path
                     filename = os.path.split(poster_file)[1]
-                    with open(poster_file, 'rb') as f:
-                        media.poster_file_s3.save(filename, File(f))
-                    media.save()
-                    logger.logger.info(poster_file)
+                    if os.path.exists(poster_file):
+                        with open(poster_file, 'rb') as f:
+                            media.poster_file_s3.save(filename, File(f))
+                        media.save()
+                        logger.logger.info(poster_file)
 
                     conference.s3_exported = True
                     conference.save()
