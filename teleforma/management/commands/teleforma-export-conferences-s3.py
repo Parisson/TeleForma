@@ -38,38 +38,41 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         organization_name = args[0]
         department_name = args[1]
-        period_name = args[2]
+        year = args[2]
         log_file = args[3]
         logger = Logger(log_file)
 
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name,
                                             organization=organization)
-        period = Period.objects.get(name=period_name)
+        periods = Period.objects.filter(name__in=year)
         media_dir = settings.MEDIA_ROOT + organization.name + os.sep + department_name
-        conferences = Conference.objects.filter(
-            department=department,
-            period=period,
-            )
 
-        for conference in conferences:
-            for media in conference.media.all():
+        for period in periods:
+            conferences = Conference.objects.filter(
+                department=department,
+                period=period,
+                s3_exported=False,
+                is_published=True,
+                )
+            for conference in conferences:
+                for media in conference.media.all():
 
-                media_file = media.file.path
-                filename = os.path.split(media_file)[1]
-                with open(media_file, 'rb') as f:
-                    media.file_s3.save(filename, File(f))
-                media.set_mime_type()
-                media.save()
-                logger.logger.info(media_file)
+                    media_file = media.file.path
+                    filename = os.path.split(media_file)[1]
+                    with open(media_file, 'rb') as f:
+                        media.file_s3.save(filename, File(f))
+                    media.set_mime_type()
+                    media.save()
+                    logger.logger.info(media_file)
 
-                poster_file = media.poster_file.path
-                filename = os.path.split(poster_file)[1]
-                with open(poster_file, 'rb') as f:
-                    media.poster_file_s3.save(filename, File(f))
-                media.save()
-                logger.logger.info(poster_file)
+                    poster_file = media.poster_file.path
+                    filename = os.path.split(poster_file)[1]
+                    with open(poster_file, 'rb') as f:
+                        media.poster_file_s3.save(filename, File(f))
+                    media.save()
+                    logger.logger.info(poster_file)
 
-                conference.s3_exported = True
-                conference.save()
+                    conference.s3_exported = True
+                    conference.save()
 
