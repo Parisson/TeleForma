@@ -45,7 +45,7 @@ class Command(BaseCommand):
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name,
                                             organization=organization)
-        periods = Period.objects.filter(name__in=year)
+        periods = Period.objects.filter(name__icontains=year)
         media_dir = settings.MEDIA_ROOT + organization.name + os.sep + department_name
 
         for period in periods:
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 department=department,
                 period=period,
                 s3_exported=False,
-                is_published=True,
+                status=3,
                 )
             for conference in conferences:
                 for media in conference.media.all():
