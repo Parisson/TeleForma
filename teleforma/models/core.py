@@ -1049,7 +1049,7 @@ class Media(MediaBase):
                                      blank=True)
     file = models.FileField(
         _('file'),
-        upload_to=self.get_conf_path,
+        upload_to=get_conf_path,
         max_length=1024,
         null=True,
         blank=True,
@@ -1057,7 +1057,7 @@ class Media(MediaBase):
         )
     file_s3 = models.FileField(
         _('S3 file'),
-        upload_to=self.get_conf_path,
+        upload_to=get_conf_path,
         max_length=1024,
         null=True,
         blank=True,
@@ -1065,13 +1065,13 @@ class Media(MediaBase):
         )
     poster_file = models.FileField(
         _('poster file'),
-        upload_to=self.get_conf_path,
+        upload_to=get_conf_path,
         max_length=255,
         null=True,
         blank=False)
     poster_file_s3 = models.FileField(
         _('poster S3 file'),
-        upload_to=self.get_conf_path,
+        upload_to=get_conf_path,
         max_length=1024,
         null=True,
         blank=True,
@@ -1088,7 +1088,8 @@ class Media(MediaBase):
 
     def get_conf_path(self):
         if self.conference:
-            return os.sep.join([str(self.conference.date_begin.year),
+            return os.sep.join([
+                str(self.conference.date_begin.year),
                 self.conference.course.slug,
                 self.conference.course_type.slug,
                 self.conference.public_id
