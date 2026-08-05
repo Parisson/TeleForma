@@ -1036,7 +1036,7 @@ def get_media_path(instance, filename):
             instance.conference.department.organization.name,
             instance.conference.department.name,
             str(instance.conference.date_begin.year),
-            instance.conference.course.code,
+            instance.conference.course.slug,
             instance.conference.course_type.slug,
             instance.conference.public_id,
             filename
