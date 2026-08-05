@@ -1030,6 +1030,18 @@ class MediaTranscoded(models.Model):
         db_table = app_label + '_media_transcoded'
 
 
+def get_media_path(instance, filename):
+    if instance.conference:
+        return os.sep.join([
+            str(instance.conference.date_begin.year),
+            instance.conference.course.slug,
+            instance.conference.course_type.slug,
+            instance.conference.public_id
+            ])
+    else:
+        return "%Y/%m/%d"
+
+
 class Media(MediaBase):
     "Describe a media resource linked to a conference"
 
@@ -1049,7 +1061,7 @@ class Media(MediaBase):
                                      blank=True)
     file = models.FileField(
         _('file'),
-        upload_to=get_conf_path,
+        upload_to=get_media_path,
         max_length=1024,
         null=True,
         blank=True,
@@ -1057,7 +1069,7 @@ class Media(MediaBase):
         )
     file_s3 = models.FileField(
         _('S3 file'),
-        upload_to=get_conf_path,
+        upload_to=get_media_path,
         max_length=1024,
         null=True,
         blank=True,
@@ -1065,13 +1077,13 @@ class Media(MediaBase):
         )
     poster_file = models.FileField(
         _('poster file'),
-        upload_to=get_conf_path,
+        upload_to=get_media_path,
         max_length=255,
         null=True,
         blank=False)
     poster_file_s3 = models.FileField(
         _('poster S3 file'),
-        upload_to=get_conf_path,
+        upload_to=get_media_path,
         max_length=1024,
         null=True,
         blank=True,
@@ -1085,17 +1097,6 @@ class Media(MediaBase):
         _("file date time"),
         blank=True,
         null=True)
-
-    def get_conf_path(self):
-        if self.conference:
-            return os.sep.join([
-                str(self.conference.date_begin.year),
-                self.conference.course.slug,
-                self.conference.course_type.slug,
-                self.conference.public_id
-                ])
-        else:
-            return "%Y/%m/%d"
 
     def set_mime_type(self):
         path = None
