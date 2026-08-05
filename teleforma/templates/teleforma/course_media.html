@@ -87,9 +87,7 @@ $(document).ready(function(){
         width="100%"
         height="auto"
         data-setup='{"playbackRates": [1, 1.25, 1.5, 2]}'
-        {% if media.poster_url %}
-            poster="{{ media.poster_url }}"
-        {% endif %}
+        {% if media.poster_url %}poster="{{ media.poster_url }}"{% endif %}
         >
             <source src="{% url 'teleforma-media-stream' period.id media.id %}" type="{{ media.mime_type }}" />
         <p class="vjs-no-js">
