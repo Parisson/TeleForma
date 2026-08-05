@@ -1034,6 +1034,8 @@ class MediaTranscoded(models.Model):
 def get_media_path(instance, filename):
     if instance.conference:
         return os.sep.join([
+            instance.conference.organization.name,
+            instance.conference.department.name,
             str(instance.conference.date_begin.year),
             instance.conference.course.slug,
             instance.conference.course_type.slug,
