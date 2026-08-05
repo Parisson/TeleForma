@@ -1036,10 +1036,11 @@ def get_media_path(instance, filename):
             str(instance.conference.date_begin.year),
             instance.conference.course.slug,
             instance.conference.course_type.slug,
-            instance.conference.public_id
+            instance.conference.public_id,
+            filename
             ])
     else:
-        return "%Y/%m/%d"
+        return "%Y/%m/%d" + filename
 
 
 class Media(MediaBase):
