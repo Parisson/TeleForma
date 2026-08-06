@@ -1157,12 +1157,18 @@ class Media(MediaBase):
             return None
 
     def set_duration(self):
-        result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-                             "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", self.file.path],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
-        self.duration = datetime.timedelta(days=0, seconds=float(result.stdout))
+        if self.file:
+            if os.path.exists(self.file.path):
+                try:
+                    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                                         "format=duration", "-of",
+                                         "default=noprint_wrappers=1:nokey=1", self.file.path],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT)
+                    self.duration = datetime.timedelta(days=0, seconds=float(result.stdout))
+                except:
+                    logger.info("failed to set duration of media.id: " + str(self.id))
+                    continue
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
