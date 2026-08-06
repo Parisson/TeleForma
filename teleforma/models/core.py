@@ -1168,7 +1168,6 @@ class Media(MediaBase):
                     self.duration = datetime.timedelta(days=0, seconds=float(result.stdout))
                 except:
                     logger.info("failed to set duration of media.id: " + str(self.id))
-                    continue
 
     class Meta(MetaCore):
         db_table = app_label + '_' + 'media'
