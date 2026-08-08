@@ -55,10 +55,13 @@ class Command(BaseCommand):
                 s3_exported=False,
                 status=3,
                 )
+
             for conference in conferences:
+                s3_exported = False
+
                 for media in conference.media.all():
 
-                    if media.file:
+                    if media.file and not media.file_s3:
                         media_file = media.file.path
                         filename = os.path.split(media_file)[1]
                         if os.path.exists(media_file):
@@ -67,8 +70,9 @@ class Command(BaseCommand):
                             media.set_mime_type()
                             media.save()
                             logger.logger.info(media_file)
+                            s3_exported = True
 
-                    if media.poster_file:
+                    if media.poster_file and not media.poster_file_s3:
                         poster_file = media.poster_file.path
                         filename = os.path.split(poster_file)[1]
                         if os.path.exists(poster_file):
@@ -76,7 +80,9 @@ class Command(BaseCommand):
                                 media.poster_file_s3.save(filename, File(f))
                             media.save()
                             logger.logger.info(poster_file)
+                            s3_exported = True
 
-                        conference.s3_exported = True
-                        conference.save()
+                if s3_exported:
+                    conference.s3_exported = True
+                    conference.save()
 
