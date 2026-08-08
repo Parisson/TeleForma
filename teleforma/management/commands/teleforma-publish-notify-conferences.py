@@ -86,8 +86,10 @@ class Command(BaseCommand):
         logger.logger.info("Starting conference publication process")
 
         for publication in publications:
-
             conference = publication.conference
+            conference.status = 3
+            conference.streaming = False
+            conference.save()
             medias = conference.media.all()
 
             if medias:
