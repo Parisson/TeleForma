@@ -46,9 +46,6 @@ class Command(BaseCommand):
         parser.add_argument('--logfile', type=str, required=False,
                             help='log file to use')
 
-        parser.add_argument('--period', type=str, required=True,
-                            help='period to process')
-
         parser.add_argument('--minute-low-range', type=int, required=False,
                             help='minute low range')
 
@@ -58,10 +55,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         logpath = options['logfile']
         logger = Logger(logpath)
-
-
-        period_name = options['period']
-        period = Period.objects.get(name=period_name)
 
         minute_low_range = options['minute_low_range']
         if not minute_low_range:
@@ -76,7 +69,6 @@ class Command(BaseCommand):
         now_plus = now + datetime.timedelta(minutes=minute_high_range)
 
         publications = ConferencePublication.objects.filter(
-                        period=period,
                         status=2,
                         notified=False,
                         date_publish__lte=now_plus,
@@ -138,13 +130,4 @@ class Command(BaseCommand):
 
                 publication.notified = True
                 publication.save()
-
-        # streaming published end conference should have a streaming propery set to False
-        for conference in Conference.objects.filter(
-                                period=period,
-                                status=3,
-                                streaming=True,
-                                date_end__lt=now):
-            conference.streaming = False
-            conference.save()
 
