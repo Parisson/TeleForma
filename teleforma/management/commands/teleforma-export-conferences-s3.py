@@ -38,14 +38,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         organization_name = args[0]
         department_name = args[1]
-        year = args[2]
+        period_name = args[2]
         log_file = args[3]
         logger = Logger(log_file)
 
         organization = Organization.objects.get(name=organization_name)
         department = Department.objects.get(name=department_name,
                                             organization=organization)
-        periods = Period.objects.filter(name__icontains=year)
+        periods = Period.objects.filter(name__icontains=period_name)
         media_dir = settings.MEDIA_ROOT + organization.name + os.sep + department_name
 
         for period in periods:
