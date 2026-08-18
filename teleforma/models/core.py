@@ -1173,8 +1173,6 @@ class Media(MediaBase):
 
     def save(self, **kwargs):
         super(Media, self).save(**kwargs)
-        if self.course:
-            self.course.save()
         if not self.duration:
             self.set_duration()
         super(Media, self).save(**kwargs)
