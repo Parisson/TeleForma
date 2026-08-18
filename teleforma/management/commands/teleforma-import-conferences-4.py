@@ -98,6 +98,7 @@ class Command(BaseCommand):
                         media.file_s3.save(filename, File(f))
                     media.save()
                     media.set_mime_type()
+                    media.set_file_datetime()
                     conference.imported = True
                     logger.logger.info(media_file)
 

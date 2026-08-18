@@ -1051,18 +1051,54 @@ class Media(MediaBase):
 
     element_type = 'media'
 
-    conference = models.ForeignKey('Conference', related_name='media', verbose_name=_('conference'),
-                                   blank=True, null=True, on_delete=models.SET_NULL)
-    course = models.ForeignKey('Course', related_name='media', verbose_name=_('course'),
-                               blank=True, null=True, on_delete=models.SET_NULL)
-    course_type = models.ForeignKey('CourseType', related_name='media', verbose_name=_('course type'),
-                                    blank=True, null=True, on_delete=models.SET_NULL)
-    period = models.ForeignKey('Period', related_name='media', verbose_name=_('period'),
-                               null=True, blank=True, on_delete=models.SET_NULL)
+    conference = models.ForeignKey(
+        'Conference',
+        related_name='media',
+        verbose_name=_('conference'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+        )
+
+    course = models.ForeignKey(
+        'Course',
+        related_name='media',
+        verbose_name=_('course'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+        )
+
+    course_type = models.ForeignKey(
+        'CourseType',
+        related_name='media',
+        verbose_name=_('course type'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+        )
+
+    period = models.ForeignKey(
+        'Period',
+        related_name='media',
+        verbose_name=_('period'),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+        )
+
     type = models.CharField(
-        _('type'), choices=streaming_choices, max_length=32)
-    readers = models.ManyToManyField(User, related_name="media", verbose_name=_('readers'),
-                                     blank=True)
+        _('type'),
+        choices=streaming_choices, max_length=32
+        )
+
+    readers = models.ManyToManyField(
+        User,
+        related_name="media",
+        verbose_name=_('readers'),
+        blank=True
+        )
+
     file = models.FileField(
         _('file'),
         upload_to=get_media_path,
@@ -1071,6 +1107,7 @@ class Media(MediaBase):
         blank=True,
         storage=storages["default"]
         )
+
     file_s3 = models.FileField(
         _('S3 file'),
         upload_to=get_media_path,
@@ -1079,12 +1116,14 @@ class Media(MediaBase):
         blank=True,
         storage=media_storage,
         )
+
     poster_file = models.FileField(
         _('poster file'),
         upload_to=get_media_path,
         max_length=255,
         null=True,
         blank=False)
+
     poster_file_s3 = models.FileField(
         _('poster S3 file'),
         upload_to=get_media_path,
@@ -1093,14 +1132,21 @@ class Media(MediaBase):
         blank=True,
         storage=media_storage,
         )
+
     duration = models.DurationField(
         _("duration"),
         blank=True,
         null=True)
+
     file_datetime = models.DateTimeField(
         _("file date time"),
         blank=True,
         null=True)
+
+    def set_file_datetime(self):
+        if not self.file_datetime:
+            self.file_datetime = datetime.datetime.fromtimestamp(os.path.getmtime(self.file.path))
+            self.save()
 
     def set_mime_type(self):
         path = None
